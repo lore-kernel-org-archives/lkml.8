@@ -2,146 +2,297 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E39C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB52C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293F0222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="Zhq0BFS0"
+	by mail.kernel.org (Postfix) with ESMTP id 6622E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703684;
+	bh=GeKdTvnywdeP8MWj0VNmxO0/yB5ZrHe8bH94R5osg5I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WX+eTqLcggrBIoazeC8ArpkUwaaiMkD47pcTkuXi2n4Hny/9Sxs1qaaCEhhTT/sSC
+	 UR00KPJYNBgQc4jDsxgx9a831aGL8T/dSGZq62SX+SqXAbuuyYsNNMC/dIajEPmHhL
+	 gEGgt9bBl3IV8DU55pBqwE3fKYY2r0E3tPXTGTMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392321AbgBNSHq (ORCPT
+        id S2391427AbgBNSID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:07:46 -0500
-Received: from USFB19PA32.eemsg.mail.mil ([214.24.26.195]:50945 "EHLO
-        USFB19PA32.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389243AbgBNSHo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:07:44 -0500
-X-EEMSG-check-017: 56598909|USFB19PA32_ESA_OUT02.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,441,1574121600"; 
-   d="scan'208";a="56598909"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by USFB19PA32.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 14 Feb 2020 18:07:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1581703661; x=1613239661;
-  h=subject:from:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ZmEj9uPZdHOZAKRIp4AYJ5EUxrhvAKsghoYmsQJ8N7o=;
-  b=Zhq0BFS0Y1HMVNQg/PSwdqMDhZeDtXpZLaF1qrpa4OgxAcuKbtnB+9BJ
-   yKhPvd+rMtyUUhT7wj69hIXUpfwj2aksCSjXPTOA95gAI1WUGA6yaOzYU
-   Ei/bbES0GI3zTkSw6wykstXuYHVKcnd3lY86/pdF0JQtSrhFNWFQey7CN
-   ZsDqIUStWHApBTokmMUPh8vvUycpa7KgXAdiphUSv5WTGZIQWaOwCQ+Fr
-   13yAJPXUV26ThO7VdDNUiyKyLbpg/COMyaCbAHg01220GfjTfR1gsH2o8
-   tyNYweqLwzQFnr1k5lhIwaYhy73DBb8uklsyHmxSAkdJk/LaKb198nGXa
-   A==;
-X-IronPort-AV: E=Sophos;i="5.70,441,1574121600"; 
-   d="scan'208";a="39145515"
-IronPort-PHdr: =?us-ascii?q?9a23=3A5Ab/UxN4X/ceccRAbyMl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0K/jyrsbcNUDSrc9gkEXOFd2Cra4d16yJ6+u5AT1IyK3CmU5BWaQEbw?=
- =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
- =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MRq7oR/Tu8UKjoduN7o9xx?=
- =?us-ascii?q?/UqXZUZupawn9lKl2Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElRrFGDzooLn?=
- =?us-ascii?q?446tTzuRbMUQWA6H0cUn4LkhVTGAjK8Av6XpbqvSTksOd2xTSXMtf3TbAwXj?=
- =?us-ascii?q?Si8rtrRRr1gyoJKzI17GfagdFrgalFvByuuQBww4/MYIGUKvV+eL/dfcgHTm?=
- =?us-ascii?q?ZFR8pdSjBNDp+5Y4YJAeUBJ+JYpJTjqVUIoxW1GA2gCPrvxzJMg3P727Ax3e?=
- =?us-ascii?q?Y8HgHcxAEuAtIAvmrarNv2OqkdX++6w6vUwjvMdP5WxTTw5ZLUfhw9r/yBX7?=
- =?us-ascii?q?R9etfRx0k1EAPFi02dp5H5PzyLzuQNs3aU7+x9Xuyyjm4osQVxojyxycYsl4?=
- =?us-ascii?q?LEgZkVxU3f9Shi3IY0JcG3SE58YdK+FptQrDuVO5F5QsMlXWFloSA3waAFt5?=
- =?us-ascii?q?6jZCUG1ZsqyhHFZ/GHboSE+AzvWemPLTtimX5ofq+0iQyo/ki60OL8U9G50F?=
- =?us-ascii?q?NNriVYjNbBrmsN1xnP6sifTft941uh1S6P1w/N7uFEJlg5lbbBJJ47w74wi4?=
- =?us-ascii?q?ETvV7CHi/wlkX2i7SWeVs49eSy9+TmYqnppp+bN4NujAHxLr8uldClDeQ9Mw?=
- =?us-ascii?q?gOW3CX+eW61LL94U30WKhGg/I5n6XDsJ3WON4XqrC2DgNLyIov9g6zDzK839?=
- =?us-ascii?q?QZmXkHIkhFeBWCj4XxIFHBPev4AOyjg1WsjDhrx/fGMqfnApXWNHfPirjhfb?=
- =?us-ascii?q?Fj60JE0go80chf545ICrEGOP/8R1X+tNrEAR8+Nwy52OnnCNJ61oMRXWKAHL?=
- =?us-ascii?q?WVP7/VsV+N/ugvOfWDZJcJuDbhLPgo/+LujX48mV8YYKmpx4EXZ2q4H/l9LE?=
- =?us-ascii?q?WZZn3sgtgFEWgUpAYxUOvqiFiaWz5Je3myR7485i08CI++FofMWIStgL2H3C?=
- =?us-ascii?q?emEZxbfX5GCl+SHnfybYmEWOkDaDiUIsB/ljwIT7+hS5Uu1Ru2rg/116JnLv?=
- =?us-ascii?q?bI+i0frZ/j0Nl15+vOlRA97DB0FNqS3H2QT2Fun2MIWz830Ll6oUx611iDzK?=
- =?us-ascii?q?x4jOJDGNxN6PNGTB06OYTfz+NkEdDyXBzOftOTRFahWNWmDik7TsgtzN8Wf0?=
- =?us-ascii?q?Z9B9KigwjH3yqrBb8VirOKCIU68qLHwnf+Odh9xGjC1KQ6kVkmTdVANXe8iq?=
- =?us-ascii?q?586QfTHYjJnFudl6qwcqQcxiHN/n+ZzWWSpEFYTBJwUaLdUHAbZ0vWq8n550?=
- =?us-ascii?q?zbQ7+tF7snKA1BxtCGKqZRdN3pgktJRO35NNTdfW2xgWGwCgiMxr+Wa4rqYW?=
- =?us-ascii?q?od1j3HCEcYiwAT4WqGNQ8mCyeivWLeCSdjFUzgY0zy6+lysnC7QVEuzwGMcU?=
- =?us-ascii?q?Jh06C5+hkPhfyTU/kTxK4LuD89qzVoG1awx8zWC9uapwpmZ6hdYM0y4FFG1W?=
- =?us-ascii?q?LHrQB9Op2gL6Z/hl8RaQh3uFnu1xptBoVdksggtGkqwxZqKaKEzFNBcCuV3Y?=
- =?us-ascii?q?jqNb3KLmn/5wivZLTL2lHaydqW/6AP6PMiq1r9pg2mCk0i83B/2dlPz3Sc/o?=
- =?us-ascii?q?nKDBYVUZ/pVEY38Rt6qqrVYik64IPU2nlsPreuvjDe3NIpAfMvygy8cNdHLK?=
- =?us-ascii?q?OECAjyHtUeB8ipK+wlhUOpbhILPOBT6aE0JdmpeuCJ2K6sO+Zgkzamgnpd7I?=
- =?us-ascii?q?9h1UKM8jJ2SvTU0JYd3/GYwgyHWi/+jFi/vMD3l55EaCodHmq4zijkC4pRab?=
- =?us-ascii?q?NocYkXDmeuJp7/+tIrq5frWnNcvHWkA1od086ufxfaO1D02wZX0WwYpnuonS?=
- =?us-ascii?q?b+xDtxxWIHtK2aiRfSzvzieRxPAWtCQG1vnB+4OoSvp8wLV0ivKQ4ynV2q4l?=
- =?us-ascii?q?islPsTn7h2M2SGGRQARCPxNWw3F/Lt57c=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CMAwA84UZe/wHyM5BmHQEBAQkBEQUFAYF7gX2BbSASh?=
- =?us-ascii?q?D6JA4ZZAQEEBoESJYlwkUoJAQEBAQEBAQEBNwQBAYRAAoIlOBMCEAEBAQUBA?=
- =?us-ascii?q?QEBAQUDAQFshUOCOykBgwIBBSMPAQVBEAsOCgICJgICVwYNCAEBgmM/glclr?=
- =?us-ascii?q?jiBMokdgT6BDiqMPnmBB4E4DAOCXT6HW4JeBI1ggj6Hb5dtgkSCT5N8BgIam?=
- =?us-ascii?q?xisJyKBWCsIAhgIIQ+DKE8YDY4pF45BIwORCAEB?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 14 Feb 2020 18:07:39 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01EI6e3h233238;
-        Fri, 14 Feb 2020 13:06:40 -0500
-Subject: Re: [PATCH 2/3] Teach SELinux about anonymous inodes
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Tim Murray <timmurray@google.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, paul@paul-moore.com,
-        Nick Kralevich <nnk@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>
-References: <20200211225547.235083-1-dancol@google.com>
- <20200214032635.75434-1-dancol@google.com>
- <20200214032635.75434-3-dancol@google.com>
- <9ca03838-8686-0007-0971-ee63bf5031da@tycho.nsa.gov>
- <CAKOZuev-=7Lgu35E3tzpHQn0m_KAvvrqi+ZJr1dpqRjHERRSqg@mail.gmail.com>
- <23f725ca-5b5a-5938-fcc8-5bbbfc9ba9bc@tycho.nsa.gov>
-Message-ID: <97603935-9f6b-ccf4-4229-87f26380c3db@tycho.nsa.gov>
-Date:   Fri, 14 Feb 2020 13:08:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 13:08:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731521AbgBNPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:27 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CB6D2467C;
+        Fri, 14 Feb 2020 15:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695666;
+        bh=GeKdTvnywdeP8MWj0VNmxO0/yB5ZrHe8bH94R5osg5I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UieYlkOWDSA5iGNGqb4TX8AldH9CFgR3ogyJ/4Kkt0vjhiq7hjB9kSwtihrFPGHKL
+         LTXuu1waz+qzRC4ZYU6xDisrdOBf2tBwsuHrx8n2H1nnjkdUFFFaJoNgKeVzWfA6IV
+         n1o/K6Y89PK3l2bxM5lZOXzf/Ri152gnYDeJI0XY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j2dIO-0059RP-BJ; Fri, 14 Feb 2020 15:54:24 +0000
 MIME-Version: 1.0
-In-Reply-To: <23f725ca-5b5a-5938-fcc8-5bbbfc9ba9bc@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Feb 2020 15:54:24 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>, jon@solid-run.com,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>, <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+In-Reply-To: <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
+ <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+Message-ID: <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: pankaj.bansal@nxp.com, ard.biesheuvel@linaro.org, lorenzo.pieralisi@arm.com, makarand.pawagi@nxp.com, calvin.johnson@nxp.com, stuyoder@gmail.com, nleeder@codeaurora.org, ioana.ciornei@nxp.com, cristian.sovaiala@nxp.com, guohanjun@huawei.com, will@kernel.org, jon@solid-run.com, linux@armlinux.org.uk, linux-acpi@vger.kernel.org, lenb@kernel.org, jason@lakedaemon.net, Andy.Wang@arm.com, V.Sethi@nxp.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com, Paul.Yang@arm.com, netdev@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, sudeep.holla@arm.com, robin.murphy@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 1:02 PM, Stephen Smalley wrote:
-> It shouldn't fire for non-anon inodes because on a (non-anon) file 
-> creation, security_transition_sid() is passed the parent directory SID 
-> as the second argument and we only assign task SIDs to /proc/pid 
-> directories, which don't support (userspace) file creation anyway.
+On 2020-02-14 15:05, Pankaj Bansal wrote:
+>> -----Original Message-----
+>> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> Sent: Friday, January 31, 2020 5:32 PM
+>> To: Marc Zyngier <maz@kernel.org>
+>> Cc: Makarand Pawagi <makarand.pawagi@nxp.com>; Calvin Johnson
+>> <calvin.johnson@nxp.com>; stuyoder@gmail.com; nleeder@codeaurora.org;
+>> Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi Sovaiala
+>> <cristian.sovaiala@nxp.com>; Hanjun Guo <guohanjun@huawei.com>; Will
+>> Deacon <will@kernel.org>; Lorenzo Pieralisi 
+>> <lorenzo.pieralisi@arm.com>;
+>> Pankaj Bansal <pankaj.bansal@nxp.com>; jon@solid-run.com; Russell King
+>> <linux@armlinux.org.uk>; ACPI Devel Maling List 
+>> <linux-acpi@vger.kernel.org>;
+>> Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>; Andy
+>> Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
+>> Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
+>> kernel@lists.infradead.org>; Laurentiu Tudor 
+>> <laurentiu.tudor@nxp.com>; Paul
+>> Yang <Paul.Yang@arm.com>; <netdev@vger.kernel.org>
+>> <netdev@vger.kernel.org>; Rafael J. Wysocki <rjw@rjwysocki.net>; Linux 
+>> Kernel
+>> Mailing List <linux-kernel@vger.kernel.org>; Shameerali Kolothum Thodi
+>> <shameerali.kolothum.thodi@huawei.com>; Sudeep Holla
+>> <sudeep.holla@arm.com>; Robin Murphy <robin.murphy@arm.com>
+>> Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for 
+>> fsl-mc
+>> 
+>> On Fri, 31 Jan 2020 at 12:06, Marc Zyngier <maz@kernel.org> wrote:
+>> >
+>> > On 2020-01-31 10:35, Makarand Pawagi wrote:
+>> > >> -----Original Message-----
+>> > >> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> > >> Sent: Tuesday, January 28, 2020 4:39 PM
+>> > >> To: Makarand Pawagi <makarand.pawagi@nxp.com>
+>> > >> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> > >> linux-arm- kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
+>> > >> linux@armlinux.org.uk; jon@solid-run.com; Cristi Sovaiala
+>> > >> <cristian.sovaiala@nxp.com>; Laurentiu Tudor
+>> > >> <laurentiu.tudor@nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>;
+>> > >> Varun Sethi <V.Sethi@nxp.com>; Calvin Johnson
+>> > >> <calvin.johnson@nxp.com>; Pankaj Bansal <pankaj.bansal@nxp.com>;
+>> > >> guohanjun@huawei.com; sudeep.holla@arm.com; rjw@rjwysocki.net;
+>> > >> lenb@kernel.org; stuyoder@gmail.com; tglx@linutronix.de;
+>> > >> jason@lakedaemon.net; maz@kernel.org;
+>> > >> shameerali.kolothum.thodi@huawei.com; will@kernel.org;
+>> > >> robin.murphy@arm.com; nleeder@codeaurora.org
+>> > >> Subject: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+>> > >>
+>> > >> Caution: EXT Email
+>> > >>
+>> > >> On Tue, Jan 28, 2020 at 01:38:45PM +0530, Makarand Pawagi wrote:
+>> > >> > ACPI support is added in the fsl-mc driver. Driver will parse MC
+>> > >> > DSDT table to extract memory and other resorces.
+>> > >> >
+>> > >> > Interrupt (GIC ITS) information will be extracted from MADT table
+>> > >> > by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
+>> > >> >
+>> > >> > IORT table will be parsed to configure DMA.
+>> > >> >
+>> > >> > Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
+>> > >> > ---
+>> > >> >  drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
+>> > >> >  drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
+>> > >> >  drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
+>> > >> >  drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
+>> > >> >  drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
+>> > >> >  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71
+>> > >> ++++++++++++++++++++++++++++-
+>> > >> >  include/linux/acpi_iort.h                   |  5 ++
+>> > >> >  7 files changed, 174 insertions(+), 20 deletions(-)
+>> > >> >
+>> > >> > diff --git a/drivers/acpi/arm64/iort.c
+>> > >> > b/drivers/acpi/arm64/iort.c index 33f7198..beb9cd5 100644
+>> > >> > --- a/drivers/acpi/arm64/iort.c
+>> > >> > +++ b/drivers/acpi/arm64/iort.c
+>> > >> > @@ -15,6 +15,7 @@
+>> > >> >  #include <linux/kernel.h>
+>> > >> >  #include <linux/list.h>
+>> > >> >  #include <linux/pci.h>
+>> > >> > +#include <linux/fsl/mc.h>
+>> > >> >  #include <linux/platform_device.h>  #include <linux/slab.h>
+>> > >> >
+>> > >> > @@ -622,6 +623,29 @@ static int iort_dev_find_its_id(struct
+>> > >> > device *dev, u32 req_id,  }
+>> > >> >
+>> > >> >  /**
+>> > >> > + * iort_get_fsl_mc_device_domain() - Find MSI domain related to
+>> > >> > +a device
+>> > >> > + * @dev: The device.
+>> > >> > + * @mc_icid: ICID for the fsl_mc device.
+>> > >> > + *
+>> > >> > + * Returns: the MSI domain for this device, NULL otherwise  */
+>> > >> > +struct irq_domain *iort_get_fsl_mc_device_domain(struct device *dev,
+>> > >> > +                                                     u32 mc_icid) {
+>> > >> > +     struct fwnode_handle *handle;
+>> > >> > +     int its_id;
+>> > >> > +
+>> > >> > +     if (iort_dev_find_its_id(dev, mc_icid, 0, &its_id))
+>> > >> > +             return NULL;
+>> > >> > +
+>> > >> > +     handle = iort_find_domain_token(its_id);
+>> > >> > +     if (!handle)
+>> > >> > +             return NULL;
+>> > >> > +
+>> > >> > +     return irq_find_matching_fwnode(handle,
+>> > >> > +DOMAIN_BUS_FSL_MC_MSI); }
+>> > >>
+>> > >> NAK
+>> > >>
+>> > >> I am not willing to take platform specific code in the generic IORT
+>> > >> layer.
+>> > >>
+>> > >> ACPI on ARM64 works on platforms that comply with SBSA/SBBR
+>> > >> guidelines:
+>> > >>
+>> > >>
+>> > >> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fd
+>> > >> eveloper.arm.com%2Farchitectures%2Fplatform-design%2Fserver-systems
+>> > >>
+>> &amp;data=02%7C01%7Cpankaj.bansal%40nxp.com%7Cdb56d889d85646277ee
+>> 30
+>> > >>
+>> 8d7a64562fa%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6371606
+>> 892
+>> > >>
+>> 50769265&amp;sdata=C7nCty8%2BVeuq6VhcEUXCwiAinN01rCfe12NRVnXJCIY%
+>> 3D
+>> > >> &amp;reserved=0
+>> > >>
+>> > >> Deviating from those requires butchering ACPI specifications (ie
+>> > >> IORT) and related kernel code which goes totally against what ACPI
+>> > >> is meant for on ARM64 systems, so there is no upstream pathway for
+>> > >> this code I am afraid.
+>> > >>
+>> > > Reason of adding this platform specific function in the generic IORT
+>> > > layer is That iort_get_device_domain() only deals with PCI bus
+>> > > (DOMAIN_BUS_PCI_MSI).
+>> > >
+>> > > fsl-mc objects when probed, need to find irq_domain which is
+>> > > associated with the fsl-mc bus (DOMAIN_BUS_FSL_MC_MSI). It will not
+>> > > be possible to do that if we do not add this function because there
+>> > > are no other suitable APIs exported by IORT layer to do the job.
+>> >
+>> > I think we all understood the patch. What both Lorenzo and myself are
+>> > saying is that we do not want non-PCI support in IORT.
+>> >
+>> 
+>> IORT supports platform devices (aka named components) as well, and
+>> there is some support for platform MSIs in the GIC layer.
+>> 
+>> So it may be possible to hide your exotic bus from the OS entirely,
+>> and make the firmware instantiate a DSDT with device objects and
+>> associated IORT nodes that describe whatever lives on that bus as
+>> named components.
+>> 
+>> That way, you will not have to change the OS at all, so your hardware
+>> will not only be supported in linux v5.7+, it will also be supported
+>> by OSes that commercial distro vendors are shipping today. *That* is
+>> the whole point of using ACPI.
+>> 
+>> If you are going to bother and modify the OS, you lose this advantage,
+>> and ACPI gives you no benefit over DT at all.
 > 
-> However, in the absence of a matching type_transition rule, we'll end up 
-> defaulting to the task SID on the anon inode, and without a separate 
-> class we won't be able to distinguish it from a /proc/pid inode.  So 
-> that might justify a separate anoninode or similar class.
+> I am replying to old message in this conversation, because the
+> discussion got sidetracked from IORT
+> table to SFP/QSFP/devlink stuff from this point onwards, which is not
+> related to IORT.
+> I will only focus on representing the MC device in IORT and using the
+> same in linux.
+> As Ard said:
+> "IORT supports platform devices (aka named components) as well, and
+> there is some support for platform MSIs in the GIC layer."
 > 
-> This however reminded me that for the context_inode case, we not only 
-> want to inherit the SID but also the sclass from the context_inode. That 
-> is so that anon inodes created via device node ioctls inherit the same 
-> SID/class pair as the device node and a single allowx rule can govern 
-> all ioctl commands on that device.
+> We can represent MC bus as named component in IORT table and use 
+> platform MSIs.
+> The only caveat is that with current implementation of platform MSIs,
+> the Input id of a device is not considered.
+> https://elixir.bootlin.com/linux/latest/source/drivers/irqchip/irq-gic-v3-its-platform-msi.c#L50
+> https://elixir.bootlin.com/linux/latest/source/drivers/acpi/arm64/iort.c#L464
 
-At least that's the way our patch worked with the /dev/kvm example. 
-However, if we are introducing a separate anoninode class for the 
-type_transition case, maybe we should apply that to all anon inodes 
-regardless of how they are labeled (based on context_inode or 
-transition) and then we'd need to write two allowx rules, one for ioctls 
-on the original device node and one for those on anon inodes created 
-from it.  Not sure how Android wants to handle that as the original 
-developer and primary user of SELinux ioctl whitelisting.
+I don't understand what you mean. Platform MSI using IORT uses the DevID
+of end-points. How could the ITS could work without specifying a DevID?
+See for example how the SMMUv3 driver uses platform MSI.
+
+> While, IORT spec doesn't specify any such limitation.
+> 
+> we can easily update iort.c to remove this limitation.
+> But, I am not sure how the input id would be passed from platform MSI
+> GIC layer to IORT.
+> Most obviously, the input id should be supplied by dev itself.
+
+Why should the device know about its own ID? That's a bus/interconnect
+thing. And nothing should be passed *to* IORT. IORT is the source.
+
+> Any thoughts?
+
+I think that in this thread, we have been fairly explicit about what our
+train of though was.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
