@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351C0C47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D53BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06434206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B45206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700656;
-	bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
+	s=default; t=1581700660;
+	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP8VjT9DoL90x3WGRD65tCAVTPLX4dm7QT2SJVmmLuoBLQnqq7EiiF2ez4yZjnR0n
-	 SFX9krkWoeq23lQOZtyHF/oX5pp5bJ8T18VyR7OoOHXXOZ0thCpw2U53Ol+B1kJZ9e
-	 Q0f+6DqfAGaq08dTBHSXAuob3SXaxt6WDMeKLpkw=
+	b=YXulQx6acjygw8s0jZY+jN1HdkMu5dA9lyQySyZrclRALKYGu6grVB3Bcw4zgtBs0
+	 RVrPd6TdKK/bYYwYlRk60TdvNik/tMvjt91+9zspQU/E+HPr9HoABJo90vLU+TPCqk
+	 yyudhWgQIDju93yu3EQ1QQ5P5M3r0KZanr2EY+/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391267AbgBNQLU (ORCPT
+        id S2394635AbgBNRRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36064 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:17:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391487AbgBNQK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:28 -0500
+        id S2391346AbgBNQLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739502468F;
-        Fri, 14 Feb 2020 16:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F72F24684;
+        Fri, 14 Feb 2020 16:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696627;
-        bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
+        s=default; t=1581696679;
+        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPbnUf/NSrXZFpGWYGUBLLUKzY7GZBK0tjO1xCcu8lVG24jo4psHbfj6GV9+ij1UI
-         xr/wfCr5iDYM624en9rovfqBgvh9GVgo9Zqal4bvHa6QTGCzgDnYhHndX0euxC1Oy7
-         eARH47G+q3n9Fn1xkqK0ezJ3z0Q2xYxSEtPDsOqM=
+        b=UJb6K2obOccp31EJoQ7V05tuC02tcJNN8LhkHCKtw30Zgot5EznjqKLJ9gWMC/iCw
+         dseFa70Hors9+iZyaDnELY5dRqsuKJLHymYsZJbvhAblENj9XJCokOi074SuQBzGgD
+         pRuwSfQHC7QxF2PvmKDryAWav9mgOE+I1FXves84=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 407/459] rtw88: fix potential NULL skb access in TX ISR
-Date:   Fri, 14 Feb 2020 11:00:57 -0500
-Message-Id: <20200214160149.11681-407-sashal@kernel.org>
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 447/459] microblaze: Prevent the overflow of the start
+Date:   Fri, 14 Feb 2020 11:01:37 -0500
+Message-Id: <20200214160149.11681-447-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,41 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-[ Upstream commit f4f84ff8377d4cedf18317747bc407b2cf657d0f ]
+[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
 
-Sometimes the TX queue may be empty and we could possible
-dequeue a NULL pointer, crash the kernel. If the skb is NULL
-then there is nothing to do, just leave the ISR.
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
 
-And the TX queue should not be empty here, so print an error
-to see if there is anything wrong for DMA ring.
-
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index d90928be663b9..77a2bdee50fa7 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -762,6 +762,11 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa694..dcba53803fa5f 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
  
- 	while (count--) {
- 		skb = skb_dequeue(&ring->queue);
-+		if (!skb) {
-+			rtw_err(rtwdev, "failed to dequeue %d skb TX queue %d, BD=0x%08x, rp %d -> %d\n",
-+				count, hw_queue, bd_idx, ring->r.rp, cur_rp);
-+			break;
-+		}
- 		tx_data = rtw_pci_get_tx_data(skb);
- 		pci_unmap_single(rtwpci->pdev, tx_data->dma, skb->len,
- 				 PCI_DMA_TODEVICE);
 -- 
 2.20.1
 
