@@ -2,74 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59F0C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE57C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6155A218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A46320661
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 04:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOHJbFLJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S9Pb+gFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgBNEIF (ORCPT
+        id S1728582AbgBNEK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 23:08:05 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41682 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728195AbgBNEIF (ORCPT
+        Thu, 13 Feb 2020 23:10:27 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36899 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728416AbgBNEK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 23:08:05 -0500
-Received: by mail-io1-f65.google.com with SMTP id m25so9082832ioo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 20:08:04 -0800 (PST)
+        Thu, 13 Feb 2020 23:10:27 -0500
+Received: by mail-pf1-f201.google.com with SMTP id x10so5207759pfn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 20:10:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc:content-transfer-encoding;
-        bh=g/1Jk3mtbadzw4L1okkvpYISXwJslSTM7k9X5r8t9lo=;
-        b=HOHJbFLJfRysO5nDIRyHqzVUPUcKe/Pd/D88lvWDDbRcCjIe0kQ03VfzkXiHqyIGYF
-         3OzuDrBDIkmx7u7Xc2IPeyAjr0R54vGLW1g9HME0Jxzj26g/3n9vk9KC78eTnw9SRpnV
-         PkX/GoV1y6MLmspD6kKtdKmxUa0CBpOtQ5MIG2EmJjV2hswXwpPEPrrnHQJt3/+6HWUC
-         szpwezRqJssnqZ2QVJYbvx6P9zlBFUKSov/FaGSFiZNUfgH4znGOYP5rAbTWIC6TIrjY
-         HdVrF70av5+OHgXR4sIJMQE89PAahN44b9tSo5wZNbZKD4H/WLF4vxNaNkS2J9YuCcSU
-         mcbw==
+        bh=RgKvkAoRvGq4vq4km26PiUmWq0ZHQ4oZSYyicW56YH0=;
+        b=S9Pb+gFTHb2Fh0ZY45QqPil7oBPqPgiU0Zolx6RwAtrcPG80CXV7dPFbjnjxymlTuZ
+         25Cprb4N9pizPEtP6vyfatugmqEqTv16F4NQWSMPwSpLlWlQ3X8x7OuYorZD7KGIwDTf
+         3tnAVAsHwe1lEHmKueV8PkPZvMrb/Qxzv65ALImqrVEGr5LcaEzQBMRkbEKPD6yLV6XG
+         ARP0QwOumatlrJC16FGfkFDMT/Ivf2Top8vxDfYVQmGJdtiuehpLHDpwrzEymndFj0r9
+         D2WctuybgBlHU7FxmZtS9OTYY9BHP2FPe7C2CWTObTLai1HvKAu3w/1rCCCZ2cY2QNm4
+         CGhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=g/1Jk3mtbadzw4L1okkvpYISXwJslSTM7k9X5r8t9lo=;
-        b=HUiLo8GQwg+ySWtytrQu+v227AqIaWlihj33n2kmHOtnaDuH4zrsAK7L3d+mvvHpsz
-         5BizkHtiOU+vZ6FImzlKtGK8EY6vwyjgdOvu+BNQJgWxlSFzMFl98yTmFqylZND5zvue
-         Iilh1pLEuXHsMgUPRf93Xsy0JV9GRm5z1uBYxXj5lRDwY2T9JLI/4nRDL+A9uuCYz4bX
-         H82XPDkgOhHTEiCf/uYAv3sK4eSnQbcx+jzS/zw6jy1K64tsVmwneqQVY71OppWzDWOW
-         8GkDj3R+XGw8/nUMQ6h3h4sjB8mt3yxqQX1J9Ahic/bRHL8zdLr78aGuvSDoTWPGsgp4
-         Jr5Q==
-X-Gm-Message-State: APjAAAVCiysd0JZokuGnyPrftW4uygtU1ksgySF7YR6OnT/1G87dFviZ
-        ygdNTFbOh03N+1lPpRIq+kVNOGfu4lvPzE8L310=
-X-Google-Smtp-Source: APXvYqx9wm1JhVDjER/3tKBYkw3APXuWqRZLPYRzBfTDKAqaGnfTgT9QaDugKx4Uas7fEwd1x2D9wU2sGI6dj91DnAE=
-X-Received: by 2002:a5d:8f90:: with SMTP id l16mr702474iol.165.1581653284272;
- Thu, 13 Feb 2020 20:08:04 -0800 (PST)
-MIME-Version: 1.0
-References: <1581401993-20041-1-git-send-email-iamjoonsoo.kim@lge.com> <1581401993-20041-4-git-send-email-iamjoonsoo.kim@lge.com>
-In-Reply-To: <1581401993-20041-4-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 14 Feb 2020 13:07:53 +0900
-Message-ID: <CAAmzW4NGwvTiE_unACAcSZUH9V3tO0qR=ZPxi=q9s=zDi53DeQ@mail.gmail.com>
-Subject: Re: [PATCH 3/9] mm/workingset: extend the workingset detection for
- anon LRU
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=RgKvkAoRvGq4vq4km26PiUmWq0ZHQ4oZSYyicW56YH0=;
+        b=RhVjuAmou5vQG7fGjI8qrte+x8CMRtLjLqf/vZd7mHXrq4YjLBwKTeRkvq7dz9F/MF
+         /uuetFERRx/Xz4+buqVx1K/HWbO99bOKjdxfH7kuS7AMAjD+xCGgTvoZ6uPZ4XVjIwsi
+         KwoN23/6K6xYcFvWqICMZI/AQG/DulKLDOv5M4g+TiCzPR/WZ43Qxe8qzaBnR/FKzdvT
+         b+0O/qFzWTo2k0TMUWGqG5PabhD/sGfj+8++4q6rknFpjzqDFQS6aTygdGxiCf2zS3QS
+         9qTnT0yerBm+pctealQqu6eOJWlAd22JcdHvtWj/+X2S0z/aLsO2Ar3ZkjFIcKxuSiIf
+         EdAQ==
+X-Gm-Message-State: APjAAAUFDtOxNolM/Z5lygxZff+80agjAZuH0PTxSjLyXTQG4SScnYlV
+        vHg1wip3X0KVgSooVR05sWB0OeoeIcPP
+X-Google-Smtp-Source: APXvYqwSQlIs6i0PxI4EUv3EQMVq8ylCsVYE+Eg6DEB4uXJc5lejL87CH4udKfX3jzrC9nUtuVKNftDDcyGg
+X-Received: by 2002:a63:3f85:: with SMTP id m127mr1361750pga.15.1581653426019;
+ Thu, 13 Feb 2020 20:10:26 -0800 (PST)
+Date:   Thu, 13 Feb 2020 20:09:51 -0800
+In-Reply-To: <20200207201856.46070-1-bgeffon@google.com>
+Message-Id: <20200214040952.43195-1-bgeffon@google.com>
+Mime-Version: 1.0
+References: <20200207201856.46070-1-bgeffon@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v5 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+From:   Brian Geffon <bgeffon@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
         Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,311 +83,298 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 2=EC=9B=94 11=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 3:20, <=
-js1304@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->
-> In the following patch, workingset detection will be applied to
-> anonymous LRU. To prepare it, this patch adds some code to
-> distinguish/handle the both LRUs.
->
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> ---
->  include/linux/mmzone.h | 14 +++++++++-----
->  mm/memcontrol.c        | 12 ++++++++----
->  mm/vmscan.c            | 15 ++++++++++-----
->  mm/vmstat.c            |  6 ++++--
->  mm/workingset.c        | 35 ++++++++++++++++++++++-------------
->  5 files changed, 53 insertions(+), 29 deletions(-)
+When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+set, the source mapping will not be removed. The remap operation
+will be performed as it would have been normally by moving over the
+page tables to the new mapping. The old vma will have any locked
+flags cleared, have no pagetables, and any userfaultfds that were
+watching that range will continue watching it.
 
-This patch should be changed as following.
+For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+the mremap() call to fail. Because MREMAP_DONTUNMAP always results in movin=
+g
+a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+equally sized VMAs where the destination contains the PTEs of the source.
 
--       enum lru_list active_lru =3D page_lru_base_type(page) + LRU_ACTIVE_=
-FILE;
-+       enum lru_list active_lru =3D page_lru_base_type(page) + LRU_ACTIVE;
+We hope to use this in Chrome OS where with userfaultfd we could write
+an anonymous mapping to disk without having to STOP the process or worry
+about VMA permission changes.
 
-Whole fixed patch is as following.
+This feature also has a use case in Android, Lokesh Gidra has said
+that "As part of using userfaultfd for GC, We'll have to move the physical
+pages of the java heap to a separate location. For this purpose mremap
+will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+heap, its virtual mapping will be removed as well. Therefore, we'll
+require performing mmap immediately after. This is not only time consuming
+but also opens a time window where a native thread may call mmap and
+reserve the java heap's address range for its own usage. This flag
+solves the problem."
 
---------------------->8----------------------
-From 2b0691140d11c4e9a0f1500dda831b70697b2a00 Mon Sep 17 00:00:00 2001
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Date: Fri, 15 Nov 2019 09:40:22 +0900
-Subject: [PATCH] mm/workingset: extend the workingset detection for anon LR=
-U
+  v4 -> v5:
+    - Correct commit message to more accurately reflect the behavior.
+    - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
+        =C2=A0 =C2=A0
+Signed-off-by: Brian Geffon <bgeffon@google.com>
 
-In the following patch, workingset detection will be applied to
-anonymous LRU. To prepare it, this patch adds some code to
-distinguish/handle the both LRUs.
-
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/mmzone.h | 14 +++++++++-----
- mm/memcontrol.c        | 12 ++++++++----
- mm/vmscan.c            | 15 ++++++++++-----
- mm/vmstat.c            |  6 ++++--
- mm/workingset.c        | 35 ++++++++++++++++++++++-------------
- 5 files changed, 53 insertions(+), 29 deletions(-)
+ include/uapi/linux/mman.h |   5 +-
+ mm/mremap.c               | 106 ++++++++++++++++++++++++++++++--------
+ 2 files changed, 88 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 5334ad8fc7bd..b78fd8c7284b 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -220,8 +220,12 @@ enum node_stat_item {
-  NR_ISOLATED_ANON, /* Temporary isolated pages from anon lru */
-  NR_ISOLATED_FILE, /* Temporary isolated pages from file lru */
-  WORKINGSET_NODES,
-- WORKINGSET_REFAULT,
-- WORKINGSET_ACTIVATE,
-+ WORKINGSET_REFAULT_BASE,
-+ WORKINGSET_REFAULT_ANON =3D WORKINGSET_REFAULT_BASE,
-+ WORKINGSET_REFAULT_FILE,
-+ WORKINGSET_ACTIVATE_BASE,
-+ WORKINGSET_ACTIVATE_ANON =3D WORKINGSET_ACTIVATE_BASE,
-+ WORKINGSET_ACTIVATE_FILE,
-  WORKINGSET_RESTORE,
-  WORKINGSET_NODERECLAIM,
-  NR_ANON_MAPPED, /* Mapped anonymous pages */
-@@ -304,10 +308,10 @@ enum lruvec_flags {
- struct lruvec {
-  struct list_head lists[NR_LRU_LISTS];
-  struct zone_reclaim_stat reclaim_stat;
-- /* Evictions & activations on the inactive file list */
-- atomic_long_t inactive_age;
-+ /* Evictions & activations on the inactive list */
-+ atomic_long_t inactive_age[2];
-  /* Refaults at the time of last reclaim cycle */
-- unsigned long refaults;
-+ unsigned long refaults[2];
-  /* Various lruvec state flags (enum lruvec_flags) */
-  unsigned long flags;
- #ifdef CONFIG_MEMCG
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 6c83cf4ed970..8f4473d6ff9c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1431,10 +1431,14 @@ static char *memory_stat_format(struct
-mem_cgroup *memcg)
-  seq_buf_printf(&s, "%s %lu\n", vm_event_name(PGMAJFAULT),
-         memcg_events(memcg, PGMAJFAULT));
-
-- seq_buf_printf(&s, "workingset_refault %lu\n",
--        memcg_page_state(memcg, WORKINGSET_REFAULT));
-- seq_buf_printf(&s, "workingset_activate %lu\n",
--        memcg_page_state(memcg, WORKINGSET_ACTIVATE));
-+ seq_buf_printf(&s, "workingset_refault_anon %lu\n",
-+        memcg_page_state(memcg, WORKINGSET_REFAULT_ANON));
-+ seq_buf_printf(&s, "workingset_refault_file %lu\n",
-+        memcg_page_state(memcg, WORKINGSET_REFAULT_FILE));
-+ seq_buf_printf(&s, "workingset_activate_anon %lu\n",
-+        memcg_page_state(memcg, WORKINGSET_ACTIVATE_ANON));
-+ seq_buf_printf(&s, "workingset_activate_file %lu\n",
-+        memcg_page_state(memcg, WORKINGSET_ACTIVATE_FILE));
-  seq_buf_printf(&s, "workingset_nodereclaim %lu\n",
-         memcg_page_state(memcg, WORKINGSET_NODERECLAIM));
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 4122a841dfce..74c3adefc933 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2735,7 +2735,10 @@ static bool shrink_node(pg_data_t *pgdat,
-struct scan_control *sc)
-  if (!sc->force_deactivate) {
-  unsigned long refaults;
-
-- if (inactive_is_low(target_lruvec, LRU_INACTIVE_ANON))
-+ refaults =3D lruvec_page_state(target_lruvec,
-+ WORKINGSET_ACTIVATE_ANON);
-+ if (refaults !=3D target_lruvec->refaults[0] ||
-+ inactive_is_low(target_lruvec, LRU_INACTIVE_ANON))
-  sc->may_deactivate |=3D DEACTIVATE_ANON;
-  else
-  sc->may_deactivate &=3D ~DEACTIVATE_ANON;
-@@ -2746,8 +2749,8 @@ static bool shrink_node(pg_data_t *pgdat, struct
-scan_control *sc)
-  * rid of any stale active pages quickly.
-  */
-  refaults =3D lruvec_page_state(target_lruvec,
--      WORKINGSET_ACTIVATE);
-- if (refaults !=3D target_lruvec->refaults ||
-+ WORKINGSET_ACTIVATE_FILE);
-+ if (refaults !=3D target_lruvec->refaults[1] ||
-      inactive_is_low(target_lruvec, LRU_INACTIVE_FILE))
-  sc->may_deactivate |=3D DEACTIVATE_FILE;
-  else
-@@ -3026,8 +3029,10 @@ static void snapshot_refaults(struct mem_cgroup
-*target_memcg, pg_data_t *pgdat)
-  unsigned long refaults;
-
-  target_lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
-- refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
-- target_lruvec->refaults =3D refaults;
-+ refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE_ANON);
-+ target_lruvec->refaults[0] =3D refaults;
-+ refaults =3D lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE_FILE);
-+ target_lruvec->refaults[1] =3D refaults;
- }
-
- /*
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 78d53378db99..3cdf8e9b0ba2 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1146,8 +1146,10 @@ const char * const vmstat_text[] =3D {
-  "nr_isolated_anon",
-  "nr_isolated_file",
-  "workingset_nodes",
-- "workingset_refault",
-- "workingset_activate",
-+ "workingset_refault_anon",
-+ "workingset_refault_file",
-+ "workingset_activate_anon",
-+ "workingset_activate_file",
-  "workingset_restore",
-  "workingset_nodereclaim",
-  "nr_anon_pages",
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 474186b76ced..5fb8f85d1fec 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -15,6 +15,7 @@
- #include <linux/dax.h>
- #include <linux/fs.h>
- #include <linux/mm.h>
-+#include <linux/mm_inline.h>
-
- /*
-  * Double CLOCK lists
-@@ -156,7 +157,7 @@
-  *
-  * Implementation
-  *
-- * For each node's file LRU lists, a counter for inactive evictions
-+ * For each node's anon/file LRU lists, a counter for inactive evictions
-  * and activations is maintained (node->inactive_age).
-  *
-  * On eviction, a snapshot of this counter (along with some bits to
-@@ -213,7 +214,8 @@ static void unpack_shadow(void *shadow, int
-*memcgidp, pg_data_t **pgdat,
-  *workingsetp =3D workingset;
- }
-
--static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgda=
-t)
-+static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgda=
-t,
-+ int is_file)
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index fc1a64c3447b..923cc162609c 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -5,8 +5,9 @@
+ #include <asm/mman.h>
+ #include <asm-generic/hugetlb_encode.h>
+=20
+-#define MREMAP_MAYMOVE	1
+-#define MREMAP_FIXED	2
++#define MREMAP_MAYMOVE		1
++#define MREMAP_FIXED		2
++#define MREMAP_DONTUNMAP	4
+=20
+ #define OVERCOMMIT_GUESS		0
+ #define OVERCOMMIT_ALWAYS		1
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 1fc8a29fbe3f..a2a792fdbc64 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *v=
+ma,
+ static unsigned long move_vma(struct vm_area_struct *vma,
+ 		unsigned long old_addr, unsigned long old_len,
+ 		unsigned long new_len, unsigned long new_addr,
+-		bool *locked, struct vm_userfaultfd_ctx *uf,
+-		struct list_head *uf_unmap)
++		bool *locked, unsigned long flags,
++		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
  {
-  /*
-  * Reclaiming a cgroup means reclaiming all its children in a
-@@ -230,7 +232,7 @@ static void advance_inactive_age(struct mem_cgroup
-*memcg, pg_data_t *pgdat)
-  struct lruvec *lruvec;
-
-  lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
-- atomic_long_inc(&lruvec->inactive_age);
-+ atomic_long_inc(&lruvec->inactive_age[is_file]);
-  } while (memcg && (memcg =3D parent_mem_cgroup(memcg)));
+ 	struct mm_struct *mm =3D vma->vm_mm;
+ 	struct vm_area_struct *new_vma;
+@@ -408,11 +408,49 @@ static unsigned long move_vma(struct vm_area_struct *=
+vma,
+ 	if (unlikely(vma->vm_flags & VM_PFNMAP))
+ 		untrack_pfn_moved(vma);
+=20
++	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
++		if (vm_flags & VM_ACCOUNT) {
++			/* Always put back VM_ACCOUNT since we won't unmap */
++			vma->vm_flags |=3D VM_ACCOUNT;
++
++			vm_acct_memory(vma_pages(new_vma));
++		}
++
++		/*
++		 * locked_vm accounting: if the mapping remained the same size
++		 * it will have just moved and we don't need to touch locked_vm
++		 * because we skip the do_unmap. If the mapping shrunk before
++		 * being moved then the do_unmap on that portion will have
++		 * adjusted vm_locked. Only if the mapping grows do we need to
++		 * do something special; the reason is locked_vm only accounts
++		 * for old_len, but we're now adding new_len - old_len locked
++		 * bytes to the new mapping.
++		 */
++		if (vm_flags & VM_LOCKED) {
++			/* We always clear VM_LOCKED[ONFAULT] on the old vma */
++			vma->vm_flags &=3D VM_LOCKED_CLEAR_MASK;
++
++			if (new_len > old_len) {
++				mm->locked_vm +=3D
++					(new_len - old_len) >> PAGE_SHIFT;
++				*locked =3D true;
++			}
++		}
++
++		goto out;
++	}
++
+ 	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+ 		/* OOM: unable to split vma, just get accounts right */
+ 		vm_unacct_memory(excess >> PAGE_SHIFT);
+ 		excess =3D 0;
+ 	}
++
++	if (vm_flags & VM_LOCKED) {
++		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
++		*locked =3D true;
++	}
++out:
+ 	mm->hiwater_vm =3D hiwater_vm;
+=20
+ 	/* Restore VM_ACCOUNT if one or two pieces of vma left */
+@@ -422,16 +460,12 @@ static unsigned long move_vma(struct vm_area_struct *=
+vma,
+ 			vma->vm_next->vm_flags |=3D VM_ACCOUNT;
+ 	}
+=20
+-	if (vm_flags & VM_LOCKED) {
+-		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
+-		*locked =3D true;
+-	}
+-
+ 	return new_addr;
  }
-
-@@ -248,18 +250,19 @@ void *workingset_eviction(struct page *page,
-struct mem_cgroup *target_memcg)
-  unsigned long eviction;
-  struct lruvec *lruvec;
-  int memcgid;
-+ int is_file =3D page_is_file_cache(page);
-
-  /* Page is fully exclusive and pins page->mem_cgroup */
-  VM_BUG_ON_PAGE(PageLRU(page), page);
-  VM_BUG_ON_PAGE(page_count(page), page);
-  VM_BUG_ON_PAGE(!PageLocked(page), page);
-
-- advance_inactive_age(page_memcg(page), pgdat);
-+ advance_inactive_age(page_memcg(page), pgdat, is_file);
-
-  lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
-  /* XXX: target_memcg can be NULL, go through lruvec */
-  memcgid =3D mem_cgroup_id(lruvec_memcg(lruvec));
-- eviction =3D atomic_long_read(&lruvec->inactive_age);
-+ eviction =3D atomic_long_read(&lruvec->inactive_age[is_file]);
-  return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
- }
-
-@@ -278,13 +281,16 @@ void workingset_refault(struct page *page, void *shad=
-ow)
-  struct lruvec *eviction_lruvec;
-  unsigned long refault_distance;
-  struct pglist_data *pgdat;
-- unsigned long active_file;
-+ unsigned long active;
-  struct mem_cgroup *memcg;
-  unsigned long eviction;
-  struct lruvec *lruvec;
-  unsigned long refault;
-  bool workingset;
-  int memcgid;
-+ int is_file =3D page_is_file_cache(page);
-+ enum lru_list active_lru =3D page_lru_base_type(page) + LRU_ACTIVE;
-+ enum node_stat_item workingset_stat;
-
-  unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &workingset);
-
-@@ -309,8 +315,8 @@ void workingset_refault(struct page *page, void *shadow=
-)
-  if (!mem_cgroup_disabled() && !eviction_memcg)
-  goto out;
-  eviction_lruvec =3D mem_cgroup_lruvec(eviction_memcg, pgdat);
-- refault =3D atomic_long_read(&eviction_lruvec->inactive_age);
-- active_file =3D lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
-+ refault =3D atomic_long_read(&eviction_lruvec->inactive_age[is_file]);
-+ active =3D lruvec_page_state(eviction_lruvec, active_lru);
-
-  /*
-  * Calculate the refault distance
-@@ -341,19 +347,21 @@ void workingset_refault(struct page *page, void *shad=
-ow)
-  memcg =3D page_memcg(page);
-  lruvec =3D mem_cgroup_lruvec(memcg, pgdat);
-
-- inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
-+ workingset_stat =3D WORKINGSET_REFAULT_BASE + is_file;
-+ inc_lruvec_state(lruvec, workingset_stat);
-
-  /*
-  * Compare the distance to the existing workingset size. We
-  * don't act on pages that couldn't stay resident even if all
-  * the memory was available to the page cache.
-  */
-- if (refault_distance > active_file)
-+ if (refault_distance > active)
-  goto out;
-
-  SetPageActive(page);
-- advance_inactive_age(memcg, pgdat);
-- inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-+ advance_inactive_age(memcg, pgdat, is_file);
-+ workingset_stat =3D WORKINGSET_ACTIVATE_BASE + is_file;
-+ inc_lruvec_state(lruvec, workingset_stat);
-
-  /* Page was active prior to eviction */
-  if (workingset) {
-@@ -371,6 +379,7 @@ void workingset_refault(struct page *page, void *shadow=
-)
- void workingset_activation(struct page *page)
+=20
+ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+-	unsigned long old_len, unsigned long new_len, unsigned long *p)
++	unsigned long old_len, unsigned long new_len, unsigned long flags,
++	unsigned long *p)
  {
-  struct mem_cgroup *memcg;
-+ int is_file =3D page_is_file_cache(page);
-
-  rcu_read_lock();
-  /*
-@@ -383,7 +392,7 @@ void workingset_activation(struct page *page)
-  memcg =3D page_memcg_rcu(page);
-  if (!mem_cgroup_disabled() && !memcg)
-  goto out;
-- advance_inactive_age(memcg, page_pgdat(page));
-+ advance_inactive_age(memcg, page_pgdat(page), is_file);
+ 	struct mm_struct *mm =3D current->mm;
+ 	struct vm_area_struct *vma =3D find_vma(mm, addr);
+@@ -453,6 +487,10 @@ static struct vm_area_struct *vma_to_resize(unsigned l=
+ong addr,
+ 		return ERR_PTR(-EINVAL);
+ 	}
+=20
++	if (flags & MREMAP_DONTUNMAP && (!vma_is_anonymous(vma) ||
++			vma->vm_flags & VM_SHARED))
++		return ERR_PTR(-EINVAL);
++
+ 	if (is_vm_hugetlb_page(vma))
+ 		return ERR_PTR(-EINVAL);
+=20
+@@ -497,7 +535,7 @@ static struct vm_area_struct *vma_to_resize(unsigned lo=
+ng addr,
+=20
+ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 		unsigned long new_addr, unsigned long new_len, bool *locked,
+-		struct vm_userfaultfd_ctx *uf,
++		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+ 		struct list_head *uf_unmap_early,
+ 		struct list_head *uf_unmap)
+ {
+@@ -505,7 +543,7 @@ static unsigned long mremap_to(unsigned long addr, unsi=
+gned long old_len,
+ 	struct vm_area_struct *vma;
+ 	unsigned long ret =3D -EINVAL;
+ 	unsigned long charged =3D 0;
+-	unsigned long map_flags;
++	unsigned long map_flags =3D 0;
+=20
+ 	if (offset_in_page(new_addr))
+ 		goto out;
+@@ -534,9 +572,11 @@ static unsigned long mremap_to(unsigned long addr, uns=
+igned long old_len,
+ 	if ((mm->map_count + 2) >=3D sysctl_max_map_count - 3)
+ 		return -ENOMEM;
+=20
+-	ret =3D do_munmap(mm, new_addr, new_len, uf_unmap_early);
+-	if (ret)
+-		goto out;
++	if (flags & MREMAP_FIXED) {
++		ret =3D do_munmap(mm, new_addr, new_len, uf_unmap_early);
++		if (ret)
++			goto out;
++	}
+=20
+ 	if (old_len >=3D new_len) {
+ 		ret =3D do_munmap(mm, addr+new_len, old_len - new_len, uf_unmap);
+@@ -545,13 +585,26 @@ static unsigned long mremap_to(unsigned long addr, un=
+signed long old_len,
+ 		old_len =3D new_len;
+ 	}
+=20
+-	vma =3D vma_to_resize(addr, old_len, new_len, &charged);
++	vma =3D vma_to_resize(addr, old_len, new_len, flags, &charged);
+ 	if (IS_ERR(vma)) {
+ 		ret =3D PTR_ERR(vma);
+ 		goto out;
+ 	}
+=20
+-	map_flags =3D MAP_FIXED;
++	/*
++	 * MREMAP_DONTUNMAP expands by new_len - (new_len - old_len), we will
++	 * check that we can expand by new_len and vma_to_resize will handle
++	 * the vma growing which is (new_len - old_len).
++	 */
++	if (flags & MREMAP_DONTUNMAP &&
++		!may_expand_vm(mm, vma->vm_flags, new_len >> PAGE_SHIFT)) {
++		ret =3D -ENOMEM;
++		goto out;
++	}
++
++	if (flags & MREMAP_FIXED)
++		map_flags |=3D MAP_FIXED;
++
+ 	if (vma->vm_flags & VM_MAYSHARE)
+ 		map_flags |=3D MAP_SHARED;
+=20
+@@ -561,10 +614,16 @@ static unsigned long mremap_to(unsigned long addr, un=
+signed long old_len,
+ 	if (offset_in_page(ret))
+ 		goto out1;
+=20
+-	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
++	/* We got a new mapping */
++	if (!(flags & MREMAP_FIXED))
++		new_addr =3D ret;
++
++	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf=
+,
+ 		       uf_unmap);
++
+ 	if (!(offset_in_page(ret)))
+ 		goto out;
++
+ out1:
+ 	vm_unacct_memory(charged);
+=20
+@@ -609,12 +668,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned=
+ long, old_len,
+ 	addr =3D untagged_addr(addr);
+ 	new_addr =3D untagged_addr(new_addr);
+=20
+-	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
++	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+ 		return ret;
+=20
+ 	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+ 		return ret;
+=20
++	/* MREMAP_DONTUNMAP is always a move */
++	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_MAYMOVE))
++		return ret;
++
+ 	if (offset_in_page(addr))
+ 		return ret;
+=20
+@@ -632,9 +695,10 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned =
+long, old_len,
+ 	if (down_write_killable(&current->mm->mmap_sem))
+ 		return -EINTR;
+=20
+-	if (flags & MREMAP_FIXED) {
++	if (flags & MREMAP_FIXED || flags & MREMAP_DONTUNMAP) {
+ 		ret =3D mremap_to(addr, old_len, new_addr, new_len,
+-				&locked, &uf, &uf_unmap_early, &uf_unmap);
++				&locked, flags, &uf, &uf_unmap_early,
++				&uf_unmap);
+ 		goto out;
+ 	}
+=20
+@@ -662,7 +726,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+ 	/*
+ 	 * Ok, we need to grow..
+ 	 */
+-	vma =3D vma_to_resize(addr, old_len, new_len, &charged);
++	vma =3D vma_to_resize(addr, old_len, new_len, flags, &charged);
+ 	if (IS_ERR(vma)) {
+ 		ret =3D PTR_ERR(vma);
+ 		goto out;
+@@ -712,7 +776,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+ 		}
+=20
+ 		ret =3D move_vma(vma, addr, old_len, new_len, new_addr,
+-			       &locked, &uf, &uf_unmap);
++			       &locked, flags, &uf, &uf_unmap);
+ 	}
  out:
-  rcu_read_unlock();
- }
+ 	if (offset_in_page(ret)) {
 --=20
-2.17.1
+2.25.0.265.gbab2e86ba0-goog
+
