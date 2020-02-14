@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9985C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD64C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC80246FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A4A246FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697862;
-	bh=RPOZWHDV1EtnlDEzdZ/sqpbvu2toE3gIN7iDQkhrWJI=;
+	s=default; t=1581697866;
+	bh=NCStkUO1sJ0PJivtjHkTUa7b0w8xn2leK7ev7u7wBw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IaP2yTkhB6DaFvOTD54/ER/6fM7hCKfOHaq+eGPX6FmAl+RHM51ASopDzTnBxzjza
-	 2RccF7x0Rc0htpFZU4i5J/ixICCY4KWXZqHG/0S5wn0VXZDrQYH/FhlB/VQgVLJJOp
-	 4i71xkKXznFBkCLZtzRRJIOCtILp6MRzYjPh+ZdQ=
+	b=E6sM8fUrYBrxwbdLcnfPsc+0YvUIvQY/LS20DC2oIdNiKeciYJZYp6x/+lV1gws3e
+	 jcH9KMnmfHAs8B3pp3vLvwb6BnV8zzPpW+HpYxrVVOmLWyBoKju/KO9CKtnRRHEIpL
+	 m1Fxfj9ITU1dxwFauxFNTANDuvviF3vl+VAawjmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406818AbgBNQbC (ORCPT
+        id S2406343AbgBNQ0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:31:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405833AbgBNQ0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:26:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405813AbgBNQYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 219E224694;
-        Fri, 14 Feb 2020 16:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E46224771;
+        Fri, 14 Feb 2020 16:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697572;
-        bh=RPOZWHDV1EtnlDEzdZ/sqpbvu2toE3gIN7iDQkhrWJI=;
+        s=default; t=1581697448;
+        bh=NCStkUO1sJ0PJivtjHkTUa7b0w8xn2leK7ev7u7wBw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpMRKH0FlNhI3PxsigBVZB/k5q7b3koK+XoxyAlXNgjUylSUfy7yqfaXvBR/64iyq
-         UPX5jjIieVID0nYvVmqw/SMdXuZMDfW20o/anyMr+OXD4eKx7ve6Zf/ijpIx5yThtL
-         DOYWFLko/vOXClB2Cc0n22bYy3L+IXDnO7bylaY4=
+        b=Hm2o7P/rtgeFJhBgvtSecyRmbn5YCjAjdrbBSHunnV2eKIm2PLaproj622IAhW8X/
+         4DO9fLgC0mutqghElxKksokqSM6gDD/OtK5anCH0FAzZY77qCkMo07RSltCMi68cVP
+         T0jhkl2sqmSOAxpZowi9qxS332S2OT062TIvZ7F4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 086/100] rtlwifi: rtl8723ae: remove unused variables
-Date:   Fri, 14 Feb 2020 11:24:10 -0500
-Message-Id: <20200214162425.21071-86-sashal@kernel.org>
+Cc:     wangyan <wangyan122@huawei.com>, Jun Piao <piaojun@huawei.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.9 132/141] ocfs2: fix a NULL pointer dereference when call ocfs2_update_inode_fsync_trans()
+Date:   Fri, 14 Feb 2020 11:21:12 -0500
+Message-Id: <20200214162122.19794-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,150 +65,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: wangyan <wangyan122@huawei.com>
 
-[ Upstream commit c5f9852411098474ab21f5d7b1b84e5cdd59ca5a ]
+[ Upstream commit 9f16ca48fc818a17de8be1f75d08e7f4addc4497 ]
 
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+I found a NULL pointer dereference in ocfs2_update_inode_fsync_trans(),
+handle->h_transaction may be NULL in this situation:
 
-These variable is never used, so remove them.
+ocfs2_file_write_iter
+  ->__generic_file_write_iter
+      ->generic_perform_write
+        ->ocfs2_write_begin
+          ->ocfs2_write_begin_nolock
+            ->ocfs2_write_cluster_by_desc
+              ->ocfs2_write_cluster
+                ->ocfs2_mark_extent_written
+                  ->ocfs2_change_extent_flag
+                    ->ocfs2_split_extent
+                      ->ocfs2_try_to_merge_extent
+                        ->ocfs2_extend_rotate_transaction
+                          ->ocfs2_extend_trans
+                            ->jbd2_journal_restart
+                              ->jbd2__journal_restart
+                                // handle->h_transaction is NULL here
+                                ->handle->h_transaction = NULL;
+                                ->start_this_handle
+                                  /* journal aborted due to storage
+                                     network disconnection, return error */
+                                  ->return -EROFS;
+                         /* line 3806 in ocfs2_try_to_merge_extent (),
+                            it will ignore ret error. */
+                        ->ret = 0;
+        ->...
+        ->ocfs2_write_end
+          ->ocfs2_write_end_nolock
+            ->ocfs2_update_inode_fsync_trans
+              // NULL pointer dereference
+              ->oi->i_sync_tid = handle->h_transaction->t_tid;
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The information of NULL pointer dereference as follows:
+    JBD2: Detected IO errors while flushing file data on dm-11-45
+    Aborting journal on device dm-11-45.
+    JBD2: Error -5 detected when updating journal superblock for dm-11-45.
+    (dd,22081,3):ocfs2_extend_trans:474 ERROR: status = -30
+    (dd,22081,3):ocfs2_try_to_merge_extent:3877 ERROR: status = -30
+    Unable to handle kernel NULL pointer dereference at
+    virtual address 0000000000000008
+    Mem abort info:
+      ESR = 0x96000004
+      Exception class = DABT (current EL), IL = 32 bits
+      SET = 0, FnV = 0
+      EA = 0, S1PTW = 0
+    Data abort info:
+      ISV = 0, ISS = 0x00000004
+      CM = 0, WnR = 0
+    user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000e74e1338
+    [0000000000000008] pgd=0000000000000000
+    Internal error: Oops: 96000004 [#1] SMP
+    Process dd (pid: 22081, stack limit = 0x00000000584f35a9)
+    CPU: 3 PID: 22081 Comm: dd Kdump: loaded
+    Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 0.98 08/25/2019
+    pstate: 60400009 (nZCv daif +PAN -UAO)
+    pc : ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
+    lr : ocfs2_write_end_nolock+0x2a0/0x550 [ocfs2]
+    sp : ffff0000459fba70
+    x29: ffff0000459fba70 x28: 0000000000000000
+    x27: ffff807ccf7f1000 x26: 0000000000000001
+    x25: ffff807bdff57970 x24: ffff807caf1d4000
+    x23: ffff807cc79e9000 x22: 0000000000001000
+    x21: 000000006c6cd000 x20: ffff0000091d9000
+    x19: ffff807ccb239db0 x18: ffffffffffffffff
+    x17: 000000000000000e x16: 0000000000000007
+    x15: ffff807c5e15bd78 x14: 0000000000000000
+    x13: 0000000000000000 x12: 0000000000000000
+    x11: 0000000000000000 x10: 0000000000000001
+    x9 : 0000000000000228 x8 : 000000000000000c
+    x7 : 0000000000000fff x6 : ffff807a308ed6b0
+    x5 : ffff7e01f10967c0 x4 : 0000000000000018
+    x3 : d0bc661572445600 x2 : 0000000000000000
+    x1 : 000000001b2e0200 x0 : 0000000000000000
+    Call trace:
+     ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
+     ocfs2_write_end+0x4c/0x80 [ocfs2]
+     generic_perform_write+0x108/0x1a8
+     __generic_file_write_iter+0x158/0x1c8
+     ocfs2_file_write_iter+0x668/0x950 [ocfs2]
+     __vfs_write+0x11c/0x190
+     vfs_write+0xac/0x1c0
+     ksys_write+0x6c/0xd8
+     __arm64_sys_write+0x24/0x30
+     el0_svc_common+0x78/0x130
+     el0_svc_handler+0x38/0x78
+     el0_svc+0x8/0xc
+
+To prevent NULL pointer dereference in this situation, we use
+is_handle_aborted() before using handle->h_transaction->t_tid.
+
+Link: http://lkml.kernel.org/r/03e750ab-9ade-83aa-b000-b9e81e34e539@huawei.com
+Signed-off-by: Yan Wang <wangyan122@huawei.com>
+Reviewed-by: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 112 ------------------
- 1 file changed, 112 deletions(-)
+ fs/ocfs2/journal.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-index 4c1c96c96a5a3..6bba981381161 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-@@ -35,118 +35,6 @@
- #include "fw.h"
- #include "hal_btc.h"
- 
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,
--	0x788001e2,
--	0x71c001c7,
--	0x6b8001ae,
--	0x65400195,
--	0x5fc0017f,
--	0x5a400169,
--	0x55400155,
--	0x50800142,
--	0x4c000130,
--	0x47c0011f,
--	0x43c0010f,
--	0x40000100,
--	0x3c8000f2,
--	0x390000e4,
--	0x35c000d7,
--	0x32c000cb,
--	0x300000c0,
--	0x2d4000b5,
--	0x2ac000ab,
--	0x288000a2,
--	0x26000098,
--	0x24000090,
--	0x22000088,
--	0x20000080,
--	0x1e400079,
--	0x1c800072,
--	0x1b00006c,
--	0x19800066,
--	0x18000060,
--	0x16c0005b,
--	0x15800056,
--	0x14400051,
--	0x1300004c,
--	0x12000048,
--	0x11000044,
--	0x10000040,
--};
--
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
--};
--
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
--};
--
- static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
+diff --git a/fs/ocfs2/journal.h b/fs/ocfs2/journal.h
+index 497a4171ef61f..bfb50fc51528f 100644
+--- a/fs/ocfs2/journal.h
++++ b/fs/ocfs2/journal.h
+@@ -637,9 +637,11 @@ static inline void ocfs2_update_inode_fsync_trans(handle_t *handle,
  {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
+ 
+-	oi->i_sync_tid = handle->h_transaction->t_tid;
+-	if (datasync)
+-		oi->i_datasync_tid = handle->h_transaction->t_tid;
++	if (!is_handle_aborted(handle)) {
++		oi->i_sync_tid = handle->h_transaction->t_tid;
++		if (datasync)
++			oi->i_datasync_tid = handle->h_transaction->t_tid;
++	}
+ }
+ 
+ #endif /* OCFS2_JOURNAL_H */
 -- 
 2.20.1
 
