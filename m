@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF0FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87600C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B4024670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E612082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699019;
-	bh=xHtMxxoPF/hZUvPjSzLSqsgIEzYTBbxy7+bvmauwNsA=;
+	s=default; t=1581699022;
+	bh=fwizeftwlR9izkeLredXixUH0zyGGLB15OEPZL7soIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Ys7GytDnNHlDzGZPSF1uSHOM7TLnrWKVVZQXFbaWGpaMhV2QfuHB+nIFIiDBApfE
-	 F3YfLcH5HDSDl2mvNV+m11NYm51tb1ItaLHh1+G1bq5vEqw4xieX8D57Pfspfzg2kc
-	 2L389LcDbBUd4bEBMeeejn50+JUK/mSADgfDSt58=
+	b=whlcvDGv9giikKFvfr5QzFXi0WmW7SVInDhoK7jgCTPrNs+hsIdSjL5ih83JhEECw
+	 9DJ48K2RsHLc/zVMYAVlSGnmICcFGS25vw/Z4wIC3Fh0QVHw1NCccicN0Ooy72TG9K
+	 I3ouBXETa6279Kkgj95UW/fEamab0So5l9Dnjd14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405176AbgBNQUQ (ORCPT
+        id S2394188AbgBNQuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52216 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392781AbgBNQTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:13 -0500
+        id S2405171AbgBNQUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CB72470B;
-        Fri, 14 Feb 2020 16:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D4924717;
+        Fri, 14 Feb 2020 16:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697151;
-        bh=xHtMxxoPF/hZUvPjSzLSqsgIEzYTBbxy7+bvmauwNsA=;
+        s=default; t=1581697216;
+        bh=fwizeftwlR9izkeLredXixUH0zyGGLB15OEPZL7soIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kiilyk5p2rZO/LoYXBnJLXZAlkbpKv7VyR0+GbOlZOKNe8ScQLAWkZzRwLxZzK4Uy
-         qc8xVGey48yVgyY3NIVLhuCKdBkxNBpQWv0RlEhlkIvXcKx0aW4S2tzwqTjUeRe1gz
-         xPYVrCdRVebsO8VyOHBRYOeYdDGLWn0Cl10YlxjA=
+        b=2ec3dFwerOmwiCnCHfbVV4NSXqJG0FK3Uj4pZiAgPycUGZrGb0tElrSLiDpkZsgK0
+         O/BQhWYsJiXR9O9wHhU6P/XE4k1MVkiCw9fAtMlSSten+RVwvZjuIoTzpaFlPw767v
+         I0Wu0DWf3CRuo69XvFZdKQunbjLQE3hy4X68D9sg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 090/186] dmaengine: Store module owner in dma_device struct
-Date:   Fri, 14 Feb 2020 11:15:39 -0500
-Message-Id: <20200214161715.18113-90-sashal@kernel.org>
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 140/186] ide: remove set but not used variable 'hwif'
+Date:   Fri, 14 Feb 2020 11:16:29 -0500
+Message-Id: <20200214161715.18113-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,78 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit dae7a589c18a4d979d5f14b09374e871b995ceb1 ]
+[ Upstream commit 98949a1946d70771789def0c9dbc239497f9f138 ]
 
-dma_chan_to_owner() dereferences the driver from the struct device to
-obtain the owner and call module_[get|put](). However, if the backing
-device is unbound before the dma_device is unregistered, the driver
-will be cleared and this will cause a NULL pointer dereference.
+Fix the following gcc warning:
 
-Instead, store a pointer to the owner module in the dma_device struct
-so the module reference can be properly put when the channel is put, even
-if the backing device was destroyed first.
+drivers/ide/pmac.c: In function pmac_ide_setup_device:
+drivers/ide/pmac.c:1027:14: warning: variable hwif set but not used
+[-Wunused-but-set-variable]
 
-This change helps to support a safer unbind of DMA engines.
-If the dma_device is unregistered in the driver's remove function,
-there's no guarantee that there are no existing clients and a users
-action may trigger the WARN_ONCE in dma_async_device_unregister()
-which is unlikely to leave the system in a consistent state.
-Instead, a better approach is to allow the backing driver to go away
-and fail any subsequent requests to it.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Link: https://lore.kernel.org/r/20191216190120.21374-2-logang@deltatee.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: d58b0c39e32f ("powerpc/macio: Rework hotplug media bay support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmaengine.c   | 4 +++-
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/ide/pmac.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index b451354735d3d..faaaf10311ec0 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -192,7 +192,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
- 
- static struct module *dma_chan_to_owner(struct dma_chan *chan)
- {
--	return chan->device->dev->driver->owner;
-+	return chan->device->owner;
- }
- 
- /**
-@@ -928,6 +928,8 @@ int dma_async_device_register(struct dma_device *device)
- 		return -EIO;
+diff --git a/drivers/ide/pmac.c b/drivers/ide/pmac.c
+index 203ed4adc04ae..7db083ec5ee06 100644
+--- a/drivers/ide/pmac.c
++++ b/drivers/ide/pmac.c
+@@ -1024,7 +1024,6 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
+ 	struct device_node *np = pmif->node;
+ 	const int *bidp;
+ 	struct ide_host *host;
+-	ide_hwif_t *hwif;
+ 	struct ide_hw *hws[] = { hw };
+ 	struct ide_port_info d = pmac_port_info;
+ 	int rc;
+@@ -1080,7 +1079,7 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
+ 		rc = -ENOMEM;
+ 		goto bail;
  	}
+-	hwif = pmif->hwif = host->ports[0];
++	pmif->hwif = host->ports[0];
  
-+	device->owner = device->dev->driver->owner;
-+
- 	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
- 		dev_err(device->dev,
- 			"Device claims capability %s, but op is not defined\n",
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 087cbe7768680..8089e28539f16 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -677,6 +677,7 @@ struct dma_filter {
-  * @fill_align: alignment shift for memset operations
-  * @dev_id: unique device ID
-  * @dev: struct device reference for dma mapping api
-+ * @owner: owner module (automatically set based on the provided dev)
-  * @src_addr_widths: bit mask of src addr widths the device supports
-  * @dst_addr_widths: bit mask of dst addr widths the device supports
-  * @directions: bit mask of slave direction the device supports since
-@@ -738,6 +739,7 @@ struct dma_device {
- 
- 	int dev_id;
- 	struct device *dev;
-+	struct module *owner;
- 
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
+ 	if (on_media_bay(pmif)) {
+ 		/* Fixup bus ID for media bay */
 -- 
 2.20.1
 
