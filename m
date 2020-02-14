@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E23EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F555C3B1A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B5824686
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED9B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696638;
-	bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
+	s=default; t=1581696649;
+	bh=NOc4DC9vNXQC8GD7WUYY8GdbGnW8gByx+18TxkurOPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aHvk9F0GVpe0V731bOGRRjHwSpx8c3+DmKuQN0GXlG/rygWaSkkYNceYUa3sXriJa
-	 av/DRhRry6oUybP4+YFEGXWOGYw1/O8OfuTT9Mzkryk+iz+yiz32L9VwDo0UeiiNLs
-	 lNLD4y2SLZjv5+2Lo0JQFJiRD/X81oRjTQFwWQc0=
+	b=v9C3VTwoxXPPasr22zQTRdd2cfeu8QeiszzYyUceR92dQVa5wdfoJAMcb3t5n1T7p
+	 aUmOopg1FQ07bpNTi1t4NoFngn3wwsTE6tOxI/vwJHg5FWyvvJCXrPsjK6dLyxnknb
+	 SVPOXyZ448OluRI2d5Ih1pw5/9NtTj98GB3m2BdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391560AbgBNQKg (ORCPT
+        id S2390849AbgBNQKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35248 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:10:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391387AbgBNQKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:02 -0500
+        id S2391409AbgBNQKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC2A24694;
-        Fri, 14 Feb 2020 16:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ECB924697;
+        Fri, 14 Feb 2020 16:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696601;
-        bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
+        s=default; t=1581696607;
+        bh=NOc4DC9vNXQC8GD7WUYY8GdbGnW8gByx+18TxkurOPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHl8XPhoriTDP3xTLY3Gab4n+dMBZXslU9PQaR91/DQ4HQmloArd2V6ybMc37i/Z1
-         AfnWPpHzRF8Vn2G0UZ1x6V0NjpKIdHQgWyvAqxVLkEn3DwWjbUb1qSr4JrUObwsSyD
-         WD75wTG+nkFN+CKl0ihlCXNkthnkKQbAsMdKh+8M=
+        b=IpdC7br9DNN1lHquGGHYjZEp96SszzrUTE7+oRwMPMR2v/l5f1ClR3qC5nT2Z7oCE
+         eCJu6Azmklq1DJcOHUkKCUTggIxSkoUUiwj4TQ74w+0jSq4OoWsauKe0A7rjGY6l9D
+         r8sRzf4HxdNnvHHHtL38Gcc+s70TFVeMdQYUTbkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikolay Borisov <nborisov@suse.com>, Su Yue <Damenly_Su@gmx.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 386/459] btrfs: Fix split-brain handling when changing FSID to metadata uuid
-Date:   Fri, 14 Feb 2020 11:00:36 -0500
-Message-Id: <20200214160149.11681-386-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 391/459] bcache: fix use-after-free in register_bcache()
+Date:   Fri, 14 Feb 2020 11:00:41 -0500
+Message-Id: <20200214160149.11681-391-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,106 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 1362089d2ad7e20d16371b39d3c11990d4ec23e4 ]
+[ Upstream commit ae3cd299919af6eb670d5af0bc9d7ba14086bd8e ]
 
-Current code doesn't correctly handle the situation which arises when
-a file system that has METADATA_UUID_INCOMPAT flag set and has its FSID
-changed to the one in metadata uuid. This causes the incompat flag to
-disappear.
+The patch "bcache: rework error unwinding in register_bcache" introduces
+a use-after-free regression in register_bcache(). Here are current code,
+	2510 out_free_path:
+	2511         kfree(path);
+	2512 out_module_put:
+	2513         module_put(THIS_MODULE);
+	2514 out:
+	2515         pr_info("error %s: %s", path, err);
+	2516         return ret;
+If some error happens and the above code path is executed, at line 2511
+path is released, but referenced at line 2515. Then KASAN reports a use-
+after-free error message.
 
-In case of a power failure we could end up in a situation where part of
-the disks in a multi-disk filesystem are correctly reverted to
-METADATA_UUID_INCOMPAT flag unset state, while others have
-METADATA_UUID_INCOMPAT set and CHANGING_FSID_V2_IN_PROGRESS.
+This patch changes line 2515 in the following way to fix the problem,
+	2515         pr_info("error %s: %s", path?path:"", err);
 
-This patch corrects the behavior required to handle the case where a
-disk of the second type is scanned first, creating the necessary
-btrfs_fs_devices. Subsequently, when a disk which has already completed
-the transition is scanned it should overwrite the data in
-btrfs_fs_devices.
-
-Reported-by: Su Yue <Damenly_Su@gmx.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 42 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 4 deletions(-)
+ drivers/md/bcache/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 9ab3ae5df3005..3e64f49c394b8 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -907,6 +907,32 @@ static struct btrfs_fs_devices *find_fsid_changed(
- 
- 	return NULL;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 86f7e09d31516..485ebc2b2144c 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -2472,10 +2472,11 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 	kfree(sb);
+ out_free_path:
+ 	kfree(path);
++	path = NULL;
+ out_module_put:
+ 	module_put(THIS_MODULE);
+ out:
+-	pr_info("error %s: %s", path, err);
++	pr_info("error %s: %s", path?path:"", err);
+ 	return ret;
  }
-+
-+static struct btrfs_fs_devices *find_fsid_reverted_metadata(
-+				struct btrfs_super_block *disk_super)
-+{
-+	struct btrfs_fs_devices *fs_devices;
-+
-+	/*
-+	 * Handle the case where the scanned device is part of an fs whose last
-+	 * metadata UUID change reverted it to the original FSID. At the same
-+	 * time * fs_devices was first created by another constitutent device
-+	 * which didn't fully observe the operation. This results in an
-+	 * btrfs_fs_devices created with metadata/fsid different AND
-+	 * btrfs_fs_devices::fsid_change set AND the metadata_uuid of the
-+	 * fs_devices equal to the FSID of the disk.
-+	 */
-+	list_for_each_entry(fs_devices, &fs_uuids, fs_list) {
-+		if (memcmp(fs_devices->fsid, fs_devices->metadata_uuid,
-+			   BTRFS_FSID_SIZE) != 0 &&
-+		    memcmp(fs_devices->metadata_uuid, disk_super->fsid,
-+			   BTRFS_FSID_SIZE) == 0 &&
-+		    fs_devices->fsid_change)
-+			return fs_devices;
-+	}
-+
-+	return NULL;
-+}
- /*
-  * Add new device to list of registered devices
-  *
-@@ -946,7 +972,9 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 		fs_devices = find_fsid(disk_super->fsid,
- 				       disk_super->metadata_uuid);
- 	} else {
--		fs_devices = find_fsid(disk_super->fsid, NULL);
-+		fs_devices = find_fsid_reverted_metadata(disk_super);
-+		if (!fs_devices)
-+			fs_devices = find_fsid(disk_super->fsid, NULL);
- 	}
  
- 
-@@ -976,12 +1004,18 @@ static noinline struct btrfs_device *device_list_add(const char *path,
- 		 * a device which had the CHANGING_FSID_V2 flag then replace the
- 		 * metadata_uuid/fsid values of the fs_devices.
- 		 */
--		if (has_metadata_uuid && fs_devices->fsid_change &&
-+		if (fs_devices->fsid_change &&
- 		    found_transid > fs_devices->latest_generation) {
- 			memcpy(fs_devices->fsid, disk_super->fsid,
- 					BTRFS_FSID_SIZE);
--			memcpy(fs_devices->metadata_uuid,
--					disk_super->metadata_uuid, BTRFS_FSID_SIZE);
-+
-+			if (has_metadata_uuid)
-+				memcpy(fs_devices->metadata_uuid,
-+				       disk_super->metadata_uuid,
-+				       BTRFS_FSID_SIZE);
-+			else
-+				memcpy(fs_devices->metadata_uuid,
-+				       disk_super->fsid, BTRFS_FSID_SIZE);
- 
- 			fs_devices->fsid_change = false;
- 		}
 -- 
 2.20.1
 
