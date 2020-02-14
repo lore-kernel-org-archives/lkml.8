@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F2AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7DBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFB22168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7552168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702941;
-	bh=ArAV1wIJAw8GbPbESMsY8CMZNSZCkxxKmAv4655zdek=;
+	s=default; t=1581702945;
+	bh=DNXbfFKO/OJJVt3Rd4Z4hn6sSESh5IbhWZq9Ff4YVxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UegvB/m9Z42hQhN2Pox2fxdmkrYrmGmuulT0qU4Q1MMCoHURjSiqOVBpXekbRzSjH
-	 vfIHFxqRZsGy7Hf3wDmDdIIqskB8TeRlUphh9VBbRbcJuBqACwtZ9E+t7KmWb7kbxZ
-	 sRMK+Isxa8qF3fvm2E3TfJdklVW6e4/N6OA901ao=
+	b=StuDpZ3O3R5AUOTweBfWKfsaU8PbhJCKEd83e+kQrf+Iwz9ZglwA8L35drKX122uc
+	 eJNaH53U8fLOaL5OCSkGAWqNDZrT/5mWhSmVyPBfnrkqS26ltvATYu/5KmiZ5L0D57
+	 fv7brKIRKs8aGw9/EZkyltr7P6+MqxMFZX8TWjjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388312AbgBNP5h (ORCPT
+        id S2388808AbgBNRzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:55:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388200AbgBNP5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:22 -0500
+        id S2388305AbgBNP5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15DDE2467B;
-        Fri, 14 Feb 2020 15:57:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4F024680;
+        Fri, 14 Feb 2020 15:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695841;
-        bh=ArAV1wIJAw8GbPbESMsY8CMZNSZCkxxKmAv4655zdek=;
+        s=default; t=1581695856;
+        bh=DNXbfFKO/OJJVt3Rd4Z4hn6sSESh5IbhWZq9Ff4YVxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eG3K5O1QRb9LqtiWA11UlTkIId5VdxfRm3NlQf4F1h9UlGCduSWrM7qYZLiHpJB63
-         gvbpa2fC9+HgO0ZB5oQX3Yn97vU+6OhEhxKRQB+jyaEPIH7TDMP3eBS0cMhq2vcL5U
-         88k004Z4CpjXCLCVu9aTNjzt0A3IVMUsR6lIBj/w=
+        b=gwPWLXG/1wDIWPDf7h7onZvmI71lGfsPvThIZ+lMOjvcjltWEwHe9Ph36QIJFh9fO
+         kk08cep21F9enEwgx0Ys1xsWDhxqfIcHVLbtCoWD8Iam720tcrRb2bJOFBYAplJHox
+         jHGt82/rxE1fyqZwgRFFzELnoFeRiU/zOQjFHqoE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.5 392/542] staging: wfx: fix possible overflow on jiffies comparaison
-Date:   Fri, 14 Feb 2020 10:46:24 -0500
-Message-Id: <20200214154854.6746-392-sashal@kernel.org>
+Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 404/542] debugobjects: Fix various data races
+Date:   Fri, 14 Feb 2020 10:46:36 -0500
+Message-Id: <20200214154854.6746-404-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,56 +59,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+From: Marco Elver <elver@google.com>
 
-[ Upstream commit def39be019b6494acd3570ce6f3f11ba1c3203a3 ]
+[ Upstream commit 35fd7a637c42bb54ba4608f4d40ae6e55fc88781 ]
 
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+The counters obj_pool_free, and obj_nr_tofree, and the flag obj_freeing are
+read locklessly outside the pool_lock critical sections. If read with plain
+accesses, this would result in data races.
 
-It is recommended to use function time_*() to compare jiffies.
+This is addressed as follows:
 
-Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200115135338.14374-45-Jerome.Pouiller@silabs.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ * reads outside critical sections become READ_ONCE()s (pairing with
+   WRITE_ONCE()s added);
+
+ * writes become WRITE_ONCE()s (pairing with READ_ONCE()s added); since
+   writes happen inside critical sections, only the write and not the read
+   of RMWs needs to be atomic, thus WRITE_ONCE(var, var +/- X) is
+   sufficient.
+
+The data races were reported by KCSAN:
+
+  BUG: KCSAN: data-race in __free_object / fill_pool
+
+  write to 0xffffffff8beb04f8 of 4 bytes by interrupt on cpu 1:
+   __free_object+0x1ee/0x8e0 lib/debugobjects.c:404
+   __debug_check_no_obj_freed+0x199/0x330 lib/debugobjects.c:969
+   debug_check_no_obj_freed+0x3c/0x44 lib/debugobjects.c:994
+   slab_free_hook mm/slub.c:1422 [inline]
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 2:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in __debug_object_init / fill_pool
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 10 on cpu 6:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init_on_stack+0x39/0x50 lib/debugobjects.c:606
+   init_timer_on_stack_key kernel/time/timer.c:742 [inline]
+
+  write to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 3:
+   alloc_object lib/debugobjects.c:258 [inline]
+   __debug_object_init+0x717/0x810 lib/debugobjects.c:544
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in free_obj_work / free_object
+
+  read to 0xffffffff9140c190 of 4 bytes by task 10 on cpu 6:
+   free_object+0x4b/0xd0 lib/debugobjects.c:426
+   debug_object_free+0x190/0x210 lib/debugobjects.c:824
+   destroy_timer_on_stack kernel/time/timer.c:749 [inline]
+
+  write to 0xffffffff9140c190 of 4 bytes by task 93 on cpu 1:
+   free_obj_work+0x24f/0x480 lib/debugobjects.c:313
+   process_one_work+0x454/0x8d0 kernel/workqueue.c:2264
+   worker_thread+0x9a/0x780 kernel/workqueue.c:2410
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200116185529.11026-1-elver@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/data_tx.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ lib/debugobjects.c | 46 +++++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
-index b13d7341f8bba..0c6a3a1a1ddfd 100644
---- a/drivers/staging/wfx/data_tx.c
-+++ b/drivers/staging/wfx/data_tx.c
-@@ -282,8 +282,7 @@ void wfx_tx_policy_init(struct wfx_vif *wvif)
- static int wfx_alloc_link_id(struct wfx_vif *wvif, const u8 *mac)
- {
- 	int i, ret = 0;
--	unsigned long max_inactivity = 0;
--	unsigned long now = jiffies;
-+	unsigned long oldest;
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 61261195f5b60..48054dbf1b51f 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -132,14 +132,18 @@ static void fill_pool(void)
+ 	struct debug_obj *obj;
+ 	unsigned long flags;
  
- 	spin_lock_bh(&wvif->ps_state_lock);
- 	for (i = 0; i < WFX_MAX_STA_IN_AP_MODE; ++i) {
-@@ -292,13 +291,10 @@ static int wfx_alloc_link_id(struct wfx_vif *wvif, const u8 *mac)
- 			break;
- 		} else if (wvif->link_id_db[i].status != WFX_LINK_HARD &&
- 			   !wvif->wdev->tx_queue_stats.link_map_cache[i + 1]) {
--			unsigned long inactivity =
--				now - wvif->link_id_db[i].timestamp;
--
--			if (inactivity < max_inactivity)
--				continue;
--			max_inactivity = inactivity;
--			ret = i + 1;
-+			if (!ret || time_after(oldest, wvif->link_id_db[i].timestamp)) {
-+				oldest = wvif->link_id_db[i].timestamp;
-+				ret = i + 1;
-+			}
+-	if (likely(obj_pool_free >= debug_objects_pool_min_level))
++	if (likely(READ_ONCE(obj_pool_free) >= debug_objects_pool_min_level))
+ 		return;
+ 
+ 	/*
+ 	 * Reuse objs from the global free list; they will be reinitialized
+ 	 * when allocating.
++	 *
++	 * Both obj_nr_tofree and obj_pool_free are checked locklessly; the
++	 * READ_ONCE()s pair with the WRITE_ONCE()s in pool_lock critical
++	 * sections.
+ 	 */
+-	while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
++	while (READ_ONCE(obj_nr_tofree) && (READ_ONCE(obj_pool_free) < obj_pool_min_free)) {
+ 		raw_spin_lock_irqsave(&pool_lock, flags);
+ 		/*
+ 		 * Recheck with the lock held as the worker thread might have
+@@ -148,9 +152,9 @@ static void fill_pool(void)
+ 		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
+ 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 			hlist_del(&obj->node);
+-			obj_nr_tofree--;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 			hlist_add_head(&obj->node, &obj_pool);
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
  		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
  	}
+@@ -158,7 +162,7 @@ static void fill_pool(void)
+ 	if (unlikely(!obj_cache))
+ 		return;
  
+-	while (obj_pool_free < debug_objects_pool_min_level) {
++	while (READ_ONCE(obj_pool_free) < debug_objects_pool_min_level) {
+ 		struct debug_obj *new[ODEBUG_BATCH_SIZE];
+ 		int cnt;
+ 
+@@ -174,7 +178,7 @@ static void fill_pool(void)
+ 		while (cnt) {
+ 			hlist_add_head(&new[--cnt]->node, &obj_pool);
+ 			debug_objects_allocated++;
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	}
+@@ -236,7 +240,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 	obj = __alloc_object(&obj_pool);
+ 	if (obj) {
+ 		obj_pool_used++;
+-		obj_pool_free--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 
+ 		/*
+ 		 * Looking ahead, allocate one batch of debug objects and
+@@ -255,7 +259,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 					       &percpu_pool->free_objs);
+ 				percpu_pool->obj_free++;
+ 				obj_pool_used++;
+-				obj_pool_free--;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 			}
+ 		}
+ 
+@@ -309,8 +313,8 @@ static void free_obj_work(struct work_struct *work)
+ 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 		hlist_del(&obj->node);
+ 		hlist_add_head(&obj->node, &obj_pool);
+-		obj_pool_free++;
+-		obj_nr_tofree--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	return;
+@@ -324,7 +328,7 @@ static void free_obj_work(struct work_struct *work)
+ 	if (obj_nr_tofree) {
+ 		hlist_move_list(&obj_to_free, &tofree);
+ 		debug_objects_freed += obj_nr_tofree;
+-		obj_nr_tofree = 0;
++		WRITE_ONCE(obj_nr_tofree, 0);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 
+@@ -375,10 +379,10 @@ static void __free_object(struct debug_obj *obj)
+ 	obj_pool_used--;
+ 
+ 	if (work) {
+-		obj_nr_tofree++;
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 		hlist_add_head(&obj->node, &obj_to_free);
+ 		if (lookahead_count) {
+-			obj_nr_tofree += lookahead_count;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -396,15 +400,15 @@ static void __free_object(struct debug_obj *obj)
+ 			for (i = 0; i < ODEBUG_BATCH_SIZE; i++) {
+ 				obj = __alloc_object(&obj_pool);
+ 				hlist_add_head(&obj->node, &obj_to_free);
+-				obj_pool_free--;
+-				obj_nr_tofree++;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
++				WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 			}
+ 		}
+ 	} else {
+-		obj_pool_free++;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		hlist_add_head(&obj->node, &obj_pool);
+ 		if (lookahead_count) {
+-			obj_pool_free += lookahead_count;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -423,7 +427,7 @@ static void __free_object(struct debug_obj *obj)
+ static void free_object(struct debug_obj *obj)
+ {
+ 	__free_object(obj);
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -982,7 +986,7 @@ static void __debug_check_no_obj_freed(const void *address, unsigned long size)
+ 		debug_objects_maxchecked = objs_checked;
+ 
+ 	/* Schedule work to actually kmem_cache_free() objects */
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -1008,12 +1012,12 @@ static int debug_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
+ 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
+ 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
+-	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
++	seq_printf(m, "pool_free     :%d\n", READ_ONCE(obj_pool_free) + obj_percpu_free);
+ 	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
+ 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
+ 	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
+ 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
+-	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
++	seq_printf(m, "on_free_list  :%d\n", READ_ONCE(obj_nr_tofree));
+ 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
+ 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
+ 	return 0;
 -- 
 2.20.1
 
