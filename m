@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C6EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD252187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960062187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704164;
-	bh=PujbNvqkvyrzZobB4pxyCIUog3O22ilzl8UACEUWRV4=;
+	s=default; t=1581704167;
+	bh=hhHJKlpWN495uh2vdO0TDhEHxnvrpn3GndEc5iHu2kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NOFXqpgEHe4SBiaGdaVBZQEeFOe0cHi/icoJlBABMmkK4hpFD4pm9J0LXEFtyKnK
-	 SkJRvNN21+8MwXAQmmBpFPeRTXxC3zKGUIdOl6Is4jsdSMT5bqtMzpn0e3SMnJ/1+C
-	 cIXae/q4W3Nh03HrDKvX5Lw7Q7rGWvexOaS7zD10=
+	b=lMpuzGNnScQcjiO/rY4MR+tuFrO8vX7/5B9kIJka6l5/2Un/louD0LijI5KKDoF7Q
+	 ZpkA4XMTkeypzE0nbJRnOhaf33CEPgFZQzPEKkBDYZdXYo0Q7dLgfEwBBz3lkM0aaE
+	 vZJ0ajHwqZqBIuwMKh6wthZM4EwgSe1YyxTALHAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbgBNPvk (ORCPT
+        id S2404758AbgBNSQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:16:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbgBNPva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:30 -0500
+        id S1730838AbgBNPvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2416F2467E;
-        Fri, 14 Feb 2020 15:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCB42465D;
+        Fri, 14 Feb 2020 15:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695489;
-        bh=PujbNvqkvyrzZobB4pxyCIUog3O22ilzl8UACEUWRV4=;
+        s=default; t=1581695500;
+        bh=hhHJKlpWN495uh2vdO0TDhEHxnvrpn3GndEc5iHu2kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2yVdn8h2na2gMl4u4i4KnAPTBYK5n9gIfL4e4X3c0LJIdzM3F4lNUTputBqfb5vo
-         og9v0Z06HRJ5Ez+p+Fyz+hnAm2nWWjp2GEIZdhIJ6fKuxBVhw4AlJ997wXunA2G9+2
-         O3CQcfHnBU0CKC2XDc/A6VvjwVKW1tos2HifMqwE=
+        b=MC0v5jSerDEMIctzOL6gY9SMHktpShHC95BWW09nl/HWmvHwqgHZHUpy+pFWKiFoF
+         ChQNFUmOa0BXXK6KoUjE4TtCAUX6hu+fhYtJrkpI4r35+eJYjotUO1/oXnMZaYy2ls
+         lJoGFoam2CpEHfsUupdJdAngj/cdYTuSN7CgMR/Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 119/542] RDMA/cma: Fix unbalanced cm_id reference count during address resolve
-Date:   Fri, 14 Feb 2020 10:41:51 -0500
-Message-Id: <20200214154854.6746-119-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Patrick Dung <patdung100@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 127/542] block, bfq: do not plug I/O for bfq_queues with no proc refs
+Date:   Fri, 14 Feb 2020 10:41:59 -0500
+Message-Id: <20200214154854.6746-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,57 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit b4fb4cc5ba83b20dae13cef116c33648e81d2f44 ]
+[ Upstream commit f718b093277df582fbf8775548a4f163e664d282 ]
 
-Below commit missed the AF_IB and loopback code flow in
-rdma_resolve_addr().  This leads to an unbalanced cm_id refcount in
-cma_work_handler() which puts the refcount which was not incremented prior
-to queuing the work.
+Commit 478de3380c1c ("block, bfq: deschedule empty bfq_queues not
+referred by any process") fixed commit 3726112ec731 ("block, bfq:
+re-schedule empty queues if they deserve I/O plugging") by
+descheduling an empty bfq_queue when it remains with not process
+reference. Yet, this still left a case uncovered: an empty bfq_queue
+with not process reference that remains in service. This happens for
+an in-service sync bfq_queue that is deemed to deserve I/O-dispatch
+plugging when it remains empty. Yet no new requests will arrive for
+such a bfq_queue if no process sends requests to it any longer. Even
+worse, the bfq_queue may happen to be prematurely freed while still in
+service (because there may remain no reference to it any longer).
 
-A call trace is observed with such code flow:
+This commit solves this problem by preventing I/O dispatch from being
+plugged for the in-service bfq_queue, if the latter has no process
+reference (the bfq_queue is then prevented from remaining in service).
 
- BUG: unable to handle kernel NULL pointer dereference at (null)
- [<ffffffff96b67e16>] __mutex_lock_slowpath+0x166/0x1d0
- [<ffffffff96b6715f>] mutex_lock+0x1f/0x2f
- [<ffffffffc0beabb5>] cma_work_handler+0x25/0xa0
- [<ffffffff964b9ebf>] process_one_work+0x17f/0x440
- [<ffffffff964baf56>] worker_thread+0x126/0x3c0
-
-Hence, hold the cm_id reference when scheduling the resolve work item.
-
-Fixes: 722c7b2bfead ("RDMA/{cma, core}: Avoid callback on rdma_addr_cancel()")
-Link: https://lore.kernel.org/r/20200126142652.104803-2-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 3726112ec731 ("block, bfq: re-schedule empty queues if they deserve I/O plugging")
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Reported-by: Patrick Dung <patdung100@gmail.com>
+Tested-by: Patrick Dung <patdung100@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bfq-iosched.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 43a6f07e0afe2..af1afc17b8bdf 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -3118,6 +3118,7 @@ static int cma_resolve_loopback(struct rdma_id_private *id_priv)
- 	rdma_addr_get_sgid(&id_priv->id.route.addr.dev_addr, &gid);
- 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, &gid);
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index ad4af4aaf2ced..5c239c540c47a 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -3444,6 +3444,10 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
+ static bool idling_needed_for_service_guarantees(struct bfq_data *bfqd,
+ 						 struct bfq_queue *bfqq)
+ {
++	/* No point in idling for bfqq if it won't get requests any longer */
++	if (unlikely(!bfqq_process_refs(bfqq)))
++		return false;
++
+ 	return (bfqq->wr_coeff > 1 &&
+ 		(bfqd->wr_busy_queues <
+ 		 bfq_tot_busy_queues(bfqd) ||
+@@ -4077,6 +4081,10 @@ static bool idling_boosts_thr_without_issues(struct bfq_data *bfqd,
+ 		bfqq_sequential_and_IO_bound,
+ 		idling_boosts_thr;
  
-+	atomic_inc(&id_priv->refcount);
- 	cma_init_resolve_addr_work(work, id_priv);
- 	queue_work(cma_wq, &work->work);
- 	return 0;
-@@ -3144,6 +3145,7 @@ static int cma_resolve_ib_addr(struct rdma_id_private *id_priv)
- 	rdma_addr_set_dgid(&id_priv->id.route.addr.dev_addr, (union ib_gid *)
- 		&(((struct sockaddr_ib *) &id_priv->id.route.addr.dst_addr)->sib_addr));
++	/* No point in idling for bfqq if it won't get requests any longer */
++	if (unlikely(!bfqq_process_refs(bfqq)))
++		return false;
++
+ 	bfqq_sequential_and_IO_bound = !BFQQ_SEEKY(bfqq) &&
+ 		bfq_bfqq_IO_bound(bfqq) && bfq_bfqq_has_short_ttime(bfqq);
  
-+	atomic_inc(&id_priv->refcount);
- 	cma_init_resolve_addr_work(work, id_priv);
- 	queue_work(cma_wq, &work->work);
- 	return 0;
+@@ -4170,6 +4178,10 @@ static bool bfq_better_to_idle(struct bfq_queue *bfqq)
+ 	struct bfq_data *bfqd = bfqq->bfqd;
+ 	bool idling_boosts_thr_with_no_issue, idling_needed_for_service_guar;
+ 
++	/* No point in idling for bfqq if it won't get requests any longer */
++	if (unlikely(!bfqq_process_refs(bfqq)))
++		return false;
++
+ 	if (unlikely(bfqd->strict_guarantees))
+ 		return true;
+ 
 -- 
 2.20.1
 
