@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580D2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D95C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3043724650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E07B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703581;
-	bh=UsiEZwaNCOzGinm9GY9LYQeSFH9pbbl3cGztO6ANsr0=;
+	s=default; t=1581703588;
+	bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fDBB0TjU1TsVB+AIA1iZh6uB/BLk7sIGbQSiFrWqfGsR6pDx8ntIEzXCZ0SwJvren
-	 0v12/wkodlDB3GvXWmIBW1Rq6+qES1dWB+iu7fOUsiyEZDRMUuhL0Zd+FGVQLmWp1/
-	 mgLYpC9L1B6isEEyWMZHK/JcFh/w366Zo42SsLBM=
+	b=NBDcI8wskjnxL+GtZGGs3ahHQuq9DKKZlEsk6n1fDswjLvpZzv9XH5/UEQVfqGcx0
+	 kQNNnhQsWv+abKIFbNH6g+w57ja34ydkWy3NOPz8f6pQe7vnrwYB+h0D0qyd1zAFTv
+	 wNuFXEmOm7Mlj+Y124lGi72NwrHGevy+oXLp0qxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387798AbgBNSGT (ORCPT
+        id S2391955AbgBNSG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbgBNPy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:56 -0500
+        id S1731231AbgBNPyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C80F824673;
-        Fri, 14 Feb 2020 15:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0700222C4;
+        Fri, 14 Feb 2020 15:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695695;
-        bh=UsiEZwaNCOzGinm9GY9LYQeSFH9pbbl3cGztO6ANsr0=;
+        s=default; t=1581695694;
+        bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6JL2uVcr+8VOcuB2PA9dV57/JbWR500G8Myd7d6QAZNVfjvwU8i1/TPSIC7yjhXg
-         Hm2HZ9XFgUGMMgT/m1CUYnleEF6VXY39/2klzzqNGtt3ba4ZeTEqOAOJAFRr4zWQMG
-         NGxIsAuTiFZQEFgX0ujIUGn7t5Ls3691dRXFIDYk=
+        b=xMFWI48WVlJrb5mmIDBQXChl+BElITRLXGkoRDwMEn0h45QCG/+VPfTyP+I38yCjW
+         gx7CZfndXEzJpwT0M4ukQDWfkhE3ctZT4bmHNMUqqmy/BNcg1VCBn93q7z6WcoSrFl
+         2f95LE/ppDA1l1Y0iC8IN8CFdq1goDkX0484naNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mitch Williams <mitch.a.williams@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 278/542] ice: add extra check for null Rx descriptor
-Date:   Fri, 14 Feb 2020 10:44:30 -0500
-Message-Id: <20200214154854.6746-278-sashal@kernel.org>
+Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 277/542] RDMA/rxe: Fix error type of mmap_offset
+Date:   Fri, 14 Feb 2020 10:44:29 -0500
+Message-Id: <20200214154854.6746-277-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,56 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mitch Williams <mitch.a.williams@intel.com>
+From: Jiewei Ke <kejiewei.cn@gmail.com>
 
-[ Upstream commit 1f45ebe0d8fbe6178670b663005f38ef8535db5d ]
+[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
 
-In the case where the hardware gives us a null Rx descriptor, it is
-theoretically possible that we could call one of our skb-construction
-functions with no data pointer, which would cause a panic.
+The type of mmap_offset should be u64 instead of int to match the type of
+mminfo.offset. If otherwise, after we create several thousands of CQs, it
+will run into overflow issues.
 
-In real life, this will never happen - we only get null RX
-descriptors as the final descriptor in a chain of otherwise-valid
-descriptors. When this happens, the skb will be extant and we'll just
-call ice_add_rx_frag(), which can deal with empty data buffers.
-
-Unfortunately, Coverity does not have intimate knowledge of our
-hardware, so we must add a check here.
-
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
+Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_txrx.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.c b/drivers/net/ethernet/intel/ice/ice_txrx.c
-index 2c212f64d99f2..8b2b9e254d28d 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.c
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
-@@ -1071,13 +1071,16 @@ static int ice_clean_rx_irq(struct ice_ring *rx_ring, int budget)
- 		ice_put_rx_buf(rx_ring, rx_buf);
- 		continue;
- construct_skb:
--		if (skb)
-+		if (skb) {
- 			ice_add_rx_frag(rx_ring, rx_buf, skb, size);
--		else if (ice_ring_uses_build_skb(rx_ring))
--			skb = ice_build_skb(rx_ring, rx_buf, &xdp);
--		else
-+		} else if (likely(xdp.data)) {
-+			if (ice_ring_uses_build_skb(rx_ring))
-+				skb = ice_build_skb(rx_ring, rx_buf, &xdp);
-+			else
-+				skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
-+		} else {
- 			skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
--
-+		}
- 		/* exit if we failed to retrieve a buffer */
- 		if (!skb) {
- 			rx_ring->rx_stats.alloc_buf_failed++;
+diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+index 95834206c80c3..92de39c4a7c1e 100644
+--- a/drivers/infiniband/sw/rxe/rxe_verbs.h
++++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+@@ -408,7 +408,7 @@ struct rxe_dev {
+ 	struct list_head	pending_mmaps;
+ 
+ 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+-	int			mmap_offset;
++	u64			mmap_offset;
+ 
+ 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ 
 -- 
 2.20.1
 
