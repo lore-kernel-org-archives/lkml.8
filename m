@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B37C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABC1C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC70246CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46D9246E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696882;
-	bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
+	s=default; t=1581696888;
+	bh=XKoTIc29oW1apUheo+XZNDmTHb2Iqz0eGdKtiIjddzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbmIp0Vl8qChpYStmNY5NSRzT1wa/nmQlg9bcwCsCd8q+i7kgTzRX5junYZt5Gqsw
-	 l43sgugq9k/1kTs7U7fPpElOVuA+BYkg/280zbwBzo3H+0a1d9xsnhRid4g4x2lvb/
-	 +ys3AaPaxxrPdmVtOIPLDEz8CNABbNzF6970DEUE=
+	b=e0jEaGYJxSOwBKn/abCfkuUNBUwOXIKvMmAuTedTzWka2pS+8ofT9D40beOFP5zWx
+	 JYGqlPxgy5cTP8hZg9ZlHMRH6af79ypdGChk23N7XvCYAB8nTQKDqW3SLISqojLp4e
+	 KcX9hcQ0POzsjuKi9Et/VZ9AmycQaPcHgfVpSBpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392366AbgBNQOl (ORCPT
+        id S2392387AbgBNQOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392239AbgBNQOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:05 -0500
+        id S2392178AbgBNQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B30246CA;
-        Fri, 14 Feb 2020 16:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D341246D3;
+        Fri, 14 Feb 2020 16:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696844;
-        bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
+        s=default; t=1581696850;
+        bh=XKoTIc29oW1apUheo+XZNDmTHb2Iqz0eGdKtiIjddzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/Rcoy0uhAzY/INZxvqTjt1JrRxa7sd/MlU/xb7qmwb2cixDlo1ZOcDgBJanHwVeD
-         1FsR/R3RsMtP6QEL5+/9LXUx3CORiublaXNQYbRo2QF9i1/ko54BTZShZUOfLFtds0
-         pktpZXKviI4AOEYifNecfauneVFF0lBTfByk7Cmo=
+        b=RqxdNLqOFfiJ4ZSakMqxUt5MvN1nZrs1u5SePLmmLM3EnvWbrXJIvkrjipLjQFln3
+         RJkqJsvrmxpbIfB0ThkwwAfBNmJkZJ+YaHWJGYg0daq/tMhNvCBWSObv3tA6+A2DWV
+         93vpjuk7TYyMUGabkcO5y1rrCiqm3CUi+hOZ4cOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 107/252] bcma: remove set but not used variable 'sizel'
-Date:   Fri, 14 Feb 2020 11:09:22 -0500
-Message-Id: <20200214161147.15842-107-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 111/252] scsi: ibmvscsi_tgt: remove set but not used variables 'iue' and 'sd'
+Date:   Fri, 14 Feb 2020 11:09:26 -0500
+Message-Id: <20200214161147.15842-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,54 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit f427939391f290cbeabe0231eb8a116429d823f0 ]
+[ Upstream commit 4aca8fe7716669e39f7857b2e1fc5dfd4475b7e5 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/bcma/scan.c: In function ‘bcma_erom_get_addr_desc’:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_send_messages:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1888:19: warning: variable iue set but not used [-Wunused-but-set-variable]
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function ibmvscsis_queue_data_in:
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:3806:8: warning: variable sd set but not used [-Wunused-but-set-variable]
 
-drivers/bcma/scan.c:222:20: warning: variable ‘sizel’ set but
-not used [-Wunused-but-set-variable]
-
-It is never used, and so can be removed.
-
-Fixes: 8369ae33b705 ("bcma: add Broadcom specific AMBA bus driver")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20191213064042.161840-1-chenzhou10@huawei.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bcma/scan.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/bcma/scan.c b/drivers/bcma/scan.c
-index 4a2d1b235fb5a..1f2de714b4017 100644
---- a/drivers/bcma/scan.c
-+++ b/drivers/bcma/scan.c
-@@ -219,7 +219,7 @@ static s32 bcma_erom_get_mst_port(struct bcma_bus *bus, u32 __iomem **eromptr)
- static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
- 				  u32 type, u8 port)
- {
--	u32 addrl, addrh, sizel, sizeh = 0;
-+	u32 addrl, addrh, sizeh = 0;
- 	u32 size;
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index f42a619198c46..9b368a2afb252 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -1885,7 +1885,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 	 */
+ 	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
+ 	struct ibmvscsis_cmd *cmd, *nxt;
+-	struct iu_entry *iue;
+ 	long rc = ADAPT_SUCCESS;
+ 	bool retry = false;
  
- 	u32 ent = bcma_erom_get_ent(bus, eromptr);
-@@ -239,12 +239,9 @@ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
+@@ -1939,8 +1938,6 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 					 */
+ 					vscsi->credit += 1;
+ 				} else {
+-					iue = cmd->iue;
+-
+ 					crq->valid = VALID_CMD_RESP_EL;
+ 					crq->format = cmd->rsp.format;
  
- 	if ((ent & SCAN_ADDR_SZ) == SCAN_ADDR_SZ_SZD) {
- 		size = bcma_erom_get_ent(bus, eromptr);
--		sizel = size & SCAN_SIZE_SZ;
- 		if (size & SCAN_SIZE_SG32)
- 			sizeh = bcma_erom_get_ent(bus, eromptr);
--	} else
--		sizel = SCAN_ADDR_SZ_BASE <<
--				((ent & SCAN_ADDR_SZ) >> SCAN_ADDR_SZ_SHIFT);
-+	}
+@@ -3814,7 +3811,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 						 se_cmd);
+ 	struct iu_entry *iue = cmd->iue;
+ 	struct scsi_info *vscsi = cmd->adapter;
+-	char *sd;
+ 	uint len = 0;
+ 	int rc;
  
- 	return addrl;
- }
+@@ -3822,7 +3818,6 @@ static int ibmvscsis_queue_data_in(struct se_cmd *se_cmd)
+ 			       1);
+ 	if (rc) {
+ 		dev_err(&vscsi->dev, "srp_transfer_data failed: %d\n", rc);
+-		sd = se_cmd->sense_buffer;
+ 		se_cmd->scsi_sense_length = 18;
+ 		memset(se_cmd->sense_buffer, 0, se_cmd->scsi_sense_length);
+ 		/* Logical Unit Communication Time-out asc/ascq = 0x0801 */
 -- 
 2.20.1
 
