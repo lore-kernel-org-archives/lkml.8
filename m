@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD54DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B678C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DCF24696
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D548B246A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696741;
-	bh=21U/1a7d6mQjvZS+p4suqgModgU1QDnOz+aloeZnv8A=;
+	s=default; t=1581696743;
+	bh=NDkes1bSJFRJFlu/prlmutb8xbcZE3iXWify3FKJuXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1wjzzM7Lyy/BtfjIX4r0h8LXHQE4pHDRAXZd7EM+eup0DSJdW+e7I6LdV6GUPTST
-	 lnWPQfaoghzZk25PEls8g7M8e4kHSIfEl3U80fMIB7jUtqQQzL1euPy7WDCXWPmx0p
-	 CxkdVnMZmZFbhBmFXce271UMgUBwBhtp+UYpbi5c=
+	b=VI9BiMCOgM/aS5fRkHRuqshp+zHw5Ki195TBm9neTuwBdVucmqkuHTOGjnRYMYlZD
+	 HUidwyU85XRyFPQcL9AqWnF+IsbGZqhvoz0XYu+D/P96tQTHqwYpiacEO+E+Kmw4Bf
+	 /bR0V1vKYnRe0p6KN1zeKOx5m/RVGmkbV1fkuxL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391626AbgBNQMV (ORCPT
+        id S2391984AbgBNQMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:12:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:12:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390995AbgBNQLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:11:12 -0500
+        id S2389948AbgBNQLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:11:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD66424697;
-        Fri, 14 Feb 2020 16:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EBF32467C;
+        Fri, 14 Feb 2020 16:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696671;
-        bh=21U/1a7d6mQjvZS+p4suqgModgU1QDnOz+aloeZnv8A=;
+        s=default; t=1581696674;
+        bh=NDkes1bSJFRJFlu/prlmutb8xbcZE3iXWify3FKJuXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMkv1/1jGk4fi43Qg7AXjzOrRfUZ+4JlTtXBk1UGU1K4q7Vt61Cx6/vpudHigtK/+
-         q4P4WxwibqqJ5AB2dUaZhE52bJrG/THNHb4TkrseLFN0waMx0enuL1G/oC1btZafcJ
-         EyreEl+uLl3vWyaTsMFq+DmFGIyYVAIZ5HM0gcFQ=
+        b=NgUpRP6suP8mjUCo/phgWKJRff3YGU+4jsYFvmn0VqbLFOtSk6NtX0bxQuLegkxv0
+         qxnKrpwAToI/bvT85Wffu2uk5KMtsgDpN5wH8RvwS049ClFZIglFJsUYfdf4O65Sar
+         K8jqnI/EhTeANDcxx3kKIEk2us+LR/eu+8Stu0GE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 441/459] nvme-pci: remove nvmeq->tags
-Date:   Fri, 14 Feb 2020 11:01:31 -0500
-Message-Id: <20200214160149.11681-441-sashal@kernel.org>
+Cc:     Avraham Stern <avraham.stern@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 443/459] iwlwifi: mvm: avoid use after free for pmsr request
+Date:   Fri, 14 Feb 2020 11:01:33 -0500
+Message-Id: <20200214160149.11681-443-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,98 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Avraham Stern <avraham.stern@intel.com>
 
-[ Upstream commit cfa27356f835dc7755192e7b941d4f4851acbcc7 ]
+[ Upstream commit cc4255eff523f25187bb95561642941de0e57497 ]
 
-There is no real need to have a pointer to the tagset in
-struct nvme_queue, as we only need it in a single place, and that place
-can derive the used tagset from the device and qid trivially.  This
-fixes a problem with stale pointer exposure when tagsets are reset,
-and also shrinks the nvme_queue structure.  It also matches what most
-other transports have done since day 1.
+When a FTM request is aborted, the driver sends the abort command to
+the fw and waits for a response. When the response arrives, the driver
+calls cfg80211_pmsr_complete() for that request.
+However, cfg80211 frees the requested data immediately after sending
+the abort command, so this may lead to use after free.
 
-Reported-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fix it by clearing the request data in the driver when the abort
+command arrives and ignoring the fw notification that will come
+afterwards.
+
+Signed-off-by: Avraham Stern <avraham.stern@intel.com>
+Fixes: fc36ffda3267 ("iwlwifi: mvm: support FTM initiator")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 14d513087a14b..f34a56d588d31 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -167,7 +167,6 @@ struct nvme_queue {
- 	 /* only used for poll queues: */
- 	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
- 	volatile struct nvme_completion *cqes;
--	struct blk_mq_tags **tags;
- 	dma_addr_t sq_dma_addr;
- 	dma_addr_t cq_dma_addr;
- 	u32 __iomem *q_db;
-@@ -377,29 +376,17 @@ static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
+index 9f4b117db9d7f..d47f76890cf9a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
+@@ -8,6 +8,7 @@
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+  * Copyright (C) 2018 Intel Corporation
+  * Copyright (C) 2019 Intel Corporation
++ * Copyright (C) 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -30,6 +31,7 @@
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+  * Copyright (C) 2018 Intel Corporation
+  * Copyright (C) 2019 Intel Corporation
++ * Copyright (C) 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -389,6 +391,8 @@ void iwl_mvm_ftm_abort(struct iwl_mvm *mvm, struct cfg80211_pmsr_request *req)
+ 	if (req != mvm->ftm_initiator.req)
+ 		return;
  
- 	WARN_ON(hctx_idx != 0);
- 	WARN_ON(dev->admin_tagset.tags[0] != hctx->tags);
--	WARN_ON(nvmeq->tags);
- 
- 	hctx->driver_data = nvmeq;
--	nvmeq->tags = &dev->admin_tagset.tags[0];
- 	return 0;
- }
- 
--static void nvme_admin_exit_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
--{
--	struct nvme_queue *nvmeq = hctx->driver_data;
--
--	nvmeq->tags = NULL;
--}
--
- static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 			  unsigned int hctx_idx)
- {
- 	struct nvme_dev *dev = data;
- 	struct nvme_queue *nvmeq = &dev->queues[hctx_idx + 1];
- 
--	if (!nvmeq->tags)
--		nvmeq->tags = &dev->tagset.tags[hctx_idx];
--
- 	WARN_ON(dev->tagset.tags[hctx_idx] != hctx->tags);
- 	hctx->driver_data = nvmeq;
- 	return 0;
-@@ -950,6 +937,13 @@ static inline void nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
- 		writel(head, nvmeq->q_db + nvmeq->dev->db_stride);
- }
- 
-+static inline struct blk_mq_tags *nvme_queue_tagset(struct nvme_queue *nvmeq)
-+{
-+	if (!nvmeq->qid)
-+		return nvmeq->dev->admin_tagset.tags[0];
-+	return nvmeq->dev->tagset.tags[nvmeq->qid - 1];
-+}
++	iwl_mvm_ftm_reset(mvm);
 +
- static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- {
- 	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
-@@ -975,7 +969,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ 	if (iwl_mvm_send_cmd_pdu(mvm, iwl_cmd_id(TOF_RANGE_ABORT_CMD,
+ 						 LOCATION_GROUP, 0),
+ 				 0, sizeof(cmd), &cmd))
+@@ -502,7 +506,6 @@ void iwl_mvm_ftm_range_resp(struct iwl_mvm *mvm, struct iwl_rx_cmd_buffer *rxb)
+ 	lockdep_assert_held(&mvm->mutex);
+ 
+ 	if (!mvm->ftm_initiator.req) {
+-		IWL_ERR(mvm, "Got FTM response but have no request?\n");
  		return;
  	}
  
--	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
-+	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
- 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
- 	nvme_end_request(req, cqe->status, cqe->result);
- }
-@@ -1578,7 +1572,6 @@ static const struct blk_mq_ops nvme_mq_admin_ops = {
- 	.queue_rq	= nvme_queue_rq,
- 	.complete	= nvme_pci_complete_rq,
- 	.init_hctx	= nvme_admin_init_hctx,
--	.exit_hctx      = nvme_admin_exit_hctx,
- 	.init_request	= nvme_init_request,
- 	.timeout	= nvme_timeout,
- };
 -- 
 2.20.1
 
