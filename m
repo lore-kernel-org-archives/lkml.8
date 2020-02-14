@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA094C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8697C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F4224681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8C224673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695743;
-	bh=G49HKmQTKtA+wr4UsRFhIrWrbndFXkiqlz9M8hDvXhA=;
+	s=default; t=1581695747;
+	bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gGEOi/ky5WjdUx6vHibWh8P4NTAu/rOuf8XVEXDNrE1LMF37YJLJvEa6j/YQaCRG
-	 iiAn20OXDLRpyWrv+e6aYpSCPWfvA/HUr9tjfRw5h9sI38FgqOwdjIxB4q+Dqe394B
-	 S4q59wPy0i9KKeQ72IpmlxmPcjZeS35X1fJGodA8=
+	b=mSHkhkZ66S3v7C9Gg045EpYJe1tILnfbKO2zLQH2FWRKQ1VhfWHH9y4zWIFTQPkAQ
+	 XGImVVGJ88sm9epW/7cK00VUAoBT/XuQLSE6DSLrB6ezIPnRG7Hr+qc/Zu6SDbHcrx
+	 RrgxlBuTAXqwkkQamPyuTbJQPv7pfvoQPcZEHL1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbgBNPzn (ORCPT
+        id S2387633AbgBNPzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731777AbgBNPz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:28 -0500
+        id S1731781AbgBNPzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F34BD24673;
-        Fri, 14 Feb 2020 15:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F3724681;
+        Fri, 14 Feb 2020 15:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695728;
-        bh=G49HKmQTKtA+wr4UsRFhIrWrbndFXkiqlz9M8hDvXhA=;
+        s=default; t=1581695731;
+        bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7QrqjS90FXN9HEGgvhUp6vc9h8U8vw5k6aKjkktNPVvavfweQnAmHRE4qpwfvY4r
-         f/aCnyEkUgNRcJMtdxeML7J5WDEFKz3678VkPcfHLyKj2iBfEaEZ0a94Y3NhM1SnDm
-         AR4X6laIxIWPuZro2ckAzV5quZ2kEuebb7nnBeMU=
+        b=JWsouZ8tXjf81hcDdbpqeoqNJODFZgziA6PNhkpYMGDp/yDXOZWBCij66Mpcma5Bs
+         wXSy8Qr8u+769WJWvvHZkr1hyQOUygH1k0C+NP8iq4YrCAIplL5yygOJfcVPyyEYZc
+         2LSw6NQvDCCN9YqVTHTD49t28cmT96qwRDhiwlrQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-kernel@axis.com,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 303/542] crypto: artpec6 - return correct error code for failed setkey()
-Date:   Fri, 14 Feb 2020 10:44:55 -0500
-Message-Id: <20200214154854.6746-303-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 305/542] usb: dwc3: use proper initializers for property entries
+Date:   Fri, 14 Feb 2020 10:44:57 -0500
+Message-Id: <20200214154854.6746-305-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,36 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit b828f905904cd76424230c69741a4cabb0174168 ]
+[ Upstream commit 5eb5afb07853d6e90d3a2b230c825e028e948f79 ]
 
-->setkey() is supposed to retun -EINVAL for invalid key lengths, not -1.
+We should not be reaching into property entries and initialize them by
+hand, but rather use proper initializer macros. This way we can alter
+internal representation of property entries with no visible changes to
+their users.
 
-Fixes: a21eb94fc4d3 ("crypto: axis - add ARTPEC-6/7 crypto accelerator driver")
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Lars Persson <lars.persson@axis.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Lars Persson <lars.persson@axis.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/axis/artpec6_crypto.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/host.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
-index 4b20606983a43..22ebe40f09f53 100644
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -1251,7 +1251,7 @@ static int artpec6_crypto_aead_set_key(struct crypto_aead *tfm, const u8 *key,
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index 5567ed2cddbec..fa252870c926f 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
  
- 	if (len != 16 && len != 24 && len != 32) {
- 		crypto_aead_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
--		return -1;
-+		return -EINVAL;
- 	}
+ 	if (dwc->usb3_lpm_capable)
+-		props[prop_idx++].name = "usb3-lpm-capable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
  
- 	ctx->key_length = len;
+ 	if (dwc->usb2_lpm_disable)
+-		props[prop_idx++].name = "usb2-lpm-disable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+ 
+ 	/**
+ 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	 * This following flag tells XHCI to do just that.
+ 	 */
+ 	if (dwc->revision <= DWC3_REVISION_300A)
+-		props[prop_idx++].name = "quirk-broken-port-ped";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+ 
+ 	if (prop_idx) {
+ 		ret = platform_device_add_properties(xhci, props);
 -- 
 2.20.1
 
