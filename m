@@ -2,83 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53A8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE7EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C57720873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4805D222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e4f5bxsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgBNIch convert rfc822-to-8bit (ORCPT
+        id S1728923AbgBNIci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:32:37 -0500
-Received: from mail.fireflyinternet.com ([77.68.26.236]:57308 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725897AbgBNIcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 03:32:38 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59270 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727965AbgBNIcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 03:32:36 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20220168-1500050 
-        for multiple; Fri, 14 Feb 2020 08:32:23 +0000
-Content-Type: text/plain; charset="utf-8"
+Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 531281EC0CED;
+        Fri, 14 Feb 2020 09:32:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581669155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uETgdUpmK7Q1w6DrhS6zC/egrZ5XfrPV6q1WMwuIhUY=;
+        b=e4f5bxsXlo8zlR/qTOTdmya+4WX79a+kH89tT8F2hXaJjq/FMuELPkBJcXXAWqAJZM28uR
+        C09K4O27b72+EePzpYMfVD9kap4r2XjQi5qqrM6a4C/t81PJrd7pLxV6J03y8tVALCh9TI
+        aRwYd23KcmwlcQ/nnzc0+NoQnt4csKE=
+Date:   Fri, 14 Feb 2020 09:32:30 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     stable@vger.kernel.org
+Cc:     X86 ML <x86@kernel.org>, Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mce/amd: Fix kobject lifetime
+Message-ID: <20200214083230.GA13395@zn.tnic>
+References: <20200214082801.13836-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <87v9o965gg.fsf@intel.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        =?utf-8?q?Michel_D=C3=A4nzer?= <michel@daenzer.net>
-References: <20200214054706.33870-1-natechancellor@gmail.com> <87v9o965gg.fsf@intel.com>
-Message-ID: <158166913989.4660.10674824117292988120@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] drm/i915: Cast remain to unsigned long in eb_relocate_vma
-Date:   Fri, 14 Feb 2020 08:32:19 +0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200214082801.13836-1-bp@alien8.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jani Nikula (2020-02-14 06:36:15)
-> On Thu, 13 Feb 2020, Nathan Chancellor <natechancellor@gmail.com> wrote:
-> > A recent commit in clang added -Wtautological-compare to -Wall, which is
-> > enabled for i915 after -Wtautological-compare is disabled for the rest
-> > of the kernel so we see the following warning on x86_64:
-> >
-> >  ../drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1433:22: warning:
-> >  result of comparison of constant 576460752303423487 with expression of
-> >  type 'unsigned int' is always false
-> >  [-Wtautological-constant-out-of-range-compare]
-> >          if (unlikely(remain > N_RELOC(ULONG_MAX)))
-> >             ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-> >  ../include/linux/compiler.h:78:42: note: expanded from macro 'unlikely'
-> >  # define unlikely(x)    __builtin_expect(!!(x), 0)
-> >                                             ^
-> >  1 warning generated.
-> >
-> > It is not wrong in the case where ULONG_MAX > UINT_MAX but it does not
-> > account for the case where this file is built for 32-bit x86, where
-> > ULONG_MAX == UINT_MAX and this check is still relevant.
-> >
-> > Cast remain to unsigned long, which keeps the generated code the same
-> > (verified with clang-11 on x86_64 and GCC 9.2.0 on x86 and x86_64) and
-> > the warning is silenced so we can catch more potential issues in the
-> > future.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/778
-> > Suggested-by: Michel Dänzer <michel@daenzer.net>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Feb 14, 2020 at 09:28:01AM +0100, Borislav Petkov wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> Works for me as a workaround,
+> Accessing the MCA thresholding controls in sysfs concurrently with CPU
+> hotplug can lead to a couple of KASAN-reported issues:
+> 
+>   BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
+>   Read of size 8 at addr ffff888367578940 by task grep/4019
+> 
+> and
+> 
+>   BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
+>   Read of size 2 at addr ffff888368a05514 by task grep/4454
+> 
+> for example. Both result from the fact that the threshold block
+> creation/teardown code frees the descriptor memory itself instead of
+> defining proper ->release function and leaving it to the driver core to
+> take care of that, after all sysfs accesses have completed.
+> 
+> Do that and get rid of the custom freeing code, fixing the above UAFs in
+> the process.
+> 
+>   [ bp: write commit message. ]
+> 
+> Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Cc: <stable@vger.kernel.org>
 
-But the whole point was that the compiler could see that it was
-impossible and not emit the code. Doesn't this break that?
--Chris
+Damn git-send-email: it read out Cc: stable and added it to the Cc list.
+I've added
+
+suppresscc = bodycc
+
+to my .gitconfig.
+
+Sorry stable guys.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
