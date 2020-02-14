@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08F924650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DD024650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701216;
-	bh=A2+Ntopew8U1toXGN/zheXxszkk51MGjBpJ3lRwHw3w=;
+	s=default; t=1581701223;
+	bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRS66NkVip9WNa8wDhDC9mc7qWaOYcTOmNIJwNRhU8xq+b98Izq3LGztRhxQPczaA
-	 +rN4FM5jU5bA7+GgCkQs1EpIa8Sw9oJWI710BHJ3vAdqofco0sfPPqDuqRNQhQglCk
-	 uZvcbG5OdMW+rZ2Blp2qxag+5cBWamxnWi/cFoaw=
+	b=aZ8VCS8143OD5sf7mQy1NNXDy4yCJyUzZEESyzeGCvxkhYPe33vCwiXxTwjsxLv7v
+	 lA1fhOzCLOKLdLnDE54uisLO+SE0PwxDaNut0TAAsbCep0rFXCqNf/twVjHhlH/P9Y
+	 /H108GbWuNMNAKkgQz1t8JO8e+aFEX4RXN8AVigo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391163AbgBNR0y (ORCPT
+        id S2391649AbgBNR1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:26:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390978AbgBNQIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:30 -0500
+        id S2390968AbgBNQI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A5CA24650;
-        Fri, 14 Feb 2020 16:08:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED1A22067D;
+        Fri, 14 Feb 2020 16:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696510;
-        bh=A2+Ntopew8U1toXGN/zheXxszkk51MGjBpJ3lRwHw3w=;
+        s=default; t=1581696508;
+        bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USNdH7tufgQNWLaazbI+bqgF576gCydL4FXHS4CBipUobBE5hcvps/iUWPt0wetPx
-         YGWGe0HtWjTU1WoyzwboRDF5rg/UffeIBDoMwsdrkjh8w7fuHct7i6Gzu1AnfLR/ix
-         ROQowrW+I8FuRxAvBxeD5+kfRIWJapRVSruYDJ6c=
+        b=dzCPCwOugKQpp/BQKd3JPHt96iywwo6Hy3KgkkELhutw54ZH46NfWIcMITLb6mGma
+         rasBRqruatFDirf+UzagD96WmKzQNb8gG0fj9B5X2TAJVvnshTTfHF1JGm/J4TBS5v
+         d1M+fUf62hHwRyMiELD1WCVXyWvkFUoxSXMVeq5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 312/459] drm/nouveau/drm/ttm: Remove set but not used variable 'mem'
-Date:   Fri, 14 Feb 2020 10:59:22 -0500
-Message-Id: <20200214160149.11681-312-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 311/459] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+Date:   Fri, 14 Feb 2020 10:59:21 -0500
+Message-Id: <20200214160149.11681-311-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -62,54 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2e4534a22794746b11a794b2229b8d58797eccce ]
+[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
 
-drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_vram_manager_new:
-drivers/gpu/drm/nouveau/nouveau_ttm.c:66:22: warning: variable mem set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_gart_manager_new:
-drivers/gpu/drm/nouveau/nouveau_ttm.c:106:22: warning: variable mem set but not used [-Wunused-but-set-variable]
+Like other cases, it should use rcu protected 'chan' rather
+than 'fence->channel' in nouveau_fence_wait_uevent_handler.
 
-They are not used any more, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_ttm.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-index f0daf958e03a2..621d28f094bc7 100644
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -63,14 +63,12 @@ nouveau_vram_manager_new(struct ttm_mem_type_manager *man,
- {
- 	struct nouveau_bo *nvbo = nouveau_bo(bo);
- 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
--	struct nouveau_mem *mem;
- 	int ret;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index 9118df035b28d..70bb6bb97af87 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -156,7 +156,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
  
- 	if (drm->client.device.info.ram_size == 0)
- 		return -ENOMEM;
- 
- 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
--	mem = nouveau_mem(reg);
- 	if (ret)
- 		return ret;
- 
-@@ -103,11 +101,9 @@ nouveau_gart_manager_new(struct ttm_mem_type_manager *man,
- {
- 	struct nouveau_bo *nvbo = nouveau_bo(bo);
- 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
--	struct nouveau_mem *mem;
- 	int ret;
- 
- 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
--	mem = nouveau_mem(reg);
- 	if (ret)
- 		return ret;
- 
+ 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
+ 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
+-		if (nouveau_fence_update(fence->channel, fctx))
++		if (nouveau_fence_update(chan, fctx))
+ 			ret = NVIF_NOTIFY_DROP;
+ 	}
+ 	spin_unlock_irqrestore(&fctx->lock, flags);
 -- 
 2.20.1
 
