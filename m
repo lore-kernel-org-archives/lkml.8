@@ -2,122 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99456C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A3C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68ADA24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456082467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNX3ZTo7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p74thIN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgBNQto (ORCPT
+        id S1730225AbgBNQtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:49:44 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37067 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405286AbgBNQtd (ORCPT
+        Fri, 14 Feb 2020 11:49:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43112 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729672AbgBNQte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:49:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so11655203wru.4;
-        Fri, 14 Feb 2020 08:49:31 -0800 (PST)
+        Fri, 14 Feb 2020 11:49:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so11619500wrq.10;
+        Fri, 14 Feb 2020 08:49:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YOBa47sfB4zGlt/eSqmdr7tVajGz1eh8XyouzGHZTXA=;
-        b=FNX3ZTo7L6hK1EJbxDuzGg93cWg/xmbLJWlVdWTgc+1FogMSsT6a3vu4ssxq3MWWlH
-         0a85jSPJgIvWWMN8lE+lwL26e5plRyOKGXvgnvRUQYWI0/wJK3e2xgcMk3AZHCaylqBj
-         0yMjs8bunFNhHd2Fgz42dKJpQsT+408waOxwEsPW9meV0VehP/pd47mu+14+FgL1Hy1i
-         adQ2f/QyVYC9hiEI/meR0ac89wfrF1j2RxOg2NJME6FOOi7Es5ZRAa5+ri68X6DvlHDH
-         UkZEVxgRf5OMUn/Rxtncg9oD4fexwzdHWGj/VdY26yA/T0gk4KeZlwuAGvLM6yg/X96R
-         qkcg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qPIxBcWGN8qvI0FZX+szZRmMvh0tAzoO6Zgc4GjqA8Y=;
+        b=p74thIN9AMW7PkIxOxQwb7BJoWY4i+0US7GZ29w+1JxqJf6SUPlZGUYhJo5iANvdPU
+         mqYdNx14sNyhSIlvxOZJY0Xs7WH7+aW4222JXhKcWqKuzd1mOzuLjVWllgtO+dbxqij5
+         +VLavUpjBIl79UXSY4+fMIbE1lOqEYnec9C5gOjPXHzc3XjSUcgzoJiTSiV2wOd75fUv
+         iCatxvIS1tRKmMYM5p5IG0isXX2YGO6QT4Fh2lgbfCOhuAFQI2SiRtKzTv428dMisoRO
+         kkuUK5Z7M7Lu3JSkUNi0FERorj6iOTE/0dmd5Ake+eu8S5XkFn/FLVhpU0kCXANQ23PD
+         phSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YOBa47sfB4zGlt/eSqmdr7tVajGz1eh8XyouzGHZTXA=;
-        b=Dkx/SELrte0bkqjc19AXPaLeZgSM555swUMiIhmxsE2yc1ZACr6JQIpZtfrGUuuhD9
-         ccCfjTaRcZExTDPjof153Z58Eh3EuV1I6FbR5+tfgLRSHFtTW8317sJRjww42aim8Hyj
-         q+OFmZ0MXxhaFpW0pOf/qGAF2unoi8j9gTWwu3AaOeJ+p4QaShcL1lJp8EZw92HlW0EC
-         LVXzwLeGP+i9Fr4nUgRkruPUUQEg5QPaD87D3Y4GyXMVqoAm5lzi5Kz3nb5V3wBku6V9
-         jIljDE3hpjixxTUMGsEHbnhleF2RwcZt+ogtOEsudhFOm59i1fD0FMI3kk/l6eokFt/o
-         IKRg==
-X-Gm-Message-State: APjAAAVuJCdFnECMCHSsfqJkQ38JkGhbeqtT+47F/xFMnmqnLDZLJ3cT
-        DmpHyg7RVSxtz45oQnJrnPpmaKJPoZFI1QRfKVc=
-X-Google-Smtp-Source: APXvYqxKeiQx6w2kj07XUMKdeqQDJA9gMVv/ylGoEkmKSG2AofVbH9t2OsP5D5vsIQzNmIOPHSPfc1T6F3njsJwzMKQ=
-X-Received: by 2002:adf:b254:: with SMTP id y20mr4851957wra.362.1581698971153;
- Fri, 14 Feb 2020 08:49:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qPIxBcWGN8qvI0FZX+szZRmMvh0tAzoO6Zgc4GjqA8Y=;
+        b=cKu6Th3ZZuXuCS/A1nwe7cVHm1at2GqlIg80Z2lIt4YD4s3ZjniXILTpgGW7vPftEa
+         5h+nVGt6Af1LhgJr+rTEWhGS8nlPnNsPoC8vpch2mnwpTKrJ1KV5MmAZRxZ6NkQyIPgF
+         PFkL6UTsNqMlekL34b4KPMLFRIKQPX1dEQWrtzbVcqoPeIlHtYKUwaRvx1kGfX2watNm
+         0dY9/GGIJr9cZL2Uk0UgsSuZuL1kK+8CpNaowN0RZ3dvvt4jbbNIM3IiF4auq77b6+Sh
+         3zZmORoZj2M20VHTLNHpv+6hO/p/8bDUYNKf4O2kUl2S0ml7YBRcWI+fO3A8VT792b2Z
+         eESg==
+X-Gm-Message-State: APjAAAXhrUxYImzXs/JsVue6HYN2qK6DqV7DEl1az9woGF+QJz5sQdpR
+        etm+ZCCdxY3EWhR5P2oBsNCWa4rYYTY=
+X-Google-Smtp-Source: APXvYqzOOar2uuq59Crmvf5/mtFOp1naDnTTJMfC1uVazTi98BMDyC5aLvLpSDy7BKveSnawuakKbg==
+X-Received: by 2002:a5d:484d:: with SMTP id n13mr4851285wrs.420.1581698972039;
+        Fri, 14 Feb 2020 08:49:32 -0800 (PST)
+Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id o9sm4860233wrw.20.2020.02.14.08.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 08:49:31 -0800 (PST)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 5.6-rc2
+Date:   Fri, 14 Feb 2020 17:49:44 +0100
+Message-Id: <20200214164944.6044-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-References: <20200214161147.15842-1-sashal@kernel.org> <20200214161147.15842-246-sashal@kernel.org>
-In-Reply-To: <20200214161147.15842-246-sashal@kernel.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 14 Feb 2020 11:49:20 -0500
-Message-ID: <CADnq5_O500gd2yFfF0VuyAt5CCirAwb+HzLcpSwM5C3VBC660w@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 246/252] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:17 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Alex Deucher <alexander.deucher@amd.com>
->
-> [ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
->
-> Cull out 0 clocks to avoid a warning in DC.
->
-> Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Hi Linus,
 
-Same comment as for 5.5.  All of the upstream patches that reference
-that bug need to be applied or they all need to be dropped.
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-Alex
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-> Reviewed-by: Evan Quan <evan.quan@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> index 3fa6e8123b8eb..48e31711bc68f 100644
-> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> @@ -1048,9 +1048,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
->
->         clocks->num_levels = 0;
->         for (i = 0; i < pclk_vol_table->count; i++) {
-> -               clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
-> -               clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
-> -               clocks->num_levels++;
-> +               if (pclk_vol_table->entries[i].clk) {
-> +                       clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
-> +                       clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
-> +                       clocks->num_levels++;
-> +               }
->         }
->
->         return 0;
-> --
-> 2.20.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+are available in the Git repository at:
+
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.6-rc2
+
+for you to fetch changes up to 3b20bc2fe4c0cfd82d35838965dc7ff0b93415c6:
+
+  ceph: noacl mount option is effectively ignored (2020-02-11 17:04:40 +0100)
+
+----------------------------------------------------------------
+A patch to make O_DIRECT | O_APPEND combination work better, a redo
+of server path canonicalization patch that went into -rc1 and a fixup
+for noacl mount option that got broken by the conversion to the new
+mount API in 5.5.
+
+----------------------------------------------------------------
+Ilya Dryomov (1):
+      ceph: canonicalize server path in place
+
+Xiubo Li (2):
+      ceph: do not execute direct write in parallel if O_APPEND is specified
+      ceph: noacl mount option is effectively ignored
+
+ fs/ceph/file.c  |  17 +++++---
+ fs/ceph/super.c | 129 ++++++++++++++------------------------------------------
+ fs/ceph/super.h |   2 +-
+ 3 files changed, 44 insertions(+), 104 deletions(-)
