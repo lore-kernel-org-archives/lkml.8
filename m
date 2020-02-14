@@ -2,413 +2,133 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3023CC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDE3C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F187F22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4561A24649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ/GOD+K"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SvpVi1rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgBNOK2 (ORCPT
+        id S1729336AbgBNONT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:10:28 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35886 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNOK2 (ORCPT
+        Fri, 14 Feb 2020 09:13:19 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16233 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbgBNONS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:10:28 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d9so5034187pgu.3;
-        Fri, 14 Feb 2020 06:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MxkvqzznTEHqAhKau37nl8jaNLmJXN6qscXilpZkBbs=;
-        b=eQ/GOD+KqOCBvrpzrIwcRIO7P4gDOD/1hK9IiEPvFWmLr6rhxLbxaxcbPG8ZVlR6v+
-         3ZdYUD5UCqVUh8iweLwBvngeINLETErX3G4EEtfcf9Dnz6+iaUlzfIm8l22r6KHKl6bM
-         gUZmPuEacGpM+O/n8Tgvw3DHMf2yWaTTb0ns9lwNrv/wUtY3LfRXHT8g9UGH2I4jsp13
-         Lgu9cxKDzNZgbGPZMrSqb2IKlrXQrPpDjyiucm3H95P4o1d3hS7+T72XaS8nqofJw+YV
-         /6r0OnCvBDp7LsRumMJ+HmkKNqff9Zw4Z91gFrVMLj0WNU1CYCbKAm9cxgQBBBl1FSWC
-         im4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MxkvqzznTEHqAhKau37nl8jaNLmJXN6qscXilpZkBbs=;
-        b=j/eFHNwwPF6/Zs2TZ6jNa8wQFhzjzrUR+IsM8nTzpBlyfJUy+Zn73WFlDPnQ4Rapnj
-         PciJqjXoXXMakhzt6KuIC6jUCRQlUFlpOphVynOcj9Byqca29ZwQiGiXsLKtXGNsCaRr
-         p2gnucgZZI8u5z5SKAwMFdNh4SCRRXRaSoGDd+cX2irkQTLgo+taX1ITiHSKGYhIzFaq
-         U3x7ozJeyJjIU0sR9mnqDzITle+XKpD0a1uU8EoQIWKaXHYBCMtRH/iWF6Gb6jyoODBP
-         73+YfC4B8pnZeV2O61DTzurSVdQccQLBMlTenYOWfAZgEb9Pq8j7hdnHbKO1WRtSHZju
-         BWZA==
-X-Gm-Message-State: APjAAAXULG4l5O0lgPny3toSYvccBtsYTxsv33FCnZmVStXy6x/tOd7J
-        2Q0+00LODTpk1O+BDyy+wkg=
-X-Google-Smtp-Source: APXvYqwsECoRvTgFluu7VgPH21rGGmq9+KuorBUHrBqUHVERkaGrnYnyHKRw/U1N1M247EX2IUTd4g==
-X-Received: by 2002:a63:8c5c:: with SMTP id q28mr3662669pgn.324.1581689426865;
-        Fri, 14 Feb 2020 06:10:26 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d69sm7785468pfd.72.2020.02.14.06.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2020 06:10:25 -0800 (PST)
-Subject: Re: [PATCH 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Evan Benn <evanbenn@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     jwerner@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, linux-watchdog@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anson Huang <Anson.Huang@nxp.com>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net>
-Date:   Fri, 14 Feb 2020 06:10:23 -0800
+        Fri, 14 Feb 2020 09:13:18 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e46aae00001>; Fri, 14 Feb 2020 06:12:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Feb 2020 06:13:17 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Feb 2020 06:13:17 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
+ 2020 14:13:15 +0000
+Subject: Re: [PATCH v8 11/19] dmaengine: tegra-apb: Remove duplicated
+ pending_sg_req checks
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200209163356.6439-1-digetx@gmail.com>
+ <20200209163356.6439-12-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <81d0f76a-8391-f8ee-c713-b699188d1856@nvidia.com>
+Date:   Fri, 14 Feb 2020 14:13:13 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200209163356.6439-12-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581689568; bh=Rh0gsvOb9X8sIihgsHGuy6sNYCz4koy1dG9PxBQP0qo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SvpVi1rmKJ5GQytWBi88Sc73RmCCn8V5h/rRWxUhTiNn+lsI4QqUhAHx/mSx6c0/v
+         7zWwxFpY/pR3tBvc+7qxesirE2Sp0dN0crFPH8hWSmNl9QGuZoaUFuPETNt3jNFtir
+         qSRKkFQ1h3Kt9nhyZHOPI8YcsLoDK9hHCgt6wdd7qrO07hRULIOqkshueTZ5yLb2+Y
+         as8BFwQU8zMXH5Yid8GGLr5tLfANrq9dwi3saDT7HW5XuI0VrRP5Mo5PTipU7kTyPe
+         FUDe5kV9z+9trGpTe4wQpiBSSyHUoLcy0mqc2R/e2cczCoW+n9XGN3v5TZM7XnlWQh
+         I4g1TJQKYFjcg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 10:26 PM, Evan Benn wrote:
-> From: Julius Werner <jwerner@chromium.org>
+
+On 09/02/2020 16:33, Dmitry Osipenko wrote:
+> There are few place in the code which check whether pending_sg_req list is
+> empty despite of the check already being done. Let's remove the duplicated
+> checks to keep code clean.
 > 
-> This patch adds a stub watchdog driver that can be used on ARM systems
-
- From kernel perspective, this is not a "stub" driver. A stub driver is one
-that doesn't do anything.
-
-> with a Secure Monitor firmware to forward watchdog operations to
-> firmware via a Secure Monitor Call. This may be useful for platforms
-> using TrustZone that want the Secure Monitor firmware to have the final
-> control over the watchdog.
-> 
-
-As written, one would assume this to work on all systems implementing
-ARM secure firmware, which is not the case. Please select a different
-name, and provide information about the systems where this is actually
-supported.
-
-If it happens to be standardized, we will need a reference to the standard
-supported. This needs to distinguish from IMX_SC_WDT, which also supports
-a secure monitor based watchdog (but doesn't claim to be generic).
-
-> Signed-off-by: Julius Werner <jwerner@chromium.org>
-> Signed-off-by: Evan Benn <evanbenn@chromium.org>
-
-I won't comment on items already covered by Enric. Please address those as well.
-
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
+>  drivers/dma/tegra20-apb-dma.c | 12 ------------
+>  1 file changed, 12 deletions(-)
 > 
->   MAINTAINERS                    |   1 +
->   arch/arm64/configs/defconfig   |   1 +
->   drivers/watchdog/Kconfig       |  12 +++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/arm_smc_wdt.c | 191 +++++++++++++++++++++++++++++++++
->   5 files changed, 206 insertions(+)
->   create mode 100644 drivers/watchdog/arm_smc_wdt.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5c45536e1177..71df3c110fdb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1426,6 +1426,7 @@ M:	Julius Werner <jwerner@chromium.org>
->   R:	Evan Benn <evanbenn@chromium.org>
->   S:	Maintained
->   F:	devicetree/bindings/watchdog/arm,smc-wdt.yaml
-> +F:	drivers/watchdog/arm_smc_wdt.c
->   
->   ARM SMMU DRIVERS
->   M:	Will Deacon <will@kernel.org>
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index b2f667307f82..8527db9e92a6 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -451,6 +451,7 @@ CONFIG_QCOM_TSENS=y
->   CONFIG_UNIPHIER_THERMAL=y
->   CONFIG_WATCHDOG=y
->   CONFIG_ARM_SP805_WATCHDOG=y
-> +CONFIG_ARM_SMC_WATCHDOG=y
->   CONFIG_S3C2410_WATCHDOG=y
->   CONFIG_DW_WATCHDOG=y
->   CONFIG_SUNXI_WATCHDOG=m
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index cec868f8db3f..0f7f93342051 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -857,6 +857,18 @@ config DIGICOLOR_WATCHDOG
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called digicolor_wdt.
->   
-> +config ARM_SMC_WATCHDOG
-> +	tristate "ARM Secure Monitor Call based watchdog support"
-> +	depends on ARM || ARM64
-
-This also depends on HAVE_ARM_SMCCC.
-
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here to include support for a watchdog timer
-> +	  implemented by the EL3 Secure Monitor on ARM platforms.
-> +	  Requires firmware support.
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called arm_smc_wdt.
-> +
-> +
-Extra empty line.
-
->   config LPC18XX_WATCHDOG
->   	tristate "LPC18xx/43xx Watchdog"
->   	depends on ARCH_LPC18XX || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352bf3372..a1e6d83a7659 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -92,6 +92,7 @@ obj-$(CONFIG_STM32_WATCHDOG) += stm32_iwdg.o
->   obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
->   obj-$(CONFIG_RTD119X_WATCHDOG) += rtd119x_wdt.o
->   obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
-> +obj-$(CONFIG_ARM_SMC_WATCHDOG) += arm_smc_wdt.o
->   obj-$(CONFIG_PM8916_WATCHDOG) += pm8916_wdt.o
->   
->   # X86 (i386 + ia64 + x86_64) Architecture
-> diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
-> new file mode 100644
-> index 000000000000..58e7294136ef
-> --- /dev/null
-> +++ b/drivers/watchdog/arm_smc_wdt.c
-> @@ -0,0 +1,191 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ARM Secure Monitor Call watchdog driver
-> + *
-> + * Copyright 2018 The Chromium OS Authors. All rights reserved.
-> + *
-> + * Julius Werner <jwerner@chromium.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * Based on mtk_wdt.c
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/watchdog.h>
-> +#include <uapi/linux/psci.h>
-> +
-> +#define DRV_NAME		"arm_smc_wdt"
-> +#define DRV_VERSION		"1.0"
-> +
-> +#define SMCWD_FUNC_ID		0x82003d06
-> +
-> +enum smcwd_call {
-> +	SMCWD_INFO		= 0,
-> +	SMCWD_SET_TIMEOUT	= 1,
-> +	SMCWD_ENABLE		= 2,
-> +	SMCWD_PET		= 3,
-> +};
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +static unsigned int timeout;
-> +
-> +static int smcwd_call(enum smcwd_call call, unsigned long arg,
-> +		      struct arm_smccc_res *res)
-> +{
-> +	struct arm_smccc_res local_res;
-> +
-> +	if (!res)
-> +		res = &local_res;
-> +
-> +	arm_smccc_smc(SMCWD_FUNC_ID, call, arg, 0, 0, 0, 0, 0, res);
-> +
-> +	if ((int)res->a0 == PSCI_RET_NOT_SUPPORTED)
-> +		return -ENOTSUPP;
-
--ENODEV would be better here.
-
-> +	if ((int)res->a0 == PSCI_RET_INVALID_PARAMS)
-> +		return -EINVAL;
-> +	if ((int)res->a0 < 0)
-> +		return -EIO;
-
-Yes, those typecasts are indeed unnecessary.
-
-> +	return res->a0;
-> +}
-> +
-> +static int smcwd_ping(struct watchdog_device *wdd)
-> +{
-> +	return smcwd_call(SMCWD_PET, 0, NULL);
-> +}
-> +
-> +static int smcwd_set_timeout(struct watchdog_device *wdd,
-> +				unsigned int timeout)
-> +{
-> +	int res;
-> +
-> +	res = smcwd_call(SMCWD_SET_TIMEOUT, timeout, NULL);
-> +	if (!res)
-> +		wdd->timeout = timeout;
-> +	return res;
-> +}
-> +
-> +static int smcwd_stop(struct watchdog_device *wdd)
-> +{
-> +	return smcwd_call(SMCWD_ENABLE, 0, NULL);
-> +}
-> +
-> +static int smcwd_start(struct watchdog_device *wdd)
-> +{
-> +	return smcwd_call(SMCWD_ENABLE, 1, NULL);
-> +}
-> +
-> +static const struct watchdog_info smcwd_info = {
-> +	.identity	= DRV_NAME,
-> +	.options	= WDIOF_SETTIMEOUT |
-> +			  WDIOF_KEEPALIVEPING |
-> +			  WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static const struct watchdog_ops smcwd_ops = {
-> +	.owner		= THIS_MODULE,
-
-Not necessary, and will result in a static analyzer warning.
-
-> +	.start		= smcwd_start,
-> +	.stop		= smcwd_stop,
-> +	.ping		= smcwd_ping,
-> +	.set_timeout	= smcwd_set_timeout,
-> +};
-> +
-> +static int smcwd_probe(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd;
-> +	int err;
-> +	struct arm_smccc_res res;
-> +
-> +	err = smcwd_call(SMCWD_INFO, 0, &res);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	wdd = devm_kzalloc(&pdev->dev, sizeof(*wdd), GFP_KERNEL);
-> +	if (!wdd)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, wdd);
-> +
-> +	wdd->info = &smcwd_info;
-> +	wdd->ops = &smcwd_ops;
-> +	wdd->timeout = res.a2;
-> +	wdd->max_timeout = res.a2;
-> +	wdd->min_timeout = res.a1;
-> +	wdd->parent = &pdev->dev;
-> +
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
-> +	err = smcwd_set_timeout(wdd, wdd->timeout);
-> +	if (err)
-> +		return err;
-> +
-> +	err = watchdog_register_device(wdd);
-
-devm_watchdog_register_device() should work here.
-
-> +	if (err)
-> +		return err;
-> +
-> +	dev_info(&pdev->dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
-
-The watchdog is not enabled here, it is only registered.
-
-> +			wdd->timeout, nowayout);
-> +
-> +	return 0;
-> +}
-> +
-> +static void smcwd_shutdown(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
-> +
-> +	if (watchdog_active(wdd))
-> +		smcwd_stop(wdd);
-> +}
-> +
-Please use watchdog_stop_on_reboot().
-
-> +static int smcwd_remove(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
-> +
-> +	watchdog_unregister_device(wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id smcwd_dt_ids[] = {
-> +	{ .compatible = "arm,smc-wdt" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
-> +
-> +static struct platform_driver smcwd_driver = {
-> +	.probe		= smcwd_probe,
-> +	.remove		= smcwd_remove,
-> +	.shutdown	= smcwd_shutdown,
-> +	.driver		= {
-> +		.name		= DRV_NAME,
-> +		.of_match_table	= smcwd_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(smcwd_driver);
-> +
-> +module_param(timeout, uint, 0);
-> +MODULE_PARM_DESC(timeout, "Watchdog heartbeat in seconds");
-> +
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Julius Werner <jwerner@chromium.org>");
-> +MODULE_DESCRIPTION("ARM Secure Monitor Call Watchdog Driver");
-> +MODULE_VERSION(DRV_VERSION);
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 22b88ccff05d..049e98ae1240 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -504,9 +504,6 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>  {
+>  	struct tegra_dma_sg_req *sg_req;
+>  
+> -	if (list_empty(&tdc->pending_sg_req))
+> -		return;
+> -
+>  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
+>  	tegra_dma_start(tdc, sg_req);
+>  	sg_req->configured = true;
+> @@ -518,9 +515,6 @@ static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
+>  {
+>  	struct tegra_dma_sg_req *hsgreq, *hnsgreq;
+>  
+> -	if (list_empty(&tdc->pending_sg_req))
+> -		return;
+> -
+>  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
+>  	if (!list_is_last(&hsgreq->node, &tdc->pending_sg_req)) {
+>  		hnsgreq = list_first_entry(&hsgreq->node, typeof(*hnsgreq),
+> @@ -567,12 +561,6 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+>  {
+>  	struct tegra_dma_sg_req *hsgreq;
+>  
+> -	if (list_empty(&tdc->pending_sg_req)) {
+> -		dev_err(tdc2dev(tdc), "DMA is running without req\n");
+> -		tegra_dma_stop(tdc);
+> -		return false;
+> -	}
+> -
+>  	/*
+>  	 * Check that head req on list should be in flight.
+>  	 * If it is not in flight then abort transfer as
 > 
 
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Thanks
+Jon
+
+-- 
+nvpublic
