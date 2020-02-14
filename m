@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D8CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF21C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7492187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466732187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695774;
-	bh=4SZ3LZ4NJqJF+7zF2Dlcszw7U77PR0xJMMQ+rBFKY8k=;
+	s=default; t=1581695778;
+	bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmFEb8vE5Jkxh1zEEYJH71jc4N1QPHodpRVNDd3qkr4B1Sffi1g1T6YLIHC489KhX
-	 uUw/9LoqIC4PdV1BFVfXQ07LsbE2KFnQ5rteRP988Cq8lQROXp7PGFL4VRvTRMPwsD
-	 /pHkyHFXC0fIUF2KEvasr68g+RRw19IRFbUYp38M=
+	b=TpD77h/wgJEp9LqmIAXx9LYZLdUQHRPL8aPrLWAJaCcvZ1ebNebwIgjt/0mvkTQsH
+	 VlGAq6wO6Nykz1ikX6hElABVAvsAgkccu72IkHnxAA++scG9nvyeTZsybpSgbrOZq7
+	 sGahuG/DCcjIj+oyLhYR9aAHZHoouc5m9LA70PL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbgBNP4O (ORCPT
+        id S2387729AbgBNP4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387675AbgBNP4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:12 -0500
+        id S2387689AbgBNP4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DEF222C4;
-        Fri, 14 Feb 2020 15:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 424642082F;
+        Fri, 14 Feb 2020 15:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695771;
-        bh=4SZ3LZ4NJqJF+7zF2Dlcszw7U77PR0xJMMQ+rBFKY8k=;
+        s=default; t=1581695773;
+        bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzuqnol1/wKDLRsHPHss3xpxNEnPloYE7PsYhIN6cN8Qqwpxj9JMGjCQsWmY3o2/i
-         YPa0pxHd/qXbMM8aENBEpsDkVrYvdFCQ6NBzYQixXpizvNGFfFJJiziFIr0iFontil
-         1xZFsugvE9PKYMLyiKBElQl+ooi3wFJVDju82NZE=
+        b=t4yNxxr24iIUR2JOQjzKnwK9IDxLmB7x34u8eQg8PTuLTtDeTUkfKDg7A8UnO6lvK
+         ZllLSPGFbCVBZhtzNPgvbQOawvMHUq4zUztNxJNkj46MYXoM8+6BchDTSbUHBhJOk8
+         hTjvqi2w8IMfcQCIULqXvE2KXLh1fm23pEE8NaRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>, Kit Chow <kchow@gigaio.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 337/542] PCI: Don't disable bridge BARs when assigning bus resources
-Date:   Fri, 14 Feb 2020 10:45:29 -0500
-Message-Id: <20200214154854.6746-337-sashal@kernel.org>
+Cc:     Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 338/542] raid6/test: fix a compilation warning
+Date:   Fri, 14 Feb 2020 10:45:30 -0500
+Message-Id: <20200214154854.6746-338-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,113 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 
-[ Upstream commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 ]
+[ Upstream commit 5e5ac01c2b8802921fee680518a986011cb59820 ]
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+The compilation warning is redefination showed as following:
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+        In file included from tables.c:2:
+        ../../../include/linux/export.h:180: warning: "EXPORT_SYMBOL" redefined
+         #define EXPORT_SYMBOL(sym)  __EXPORT_SYMBOL(sym, "")
 
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
+        In file included from tables.c:1:
+        ../../../include/linux/raid/pq.h:61: note: this is the location of the previous definition
+         #define EXPORT_SYMBOL(sym)
 
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 69a94abb82ee ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-bus.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ include/linux/raid/pq.h | 2 ++
+ lib/raid6/mktables.c    | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f279826204eb4..591161ce0f516 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1803,12 +1803,18 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 0b6e7ad9cd2a8..e0ddb47f44020 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -58,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
+ #define enable_kernel_altivec()
+ #define disable_kernel_altivec()
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
++#undef	EXPORT_SYMBOL
+ #define EXPORT_SYMBOL(sym)
++#undef	EXPORT_SYMBOL_GPL
+ #define EXPORT_SYMBOL_GPL(sym)
+ #define MODULE_LICENSE(licence)
+ #define MODULE_DESCRIPTION(desc)
+diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
+index 9c485df1308fb..f02e10fa62381 100644
+--- a/lib/raid6/mktables.c
++++ b/lib/raid6/mktables.c
+@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
+ 	uint8_t v;
+ 	uint8_t exptbl[256], invtbl[256];
  
-@@ -2055,12 +2061,18 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+-	printf("#include <linux/raid/pq.h>\n");
+ 	printf("#include <linux/export.h>\n");
++	printf("#include <linux/raid/pq.h>\n");
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
-+
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
+ 	/* Compute multiplication table */
+ 	printf("\nconst u8  __attribute__((aligned(256)))\n"
 -- 
 2.20.1
 
