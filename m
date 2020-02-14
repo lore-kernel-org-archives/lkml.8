@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34625C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B014BC3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F16320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD3820848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703059;
-	bh=E+NY1IUfRyjLg3KC35UISknubnYvdfXwNTG13ScXiD8=;
+	s=default; t=1581703060;
+	bh=gSWMBptURQOv6a2L0gBtCD6ZnyHnluDS87v6Rf/xuQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5ywO1FLM44G3HPhH32xnbVvJQJ7ldZO312+fMavj7Rd/oVGLyw7m2RZz/islFaSW
-	 75y/bjNKBZTWt4KUezTMwumw56YiqR7MO8FzCd3wsEHeNd9ctcvINoufYtDv+qeuGw
-	 7ZK41M5RyzNgxTXVRLTLSGp2m9Jt4NeX34uLsZ58=
+	b=noUJNg9EqWsA+q9swueTn1dkfPFu8+WTi2lM1giHeCM23d3/w1Q3yN3LOBXqRgXTj
+	 EKCnKOk2Tw2ow5U00RiD5PoELR//732BbK7IccKST2BXtDhgiTpMonTXgZTEF+rMX+
+	 AeOJMXryKJ+TZiO/PeOtoneuLRxOBuIbUHSrcdL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgBNR4V (ORCPT
+        id S1731053AbgBNR5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:57:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388205AbgBNP5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:23 -0500
+        id S2388174AbgBNP5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27CFD24676;
-        Fri, 14 Feb 2020 15:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B6F222C4;
+        Fri, 14 Feb 2020 15:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695843;
-        bh=E+NY1IUfRyjLg3KC35UISknubnYvdfXwNTG13ScXiD8=;
+        s=default; t=1581695837;
+        bh=gSWMBptURQOv6a2L0gBtCD6ZnyHnluDS87v6Rf/xuQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otqB9oy1EUg46c4SNmUg7NVxf5mMcvsXhSpvPrKlk8xfDap83KwnVAn7Oy3GrkoVz
-         8U+NEZyC0ihd/K67lfxhYOyxMsicGvpcfdxC6C2Yjvs+RJePkg9fAQlEGdZKDjIjGC
-         Am7fPnXkUcfsKiV6wXTJ8fVnMDAp80RVkUwqJlKE=
+        b=s1JfQqo6U9BD2vSSlRLBsLw40q6ubCjZIzJ1/kYF7GFAATWd/nTzVYGke0gbOTFbU
+         2nOk7fL9qYKl9yo/AeI9wtEs8YXC4iwKrDGrVWNxM52tRT+kIJk/3npoYmKMue517f
+         u5W0wog3cDJxeQEaNc9y8MKIFSEzppC3Nt6UOQrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 393/542] IB/mlx4: Fix memory leak in add_gid error flow
-Date:   Fri, 14 Feb 2020 10:46:25 -0500
-Message-Id: <20200214154854.6746-393-sashal@kernel.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 389/542] clocksource/drivers/hyper-v: Reserve PAGE_SIZE space for tsc page
+Date:   Fri, 14 Feb 2020 10:46:21 -0500
+Message-Id: <20200214154854.6746-389-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,80 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-[ Upstream commit eaad647e5cc27f7b46a27f3b85b14c4c8a64bffa ]
+[ Upstream commit ddc61bbc45017726a2b450350d476b4dc5ae25ce ]
 
-In procedure mlx4_ib_add_gid(), if the driver is unable to update the FW
-gid table, there is a memory leak in the driver's copy of the gid table:
-the gid entry's context buffer is not freed.
+Currently, the reserved size for a tsc page is 4K, which is enough for
+communicating with hypervisor. However, in the case where we want to
+export the tsc page to userspace (e.g. for vDSO to read the
+clocksource), the tsc page should be at least PAGE_SIZE, otherwise, when
+PAGE_SIZE is larger than 4K, extra kernel data will be mapped into
+userspace, which means leaking kernel information.
 
-If such an error occurs, free the entry's context buffer, and mark the
-entry as available (by setting its context pointer to NULL).
+Therefore reserve PAGE_SIZE space for tsc_pg as a preparation for the
+vDSO support of ARM64 in the future. Also, while at it, replace all
+reference to tsc_pg with hv_get_tsc_page() since it should be the only
+interface to access tsc page.
 
-Fixes: e26be1bfef81 ("IB/mlx4: Implement ib_device callbacks")
-Link: https://lore.kernel.org/r/20200115085050.73746-1-leon@kernel.org
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Cc: linux-hyperv@vger.kernel.org
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/clocksource/hyperv_timer.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 34055cbab38cf..2f5d9b181848b 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -246,6 +246,13 @@ static int mlx4_ib_update_gids(struct gid_entry *gids,
- 	return mlx4_ib_update_gids_v1(gids, ibdev, port_num);
- }
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 287d8d58c21ac..b6ea3a2093c56 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -307,17 +307,20 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+ struct clocksource *hyperv_cs;
+ EXPORT_SYMBOL_GPL(hyperv_cs);
  
-+static void free_gid_entry(struct gid_entry *entry)
-+{
-+	memset(&entry->gid, 0, sizeof(entry->gid));
-+	kfree(entry->ctx);
-+	entry->ctx = NULL;
-+}
-+
- static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
+-static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
++static union {
++	struct ms_hyperv_tsc_page page;
++	u8 reserved[PAGE_SIZE];
++} tsc_pg __aligned(PAGE_SIZE);
+ 
+ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
  {
- 	struct mlx4_ib_dev *ibdev = to_mdev(attr->device);
-@@ -313,6 +320,8 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
- 				     GFP_ATOMIC);
- 		if (!gids) {
- 			ret = -ENOMEM;
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
- 		} else {
- 			for (i = 0; i < MLX4_MAX_PORT_GIDS; i++) {
- 				memcpy(&gids[i].gid, &port_gid_table->gids[i].gid, sizeof(union ib_gid));
-@@ -324,6 +333,12 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
+-	return &tsc_pg;
++	return &tsc_pg.page;
+ }
+ EXPORT_SYMBOL_GPL(hv_get_tsc_page);
  
- 	if (!ret && hw_update) {
- 		ret = mlx4_ib_update_gids(gids, ibdev, attr->port_num);
-+		if (ret) {
-+			spin_lock_bh(&iboe->lock);
-+			*context = NULL;
-+			free_gid_entry(&port_gid_table->gids[free]);
-+			spin_unlock_bh(&iboe->lock);
-+		}
- 		kfree(gids);
- 	}
+ static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
+ {
+-	u64 current_tick = hv_read_tsc_page(&tsc_pg);
++	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
  
-@@ -353,10 +368,7 @@ static int mlx4_ib_del_gid(const struct ib_gid_attr *attr, void **context)
- 		if (!ctx->refcount) {
- 			unsigned int real_index = ctx->real_index;
+ 	if (current_tick == U64_MAX)
+ 		hv_get_time_ref_count(current_tick);
+@@ -372,7 +375,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 		return false;
  
--			memset(&port_gid_table->gids[real_index].gid, 0,
--			       sizeof(port_gid_table->gids[real_index].gid));
--			kfree(port_gid_table->gids[real_index].ctx);
--			port_gid_table->gids[real_index].ctx = NULL;
-+			free_gid_entry(&port_gid_table->gids[real_index]);
- 			hw_update = 1;
- 		}
- 	}
+ 	hyperv_cs = &hyperv_cs_tsc;
+-	phys_addr = virt_to_phys(&tsc_pg);
++	phys_addr = virt_to_phys(hv_get_tsc_page());
+ 
+ 	/*
+ 	 * The Hyper-V TLFS specifies to preserve the value of reserved
 -- 
 2.20.1
 
