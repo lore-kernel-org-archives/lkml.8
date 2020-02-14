@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9935C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA3BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D2624685
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B442067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696365;
-	bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
+	s=default; t=1581696373;
+	bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzpSs8/le9y4kCGVoVnLw9ovTssHxC4XQLGUMZNKSq2aaI5Dah/eLpGh1EeFE0j2t
-	 CiI2ee4ATl0Hlbo8mHiAP9k+lj7MAA8XWyD/wn609qEkQEAvxxClOVIKebvvUZ6Ed/
-	 +QUH+tgFYfNBUTC32/mpFqPjYoS6WWWBbMmWbfFA=
+	b=1Vbe95PpLoUzEi1M5zZ9PVOdaKG9KSnRhL6N9Otz4Lpcv8qw2rsEmUoFlC/wL83GN
+	 r5zsbi0TrfaQo+ZlavO4RAo7T6wtckUvdmUr7rlfri45XKHtRrc3T/FiSk7fI4oMwj
+	 HGWw5i+wa5t7VuzIZRV7+n9XYiNrx1RGc3/Mk79Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390289AbgBNQGF (ORCPT
+        id S2389390AbgBNQGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389812AbgBNQFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:25 -0500
+        id S2389414AbgBNQFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05BE824691;
-        Fri, 14 Feb 2020 16:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 719042467D;
+        Fri, 14 Feb 2020 16:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696324;
-        bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
+        s=default; t=1581696331;
+        bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yp19qlj3I+ksef0w8gHDkr14DZcN+w52/+17VGwSrIQf/fTbWRVD8wXq/wFEVsWBc
-         Rf7oiM22LOUGGU/7ncMnsbnj3ieaESHMKv0ktoFlAdUaAQ500KuLdeMiF4MNlVbyeo
-         wWURtSmmXT8BJvMNPFPGAa/QPT6NyQrdejxURBUQ=
+        b=rHIOTuohVa4meAjkRZla0MrlRCOJYuV4NjqBsxQVlGDZK4zcjDsXUWmdk2o39TdHj
+         4j0rkb3VLM4Nc2zpNGbZLNbTYp7ijlKDXaM+xiFC7D49aGsGg2yt6r0ZFBkZ7pwW3M
+         w/TdtREp16AlMEJWW/7FomB+2hwO1lStXyLPJsVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 164/459] tty: omap-serial: remove set but unused variable
-Date:   Fri, 14 Feb 2020 10:56:54 -0500
-Message-Id: <20200214160149.11681-164-sashal@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 169/459] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Fri, 14 Feb 2020 10:56:59 -0500
+Message-Id: <20200214160149.11681-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,46 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit e83c6587c47caa2278aa3bd603b5a85eddc4cec9 ]
+[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
 
-Fix the following warning:
-drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
-drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-The character read is useless according to the table 23-246 of the omap4
-TRM. So we can drop it.
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/1575617863-32484-1-git-send-email-wangxiongfeng2@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/omap-serial.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/padata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index 6420ae581a802..5f808d8dfcd5c 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -493,10 +493,13 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
- static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
- {
- 	unsigned int flag;
--	unsigned char ch = 0;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index fda7a7039422d..fdbbe96547713 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
-+	/*
-+	 * Read one data character out to avoid stalling the receiver according
-+	 * to the table 23-246 of the omap4 TRM.
-+	 */
- 	if (likely(lsr & UART_LSR_DR))
--		ch = serial_in(up, UART_RX);
-+		serial_in(up, UART_RX);
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
  
- 	up->port.icount.rx++;
- 	flag = TTY_NORMAL;
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
+ 
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 -- 
 2.20.1
 
