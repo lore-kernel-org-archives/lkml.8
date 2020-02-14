@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF9C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C4AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3A620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2022A20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703480;
-	bh=uyTSEKzssiXTjw2/MDuQphK+UDTxkooeOKp7U8Y6QyY=;
+	s=default; t=1581703486;
+	bh=fKgzkNovUzgTf8pbQsgdrFyVGaFJHfBMFNKzV/qWmos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O7KtU6vJI0Cz7Cy2vRhK/IqT/ixYpveiYHtFTQASTGAI5nLG/tpCfGUVsTWea7Qmh
-	 SwLFJ8y6y2HdK/4nsUhY9JlDZ1IA+8rsYl+OX2VBVyDgno/i9+nbw4fGxZWCJ+zk/2
-	 WZv82uGVEo8fJj4l/UpoGsTa6H75rZsm7BfIslEI=
+	b=EZh+SuIUo05NZDpwHMaQ2AHfSgoZTiXMdmX7aLTmBawnwSbaBDZvbFRkKsofgZFCD
+	 zFy4f5uic5HY2SL7zSIhzPrgdugJkwdkh6TssQ2kC/pITkwGaf1AQo8ZQpVxq+wES5
+	 JM3rhvosOzLpO2jW9Hsbsgtrz+eeNcbXw+Sd3PAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391327AbgBNSEf (ORCPT
+        id S2391409AbgBNSEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:04:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387445AbgBNPzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:38 -0500
+        id S1731159AbgBNPzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F87424682;
-        Fri, 14 Feb 2020 15:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B411D222C4;
+        Fri, 14 Feb 2020 15:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695738;
-        bh=uyTSEKzssiXTjw2/MDuQphK+UDTxkooeOKp7U8Y6QyY=;
+        s=default; t=1581695735;
+        bh=fKgzkNovUzgTf8pbQsgdrFyVGaFJHfBMFNKzV/qWmos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d23n6UALZ3wJdCiJQ7z4cjb5Gc2O+u2SQL/3p51E7nEtF1YdYd/a+VNqotfX7aZgs
-         F47riaUNLWXo0WscvSZWRNzHofi7tuBoTgTL3GoWkTBbdgxUnuNs3KfOeT5S/iZhO4
-         hYBZzV5Bb82O0hN+HvEefUfdFLKzkGt3sDnove0o=
+        b=HSlAkNBgpHNkXael2tglTgn6xHhTgMTiohT2NNYUa49Prv75FUFW0mN6bCkLZkQv8
+         8ECiA6ZHbXZXYIGzRwKAzaJs42dzgenAJqqoyJP2BxiyAv4yYd1eI9Si4WYzhMkBBv
+         u6DTAv877xOaEPFv+ua5TmzF+lQQpwx8OzLogrfs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 311/542] drm/mediatek: Add gamma property according to hardware capability
-Date:   Fri, 14 Feb 2020 10:45:03 -0500
-Message-Id: <20200214154854.6746-311-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 309/542] selftests: Uninitialized variable in test_cgcore_proc_migration()
+Date:   Fri, 14 Feb 2020 10:45:01 -0500
+Message-Id: <20200214154854.6746-309-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,58 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 4cebc1de506fa753301266a5a23bb21bca52ad3a ]
+[ Upstream commit 192c197cbca599321de95a4cf15c2fa0681140d3 ]
 
-If there is no gamma function in the crtc
-display path, don't add gamma property
-for crtc
+The "c_threads" variable is used in the error handling code before it
+has been initialized
 
-Fixes: 2f3f4dda747c ("drm/mediatek: Add gamma correction.")
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Fixes: 11318989c381 ("selftests: cgroup: Add task migration tests")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/cgroup/test_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 4132cd114a037..c3f5111fd563f 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -641,6 +641,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 	int pipe = priv->num_pipes;
- 	int ret;
- 	int i;
-+	uint gamma_lut_size = 0;
+diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
+index c5ca669feb2bd..e19ce940cd6a2 100644
+--- a/tools/testing/selftests/cgroup/test_core.c
++++ b/tools/testing/selftests/cgroup/test_core.c
+@@ -369,7 +369,7 @@ static void *dummy_thread_fn(void *arg)
+ static int test_cgcore_proc_migration(const char *root)
+ {
+ 	int ret = KSFT_FAIL;
+-	int t, c_threads, n_threads = 13;
++	int t, c_threads = 0, n_threads = 13;
+ 	char *src = NULL, *dst = NULL;
+ 	pthread_t threads[n_threads];
  
- 	if (!path)
- 		return 0;
-@@ -691,6 +692,9 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 		}
- 
- 		mtk_crtc->ddp_comp[i] = comp;
-+
-+		if (comp->funcs && comp->funcs->gamma_set)
-+			gamma_lut_size = MTK_LUT_SIZE;
- 	}
- 
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
-@@ -711,8 +715,10 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 				NULL, pipe);
- 	if (ret < 0)
- 		return ret;
--	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
--	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, MTK_LUT_SIZE);
-+
-+	if (gamma_lut_size)
-+		drm_mode_crtc_set_gamma_size(&mtk_crtc->base, gamma_lut_size);
-+	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, gamma_lut_size);
- 	priv->num_pipes++;
- 
- 	return 0;
 -- 
 2.20.1
 
