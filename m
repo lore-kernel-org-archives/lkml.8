@@ -2,152 +2,81 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2636C3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D6FC3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A57222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581645092;
-	bh=WDRqGLlGcgsGtJnCUjmJ8SBRFPhZLI4nnSahdtCOJpY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YG+xs2WU1/YL0hVtHvuE4u3S4xpBEkwiftuGRJbo9EPwXC7XDz2eVjQA8s01Y+0Xl
-	 2wXCXUoI773WmKLrgf4y605ONKlmW2QzAgNvHRYQ7PTdyNQzYm8sC4n8khdQAdMlP5
-	 2DZLj9JmlwV7/p+5wwW8NUe2NVq/ck/uCPkBB3C4=
+	by mail.kernel.org (Postfix) with ESMTP id CFFCA20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgBNBvb (ORCPT
+        id S1728405AbgBNByK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbgBNBvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:51:31 -0500
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D8224649;
-        Fri, 14 Feb 2020 01:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581645090;
-        bh=WDRqGLlGcgsGtJnCUjmJ8SBRFPhZLI4nnSahdtCOJpY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HtJglxyTjgkyhe4CdWu2WxkDcE1vpcbE2FQM+j+/LT3a3sPVxwe4B50H6W+JTFKMB
-         8UX72jZ6DWHQO9gMz2QLuDNkYpBreBVCb99ZsN1DIYDGdslV2tEZUFvz2K2H29uqep
-         NgBRCfWK3CQsmLXp+IpnCygmJPeRzhieeOkihNTQ=
-Received: by mail-qv1-f49.google.com with SMTP id m5so3609773qvv.4;
-        Thu, 13 Feb 2020 17:51:30 -0800 (PST)
-X-Gm-Message-State: APjAAAU9dBWPgKdFOIVVPkAAbR2vUc5VqJvbzyIwGHNVkCDlJkq820GB
-        9vypOK6SzdAAzBCnMG2sUi2zW9tZNyQzGhsuLg==
-X-Google-Smtp-Source: APXvYqyTjLz0Q5iJr0U8tlUZFBpbfIYW2iYnW0ja4OOrPVoI4LcvA1j0mwSJRTx6VSFky+W9OzdHXzwuqOuZ2A/a70w=
-X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr301052qvv.85.1581645089662;
- Thu, 13 Feb 2020 17:51:29 -0800 (PST)
+        Thu, 13 Feb 2020 20:54:10 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728333AbgBNByJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:54:09 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A21799734858F8C28B98;
+        Fri, 14 Feb 2020 09:54:06 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 14 Feb 2020 09:53:59 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <huangdaode@huawei.com>, <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Yufeng Mo <moyufeng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net 1/3] net: hns3: add management table after IMP reset
+Date:   Fri, 14 Feb 2020 09:53:41 +0800
+Message-ID: <1581645223-23038-2-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581645223-23038-1-git-send-email-tanhuazhong@huawei.com>
+References: <1581645223-23038-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-References: <20200214004413.12450-1-john.stultz@linaro.org>
-In-Reply-To: <20200214004413.12450-1-john.stultz@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 13 Feb 2020 19:51:18 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+P0FZU9DnRhgYu6kvCFVbia=Z20VWNR2qi-Zwv=YtQhQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+P0FZU9DnRhgYu6kvCFVbia=Z20VWNR2qi-Zwv=YtQhQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] driver core: Extend returning EPROBE_DEFER for two
- minutes after late_initcall
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Alexander Graf <agraf@suse.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 6:44 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> at the end of initcall"), along with commit 25b4e70dcce9
-> ("driver core: allow stopping deferred probe after init") after
-> late_initcall, drivers will stop getting EPROBE_DEFER, and
-> instead see an error causing the driver to fail to load.
->
-> That change causes trouble when trying to use many clk drivers
-> as modules, as the clk modules may not load until much later
-> after init has started. If a dependent driver loads and gets an
-> error instead of EPROBE_DEFER, it won't try to reload later when
-> the dependency is met, and will thus fail to load.
->
-> Instead of reverting that patch, this patch tries to extend the
-> time that EPROBE_DEFER is retruned by two minutes, to (hopefully)
-> ensure that everything has had a chance to load.
+From: Yufeng Mo <moyufeng@huawei.com>
 
-I think regulators already has some delay like this. We should use the
-same timeouts.
+In the current process, the management table is missing after the
+IMP reset. This patch adds the management table to the reset process.
 
-We also have the 'deferred_probe_timeout' cmdline option. It's deemed
-a debug option currently, but we could change that and change the
-default.
+Fixes: f5aac71c0327 ("net: hns3: add manager table initialization for hardware")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> Specifically, on db845c, this change allows us to set
-> SDM_GPUCC_845, QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and
-> get a working system, where as without it the display will fail
-> to load.
->
-> Cc: Alexander Graf <agraf@suse.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Fixes: e01afc3250255 ("PM / Domains: Stop deferring probe at the end of initcall")
-> Fixes: 25b4e70dcce9 ("driver core: allow stopping deferred probe after init")
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index ec5f6ee..25ac573 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -9834,6 +9834,13 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		return ret;
+ 	}
+ 
++	ret = init_mgr_tbl(hdev);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to reinit manager table, ret = %d\n", ret);
++		return ret;
++	}
++
+ 	ret = hclge_init_fd_config(hdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fd table init fail, ret=%d\n", ret);
+-- 
+2.7.4
 
-We can debate the design, but those work as designed. So Fixes?
-
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/base/dd.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b25bcab2a26b..35ebae8b65be 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -311,6 +311,12 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
->  }
->  static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
->
-> +static void deferred_initcall_done_work_func(struct work_struct *work)
-> +{
-> +       initcalls_done = true;
-> +}
-> +static DECLARE_DELAYED_WORK(deferred_initcall_done_work, deferred_initcall_done_work_func);
-> +
->  /**
->   * deferred_probe_initcall() - Enable probing of deferred devices
->   *
-> @@ -327,7 +333,7 @@ static int deferred_probe_initcall(void)
->         driver_deferred_probe_trigger();
->         /* Sort as many dependencies as possible before exiting initcalls */
->         flush_work(&deferred_probe_work);
-> -       initcalls_done = true;
-> +       schedule_delayed_work(&deferred_initcall_done_work, 120 * HZ);
->
->         /*
->          * Trigger deferred probe again, this time we won't defer anything
-> --
-> 2.17.1
->
