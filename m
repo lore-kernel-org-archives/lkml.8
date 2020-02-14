@@ -2,275 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B164CC3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741ABC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8234720656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699965;
-	bh=F7juY/Ro+6DNKuswFBepbFfkzgLEJrYxcl6Pfk6p+wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TM9HcPNv8BTuZVwsdi2S9EJebRB1ZshMabFN5mIOzcj9ampEtZdLvl2e81flijpXk
-	 vS2cVxIFUO7LK37XjPv8wLocH7o3vmiL8iehMD4oP4zRpjI3QH46x07HRksSPq3gQg
-	 +TyTte0At/j93finExUFcVlNVfpf7J+F4LaVIcE8=
+	by mail.kernel.org (Postfix) with ESMTP id 4AC2F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394441AbgBNRGE (ORCPT
+        id S2405206AbgBNRGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 12:06:05 -0500
+Received: from muru.com ([72.249.23.125]:55252 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394058AbgBNRGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 12:06:04 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34131 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388586AbgBNRGA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:06:00 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j4so5264194pgi.1;
-        Fri, 14 Feb 2020 09:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YcmNAmrbG8b4Q1zbELocvrBQuIWTW45ghRZPxCURlKs=;
-        b=LGkW4u1S5E8xLFpgR5v7sW2j06MK3yVNHxU7BxIbb9dw1hQNkkR9C95XGIutlBVZOy
-         j8OibtW7kRPNZT2UUXzy9Dgv2DDs1BGd0VUrSg2/0vA8DUg/j32AxBQ2C7RdXdwvUXNL
-         zHKcDvcx+gPUB5hUFZait/vJHSaLNM2JvzhGrVil3ImfSx1lp50ncoYm1Wd3OgrjHAd1
-         xpd0FtDIbiOYHB4Rkp7zI1TWkowpx1OzmcdbBlOjAKznDFnzI4hJfkYd7ctzMoxlg72/
-         nJ8yoXws8+0Bd6iILckuNlmrBEVs2h5EdCTqLg1zaNHAj3k2CYrsO/InLKrbGbiVOPj9
-         vJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=YcmNAmrbG8b4Q1zbELocvrBQuIWTW45ghRZPxCURlKs=;
-        b=IJ9sEJG1BHTw6D0S8RsfKjCQmyd8vitb/aMTAMQaTNM0Zb6SPybOVFucuFuePtT+1Y
-         s2Q/jVlNhn9MqjU1ty/rtlJYnJ3jLh+gRHJTXlpYpaE1OO/JSD6dQ8GPCLOJZnUeZz3g
-         YOahr+q41D8DMDP5q9mVP1FzVh5WYg2Z+IGgvef5vYdr6iVcTt2iBYALRIu5xbyvEJjq
-         68zj176KAitdEcv9YER6bl8n7f/J6aP1AMOMXDgCRWy+PYJ+KJ7tzU0htptFMX6a5Hof
-         NWUuPqj09pxwIQQc4eA9yQA1obg7BUu+v6TXrFspTbqO22SWA+fbtMyzRkK0BzGApQQB
-         7L4w==
-X-Gm-Message-State: APjAAAUBz1Dxjtv0o7+9aC42q+KjxZO1OPZ/crktHCpUsms+MSNlFeGZ
-        CzR3AIDaUO0ep2++t/BJnVA=
-X-Google-Smtp-Source: APXvYqwqHc9Z5itNolbOM6+dAnfpFmB5PRq+nvJ3VvlFX7h3R8ChYUzXC6dGwCHonYwcsiCsEH02xA==
-X-Received: by 2002:a63:86c2:: with SMTP id x185mr4373491pgd.245.1581699959469;
-        Fri, 14 Feb 2020 09:05:59 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 09:05:51 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v5 1/7] mm: pass task and mm to do_madvise
-Date:   Fri, 14 Feb 2020 09:05:14 -0800
-Message-Id: <20200214170520.160271-2-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200214170520.160271-1-minchan@kernel.org>
-References: <20200214170520.160271-1-minchan@kernel.org>
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CF2AC80E7;
+        Fri, 14 Feb 2020 17:06:46 +0000 (UTC)
+Date:   Fri, 14 Feb 2020 09:05:59 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200214170559.GA64767@atomide.com>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
+ <20200214124920.GH4827@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214124920.GH4827@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In upcoming patches, do_madvise will be called from external process
-context so we shouldn't asssume "current" is always hinted process's
-task_struct. Furthermore, we couldn't access mm_struct via task->mm
-once it's verified by access_mm which will be introduced in next
-patch[1]. And let's pass *current* and current->mm as arguments of
-do_madvise so it shouldn't change existing behavior but prepare
-next patch to make review easy.
+* Mark Brown <broonie@kernel.org> [200214 12:50]:
+> On Fri, Feb 14, 2020 at 02:41:30PM +0200, Peter Ujfalusi wrote:
+> > On 12/02/2020 16.35, Tony Lindgren wrote:
+> 
+> > > Oops, that's not good. So should we just keep the old naming if there's
+> > > only one endpoint?
+> 
+> > That's an option, yes, if we really need extra dummy McBSP DAIs at all,
+> > again, let's hear from Morimoto-san or Mark.
+> 
+> We really shouldn't need dummy DAIs at all I think, if we do it feels
+> like there's a problem.  It's quite possible that there is actually a
+> problem here though...
 
-[1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
+It's dummy in the droid4 voice call case as mcbsp is not the clock-master
+and there's nothing to configure for mcbsp.
 
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- fs/io_uring.c      |  2 +-
- include/linux/mm.h |  3 ++-
- mm/madvise.c       | 34 +++++++++++++++++++---------------
- 3 files changed, 22 insertions(+), 17 deletions(-)
+But I guess in some cases mcbsp could be the clock-master and then the
+secondary DAI would have ops.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 63beda9bafc5..bf111675307c 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
- 	if (force_nonblock)
- 		return -EAGAIN;
- 
--	ret = do_madvise(ma->addr, ma->len, ma->advice);
-+	ret = do_madvise(current, current->mm, ma->addr, ma->len, ma->advice);
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..beb9259f9ed1 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2323,7 +2323,8 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
- 		       struct list_head *uf, bool downgrade);
- extern int do_munmap(struct mm_struct *, unsigned long, size_t,
- 		     struct list_head *uf);
--extern int do_madvise(unsigned long start, size_t len_in, int behavior);
-+extern int do_madvise(struct task_struct *task, struct mm_struct *mm,
-+		unsigned long start, size_t len_in, int behavior);
- 
- static inline unsigned long
- do_mmap_pgoff(struct file *file, unsigned long addr,
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 43b47d3fae02..24566f59b89b 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -254,6 +254,7 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 			     struct vm_area_struct **prev,
- 			     unsigned long start, unsigned long end)
- {
-+	struct mm_struct *mm = vma->vm_mm;
- 	struct file *file = vma->vm_file;
- 	loff_t offset;
- 
-@@ -288,12 +289,12 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 	 */
- 	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
- 	get_file(file);
--	up_read(&current->mm->mmap_sem);
-+	up_read(&mm->mmap_sem);
- 	offset = (loff_t)(start - vma->vm_start)
- 			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
- 	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
- 	fput(file);
--	down_read(&current->mm->mmap_sem);
-+	down_read(&mm->mmap_sem);
- 	return 0;
- }
- 
-@@ -676,7 +677,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 	if (nr_swap) {
- 		if (current->mm == mm)
- 			sync_mm_rss(mm);
--
- 		add_mm_counter(mm, MM_SWAPENTS, nr_swap);
- 	}
- 	arch_leave_lazy_mmu_mode();
-@@ -756,6 +756,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
- 				  unsigned long start, unsigned long end,
- 				  int behavior)
- {
-+	struct mm_struct *mm = vma->vm_mm;
-+
- 	*prev = vma;
- 	if (!can_madv_lru_vma(vma))
- 		return -EINVAL;
-@@ -763,8 +765,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
- 	if (!userfaultfd_remove(vma, start, end)) {
- 		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
- 
--		down_read(&current->mm->mmap_sem);
--		vma = find_vma(current->mm, start);
-+		down_read(&mm->mmap_sem);
-+		vma = find_vma(mm, start);
- 		if (!vma)
- 			return -ENOMEM;
- 		if (start < vma->vm_start) {
-@@ -818,6 +820,7 @@ static long madvise_remove(struct vm_area_struct *vma,
- 	loff_t offset;
- 	int error;
- 	struct file *f;
-+	struct mm_struct *mm = vma->vm_mm;
- 
- 	*prev = NULL;	/* tell sys_madvise we drop mmap_sem */
- 
-@@ -845,13 +848,13 @@ static long madvise_remove(struct vm_area_struct *vma,
- 	get_file(f);
- 	if (userfaultfd_remove(vma, start, end)) {
- 		/* mmap_sem was not released by userfaultfd_remove() */
--		up_read(&current->mm->mmap_sem);
-+		up_read(&mm->mmap_sem);
- 	}
- 	error = vfs_fallocate(f,
- 				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
- 				offset, end - start);
- 	fput(f);
--	down_read(&current->mm->mmap_sem);
-+	down_read(&mm->mmap_sem);
- 	return error;
- }
- 
-@@ -1044,7 +1047,8 @@ madvise_behavior_valid(int behavior)
-  *  -EBADF  - map exists, but area maps something that isn't a file.
-  *  -EAGAIN - a kernel resource was temporarily unavailable.
-  */
--int do_madvise(unsigned long start, size_t len_in, int behavior)
-+int do_madvise(struct task_struct *task, struct mm_struct *mm,
-+		unsigned long start, size_t len_in, int behavior)
- {
- 	unsigned long end, tmp;
- 	struct vm_area_struct *vma, *prev;
-@@ -1082,10 +1086,10 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
- 
- 	write = madvise_need_mmap_write(behavior);
- 	if (write) {
--		if (down_write_killable(&current->mm->mmap_sem))
-+		if (down_write_killable(&mm->mmap_sem))
- 			return -EINTR;
- 	} else {
--		down_read(&current->mm->mmap_sem);
-+		down_read(&mm->mmap_sem);
- 	}
- 
- 	/*
-@@ -1093,7 +1097,7 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
- 	 * ranges, just ignore them, but return -ENOMEM at the end.
- 	 * - different from the way of handling in mlock etc.
- 	 */
--	vma = find_vma_prev(current->mm, start, &prev);
-+	vma = find_vma_prev(mm, start, &prev);
- 	if (vma && start > vma->vm_start)
- 		prev = vma;
- 
-@@ -1130,19 +1134,19 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
- 		if (prev)
- 			vma = prev->vm_next;
- 		else	/* madvise_remove dropped mmap_sem */
--			vma = find_vma(current->mm, start);
-+			vma = find_vma(mm, start);
- 	}
- out:
- 	blk_finish_plug(&plug);
- 	if (write)
--		up_write(&current->mm->mmap_sem);
-+		up_write(&mm->mmap_sem);
- 	else
--		up_read(&current->mm->mmap_sem);
-+		up_read(&mm->mmap_sem);
- 
- 	return error;
- }
- 
- SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
- {
--	return do_madvise(start, len_in, behavior);
-+	return do_madvise(current, current->mm, start, len_in, behavior);
- }
--- 
-2.25.0.265.gbab2e86ba0-goog
+I could be wrong though, this is just based on my experience with
+getting one device working.
 
+Regards,
+
+Tony
