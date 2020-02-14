@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F5FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8DDC3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFAF20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546682168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699877;
-	bh=2D+nHV/qWbnw3vJE7DODLZI9JPpNMJQPog1FXaKPbDo=;
+	s=default; t=1581699883;
+	bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCEVcjvUT5wTGhPhYyqCEEduVUft+FX9yJWBRHG6Mme5dN4BniyNYnhlonsGvSVXf
-	 MtuLMj43ldCt2Or5F85PC8uAPH5GNVDcnnnyB89xVouP93VQotGrXpoz5xZ8LENpo3
-	 EQV89wPp1M02UfqR1Eof0GiCocpv0nLtBBRoOcQA=
+	b=Ww9vYIDiWEDGaIO0Ii+amZUO569L3NrG3tTRFJl/CQ/q/wvXaPuV4j9F47IRSVmPr
+	 8LqvWSwTjlD8sL2xMvIb50w8jbIh4bAaVqLO/9EWfZIgbwHknh2KsfPCn/8NDfffcl
+	 ugjpHBhBSlslgq6Kqhx5Q6xTATprCOfT41fMMJFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404116AbgBNREg (ORCPT
+        id S2404127AbgBNQP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:04:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45690 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391683AbgBNQP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:15:29 -0500
+        id S2391621AbgBNQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490BD246DC;
-        Fri, 14 Feb 2020 16:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2EB246D5;
+        Fri, 14 Feb 2020 16:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696929;
-        bh=2D+nHV/qWbnw3vJE7DODLZI9JPpNMJQPog1FXaKPbDo=;
+        s=default; t=1581696875;
+        bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRrUgwwWiDVNfo+wefxWc0y4pxPytsJ/hf44wXTQ93And4cbPLDbehPVgIJ1Ce9B1
-         B6r6OlqGd6PhrLnnR1qufVK3nVhuClZlk/6SJVJcJXZqrXe+c3s27qd+2jYA7OxWzD
-         A33m8LDkAqukrjTqqPQoH/gXgdeZdolYOprgJ9iY=
+        b=PfAFHCrMBFJFB9CJcWxW+fgFWax0XA2UUEqpQ/Qb2HtggCS76YXuoaxiKuBou0FCC
+         twU0dLb3wbkHwKX/aq/a00FhZ+dQbkui3lBdbDhFvCjTnZthhFiMX6uCgI5T5ZFMfz
+         ZpRJo8HcaXYu6fZGicnQZCGmasffR31z4EZCx+WI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 175/252] NFS: Revalidate the file size on a fatal write error
-Date:   Fri, 14 Feb 2020 11:10:30 -0500
-Message-Id: <20200214161147.15842-175-sashal@kernel.org>
+Cc:     Andrey Zhizhikin <andrey.z@gmail.com>,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 131/252] tools lib api fs: Fix gcc9 stringop-truncation compilation error
+Date:   Fri, 14 Feb 2020 11:09:46 -0500
+Message-Id: <20200214161147.15842-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,42 +69,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Andrey Zhizhikin <andrey.z@gmail.com>
 
-[ Upstream commit 0df68ced55443243951d02cc497be31fadf28173 ]
+[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
 
-If we suffer a fatal error upon writing a file, which causes us to
-need to revalidate the entire mapping, then we should also revalidate
-the file size.
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-Fixes: d2ceb7e57086 ("NFS: Don't use page_file_mapping after removing the page")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
+
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
+
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index e27637fa0f790..e8152781814dd 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -240,7 +240,15 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
- /* A writeback failed: mark the page as bad, and invalidate the page cache */
- static void nfs_set_pageerror(struct address_space *mapping)
- {
-+	struct inode *inode = mapping->host;
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 7aba8243a0e7c..bd021a0eeef8c 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
 +
- 	nfs_zap_mapping(mapping->host, mapping);
-+	/* Force file size revalidation */
-+	spin_lock(&inode->i_lock);
-+	NFS_I(inode)->cache_validity |= NFS_INO_REVAL_FORCED |
-+					NFS_INO_REVAL_PAGECACHE |
-+					NFS_INO_INVALID_SIZE;
-+	spin_unlock(&inode->i_lock);
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
+ 
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
  }
  
- /*
 -- 
 2.20.1
 
