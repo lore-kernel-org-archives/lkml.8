@@ -2,121 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D3EC3B195
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F5EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B9C20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E4220675
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZy3hsvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgBNH4A convert rfc822-to-8bit (ORCPT
+        id S2387397AbgBNH6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:56:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46912 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgBNH4A (ORCPT
+        Fri, 14 Feb 2020 02:58:07 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42191 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbgBNH6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:56:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g64so8278372otb.13;
-        Thu, 13 Feb 2020 23:56:00 -0800 (PST)
+        Fri, 14 Feb 2020 02:58:06 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so6127029lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:58:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ymE4wWcDTZ4AlH/kInJn4kU9JLjQhMLl2OMys97727A=;
+        b=nZy3hsvlMcZfE3n5bPdXmH8xVZu2quGC7nIe8Bh1yEGC8nv9V5v20T+dh2fD8BANzk
+         KWU+vGXh8JxqXqgG3CD9mO2i0DI4omtVF9dg+aqcuKNEFU/5u1V01XKoU7+xjV8c7xQV
+         tWb4VNixrew50D/MsLtSXmcHF+z33WoDgZjCJi9TnTm1AZ7H0MIaV9U5VRNogocswkAV
+         Sj2ree9xZBb20hixgkBdf8HgVsdBfLBXiCYhxbMXb+cN3Nkc6z/hKmOVOY/Tr+Ne2+2Z
+         4gIS0f22I7+LyXWcWV6ijyxBd+zTI8geRJj20VpS7bWPplBqFlATSPA8WFO/iE1XZyZq
+         2clA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7oQONjLNlEZepD8Y2r5t+j56WISZpm8LS3SWu/bbMS8=;
-        b=LoWNVwZvw6Cxhw9xOidUFGWhRw7qFg/2ErZzhsi7hkw3Loqj1xPPN/hw5Cp6gvBach
-         51Vrl1CkZlH5lZQfcRyI8fk2N7pjsp1NiEcNlJys1x4vI+3rzxN6UNEopj30SYEWPDD1
-         63ZCyxD5M8a1w2mRy0WVacYr4NfmCNB54t6iYTOOg699BOAuKwh1B368+a2Mpb2TtyXD
-         iDMVhzbh8OwECqqVR1cNbUhHWsuIU8N2fJULko1VUNac6BJOIppl5cxbm2w4RyVBiILa
-         9QLUzR3cxHvY/jPvfgiaf4qmUk1gOSUv0epMKhvkdHYRZiyJUjjDxtPndk4xNPtxCp6/
-         X8Hw==
-X-Gm-Message-State: APjAAAWM8sJLFnuoClL3vVJZeWnNJN0i+rqdgNdqbsmn/b63DIEPcRTc
-        6u9FpKkbh1/KIrqYu9SFKCGk/5kRMv6FTzw0oLQ=
-X-Google-Smtp-Source: APXvYqxDeWmOc69NHWSa6PwqqMjpTxI+i2WBomfCoxkfPUQbLE6azVsZ1oV9DuLc2U8uR66fSJB33go/01gP97cCVJ4=
-X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr1223936oth.145.1581666959566;
- Thu, 13 Feb 2020 23:55:59 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=ymE4wWcDTZ4AlH/kInJn4kU9JLjQhMLl2OMys97727A=;
+        b=X/bM8McYUM0+ZNPPH5JzLGtMWdM29g6f4s1VmSjXxW1v7x0BVFElurc6WTTIbFK9mn
+         NVRL5m+tgWSbOV4atlVhK0Ilb78rTsUo9DEa/CggE5WhfyfbBF8oPSBxQyvtsTAa9/ZA
+         QPBZXQicfwrvaBI9Uu+O0m7rvOGV+Zr61gVDpTmZH6MM7J+KHWN6P3+VoO90tKomQks5
+         mCRFA/h9Sy9RBr3VwKYgabXTnJLytC3YMaW8cCQn0VcJYUuPs9dIu4VZ/nS2W26JfnV5
+         B1M2Xpp3ag6q7bO6M3mybCbpHh/smoyvkWjRj42T8hEdg8K1+K7gOYkQgDvmvEYh5fVX
+         WC2g==
+X-Gm-Message-State: APjAAAUs6c5lRXQQOqtl7/2iKU+iLbat0AkNFC0KQnUuifNRV0BS+L+g
+        Vk48kkSB5lWoF7r/Ll5iYN6aKvcnWRn8+5YxzJvgQw==
+X-Google-Smtp-Source: APXvYqxVrgTWvhNGIt/68cvNnLcqmAKR2/yh4RqSuMw7dAFsIDHGzBtLAqtp6LbjMZQDirjIQnTzLRtZuhdpeY2CkW8=
+X-Received: by 2002:a19:40d8:: with SMTP id n207mr996255lfa.4.1581667084690;
+ Thu, 13 Feb 2020 23:58:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200213151839.156309910@linuxfoundation.org> <20200213222732.GA20637@roeck-us.net>
-In-Reply-To: <20200213222732.GA20637@roeck-us.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 14 Feb 2020 08:55:48 +0100
-Message-ID: <CAMuHMdV0nRPVjRpvVuZBMpaTfQGeMQN-2xrSehDwXOoG=4iATw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+References: <20200213053943.kxss6vvhi3jacfpw@shreyas_biamp.biamp.com>
+In-Reply-To: <20200213053943.kxss6vvhi3jacfpw@shreyas_biamp.biamp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 14 Feb 2020 08:57:53 +0100
+Message-ID: <CACRpkdawYjK9ma6pHnZYoHgsMxgfB1PbNCA83aD3Z-KS0CVAMw@mail.gmail.com>
+Subject: Re: [PATCH V4] mfd: da9062: add support for interrupt polarity
+ defined in device tree
+To:     Shreyas Joshi <shreyas.joshi@biamp.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        shreyasjoshi15@gmail.com,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Günter,
+Hi Shreyas,
 
-On Thu, Feb 13, 2020 at 11:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On Thu, Feb 13, 2020 at 07:20:07AM -0800, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.20 release.
-> > There are 96 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
-> > Anything received after that time might be too late.
-> >
->
-> Build reference: v5.4.19-98-gdfae536f94c2
-> gcc version: powerpc64-linux-gcc (GCC) 9.2.0
->
-> Building powerpc:defconfig ... failed
-> --------------
-> Error log:
-> drivers/rtc/rtc-ds1307.c:1570:21: error: variable 'regmap_config' has initializer but incomplete type
->  1570 | static const struct regmap_config regmap_config = {
->
-> Bisect log below. Looks like the the definition of "not needed"
-> needs an update.
+thanks for your patch!
 
-"not needed" goes together with (or after) "when necessary":
-578c2b661e2b1b47 ("rtc: Kconfig: select REGMAP_I2C when necessary")
+On Thu, Feb 13, 2020 at 6:40 AM Shreyas Joshi <shreyas.joshi@biamp.com> wrote:
 
-> v5.5.y has the same problem.
->
-> Guenter
->
-> ---
-> # bad: [dfae536f94c22d5fd109d5db73cd5ed7245a764c] Linux 5.4.20-rc1
-> # good: [d6591ea2dd1a44b1c72c5a3e3b6555d7585acdae] Linux 5.4.19
-> git bisect start 'HEAD' 'v5.4.19'
-> # bad: [f52a8d450b1431b775d993cd8586f0cfd5fe25e1] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-> git bisect bad f52a8d450b1431b775d993cd8586f0cfd5fe25e1
-> # good: [99323d91be3464a8ff87c7b16c72e7134b7b5075] selftests/bpf: Test freeing sockmap/sockhash with a socket in it
-> git bisect good 99323d91be3464a8ff87c7b16c72e7134b7b5075
-> # bad: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
-> git bisect bad 4ece240000532dbe0628f28f3f5466ed4091613b
-> # good: [3a0805bedf5a29ff659d82b34ccf8f393820a5f1] NFS: Fix fix of show_nfs_errors
-> git bisect good 3a0805bedf5a29ff659d82b34ccf8f393820a5f1
-> # good: [bd35cae202fa94fe8349ea63ea082f190b31692c] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-> git bisect good bd35cae202fa94fe8349ea63ea082f190b31692c
-> # good: [d052da5a3c584de39b4b74176b37925d58ab4239] rtc: hym8563: Return -EINVAL if the time is known to be invalid
-> git bisect good d052da5a3c584de39b4b74176b37925d58ab4239
-> # first bad commit: [4ece240000532dbe0628f28f3f5466ed4091613b] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
+> +       switch (*trigger) {
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               irq_type = 1;
+> +               break;
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               irq_type = 0;
+> +               break;
 
-Gr{oetje,eeting}s,
+Please create #defines for the level indicator, like
 
-                        Geert
+#define DA9062_IRQ_HIGH 1
+#define DA9062_IRQ_LOW 0
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+and use that.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With that change:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
