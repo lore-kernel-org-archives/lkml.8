@@ -2,105 +2,123 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC06C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA6FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3DD24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697896;
-	bh=FMn3dqKXlRf0VWYX1FOgHq9M1KnMQBmA7KSUS80C7sI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZJ/E65yjFkxMcRrbNMbFYhaBOSvlNlw//5pNaLoQ4iKIs7E4c3L3TkQjq39Q6bXu
-	 wz9dcRlCS8oP46ScSbutbv4wuFSj4IzOH1t2y7oZo6KGzQWxryA0NOgc+G130hGNP4
-	 rUcPr3W07wDij8h3JJhEmFW6iJsKdhKMWJEm0zgI=
+	by mail.kernel.org (Postfix) with ESMTP id 162F724696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:31:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/MyHARi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406821AbgBNQbf (ORCPT
+        id S2406847AbgBNQbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:31:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406292AbgBNQ0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:06 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C990247B1;
-        Fri, 14 Feb 2020 16:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697565;
-        bh=FMn3dqKXlRf0VWYX1FOgHq9M1KnMQBmA7KSUS80C7sI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJf496GpW7e0eTtkS9NFJ0cu67/asa9N3IPJK5C7n4OIhmnt7hb3xcT0EU4xEvBln
-         Mq43Ix0n0X/U3zD9oZRozW//64vP7EFQeSEl4t3y+dt14t4sgRyI2QPLeU5cwl5gGB
-         0M9YkvbKNxCcAYcbxeeQkwwCLpYhSMCUiCYCjnaM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 081/100] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 14 Feb 2020 11:24:05 -0500
-Message-Id: <20200214162425.21071-81-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:31:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54683 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406548AbgBNQbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:31:44 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g1so10556871wmh.4;
+        Fri, 14 Feb 2020 08:31:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eAPiyJCQWJAYuCQbg5vLQMsHB0XHMIF5EmjZS4cVVMc=;
+        b=U/MyHARiUoYbmegGISDczV0sWnxf/CnBisvcw2jP8Q2HgYSyL06jv5gfeTBP2p4i3D
+         QhuS8B+4XAy9CwyDawix1OFxAgYhQpFMMsmC94tYIm2qmJnfyh55YEg0pWY1pHMg+ocI
+         manMWCwf4ahuziuNMS3zGbJONPoQWeeIR3zEGrreA3w7fmh8XdV/8B78hr80zPWdC2LT
+         cVlEtA0td92IIYlzvtt2X0tnS9sXkgKV/dqnFWYcWfP6BnqJjk5hQc+N90kscu4bfQXt
+         FkBvGcZCIWjwRCYqPZxbptIimSIJ9le4M94WzYU5Og0VLFp9HC3MZoCehWOIBKHr6K6o
+         HyJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eAPiyJCQWJAYuCQbg5vLQMsHB0XHMIF5EmjZS4cVVMc=;
+        b=ikZ1Iu3zCpnrDIpDMbRTIChci9UEZq2p8zvEu7cCwQucbuXs2TPQRLy2ise+Kglf2/
+         db3bcZNvSYN2uIC8iqPTKObVPyJSQ9m+YPtHBCL6XIpO30G0b1T2graVmj9N0k0o/J5v
+         fsUt5iRwwGaRkIiVPcfG4CXwE9seogkpGzD3SyX4yMyMejJS5QjnlXLH3+cHHNlOgqlo
+         jtrr0vETLHlkq3L0v/w9+5hOZkI2kS2STdbawZ22tFY/eDrT2cSSP7Y+AyNAMa3V0gZi
+         zIHC/aA5OUl2dRatU9kQClHCCb7i8S11HZjjqm/K6xdagQnf55OICZdZUio81NcMiVip
+         kgdw==
+X-Gm-Message-State: APjAAAWyOnxfs1rIvM1rQuXAMJaRw+OltZoXvx7k/a73x2NJHI349w0S
+        y0WI1lxkizsANNl9BRCruVo6vAsgGIU4oSiwKxs=
+X-Google-Smtp-Source: APXvYqzlHaboZa+02wB3RWO97MuTp7IBVGo1BoTiJj/H1xoW7PoNMQhdrNk38Zh5PiWw6BYvdcF+waGi/AJsrdjus7I=
+X-Received: by 2002:a05:600c:2c53:: with SMTP id r19mr5496620wmg.39.1581697902657;
+ Fri, 14 Feb 2020 08:31:42 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-530-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-530-sashal@kernel.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 14 Feb 2020 11:31:31 -0500
+Message-ID: <CADnq5_Oq-6VYYMWgvSbTcs5S6+DHP1K+ambo3Cd_BBkYFQk8HQ@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.5 530/542] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+On Fri, Feb 14, 2020 at 11:00 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Alex Deucher <alexander.deucher@amd.com>
+>
+> [ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
+>
+> Cull out 0 clocks to avoid a warning in DC.
+>
+> Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+All of the upstream commits that reference this bug need to be applied
+or this patch set will be broken.  Please either apply them all or
+drop them.
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
+Alex
 
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/jbd2/commit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index ebbd7d054cabd..6710fff0085e0 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -797,7 +797,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 
- 	blk_finish_plug(&plug);
-@@ -890,7 +890,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
--- 
-2.20.1
-
+> Reviewed-by: Evan Quan <evan.quan@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> index 627a42e8fd318..fed3fc4bb57a9 100644
+> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+> @@ -1080,9 +1080,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+>
+>         clocks->num_levels = 0;
+>         for (i = 0; i < pclk_vol_table->count; i++) {
+> -               clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+> -               clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
+> -               clocks->num_levels++;
+> +               if (pclk_vol_table->entries[i].clk) {
+> +                       clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+> +                       clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
+> +                       clocks->num_levels++;
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 2.20.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
