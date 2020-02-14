@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E73C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF52C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837072168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53522082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701698;
-	bh=8ZM05lNKpU6kdaPrhIh/NDaUPwNaVKRoptZj+HHqS/A=;
+	s=default; t=1581701701;
+	bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xR8FjtY7DCH7svLijujgoJmUxNCZvxJfl24IzXrmctvpL+Z2YrXKQE6XD/APql1bX
-	 w2VL9+eFtJtmUXMEF29ppwz5EVmbNMZCStQca5j3XZS7CBzy0ffIKPJFdhxSsbgWml
-	 egEg7Lnoclikk+KahvTTOFg4bam8E9Lw5DfXF4Vg=
+	b=vd2OE/xY+ezjiUa6RaD4lS/6pu2XeJOFoc906KxKvIFqVw6CV/MWcLrd4MW3ONOnI
+	 UBjU3TrqGQqibWB7yiJZIWjDTXxbQ8YKX9B9devCpZN/Oz1nzAKGPazGbcTUKGc6uG
+	 e67A42qBYPC3C0aYeRT30ampyzZW+6a+EJ/dJ7n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394696AbgBNRe5 (ORCPT
+        id S2390304AbgBNQGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:34:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:06:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390309AbgBNQGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:04 -0500
+        id S2390148AbgBNQFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:05:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330B124686;
-        Fri, 14 Feb 2020 16:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB7824681;
+        Fri, 14 Feb 2020 16:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696364;
-        bh=8ZM05lNKpU6kdaPrhIh/NDaUPwNaVKRoptZj+HHqS/A=;
+        s=default; t=1581696319;
+        bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFQgyU8UiJZNn0aPuzUuwmIyt6cneFJu3F6ebQAQQtTextfzvF8aZZECnFXh9cGwV
-         JT/065+OgCZF5oV/5T1IFg35yf3zXKt9swGkJPDtq3TBIHqgKbR6c9s2lHecaqanWF
-         verU96c6mCjCqOvJfa5ktV/+apTdyan4VAHBQ50U=
+        b=UxE/z+Slei+YF8x+h/ggXz1TTZkFpWjzin5tul9TCjmqghJiKfeCfuaOex3eKPC8i
+         soBYRGuKLZmKpwcNRuIzYMCOTfTcTo/9yMXXsvPGlKBpMCLQrY+EBd4Uy9t7al3yLO
+         rwKjXVR/2JByedbXgCC6YydIO3ISME0FJVC/AThw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Engraf <david.engraf@sysgo.com>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 195/459] Revert "tty/serial: atmel: fix out of range clock divider handling"
-Date:   Fri, 14 Feb 2020 10:57:25 -0500
-Message-Id: <20200214160149.11681-195-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 160/459] arm64: dts: allwinner: H5: Add PMU node
+Date:   Fri, 14 Feb 2020 10:56:50 -0500
+Message-Id: <20200214160149.11681-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,37 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 6dbd54e4154dfe386b3333687de15be239576617 ]
+[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
 
-This reverts commit 751d0017334db9c4d68a8909c59f662a6ecbcec6.
+Add the Performance Monitoring Unit (PMU) device tree node to the H5
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core.
+As with the A64, the interrupt numbers from the manual were wrong (off
+by 4), the actual SPI IDs have been gathered in U-Boot, and were
+verified with perf in Linux.
 
-The wrong commit got added to the tty-next tree, the correct one is in
-the tty-linus branch.
+Tested with perf record and taskset on an OrangePi PC2.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: David Engraf <david.engraf@sysgo.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/atmel_serial.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index 1ba9bc667e136..ab4d4a0b36497 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -2270,6 +2270,9 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
- 		mode |= ATMEL_US_USMODE_NORMAL;
- 	}
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index f002a496d7cbb..1d34e3eefda3f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -54,21 +54,21 @@
+ 			enable-method = "psci";
+ 		};
  
-+	/* set the mode, clock divisor, parity, stop bits and data size */
-+	atmel_uart_writel(port, ATMEL_US_MR, mode);
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -76,6 +76,16 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
 +
- 	/*
- 	 * Set the baud rate:
- 	 * Fractional baudrate allows to setup output frequency more
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
