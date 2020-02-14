@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8408C3B1A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9848C3B1A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B041E24688
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E082468C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695387;
-	bh=T7uWfjRYwYIvMGHvSLHzXsYWS5MRR42vOXJsYdLx2RE=;
+	s=default; t=1581695394;
+	bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjyxWphQry4reIAf+ok64O88/naZjD8JHUK6h9Qb5PA8CMAvOfdIQf/M0o1CkDWCX
-	 BqzGoZImH2ixcJbhN5ZYjs0VBucyyj3UNLXua6BxYVAsImio4eAEiXbz04ZvERSgqF
-	 cBkWs8V1KoAt+2CuTwJ2DLjIuLr00D9eZ9lD2kQk=
+	b=K8b2VAuiEv8EAAV9ty5ivKn4hekY7WbmO6MnTsoGNfaixDzPt4QxHTJ0HXmLzdj/d
+	 CDoq7iztuH75YFF/53+mpBHrICQWPov3HIQIu2v+wY3VKT65ZKdtsL/h5F8m30sDZD
+	 pDofTY+bpMDFXtKwrPPSYEuJil4+a/mL354sCQZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgBNPtq (ORCPT
+        id S1730262AbgBNPtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52852 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730083AbgBNPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:41 -0500
+        id S1730214AbgBNPts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E7724650;
-        Fri, 14 Feb 2020 15:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA69024687;
+        Fri, 14 Feb 2020 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695381;
-        bh=T7uWfjRYwYIvMGHvSLHzXsYWS5MRR42vOXJsYdLx2RE=;
+        s=default; t=1581695387;
+        bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbqn7P1ME16belOwu1JdbKK04L5+aWXCGp5pPL9Pk51xXlRQDQg3YfCxxRSlX5Ods
-         OHMwydSJfJ1xdnTcERw2A2laCRl/FEeV6en//61PsZABuxHnbhUpSDbgft5AXos2SK
-         srH/TM3U1QBWFgN2g51D8Ii/BTqNTe2yEEz9nktk=
+        b=A9Rj5+TbIsaYB1zcl28a1H9bKzZHti3x0xoI3BoUiuYnKeX+eD28W/ga3P1kffQyq
+         0KvdrJhuIklIL+x2XJWyY99lC94ZSRMfSSixmD2mJWVhtUIstYgC031KY9DX2gbtWu
+         JxVJKm9Wqu4i4JQ/VXvk52X+vFF6PadtOAZ+Po6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 036/542] printk: fix exclusive_console replaying
-Date:   Fri, 14 Feb 2020 10:40:28 -0500
-Message-Id: <20200214154854.6746-36-sashal@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 041/542] media: ov5640: Fix check for PLL1 exceeding max allowed rate
+Date:   Fri, 14 Feb 2020 10:40:33 -0500
+Message-Id: <20200214154854.6746-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,56 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit def97da136515cb289a14729292c193e0a93bc64 ]
+[ Upstream commit 2e3df204f9af42a47823ee955c08950373417420 ]
 
-Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
-the log") introduced a new variable @exclusive_console_stop_seq to
-store when an exclusive console should stop printing. It should be
-set to the @console_seq value at registration. However, @console_seq
-is previously set to @syslog_seq so that the exclusive console knows
-where to begin. This results in the exclusive console immediately
-reactivating all the other consoles and thus repeating the messages
-for those consoles.
+The variable _rate is by ov5640_compute_sys_clk() which returns
+zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
+if the max PLL1 output is checking 'rate' and not '_rate' and
+'rate' does not ever appear to be 0.
 
-Set @console_seq after @exclusive_console_stop_seq has stored the
-current @console_seq value.
+This patch changes the check against the returned value of
+'_rate' to determine if the PLL1 output exceeds 1GHz.
 
-Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
-Link: http://lkml.kernel.org/r/20191219115322.31160-1-john.ogness@linutronix.de
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov5640.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1ef6f75d92f1f..fada22dc4ab6c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2770,8 +2770,6 @@ void register_console(struct console *newcon)
- 		 * for us.
- 		 */
- 		logbuf_lock_irqsave(flags);
--		console_seq = syslog_seq;
--		console_idx = syslog_idx;
- 		/*
- 		 * We're about to replay the log buffer.  Only do this to the
- 		 * just-registered console to avoid excessive message spam to
-@@ -2783,6 +2781,8 @@ void register_console(struct console *newcon)
- 		 */
- 		exclusive_console = newcon;
- 		exclusive_console_stop_seq = console_seq;
-+		console_seq = syslog_seq;
-+		console_idx = syslog_idx;
- 		logbuf_unlock_irqrestore(flags);
- 	}
- 	console_unlock();
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 5e495c833d329..bb968e764f318 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
+ 			 * We have reached the maximum allowed PLL1 output,
+ 			 * increase sysdiv.
+ 			 */
+-			if (!rate)
++			if (!_rate)
+ 				break;
+ 
+ 			/*
 -- 
 2.20.1
 
