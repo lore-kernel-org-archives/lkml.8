@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440ECC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB86C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C71824694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69797246FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697640;
-	bh=Su6IFIGirrLOUgdlL/sRKT0JfpP+Dg+DC1+yPwb5HTk=;
+	s=default; t=1581697642;
+	bh=BAiSBRFdJMN3ZHL/w78o+PZyV1AC1701XX/Z2jnkgC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sc8duIdI8V+YU/bjZONx3hot/62I2oz4oppfrcRBnItiD6WMl5tvRpLOtmDnlr7lY
-	 SiUkIQDPsTRGoVO+H53TW5g+05NlXmZQkXfzsrDhg7Sc4RoGToi9APEWnELGpyuTf6
-	 xbWo9iaDIUnyhJxJBBGvgmXcrf5PJKkmK/cakFbY=
+	b=HHMc9Pks4VSunsBqyXSsa1ufUy3WePk25GA94pUXhzFUk1skeH4ByNUlnmIggqKzq
+	 lb+A02p3sHKpI5PmqI2DpBgZDTcBJit46pwEvJiNhWXBcn/N7y7ojjfOIyZW39zgi8
+	 mZg4qukiyHl12Bym1NDxhVaaRzT7IRF11JhyTsKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406613AbgBNQ1T (ORCPT
+        id S2406624AbgBNQ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:27:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:27:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406065AbgBNQZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:21 -0500
+        id S2406105AbgBNQZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C3A7247B1;
-        Fri, 14 Feb 2020 16:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B352A247C7;
+        Fri, 14 Feb 2020 16:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697521;
-        bh=Su6IFIGirrLOUgdlL/sRKT0JfpP+Dg+DC1+yPwb5HTk=;
+        s=default; t=1581697527;
+        bh=BAiSBRFdJMN3ZHL/w78o+PZyV1AC1701XX/Z2jnkgC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uX45Sz2OgBgKbTgWVPN+yaEORQWJZ28fOtWMh0Mkdm3ViGlz7etjiK0rSdq6Ui5Bu
-         VaxSNfHhj1k8udEKhCBBlR+Aw9SECxhOpnLQV0df1BsP9ufIeZCZPsZ2w4miKC260k
-         vv9Q2sm17IkV8a+T9Z6ZexnY21fNoeKnNsbzTurg=
+        b=n0cOuoKt9lDB9xnxgalnqKdlCAcMVDclk/l+QuNu0EnN97591qkdpTXj1c3Dh+3pr
+         t/xe+GamU0SS24ZSLyVdgtkXAaIdIk1sW94WOm2rtk7cS7487RvBqDcpXh7rPQpYhC
+         5MOBOnSFejiLy3MtFyUROajMQ6rphdZWRjHFf/O8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 045/100] iwlegacy: Fix -Wcast-function-type
-Date:   Fri, 14 Feb 2020 11:23:29 -0500
-Message-Id: <20200214162425.21071-45-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 050/100] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+Date:   Fri, 14 Feb 2020 11:23:34 -0500
+Message-Id: <20200214162425.21071-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -61,70 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
+[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+Clang warns:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+                        ^
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
+is here
+                        if (syncrate == &ahc_syncrates[maxsync])
+                        ^
+1 warning generated.
+
+This warning occurs because there is a space amongst the tabs on this
+line. Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+This has been a problem since the beginning of git history hence no fixes
+tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/817
+Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/iwlegacy/3945-mac.c | 5 +++--
- drivers/net/wireless/iwlegacy/4965-mac.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/iwlegacy/3945-mac.c b/drivers/net/wireless/iwlegacy/3945-mac.c
-index af1b3e6839fa6..775f5e7791d48 100644
---- a/drivers/net/wireless/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/iwlegacy/3945-mac.c
-@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
- }
- 
- static void
--il3945_irq_tasklet(struct il_priv *il)
-+il3945_irq_tasklet(unsigned long data)
- {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
- 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
- 
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il3945_irq_tasklet,
-+		     il3945_irq_tasklet,
- 		     (unsigned long)il);
- }
- 
-diff --git a/drivers/net/wireless/iwlegacy/4965-mac.c b/drivers/net/wireless/iwlegacy/4965-mac.c
-index 04b0349a6ad9f..b1925bdb11718 100644
---- a/drivers/net/wireless/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/iwlegacy/4965-mac.c
-@@ -4361,8 +4361,9 @@ il4965_synchronize_irq(struct il_priv *il)
- }
- 
- static void
--il4965_irq_tasklet(struct il_priv *il)
-+il4965_irq_tasklet(unsigned long data)
- {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -6257,7 +6258,7 @@ il4965_setup_deferred_work(struct il_priv *il)
- 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
- 
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il4965_irq_tasklet,
-+		     il4965_irq_tasklet,
- 		     (unsigned long)il);
- }
- 
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index 64ab9eaec428c..def3208dd2905 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -2321,7 +2321,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
+ 			 * At some speeds, we only support
+ 			 * ST transfers.
+ 			 */
+-		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
++			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+ 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
+ 			break;
+ 		}
 -- 
 2.20.1
 
