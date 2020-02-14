@@ -2,125 +2,147 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEB0C3B18F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52388C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A5E24681
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581680873;
-	bh=ipltv6N9bdhTSgDzSuTM6lIXL8j+CLMtiTE9Vv3TYrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RqsbDaQriuhMmQrx5OIztqcqSYEXlchruylelhhibmas2tiot4HxScCmuQRuFbZAq
-	 bE2FJh9fUtOJv/7jq/grpDh9APxWulJ4mnpygY9iUDmm1KEBuZukjNNLITm/xzU1U9
-	 GLuUuCEaXT5CjVlhOeZdeybypuiFDinGfzHcskOA=
+	by mail.kernel.org (Postfix) with ESMTP id 276A2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 11:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tE4AUGn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgBNLrx (ORCPT
+        id S1729173AbgBNLs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 06:47:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:60130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbgBNLrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 06:47:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE7F91045;
-        Fri, 14 Feb 2020 03:47:51 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719253F68F;
-        Fri, 14 Feb 2020 03:47:51 -0800 (PST)
-Date:   Fri, 14 Feb 2020 11:47:49 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
-Message-ID: <20200214114749.GB4827@sirena.org.uk>
-References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
- <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
- <20200211190614.GP4543@sirena.org.uk>
- <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
+        Fri, 14 Feb 2020 06:48:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30238 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728689AbgBNLs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 06:48:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581680906; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=dem2MPO59EVETxmr+ElZhIMQ9T5DDrU5ZkPlTSFmIs0=;
+ b=tE4AUGn7bBEfiSQefam3pbS50NNz3MAl8vRQiJPlGvnYHn0RdOZX0qbeq0oT5F+gjVs7Rt3Q
+ vE4E29kzyVVFhM6iKSXI6Bc+/N3nSG2TrHA8e1CC41zSgPbv+I/eJQ0xX9w8HBDmIakKiqe6
+ GtV0iJ9EjqEseSxv5TCC9iUOxxQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e468905.7f5abdc3a6c0-smtp-out-n02;
+ Fri, 14 Feb 2020 11:48:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1529AC4479C; Fri, 14 Feb 2020 11:48:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: gubbaven)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52D0FC43383;
+        Fri, 14 Feb 2020 11:48:20 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Content-Disposition: inline
-In-Reply-To: <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
-X-Cookie: Shipping not included.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Feb 2020 17:18:20 +0530
+From:   gubbaven@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     johan.hedberg@gmail.com, marcel@holtmann.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        robh@kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        tientzu@chromium.org, seanpaul@chromium.org, rjliao@codeaurora.org,
+        yshavit@google.com
+Subject: Re: [PATCH v3] Bluetooth: hci_qca: Bug fixes while collecting
+ controller memory dump
+In-Reply-To: <158164697600.184098.7937205486686028830@swboyd.mtv.corp.google.com>
+References: <1581609364-21824-1-git-send-email-gubbaven@codeaurora.org>
+ <158164697600.184098.7937205486686028830@swboyd.mtv.corp.google.com>
+Message-ID: <d37ca6d9414720b2355d552fa8b68629@codeaurora.org>
+X-Sender: gubbaven@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
+On 2020-02-14 07:52, Stephen Boyd wrote:
+> Quoting Venkata Lakshmi Narayana Gubba (2020-02-13 07:56:04)
+>> This patch will fix the below issues
+>>    1.Fixed race conditions while accessing memory dump state flags.
+> 
+> What sort of race condition?
+[Venkat]:
+To avoid race condition between qca_hw_error() and 
+qca_controller_memdump() while accessing memory buffer, mutex is added.
+In timeout scenario, qca_hw_error() frees memory dump buffers and 
+qca_controller_memdump() might still access same memory buffers.
+We can avoid this situation by using mutex.
+> 
+>>    2.Updated with actual context of timer in hci_memdump_timeout()
+> 
+> What does this mean?
+[Venkat]:
+I will update commit text and post in next patch set.
+> 
+>>    3.Updated injecting hardware error event if the dumps failed to 
+>> receive.
+>>    4.Once timeout is triggered, stopping the memory dump collections.
+>> 
+>> Possible scenarios while collecting memory dump:
+>> 
+>> Scenario 1:
+>> 
+>> Memdump event from firmware
+>> Some number of memdump events with seq #
+>> Hw error event
+>> Reset
+>> 
+>> Scenario 2:
+>> 
+>> Memdump event from firmware
+>> Some number of memdump events with seq #
+>> Timeout schedules hw_error_event if hw error event is not received 
+>> already
+>> hw_error_event clears the memdump activity
+>> reset
+>> 
+>> Scenario 3:
+>> 
+>> hw_error_event sends memdump command to firmware and waits for 
+>> completion
+>> Some number of memdump events with seq #
+>> hw error event
+>> reset
+>> 
+>> Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory 
+>> dump during SSR")
+>> Reported-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>> Signed-off-by: Venkata Lakshmi Narayana Gubba 
+>> <gubbaven@codeaurora.org>
+>> ---
+> [...]
+>> @@ -1449,6 +1465,23 @@ static void qca_hw_error(struct hci_dev *hdev, 
+>> u8 code)
+>>                 bt_dev_info(hdev, "waiting for dump to complete");
+>>                 qca_wait_for_dump_collection(hdev);
+>>         }
+>> +
+>> +       if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
+>> +               bt_dev_err(hu->hdev, "clearing allocated memory due to 
+>> memdump timeout");
+>> +               mutex_lock(&qca->hci_memdump_lock);
+> 
+> Why is a mutex needed? Are crashes happening in parallel? It would be
+> nice if the commit text mentioned why the mutex is added so that the
+> reader doesn't have to figure it out.
+> 
+[Venkat]:Explained in above answer.
+>> +               if (qca_memdump)
+>> +                       memdump_buf = qca_memdump->memdump_buf_head;
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 12, 2020 at 06:56:37AM +0000, Vaittinen, Matti wrote:
-> On Tue, 2020-02-11 at 19:06 +0000, Mark Brown wrote:
-
-> > Note also that we already have quite extensive helpers for this sort
-> > of
-> > stuff in the regulator API which I sense may have been involved in
-> > this
-> > implementation
-
-> You sense well xD
-
-If you're factoring stuff out of an existing implementation it'd be good
-to explicitly do that - this both shows where things came from and also
-means that you can show that the existing user works with the new code
-which is good.
-
-> But another option - which I thought only now - would be to see if
-> current regulator implementation could be re-named to more generic and
-> placed under some more generic component (I thought of regmap but as
-> you pointed out this is equally usefull for devices connected to memory
-> mapped buses - so maybe under lib - if static inline functions in a
-> header are not a good option). I just have a feeling that the linear-
-> ranges is currently kind of embedded in the code which is internal to
-> regulator framework so it is probably not easily extracted from
-> regulator code?
-
-It is a bit but I think that's solvable with some refactoring in place
-(eg, pushing things into a smaller struct embedded in the main regulator
-one and then moving them out).  I might look at it myself if nobody else
-gets to it first...
-
-> So if we do not start pulling the range code out of regulator framework
-> (for now at least) - and if we do not place this under regmap - then I
-> can drop you out of the recipient list for this charger driver in order
-> to not pollute your inbox ;) How do you feel Mark, do you want to be
-> following this series?
-
-Well, if there's a refactoring out of the regulator code going on I'll
-need to look at that anyway.
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GiOUACgkQJNaLcl1U
-h9ACeAf8DB2xRPKGrvFQ8dGG0zRPuFif0voo7h906pgsLKrxhw1RdAS6b0hf2/Vf
-kgaDDlXcG5xbcnXivGAh1rK/l58zaUNsEWIGg0vhkwIHajdX5qqn5lspqrSj8JT/
-xo0LuYHy7Nki0SdRUgulm85zbaO6tbjqZFiLwaFDY0ZmaOH1tCbmxAD8BHweJltX
-cHfajZQO9UIjSOc46qfetMGchng6pdu+TAsc7SywjwqHQis2xKjcuZSiunjpMlwA
-Ixe4rx2+fbsyx9Zn1VqU7nr8JMlwILt78mrLNlKq4/6XbLAb4BCmwHvzFLe89Z7B
-6ALKhYNedwGJ0oe3fI6OvNl5a/H2uA==
-=6GmO
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
+Regards,
+Lakshmi Narayana.
