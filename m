@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76417C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6582187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032CB2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698629;
-	bh=dsc5/lIAV0ue5hoxHQRCljp+C+yDfjgL8AGGJpqwUHU=;
+	s=default; t=1581698635;
+	bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hiZCHRaD6ivlg4MqMXkNhTWuvvHksXhV4M5yc8x2Qn47wWrNRly0QUngtlBDKm9HS
-	 TFTNxCnLkEdI5YTEpJVO2bhkhzZGZPKtF7ZsUQa64Z6x3k/n8LTExqSaP8s6Qc2g0L
-	 +M3QwbsYsQgzT6ZDk/ublSdIFx0HDCcj1WxiMIwc=
+	b=LE76m0Ottv6NaNL20Nvv2WUlQTcD2iUaADl56IFHL50D3c0fTaVwSSAeNA/britlm
+	 QQArMkVqUKZxFV2bDIS0CeRbzPFzDI4HnOCEcJjtRgpiarlH7JY0QxQxmzfkp2qzNr
+	 otRez2kaK7+7BAjJGnHLWJbsyj7OqThwHFzklHHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394057AbgBNQns (ORCPT
+        id S2393108AbgBNQVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:43:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56960 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:21:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393141AbgBNQV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:57 -0500
+        id S2404964AbgBNQUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:20:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB2B246CE;
-        Fri, 14 Feb 2020 16:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D4C024722;
+        Fri, 14 Feb 2020 16:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697316;
-        bh=dsc5/lIAV0ue5hoxHQRCljp+C+yDfjgL8AGGJpqwUHU=;
+        s=default; t=1581697220;
+        bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQvx5UZ8+oCkHnwabE0NcAm6b4A1SQWJYjt2FB6UmZOk7bCvjEzHzrRe+gBayQ65F
-         SypLS60uMDkWTvmv5T4JeAQVhdioFhoCNEEl+kdicUd0zAH++CfNGvG9MYk7RoglSr
-         lkYrm3T7T1btvG/jvY/NMsMFeFAC80WsRC2ehp9E=
+        b=I2B496mHgRwiIC7JPDAjpRll+JSUPDRJQ8+sPbtE1aNLZAMW+HTmmxiPStcnEUBRX
+         CP0hzps1iiTPK+0FTeMb/9/5hAiw8AloZXi/kHAB6twRLLzHZe2oP+0QPgyICBo3YP
+         MwaO2leDgukpfzpssqCREgf+WGhwBTIdjxN3eB+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 027/141] ext4, jbd2: ensure panic when aborting with zero errno
-Date:   Fri, 14 Feb 2020 11:19:27 -0500
-Message-Id: <20200214162122.19794-27-sashal@kernel.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 144/186] btrfs: fix possible NULL-pointer dereference in integrity checks
+Date:   Fri, 14 Feb 2020 11:16:33 -0500
+Message-Id: <20200214161715.18113-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,74 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Johannes Thumshirn <jth@kernel.org>
 
-[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
+[ Upstream commit 3dbd351df42109902fbcebf27104149226a4fcd9 ]
 
-JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
-aborted, and then __ext4_abort() and ext4_handle_error() can invoke
-panic if ERRORS_PANIC is specified. But if the journal has been aborted
-with zero errno, jbd2_journal_abort() didn't set this flag so we can
-no longer panic. Fix this by always record the proper errno in the
-journal superblock.
+A user reports a possible NULL-pointer dereference in
+btrfsic_process_superblock(). We are assigning state->fs_info to a local
+fs_info variable and afterwards checking for the presence of state.
 
-Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+While we would BUG_ON() a NULL state anyways, we can also just remove
+the local fs_info copy, as fs_info is only used once as the first
+argument for btrfs_num_copies(). There we can just pass in
+state->fs_info as well.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205003
+Signed-off-by: Johannes Thumshirn <jth@kernel.org>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/checkpoint.c |  2 +-
- fs/jbd2/journal.c    | 15 ++++-----------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ fs/btrfs/check-integrity.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
-index 4d5a5a4cc017c..addb0784dd1c4 100644
---- a/fs/jbd2/checkpoint.c
-+++ b/fs/jbd2/checkpoint.c
-@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
- 				       "journal space in %s\n", __func__,
- 				       journal->j_devname);
- 				WARN_ON(1);
--				jbd2_journal_abort(journal, 0);
-+				jbd2_journal_abort(journal, -EIO);
- 			}
- 			write_lock(&journal->j_state_lock);
- 		} else {
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 40c754854b29e..efc8cfd060730 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2100,12 +2100,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/fs/btrfs/check-integrity.c b/fs/btrfs/check-integrity.c
+index 7d5a9b51f0d7a..4be07cf31d74c 100644
+--- a/fs/btrfs/check-integrity.c
++++ b/fs/btrfs/check-integrity.c
+@@ -642,7 +642,6 @@ static struct btrfsic_dev_state *btrfsic_dev_state_hashtable_lookup(dev_t dev,
+ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 				      struct btrfs_fs_devices *fs_devices)
+ {
+-	struct btrfs_fs_info *fs_info = state->fs_info;
+ 	struct btrfs_super_block *selected_super;
+ 	struct list_head *dev_head = &fs_devices->devices;
+ 	struct btrfs_device *device;
+@@ -713,7 +712,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 			break;
+ 		}
  
- 	__jbd2_journal_abort_hard(journal);
- 
--	if (errno) {
--		jbd2_journal_update_sb_errno(journal);
--		write_lock(&journal->j_state_lock);
--		journal->j_flags |= JBD2_REC_ERR;
--		write_unlock(&journal->j_state_lock);
--	}
-+	jbd2_journal_update_sb_errno(journal);
-+	write_lock(&journal->j_state_lock);
-+	journal->j_flags |= JBD2_REC_ERR;
-+	write_unlock(&journal->j_state_lock);
- }
- 
- /**
-@@ -2147,11 +2145,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
-  * failure to disk.  ext3_error, for example, now uses this
-  * functionality.
-  *
-- * Errors which originate from within the journaling layer will NOT
-- * supply an errno; a null errno implies that absolutely no further
-- * writes are done to the journal (unless there are any already in
-- * progress).
-- *
-  */
- 
- void jbd2_journal_abort(journal_t *journal, int errno)
+-		num_copies = btrfs_num_copies(fs_info, next_bytenr,
++		num_copies = btrfs_num_copies(state->fs_info, next_bytenr,
+ 					      state->metablock_size);
+ 		if (state->print_mask & BTRFSIC_PRINT_MASK_NUM_COPIES)
+ 			pr_info("num_copies(log_bytenr=%llu) = %d\n",
 -- 
 2.20.1
 
