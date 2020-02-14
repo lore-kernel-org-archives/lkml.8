@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EB9C3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A40AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796A524654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267942082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696086;
-	bh=fWkVieqX4+okU8uVSg0m7NTofCEOdf4K60FWuuLXt9s=;
+	s=default; t=1581696091;
+	bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlrpbqYfYOMuG79fRHx6z6GGnN9+PGJOqUqsHdpiULvTH3fj9cp4d0mgqjTTxvu9a
-	 1Rl8SJ7DSF3fvrx73FpRgVADOWdhrbDb9y0l92sNtizByBum1UOOaYNBLN2bNgtRwH
-	 kOt8SWc7MGxXFFEdH2v4HlIimC1zsvcmRbHRwwsA=
+	b=OegCw+OqoQUf6NtaX9Qja1vOBYvGfM0AX3Z94XDW647LUVepxMsexO8eg4YixxskR
+	 U5+esOpBJjCZUXTaHx06suk03v0mq/8ZRuAOznWApAS/bIRQ6w/TNqkpbnXbC0CYEc
+	 kwgZS+F8GukPVGykE7wmJtuf9k0GIQM7era2tBNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388864AbgBNQBZ (ORCPT
+        id S2389080AbgBNQBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:01:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389092AbgBNQAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:00:15 -0500
+        id S2389088AbgBNQAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:00:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C3C524681;
-        Fri, 14 Feb 2020 16:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C84122187F;
+        Fri, 14 Feb 2020 16:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696014;
-        bh=fWkVieqX4+okU8uVSg0m7NTofCEOdf4K60FWuuLXt9s=;
+        s=default; t=1581696012;
+        bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kkfg0LkLSMRg4CQEm7e4XVogPHn44+O4nhE9YO5x0qvL7aRg1qzGZhWgOP0MPzogE
-         3qDAdztgZvLpaXhGxnS/eKcdg3TqNxomrsoZFjw9y9UKxDCZl/BZLEFy8zWqMVd04a
-         RBE/bF7Yvz+JZxfpdRnOX9lIX20b4rp6tTDR+VUQ=
+        b=MkyOIZBM0IwoPVFEwu6WKpqpFfDiUIqjX1FyoxDcFXhV19LhdBrqjqU9h1N504f0F
+         UB5y1OhpMrMgGbgxoDGkxGe4BFeEZMAExdM7yNMKqWyVluoJohAjfdeYeVGiyFSpNM
+         S+Jz/jRA/9qzEcTMVl2x+kqzoJqa8HZMTs0LjDQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 531/542] NFS: Fix memory leaks
-Date:   Fri, 14 Feb 2020 10:48:43 -0500
-Message-Id: <20200214154854.6746-531-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Sasha Levin <sashal@kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 529/542] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency
+Date:   Fri, 14 Feb 2020 10:48:41 -0500
+Message-Id: <20200214154854.6746-529-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,49 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 123c23c6a7b7ecd2a3d6060bea1d94019f71fd66 ]
+[ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
 
-In _nfs42_proc_copy(), 'res->commit_res.verf' is allocated through
-kzalloc() if 'args->sync' is true. In the following code, if
-'res->synchronous' is false, handle_async_copy() will be invoked. If an
-error occurs during the invocation, the following code will not be executed
-and the error will be returned . However, the allocated
-'res->commit_res.verf' is not deallocated, leading to a memory leak. This
-is also true if the invocation of process_copy_commit() returns an error.
+Only send non-0 clocks to DC for validation.  This mirrors
+what the windows driver does.
 
-To fix the above leaks, redirect the execution to the 'out' label if an
-error is encountered.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs42proc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 9637aad36bdca..e2ae54b35dfe1 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -343,14 +343,14 @@ static ssize_t _nfs42_proc_copy(struct file *src,
- 		status = handle_async_copy(res, dst_server, src_server, src,
- 				dst, &args->src_stateid, restart);
- 		if (status)
--			return status;
-+			goto out;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+index 1115761982a78..627a42e8fd318 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+@@ -1026,12 +1026,15 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
+ 
+ 	clocks->num_levels = 0;
+ 	for (i = 0; i < pclk_vol_table->count; i++) {
+-		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
+-		clocks->data[i].latency_in_us = latency_required ?
+-						smu10_get_mem_latency(hwmgr,
+-						pclk_vol_table->entries[i].clk) :
+-						0;
+-		clocks->num_levels++;
++		if (pclk_vol_table->entries[i].clk) {
++			clocks->data[clocks->num_levels].clocks_in_khz =
++				pclk_vol_table->entries[i].clk * 10;
++			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
++				smu10_get_mem_latency(hwmgr,
++						      pclk_vol_table->entries[i].clk) :
++				0;
++			clocks->num_levels++;
++		}
  	}
  
- 	if ((!res->synchronous || !args->sync) &&
- 			res->write_res.verifier.committed != NFS_FILE_SYNC) {
- 		status = process_copy_commit(dst, pos_dst, res);
- 		if (status)
--			return status;
-+			goto out;
- 	}
- 
- 	truncate_pagecache_range(dst_inode, pos_dst,
+ 	return 0;
 -- 
 2.20.1
 
