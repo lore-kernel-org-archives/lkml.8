@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49EDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0210CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B956B206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25FC206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702135;
-	bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
+	s=default; t=1581702144;
+	bh=Srs9+yc0o/XT+FN6YHGUoe6mlRHFCPi0IL/RpXDaEOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=havPEd76f3his/GxEXtp4ukGA0A9hjo7rAMqAMCYkNgWojg0VOR1ynWPaUI4W8J3c
-	 F8ugsho7z/S7Vv1Vsr26igwGpbQ+JSc0aybPb9EYPLc38ZEbZ5CjHkl1hi3uNfhV1r
-	 ybUd3he2OU90JeydQWp5iF2/xkvYBlVCBTons0Rc=
+	b=0dlxs38tT6A2E1pVe+WurtwANIJpHsBVzc98GT83u459b5uPQnoI3fDN8U7M3Uh3s
+	 t66XYyG0mfox4fa9GpnE528Gjf+x8FRDq45k0TVhxobsKaNuQk+djAi62DvCbR7Bfy
+	 lsvOB0pDOKNgSuxN8VOHgsMQZOkSEDFbKYK+flv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389739AbgBNRmO (ORCPT
+        id S2390042AbgBNRmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:42:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389640AbgBNQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:29 -0500
+        id S2389230AbgBNQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B854724680;
-        Fri, 14 Feb 2020 16:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FFB624681;
+        Fri, 14 Feb 2020 16:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696208;
-        bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
+        s=default; t=1581696207;
+        bh=Srs9+yc0o/XT+FN6YHGUoe6mlRHFCPi0IL/RpXDaEOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxQbX2q5d/EoZh1Yr5fNrvqlD8AfvyXwQDffrsFoBDfetMLjjtiVpIoHfQApM7cAU
-         wDx7Aq42xftGlKq4/04IEYjDGdVKK9IufQbMVcRv47tyUHZJRE1qxFy0MBahuzK2ay
-         t2JHcPv2n8UPuW/BmUGav0kooKPox6HwDoNKzFz4=
+        b=xU9/UOrokDHrHez8jSgvnM1uXt8FsGLbsG7DYGoZiMbN4IO3SPjoKZvS5eS4Xbyan
+         qVyEAqUBWhaw3P9/lKCsw4swmFDFP6in82FYowvmY6iG2gfaGuX1APncpzLsPOf/U5
+         3SfeTLFIKJZsrrOGasD1OX3mXTNQ4AfOCI4LNgow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Li <li.kai4@h3c.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 073/459] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-Date:   Fri, 14 Feb 2020 10:55:23 -0500
-Message-Id: <20200214160149.11681-73-sashal@kernel.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 072/459] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
+Date:   Fri, 14 Feb 2020 10:55:22 -0500
+Message-Id: <20200214160149.11681-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,52 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Li <li.kai4@h3c.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
+[ Upstream commit 7226017ad37a888915628e59a84a2d1e57b40707 ]
 
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
+When a new cgroup is created, the effective uclamp value wasn't updated
+with a call to cpu_util_update_eff() that looks at the hierarchy and
+update to the most restrictive values.
 
-Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
-Signed-off-by: Kai Li <li.kai4@h3c.com>
-Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
+becomes online.
+
+Without this change, the newly created cgroup uses the default
+root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
+which will cause the rq to to be clamped to max, hence cause the
+system to run at max frequency.
+
+The problem was observed on Ubuntu server and was reproduced on Debian
+and Buildroot rootfs.
+
+By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
+and add all tasks to it - which creates enough noise to keep the rq
+uclamp value at max most of the time. Imitating this behavior makes the
+problem visible in Buildroot too which otherwise looks fine since it's a
+minimal userspace.
+
+Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Doug Smythies <dsmythies@telus.net>
+Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/sched/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index ef485f892d1b0..389c9be4e7919 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1682,6 +1682,11 @@ int jbd2_journal_load(journal_t *journal)
- 		       journal->j_devname);
- 		return -EFSCORRUPTED;
- 	}
-+	/*
-+	 * clear JBD2_ABORT flag initialized in journal_init_common
-+	 * here to update log tail information with the newest seq.
-+	 */
-+	journal->j_flags &= ~JBD2_ABORT;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8dacda4b03627..00743684a549a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7090,6 +7090,12 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
  
- 	/* OK, we've finished with the dynamic journal bits:
- 	 * reinitialise the dynamic contents of the superblock in memory
-@@ -1689,7 +1694,6 @@ int jbd2_journal_load(journal_t *journal)
- 	if (journal_reset(journal))
- 		goto recovery_error;
- 
--	journal->j_flags &= ~JBD2_ABORT;
- 	journal->j_flags |= JBD2_LOADED;
+ 	if (parent)
+ 		sched_online_group(tg, parent);
++
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++	/* Propagate the effective uclamp value for the new group */
++	cpu_util_update_eff(css);
++#endif
++
  	return 0;
+ }
  
 -- 
 2.20.1
