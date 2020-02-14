@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AA5C3B1B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53283C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D006E22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7A622314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704020;
-	bh=PJ1dNamkW+D4Whf16A1tYExOik0G4kukgCtYd/HrtIk=;
+	s=default; t=1581704023;
+	bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PflOc5xJTR5fxIbyf2nGh0ngbutNUro8gYB6s194GnjCaXA1PWJ0H+f2x2IoRNx1N
-	 NCwWIkcoguyXCkYBAbXTdA01REQ2a+ywrayjHEP/8SwyfvciKSAmCPkpeD3kiBUEto
-	 4X9saRfIN21UsiRHv48qJlEcPyeQtD7Sfa6bIg/Y=
+	b=X+SXCfSnEp74JT2DYaa+lY6LNkw6NAt8Et5MAsjL/Lt+qVKYRzVC1pJ7jJvVyARRB
+	 rpZMwayE2cNwxGDET+QOH2TgMtw0fJPd6tzpNGK4/ok1CaAGsS31VxhIgws706+p8l
+	 125/y5RZodSrd77Avnd6UlR5+LvdcE22LYEyqQ4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbgBNPwp (ORCPT
+        id S2393582AbgBNSNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:13:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbgBNPwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:52:18 -0500
+        id S1731047AbgBNPwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80D622465D;
-        Fri, 14 Feb 2020 15:52:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2DFC24682;
+        Fri, 14 Feb 2020 15:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695537;
-        bh=PJ1dNamkW+D4Whf16A1tYExOik0G4kukgCtYd/HrtIk=;
+        s=default; t=1581695564;
+        bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSuMg5Ru4/X4CVexQijuIbYZCOjgWT6ihpBPvTNEOhAGwTe+1ME0VuVxSCZkYR2qz
-         a2TB0pdWsfeVXDF+gUJyZ3HPx7kUUECX4mnPrOs24P3aFearn10/cjx50hKKReR0mw
-         +gUleRDlNRqDFMSFi5B/5y4tKkTXZzB5YHICSwak=
+        b=DHnbLDVHWR5enzDUdmPbx04lUS0hHkmMCFg/zdrSzAdpqxk99WRSRUQUPbSlr3p0K
+         bWSkVjthZXNaztFL1XIiQGT5vzn7MR8DKQqMgRMB2kw2sWjyij1goSSzUSqIswMmwj
+         /K9/LB05qeS51b9iHA9OvNLCvUoJDAefoFUfCocw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 156/542] drm/amd/display: remove set but not used variable 'old_plane_crtc'
-Date:   Fri, 14 Feb 2020 10:42:28 -0500
-Message-Id: <20200214154854.6746-156-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Timur Tabi <timur@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 177/542] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+Date:   Fri, 14 Feb 2020 10:42:49 -0500
+Message-Id: <20200214154854.6746-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -62,49 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit d3b65841b31c0192f997e0f9bc64dccbfaa97bcc ]
+[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Qiang Zhao points out that these offsets get written to 16-bit
+registers, and there are some QE platforms with more than 64K
+muram. So it is possible that qe_muram_alloc() gives us an allocation
+that can't actually be used by the hardware, so detect and reject
+that.
 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c: In function dm_determine_update_type_for_commit:
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:6516:36: warning: variable old_plane_crtc set but not used [-Wunused-but-set-variable]
-
-It is introduced by commit a87fa9938749 ("drm/amd/display:
-Build stream update and plane updates in dm"), but never used,
-so remove it.
-
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 803e59d974111..ce57bfde2302b 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -7265,7 +7265,7 @@ dm_determine_update_type_for_commit(struct amdgpu_display_manager *dm,
- 	int i, j, num_plane, ret = 0;
- 	struct drm_plane_state *old_plane_state, *new_plane_state;
- 	struct dm_plane_state *new_dm_plane_state, *old_dm_plane_state;
--	struct drm_crtc *new_plane_crtc, *old_plane_crtc;
-+	struct drm_crtc *new_plane_crtc;
- 	struct drm_plane *plane;
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index aef7de225783f..4ad0a0c33d853 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ 		ret = -ENOMEM;
+ 		goto free_riptr;
+ 	}
++	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
++		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
++		ret = -ENOMEM;
++		goto free_tiptr;
++	}
  
- 	struct drm_crtc *crtc;
-@@ -7311,7 +7311,6 @@ dm_determine_update_type_for_commit(struct amdgpu_display_manager *dm,
- 			uint64_t tiling_flags;
- 
- 			new_plane_crtc = new_plane_state->crtc;
--			old_plane_crtc = old_plane_state->crtc;
- 			new_dm_plane_state = to_dm_plane_state(new_plane_state);
- 			old_dm_plane_state = to_dm_plane_state(old_plane_state);
- 
+ 	/* Set RIPTR, TIPTR */
+ 	iowrite16be(riptr, &priv->ucc_pram->riptr);
 -- 
 2.20.1
 
