@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FF0C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFDDC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A2A24691
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4603224694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697054;
-	bh=zGDsKnCbDCmGbyaAhoyu+iozB1UdO/wpTisfWn1/pMc=;
+	s=default; t=1581697062;
+	bh=WKeqSySH9aIG09sch9PE7HMHhM0Qp6oU8B87iJeSRZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyyz6BKPEGBGu4f4MCnfCIkkLysyGcW8WNbDp7ee2pGHfGnu93t/ooqXaYlorVbp7
-	 I8HbFDEL8cZ7cRgnz6OmTVh3XNjtmY11xQ53sqcD4PKtFPCJws7zlE2R0yYJ5l46k7
-	 JNUUArNs+JBhD4hNSk184j/JZrjOZTQcjj2gTJBU=
+	b=luWKXdcvKDKyzghow5T9OYHQUlgaTDq2xXfmqH4c0bAwAEWBXTA898OR+sDpKHUvp
+	 Pi5PO4GvHGFs6Bsmb7O8S4pV2wadnwEM8WE6KCXR8z0yhUIJ9C2EWmAYjDvZFoaii8
+	 RfTaTMmOtIxtWMqlKBll8EPJ6huSYtlZEbgTOC5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404502AbgBNQRe (ORCPT
+        id S2404537AbgBNQRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404285AbgBNQQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:35 -0500
+        id S2404317AbgBNQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F34B124694;
-        Fri, 14 Feb 2020 16:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33C224694;
+        Fri, 14 Feb 2020 16:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696994;
-        bh=zGDsKnCbDCmGbyaAhoyu+iozB1UdO/wpTisfWn1/pMc=;
+        s=default; t=1581696998;
+        bh=WKeqSySH9aIG09sch9PE7HMHhM0Qp6oU8B87iJeSRZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUCWZ/Gi6gPIwPMEMaPk0qgKTUYPsC8rqT3OCe3Gd/rTWEIhV7czRjmMjej+ra+RI
-         yQKf7H3hocaFB7vmFLBTJBdUGir9ReGA7MiRX+Rd6fBP++stCt1RxHgimWU2v5Jz+z
-         JecC0a6qVW0tbQar9+1EUWkt3eujXxZtYewrI32U=
+        b=L8FHbSXARbUn9hEnqtosaIKl9wdsH95KiissZVC2rMo/3wpmuchLKUf74O4P7lUDl
+         pA9YXbAZqyN47s7zUm3XkTtwsPgBFpoqtVIuUXtHmRBJq4VKT8YGehNv+3O3AtTcOL
+         9VX7bwsOWkPlCvpGrrTaaMzyKulKNyGTEUA3EY64=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 228/252] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
-Date:   Fri, 14 Feb 2020 11:11:23 -0500
-Message-Id: <20200214161147.15842-228-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 231/252] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Fri, 14 Feb 2020 11:11:26 -0500
+Message-Id: <20200214161147.15842-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,41 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qing Xu <m1s5p6688@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
-the destination size may trigger a buffer overflower,
-which a local user could use to cause denial of service
-or the execution of arbitrary code.
-Fix it by putting the length check before calling memcpy().
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
+
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index dd02bbd9544e7..85d6d5f3dce5b 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -2894,6 +2894,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
- 			vs_param_set->header.len =
- 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
- 				& 0x00FF) + 2);
-+			if (le16_to_cpu(vs_param_set->header.len) >
-+				MWIFIEX_MAX_VSIE_LEN) {
-+				mwifiex_dbg(priv->adapter, ERROR,
-+					    "Invalid param length!\n");
-+				break;
-+			}
-+
- 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
- 			       le16_to_cpu(vs_param_set->header.len));
- 			*buffer += le16_to_cpu(vs_param_set->header.len) +
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d5912f1ec8848..ac888d7a0b00a 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1347,6 +1347,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1441,8 +1442,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
++	}
+ 
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1472,8 +1475,10 @@ static int __init gic_acpi_count_gicr_regions(void)
+ 
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+ 
+ 	return count;
+ }
 -- 
 2.20.1
 
