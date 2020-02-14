@@ -2,140 +2,186 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678ACC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6A7C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CEE222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82E720661
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sOVfkNWL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7uwClEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgBNDTz (ORCPT
+        id S1728468AbgBNDXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:19:55 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15730 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgBNDTz (ORCPT
+        Thu, 13 Feb 2020 22:23:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27034 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728089AbgBNDXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:19:55 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4611980000>; Thu, 13 Feb 2020 19:18:48 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Feb 2020 19:19:54 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Feb 2020 19:19:54 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 03:19:53 +0000
-Subject: Re: [PATCH v5 01/13] mm: Fix the return type of
- __do_page_cache_readahead
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200211010348.6872-1-willy@infradead.org>
- <20200211010348.6872-2-willy@infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e0f459af-bb5d-58b9-78be-5adf687477c0@nvidia.com>
-Date:   Thu, 13 Feb 2020 19:19:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 13 Feb 2020 22:23:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581650632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WiBwyrz6cX+xE4nXs+94fQKaFw5y/aQb69mQMK4gGl0=;
+        b=W7uwClEemERc8oqUMk4qYGC2Cvjz/RryTBJnVU3EnnQVRa2yOJ6SxEKrWMy5cqe/REoQSl
+        VaoifEFf3xu4qH0nlGRJvK4khLaVdG5AVIVbqIXqsBx+QdYoauKS0PFmBqJL5Nu+ujaOva
+        36pXuM10anrv0L7OtFQJomoEyY/FK/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-fdAi4kdyMtWwFgGd05oe8Q-1; Thu, 13 Feb 2020 22:23:51 -0500
+X-MC-Unique: fdAi4kdyMtWwFgGd05oe8Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45C388017CC;
+        Fri, 14 Feb 2020 03:23:48 +0000 (UTC)
+Received: from [10.72.13.213] (ovpn-13-213.pek2.redhat.com [10.72.13.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E0CD338A;
+        Fri, 14 Feb 2020 03:23:29 +0000 (UTC)
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200210035608.10002-1-jasowang@redhat.com>
+ <20200210035608.10002-4-jasowang@redhat.com>
+ <20200211134746.GI4271@mellanox.com>
+ <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+ <20200212125108.GS4271@mellanox.com>
+ <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+ <20200213134128.GV4271@mellanox.com>
+ <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
+ <20200213150542.GW4271@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <8b3e6a9c-8bfd-fb3c-12a8-2d6a3879f1ae@redhat.com>
+Date:   Fri, 14 Feb 2020 11:23:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200211010348.6872-2-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200213150542.GW4271@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581650328; bh=RNaZ4JfNFDU0NcYE8lJdvYhazrtkoisD3k8b6KMLtdc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=sOVfkNWLLDt+JEZLsJm7PWpwNhbfMy7Zr3aDG23myvOrIan5N9yqRMjDlz3lXkn18
-         DOkKMeiS/Gc4FUCYcIhmYx6Gd7Wh3GI9SHQJ9/gKNMFblTwGjqwXR5Q5D4ZJTz5GCZ
-         Xeql/aFHQc1P1nooQI57fQbl4K4t7T8vB35SNzfiqeD93s0O06ZnBUEgtoW1hZorwx
-         QM5A4B35PxahBIULwNXu6XXsvZ+FCzpvOZA92INsgfO8+7HlzE56nLNgNW3zAzwSYq
-         nJ58IKrrUjUsb0ZBJ3d45ZXUZUk1+JGN1AjIVhnbFLrQYKBelF3S+H6U7y1Rblwba5
-         U6Kkbjsxumihg==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 5:03 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> ra_submit() which is a wrapper around __do_page_cache_readahead() already
-> returns an unsigned long, and the 'nr_to_read' parameter is an unsigned
-> long, so fix __do_page_cache_readahead() to return an unsigned long,
-> even though I'm pretty sure we're not going to readahead more than 2^32
-> pages ever.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  mm/internal.h  | 2 +-
->  mm/readahead.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 3cf20ab3ca01..41b93c4b3ab7 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -49,7 +49,7 @@ void unmap_page_range(struct mmu_gather *tlb,
->  			     unsigned long addr, unsigned long end,
->  			     struct zap_details *details);
->  
-> -extern unsigned int __do_page_cache_readahead(struct address_space *mapping,
-> +extern unsigned long __do_page_cache_readahead(struct address_space *mapping,
->  		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
->  		unsigned long lookahead_size);
->  
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 2fe72cd29b47..6bf73ef33b7e 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -152,7 +152,7 @@ static int read_pages(struct address_space *mapping, struct file *filp,
->   *
->   * Returns the number of pages requested, or the maximum amount of I/O allowed.
->   */
-> -unsigned int __do_page_cache_readahead(struct address_space *mapping,
-> +unsigned long __do_page_cache_readahead(struct address_space *mapping,
->  		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
->  		unsigned long lookahead_size)
->  {
-> @@ -161,7 +161,7 @@ unsigned int __do_page_cache_readahead(struct address_space *mapping,
->  	unsigned long end_index;	/* The last page we want to read */
->  	LIST_HEAD(page_pool);
->  	int page_idx;
+
+On 2020/2/13 =E4=B8=8B=E5=8D=8811:05, Jason Gunthorpe wrote:
+> On Thu, Feb 13, 2020 at 10:58:44PM +0800, Jason Wang wrote:
+>> On 2020/2/13 =E4=B8=8B=E5=8D=889:41, Jason Gunthorpe wrote:
+>>> On Thu, Feb 13, 2020 at 11:34:10AM +0800, Jason Wang wrote:
+>>>
+>>>>>     You have dev, type or
+>>>>> class to choose from. Type is rarely used and doesn't seem to be us=
+ed
+>>>>> by vdpa, so class seems the right choice
+>>>>>
+>>>>> Jason
+>>>> Yes, but my understanding is class and bus are mutually exclusive. S=
+o we
+>>>> can't add a class to a device which is already attached on a bus.
+>>> While I suppose there are variations, typically 'class' devices are
+>>> user facing things and 'bus' devices are internal facing (ie like a
+>>> PCI device)
+>>
+>> Though all vDPA devices have the same programming interface, but the
+>> semantic is different. So it looks to me that use bus complies what
+>> class.rst said:
+>>
+>> "
+>>
+>> Each device class defines a set of semantics and a programming interfa=
+ce
+>> that devices of that class adhere to. Device drivers are the
+>> implementation of that programming interface for a particular device o=
+n
+>> a particular bus.
+>>
+>> "
+> Here we are talking about the /dev/XX node that provides the
+> programming interface.
 
 
-What about page_idx, too? It should also have the same data type as nr_pages, as long as
-we're trying to be consistent on this point.
+I'm confused here, are you suggesting to use class to create char device=20
+in vhost-vdpa? That's fine but the comment should go for vhost-vdpa patch=
+.
 
-Just want to ensure we're ready to handle those 2^33+ page readaheads... :)
+
+> All the vdpa devices have the same basic
+> chardev interface and discover any semantic variations 'in band'
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
-> -	unsigned int nr_pages = 0;
-> +	unsigned long nr_pages = 0;
->  	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
->  
-> 
+That's not true, char interface is only used for vhost. Kernel virtio=20
+driver does not need char dev but a device on the virtio bus.
+
+
+>
+>>> So why is this using a bus? VDPA is a user facing object, so the
+>>> driver should create a class vhost_vdpa device directly, and that
+>>> driver should live in the drivers/vhost/ directory.
+>>  =20
+>> This is because we want vDPA to be generic for being used by different
+>> drivers which is not limited to vhost-vdpa. E.g in this series, it all=
+ows
+>> vDPA to be used by kernel virtio drivers. And in the future, we will
+>> probably introduce more drivers in the future.
+> I don't see how that connects with using a bus.
+
+
+This is demonstrated in the virito-vdpa driver. So if you want to use=20
+kernel virito driver for vDPA device, a bus is most straight forward.
+
+
+>
+> Every class of virtio traffic is going to need a special HW driver to
+> enable VDPA, that special driver can create the correct vhost side
+> class device.
+
+
+Are you saying, e.g it's the charge of IFCVF driver to create vhost char=20
+dev and other stuffs?
+
+
+>
+>>> For the PCI VF case this driver would bind to a PCI device like
+>>> everything else
+>>>
+>>> For our future SF/ADI cases the driver would bind to some
+>>> SF/ADI/whatever device on a bus.
+>> All these driver will still be bound to their own bus (PCI or other). =
+And
+>> what the driver needs is to present a vDPA device to virtual vDPA bus =
+on
+>> top.
+> Again, I can't see any reason to inject a 'vdpa virtual bus' on
+> top. That seems like mis-using the driver core.
+
+
+I don't think so. Vhost is not the only programming interface for vDPA.=20
+We don't want a device that can only work for userspace drivers and only=20
+have a single set of userspace APIs.
+
+Thanks
+
+
+>
+> Jason
+>
+
