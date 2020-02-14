@@ -2,84 +2,79 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52487C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712CFC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DC92187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACF5218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581648263;
-	bh=0UJhuKGAYdnYJjJ52HOZ9X/15LDeFbdp2hBicgTmaVE=;
+	s=default; t=1581648360;
+	bh=b6eY0omPiK9NtrDQWKKdHLgqQLvFeuFG7e+VjpYfmrc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i0dAD1FcDTaFT7dc9laFm/P1Nr3EdGB5Q8RDaXQ+3mYgv0l2CPB7gQKX9wb/5pzzJ
-	 qahzkUAYQ5bUR506cAe5Z9o6o0LXYgbhbgdGSbBz9mhrQ61IEwON5ZxCAAk9Kwj+TJ
-	 /cRZjBh0GxiqoxQg86ciigZw7/iWrXkOZk7mouXc=
+	b=B1XeORhFL2MezJp/TzP5CnNZxLqWVSjJcOfwpWvH2lfTXrAOUJ2+RheSwcCoJMf9I
+	 ItINypyaHm+Uy7f5T7MD1PfKj0KQ40ZRBVJQiBlUTe5n6syruv4t8Vef0f9ytsjwFO
+	 2UueAVTnhTVlwPXOu6jevQXiTtzXR+3PWcwoLIH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgBNCoW (ORCPT
+        id S1728369AbgBNCp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:44:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34822 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 21:45:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgBNCoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:44:21 -0500
+        id S1728052AbgBNCp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:45:59 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9797D20848;
-        Fri, 14 Feb 2020 02:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93FBE20848;
+        Fri, 14 Feb 2020 02:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581648261;
-        bh=0UJhuKGAYdnYJjJ52HOZ9X/15LDeFbdp2hBicgTmaVE=;
+        s=default; t=1581648358;
+        bh=b6eY0omPiK9NtrDQWKKdHLgqQLvFeuFG7e+VjpYfmrc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k9J+IaR2ZlqMSergpAtvMx5N239+ofHV43GulsZx6GkYLH58wONeBrn2WtpLmxnGo
-         YT2d0Uhg+ybB5lw8BDm97R9eOObCY/SRGTZmyaPbxYyS1hAsubEWAF6ecKzy2W8g7B
-         0/Doij3rIBlo+cVimA5CvdOLqb1jz59M5EGwRx3A=
-Date:   Fri, 14 Feb 2020 10:44:14 +0800
+        b=nukh9AKV6wEXxVK6H+l10mFvYMjf6GGkB2ynajqXnbkx2yXoNbi5ZxwzHvg8DEv0Q
+         hlKd6UQmGDQyMt2ZBscja0ilDIQZc737/b0bWbZ81uhcm6SCdq82bOyQKTj0s8Y+UF
+         7FFyj1N4gwTM8VBNqpohwLcW86iHvrpmTY04CNBQ=
+Date:   Fri, 14 Feb 2020 10:45:52 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
+To:     "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
 Cc:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
         dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
         Aisheng Dong <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Sebastien Fagard <sebastien.fagard@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 2/2] soc: imx: increase build coverage for imx8m soc
- driver
-Message-ID: <20200214024414.GG22842@dragon>
-References: <1580191098-5886-1-git-send-email-peng.fan@nxp.com>
- <1580191098-5886-3-git-send-email-peng.fan@nxp.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH 0/2] Add more power domains
+Message-ID: <20200214024551.GH22842@dragon>
+References: <20200127142717.27570-1-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580191098-5886-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <20200127142717.27570-1-daniel.baluta@oss.nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 06:03:17AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Mon, Jan 27, 2020 at 02:27:30PM +0000, Daniel Baluta (OSS) wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
 > 
-> The soc-imx8.c driver is actually for i.MX8M family, so rename it
-> to soc-imx8m.c.
+> This patch series adds some missing audio PD domain and enlarges
+> the power domain range for MU side B.
 > 
-> Use CONFIG_SOC_IMX8M as build gate, not CONFIG_ARCH_MXC, to control
-> whether build this driver, also make it possible for compile test.
+> Daniel Baluta (1):
+>   firmware: imx: scu-pd: Add missing audio PD ranges
 > 
-> Default set it to y for ARCH_MXC && ARM64
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Sebastien Fagard (1):
+>   firmware: imx: scu-pd: enlarge PD range for mu_b
 
-Applied, thanks.
+Applied both, thanks.
