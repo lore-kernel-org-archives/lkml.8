@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A5CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB814C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD15E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9741D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703924;
-	bh=vAcka8fHr6mFiJZkIqQNpXN3P/qJC9ZOA4MvldSnGKc=;
+	s=default; t=1581703928;
+	bh=gQCl3t2EcBsDvz3br3y54JgMri+EC7RXVVMTJI5P1Wk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rritdWJaOsY85ZZH5/8/PiKFFJbmbtIKDIpjlnE7v5prsDo4MHaFJkgoRvopSj8c9
-	 KQR2aAzzcS9hgsL5u7+acXV8r7EcpwvUcWGA2asqfy2hRT70Sy1P7eatguZiPcKO0+
-	 1ljvU3yA66ljXgJAcZreQX59oubSMTw0PGbCEwCQ=
+	b=zHjWHUSpTPz/nmX75TPxY3aHCdW8F/nHXFn50jvVjIpF47XqRbM1fhC2RKBf6904D
+	 P5iVeuXcXVGus5VXc90mJj91i9xZdcKCB0p4tlwxp8rUhORnBKlgsTwSZ1VG9YCKV/
+	 0IU8sof2NqHXU94X81vkzAFIl6eAltus9EA3d3iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393165AbgBNSME (ORCPT
+        id S1731195AbgBNPxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:12:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60672 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729657AbgBNPxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:17 -0500
+        id S1730728AbgBNPw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:52:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C6A222C4;
-        Fri, 14 Feb 2020 15:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4EF24681;
+        Fri, 14 Feb 2020 15:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695597;
-        bh=vAcka8fHr6mFiJZkIqQNpXN3P/qJC9ZOA4MvldSnGKc=;
+        s=default; t=1581695577;
+        bh=gQCl3t2EcBsDvz3br3y54JgMri+EC7RXVVMTJI5P1Wk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrKt4x+2HTbPt5fUpc+T54S2+n4MEdP79hdMKgBpfPou8iPPO5nrWdEAaalwU8sSy
-         /iXDElnzrlLL5VTXC7TW5YXPXSq+IqjPYIjEm3aU0/3c69FfLC8WXGZFXct09RuGFU
-         iL1Da512ioRp1bcX4UjXNutIg12sT6MhLRP2P36U=
+        b=NCyyQwEuabI+sTmoIo3MvZTADXUTVRHP4E1m3Ijx3kVgknjMd0K2OicOLQyjUqUib
+         3gdJpbTTzSOMU8B5OZpxOl6tEPabde4Jal22xMIEPGHnkuCzxAIZmYXQFoxwj3Qd4z
+         sTniRczN5VQeI67r6h2UGlLbHwNEBdR0zQfW3WzQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 202/542] bus: ti-sysc: Implement quirk handling for CLKDM_NOAUTO
-Date:   Fri, 14 Feb 2020 10:43:14 -0500
-Message-Id: <20200214154854.6746-202-sashal@kernel.org>
+Cc:     Ingo van Lil <inguin@gmx.de>, Peter Rosin <peda@axentia.se>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 187/542] ARM: dts: at91: Reenable UART TX pull-ups
+Date:   Fri, 14 Feb 2020 10:42:59 -0500
+Message-Id: <20200214154854.6746-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,71 +60,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ingo van Lil <inguin@gmx.de>
 
-[ Upstream commit 94f6345712b37e4bb23cb265ce4c65b9d177e75a ]
+[ Upstream commit 9d39d86cd4af2b17b970d63307daad71f563d207 ]
 
-For dra7 dcan and dwc3 instances we need to block clockdomain autoidle.
-Let's do this with CLKDM_NOAUTO quirk flag and enable it for dcan and
-dwc3.
+Pull-ups for SAM9 UART/USART TX lines were disabled in a previous
+commit. However, several chips in the SAM9 family require pull-ups to
+prevent the TX lines from falling (and causing an endless break
+condition) when the transceiver is disabled.
 
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+From the SAM9G20 datasheet, 32.5.1: "To prevent the TXD line from
+falling when the USART is disabled, the use of an internal pull up
+is mandatory.". This commit reenables the pull-ups for all chips having
+that sentence in their datasheets.
+
+Fixes: 5e04822f7db5 ("ARM: dts: at91: fixes uart pinctrl, set pullup on rx, clear pullup on tx")
+Signed-off-by: Ingo van Lil <inguin@gmx.de>
+Cc: Peter Rosin <peda@axentia.se>
+Link: https://lore.kernel.org/r/20191203142147.875227-1-inguin@gmx.de
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c                 | 10 ++++++++--
- include/linux/platform_data/ti-sysc.h |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91sam9260.dtsi | 12 ++++++------
+ arch/arm/boot/dts/at91sam9261.dtsi |  6 +++---
+ arch/arm/boot/dts/at91sam9263.dtsi |  6 +++---
+ arch/arm/boot/dts/at91sam9g45.dtsi |  8 ++++----
+ arch/arm/boot/dts/at91sam9rl.dtsi  |  8 ++++----
+ 5 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index ccb44fe790a71..3d79b074f9581 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -479,7 +479,7 @@ static void sysc_clkdm_deny_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index dee9c0c8a0964..16c6fd3c42462 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -187,7 +187,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
+@@ -221,7 +221,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -491,7 +491,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
+@@ -239,7 +239,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
+@@ -257,7 +257,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 10 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -1251,6 +1251,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	/* Quirks that need to be set based on detected module */
- 	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_AESS),
-+	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_HDQ1W),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
-index 8cfe570fdece6..2cbde6542849d 100644
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
+@@ -275,7 +275,7 @@
+ 				uart0 {
+ 					pinctrl_uart0: uart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_NONE
++							<AT91_PIOA 31 AT91_PERIPH_B AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOA 30 AT91_PERIPH_B AT91_PINCTRL_PULL_UP>;
+ 					};
+ 				};
+@@ -283,7 +283,7 @@
+ 				uart1 {
+ 					pinctrl_uart1: uart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 				};
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index dba025a985270..5ed3d745ac867 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -329,7 +329,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
  
-+#define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
- #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
- #define SYSC_MODULE_QUIRK_AESS		BIT(19)
- #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+@@ -347,7 +347,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -365,7 +365,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOC 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOC 15 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 99678abdda930..5c990cfae254e 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -183,7 +183,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOA 27 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -201,7 +201,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOD 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -219,7 +219,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOD 3 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 691c95ea61754..fd179097a4bfd 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -556,7 +556,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 19 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 18 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -574,7 +574,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -592,7 +592,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -610,7 +610,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_NONE
++							<AT91_PIOB 8 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+ 							 AT91_PIOB 9 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
+index 8643b71515650..ea024e4b6e095 100644
+--- a/arch/arm/boot/dts/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+@@ -682,7 +682,7 @@
+ 				usart0 {
+ 					pinctrl_usart0: usart0-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -721,7 +721,7 @@
+ 				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -744,7 +744,7 @@
+ 				usart2 {
+ 					pinctrl_usart2: usart2-0 {
+ 						atmel,pins =
+-							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
+@@ -767,7 +767,7 @@
+ 				usart3 {
+ 					pinctrl_usart3: usart3-0 {
+ 						atmel,pins =
+-							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE>,
++							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>,
+ 							<AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+ 					};
+ 
 -- 
 2.20.1
 
