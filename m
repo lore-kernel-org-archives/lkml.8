@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6102FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEE6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF89222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E090C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702910;
-	bh=tKutHQzqUEtlGwZgT4t3m5DF0mw5khkEEf3otkXuA88=;
+	s=default; t=1581702915;
+	bh=GenGKx8klKN5QOWUcat6rkevYzH+j2MnwyEAoetKWvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTcHclS+YhXLkfyvHu6Bn6W1TuEVMsTQB+20jxEAShptYxf/Bs//2v7ZNjzIQXrmH
-	 W9MWSY9MjRFK8VegmgnjB/YezCNasjy1+2O6ohkjpRBxkWtTm9Cvu5KiQgp3nRiEq+
-	 dyb0+pfx4gdoRsA40j4Yg5/6lIcUcO/qIcIp3FBM=
+	b=2SppA5Jzczm7CY3J1cGCRhav7AiNAz8Ugi8Uvnx5X0UEon5TxSQtaeSQA3eBuKTu3
+	 BSA3ngg9KPEudSQJTLESNOf0ZRVXMiHaWBX70QSmzWgkTElYGtGrGbnP//r5irdc8X
+	 LkCJALDsDUeeKidZpl4EluKyT56by5c8gZs9Sm9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390595AbgBNRzJ (ORCPT
+        id S2388372AbgBNP5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:55:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbgBNP5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:51 -0500
+        id S2388271AbgBNP5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F4181206D7;
-        Fri, 14 Feb 2020 15:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E0B924676;
+        Fri, 14 Feb 2020 15:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695870;
-        bh=tKutHQzqUEtlGwZgT4t3m5DF0mw5khkEEf3otkXuA88=;
+        s=default; t=1581695852;
+        bh=GenGKx8klKN5QOWUcat6rkevYzH+j2MnwyEAoetKWvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyQQmQ+5+xjl5KWpSo3Y1huCcrgy801zUxo+XB1peLuO3QT87a27UNHIpnYVfVHsh
-         PE6gtJUgCQjAlxU5sMAASZSxC/KxlD0voBIUODpDCyY5U8L49TG/ceSOUpGqBEMAGi
-         Ru6iFR7dSPGLH+CsAIb38rqt+Qn3qpMpNiceLM5Y=
+        b=Uqs3Jx56DNBaxzKJL2+jKtSh2JeVBUQqZiHvXwbUMIWec4bqSu0p1Q/znNiCRVh+2
+         w0Q7gh7JbQPKY6RDgssEFeE+jhR5oulOITRZoUSqb+O/6QIIxh1gPZKBY71AAL7W3A
+         9M5fPlQmGC7pxVs2aPMmatrH7ezw3Gx35nGP4M8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 416/542] ide: serverworks: potential overflow in svwks_set_pio_mode()
-Date:   Fri, 14 Feb 2020 10:46:48 -0500
-Message-Id: <20200214154854.6746-416-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 401/542] enetc: Don't print from enetc_sched_speed_set when link goes down
+Date:   Fri, 14 Feb 2020 10:46:33 -0500
+Message-Id: <20200214154854.6746-401-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,43 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
+[ Upstream commit 90f29f0eada4d60e1f6ae537502ddb2202b9540d ]
 
-The "drive->dn" variable is a u8 controlled by root.
+It is not an error to unplug a cable from the ENETC port even with TSN
+offloads, so don't spam the log with link-related messages from the
+tc-taprio offload subsystem, a single notification is sufficient:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[10972.351859] fsl_enetc 0000:00:00.0 eno0: Qbv PSPEED set speed link down.
+[10972.360241] fsl_enetc 0000:00:00.0 eno0: Link is Down
+
+Fixes: 2e47cb415f0a ("enetc: update TSN Qbv PSPEED set according to adjust link speed")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/serverworks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/freescale/enetc/enetc_qos.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
-index ac6fc3fffa0de..458e72e034b09 100644
---- a/drivers/ide/serverworks.c
-+++ b/drivers/ide/serverworks.c
-@@ -115,6 +115,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 	struct pci_dev *dev = to_pci_dev(hwif->dev);
- 	const u8 pio = drive->pio_mode - XFER_PIO_0;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index 9190ffc9f6b21..de52686b1d467 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -36,7 +36,6 @@ void enetc_sched_speed_set(struct net_device *ndev)
+ 	case SPEED_10:
+ 	default:
+ 		pspeed = ENETC_PMR_PSPEED_10M;
+-		netdev_err(ndev, "Qbv PSPEED set speed link down.\n");
+ 	}
  
-+	if (drive->dn >= ARRAY_SIZE(drive_pci))
-+		return;
-+
- 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
- 
- 	if (svwks_csb_check(dev)) {
-@@ -141,6 +144,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 
- 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
- 
-+	if (drive->dn >= ARRAY_SIZE(drive_pci2))
-+		return;
-+
- 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
- 	pci_read_config_byte(dev, 0x54, &ultra_enable);
- 
+ 	priv->speed = speed;
 -- 
 2.20.1
 
