@@ -2,200 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D416C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB62C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FAD206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016DE206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="YVd1HDpT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CesTyts3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388479AbgBNTjF (ORCPT
+        id S1729927AbgBNTkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:39:05 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:31202 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387557AbgBNTjF (ORCPT
+        Fri, 14 Feb 2020 14:40:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21189 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729633AbgBNTkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:39:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581709143;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3/3pr6TTlfArYBb96BTohy3TZX45DflCmc3yt/TKopU=;
-        b=YVd1HDpTJatEjIP4nd/4m1B3+vCwBIxiNEsmE/7xxFg/GfUUh2F29+3yeoHlnmSizl
-        kWIUsDnhGvioVlOHIIl6UT/V4CXi8aW7zAJ7Aw4QZz4e80Y0vBr5JCWsm5aCOuhJ0y8I
-        qIB8BNliwj+5RD+vQ45stC5ZEkTisS/qyCfqchLECjLjNwc/zaHpEz+SBE/0btgyrsiG
-        hI5rvrTdjRj0IfsWO4qp8xWoYwNXmgdyaZRaxFmrWopRe6UEmhufhSxIKAr0L4ULaEfN
-        2dMy6r9fOBeUTvB7/JSNmfI6ggWeAB+UlpbOVJzDwJv1n1PmrhQe/aKIjJxiInyceYvZ
-        jSeQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspHA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EJcgGEj
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 20:38:42 +0100 (CET)
-Content-Type: text/plain; charset=iso-8859-1
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [PATCH v2] net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <996F2206-B261-46E3-9167-B48BA7D3C9FF@goldelico.com>
-Date:   Fri, 14 Feb 2020 20:38:41 +0100
-Cc:     Paul Cercueil <paul@crapouillou.net>, Andrew Lunn <andrew@lunn.ch>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        kernel@pyra-handheld.com,
-        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A686A3C7-09A4-4654-A265-2BDBEF41A7C4@goldelico.com>
-References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com> <1581706048.3.3@crapouillou.net> <996F2206-B261-46E3-9167-B48BA7D3C9FF@goldelico.com>
-To:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 14 Feb 2020 14:40:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581709213;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BE9teR/4Mz7yydIxx4Z3k95pTHytQ+QYaa5uCwafbV0=;
+        b=CesTyts35amLfIahLWRnttHtl2bVNYYRmeEW/eSqNMTzdyfIEnzUQEm3wSqz9FRFo6OruV
+        w+fZ8Cm/Bi73HFByzgaHhOxkjSwFQwMWyxcnZ+lT1MMqL9wA1Su17+UqXu5/qdKWFpUfXj
+        8R0bdcuyEVWzS1WsB3Q1R0zKFqvB6DI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-_hLdMz4tN3-qYYc-y7uaow-1; Fri, 14 Feb 2020 14:40:12 -0500
+X-MC-Unique: _hLdMz4tN3-qYYc-y7uaow-1
+Received: by mail-qv1-f69.google.com with SMTP id p3so6389358qvt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:40:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BE9teR/4Mz7yydIxx4Z3k95pTHytQ+QYaa5uCwafbV0=;
+        b=cnoV1Nvd6IkzpFRf/lInClccIrUKtzNWaz8kOhjNkV1vwlYD9yYHU+RSqv2KVtJshr
+         lkclYL/i9FGpUfIjsJqiNqfZohQLvtQEO9F25IWbdxXx+D54hcJwyvDtGpmCu1bGgdbH
+         hKkw1uh+OSb7lp7H5+rDEIVFKWxUV7vR1ck7z/11TNHOsNkL6PZe7or43RgAtxZCZR0l
+         5RxIN7ZwJXfEzSWTa+onKMtQblEBBzrJvtdeydRWzDMxKycFSAbcAHWcy1i9U8h7LQ6o
+         ywrZkRPIRuEcyFiV7tx1xn/R/GqklXt18JfVIVU+KdVDzOqy19HDFYDWkqEG4wV+/GzX
+         RyAw==
+X-Gm-Message-State: APjAAAVrbBJbVMw8+3YClkPrOy/LQsYjntXFMsS5haBV1ZvkZEftmnNM
+        VqmFIMAsNRL3xoDZ13/4VFNDhPz3z2mr9lptn4rk7AwHtel5OZF6ZMbJ9kDT1xJpP0bt12sTdXA
+        4HpGxf9xuGPnQr63gjpN84QIv
+X-Received: by 2002:a37:c49:: with SMTP id 70mr4265162qkm.12.1581709211258;
+        Fri, 14 Feb 2020 11:40:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwIfgOvyKPo0dPjB9m4JrN4P419c0E8fs0nNBksTNU/4s3Oo9D6YcAB01pS1mSfyNQja16xgg==
+X-Received: by 2002:a37:c49:: with SMTP id 70mr4265146qkm.12.1581709211022;
+        Fri, 14 Feb 2020 11:40:11 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id t187sm2583971qke.85.2020.02.14.11.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 11:40:09 -0800 (PST)
+Date:   Fri, 14 Feb 2020 14:40:08 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown
+ sub-parameters
+Message-ID: <20200214194008.GA1193332@xz-x1>
+References: <20200204161639.267026-1-peterx@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200204161639.267026-1-peterx@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 04, 2020 at 11:16:39AM -0500, Peter Xu wrote:
+> The "isolcpus=" parameter allows sub-parameters to exist before the
+> cpulist is specified, and if it sees unknown sub-parameters the whole
+> parameter will be ignored.  This design is incompatible with itself
+> when we add more sub-parameters to "isolcpus=", because the old
+> kernels will not recognize the new "isolcpus=" sub-parameters, then it
+> will invalidate the whole parameter so the CPU isolation will not
+> really take effect if we start to use the new sub-parameters while
+> later we reboot into an old kernel. Instead we will see this when
+> booting the old kernel:
+> 
+>     isolcpus: Error, unknown flag
+> 
+> The better and compatible way is to allow "isolcpus=" to skip unknown
+> sub-parameters, so that even if we add new sub-parameters to it the
+> old kernel will still be able to behave as usual even if with the new
+> sub-parameter is specified.
+> 
+> Ideally this patch should be there when we introduce the first
+> sub-parameter for "isolcpus=", so it's already a bit late.  However
+> late is better than nothing.
 
-> Am 14.02.2020 um 20:24 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
->=20
->> Am 14.02.2020 um 19:47 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->> Hi Nikolaus,
->>=20
->> What I'd suggest is to write a NVMEM driver for the efuse and =
-retrieve the MAC address cleanly with nvmem_get_mac_address().
->>=20
->> It shouldn't be hard to do (there's already code for it in the =
-non-upstream 3.18 kernel for the CI20) and you remove the dependency on =
-uboot.
->=20
-> Interesting approach. I have found this:
->=20
-> https://lore.kernel.org/patchwork/patch/868158/
->=20
-> but it looks as if it was never finished (I could not locate a V3 or =
-anything mainline?)
-> and and it tries to solve other problems as well.
->=20
-> And it looks to be much more complex than my "solution" to the =
-immediate problem.
->=20
-> I have to study it to know if I can write a nvmem_get_mac_address().
+Ping - Hi, Thomas, do you have any further comment on this patch?
 
-Another question is how to link this very jz4780 specific code to the =
-generic davicom dm9000 driver?
-And where should the new code live. In some jz4780 specific file or =
-elsewhere?
+Thanks,
 
->=20
-> BR,
-> Nikolaus
->=20
->>=20
->> -Paul
->>=20
->>=20
->> Le ven., f=E9vr. 14, 2020 at 17:07, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->>> The MIPS Ingenic CI20 board is shipped with a quite old u-boot
->>> (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
->>> the MAC address through dm9000.mac_addr=3Dxx:xx:xx:xx:xx:xx
->>> kernel module parameter to give the board a fixed MAC address.
->>> This is not processed by the dm9000 driver which assigns a random
->>> MAC address on each boot, making DHCP assign a new IP address
->>> each time.
->>> So we add a check for the mac_addr module parameter as a last
->>> resort before assigning a random one. This mechanism can also
->>> be used outside of u-boot to provide a value through modprobe
->>> config.
->>> To parse the MAC address in a new function get_mac_addr() we
->>> use an copy adapted from the ksz884x.c driver which provides
->>> the same functionality.
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>> ---
->>> drivers/net/ethernet/davicom/dm9000.c | 42 =
-+++++++++++++++++++++++++++
->>> 1 file changed, 42 insertions(+)
->>> diff --git a/drivers/net/ethernet/davicom/dm9000.c =
-b/drivers/net/ethernet/davicom/dm9000.c
->>> index 1ea3372775e6..7402030b0352 100644
->>> --- a/drivers/net/ethernet/davicom/dm9000.c
->>> +++ b/drivers/net/ethernet/davicom/dm9000.c
->>> @@ -1409,6 +1409,43 @@ static struct dm9000_plat_data =
-*dm9000_parse_dt(struct device *dev)
->>> 	return pdata;
->>> }
->>> +static char *mac_addr =3D ":";
->>> +module_param(mac_addr, charp, 0);
->>> +MODULE_PARM_DESC(mac_addr, "MAC address");
->>> +
->>> +static void get_mac_addr(struct net_device *ndev, char *macaddr)
->>> +{
->>> +	int i =3D 0;
->>> +	int j =3D 0;
->>> +	int got_num =3D 0;
->>> +	int num =3D 0;
->>> +
->>> +	while (j < ETH_ALEN) {
->>> +		if (macaddr[i]) {
->>> +			int digit;
->>> +
->>> +			got_num =3D 1;
->>> +			digit =3D hex_to_bin(macaddr[i]);
->>> +			if (digit >=3D 0)
->>> +				num =3D num * 16 + digit;
->>> +			else if (':' =3D=3D macaddr[i])
->>> +				got_num =3D 2;
->>> +			else
->>> +				break;
->>> +		} else if (got_num) {
->>> +			got_num =3D 2;
->>> +		} else {
->>> +			break;
->>> +		}
->>> +		if (got_num =3D=3D 2) {
->>> +			ndev->dev_addr[j++] =3D (u8)num;
->>> +			num =3D 0;
->>> +			got_num =3D 0;
->>> +		}
->>> +		i++;
->>> +	}
->>> +}
->>> +
->>> /*
->>> * Search DM9000 board, allocate space and register it
->>> */
->>> @@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
->>> 			ndev->dev_addr[i] =3D ior(db, i+DM9000_PAR);
->>> 	}
->>> +	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>> +		mac_src =3D "param";
->>> +		get_mac_addr(ndev, mac_addr);
->>> +	}
->>> +
->>> 	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>> 		inv_mac_addr =3D true;
->>> 		eth_hw_addr_random(ndev);
->>> --
->>> 2.23.0
->>=20
->>=20
->=20
-> _______________________________________________
-> http://projects.goldelico.com/p/gta04-kernel/
-> Letux-kernel mailing list
-> Letux-kernel@openphoenux.org
-> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
+-- 
+Peter Xu
 
