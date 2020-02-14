@@ -2,107 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EB6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B4C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703613;
-	bh=2wsmw7LgUVLxcb60T5P9mFsAuefCeFVQD3JLWpvFv74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+vnOZ3nW4ddRrVe6ZG4mJzNhs/Q69fysy4FH+coAZ1u6znXert/oF5WlwAPavdRi
-	 C7OjzK/lo/FFTHrLcyMYR8Rp+PNP7K4w3CA+xelUd5ktdKR2siPt+bx8DFWrSpERQV
-	 QZVYkuorY652XX5Ab4pN0ZMzLEADrLIEzPUyfzRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 677FA2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392104AbgBNSGw (ORCPT
+        id S2392122AbgBNSG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Feb 2020 13:06:56 -0500
+Received: from 15.mo4.mail-out.ovh.net ([91.121.62.11]:36643 "EHLO
+        15.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392088AbgBNSGw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 13:06:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbgBNPyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:45 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0124673;
-        Fri, 14 Feb 2020 15:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695685;
-        bh=2wsmw7LgUVLxcb60T5P9mFsAuefCeFVQD3JLWpvFv74=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ecjvyxb2PM3wwxYlBmgBo9Q0MSo2m9fSzRzU7M7Sl8o/ZkZxN6kDqEgPYujfCZncx
-         wh7KwRlht1OGc70yBE+PYQ/2hsKG3MxAVxLEPPnrYCwlIcEr++zVRkG/TgrOO7KMIG
-         X1yR7VnsfAWbbQ8UN/msKbzBdz5wu0SYu9E53Ukc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 270/542] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Fri, 14 Feb 2020 10:44:22 -0500
-Message-Id: <20200214154854.6746-270-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+Received: from player798.ha.ovh.net (unknown [10.108.57.211])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 327952232F8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 18:27:50 +0100 (CET)
+Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
+        (Authenticated sender: steve@sk2.org)
+        by player798.ha.ovh.net (Postfix) with ESMTPSA id 96C63F80209B;
+        Fri, 14 Feb 2020 17:27:38 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] s390: remove obsolete ieee_emulation_warnings
+Date:   Fri, 14 Feb 2020 18:26:28 +0100
+Message-Id: <20200214172628.3598516-1-steve@sk2.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 15606661560320675101
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgddutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkeekrdduvddvrdduvdeirdduudeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+s390 math emulation was removed with commit 5a79859ae0f3 ("s390:
+remove 31 bit support"), rendering ieee_emulation_warnings useless.
+The code still built because it was protected by CONFIG_MATHEMU, which
+was no longer selectable.
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+This patch removes the sysctl_ieee_emulation_warnings declaration and
+the sysctl entry declaration.
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Stephen Kitt <steve@sk2.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/processor.h | 1 -
+ kernel/sysctl.c                   | 9 ---------
+ 2 files changed, 10 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 35535833b6f78..c7804635e89ea 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -115,7 +115,8 @@ config ARM_TEGRA20_DEVFREQ
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index 361ef5eda468..aadb3d0e2adc 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -84,7 +84,6 @@ void s390_update_cpu_mhz(void);
+ void cpu_detect_mhz_feature(void);
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cef2cf5347ca7..a53e0a6ffdfeb 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -34,7 +34,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
+ extern const struct seq_operations cpuinfo_op;
+-extern int sysctl_ieee_emulation_warnings;
+ extern void execve_tail(void);
+ extern void __bpon(void);
  
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index d396aaaf19a3..ad5b88a53c5a 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -805,15 +805,6 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= &maxolduid,
+ 	},
+ #ifdef CONFIG_S390
+-#ifdef CONFIG_MATHEMU
+-	{
+-		.procname	= "ieee_emulation_warnings",
+-		.data		= &sysctl_ieee_emulation_warnings,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+-#endif
+ 	{
+ 		.procname	= "userprocess_debug",
+ 		.data		= &show_unhandled_signals,
+
+base-commit: 359c92c02bfae1a6f1e8e37c298e518fd256642c
 -- 
-2.20.1
+2.24.1
 
