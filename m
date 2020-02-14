@@ -2,106 +2,80 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3FCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB0DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8298206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2022624649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581706628;
-	bh=YlbFqP4MOujySUgnVR9wtKNwv0GjLZbM5SbUJK0O0gQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yTNMG+XUuavHK+SZZLubR+dwpr7JSOTeCb3GcGSWmVadrvWcryIoHHVSJA9v4higA
-	 sf98620yni0geAOsOR7OZik79NL95yj1RfbTHZ0tBfut3AZYDqErob5Cfw+GD+wtXK
-	 RstmfbiyFl7nFwa+k2zxGjwEsM2Fz6R88j3XMMy8=
+	s=default; t=1581706739;
+	bh=hN7SPeLJCWEGiPDKat8V/+hhK7EWj0c4fKIn0VjGFk0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1Sj4pGa8ExsauAsQTPv7QN/SqRQ4uZ9p7Mo6hQ/K6eyQOUkkFK3FuYR3JW1JSJ+Fi
+	 H7O38PQPHzLASxScW9PuctuEIefIRRKFNznngdLbF+TxBWlL3W9Vy6oGRzFR8JYfSG
+	 v8HbtVh5f8ZgwVAHZ+gcumFJjLPT0FghkQp495Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgBNS5I (ORCPT
+        id S2387669AbgBNS66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:57:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:58:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgBNS5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:57:07 -0500
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729210AbgBNS65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 13:58:57 -0500
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 901C622314
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 18:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9EC206CC;
+        Fri, 14 Feb 2020 18:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581706626;
-        bh=YlbFqP4MOujySUgnVR9wtKNwv0GjLZbM5SbUJK0O0gQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LFxgD4D+vmep4eAzrKNlFmVFdKVoEdLCpcb8r6lf3Y7K8zRscdcjqr7NFiohrVA85
-         HzvaAZxHtIPji4PzbrjMDpMUOw9EiuIwJGLQ2/v7mzoIFjvifDnzJgHub58d+I9LIM
-         8U/QNff+0x9O+PPZqDCBUvpj8SGZ5n3iEL5Alnrw=
-Received: by mail-wm1-f48.google.com with SMTP id t23so11032596wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 10:57:06 -0800 (PST)
-X-Gm-Message-State: APjAAAXJio4xIhV1usPPg2dxHZaNo5x/BJoRnPrQQ9bu4vzo33tuxqdJ
-        v6shP3htSy1SoI4hDPVPJvqLckaB3xSRMEGZy+hIWA==
-X-Google-Smtp-Source: APXvYqxxTQ3SaP1YdoafrYMVaIYSQJJTGOsfi5VrDKZoEp9ouh4TF+uABwFX1kDAEk06lgdpKqTVZcp7FLgcnYYfkKY=
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr6008857wmi.21.1581706625011;
- Fri, 14 Feb 2020 10:57:05 -0800 (PST)
+        s=default; t=1581706737;
+        bh=hN7SPeLJCWEGiPDKat8V/+hhK7EWj0c4fKIn0VjGFk0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qHZpcGNuWvHNt/z3H9CN/IMRyi0p2dBOzNsijHzhWgXo8NjQ2NUxR0eGpaLmS55hK
+         yLfOG8hj01HDsWBYgeHp4kTgK/XMeuyZYrcPAz6zdc2fSXFrEsZcj7WWCMOFSjfp+T
+         uRvfQcKsdF7F6a4eJ+oSQXIYfuACGsrYmKAWfquU=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 1/3] f2fs: skip GC when section is full
+Date:   Fri, 14 Feb 2020 10:58:53 -0800
+Message-Id: <20200214185855.217360-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-References: <cover.1581555616.git.ashish.kalra@amd.com> <a22c5b534fa035b23e549669fd5ac617b6031158.1581555616.git.ashish.kalra@amd.com>
- <CALCETrX6Oo00NXn2QfR=eOKD9wvWiov_=WBRwb7V266=hJ2Duw@mail.gmail.com> <20200213222825.GA8784@ashkalra_ubuntu_server>
-In-Reply-To: <20200213222825.GA8784@ashkalra_ubuntu_server>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 14 Feb 2020 10:56:53 -0800
-X-Gmail-Original-Message-ID: <CALCETrX=ycjSuf_N_ff-VQtqq2_RoawuAqdkM+bCPn_2_swkjg@mail.gmail.com>
-Message-ID: <CALCETrX=ycjSuf_N_ff-VQtqq2_RoawuAqdkM+bCPn_2_swkjg@mail.gmail.com>
-Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
- status is changed
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 2:28 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
->
-> On Wed, Feb 12, 2020 at 09:42:02PM -0800, Andy Lutomirski wrote:
-> >> On Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
-> >> >
-> >> > From: Brijesh Singh <brijesh.singh@amd.com>
-> > >
-> > > Invoke a hypercall when a memory region is changed from encrypted ->
-> > > decrypted and vice versa. Hypervisor need to know the page encryption
-> > > status during the guest migration.
-> >>
-> >> What happens if the guest memory status doesn't match what the
-> >> hypervisor thinks it is?  What happens if the guest gets migrated
-> >> between the hypercall and the associated flushes?
->
-> This is basically same as the dirty page tracking and logging being done
-> during Live Migration. As with dirty page tracking and logging we
-> maintain a page encryption bitmap in the kernel which keeps tracks of
-> guest's page encrypted/decrypted state changes and this bitmap is
-> sync'ed regularly from kernel to qemu and also during the live migration
-> process, therefore any dirty pages whose encryption status will change
-> during migration, should also have their page status updated when the
-> page encryption bitmap is sync'ed.
->
-> Also i think that when the amount of dirty pages reach a low threshold,
-> QEMU stops the source VM and then transfers all the remaining dirty
-> pages, so at that point, there will also be a final sync of the page
-> encryption bitmap, there won't be any hypercalls after this as the
-> source VM has been stopped and the remaining VM state gets transferred.
+This fixes skipping GC when segment is full in large section.
 
-And have you ensured that, in the inevitable race when a guest gets
-migrated part way through an encryption state change, that no data
-corruption occurs?
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/gc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 53312d7bc78b..65c0687ee2bb 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1018,8 +1018,8 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+ 		 * race condition along with SSR block allocation.
+ 		 */
+ 		if ((gc_type == BG_GC && has_not_enough_free_secs(sbi, 0, 0)) ||
+-				get_valid_blocks(sbi, segno, false) ==
+-							sbi->blocks_per_seg)
++				get_valid_blocks(sbi, segno, true) ==
++							BLKS_PER_SEC(sbi))
+ 			return submitted;
+ 
+ 		if (check_valid_map(sbi, segno, off) == 0)
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
