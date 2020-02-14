@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6ECC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68CFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAB224684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759C5246A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="X8zoS4Ot"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rXRz5LTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391844AbgBNQLs (ORCPT
+        id S2391860AbgBNQLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:11:48 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.175]:11483 "EHLO
+        Fri, 14 Feb 2020 11:11:52 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.175]:34132 "EHLO
         mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391579AbgBNQKp (ORCPT
+        with ESMTP id S2391582AbgBNQKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:10:45 -0500
+        Fri, 14 Feb 2020 11:10:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581696640;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZBAC50dU0uhRQKdMbm4Q/e7P7wLPrnPuOlslKb4Wgqo=;
-        b=X8zoS4OtkByR+9JNCBLPrlB7le9++A+8+OoB3dfwikrywj7q92SuxmXwbRsEq7XCta
-        ERMFJVFKt9U/ZrmXZVdQTilrwg1T/4kjaUiliTfygfcDtxfXCsaJ93EQ9p8Q80uJ3M5p
-        /ibXs+3xysg//X6GBI29RDwffsNOjRhXiQ+t1ks8+uv404C6n1S9GgLItsZ4aqyy8HIx
-        t2+boZwYz/QS3hJ66Qlbcrt/D0Iz6tS3qGLiV/ARVJQf4E8GZ1/p55V2ZVNXcAMGPjzR
-        xistHAe8lNhqPPwRIp2GxvIx6GWlL/CS6uA5BrE/hWJaBaOM5lpuxHi7LOIZxef+1LBH
-        kN6w==
+        bh=o2aaGn+CrBGGFUCI/aU8qBP4BNQ+G25EUxt570OpKBY=;
+        b=rXRz5LTq/z0HQhXyEkznDaTE+Cl+Ip5z8h+t6gBXa6s5Q5PujUOSwcif07z9Tyyhe3
+        AXxRBZTzHSGrtLh14Og+hRfBHAbcx22lY5SgHKqxMb7+9evHC03g41oLg+ZZlXcdQOZ4
+        d5dH25waOs2Ku8BzR5xPSzu0MWpEhFx51ONj0mpCHYZ+IWIyiFfPUr8mSyYq0hpT2HBM
+        nQG+Z5kzEIoxtACh3zXGrQNdUePJE1vBL+oD4ZV69TV/+9GjXNR7j+3vYV285jLvzqkV
+        TU+bUqgjYyaVXbM9Ge4cJibgOMLmsNnWllNHr6u7EpujKG6X41NJxuvVPQ81Nq+2//wz
+        QtBA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7OMfsfQx3"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EGAUFl2
+        with ESMTPSA id U06217w1EGATFl1
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 14 Feb 2020 17:10:30 +0100 (CET)
+        Fri, 14 Feb 2020 17:10:29 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Boddie <paul@boddie.org.uk>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -58,9 +58,9 @@ To:     Paul Boddie <paul@boddie.org.uk>,
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: [PATCH v2 07/12] MIPS: DTS: CI20: give eth0_power a defined voltage.
-Date:   Fri, 14 Feb 2020 17:10:19 +0100
-Message-Id: <b72b4c86d2b390844a1ea97885c4b65204bc8872.1581696624.git.hns@goldelico.com>
+Subject: [PATCH v2 06/12] MIPS: CI20: defconfig: configure CONFIG_REGULATOR_ACT8865 for PMU
+Date:   Fri, 14 Feb 2020 17:10:18 +0100
+Message-Id: <16836bcf6830a3989b578fba2972220c348afc10.1581696624.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581696624.git.hns@goldelico.com>
 References: <cover.1581696624.git.hns@goldelico.com>
@@ -71,26 +71,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a 3.3V power switch (DVNET3.3V ).
+The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
+Since it is not compiled, the PMU and the CI20 board is running in
+power-on reset state of the PMU.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/configs/ci20_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index e02a19db7ef1..e1364f941c7d 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -56,6 +56,8 @@
- 	eth0_power: fixedregulator@0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "eth0_power";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
- 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
- 		enable-active-high;
- 	};
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index 30a47a7a2994..74e5775b8a05 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -95,6 +95,7 @@ CONFIG_JZ4740_WDT=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_DEBUG=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_ACT8865=y
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
 -- 
 2.23.0
 
