@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE0DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEC8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFD224650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474F324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701361;
-	bh=AIbo4S4usFiwy+n5RgPSDhWrfMvr5ydKo17MWKxWy40=;
+	s=default; t=1581701366;
+	bh=7FMsyWcS1dwfyUSPF3+9JWESGJIhRRVt1a5N6xGkfDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8aIIlzFAuZvWmyu+mkVNFaVC37/ulEPdFRb8VutnGVVY6YOdhXLUAn9GuYrLGgUT
-	 9QVXJLSVBjAi5YLY5UUOG1Z01U95SlwtNdVSZm/Y8hXw0pteUE1zq8DlYe1ZSo8y0d
-	 0eTDqEjjj+BGy/xGNgB3YBnTAuhH40SEk0wSxy2U=
+	b=fz7UNOT82WmzF4X4Zjq2e/GaQskW8LW0enrhAsu1o4Uk1YY2PPco5Rc/5fqiDQikQ
+	 n/eIQt8En8SraibUkgwhwWkd6x7CxGYMznqYk5xhiosiI+a8pLF90RzaVmrARvLUvB
+	 kak5cbaqG8CYEOsU5gdSnc2xlaKa2SHD87B2RH2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390101AbgBNQH4 (ORCPT
+        id S2390892AbgBNR3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58334 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:29:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390040AbgBNQHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:12 -0500
+        id S2390807AbgBNQHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FCF222C2;
-        Fri, 14 Feb 2020 16:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CBBA24685;
+        Fri, 14 Feb 2020 16:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696432;
-        bh=AIbo4S4usFiwy+n5RgPSDhWrfMvr5ydKo17MWKxWy40=;
+        s=default; t=1581696475;
+        bh=7FMsyWcS1dwfyUSPF3+9JWESGJIhRRVt1a5N6xGkfDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBNWAtsGN6eXarS0jW8LYqFg1EinNcfHonhonbb2RBQLnaQbtPcYzISWSxdjSx036
-         7eiPv3QSn2MNlMxT1tZzAyV92YbPtl6lW6WFCtjAfDoq8PToKj5R3kCTO2DHPGqk1O
-         0O4mVM+9NVaO4k/XIl2W6TM0QWSz87Hl/spqstrU=
+        b=YpzZZVBjMfUD87mMYvgt3XxJYgbhD0hIz21gYXelWIAIopGqAH9M2vq1QP8sOHorO
+         nSYM2sI0zTEZsmGfHlOJwx76Rgk6kJnyBzd+QjWB0wH15KMiOG1bja5gqDL9jzNyD8
+         MzeHs+xkhep1YwQnwgS2SdAX6QmfpTRH3XSVU4Fg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam McNally <sammc@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 250/459] ASoC: Intel: sof_rt5682: Ignore the speaker amp when there isn't one.
-Date:   Fri, 14 Feb 2020 10:58:20 -0500
-Message-Id: <20200214160149.11681-250-sashal@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 283/459] Input: edt-ft5x06 - work around first register access error
+Date:   Fri, 14 Feb 2020 10:58:53 -0500
+Message-Id: <20200214160149.11681-283-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -60,69 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam McNally <sammc@chromium.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit d4b74e218a8d0d6cf58e546627ab9d4d4f2645ab ]
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
-Some members of the Google_Hatch family include a rt5682 jack codec, but
-no speaker amplifier. This uses the same driver (sof_rt5682) as a
-combination of rt5682 jack codec and max98357a speaker amplifier. Within
-the sof_rt5682 driver, these cases are not currently distinguishable,
-relying on a DMI quirk to decide the configuration. This causes an
-incorrect configuration when only the rt5682 is present on a
-Google_Hatch device.
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-For CML, the jack codec is used as the primary key when matching,
-with a possible speaker amplifier described in quirk_data. The two cases
-of interest are the second and third 10EC5682 entries in
-snd_soc_acpi_intel_cml_machines[]. The second entry matches the
-combination of rt5682 and max98357a, resulting in the quirk_data field
-in the snd_soc_acpi_mach being non-null, pointing at
-max98357a_spk_codecs, the snd_soc_acpi_codecs for the matched speaker
-amplifier. The third entry matches just the rt5682, resulting in a null
-quirk_data.
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
 
-The sof_rt5682 driver's DMI data matching identifies that a speaker
-amplifier is present for all Google_Hatch family devices. Detect cases
-where there is no speaker amplifier by checking for a null quirk_data in
-the snd_soc_acpi_mach and remove the speaker amplifier bit in that case.
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
 
-Signed-off-by: Sam McNally <sammc@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200103124921.v3.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index 9441ddfeea5e6..06b7d6c6c9a04 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -594,6 +594,14 @@ static int sof_audio_probe(struct platform_device *pdev)
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 5525f1fb1526e..240e8de24cd24 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1041,6 +1041,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -1110,6 +1111,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
  
- 	dmi_check_system(sof_rt5682_quirk_table);
- 
-+	mach = (&pdev->dev)->platform_data;
-+
-+	/* A speaker amp might not be present when the quirk claims one is.
-+	 * Detect this via whether the machine driver match includes quirk_data.
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
 +	 */
-+	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
-+		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
 +
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
- 		is_legacy_cpu = 1;
- 		dmic_be_num = 0;
-@@ -654,7 +662,6 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
- 
- 	sof_audio_card_rt5682.dev = &pdev->dev;
--	mach = (&pdev->dev)->platform_data;
- 
- 	/* set platform name for each dailink */
- 	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
 2.20.1
 
