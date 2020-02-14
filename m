@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13B4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5563D2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBFB2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699156;
-	bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
+	s=default; t=1581699158;
+	bh=j9CGMquJFaVOyKvyBwEyDj0Jd3QL7FMTAYCZyECBKYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmMX1wMiXS5STVKoLnYy+fq2vAVW4qRMhT/ZyEEsInxxKRJ26Z3q9oeEtuN38YBsk
-	 yK38KLmPYBA39lM+miVPxNOAUK2LUBJqAumzXBXTa7a5AVYPKogkUXA2EVFejpd95U
-	 TNPZRgO14szcSTFUf60nHiC/+GWQB2HFIOSE4eWc=
+	b=MQV/F8SZNwX2YmrT9NvietDmZQSDG/orU6EmkV4gXWzr6DYRJQg01d/LOdP4fQKYD
+	 +YkqVfi/XGQJvBQV+TWruYFql5LnFHrPOQG30pRLqq425ZiFdxxIOBLrvRM0txtum7
+	 DoShkj/6dLtQcQgj2wK+mr6OyT4kIJwGJSPGJ9pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393241AbgBNQwf (ORCPT
+        id S2392431AbgBNQwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:52:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52354 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:52:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404967AbgBNQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:19 -0500
+        id S2404507AbgBNQTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C96424712;
-        Fri, 14 Feb 2020 16:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3B4A246F8;
+        Fri, 14 Feb 2020 16:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697159;
-        bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
+        s=default; t=1581697156;
+        bh=j9CGMquJFaVOyKvyBwEyDj0Jd3QL7FMTAYCZyECBKYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qaXDtQQ5wHx6oL2+slWTbLouygXum8eyuNBXTggLUuX/PZncLmTsVBrJJbHgSIFR0
-         WgMFtoQ7tXGydgnpGgngTE49bDQzvVn2lYdf5GTP3hbKDKmPqkK2AVoEVmSKQUvccP
-         fAS/AouyWNktyc0SJ1GL0Aq5DqJL9FXpV0QyQzgw=
+        b=YJoAvYlLuujU/90PcFe+E3j6vu4friBCC7sgPHTOFC/qgjer6CjmEngS2jt5Zi8sA
+         5IQNURBhWJkpC+cQsaYMh4ExZm2AQPvtEeV58YzkRBLYp0rmD/D1bXWqJyML0hiw5L
+         ROg31CEO1fnbwmZbZ7NASYGdY/xFu1xi3wCrmRu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 096/186] RDMA/rxe: Fix error type of mmap_offset
-Date:   Fri, 14 Feb 2020 11:15:45 -0500
-Message-Id: <20200214161715.18113-96-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 094/186] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+Date:   Fri, 14 Feb 2020 11:15:43 -0500
+Message-Id: <20200214161715.18113-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -59,36 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiewei Ke <kejiewei.cn@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
+[ Upstream commit 805f635703b2562b5ddd822c62fc9124087e5dd5 ]
 
-The type of mmap_offset should be u64 instead of int to match the type of
-mminfo.offset. If otherwise, after we create several thousands of CQs, it
-will run into overflow issues.
+The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
+one set of users must be wrong.  Replace them by the correct enum IDs.
 
-Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
-Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index d1cc89f6f2e33..46c8a66731e6c 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -408,7 +408,7 @@ struct rxe_dev {
- 	struct list_head	pending_mmaps;
- 
- 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
--	int			mmap_offset;
-+	u64			mmap_offset;
- 
- 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+index c3af9ebee4afc..28c0405ba396f 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -2325,7 +2325,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
+ 		/* IP0_11_8 [4] */
+ 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
+-		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
++		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
+ 		FN_PWM4_B,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP0_7_5 [3] */
+@@ -2367,7 +2367,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_TS_SDAT0_A,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP1_10_8 [3] */
+-		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
++		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
+ 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
+ 		/* IP1_7_5 [3] */
+ 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
 -- 
 2.20.1
 
