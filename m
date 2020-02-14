@@ -2,111 +2,117 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FBEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6426AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282AA22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XkntFlzo"
+	by mail.kernel.org (Postfix) with ESMTP id 37D88206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581689810;
+	bh=5HALsHiDTL4axGdxa3WIcXS5r2rp1q38KCHpbT5M5g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ac9JBtkeM6UVxeZo/VpCAV3OiURyXoSbD0ZdcwnSIEgAftngbkFljiN5j5NR2dnjz
+	 F9MRhhdWeuwerh9h616g7WD1HzhtZbvWmkSaeBtiu0nrFaQTfwe78ROgE5wLqEmQgh
+	 Bnj9Pev05TzXI2Yn3IQlwPB++ybmOsVnWD7sH7yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgBNOQa (ORCPT
+        id S1729424AbgBNOQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:16:30 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19999 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729092AbgBNOQa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:16:30 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e46abaf0000>; Fri, 14 Feb 2020 06:16:15 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 14 Feb 2020 06:16:29 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 14 Feb 2020 06:16:29 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 14:16:27 +0000
-Subject: Re: [PATCH v8 19/19] dmaengine: tegra-apb: Improve error message
- about DMA underflow
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200209163356.6439-20-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f26f9a99-a044-a0ed-d845-5c93628d29d4@nvidia.com>
-Date:   Fri, 14 Feb 2020 14:16:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 09:16:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:33560 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgBNOQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:16:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4E141FB;
+        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283DB3F68F;
+        Fri, 14 Feb 2020 06:16:47 -0800 (PST)
+Date:   Fri, 14 Feb 2020 14:16:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20200214141645.GM4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+ <20200214121145.GF4827@sirena.org.uk>
+ <CAAh8qsxmYmpyAg-FQJLnEwvKKFZYg6VQenKf83_TJ4oF0GyMsA@mail.gmail.com>
+ <20200214131518.GJ4827@sirena.org.uk>
+ <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200209163356.6439-20-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581689775; bh=e8YDGG5SBKWvch6oV9YVb5CtuyrsWgVzbSEi0lh2ydE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XkntFlzoon0L80vKlRoIPbHq/UEAFGYcr20kuca+URiHavLLTta6pgPqRUNksvuea
-         QTG9w5Q3dCzslsi/hC4/c897Ny3ORs8UGN9+QnP8lYy/+NMnj7eInhw4EGVxhgEHbu
-         pWext/H213rbfDyD+sf1sDoCxMYOUyVIELQ54ZCPwq+hPXes2hcre4jreqh7ke5xJe
-         PAApGvRUAWfn//sRevKraW5HezcGwpeC7z8YVHLxH+2rfIz7tlAaivH2we/XeL7mbu
-         wkidO+C3FRQgGrNptiDQXkl8JdVVGAz4ZAxyxbvK7fB1efhgEEbFlM65HtLwzVWEmp
-         P6VKrK9wWqqLQ==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rf72Gf+bfLC8kxKs"
+Content-Disposition: inline
+In-Reply-To: <CAAh8qswA0TLY73URB8eUYm+nFK9q08Ep4wamz3rAE_5g3fd51g@mail.gmail.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 09/02/2020 16:33, Dmitry Osipenko wrote:
-> Technically it is possible that DMA could be misconfigured in a way that
-> cyclic DMA transfer is processed slower than it takes to complete the
-> cycle and in this case the DMA is getting aborted with a not very
-> informative message about the problem, let's improve it.
-> 
-> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 3e0373b89195..1a9b37c102ba 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -566,7 +566,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->  	if (!hsgreq->configured) {
->  		tegra_dma_stop(tdc);
->  		pm_runtime_put(tdc->tdma->dev);
-> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
-> +		dev_err(tdc2dev(tdc), "DMA transfer underflow, aborting DMA\n");
->  		tegra_dma_abort_all(tdc);
->  		return false;
->  	}
-> 
+--rf72Gf+bfLC8kxKs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+On Fri, Feb 14, 2020 at 02:49:48PM +0100, Simon Goldschmidt wrote:
+> On Fri, Feb 14, 2020 at 2:15 PM Mark Brown <broonie@kernel.org> wrote:
 
-Thanks!
-Jon
+> > I'm not seeing anything in the driver that removes whatever the current
+> > support is?  Unless it's just adding a duplicate driver for the same
+> > compatible strings which is obviously a bad idea but at least means that
+> > unless people enable the driver there's no risk of it colliding with the
+> > existing one.
 
--- 
-nvpublic
+> It does add a duplicate driver for the same compatible strings. The current
+> working driver is in 'drivers/mtd/spi-nor/cadence-quadspi.c'.
+
+> In fact, the compatible string "cdns,qspi-nor" copied from the old driver to
+> this new driver is *only* used for altera. TI has its own compatible string,
+> the new Intel platform adds its own as well.
+
+Oh, that's not good - it's adding a completely new binding for the same
+compatibles which isn't OK.  We can transition to a new driver using the
+same binding but we should be keeping the old binding.  If we're moving
+the binding document around and/or transitioning to YAML that needs to
+be done explicitly rather than adding a new document for the same
+compatible.
+
+> As long as that one doesn't get removed, I have nothing against this driver
+> here. I'm only concerned that this will get forgotten. And given that I added
+> altera guys to the loop in one of the previous versions, I just was surprised
+> they aren't on CC in this version.
+
+Yes, like I say it'd be much better to get their review.
+
+--rf72Gf+bfLC8kxKs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Gq8wACgkQJNaLcl1U
+h9DHoQf+LsSB3ZHCDD01+GU4dangDKO0Y7qLxBcScMbJ4+Xuws5182R7ns4mhTmt
+wTsTbbf+Y3qfIXqReAzBxs5lRRxl46CdLexDJe/CRPKr+ADYByxAOhYcQ8jtPZzd
+9QNw3ftS8JICO81XdPsIH9FdPHbMfj1/H+Js5GhfppYUbsvvrxUI1njQ06mF6sOw
+oCymlCc+ruUgLSR0fA4FsBrLFmWMJTor8kudFBLupMeJs9F3dB2jgmQbkHmlfm1z
+X/fJnZRpD7voBp4x2TFfm+lx/m6OBPTLuOCuu6CON9p3ahH4KoSB1YXLl8S/d1Ew
+YV2Vi7U/k2epOpGy2yjWnN2je8whYA==
+=ysJH
+-----END PGP SIGNATURE-----
+
+--rf72Gf+bfLC8kxKs--
