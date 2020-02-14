@@ -2,156 +2,160 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2534C3B1B1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A67C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9039820848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702480;
-	bh=9Ctd1fmVcttbjX+dX5w5TzwYoyTQbQ9VFRC0ZOZZ1FI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbG16pxseslZdwK93/ixI4xy5VFBUvhM7W8M+UvABR/zfC8kZB55ju9Z+PLqCeyqD
-	 HcIZ5ip212bUNeHIVn1LSqRWPdes6Rw8zK5vR0aUhbY5ZVbazqkCtrtG9AusH3mIvC
-	 IxWJtr4tD5nfKR7JDRRXHwu8w92hY/tvklD2Q9ww=
+	by mail.kernel.org (Postfix) with ESMTP id D610F2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGUWL5x5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389253AbgBNRr7 (ORCPT
+        id S2389401AbgBNRr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:47:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388991AbgBNP74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A114024654;
-        Fri, 14 Feb 2020 15:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695995;
-        bh=9Ctd1fmVcttbjX+dX5w5TzwYoyTQbQ9VFRC0ZOZZ1FI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+xLyT3YmmqNaFNt0PMyTiwKfpxI2FV8VMfbqiDCrAYgVk6WVFjguYqW2NSiaqZIC
-         +vAVKwaACAucY3bk9Tkb2Vn/LanSfsaA8XHM7PNfuI6Z7i0ilAsqLbpnR27WDJvxzP
-         9WCIN9GEg94ggBV79sdfZAhE6g38nFTKb5w28FRI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 515/542] nvme-pci: remove nvmeq->tags
-Date:   Fri, 14 Feb 2020 10:48:27 -0500
-Message-Id: <20200214154854.6746-515-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:47:57 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39214 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389163AbgBNRrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:47:55 -0500
+Received: by mail-qt1-f194.google.com with SMTP id c5so7498609qtj.6;
+        Fri, 14 Feb 2020 09:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H+bcYUOrw2Ec/4DtIbHXNA+UE0pkCSGSt87LCFpCLwo=;
+        b=mGUWL5x5/ddWeJndVHUtzpNm4U3UwftZq3hvLy8lPhOLA7bneN33HuW16QXONzF1RZ
+         bcO9orAA7CDhhTsxYwVjKtHj+Cm4oZd9C7t0DfgonqYm7iEh7Dhwq7iEzMPTawnDmMr7
+         nMGOOQqkE0jfRwwCZVTmxuuPuhlaGfEz2wCyA6cCgvb1SpQ6eqOdZ+PmOSzU3+uUej/b
+         QevI9N8IfO7NNBkO8t40aScYabPZRAzrC1lNEVfu7nlRwDqRwSnhDrvbVXEXTuyl+aP+
+         s5hhCSZ7pajQhDU4F8XHELnoLqSSTHnQBkp4GUPdybENcwfsDvaz8FqGIGpHiIXFJHmx
+         4pyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H+bcYUOrw2Ec/4DtIbHXNA+UE0pkCSGSt87LCFpCLwo=;
+        b=sjxvWTm/nnCsGZKe9/B89Fri7h92ZLXkH0NcHYedc0raOr6TjuMeTs/iL/TmRnovfs
+         xJ1EKwMFZ1lH7JrzYHZjPwP8vuRe+k/5wIRwEDq1ie26StFYtVhFimJETHcQ19OvaCLK
+         LS61wi0l+KFotIkts4O7Xp6dqjDCRpndKcArtd6Ac4NBsH7OVe9BXwi5aeoJSEoA8lhN
+         /lpEJL/SNDcu5HvSUeG/3hi95DGlrEX7379zN7z9fL3rUQS0RB7P6Kw8lqM7oBtdwmua
+         qTFyecoETnR6qVqMMQPmXjIbe5vtScJDjav7Lll1nu5a53HrFaLrwW+x4Vvv2EFi8sFD
+         kZ/Q==
+X-Gm-Message-State: APjAAAXsK4vHf482/y2aG2+bMFNcjcwQ5NdL/8sqSIvPqVMAix4pmSOk
+        vdvTPr9o+t3WbLw/NDigzf8OXd9OXsPQuw2y9pU=
+X-Google-Smtp-Source: APXvYqzehCXpsoVGV8M2tbw+6jU4FpDwGO7PhmOV64EuR2joOSQ/4HR4OlLBjVv5MgRZM1cs03RZCLRBRMF0AFF8dBY=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr3349919qtq.93.1581702474041;
+ Fri, 14 Feb 2020 09:47:54 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CAEf4BzZfGXHL36ntjkQsTTEEa9yzqnS=Xs4XCibejpo5AKGpuQ@mail.gmail.com>
+ <C0LP269G4WO4.1Q4M8CK4K92SU@dlxu-fedora-R90QNFJV>
+In-Reply-To: <C0LP269G4WO4.1Q4M8CK4K92SU@dlxu-fedora-R90QNFJV>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 14 Feb 2020 09:47:43 -0800
+Message-ID: <CAEf4Bzb7n+RGfKHP0ik7M6P7WGHke3FzsoLmuUmrEYmzK_Neog@mail.gmail.com>
+Subject: Re: [PATCH v7 bpf-next RESEND 2/2] selftests/bpf: add
+ bpf_read_branch_records() selftest
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Thu, Feb 13, 2020 at 11:05 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> On Tue Feb 11, 2020 at 11:30 AM, Andrii Nakryiko wrote:
+> > On Mon, Feb 10, 2020 at 12:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+> [...]
+>
+> >
+> > > +       /* generate some branches on cpu 0 */
+> > > +       CPU_ZERO(&cpu_set);
+> > > +       CPU_SET(0, &cpu_set);
+> > > +       err = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set), &cpu_set);
+> > > +       if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
+> > > +               goto out_free_pb;
+> > > +       /* spin the loop for a while (random high number) */
+> > > +       for (i = 0; i < 1000000; ++i)
+> > > +               ++j;
+> > > +
+> >
+> >
+> > test_perf_branches__detach here?
+>
+> Yeah, good idea.
+>
+> [...]
+>
+> > > +struct fake_perf_branch_entry {
+> > > +       __u64 _a;
+> > > +       __u64 _b;
+> > > +       __u64 _c;
+> > > +};
+> > > +
+> > > +struct output {
+> > > +       int required_size;
+> > > +       int written_stack;
+> > > +       int written_map;
+> > > +};
+> > > +
+> > > +struct {
+> > > +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> > > +       __uint(key_size, sizeof(int));
+> > > +       __uint(value_size, sizeof(int));
+> > > +} perf_buf_map SEC(".maps");
+> > > +
+> > > +typedef struct fake_perf_branch_entry fpbe_t[30];
+> > > +
+> > > +struct {
+> > > +       __uint(type, BPF_MAP_TYPE_ARRAY);
+> > > +       __uint(max_entries, 1);
+> > > +       __type(key, __u32);
+> > > +       __type(value, fpbe_t);
+> > > +} scratch_map SEC(".maps");
+> >
+> >
+> > Can you please use global variables instead of array
+>
+> If you mean `scratch_map`, sure.
+>
+> > and perf_event_array?
+>
+> Do you mean replace the perf ring buffer with global variables? I think
+> that would limit the number of samples we validate in userspace to a fixed
+> number. It might be better to validate as many as the system gives us.
+>
+> Let me know what you think. I might be overthinking it.
 
-[ Upstream commit cfa27356f835dc7755192e7b941d4f4851acbcc7 ]
+Yeah, I meant get rid of perf_buffer and just use global variables for
+outputting data.
 
-There is no real need to have a pointer to the tagset in
-struct nvme_queue, as we only need it in a single place, and that place
-can derive the used tagset from the device and qid trivially.  This
-fixes a problem with stale pointer exposure when tagsets are reset,
-and also shrinks the nvme_queue structure.  It also matches what most
-other transports have done since day 1.
+re: validating multiple samples in perf_buffer. Given you don't really
+control how many samples you'll get and you check nothing specific
+about any single sample, I think it's fine to just validate any. They
+are not supposed to differ much, right? Checking that size is multiple
+of perf_branch_entry size is pretty much the only thing we can check,
+no?
 
-Reported-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/pci.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 365a2ddbeaa76..da392b50f73e7 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -167,7 +167,6 @@ struct nvme_queue {
- 	 /* only used for poll queues: */
- 	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
- 	volatile struct nvme_completion *cqes;
--	struct blk_mq_tags **tags;
- 	dma_addr_t sq_dma_addr;
- 	dma_addr_t cq_dma_addr;
- 	u32 __iomem *q_db;
-@@ -376,29 +375,17 @@ static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 
- 	WARN_ON(hctx_idx != 0);
- 	WARN_ON(dev->admin_tagset.tags[0] != hctx->tags);
--	WARN_ON(nvmeq->tags);
- 
- 	hctx->driver_data = nvmeq;
--	nvmeq->tags = &dev->admin_tagset.tags[0];
- 	return 0;
- }
- 
--static void nvme_admin_exit_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
--{
--	struct nvme_queue *nvmeq = hctx->driver_data;
--
--	nvmeq->tags = NULL;
--}
--
- static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 			  unsigned int hctx_idx)
- {
- 	struct nvme_dev *dev = data;
- 	struct nvme_queue *nvmeq = &dev->queues[hctx_idx + 1];
- 
--	if (!nvmeq->tags)
--		nvmeq->tags = &dev->tagset.tags[hctx_idx];
--
- 	WARN_ON(dev->tagset.tags[hctx_idx] != hctx->tags);
- 	hctx->driver_data = nvmeq;
- 	return 0;
-@@ -948,6 +935,13 @@ static inline void nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
- 		writel(head, nvmeq->q_db + nvmeq->dev->db_stride);
- }
- 
-+static inline struct blk_mq_tags *nvme_queue_tagset(struct nvme_queue *nvmeq)
-+{
-+	if (!nvmeq->qid)
-+		return nvmeq->dev->admin_tagset.tags[0];
-+	return nvmeq->dev->tagset.tags[nvmeq->qid - 1];
-+}
-+
- static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- {
- 	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
-@@ -972,7 +966,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- 		return;
- 	}
- 
--	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
-+	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
- 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
- 	nvme_end_request(req, cqe->status, cqe->result);
- }
-@@ -1572,7 +1566,6 @@ static const struct blk_mq_ops nvme_mq_admin_ops = {
- 	.queue_rq	= nvme_queue_rq,
- 	.complete	= nvme_pci_complete_rq,
- 	.init_hctx	= nvme_admin_init_hctx,
--	.exit_hctx      = nvme_admin_exit_hctx,
- 	.init_request	= nvme_init_request,
- 	.timeout	= nvme_timeout,
- };
--- 
-2.20.1
-
+>
+> > Would make BPF side clearer and userspace simpler.
+> > struct output member will just become variables.
+>
+>
+> Thanks,
+> Daniel
