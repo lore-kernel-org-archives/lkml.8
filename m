@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA180C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874C5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9200B2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555B52187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698556;
-	bh=8FIpGAv38N3JOcE3mn8yy2om0YdEiQlkwbQpw79bDhg=;
+	s=default; t=1581698559;
+	bh=9Et37cIllYVrbRLcETJX4azs8dFhX5iB0xAVVervu7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=llz4GmMAGUsfO9FfJBpieepRfb/kKMmJPla3REtKFLYaE5eNiZmwqBqGvYaaluIR6
-	 qC2pz9mTiTDnmMOZfc6FQkWOfrM6ZAqql9USjSO5YOpyxBYMH2OstpwcyPa9h9Oty4
-	 ZKZYIbbRuIJ9/rty2Q8CAEiZjBLHxEitT7EMNAEc=
+	b=CJu0tktKXGN2ALz/mkwVuCQ1e3XNWSp6w/kfqvTBFKbTOyiEOYVfVHsl+Nwgnp6Xs
+	 OoPY6O1I/kEgdqFx1jhLmVRJqCduYlld9LG8tWH2fvCG4grVJbiws0gXFu+l71tOUC
+	 osSt+/ZWe3rnZvSuvDDoIbA4jDobD8rFB2Lvbqi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392918AbgBNQWS (ORCPT
+        id S2405951AbgBNQmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55230 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:42:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392927AbgBNQVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:04 -0500
+        id S2405428AbgBNQWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FCF24755;
-        Fri, 14 Feb 2020 16:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 450582473C;
+        Fri, 14 Feb 2020 16:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697264;
-        bh=8FIpGAv38N3JOcE3mn8yy2om0YdEiQlkwbQpw79bDhg=;
+        s=default; t=1581697337;
+        bh=9Et37cIllYVrbRLcETJX4azs8dFhX5iB0xAVVervu7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FPqgVw1oUbbrfljE7e2KCWQXz0INbdzttjWluEP+M+x4I75KAU2CuThw4Ad1ihOH
-         0Y8ne3zt+BzUQh027VazpfoMsFHqKqQp0QxgTDRpQDtDIZrSTKJHsI0AVxC4iRuYM/
-         o/Z2p5JI3r+O/ZDnnvFEXA0Ji+t3u9B8qXBbJSio=
+        b=blYfuMWmBX0zgWuVBBwNNJXmI2rvRGlrCe3odFDW/HlGilg5yINUMtkgHjzh4jsyn
+         poLC3kbCAZHItmw+XM+Q0sOFMxEkA9qaa01VvUOtzNoqNnIptudEUo0peun2kItR7e
+         eGIrlJehqOZDbeFD9rolQS4GGNBEKAeKfk++vCKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, kbuild test robot <lkp@intel.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 178/186] bcache: explicity type cast in bset_bkey_last()
-Date:   Fri, 14 Feb 2020 11:17:07 -0500
-Message-Id: <20200214161715.18113-178-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 043/141] drm/radeon: remove set but not used variable 'backbias_response_time'
+Date:   Fri, 14 Feb 2020 11:19:43 -0500
+Message-Id: <20200214162122.19794-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
+[ Upstream commit ac52caecbcf2c30ce95b2536c1caf2643c49b91c ]
 
-In bset.h, macro bset_bkey_last() is defined as,
-    bkey_idx((struct bkey *) (i)->d, (i)->keys)
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Parameter i can be variable type of data structure, the macro always
-works once the type of struct i has member 'd' and 'keys'.
+drivers/gpu/drm/radeon/si_dpm.c: In function si_program_response_times:
+drivers/gpu/drm/radeon/si_dpm.c:3640:29: warning: variable backbias_response_time set but not used [-Wunused-but-set-variable]
 
-bset_bkey_last() is also used in macro csum_set() to calculate the
-checksum of a on-disk data structure. When csum_set() is used to
-calculate checksum of on-disk bcache super block, the parameter 'i'
-data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
-struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
-unsigned int (a 32bit width), so there is problem when sending
-parameters via stack to call bkey_idx().
+It is introduced by commit a9e61410921b ("drm/radeon/kms:
+add dpm support for SI (v7)"), but never used, so remove it.
 
-Sparse tool from Intel 0day kbuild system reports this incompatible
-problem. bkey_idx() is part of user space API, so the simplest fix is
-to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/bset.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/si_dpm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index 8d1964b472e7e..0bfde500af196 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -381,7 +381,8 @@ void bch_btree_keys_stats(struct btree_keys *, struct bset_stats *);
+diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+index ac7ae206f2e71..06c7244a1f9c5 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -3695,14 +3695,13 @@ static int si_notify_smc_display_change(struct radeon_device *rdev,
  
- /* Bkey utility code */
- 
--#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
-+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
-+					 (unsigned int)(i)->keys)
- 
- static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned idx)
+ static void si_program_response_times(struct radeon_device *rdev)
  {
+-	u32 voltage_response_time, backbias_response_time, acpi_delay_time, vbi_time_out;
++	u32 voltage_response_time, acpi_delay_time, vbi_time_out;
+ 	u32 vddc_dly, acpi_dly, vbi_dly;
+ 	u32 reference_clock;
+ 
+ 	si_write_smc_soft_register(rdev, SI_SMC_SOFT_REGISTER_mvdd_chg_time, 1);
+ 
+ 	voltage_response_time = (u32)rdev->pm.dpm.voltage_response_time;
+-	backbias_response_time = (u32)rdev->pm.dpm.backbias_response_time;
+ 
+ 	if (voltage_response_time == 0)
+ 		voltage_response_time = 1000;
 -- 
 2.20.1
 
