@@ -2,133 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78646C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F574C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C61C206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06438206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 10:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LUObm/4l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZI+0qXsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387476AbgBNKlT (ORCPT
+        id S2387488AbgBNKlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 05:41:19 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53990 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387397AbgBNKlT (ORCPT
+        Fri, 14 Feb 2020 05:41:39 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34376 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387414AbgBNKlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 05:41:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581676877;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JIODMyxS3Cw9NVg2Y0JpjutrQnRroxT6oU0d5Fa65Qk=;
-        b=LUObm/4lEVO5KAnX63WGy3bsGzwNNG9fHcuBTMLWZEGf1oAjzJ5hW7HVx0116g0FIoMpK4
-        HpZy5b5Jcq+BHFZtUaIiJi0UScGA3Cl9BI5Bs8LpSbkPRsNRCC4BPUEsr6eG6OtV76Zcix
-        D0BUHWGyAu/PdQQpdR9cPX7skwCQOOs=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-6m0DcErZMG2mxi4j1FioBg-1; Fri, 14 Feb 2020 05:41:11 -0500
-X-MC-Unique: 6m0DcErZMG2mxi4j1FioBg-1
-Received: by mail-qv1-f71.google.com with SMTP id v3so5432170qvm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:41:11 -0800 (PST)
+        Fri, 14 Feb 2020 05:41:39 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x7so10190982ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 02:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I84A/i8tcPKxxOGbCK9A8uezoeqh4sVjuwMk9nGOQlQ=;
+        b=ZI+0qXsAcGpAsFA7BAHC/r2eJz4nN4Nx9/qkAEpIDDoDDtOyybIt7BDzE47CID6Zb8
+         KXMmlcs3o1Q8M593QyBQoHhzPwoHNJQ4zGVhk7KfRX9tHIalJEZU0yATHyk4H/6agSXL
+         gAMP09pjFClhtjllFq78QJmvRKdUfZKjsL1rCKvnAleNtFLlFGT2Cxjz1mlJCSsta0b3
+         KKKJn1DNPsLayW72dHiVAOekjpBBMiBKWClSc+KnprNG9aog6lHLlzp6poDAdhIOlyGk
+         baBAuwWPvaTk8SFcwHvkkyo0+c+PEW9bquP2Fw+2ouoNeThdQv+XG4j0dW03YIobBLEc
+         Tq7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JIODMyxS3Cw9NVg2Y0JpjutrQnRroxT6oU0d5Fa65Qk=;
-        b=DNGGb0YHTimbu0XMPSWZ3GJH9Av4kU34mY3KjiQqYcfxizp8Bpp2RynAHAlprP/++u
-         yboTd3SXpvlIBFcF9X3jGYaAU6tc3+kJdFJc5UKMGf75w9McvFBhyeM5dwTqd0WFtaCi
-         kF5oQGISmaCTPpt5DspUtuhdaULcssnOqFrTFp5Hu3sfcPmDc8XI2Ow8AWpCLVMsoZAW
-         hYTBf44xedpZgmrhe+pCb2XgiYv4I4Vjk8T95gTqzjh8QW3lN+3IncRMiu5FjCxQIJ3K
-         9PiIdKRZQrPZuT1oNVEa9+USfT2SXHE7V6eyOo2OGSldLNKfvVtXi+GERweCwdB2YYw3
-         TPnw==
-X-Gm-Message-State: APjAAAWEvEJir+oLhrYKBioQHlowdFkt82s1khql4Lh0HUJWn91I3UY5
-        wVMtiE9CKaodPCwKMRDdDHJOwqppfh4PwKU2z12HTKQGJXyOknGPkQx006RuD03lcY4lEmBKpz7
-        YcdpbdhgHU0bUT5Ggk9v90oqnKiZnzy4ndsLAm9x9
-X-Received: by 2002:a37:a717:: with SMTP id q23mr1847722qke.169.1581676870590;
-        Fri, 14 Feb 2020 02:41:10 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw8d+hGyj3olMhg+4toi9NBjWt6lr9Wsapa23D7XeqEdU1Ydn5be+Ql2yJAA553mDKf9WAuFnMbeiu3rclujH0=
-X-Received: by 2002:a37:a717:: with SMTP id q23mr1847704qke.169.1581676870363;
- Fri, 14 Feb 2020 02:41:10 -0800 (PST)
+        bh=I84A/i8tcPKxxOGbCK9A8uezoeqh4sVjuwMk9nGOQlQ=;
+        b=aUgi6RhswEknBdiZlj7zRFfja27l4sktQXuCcG4DTzVOQUr3efuwIUPLhjLXN4hzM2
+         oV6Qi6mf4ZLsTMcecnctCNxP9bseJMAsYJ8wcWl6CPHhac3GF+gcGptQDCwOmLtVyOko
+         dHqPllBaKwwWTyyqHEIaSvllXS7kn/LmgO63nTnqm5SMv51sbjNfll5KYuwfVvJVTrts
+         uy6yiUUw7sPgUDjoBcoErTi9yK/t7DA6oxyxM939h4fLoF+GJZGz9832IoXAWDVf/q8J
+         mmQx0Hmbr5i7pccZyDS2ksvx33QbGQwurWzsp2vLKGGydDFypYdZ0Pgw3ZSXalmz5Zz+
+         +CXA==
+X-Gm-Message-State: APjAAAXFYQG+HAA09l1glw8CPSOytld0OFmNX80viANitM3G2sEw1wTs
+        GE/WRrIIcEru/7wOKsIAoJyNZoI/kf/oGjdl1Wm0eA==
+X-Google-Smtp-Source: APXvYqz8IjNrCqOb2DDhLjIqc5YDiIKJ0wbJLELLFODbj8iR64pcK9T84Q6voECeqUp1U7eWp+sJ9v+o6dnCBu0XMxQ=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr1685747ljg.168.1581676895494;
+ Fri, 14 Feb 2020 02:41:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200214065309.27564-1-kai.heng.feng@canonical.com> <189a7784-3754-99b8-3f3d-560b7657c134@redhat.com>
-In-Reply-To: <189a7784-3754-99b8-3f3d-560b7657c134@redhat.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 14 Feb 2020 11:40:59 +0100
-Message-ID: <CAO-hwJL5d4RGxOZ7NqDBdQ=0GYCDThCUR8b+-kRpwPEuhsFXyA@mail.gmail.com>
-Subject: Re: [PATCH] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 14 Feb 2020 11:41:24 +0100
+Message-ID: <CACRpkdYzf0FjBS+GbErPK48QMg92aGX58szQB+4WHqCYk5Gv5Q@mail.gmail.com>
+Subject: Re: [PATCH v8 1/6] pinctrl: mediatek: Check gpio pin number and use
+ binary search in mtk_hw_pin_field_lookup()
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, kuohong.wang@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jan 22, 2020 at 7:53 AM <light.hsieh@mediatek.com> wrote:
 
-On Fri, Feb 14, 2020 at 9:32 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> From: Light Hsieh <light.hsieh@mediatek.com>
 >
-> Hi,
+> 1. Check if gpio pin number is in valid range to prevent from get invalid
+>    pointer 'desc' in the following code:
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
 >
-> On 2/14/20 7:53 AM, Kai-Heng Feng wrote:
-> > The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-> > descriptors, so it has to be added to the override list.
-> >
-> > BugLink: https://bugs.launchpad.net/bugs/1858299
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> 2. Improve  mtk_hw_pin_field_lookup()
+> 2.1 Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+>      search.
+> 2.2 Correct message after the following check fail:
+>     if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+>                 rc = &hw->soc->reg_cal[field];
+>     The original message is:
+>         "Not support field %d for pin %d (%s)\n"
+>     However, the check is on soc chip level, not on pin level yet.
+>     So the message is corrected as:
+>         "Not support field %d for this soc\n"
 >
-> Patch looks good to me:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 
-Thanks everybody for the patch submission and the quick review.
+I managed to apply all 6 patches now for v5.7.
 
-Patch is now queued in for-5.6/upstream-fixes
+I had a big problem extracting the patches since they get base64
+encoded and for some reason git am cannot deal with this. I thought
+it would but it doesn't possibly because of custom headers in the
+message.
 
-Cheers,
-Benjamin
+I have to save out the base64 part of the message, decode separately,
+then paste back the result removing the transfer-encoding line
+of the original message.
 
->
-> Regards,
->
-> Hans
->
->
->
-> > ---
-> >   drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> > index d31ea82b84c1..a66f08041a1a 100644
-> > --- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> > +++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-> > @@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
-> >               },
-> >               .driver_data = (void *)&sipodev_desc
-> >       },
-> > +     {
-> > +             .ident = "Trekstor SURFBOOK E11B",
-> > +             .matches = {
-> > +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-> > +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-> > +             },
-> > +             .driver_data = (void *)&sipodev_desc
-> > +     },
-> >       {
-> >               .ident = "Direkt-Tek DTLAPY116-2",
-> >               .matches = {
-> >
->
+cat mtk65.txt | base64 -d -i > scratch.patch
 
+Any tips on how to handle this more efficiently?
+
+Yours,
+Linus Walleij
