@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30884C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E07C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D0B2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCEE2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703662;
-	bh=uGPoaQq5sIQF55e4UpMPnmFtF7DSigxvWVTWul9hHJM=;
+	s=default; t=1581703664;
+	bh=CVfVA6v89yNedy4aQtUH/s74q22YyBh8hOOT8Sme+v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jOBAVzb5TmUH2JR7cL9Ywt2+4tSxe02auEtA/mZheCtGTOiuZHGMLi2/HgR+jE8Si
-	 AYNZdZNAOizPBIW1QuugHHn1el3E7I0AayJmnadrg/MNkWO0TrOFEAJhAAIrNrSxuo
-	 fIB13NXGc+qTVr1p4vSaWXQtsABxkBDM4E/oM2DU=
+	b=BSnoricea20N89EiyK0J1QjG519AP50HPVNLuUiCGzfpD/Nh5insLJFJtfYH6sKQW
+	 pxGkNuidkW2i8rdXEaW/DbdT85UcdKFOH9/8l1FrIV5VnZ0zvKWxKNtKIPdOjBz/8x
+	 8S7mHOd9IZbzHHsUGeYPFBr88THAWUQSttWm4P9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgBNPya (ORCPT
+        id S2388812AbgBNSHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34416 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:07:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731517AbgBNPyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:25 -0500
+        id S1731534AbgBNPy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FD4222C4;
-        Fri, 14 Feb 2020 15:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F8B222C4;
+        Fri, 14 Feb 2020 15:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695664;
-        bh=uGPoaQq5sIQF55e4UpMPnmFtF7DSigxvWVTWul9hHJM=;
+        s=default; t=1581695668;
+        bh=CVfVA6v89yNedy4aQtUH/s74q22YyBh8hOOT8Sme+v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xoFgLBZYRJHH9osszXyjm5qGPsFqX9U6uEtkdBFwJ8q1IKa4HwO7rgpYqoSmNjqRF
-         1ErH7xhgdlNneBPkGCxcMPh2udybUWNT4jozzN+eaXeJ1n9ESiJvffpToprh2qaAC9
-         vTFBNz616Zz+S0A4Vyucc8XD61/HRFnx7j9hlaaM=
+        b=UZOkG9aKTnt0LTypyrpCz65/JAPQFti0huxbPWrZyifiJ3Grropt2Rr55nM/2dK5M
+         WM/y8etsLG56hxSriZCBJdMrwHIHuuO7dHiOBXmfkmpwFVBXNzoeor34Ygc0kQX0Ru
+         nCVuddO9SX41WcrNtJByAARFmz9jV/s1WIW0UGKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 254/542] iommu/amd: Check feature support bit before accessing MSI capability registers
-Date:   Fri, 14 Feb 2020 10:44:06 -0500
-Message-Id: <20200214154854.6746-254-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 257/542] clk: qcom: Add missing msm8998 gcc_bimc_gfx_clk
+Date:   Fri, 14 Feb 2020 10:44:09 -0500
+Message-Id: <20200214154854.6746-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,80 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 813071438e83d338ba5cfe98b3b26c890dc0a6c0 ]
+[ Upstream commit db2c7c0a04b11753f5741d00b784b5380ddeee72 ]
 
-The IOMMU MMIO access to MSI capability registers is available only if
-the EFR[MsiCapMmioSup] is set. Current implementation assumes this bit
-is set if the EFR[XtSup] is set, which might not be the case.
+gcc_bimc_gfx_clk is a required clock for booting the GPU and GPU SMMU.
 
-Fix by checking the EFR[MsiCapMmioSup] before accessing the MSI address
-low/high and MSI data registers via the MMIO.
-
-Fixes: 66929812955b ('iommu/amd: Add support for X2APIC IOMMU interrupts')
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20191217164913.4783-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c  | 17 ++++++++++++-----
- drivers/iommu/amd_iommu_types.h |  1 +
- 2 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/clk/qcom/gcc-msm8998.c               | 14 ++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 483f7bc379fa8..61628c906ce11 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -147,7 +147,7 @@ bool amd_iommu_dump;
- bool amd_iommu_irq_remap __read_mostly;
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index cf31b5d03270f..df1d7056436cd 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1996,6 +1996,19 @@ static struct clk_branch gcc_gp3_clk = {
+ 	},
+ };
  
- int amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_VAPIC;
--static int amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
-+static int amd_iommu_xt_mode = IRQ_REMAP_XAPIC_MODE;
++static struct clk_branch gcc_bimc_gfx_clk = {
++	.halt_reg = 0x46040,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x46040,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_bimc_gfx_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_gpu_bimc_gfx_clk = {
+ 	.halt_reg = 0x71010,
+ 	.halt_check = BRANCH_HALT,
+@@ -2810,6 +2823,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
+ 	[GCC_GP1_CLK] = &gcc_gp1_clk.clkr,
+ 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
++	[GCC_BIMC_GFX_CLK] = &gcc_bimc_gfx_clk.clkr,
+ 	[GCC_GPU_BIMC_GFX_CLK] = &gcc_gpu_bimc_gfx_clk.clkr,
+ 	[GCC_GPU_BIMC_GFX_SRC_CLK] = &gcc_gpu_bimc_gfx_src_clk.clkr,
+ 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+index de1d8a1f59665..63e02dc32a0bb 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+@@ -182,6 +182,7 @@
+ #define GCC_MSS_GPLL0_DIV_CLK_SRC				173
+ #define GCC_MSS_SNOC_AXI_CLK					174
+ #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
++#define GCC_BIMC_GFX_CLK					176
  
- static bool amd_iommu_detected;
- static bool __initdata amd_iommu_disabled;
-@@ -1534,8 +1534,15 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
- 			iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
- 		if (((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0))
- 			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
--		if (((h->efr_reg & (0x1 << IOMMU_EFR_XTSUP_SHIFT)) == 0))
--			amd_iommu_xt_mode = IRQ_REMAP_XAPIC_MODE;
-+		/*
-+		 * Note: Since iommu_update_intcapxt() leverages
-+		 * the IOMMU MMIO access to MSI capability block registers
-+		 * for MSI address lo/hi/data, we need to check both
-+		 * EFR[XtSup] and EFR[MsiCapMmioSup] for x2APIC support.
-+		 */
-+		if ((h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT)) &&
-+		    (h->efr_reg & BIT(IOMMU_EFR_MSICAPMMIOSUP_SHIFT)))
-+			amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -1996,8 +2003,8 @@ static int iommu_init_intcapxt(struct amd_iommu *iommu)
- 	struct irq_affinity_notify *notify = &iommu->intcapxt_notify;
- 
- 	/**
--	 * IntCapXT requires XTSup=1, which can be inferred
--	 * amd_iommu_xt_mode.
-+	 * IntCapXT requires XTSup=1 and MsiCapMmioSup=1,
-+	 * which can be inferred from amd_iommu_xt_mode.
- 	 */
- 	if (amd_iommu_xt_mode != IRQ_REMAP_X2APIC_MODE)
- 		return 0;
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index f52f59d5c6bd4..f8a7945f3df90 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -383,6 +383,7 @@
- /* IOMMU Extended Feature Register (EFR) */
- #define IOMMU_EFR_XTSUP_SHIFT	2
- #define IOMMU_EFR_GASUP_SHIFT	7
-+#define IOMMU_EFR_MSICAPMMIOSUP_SHIFT	46
- 
- #define MAX_DOMAIN_ID 65536
- 
+ #define PCIE_0_GDSC						0
+ #define UFS_GDSC						1
 -- 
 2.20.1
 
