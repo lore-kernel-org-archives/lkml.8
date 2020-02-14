@@ -2,57 +2,55 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E10AC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903C1C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E40246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564582082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698160;
-	bh=WPoO9fSZtjkjEpEm9vtqz34cRRqNUXjfucR+5dFT6I0=;
+	s=default; t=1581698165;
+	bh=BAiSBRFdJMN3ZHL/w78o+PZyV1AC1701XX/Z2jnkgC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zuRqCudtIviFDTTceWKrfEECwyDQ1SiqefLYNaz4R/ce9ecdE1K6/+3WqcyfJIna4
-	 kQI43hlX1R8u9bda0f+Af2VukguxP1hluka7HQctWJNoc6TSGxb6MTPypstlaO+uTs
-	 lZrWNqOFx3sqcnwKq/lbH2NKuNJA9c7adAQuXK5c=
+	b=ndcEQayYCfaEJzcLf3IZcOMIsyZsPp9mOcUX6OHH4TG7YJcGmI31at3FbmrwfS8SO
+	 eKAtjeVgFMejFSptopYMlPb9T2PB9BU6GNG4HpSDCpfuWzEHgF3YR5c6BjbLXDlBN2
+	 kY/IZZEd/IvwVPlrkG8ahVZ2KB1S9nZXPCi58gEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393682AbgBNQgA (ORCPT
+        id S2405463AbgBNQYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:24:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405907AbgBNQYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:34 -0500
+        id S2393247AbgBNQWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 430F02479B;
-        Fri, 14 Feb 2020 16:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF592473E;
+        Fri, 14 Feb 2020 16:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697473;
-        bh=WPoO9fSZtjkjEpEm9vtqz34cRRqNUXjfucR+5dFT6I0=;
+        s=default; t=1581697369;
+        bh=BAiSBRFdJMN3ZHL/w78o+PZyV1AC1701XX/Z2jnkgC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMTO7lWzkB1aKe5qmV5QaRlMZUdSDSp8Cz57CTPUE9srUA1sHtvdpTmxvILeG+scu
-         VhzHwQ93r4f6QBAXhT6ofkEld0NrRYTqvOiSqsPKk1SITrFUPnm2u5qOaFdUbu7tGa
-         phaZpymZM9jsfrX/0+a37WvXa1LT//Ts5/Da4O8M=
+        b=WSMZMWq0MxTu3hDwAo2IQl51T3o8M/dpCs75iysSQ7qpGCXvAbTG4QZGh4m5e6UQW
+         U++Y1D291ghjX7me2JQscbkwDVyFF5eiL/M7N0Hj6O1Z/0BwX2CRsO/8MN7zcV6YPQ
+         50HzWUFGey3HPZFava40hs1J7udhH6m81va4UK/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Wenyou Yang <wenyou.yang@microchip.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 006/100] media: i2c: mt9v032: fix enum mbus codes and frame sizes
-Date:   Fri, 14 Feb 2020 11:22:50 -0500
-Message-Id: <20200214162425.21071-6-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 068/141] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+Date:   Fri, 14 Feb 2020 11:20:08 -0500
+Message-Id: <20200214162122.19794-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,61 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
+[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
 
-This driver supports both the mt9v032 (color) and the mt9v022 (mono)
-sensors. Depending on which sensor is used, the format from the sensor is
-different. The format.code inside the dev struct holds this information.
-The enum mbus and enum frame sizes need to take into account both type of
-sensors, not just the color one. To solve this, use the format.code in
-these functions instead of the hardcoded bayer color format (which is only
-used for mt9v032).
+Clang warns:
 
-[Sakari Ailus: rewrapped commit message]
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+                        ^
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
+is here
+                        if (syncrate == &ahc_syncrates[maxsync])
+                        ^
+1 warning generated.
 
-Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This warning occurs because there is a space amongst the tabs on this
+line. Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+This has been a problem since the beginning of git history hence no fixes
+tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/817
+Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9v032.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index a68ce94ee0976..cacdab30fece0 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -454,10 +454,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
- 				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_mbus_code_enum *code)
- {
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
- 	if (code->index > 0)
- 		return -EINVAL;
- 
--	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-+	code->code = mt9v032->format.code;
- 	return 0;
- }
- 
-@@ -465,7 +467,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_frame_size_enum *fse)
- {
--	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
-+	if (fse->index >= 3)
-+		return -EINVAL;
-+	if (mt9v032->format.code != fse->code)
- 		return -EINVAL;
- 
- 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index 64ab9eaec428c..def3208dd2905 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -2321,7 +2321,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
+ 			 * At some speeds, we only support
+ 			 * ST transfers.
+ 			 */
+-		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
++			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+ 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
+ 			break;
+ 		}
 -- 
 2.20.1
 
