@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BA3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825D1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE8524680
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FA22468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696222;
-	bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
+	s=default; t=1581696226;
+	bh=bF3mm8LgK4WLj9DZFyScvnTUuhRmv0kvP5u5CVxcBuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbPKO2BPahPormCrdlhYYb1xdvpFB9eJ9IG/d9Q49g4ERNKfJPvXDqtINafJfKmA9
-	 w2n2k9eF1Ic9oknmpTEmgWQDA7OhSQQtHV54pBYH+vJ6gRcbozSZsGVV6V4x/R0ben
-	 tHww9KLjWkL6pufOyBf2FeC2J4CMl1JLJpDp4Gi0=
+	b=R2b4GwIFdXgiFjIhERFg5hIKTlwZ8hRYcAM+lKp1HEGVbPu+sP4p8cpFQbj2KaTXl
+	 frvZ0FujkJ81XhcrqhdVpbwiQs+iOY1f6wFJWoX9WrN2POiSCSjfmom0av+okhbxVz
+	 Ks2xVJzlbnbA1dHsGsBsuUp/5gEAFSplxvr2b/go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389294AbgBNQDl (ORCPT
+        id S2389738AbgBNQDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389648AbgBNQDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:30 -0500
+        id S2389682AbgBNQDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBB1124654;
-        Fri, 14 Feb 2020 16:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A9D32467D;
+        Fri, 14 Feb 2020 16:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696209;
-        bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
+        s=default; t=1581696215;
+        bh=bF3mm8LgK4WLj9DZFyScvnTUuhRmv0kvP5u5CVxcBuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIe4p+7cZisWnKhF8gucmFTCd/yT6nZ7ePkomlxo+1fYkSz2lNZe+CYc39EF0mzrg
-         GUpJA+cEwRXjkWalJ4P0ilDVAeGn/gAgpzmWl8cokFfk4Mo5Q4mf5C7PEWakftpIug
-         wAjDmVai3jAFLPbJ3TvEkH3CeoAi+nYlNRgPglqM=
+        b=ozb+ZQ8kaafj5iAKmnntAR4VDZ/mPoERy6SF5x/Fmm4axPjqFZMI5nobmNn2Z8jWq
+         RfWz4zorYUDJ1gTlVVWbr1eyuK6XArtqrUSmCs2bfJ5xFr+tMQM+XH8rpMbImGzl+m
+         HjRt20N31n2IEikd7lyV7QI+HD/AFdqSB9FaDIBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 074/459] ext4: fix deadlock allocating bio_post_read_ctx from mempool
-Date:   Fri, 14 Feb 2020 10:55:24 -0500
-Message-Id: <20200214160149.11681-74-sashal@kernel.org>
+Cc:     Bean Huo <beanhuo@micron.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 079/459] scsi: ufs: Fix ufshcd_probe_hba() reture value in case ufshcd_scsi_add_wlus() fails
+Date:   Fri, 14 Feb 2020 10:55:29 -0500
+Message-Id: <20200214160149.11681-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -58,79 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit 68e45330e341dad2d3a0a3f8ef2ec46a2a0a3bbc ]
+[ Upstream commit b9fc5320212efdfb4e08b825aaa007815fd11d16 ]
 
-Without any form of coordination, any case where multiple allocations
-from the same mempool are needed at a time to make forward progress can
-deadlock under memory pressure.
+A non-zero error value likely being returned by ufshcd_scsi_add_wlus() in
+case of failure of adding the WLs, but ufshcd_probe_hba() doesn't use this
+value, and doesn't report this failure to upper caller.  This patch is to
+fix this issue.
 
-This is the case for struct bio_post_read_ctx, as one can be allocated
-to decrypt a Merkle tree page during fsverity_verify_bio(), which itself
-is running from a post-read callback for a data bio which has its own
-struct bio_post_read_ctx.
-
-Fix this by freeing the first bio_post_read_ctx before calling
-fsverity_verify_bio().  This works because verity (if enabled) is always
-the last post-read step.
-
-This deadlock can be reproduced by trying to read from an encrypted
-verity file after reducing NUM_PREALLOC_POST_READ_CTXS to 1 and patching
-mempool_alloc() to pretend that pool->alloc() always fails.
-
-Note that since NUM_PREALLOC_POST_READ_CTXS is actually 128, to actually
-hit this bug in practice would require reading from lots of encrypted
-verity files at the same time.  But it's theoretically possible, as N
-available objects isn't enough to guarantee forward progress when > N/2
-threads each need 2 objects at a time.
-
-Fixes: 22cfe4b48ccb ("ext4: add fs-verity read support")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20191231181222.47684-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
+Link: https://lore.kernel.org/r/20200120130820.1737-2-huobean@gmail.com
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/readpage.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index a30b203fa461c..a5f55fece9b04 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -57,6 +57,7 @@ enum bio_post_read_step {
- 	STEP_INITIAL = 0,
- 	STEP_DECRYPT,
- 	STEP_VERITY,
-+	STEP_MAX,
- };
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0d41a7dc1d6b2..b0d6978d78bf8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6953,7 +6953,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+ 			ufshcd_init_icc_levels(hba);
  
- struct bio_post_read_ctx {
-@@ -106,10 +107,22 @@ static void verity_work(struct work_struct *work)
- {
- 	struct bio_post_read_ctx *ctx =
- 		container_of(work, struct bio_post_read_ctx, work);
-+	struct bio *bio = ctx->bio;
+ 		/* Add required well known logical units to scsi mid layer */
+-		if (ufshcd_scsi_add_wlus(hba))
++		ret = ufshcd_scsi_add_wlus(hba);
++		if (ret)
+ 			goto out;
  
--	fsverity_verify_bio(ctx->bio);
-+	/*
-+	 * fsverity_verify_bio() may call readpages() again, and although verity
-+	 * will be disabled for that, decryption may still be needed, causing
-+	 * another bio_post_read_ctx to be allocated.  So to guarantee that
-+	 * mempool_alloc() never deadlocks we must free the current ctx first.
-+	 * This is safe because verity is the last post-read step.
-+	 */
-+	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
-+	mempool_free(ctx, bio_post_read_ctx_pool);
-+	bio->bi_private = NULL;
- 
--	bio_post_read_processing(ctx);
-+	fsverity_verify_bio(bio);
-+
-+	__read_end_io(bio);
- }
- 
- static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
+ 		/* Initialize devfreq after UFS device is detected */
 -- 
 2.20.1
 
