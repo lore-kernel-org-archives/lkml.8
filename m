@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09274C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9BEC3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C182082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FAE222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701633;
-	bh=Ib/kJYQoRP9+Z4hzql8Gs1MBOxNuMCCSr6QAxvEN8RM=;
+	s=default; t=1581701643;
+	bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IDFMTER0yCnGKOQJFGXMg5hrHeWtZYoGnxnlt5/c0WSgUESkC/x7X3EDPxMR+VHZI
-	 mN+cMNaynbjDjEkzYpEZEaRHzAX4RrfDZT2IM9kuBEUlzjS7Qv4rGtJxuv7uYQopGy
-	 G02EG+p9dO8bfOXDEVrtQoeK8k0OFuzsXV0nrJTY=
+	b=pHnviQc6yBWLThVzwJQM2YRGsy4O4quHv1SdjYuKbPoPFfqSiG8r4sG4ENphjSM06
+	 FRm+WYxJGm1Tvxq7PnIHOJ5mSJozCEjNbT4I1GNP5AT8CdPIYIqHVKZdBbFglWgJAe
+	 PxNCUatPqs1uMYJ1GCPYNoGjMOifJPwPuc14waAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390771AbgBNRdx (ORCPT
+        id S2391591AbgBNReC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:33:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:34:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390373AbgBNQGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:06:16 -0500
+        id S2390349AbgBNQGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B77812067D;
-        Fri, 14 Feb 2020 16:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 686D0206D7;
+        Fri, 14 Feb 2020 16:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696375;
-        bh=Ib/kJYQoRP9+Z4hzql8Gs1MBOxNuMCCSr6QAxvEN8RM=;
+        s=default; t=1581696373;
+        bh=3gwgFUqvJ8N/VlvUVeaLWqEWpiO5LJUZARXPEDPwzPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ks9tuMRhLMqHPOU8V7g2/NI48aQuFRV+k2PMg+WXjoTP+Qmtc0jkKAfwmaEwxMU6I
-         Tm+NKJfgKH7Q947Qw1cfyVZ48slxeKlTXegscUjsYYsKH2foz7jdRJ8ZnmGPZdeWap
-         pm83waQGOtiJmxvL53cB2Zyjdxc0YgrvfUlFK5y0=
+        b=Au94Gvp/99kComdz1wDTto/2QUYOB1VX9439vRvMDJDWl2Jvxcplk1dCSsxl/0MRi
+         zJk0sbydqC92lw8rnZCEOjW3X9QadvdwrJiIfOlM/Zpa1oPyeC0cV69mZGvCeP9qE0
+         ml48EfoT3nINsah1wIH+LhoakEZzTAeemknbf2wI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Monk Liu <Monk.Liu@amd.com>, Emily Deng <Emily.Deng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 204/459] drm/amdgpu: fix KIQ ring test fail in TDR of SRIOV
-Date:   Fri, 14 Feb 2020 10:57:34 -0500
-Message-Id: <20200214160149.11681-204-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 202/459] bcma: remove set but not used variable 'sizel'
+Date:   Fri, 14 Feb 2020 10:57:32 -0500
+Message-Id: <20200214160149.11681-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Monk Liu <Monk.Liu@amd.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 5a7489a7e189ee2be889485f90c8cf24ea4b9a40 ]
+[ Upstream commit f427939391f290cbeabe0231eb8a116429d823f0 ]
 
-issues:
-MEC is ruined by the amdkfd_pre_reset after VF FLR done
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-fix:
-amdkfd_pre_reset() would ruin MEC after hypervisor finished the VF FLR,
-the correct sequence is do amdkfd_pre_reset before VF FLR but there is
-a limitation to block this sequence:
-if we do pre_reset() before VF FLR, it would go KIQ way to do register
-access and stuck there, because KIQ probably won't work by that time
-(e.g. you already made GFX hang)
+drivers/bcma/scan.c: In function ‘bcma_erom_get_addr_desc’:
 
-so the best way right now is to simply remove it.
+drivers/bcma/scan.c:222:20: warning: variable ‘sizel’ set but
+not used [-Wunused-but-set-variable]
 
-Signed-off-by: Monk Liu <Monk.Liu@amd.com>
-Reviewed-by: Emily Deng <Emily.Deng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+It is never used, and so can be removed.
+
+Fixes: 8369ae33b705 ("bcma: add Broadcom specific AMBA bus driver")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/bcma/scan.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 7a6c837c0a85f..13694d5eba474 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3466,8 +3466,6 @@ static int amdgpu_device_reset_sriov(struct amdgpu_device *adev,
- 	if (r)
- 		return r;
+diff --git a/drivers/bcma/scan.c b/drivers/bcma/scan.c
+index 4a2d1b235fb5a..1f2de714b4017 100644
+--- a/drivers/bcma/scan.c
++++ b/drivers/bcma/scan.c
+@@ -219,7 +219,7 @@ static s32 bcma_erom_get_mst_port(struct bcma_bus *bus, u32 __iomem **eromptr)
+ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
+ 				  u32 type, u8 port)
+ {
+-	u32 addrl, addrh, sizel, sizeh = 0;
++	u32 addrl, addrh, sizeh = 0;
+ 	u32 size;
  
--	amdgpu_amdkfd_pre_reset(adev);
--
- 	/* Resume IP prior to SMC */
- 	r = amdgpu_device_ip_reinit_early_sriov(adev);
- 	if (r)
+ 	u32 ent = bcma_erom_get_ent(bus, eromptr);
+@@ -239,12 +239,9 @@ static u32 bcma_erom_get_addr_desc(struct bcma_bus *bus, u32 __iomem **eromptr,
+ 
+ 	if ((ent & SCAN_ADDR_SZ) == SCAN_ADDR_SZ_SZD) {
+ 		size = bcma_erom_get_ent(bus, eromptr);
+-		sizel = size & SCAN_SIZE_SZ;
+ 		if (size & SCAN_SIZE_SG32)
+ 			sizeh = bcma_erom_get_ent(bus, eromptr);
+-	} else
+-		sizel = SCAN_ADDR_SZ_BASE <<
+-				((ent & SCAN_ADDR_SZ) >> SCAN_ADDR_SZ_SHIFT);
++	}
+ 
+ 	return addrl;
+ }
 -- 
 2.20.1
 
