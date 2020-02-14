@@ -2,135 +2,131 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65221C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E07C3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6B424654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9882A217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581704182;
+	bh=v9kgbTRLSbsOE/FA6v/8+h7+wnByHJqRW7CwIyvCXio=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GeW62JVSMx2Tk2QqefM5OBTlU8UTwrKreS4BhWJrQQTc3BQSaoweWU6kiT5LuKXRT
+	 T/CGLjnXLUwxyzFeR5M9pbHXQJST0Up66qyIwTbeOyN/YFB6a9JXC71vr4GtSzEEnE
+	 k7aZtSgxdMUV+bN53WrWhwDeuUxEl/P8cik+1+oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404850AbgBNSQQ (ORCPT
+        id S1730816AbgBNPvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:16:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:42910 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 10:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404808AbgBNSQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:16:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 994AC328;
-        Fri, 14 Feb 2020 10:16:12 -0800 (PST)
-Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 651713F68E;
-        Fri, 14 Feb 2020 10:16:11 -0800 (PST)
-From:   James Morse <james.morse@arm.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH v2] x86/resctrl: Preserve CDP enable over cpuhp
-Date:   Fri, 14 Feb 2020 18:16:00 +0000
-Message-Id: <20200214181600.38779-1-james.morse@arm.com>
-X-Mailer: git-send-email 2.24.1
+        id S1729758AbgBNPv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:28 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56DD2168B;
+        Fri, 14 Feb 2020 15:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695487;
+        bh=v9kgbTRLSbsOE/FA6v/8+h7+wnByHJqRW7CwIyvCXio=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e4oY3o4UhveyG5wOPUgyvjmvzXiGxNGi4QRHnn4DCuFGNXwq+JSo0JB7pJwZTWPYo
+         j6uHzZbr5JYQN5socnClFhBSGBlDxMtftH7wKRx1vRtBqyVzJ3g2EFuvXzVPqUeU23
+         7pM7czD+MtotNmM3QtnAweCcRniTX48H3oVp2Tys=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Louis Li <Ching-shih.Li@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 117/542] drm/amd/display: Retrain dongles when SINK_COUNT becomes non-zero
+Date:   Fri, 14 Feb 2020 10:41:49 -0500
+Message-Id: <20200214154854.6746-117-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resctrl assumes that all CPUs are online when the filesystem is
-mounted, and that CPUs remember their CDP-enabled state over CPU
-hotplug.
+From: Harry Wentland <harry.wentland@amd.com>
 
-This goes wrong when resctrl's CDP-enabled state changes while all
-the CPUs in a domain are offline.
+[ Upstream commit 3eb6d7aca53d81ce888624f09cd44dc0302161e8 ]
 
-When a domain comes online, enable (or disable!) CDP to match resctrl's
-current setting.
+[WHY]
+Two years ago the patch referenced by the Fixes tag stopped running
+dp_verify_link_cap_with_retries during DP detection when the reason
+for the detection was a short-pulse interrupt. This effectively meant
+that we were no longer doing the verify_link_cap training on active
+dongles when their SINK_COUNT changed from 0 to 1.
 
-Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: James Morse <james.morse@arm.com>
+A year ago this was partly remedied with:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
 
+This made sure that we trained the dongle on initial hotplug (without
+connected downstream devices).
+
+This is all fine and dandy if it weren't for the fact that there are
+some dongles on the market that don't like link training when SINK_COUNT
+is 0 These dongles will in fact indicate a SINK_COUNT of 0 immediately
+after hotplug, even when a downstream device is connected, and then
+trigger a shortpulse interrupt indicating a SINK_COUNT change to 1.
+
+In order to play nicely we will need our policy to not link train an
+active DP dongle when SINK_COUNT is 0 but ensure we train it when the
+SINK_COUNT changes to 1.
+
+[HOW]
+Call dp_verify_link_cap_with_retries on detection even when the detection
+is triggered from a short pulse interrupt.
+
+With this change we can also revert this commit which we'll do in a separate
+follow-up change:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
+
+Fixes: 0301ccbaf67d ("drm/amd/display: DP Compliance 400.1.1 failure")
+Suggested-by: Louis Li <Ching-shih.Li@amd.com>
+Tested-by: Louis Li <Ching-shih.Li@amd.com>
+Cc: Wenjing Liu <Wenjing.Liu@amd.com>
+Cc: Hersen Wu <hersenxs.wu@amd.com>
+Cc: Eric Yang <Eric.Yang2@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes since v1:
- * Explicitly test for L2/L3 resources to ignore duplicate calls.
- * Poke the LxDATA resources to avoid confusing CDP-off with CDP-unsupported.
- * Moved code to rdtgroup.c for fewer exported functions.
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-v1: lore.kernel.org/r/20200212185359.163111-1-james.morse@arm.com
----
- arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
- arch/x86/kernel/cpu/resctrl/internal.h |  1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 18 ++++++++++++++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 89049b343c7a..d8cc5223b7ce 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
- 	d->id = id;
- 	cpumask_set_cpu(cpu, &d->cpu_mask);
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 4619f94f0ac78..70846ae7d854d 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -968,8 +968,7 @@ static bool dc_link_detect_helper(struct dc_link *link,
+ 			same_edid = is_same_edid(&prev_sink->dc_edid, &sink->dc_edid);
  
-+	rdt_domain_reconfigure_cdp(r);
-+
- 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
- 		kfree(d);
- 		return;
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 181c992f448c..3dd13f3a8b23 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
- void __check_limbo(struct rdt_domain *d, bool force_free);
- bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
- bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
- 
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 064e9ef44cd6..5967320a1951 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1831,6 +1831,9 @@ static int set_cache_qos_cfg(int level, bool enable)
- 	struct rdt_domain *d;
- 	int cpu;
- 
-+	 /* CDP state is restored during cpuhp, which takes this lock */
-+	lockdep_assert_held(&rdtgroup_mutex);
-+
- 	if (level == RDT_RESOURCE_L3)
- 		update = l3_qos_cfg_update;
- 	else if (level == RDT_RESOURCE_L2)
-@@ -1859,6 +1862,21 @@ static int set_cache_qos_cfg(int level, bool enable)
- 	return 0;
- }
- 
-+/* Restore the qos cfg state when a package comes online */
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
-+{
-+	lockdep_assert_held(&rdtgroup_mutex);
-+
-+	if (!r->alloc_capable)
-+		return;
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
-+		l2_qos_cfg_update(&r->alloc_enabled);
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
-+		l3_qos_cfg_update(&r->alloc_enabled);
-+}
-+
- /*
-  * Enable or disable the MBA software controller
-  * which helps user specify bandwidth in MBps.
+ 		if (link->connector_signal == SIGNAL_TYPE_DISPLAY_PORT &&
+-			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX &&
+-			reason != DETECT_REASON_HPDRX) {
++			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX) {
+ 			/*
+ 			 * TODO debug why Dell 2413 doesn't like
+ 			 *  two link trainings
 -- 
-2.24.1
+2.20.1
 
