@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84AFC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276A4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AEF2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEFC206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695870;
-	bh=EcCWKwGSZO4bHFmae70KvAGM3Xaq12rnjsNVbZ8vQvE=;
+	s=default; t=1581695883;
+	bh=GiqdFSZEoNy8iXjcP7SuRT0i4X8ZFZZeuCykkBIh0EQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgnoTjddg49S8MzQ/ZMoXnpkf7fxP5Fbqc7hQfiorfmPmqreVFrsq65T/ooLpATYV
-	 hluYJL15GBJGsPfdSzhMh6PPxX3jggglp1LuzRU100ld3yda1xAVCDd5v70RCi9ag4
-	 FYL5UFH2kPt8lIIQFVH8Pu6EYJm1rVNhdDRxlCVo=
+	b=HlwdvKLakOGi+7q+dv4Vo04ZMhxBBYom02b6tK1YUajaLoFaY0ckFv2S8W+1+6XkL
+	 mjWbLucx+43UUd8M9dxOYnsz3RwFVf4sH3IIY9osX8LvMWk+ZzOi/8UY5xDI6JZqDb
+	 Fdp916uN/1GnUHP2vnmDPZIlJRNr1aYTp85LD/Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbgBNP5u (ORCPT
+        id S2388059AbgBNP6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40636 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388289AbgBNP5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:57:34 -0500
+        id S2388352AbgBNP5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06232082F;
-        Fri, 14 Feb 2020 15:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C07B24690;
+        Fri, 14 Feb 2020 15:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695853;
-        bh=EcCWKwGSZO4bHFmae70KvAGM3Xaq12rnjsNVbZ8vQvE=;
+        s=default; t=1581695864;
+        bh=GiqdFSZEoNy8iXjcP7SuRT0i4X8ZFZZeuCykkBIh0EQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r47tURm68B7U25K/zUxC7exY+4GYxFvxLN8GaLVFVewP/dxi7UcIvPuAxcXmW8oRq
-         vNhRoXr2e9kI47VxwNy8+2sS2zwGulhWiLgmkcmOWTgbgD1FWgnPC4L46207JXxdQ/
-         se7R/fvgWfzhgv4uyRrgtgkyhE19Ya+hhVJga9Bw=
+        b=nvo5LUK2RCyz69UYS+F+91OMbW3UdL7+fnK9KqUAYK4TdZ/67KKzFnq/lV+pWVpma
+         HThGM9/iWDQOvGGMTMCcz567pqM6nBPaRg3ndKZLeVEkkKOUKEGdlqK98HZ4kDbBH9
+         /uxIFpucdnHMznrKOJcf8uSoXWurJp9Yr0rPg7AU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hanjun Guo <guohanjun@huawei.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 402/542] ACPI/IORT: Fix 'Number of IDs' handling in iort_id_map()
-Date:   Fri, 14 Feb 2020 10:46:34 -0500
-Message-Id: <20200214154854.6746-402-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 411/542] efi/arm: Defer probe of PCIe backed efifb on DT systems
+Date:   Fri, 14 Feb 2020 10:46:43 -0500
+Message-Id: <20200214154854.6746-411-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -65,154 +60,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanjun Guo <guohanjun@huawei.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
+[ Upstream commit 64c8a0cd0a535891d5905c3a1651150f0f141439 ]
 
-The IORT specification [0] (Section 3, table 4, page 9) defines the
-'Number of IDs' as 'The number of IDs in the range minus one'.
+The new of_devlink support breaks PCIe probing on ARM platforms booting
+via UEFI if the firmware exposes a EFI framebuffer that is backed by a
+PCI device. The reason is that the probing order gets reversed,
+resulting in a resource conflict on the framebuffer memory window when
+the PCIe probes last, causing it to give up entirely.
 
-However, the IORT ID mapping function iort_id_map() treats the 'Number
-of IDs' field as if it were the full IDs mapping count, with the
-following check in place to detect out of boundary input IDs:
+Given that we rely on PCI quirks to deal with EFI framebuffers that get
+moved around in memory, we cannot simply drop the memory reservation, so
+instead, let's use the device link infrastructure to register this
+dependency, and force the probing to occur in the expected order.
 
-InputID >= Input base + Number of IDs
-
-This check is flawed in that it considers the 'Number of IDs' field as
-the full number of IDs mapping and disregards the 'minus one' from
-the IDs count.
-
-The correct check in iort_id_map() should be implemented as:
-
-InputID > Input base + Number of IDs
-
-this implements the specification correctly but unfortunately it breaks
-existing firmwares that erroneously set the 'Number of IDs' as the full
-IDs mapping count rather than IDs mapping count minus one.
-
-e.g.
-
-PCI hostbridge mapping entry 1:
-Input base:  0x1000
-ID Count:    0x100
-Output base: 0x1000
-Output reference: 0xC4  //ITS reference
-
-PCI hostbridge mapping entry 2:
-Input base:  0x1100
-ID Count:    0x100
-Output base: 0x2000
-Output reference: 0xD4  //ITS reference
-
-Two mapping entries which the second entry's Input base = the first
-entry's Input base + ID count, so for InputID 0x1100 and with the
-correct InputID check in place in iort_id_map() the kernel would map
-the InputID to ITS 0xC4 not 0xD4 as it would be expected.
-
-Therefore, to keep supporting existing flawed firmwares, introduce a
-workaround that instructs the kernel to use the old InputID range check
-logic in iort_id_map(), so that we can support both firmwares written
-with the flawed 'Number of IDs' logic and the correct one as defined in
-the specifications.
-
-[0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
-
-Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Co-developed-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200113172245.27925-9-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/arm-init.c | 107 ++++++++++++++++++++++++++++++--
+ 1 file changed, 103 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 33f71983e0017..6078064684c6c 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -298,6 +298,59 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
- 	return status;
+diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+index 904fa09e6a6b0..d99f5b0c8a090 100644
+--- a/drivers/firmware/efi/arm-init.c
++++ b/drivers/firmware/efi/arm-init.c
+@@ -10,10 +10,12 @@
+ #define pr_fmt(fmt)	"efi: " fmt
+ 
+ #include <linux/efi.h>
++#include <linux/fwnode.h>
+ #include <linux/init.h>
+ #include <linux/memblock.h>
+ #include <linux/mm_types.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_fdt.h>
+ #include <linux/platform_device.h>
+ #include <linux/screen_info.h>
+@@ -276,15 +278,112 @@ void __init efi_init(void)
+ 		efi_memmap_unmap();
  }
  
-+struct iort_workaround_oem_info {
-+	char oem_id[ACPI_OEM_ID_SIZE + 1];
-+	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
-+	u32 oem_revision;
-+};
-+
-+static bool apply_id_count_workaround;
-+
-+static struct iort_workaround_oem_info wa_info[] __initdata = {
-+	{
-+		.oem_id		= "HISI  ",
-+		.oem_table_id	= "HIP07   ",
-+		.oem_revision	= 0,
-+	}, {
-+		.oem_id		= "HISI  ",
-+		.oem_table_id	= "HIP08   ",
-+		.oem_revision	= 0,
-+	}
-+};
-+
-+static void __init
-+iort_check_id_count_workaround(struct acpi_table_header *tbl)
++static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
 +{
-+	int i;
++	u64 fb_base = screen_info.lfb_base;
 +
-+	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
-+		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
-+		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-+		    wa_info[i].oem_revision == tbl->oem_revision) {
-+			apply_id_count_workaround = true;
-+			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
-+			break;
-+		}
-+	}
++	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
++		fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
++
++	return fb_base >= range->cpu_addr &&
++	       fb_base < (range->cpu_addr + range->size);
 +}
 +
-+static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
++static struct device_node *find_pci_overlap_node(void)
 +{
-+	u32 map_max = map->input_base + map->id_count;
++	struct device_node *np;
++
++	for_each_node_by_type(np, "pci") {
++		struct of_pci_range_parser parser;
++		struct of_pci_range range;
++		int err;
++
++		err = of_pci_range_parser_init(&parser, np);
++		if (err) {
++			pr_warn("of_pci_range_parser_init() failed: %d\n", err);
++			continue;
++		}
++
++		for_each_of_pci_range(&parser, &range)
++			if (efifb_overlaps_pci_range(&range))
++				return np;
++	}
++	return NULL;
++}
++
++/*
++ * If the efifb framebuffer is backed by a PCI graphics controller, we have
++ * to ensure that this relation is expressed using a device link when
++ * running in DT mode, or the probe order may be reversed, resulting in a
++ * resource reservation conflict on the memory window that the efifb
++ * framebuffer steals from the PCIe host bridge.
++ */
++static int efifb_add_links(const struct fwnode_handle *fwnode,
++			   struct device *dev)
++{
++	struct device_node *sup_np;
++	struct device *sup_dev;
++
++	sup_np = find_pci_overlap_node();
 +
 +	/*
-+	 * The IORT specification revision D (Section 3, table 4, page 9) says
-+	 * Number of IDs = The number of IDs in the range minus one, but the
-+	 * IORT code ignored the "minus one", and some firmware did that too,
-+	 * so apply a workaround here to keep compatible with both the spec
-+	 * compliant and non-spec compliant firmwares.
++	 * If there's no PCI graphics controller backing the efifb, we are
++	 * done here.
 +	 */
-+	if (apply_id_count_workaround)
-+		map_max--;
++	if (!sup_np)
++		return 0;
 +
-+	return map_max;
++	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
++	of_node_put(sup_np);
++
++	/*
++	 * Return -ENODEV if the PCI graphics controller device hasn't been
++	 * registered yet.  This ensures that efifb isn't allowed to probe
++	 * and this function is retried again when new devices are
++	 * registered.
++	 */
++	if (!sup_dev)
++		return -ENODEV;
++
++	/*
++	 * If this fails, retrying this function at a later point won't
++	 * change anything. So, don't return an error after this.
++	 */
++	if (!device_link_add(dev, sup_dev, 0))
++		dev_warn(dev, "device_link_add() failed\n");
++
++	put_device(sup_dev);
++
++	return 0;
 +}
 +
- static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		       u32 *rid_out)
++static const struct fwnode_operations efifb_fwnode_ops = {
++	.add_links = efifb_add_links,
++};
++
++static struct fwnode_handle efifb_fwnode = {
++	.ops = &efifb_fwnode_ops,
++};
++
+ static int __init register_gop_device(void)
  {
-@@ -314,8 +367,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		return -ENXIO;
- 	}
+-	void *pd;
++	struct platform_device *pd;
++	int err;
  
--	if (rid_in < map->input_base ||
--	    (rid_in >= map->input_base + map->id_count))
-+	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
- 		return -ENXIO;
+ 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
+ 		return 0;
  
- 	*rid_out = map->output_base + (rid_in - map->input_base);
-@@ -1631,5 +1683,6 @@ void __init acpi_iort_init(void)
- 		return;
- 	}
- 
-+	iort_check_id_count_workaround(iort_table);
- 	iort_init_platform_devices();
+-	pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
+-					   &screen_info, sizeof(screen_info));
+-	return PTR_ERR_OR_ZERO(pd);
++	pd = platform_device_alloc("efi-framebuffer", 0);
++	if (!pd)
++		return -ENOMEM;
++
++	if (IS_ENABLED(CONFIG_PCI))
++		pd->dev.fwnode = &efifb_fwnode;
++
++	err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
++	if (err)
++		return err;
++
++	return platform_device_add(pd);
  }
+ subsys_initcall(register_gop_device);
 -- 
 2.20.1
 
