@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3679EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E0DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0672067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07AC24681
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699461;
-	bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
+	s=default; t=1581699464;
+	bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13OLDPs0XflBgehfUv/Gt+5ZPOZSsLjYVfjuAQ3jHusWSTSRjvTJL8Xnc6EoW89x9
-	 57FmTLC1xggjJ6RYpgWcJpm6OBzMSs0REOaRwYSBa9e2plT8mJ0aTSbNKaWBqu/wXG
-	 wkFP8HcS6fz/FT0poRdG9cEB323DJrSdXQAZQmvo=
+	b=ye8x7G3FV8JOId4o11gCdK6OsMnO5LAXkydK4gnCWRSD/R69Xuj81HHN4PexA13r0
+	 yBd7g0NLveXfc/r0OtEghKkK64X1dVWSH5YinHoF/YzVFq9UU4c3Hn13MWjkR2zR1S
+	 xglW6mZGQNQsPHNWxOYysyNno/4kzT4HOQCqqZQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392734AbgBNQ5k (ORCPT
+        id S2404527AbgBNQRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:57:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49112 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:17:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404521AbgBNQRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:40 -0500
+        id S2404326AbgBNQQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B8F246EA;
-        Fri, 14 Feb 2020 16:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC0B246A8;
+        Fri, 14 Feb 2020 16:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697059;
-        bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
+        s=default; t=1581697000;
+        bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vBXtJhyGA2JmUWQT3eW67n4fdJNboQvG04db1ChKg9DuYbw+cA9baUu3ChpTsxjuE
-         jb1AZlyngQa7UjT9AMOek7gNmWcWtq6QAWHfR6s6UTBSWOMBPpcn8nDuKIT4pNu+xy
-         PPO0WzsNhyDvHZSpLdSp7JUmg1HW1E3iRQILchPI=
+        b=RoCiMgEPlYS421OnDAGoNd6rwrb6+olzirPsZ9JpKeTme26s54G7VKoGL5QuFIO0v
+         QX2PWiJuEELA2tNrpAXUuKu996WYknJOSew/RTqCPkFaWsD1tCNHpPHh1DKwUTXnUC
+         F1W2IJmjYk0P0BeWfqQPWUpeWCrQuv35zyxBVm/U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 018/186] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
-Date:   Fri, 14 Feb 2020 11:14:27 -0500
-Message-Id: <20200214161715.18113-18-sashal@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 233/252] docs: i2c: writing-clients: properly name the stop condition
+Date:   Fri, 14 Feb 2020 11:11:28 -0500
+Message-Id: <20200214161147.15842-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,75 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
 
-[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
+[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
+condition".
 
-drivers/gpio/gpio-grgpio.c, 261:
-	request_irq in grgpio_irq_map
-drivers/gpio/gpio-grgpio.c, 255:
-	_raw_spin_lock_irqsave in grgpio_irq_map
-
-drivers/gpio/gpio-grgpio.c, 318:
-	free_irq in grgpio_irq_unmap
-drivers/gpio/gpio-grgpio.c, 299:
-	_raw_spin_lock_irqsave in grgpio_irq_unmap
-
-request_irq() and free_irq() can sleep at runtime.
-
-To fix these bugs, request_irq() and free_irq() are called without
-holding the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-grgpio.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ Documentation/i2c/writing-clients | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 6544a16ab02e9..7541bd327e6c5 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -259,17 +259,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 	lirq->irq = irq;
- 	uirq = &priv->uirqs[lirq->index];
- 	if (uirq->refcnt == 0) {
-+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
- 				  dev_name(priv->dev), priv);
- 		if (ret) {
- 			dev_err(priv->dev,
- 				"Could not request underlying irq %d\n",
- 				uirq->uirq);
--
--			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
--
- 			return ret;
- 		}
-+		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
- 	}
- 	uirq->refcnt++;
+diff --git a/Documentation/i2c/writing-clients b/Documentation/i2c/writing-clients
+index a755b141fa4a8..8b0de4334ae90 100644
+--- a/Documentation/i2c/writing-clients
++++ b/Documentation/i2c/writing-clients
+@@ -339,9 +339,9 @@ read/written.
  
-@@ -315,8 +314,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	if (index >= 0) {
- 		uirq = &priv->uirqs[lirq->index];
- 		uirq->refcnt--;
--		if (uirq->refcnt == 0)
-+		if (uirq->refcnt == 0) {
-+			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 			free_irq(uirq->uirq, priv);
-+			return;
-+		}
- 	}
+ This sends a series of messages. Each message can be a read or write,
+ and they can be mixed in any way. The transactions are combined: no
+-stop bit is sent between transaction. The i2c_msg structure contains
+-for each message the client address, the number of bytes of the message
+-and the message data itself.
++stop condition is issued between transaction. The i2c_msg structure
++contains for each message the client address, the number of bytes of the
++message and the message data itself.
  
- 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ You can read the file `i2c-protocol' for more information about the
+ actual I2C protocol.
 -- 
 2.20.1
 
