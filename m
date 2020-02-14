@@ -2,104 +2,94 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A886C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66324C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE658246F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697778;
-	bh=Yu5GErkoSoCo/cmmcBfRhCwV+dtTT0+BkyMOarjkies=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FelCOztgPBLrubIN3BXhs2Q0Jzhq+QRoooYTg1Z91ZIbubRlwJZ5VmCQde34dEt9J
-	 mPJlcd8mBbem/W/yKuJ50/QJ5DxaaZASiRAQHfNCLLSYXDwgko+LNpoajXTnz+VjON
-	 DvkY5pBaM127Y4rAI54s+u10hu1YcCZC4UCWBsmU=
+	by mail.kernel.org (Postfix) with ESMTP id 392E82470C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FojDOUKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406508AbgBNQ0w (ORCPT
+        id S2406011AbgBNQ3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389345AbgBNQY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:58 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD34247B6;
-        Fri, 14 Feb 2020 16:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697497;
-        bh=Yu5GErkoSoCo/cmmcBfRhCwV+dtTT0+BkyMOarjkies=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pBCmckpVUi0NRUtu79rWBj2ln8Zrzfc9iR83SdmqlWRMTwTnTIT2CXSa/CmBJmBMk
-         GRoAAg5KigzO8W68Kq2Gt6sP6uc+R/rYuNT2dTg7DR2Ump73Pi76JH++ycULq/4oKO
-         MYcxyF/WMlu88kAu94AL/DXc9Sj5rxvVCEny3m1s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 026/100] drm/amdgpu: remove set but not used variable 'amdgpu_connector'
-Date:   Fri, 14 Feb 2020 11:23:10 -0500
-Message-Id: <20200214162425.21071-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 11:29:41 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37104 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393402AbgBNQ0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:49 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c23so3911307plz.4;
+        Fri, 14 Feb 2020 08:26:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B5LavZnvDc2H0BilbcHTMEaeHVyUFn+jvZShai3pdz4=;
+        b=FojDOUKhHE/32/VEavk94WoIhrYrOObwR06J9FRHFHAIp+jFrNhRAZC71hw1sOqzbb
+         rajf8h286q1k6zL+D8lbdRmcRWf7mDziyJ+8oef2DTpsAfwJqZKjy1IqeecXVkJhLJkK
+         jBNnItT6nT2+Gw0p0WJlA78rtbv+UHs6uU0XUZ72oClHNLyRDz85Pxiy8/QEyzxHxs4i
+         SLeoqXtnxXcOdlkowqqBjvJhN7mVXhEx/GVgeUoyBv1pQiNXu+WXUzixajtfxYGCAxCM
+         XiusUlVEb4JNaOMI3Hu6GTpTSbKQVn10wyOqRkCcuWwdzC8CXx3QqclvXhszrelilUVh
+         MbSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B5LavZnvDc2H0BilbcHTMEaeHVyUFn+jvZShai3pdz4=;
+        b=l2Rmyzgg+otKw8MlyDW5x1vHsEECpWGr5iFWEpZ1Kg+X0g2IT5qqGyFzvqhbdlSjjT
+         7fTdL/xQlyEpGyUOvymGdMWC9ZeTp9syB0DRvcWKc9cFY7GR7e3wyTqPsS/3BKIMNZn0
+         sg8D0HRfUo3a4RZINCYcLMo4/csoqhK5e/miBB+wm7htySSia8Z88SNzeqqebd3x5Y77
+         zi/R2Emy1w1lLsz48ffWjIVDMacvlfR5EApHBUKkg4pREIQX1drpMVVSj26QmGhxchve
+         q6f/BFq1zSZMwQcLcY7vZAL/dxttPNgOzcHac07tQM5uev6SlsraMwGfRPeuc8f+tKuN
+         YZUg==
+X-Gm-Message-State: APjAAAUjmMdf74l5mwDcgmbJugwASiCESHPaIfLbs77GxFb8icJ6xbW8
+        /qpOkVFSEUJvsIB8zixe7xc=
+X-Google-Smtp-Source: APXvYqx7lg9W8azBTIVgcSYBl/71cYY2Qqr/zdB8ci7UekByj8eHdv/HkemitzSzxfeAMEYl4cFcEw==
+X-Received: by 2002:a17:90a:17c2:: with SMTP id q60mr4327761pja.111.1581697609226;
+        Fri, 14 Feb 2020 08:26:49 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o14sm7549898pgm.67.2020.02.14.08.26.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 08:26:48 -0800 (PST)
+Date:   Fri, 14 Feb 2020 08:26:47 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/173] 4.14.171-stable review
+Message-ID: <20200214162647.GA18488@roeck-us.net>
+References: <20200213151931.677980430@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213151931.677980430@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+On Thu, Feb 13, 2020 at 07:18:23AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.171 release.
+> There are 173 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 15 Feb 2020 15:16:41 +0000.
+> Anything received after that time might be too late.
+> 
 
-[ Upstream commit 4f2922d12d6c63d0f4aa4e859ad95aee6d0d4ea0 ]
+For v4.14.170-175-gfc30e3f7ed49:
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 378 pass: 378 fail: 0
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_display.c: In function
-‘amdgpu_display_crtc_scaling_mode_fixup’:
-drivers/gpu/drm/amd/amdgpu/amdgpu_display.c:693:27: warning: variable
-‘amdgpu_connector’ set but not used [-Wunused-but-set-variable]
-
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index c555781685ea8..8b3a33ae44ed8 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -693,7 +693,6 @@ bool amdgpu_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 	struct amdgpu_crtc *amdgpu_crtc = to_amdgpu_crtc(crtc);
- 	struct amdgpu_encoder *amdgpu_encoder;
- 	struct drm_connector *connector;
--	struct amdgpu_connector *amdgpu_connector;
- 	u32 src_v = 1, dst_v = 1;
- 	u32 src_h = 1, dst_h = 1;
- 
-@@ -705,7 +704,6 @@ bool amdgpu_crtc_scaling_mode_fixup(struct drm_crtc *crtc,
- 			continue;
- 		amdgpu_encoder = to_amdgpu_encoder(encoder);
- 		connector = amdgpu_get_connector_for_encoder(encoder);
--		amdgpu_connector = to_amdgpu_connector(connector);
- 
- 		/* set scaling */
- 		if (amdgpu_encoder->rmx_type == RMX_OFF)
--- 
-2.20.1
-
+Guenter
