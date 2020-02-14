@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD4EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC90DC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4382024654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B546724649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581692296;
-	bh=8W5ChLnE0Dk9EUMx3GnWcLMDNAM/Tyy1sSux0pepHac=;
+	s=default; t=1581692300;
+	bh=kNgwkIvSiUh1x+liaoEQl3asDxJlp/aCxRuXoHWWqqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGwmtdzEMFxnZB4rkpJQKwFS2AiqZlYGkCrCamIt6B4KMdUg1KbTuhdBM5P13mPyx
-	 HDlOluvw/cdOqfGIOYIYG8bfrNCowz5r2loW1TNTY6yedePyPABeG5DahdJCA6YZfL
-	 7h69GWdMXsC8+ilAQzVC+om6WbbnJvjjg3Fm8wnQ=
+	b=kky+S3/cx5cVBl1ZFBbdsDZuL1sC1Wg3vHqZqP+FYIpiUiDlMx72OybqF9v5NgSb3
+	 gLchaX0KL4E+kzY7GdsHc7flV6Tq8EQ0DK3mcN4pwsW+SDePUw4LtQvGe6icL/ok1Z
+	 3Uj7RPdBaIuwcAhyc9vvxNwhZd/8wUhVft6lpAj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbgBNO6P (ORCPT
+        id S2387467AbgBNO5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:58:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51056 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 09:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbgBNO5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:57:51 -0500
+        id S1729294AbgBNO5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:57:49 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6118124694;
-        Fri, 14 Feb 2020 14:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B27724681;
+        Fri, 14 Feb 2020 14:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581692271;
-        bh=8W5ChLnE0Dk9EUMx3GnWcLMDNAM/Tyy1sSux0pepHac=;
+        s=default; t=1581692268;
+        bh=kNgwkIvSiUh1x+liaoEQl3asDxJlp/aCxRuXoHWWqqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xIA8kGtP1Tx1Os8ZQWO0cw4x8XQQT1OuMXjFTkixegUHf4K/bo8Cifm/eodm6OZs6
-         7bPb41XV2ETdUSYCADwqcMPJi0BSNzdlYBmUMOjSHXuSvAIx29eA5oB6JEIKv0wIpQ
-         FH8pf61b1h/hQraA4qzEqsjE0cz5+8unkdAmPaLs=
+        b=sbFhWqEp8X34b79OW7oH8jWuOYk5kXzxD/xQgaHIfDqorH999nikEFwJERhM1vMWr
+         flKE8V+pXqLDmhhBM2UVeSjGOqGXj0A7krKTBEVCBuZSKER6xgm/O1PyrdkoQiyBEz
+         Kx1eW/csCx5LVyj6fxLTVrYqzXA3O4T1/lrAyfxM=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j2cPd-0057sw-OZ; Fri, 14 Feb 2020 14:57:49 +0000
+        id 1j2cPa-0057sw-HN; Fri, 14 Feb 2020 14:57:46 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 07/20] irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
-Date:   Fri, 14 Feb 2020 14:57:23 +0000
-Message-Id: <20200214145736.18550-8-maz@kernel.org>
+Subject: [PATCH v4 02/20] irqchip/gic-v3: Use SGIs without active state if offered
+Date:   Fri, 14 Feb 2020 14:57:18 +0000
+Message-Id: <20200214145736.18550-3-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214145736.18550-1-maz@kernel.org>
 References: <20200214145736.18550-1-maz@kernel.org>
@@ -73,49 +73,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement mask/unmask for virtual SGIs by calling into the
-configuration helper.
+To allow the direct injection of SGIs into a guest, the GICv4.1
+architecture has to sacrifice the Active state so that SGIs look
+a lot like LPIs (they are injected by the same mechanism).
+
+In order not to break existing software, the architecture gives
+offers guests OSs the choice: SGIs with or without an active
+state. It is the hypervisors duty to honor the guest's choice.
+
+For this, the architecture offers a discovery bit indicating whether
+the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
+bit indicating whether the guest wants Active-less SGIs or not
+(controlled by GICD_CTLR.nASSGIreq).
+
+A hypervisor not supporting GICv4.1 SGIs would leave nASSGIcap
+clear, and a guest not knowing about GICv4.1 SGIs (or definitely
+wanting an Active state) would leave nASSGIreq clear (both being
+thankfully backward compatible with oler revisions of the GIC).
+
+Since Linux is perfectly happy without an active state on SGIs,
+inform the hypervisor that we'll use that if offered.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/irqchip/irq-gic-v3.c       | 10 ++++++++--
+ include/linux/irqchip/arm-gic-v3.h |  2 ++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 229e4ae9c59b..1e448d9a16ea 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3892,6 +3892,22 @@ static void its_configure_sgi(struct irq_data *d, bool clear)
- 	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
- }
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index cd76435c4a31..73e87e176d76 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -724,6 +724,7 @@ static void __init gic_dist_init(void)
+ 	unsigned int i;
+ 	u64 affinity;
+ 	void __iomem *base = gic_data.dist_base;
++	u32 val;
  
-+static void its_sgi_mask_irq(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = false;
-+	its_configure_sgi(d, false);
-+}
-+
-+static void its_sgi_unmask_irq(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = true;
-+	its_configure_sgi(d, false);
-+}
-+
- static int its_sgi_set_affinity(struct irq_data *d,
- 				const struct cpumask *mask_val,
- 				bool force)
-@@ -3901,6 +3917,8 @@ static int its_sgi_set_affinity(struct irq_data *d,
+ 	/* Disable the distributor */
+ 	writel_relaxed(0, base + GICD_CTLR);
+@@ -756,9 +757,14 @@ static void __init gic_dist_init(void)
+ 	/* Now do the common stuff, and wait for the distributor to drain */
+ 	gic_dist_config(base, GIC_LINE_NR, gic_dist_wait_for_rwp);
  
- static struct irq_chip its_sgi_irq_chip = {
- 	.name			= "GICv4.1-sgi",
-+	.irq_mask		= its_sgi_mask_irq,
-+	.irq_unmask		= its_sgi_unmask_irq,
- 	.irq_set_affinity	= its_sgi_set_affinity,
- };
++	val = GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1;
++	if (gic_data.rdists.gicd_typer2 & GICD_TYPER2_nASSGIcap) {
++		pr_info("Enabling SGIs without active state\n");
++		val |= GICD_CTLR_nASSGIreq;
++	}
++
+ 	/* Enable distributor with ARE, Group1 */
+-	writel_relaxed(GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1,
+-		       base + GICD_CTLR);
++	writel_relaxed(val, base + GICD_CTLR);
+ 
+ 	/*
+ 	 * Set all global interrupts to the boot CPU only. ARE must be
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 83439bfb6c5b..c29a02678a6f 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -57,6 +57,7 @@
+ #define GICD_SPENDSGIR			0x0F20
+ 
+ #define GICD_CTLR_RWP			(1U << 31)
++#define GICD_CTLR_nASSGIreq		(1U << 8)
+ #define GICD_CTLR_DS			(1U << 6)
+ #define GICD_CTLR_ARE_NS		(1U << 4)
+ #define GICD_CTLR_ENABLE_G1A		(1U << 1)
+@@ -90,6 +91,7 @@
+ #define GICD_TYPER_ESPIS(typer)						\
+ 	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
+ 
++#define GICD_TYPER2_nASSGIcap		(1U << 8)
+ #define GICD_TYPER2_VIL			(1U << 7)
+ #define GICD_TYPER2_VID			GENMASK(4, 0)
  
 -- 
 2.20.1
