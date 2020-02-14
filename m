@@ -5,70 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96699C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1564CC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A3224650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C9A24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay8hOWvC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fn8INV2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389705AbgBNUtu (ORCPT
+        id S2388846AbgBNUtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:49:50 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34073 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388892AbgBNUtE (ORCPT
+        Fri, 14 Feb 2020 15:49:01 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40968 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388432AbgBNUsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:49:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s144so2845081wme.1;
-        Fri, 14 Feb 2020 12:49:03 -0800 (PST)
+        Fri, 14 Feb 2020 15:48:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c9so12475511wrw.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 12:48:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GCRH+QSVscHEtOqyJbkVwS2XTrXy464tV8myRNcAShs=;
-        b=Ay8hOWvCaf/jjwOzQL4nq3SxxQqmuZYQX8aqs71KDQfmrlnHqCU4FTeYtgzsW3T5D3
-         QJ+59vMkLvAC487GmN798HbJ3thFXm0t9Wc6pAAgd/CZ9F/J+ownXtBvdR+fEJFgcW40
-         bJr91ikng2vo7ZAmr43HAbSNb5GOTZ6yuJ0Su2g8ukACKa5nWCuA9ap0YWm5BijuqqWY
-         XgR91YELX1wXHX71irhswQcsP1EyzId/VMwURtVpNFgcieo/BY4hxV9Lnlh0SQRrq56/
-         sIa5uqSrooQ6DY7RTFwd3DL6JC8x+Sb2SRYr8U9o/+BrbJPAtR8O4mpjfhHazWL8pjam
-         2ReQ==
+        bh=xuZKU7LjmXWLYQI/wtTpyWHlvqjYehwlyKEt0Tnztc4=;
+        b=fn8INV2ODKBl+bG/dtdZOpRB8nT5T8itpwEPSR0z27GWAYSVu1s+fYw6/0zv6k28a7
+         tZA1dQbPfL+m+lO91btmj/u7dynyGdCwSnCvJ6+L7Wn/iOsXg9yvIeQZfugEaozwGMTO
+         KNZBDqjYZRrPr750JIsMLiNvYlkEVSA84TRMO81Pt4ZsxlLYmJqsVtjCfqQem1Pgc1k1
+         3wBvXxOcpBiOssy1gzPJBOv/0wJnOwPaT2qXfFT+RUHATT+PpHmZ6Ph1APJVHDn/tlez
+         QUAKymRjOEDOppyFluLHU1/65qetfcs2joTiF8+4zhypXrOaqvzVmpx1LmoAg1IS/X/K
+         bd0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GCRH+QSVscHEtOqyJbkVwS2XTrXy464tV8myRNcAShs=;
-        b=cBAkuhYHBNwQleLUfve/XniysjH/b7Hh1yEW35SwTVA2C/9PFUiEIYgjpZC1qfWSyd
-         Ds0w4CaGpBJbWQZfnlUxMY/lEJkagEciTxT2HpS1kXpyP8ylcptByD/cwiXwQX+epqAm
-         s/iR6mm/f2/Vjc9F9WUk+GKbcMFAVsCORBsPM4g84rCEeaMoz6eDFLkHHcNyPhO3Txpa
-         ibJYbsPmXsq48fqnSuPW0i8HIqV8oc96ax3uEIdcTlSvdxOWkDio12jyJ5PrgeWWvEIX
-         CKrvaZiHjghFTzJV+iwkL/oBGCCwR6D1Nxpiknpn63S168w6TTRHzabm0CkRA2P6b/sK
-         qBuw==
-X-Gm-Message-State: APjAAAVy3ggdapEl8EV+RASxOddAyG6eRRQlsrlhJErsFPGTwRuMLGcB
-        tf2/3n6IymfVYQOYpUv5d+bv9reKmDeI
-X-Google-Smtp-Source: APXvYqwTxeuGXC7F27jC1xbbu0tmh8GGXdsK27UP9jCeJm5RiluBDSW2gTi2k1Vk8Z86EPg58UDpbA==
-X-Received: by 2002:a7b:c088:: with SMTP id r8mr6522805wmh.18.1581713342352;
-        Fri, 14 Feb 2020 12:49:02 -0800 (PST)
+        bh=xuZKU7LjmXWLYQI/wtTpyWHlvqjYehwlyKEt0Tnztc4=;
+        b=ZKi7NTbX9keVH8oAy+a0GBbl3YkmPhCYsqsIb+A8MHHG6e6LaKTgPaJIFy/e7UpnCG
+         0UPvoytCXyaaQu/ws1Fg6NNveYwMTlsyoA6solZIi829Jgs08b4PGXMGQj/JJ7ZR9BzD
+         SbSNstY8bpx7+EH6bVHnjUZNPgXzr9507kLB6iF8FFjmWoikddOEcEHS+yFXE/a3FDcY
+         Ou0HN8Jiqk605goo9Y9JWTOLQINQDv1tJuDI15OvJ9493ldzFMFzs3SgVfQLpCbkjDxK
+         kxB2+lNwma5VPrbD5PVlwf1NouiGuKuq5ywFpGROmXbxSRLRwT+kqrEyHKNCGAy6FPet
+         9wVA==
+X-Gm-Message-State: APjAAAVT7X+H/nWrl2wzkXUl4mb/Qa9fLAEufwDUsqnBXE0vfDNsxYbP
+        Mwki8OirUF0rGGbCFgeHaZ5ICNGrjWKD
+X-Google-Smtp-Source: APXvYqyOibwoRxJ6OG/pfMQU/qnxDVxBoitUFSf/mkb3Z3bKbL8DjSkLBFHPpJm3dbdATypsCa8WcA==
+X-Received: by 2002:a5d:4b88:: with SMTP id b8mr5775564wrt.343.1581713330706;
+        Fri, 14 Feb 2020 12:48:50 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.49.01
+        by smtp.googlemail.com with ESMTPSA id y12sm8660782wmj.6.2020.02.14.12.48.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 12:49:01 -0800 (PST)
+        Fri, 14 Feb 2020 12:48:50 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org (open list:TIPC NETWORK LAYER),
-        tipc-discussion@lists.sourceforge.net (open list:TIPC NETWORK LAYER)
-Subject: [PATCH 26/30] tipc: Add missing annotation for tipc_node_write_lock()
-Date:   Fri, 14 Feb 2020 20:47:37 +0000
-Message-Id: <20200214204741.94112-27-jbi.octave@gmail.com>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        xen-devel@lists.xenproject.org (moderated list:XEN HYPERVISOR INTERFACE)
+Subject: [PATCH 15/30] x86/xen: Add missing annotation for xen_pte_unlock()
+Date:   Fri, 14 Feb 2020 20:47:26 +0000
+Message-Id: <20200214204741.94112-16-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200214204741.94112-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,31 +82,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at tipc_node_write_lock()
+Sparse reports warning at xen_pte_unlock()
 
-warning: context imbalance in  tipc_node_write_lock - wrong count at exit
+warning: context imbalance in xen_pte_unlock() - unexpected unlock
 
-The root cause is the missing annotation at tipc_node_write_lock()
-Add the missing __acquires(&n->lock) annotation
+The root cause is the missing annotation at xen_pte_unlock()
+Add the missing __releases(ptl) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/tipc/node.c | 2 +-
+ arch/x86/xen/mmu_pv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index eafa38896e3a..d8401789fa23 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -361,7 +361,7 @@ static void tipc_node_read_unlock(struct tipc_node *n) __releases(&n->lock)
- 	read_unlock_bh(&n->lock);
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index 352f0c80cfcf..777008f8c668 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -707,7 +707,7 @@ static spinlock_t *xen_pte_lock(struct page *page, struct mm_struct *mm)
+ 	return ptl;
  }
  
--static void tipc_node_write_lock(struct tipc_node *n)
-+static void tipc_node_write_lock(struct tipc_node *n) __acquires(&n->lock)
+-static void xen_pte_unlock(void *v)
++static void xen_pte_unlock(void *v) __releases(ptl)
  {
- 	write_lock_bh(&n->lock);
- }
+ 	spinlock_t *ptl = v;
+ 	spin_unlock(ptl);
 -- 
 2.24.1
 
