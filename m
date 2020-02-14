@@ -2,52 +2,55 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8FFC3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3755C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953152187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4CC2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698494;
-	bh=dFYtIWFy2BER3tZTIWKN+5yoO3kFDbgxCTEuKu9oAsA=;
+	s=default; t=1581698497;
+	bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g2o3xUgoXpslX1m0PLLzrzHE21va2+AGMbH1bVKQCYajjnmK2ajF8IYUMpg7kfovD
-	 ogsQAvDYzNt/V466knSsXaNmThvevUORyKE8tAcPqmRKJoENtiO+ODnK7jOCiUclOt
-	 XqcfFFyR7J0B3lXVf8t2O7D7IAX7Yl4Yp8jiysdY=
+	b=DeywVsagcGAWLOU8cbEpaqlVaVex98UnIR9nGKFkFKDmug71LtqNiNyaw14cA3Ds7
+	 IDNVhYli79JXcF4B9Uefg1RN1ExnjbXwBwm1BNHcr1c7NY6goht6faSEyoBaMEMfGi
+	 bvmmNhCcURFJpBZleXRZJ32eH7lNKk7qi7bZB/f0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405489AbgBNQWg (ORCPT
+        id S2405578AbgBNQlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:41:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392935AbgBNQV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:27 -0500
+        id S2405482AbgBNQWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98D30246B1;
-        Fri, 14 Feb 2020 16:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF43F24754;
+        Fri, 14 Feb 2020 16:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697286;
-        bh=dFYtIWFy2BER3tZTIWKN+5yoO3kFDbgxCTEuKu9oAsA=;
+        s=default; t=1581697353;
+        bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+7f9YlRhBQgfm29ZeNe/WqRPLN+tvc1WYk7Z9lqBBEBEV8NsJnVDcKhsmOzLj1xB
-         Hb8QzQeNbu/3chMyiQgcE9+Izr8v7s87YKD6K8/ocSCqN0fNPAQIi6Y9jGXViz0Dye
-         bhzhScuUZgL3yTd4POEi9Y/ZDlLL+pY59IKpRPDM=
+        b=bpsMnwmTq5wXrRv4dXjOI8rJyRFhcv+TIa2RKZdPkXhfwbBGgAy3XaUQJU4Urkmug
+         1LZS8Q8E9wNECxfgKLsQAgU3H4ueJpGSGsL4abap4A9acHWGo8FUjM0hz99r01s84f
+         x15BpPFN0zI2KAqzTXdoFkEA0pRCjjRUO+HOWFqg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 003/141] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
-Date:   Fri, 14 Feb 2020 11:19:03 -0500
-Message-Id: <20200214162122.19794-3-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 056/141] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
+Date:   Fri, 14 Feb 2020 11:19:56 -0500
+Message-Id: <20200214162122.19794-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -60,186 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 800cd6fb76f0ec7711deb72a86c924db1ae42648 ]
+[ Upstream commit afb34781620274236bd9fc9246e22f6963ef5262 ]
 
-There are a number of problems with cpm_muram_alloc() and its
-callers. Most callers assign the return value to some variable and
-then use IS_ERR_VALUE to check for allocation failure. However, when
-that variable is not sizeof(long), this leads to warnings - and it is
-indeed broken to do e.g.
+When building with Clang + -Wtautological-constant-compare, several of
+the ivtv and cx18 drivers warn along the lines of:
 
-  u32 foo = cpm_muram_alloc();
-  if (IS_ERR_VALUE(foo))
+ drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+ result of '<<' to a boolean always evaluates to true
+ [-Wtautological-constant-compare]
+                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+                                         ^
+ drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+ 'CX18_HW_GPIO_RESET_CTRL'
+ #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+                                           ^
+ 1 warning generated.
 
-on a 64-bit platform, since the condition
+This warning happens because the shift operation is implicitly converted
+to a boolean in v4l2_device_mask_call_all before being negated. This can
+be solved by just comparing the mask result to 0 explicitly so that
+there is no boolean conversion. The ultimate goal is to enable
+-Wtautological-compare globally because there are several subwarnings
+that would be helpful to have.
 
-  foo >= (unsigned long)-ENOMEM
+For visual consistency and avoidance of these warnings in the future,
+all of the implicitly boolean conversions in the v4l2_device macros
+are converted to explicit ones as well.
 
-is tautologically false. There are also callers that ignore the
-possibility of error, and then there are those that check for error by
-comparing the return value to 0...
+Link: https://github.com/ClangBuiltLinux/linux/issues/752
 
-One could fix that by changing all callers to store the return value
-temporarily in an "unsigned long" and test that. However, use of
-IS_ERR_VALUE() is error-prone and should be restricted to things which
-are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
-for changing to the standard kernel style
-
-  int foo = cpm_muram_alloc();
-  if (foo < 0)
-    deal_with_it()
-  some->where = foo;
-
-Changing the return type from unsigned long to s32 (aka signed int)
-doesn't change the value that gets stored into any of the callers'
-variables except if the caller was storing the result in a u64 _and_
-the allocation failed, so in itself this patch should be a no-op.
-
-Another problem with cpm_muram_alloc() is that it can certainly
-validly return 0 - and except if some cpm_muram_alloc_fixed() call
-interferes, the very first cpm_muram_alloc() call will return just
-that. But that shows that both ucc_slow_free() and ucc_fast_free() are
-buggy, since they assume that a value of 0 means "that field was never
-allocated". We'll later change cpm_muram_free() to accept (and ignore)
-a negative offset, so callers can use a sentinel of -1 instead of 0
-and just unconditionally call cpm_muram_free().
-
-Reviewed-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
- include/soc/fsl/qe/qe.h        | 16 ++++++++--------
- 2 files changed, 24 insertions(+), 21 deletions(-)
+ include/media/v4l2-device.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
-index 104e68d9b84f2..4f60724b06b7c 100644
---- a/drivers/soc/fsl/qe/qe_common.c
-+++ b/drivers/soc/fsl/qe/qe_common.c
-@@ -35,7 +35,7 @@ static phys_addr_t muram_pbase;
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index 8ffa94009d1a9..76002416cead9 100644
+--- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -268,7 +268,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ 	} while (0)
  
- struct muram_block {
- 	struct list_head head;
--	unsigned long start;
-+	s32 start;
- 	int size;
- };
+@@ -280,7 +280,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ })
  
-@@ -113,13 +113,14 @@ int cpm_muram_init(void)
-  * @algo: algorithm for alloc.
-  * @data: data for genalloc's algorithm.
-  *
-- * This function returns an offset into the muram area.
-+ * This function returns a non-negative offset into the muram area, or
-+ * a negative errno on failure.
-  */
--static unsigned long cpm_muram_alloc_common(unsigned long size,
--		genpool_algo_t algo, void *data)
-+static s32 cpm_muram_alloc_common(unsigned long size,
-+				  genpool_algo_t algo, void *data)
- {
- 	struct muram_block *entry;
--	unsigned long start;
-+	s32 start;
- 
- 	if (!muram_pool && cpm_muram_init())
- 		goto out2;
-@@ -140,7 +141,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
- out1:
- 	gen_pool_free(muram_pool, start, size);
- out2:
--	return (unsigned long)-ENOMEM;
-+	return -ENOMEM;
- }
+@@ -294,8 +294,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ 	} while (0)
  
  /*
-@@ -148,13 +149,14 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
-  * @size: number of bytes to allocate
-  * @align: requested alignment, in bytes
-  *
-- * This function returns an offset into the muram area.
-+ * This function returns a non-negative offset into the muram area, or
-+ * a negative errno on failure.
-  * Use cpm_dpram_addr() to get the virtual address of the area.
-  * Use cpm_muram_free() to free the allocation.
-  */
--unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
-+s32 cpm_muram_alloc(unsigned long size, unsigned long align)
- {
--	unsigned long start;
-+	s32 start;
- 	unsigned long flags;
- 	struct genpool_data_align muram_pool_data;
+@@ -308,8 +308,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ })
  
-@@ -171,7 +173,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
-  * cpm_muram_free - free a chunk of multi-user ram
-  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
-  */
--int cpm_muram_free(unsigned long offset)
-+int cpm_muram_free(s32 offset)
- {
- 	unsigned long flags;
- 	int size;
-@@ -197,13 +199,14 @@ EXPORT_SYMBOL(cpm_muram_free);
-  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
-  * @offset: offset of allocation start address
-  * @size: number of bytes to allocate
-- * This function returns an offset into the muram area
-+ * This function returns @offset if the area was available, a negative
-+ * errno otherwise.
-  * Use cpm_dpram_addr() to get the virtual address of the area.
-  * Use cpm_muram_free() to free the allocation.
-  */
--unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
-+s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
- {
--	unsigned long start;
-+	s32 start;
- 	unsigned long flags;
- 	struct genpool_data_fixed muram_pool_data_fixed;
- 
-diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-index 226f915a68c28..55907f7ace82e 100644
---- a/include/soc/fsl/qe/qe.h
-+++ b/include/soc/fsl/qe/qe.h
-@@ -102,26 +102,26 @@ static inline void qe_reset(void) {}
- int cpm_muram_init(void);
- 
- #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
--unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
--int cpm_muram_free(unsigned long offset);
--unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
-+s32 cpm_muram_alloc(unsigned long size, unsigned long align);
-+int cpm_muram_free(s32 offset);
-+s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
- void __iomem *cpm_muram_addr(unsigned long offset);
- unsigned long cpm_muram_offset(void __iomem *addr);
- dma_addr_t cpm_muram_dma(void __iomem *addr);
- #else
--static inline unsigned long cpm_muram_alloc(unsigned long size,
--					    unsigned long align)
-+static inline s32 cpm_muram_alloc(unsigned long size,
-+				  unsigned long align)
- {
- 	return -ENOSYS;
- }
- 
--static inline int cpm_muram_free(unsigned long offset)
-+static inline int cpm_muram_free(s32 offset)
- {
- 	return -ENOSYS;
- }
- 
--static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
--						  unsigned long size)
-+static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
-+					unsigned long size)
- {
- 	return -ENOSYS;
- }
+ /*
 -- 
 2.20.1
 
