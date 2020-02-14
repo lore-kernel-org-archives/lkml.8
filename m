@@ -2,95 +2,98 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA54BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCFBC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85108222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC81222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:11:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="UQILWCtw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404066AbgBNRLv (ORCPT
+        id S2392146AbgBNQNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:11:51 -0500
-Received: from mga06.intel.com ([134.134.136.31]:10329 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394490AbgBNRLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:11:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:11:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="234517959"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 14 Feb 2020 09:11:46 -0800
-Date:   Fri, 14 Feb 2020 09:11:46 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200214171146.GD20690@linux.intel.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
- <d17c50a7-6900-731b-43a2-d6e49b8eb44d@fortanix.com>
- <20200213180737.GC18610@linux.intel.com>
- <a4d9a58d-6984-5894-f6c8-73f2b2b466aa@fortanix.com>
+        Fri, 14 Feb 2020 11:13:16 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41459 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391994AbgBNQM0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:12:26 -0500
+Received: by mail-pl1-f196.google.com with SMTP id t14so3890888plr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/968X58dLK1gbF0pDZtAYWHd3eejljCvh2jL11+eONM=;
+        b=UQILWCtwnIBJgebvt5RT9JS5S2A5Gb+PhZQY94Uu5TmLGYT+bSG687sDAppoY4pWFH
+         9pCgh5x7EN14c7S063FkkVdKpxMEuMwarDA4W2dGDhfDrYmFr42b+2q+7kABQovc3zm9
+         5ffZ8IHJdJUG+ieABc2OKb32PWGY9BgPzYkfkW5jrgHCPVpweIuWPGlR9b1rVEj9HCib
+         Y6J6z46dhhQ0WRMycx7v1XZy3po7OYGmDVwZW/4Lyooj1ummYkobgUGEkbOxC+H57oIc
+         vE3xKhsfABJcpjzR1QOFLiz2inoo2uKHreWxxxEd6TA/a44pNMj73dvGPBAtm8w6R/zc
+         Ti1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/968X58dLK1gbF0pDZtAYWHd3eejljCvh2jL11+eONM=;
+        b=DVybH3e2P+8A8sylPuP0HAIzObam7d18oqTuyJY2HxV2l3eE1bX/jSA+GOWGZe9EsP
+         8QaFr73QT2eoxvx+y3i6ZKe48hYr7//y5LV4rMNDqgHf4Uh7wg44cBoKl9rot2BOY145
+         srRJ5Yjt4NtZSrbhwKrntqn2B9542W72oEGCnLDEOmu/sddEqSLhbd3HvwAUJwsd3ELX
+         usHcqkI5cyluksQH0zFZvTReEXFcQBYeeIZEZJ/9KPCUAoPbrqyM9IgOVLWU5eQoXdSC
+         +WKgXjeGeIDQjdmZj1CEoy7rNICjNsShKWpGHIUR60t4m/6NFOLeytdz6HCNfYqtQxrR
+         TscA==
+X-Gm-Message-State: APjAAAX44z5PVL/PWlRvVtxMDym8inn5UMeUtimZHaIB62ttF3SpG06T
+        gxFhdrIT2TT3cXRdpoaMeJyAkw==
+X-Google-Smtp-Source: APXvYqwfgkPahw7rPkhdNNYFa40haQXJ7XrXUEWcN8SPIy5CCPGbJU6qPxWgNvJNG5WtKc+QAd63dw==
+X-Received: by 2002:a17:90b:243:: with SMTP id fz3mr4623644pjb.29.1581696744437;
+        Fri, 14 Feb 2020 08:12:24 -0800 (PST)
+Received: from debian ([122.164.201.151])
+        by smtp.gmail.com with ESMTPSA id p3sm7727709pfg.184.2020.02.14.08.12.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 08:12:23 -0800 (PST)
+Date:   Fri, 14 Feb 2020 21:42:16 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in
+Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
+Message-ID: <20200214161216.GA2654@debian>
+References: <20200213151839.156309910@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a4d9a58d-6984-5894-f6c8-73f2b2b466aa@fortanix.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
-> On 2020-02-13 19:07, Sean Christopherson wrote:
-> > On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
-> >> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
-> >>> +/**
-> >>> + * struct sgx_enclave_add_pages - parameter structure for the
-> >>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-> >>> + * @src:	start address for the page data
-> >>> + * @offset:	starting page offset
-> >>> + * @length:	length of the data (multiple of the page size)
-> >>> + * @secinfo:	address for the SECINFO data
-> >>> + * @flags:	page control flags
-> >>> + * @count:	number of bytes added (multiple of the page size)
-> >>> + */
-> >>> +struct sgx_enclave_add_pages {
-> >>> +	__u64	src;
-> >>> +	__u64	offset;
-> >>> +	__u64	length;
-> >>> +	__u64	secinfo;
-> >>> +	__u64	flags;
-> >>> +	__u64	count;
-> >>> +};
-> >>
-> >> Compared to the last time I looked at the patch set, this API removes the
-> >> ability to measure individual pages chunks. That is not acceptable.
-> > 
-> > Why is it not acceptable?  E.g. what specific use case do you have that
-> > _requires_ on measuring partial 4k pages of an enclave?
+On Thu, Feb 13, 2020 at 07:20:07AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.20 release.
+> There are 96 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> The use case is someone gives me an enclave and I want to load it. If I don't
-> load it exactly as the enclave author specified, the enclave hash will be
-> different, and it won't work.
+> Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.20-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
 
-And if our ABI says "thou shall measure in 4k chunks", then it's an invalid
-enclave if its author generated MRENCLAVE using a different granularity.
+hello,
+
+compiled and booted 5.4.20-rc1+ . No new error according to "dmesg -l err"
+
+--
+software engineer
+rajagiri school of engineering and technology
