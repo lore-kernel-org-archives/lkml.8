@@ -2,51 +2,55 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AE3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7775C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C505520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F48206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700123;
-	bh=QhMSiDaFxU/eFY7V8DeABZVM+LAdtNWFTzs+OeJHYFE=;
+	s=default; t=1581700130;
+	bh=EuFzhoLZW1Xqcn9uKBwQn2yQLYSQNUgB5uOubWxz5C8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=isXaGWjka/WouRvc2yWFoMaRxidxjHHh7kJPbrswNA0CqR4BvR2X3D61F45hjXk24
-	 Nf2+NJkS6zFEvhvimXM9xrPlkRm6Y2UaeurkDrf9wKYYJe4GZBtGRAgDL4ESIMc5kp
-	 UiGw9Pg4YHPhs6Bu/a4x106mJF9NqnEYL/MG+B0Q=
+	b=DKFlALeI6DxmZ+hQG853oEFfxZxbSkS2K3jPAgKOEJPn7mTJVdqwQpr4IBG7K/CGA
+	 mN1dq5pUChNlZkF+njGQx9UXGcXK7Hb7P0VWCtWZxkpaTCUG1uQA9kd5eT5VyYl+6X
+	 Q8fJs+nQZYAIbgopPGf8by6i1LNVXtbaX9D73NI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391758AbgBNQOD (ORCPT
+        id S2404159AbgBNRIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41982 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403879AbgBNQN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:29 -0500
+        id S2403989AbgBNQOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22222246B7;
-        Fri, 14 Feb 2020 16:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0C9246C9;
+        Fri, 14 Feb 2020 16:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696807;
-        bh=QhMSiDaFxU/eFY7V8DeABZVM+LAdtNWFTzs+OeJHYFE=;
+        s=default; t=1581696839;
+        bh=EuFzhoLZW1Xqcn9uKBwQn2yQLYSQNUgB5uOubWxz5C8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UgJpb4mbLEuez26OzYjIlGCLTr3I5W6STMrtkPLAjwoujGmgwhTIJ3Cn7L1DkrEHH
-         ypY4PgpyD3HUJMLxsfMF43xpKNJV+wsfM2wRVx+eKEnPoypsJwqsjyKYN6856w3SjF
-         FbgCZYq+W6dDObClWzmjYJ/QGwC58X3XuDvK4puE=
+        b=sEz+fpUzRJ7egktsScWQyqLoyfUaE/KxiSHC6ypkAXuVyd9b//Y8fnq7lT5T9+0Rn
+         OmYUW+/GSWEgA0AUf0A+66ttUk4MC2cieaxPLDZ6TiFQ+dQrCLFM4ICXa8JxHDBYvE
+         H7j2pfAkrq129lkQpAES4rBER+5ktByaf9cL3UCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 078/252] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
-Date:   Fri, 14 Feb 2020 11:08:53 -0500
-Message-Id: <20200214161147.15842-78-sashal@kernel.org>
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 103/252] b43legacy: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:09:18 -0500
+Message-Id: <20200214161147.15842-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -59,54 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
+[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
 
-In the implementation of pci_iov_add_virtfn() the allocated virtfn is
-leaked if pci_setup_device() fails. The error handling is not calling
-pci_stop_and_remove_bus_device(). Change the goto label to failed2.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
-Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/iov.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index c5f3cd4ed766f..c3b0b10f95cb6 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -188,10 +188,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- 	sprintf(buf, "virtfn%u", id);
- 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
- 	if (rc)
--		goto failed2;
-+		goto failed1;
- 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
- 	if (rc)
--		goto failed3;
-+		goto failed2;
+diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
+index 55f411925960e..770cc218ca4bd 100644
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -1304,8 +1304,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+ }
  
- 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
- 
-@@ -199,11 +199,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- 
- 	return 0;
- 
--failed3:
--	sysfs_remove_link(&dev->dev.kobj, buf);
- failed2:
--	pci_stop_and_remove_bus_device(virtfn);
-+	sysfs_remove_link(&dev->dev.kobj, buf);
- failed1:
-+	pci_stop_and_remove_bus_device(virtfn);
- 	pci_dev_put(dev);
- failed0:
- 	virtfn_remove_bus(dev->bus, bus);
+ /* Interrupt handler bottom-half */
+-static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
++static void b43legacy_interrupt_tasklet(unsigned long data)
+ {
++	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
+ 	u32 reason;
+ 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
+ 	u32 merged_dma_reason = 0;
+@@ -3775,7 +3776,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
+ 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
+ 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
+ 	tasklet_init(&wldev->isr_tasklet,
+-		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
++		     b43legacy_interrupt_tasklet,
+ 		     (unsigned long)wldev);
+ 	if (modparam_pio)
+ 		wldev->__using_pio = true;
 -- 
 2.20.1
 
