@@ -2,346 +2,395 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFCBC3B19D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E42C3B198
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D0C24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581690504;
-	bh=RvVbC2i7/H1vcfgSdnQX/1SQ7dwjjVBtJXKMdJT1me4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gdvuQJ2ouHLAVK0iNmSfMtROXA08sa2qC46mHvn544ePHkf8MGKliNEpz+PUdC1Be
-	 EcVxmctnwChDaCLh20nQ1/fisYWSlvI0TNv0turhn3HCqDmRscSauuFzhd2EPpQe7j
-	 sgW55ufeuuBlYwYQHvPQ1SHPoGWIPY6Bi+Ylo5lE=
+	by mail.kernel.org (Postfix) with ESMTP id 2286C2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="nHSn54iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgBNO2X (ORCPT
+        id S1729438AbgBNO2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgBNO2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:28:23 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E239F206B6;
-        Fri, 14 Feb 2020 14:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581690501;
-        bh=RvVbC2i7/H1vcfgSdnQX/1SQ7dwjjVBtJXKMdJT1me4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FRoj2QAVcea7jSVEUNZ+vnfHBVrZ8gecK+hEIUzSV3T1D8vydS8bOaAdO5iyrqPPa
-         RQ7Zsn7W/AFjsYQlGwsdaqdbVccbDPkMWiKtp9oVI3/T5FM6B5e6XK4yRI3wyD+epT
-         Z5aiJCcKTCQ3HY/ti8pCiJA5UzSm1Z60wzx823k4=
-Date:   Fri, 14 Feb 2020 14:28:17 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nuno.sa@analog.com>
-Subject: Re: [PATCH v2 1/9] iio: imu: adis16480: initialize adis_data
- statically
-Message-ID: <20200214142817.3bd22a15@archlinux>
-In-Reply-To: <20200210132606.9315-1-alexandru.ardelean@analog.com>
-References: <20200210132606.9315-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 14 Feb 2020 09:28:39 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35845 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729415AbgBNO2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:28:39 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so10955326ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:28:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=AafOgySyVAzNy0c2ESmrKX2K4Va55RytPel0n9VaSzQ=;
+        b=nHSn54izT9Msimbur8SPtDE3YxZvL5kxU+xWVBaAscT1fbbIdKw83O2OvwloH0I5n5
+         QievxaE0p4d/SwFB2vQRyII4ea75N1wGlUVU+Lz/LHfbWA2V1szE4HxJYd2kjC+2BZq8
+         GG+t4QpWHrn45qA0KMo1bmJh8LLBejR1KrE9+Ak9WENSGwHSA2NA/zJDDoqMpXOPKcue
+         50nqBRxhURgBbPUVFCR8vSVNVBeG1J/qzsnprAYXmyUdSn/po4s8AuzezOSXe/1uresb
+         WaIEZfm02srJijxWKIsw4BlIreBDeCVfxlU+6Y8EiX6SDr9MQAMucUSzX4j68bXil+Cm
+         bSxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=AafOgySyVAzNy0c2ESmrKX2K4Va55RytPel0n9VaSzQ=;
+        b=qCxyh+bxfuYObtaekkjwy+jyeAHH+XAfKRaO5d6Jl9bDB4rak5abm4eG700HFAE3sb
+         z2fHm8xf+TiznQepaqtREc+NXyRe6FnmMxdM8MBcNcmrp0bM8dTaXvJoO++TCTq09XYM
+         dz3pK9oI4Awm8toKnFEjaqco3pFcw8QRcSCNODeSu0IhrSRw0ix3gTRhAob9/UNpdk3Y
+         HLa/6GR/wx6STcuuo5gaF6t+hmVquLtRr/1DAMssPIyYXgMTpyErTDqAMuw6SgEn5n6n
+         po6yh3AXTCw0nXA53F1Q89FF6LdPPJFpZGlRD/9aPT6QdMWD4fTc4ffHJYlseqj8uTIu
+         QGfw==
+X-Gm-Message-State: APjAAAXdk0oM6ccFjjI7aOygKueCa/Ykhr8AS0JdB73kAbKKvymfwtTB
+        Cc18DvMFDPKS0TVGWIQfrOpACQ==
+X-Google-Smtp-Source: APXvYqyNgbOD18Nh05jEbTbR/WGlDFR4IPYAZjI0gDO74z2U9weVu95HKeKUBL3KbdshfB+UFiX7cw==
+X-Received: by 2002:a2e:860c:: with SMTP id a12mr2344290lji.146.1581690515304;
+        Fri, 14 Feb 2020 06:28:35 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id i1sm3594789lji.71.2020.02.14.06.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 06:28:34 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 37EF1100F30; Fri, 14 Feb 2020 17:28:57 +0300 (+03)
+Date:   Fri, 14 Feb 2020 17:28:57 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v5 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200214142857.kcmjiequhfl3sot2@box>
+References: <20200207201856.46070-1-bgeffon@google.com>
+ <20200214040952.43195-1-bgeffon@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214040952.43195-1-bgeffon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 15:25:58 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> This change overrides commit 380b107bbf944 ("iio: adis: Introduce timeouts
-> structure"). It removes the memory allocation and moves the 'adis_data'
-> information to be static on the chip_info struct.
+On Thu, Feb 13, 2020 at 08:09:51PM -0800, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. The remap operation
+> will be performed as it would have been normally by moving over the
+> page tables to the new mapping. The old vma will have any locked
+> flags cleared, have no pagetables, and any userfaultfds that were
+> watching that range will continue watching it.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to poke at it.
-
-Thanks,
-
-Jonathan
-
+> For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+> the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+> equally sized VMAs where the destination contains the PTEs of the source.
+> 
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+> 
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+> 
+>   v4 -> v5:
+>     - Correct commit message to more accurately reflect the behavior.
+>     - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
+>            
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> 
 > ---
+>  include/uapi/linux/mman.h |   5 +-
+>  mm/mremap.c               | 106 ++++++++++++++++++++++++++++++--------
+>  2 files changed, 88 insertions(+), 23 deletions(-)
 > 
-> Changelog v1 -> v2:
-> * initialize 'adis_data' statically on adis16480,adis16136 & adis16400
-> * split 'iio: imu: adis: Refactor adis_initial_startup' patch
->   - new: 'iio: imu: adis: add unlocked __adis_initial_startup()'
->   - new: 'iio: imu: adis: add support product ID check in adis_initial_startup'
->   - modified: 'iio: imu: adis: Refactor adis_initial_startup'
-> * added 'prod_id' field together with 'prod_id_reg' on 'adis_data'
->   each device that wants to use the 'prod_id_reg' must also provide an
->   expected 'prod_id' value
-> 
->  drivers/iio/imu/adis16480.c | 140 ++++++++++++++++--------------------
->  1 file changed, 62 insertions(+), 78 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
-> index dac87f1001fd..4c4de1b62769 100644
-> --- a/drivers/iio/imu/adis16480.c
-> +++ b/drivers/iio/imu/adis16480.c
-> @@ -138,7 +138,7 @@ struct adis16480_chip_info {
->  	unsigned int max_dec_rate;
->  	const unsigned int *filter_freqs;
->  	bool has_pps_clk_mode;
-> -	const struct adis_timeout *timeouts;
-> +	const struct adis_data adis_data;
->  };
+> diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+> index fc1a64c3447b..923cc162609c 100644
+> --- a/include/uapi/linux/mman.h
+> +++ b/include/uapi/linux/mman.h
+> @@ -5,8 +5,9 @@
+>  #include <asm/mman.h>
+>  #include <asm-generic/hugetlb_encode.h>
 >  
->  enum adis16480_int_pin {
-> @@ -796,6 +796,55 @@ enum adis16480_variant {
->  	ADIS16497_3,
->  };
+> -#define MREMAP_MAYMOVE	1
+> -#define MREMAP_FIXED	2
+> +#define MREMAP_MAYMOVE		1
+> +#define MREMAP_FIXED		2
+> +#define MREMAP_DONTUNMAP	4
 >  
-> +#define ADIS16480_DIAG_STAT_XGYRO_FAIL 0
-> +#define ADIS16480_DIAG_STAT_YGYRO_FAIL 1
-> +#define ADIS16480_DIAG_STAT_ZGYRO_FAIL 2
-> +#define ADIS16480_DIAG_STAT_XACCL_FAIL 3
-> +#define ADIS16480_DIAG_STAT_YACCL_FAIL 4
-> +#define ADIS16480_DIAG_STAT_ZACCL_FAIL 5
-> +#define ADIS16480_DIAG_STAT_XMAGN_FAIL 8
-> +#define ADIS16480_DIAG_STAT_YMAGN_FAIL 9
-> +#define ADIS16480_DIAG_STAT_ZMAGN_FAIL 10
-> +#define ADIS16480_DIAG_STAT_BARO_FAIL 11
-> +
-> +static const char * const adis16480_status_error_msgs[] = {
-> +	[ADIS16480_DIAG_STAT_XGYRO_FAIL] = "X-axis gyroscope self-test failure",
-> +	[ADIS16480_DIAG_STAT_YGYRO_FAIL] = "Y-axis gyroscope self-test failure",
-> +	[ADIS16480_DIAG_STAT_ZGYRO_FAIL] = "Z-axis gyroscope self-test failure",
-> +	[ADIS16480_DIAG_STAT_XACCL_FAIL] = "X-axis accelerometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_YACCL_FAIL] = "Y-axis accelerometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_ZACCL_FAIL] = "Z-axis accelerometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_XMAGN_FAIL] = "X-axis magnetometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_YMAGN_FAIL] = "Y-axis magnetometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_ZMAGN_FAIL] = "Z-axis magnetometer self-test failure",
-> +	[ADIS16480_DIAG_STAT_BARO_FAIL] = "Barometer self-test failure",
-> +};
-> +
-> +static int adis16480_enable_irq(struct adis *adis, bool enable);
-> +
-> +#define ADIS16480_DATA(_timeouts)					\
-> +{									\
-> +	.diag_stat_reg = ADIS16480_REG_DIAG_STS,			\
-> +	.glob_cmd_reg = ADIS16480_REG_GLOB_CMD,				\
-> +	.has_paging = true,						\
-> +	.read_delay = 5,						\
-> +	.write_delay = 5,						\
-> +	.self_test_mask = BIT(1),					\
-> +	.status_error_msgs = adis16480_status_error_msgs,		\
-> +	.status_error_mask = BIT(ADIS16480_DIAG_STAT_XGYRO_FAIL) |	\
-> +		BIT(ADIS16480_DIAG_STAT_YGYRO_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_ZGYRO_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_XACCL_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_YACCL_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_ZACCL_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_XMAGN_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_YMAGN_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_ZMAGN_FAIL) |			\
-> +		BIT(ADIS16480_DIAG_STAT_BARO_FAIL),			\
-> +	.enable_irq = adis16480_enable_irq,				\
-> +	.timeouts = (_timeouts),					\
-> +}
-> +
->  static const struct adis_timeout adis16485_timeouts = {
->  	.reset_ms = 560,
->  	.sw_reset_ms = 120,
-> @@ -838,7 +887,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.int_clk = 2460000,
->  		.max_dec_rate = 2048,
->  		.filter_freqs = adis16480_def_filter_freqs,
-> -		.timeouts = &adis16485_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16485_timeouts),
->  	},
->  	[ADIS16480] = {
->  		.channels = adis16480_channels,
-> @@ -851,7 +900,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.int_clk = 2460000,
->  		.max_dec_rate = 2048,
->  		.filter_freqs = adis16480_def_filter_freqs,
-> -		.timeouts = &adis16480_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16480_timeouts),
->  	},
->  	[ADIS16485] = {
->  		.channels = adis16485_channels,
-> @@ -864,7 +913,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.int_clk = 2460000,
->  		.max_dec_rate = 2048,
->  		.filter_freqs = adis16480_def_filter_freqs,
-> -		.timeouts = &adis16485_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16485_timeouts),
->  	},
->  	[ADIS16488] = {
->  		.channels = adis16480_channels,
-> @@ -877,7 +926,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.int_clk = 2460000,
->  		.max_dec_rate = 2048,
->  		.filter_freqs = adis16480_def_filter_freqs,
-> -		.timeouts = &adis16485_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16485_timeouts),
->  	},
->  	[ADIS16490] = {
->  		.channels = adis16485_channels,
-> @@ -891,7 +940,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_timeouts),
->  	},
->  	[ADIS16495_1] = {
->  		.channels = adis16485_channels,
-> @@ -905,7 +954,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  	[ADIS16495_2] = {
->  		.channels = adis16485_channels,
-> @@ -919,7 +968,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  	[ADIS16495_3] = {
->  		.channels = adis16485_channels,
-> @@ -933,7 +982,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  	[ADIS16497_1] = {
->  		.channels = adis16485_channels,
-> @@ -947,7 +996,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  	[ADIS16497_2] = {
->  		.channels = adis16485_channels,
-> @@ -961,7 +1010,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  	[ADIS16497_3] = {
->  		.channels = adis16485_channels,
-> @@ -975,7 +1024,7 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
->  		.max_dec_rate = 4250,
->  		.filter_freqs = adis16495_def_filter_freqs,
->  		.has_pps_clk_mode = true,
-> -		.timeouts = &adis16495_1_timeouts,
-> +		.adis_data = ADIS16480_DATA(&adis16495_1_timeouts),
->  	},
->  };
->  
-> @@ -1048,53 +1097,6 @@ static int adis16480_initial_setup(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> -#define ADIS16480_DIAG_STAT_XGYRO_FAIL 0
-> -#define ADIS16480_DIAG_STAT_YGYRO_FAIL 1
-> -#define ADIS16480_DIAG_STAT_ZGYRO_FAIL 2
-> -#define ADIS16480_DIAG_STAT_XACCL_FAIL 3
-> -#define ADIS16480_DIAG_STAT_YACCL_FAIL 4
-> -#define ADIS16480_DIAG_STAT_ZACCL_FAIL 5
-> -#define ADIS16480_DIAG_STAT_XMAGN_FAIL 8
-> -#define ADIS16480_DIAG_STAT_YMAGN_FAIL 9
-> -#define ADIS16480_DIAG_STAT_ZMAGN_FAIL 10
-> -#define ADIS16480_DIAG_STAT_BARO_FAIL 11
-> -
-> -static const char * const adis16480_status_error_msgs[] = {
-> -	[ADIS16480_DIAG_STAT_XGYRO_FAIL] = "X-axis gyroscope self-test failure",
-> -	[ADIS16480_DIAG_STAT_YGYRO_FAIL] = "Y-axis gyroscope self-test failure",
-> -	[ADIS16480_DIAG_STAT_ZGYRO_FAIL] = "Z-axis gyroscope self-test failure",
-> -	[ADIS16480_DIAG_STAT_XACCL_FAIL] = "X-axis accelerometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_YACCL_FAIL] = "Y-axis accelerometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_ZACCL_FAIL] = "Z-axis accelerometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_XMAGN_FAIL] = "X-axis magnetometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_YMAGN_FAIL] = "Y-axis magnetometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_ZMAGN_FAIL] = "Z-axis magnetometer self-test failure",
-> -	[ADIS16480_DIAG_STAT_BARO_FAIL] = "Barometer self-test failure",
-> -};
-> -
-> -static const struct adis_data adis16480_data = {
-> -	.diag_stat_reg = ADIS16480_REG_DIAG_STS,
-> -	.glob_cmd_reg = ADIS16480_REG_GLOB_CMD,
-> -	.has_paging = true,
-> -
-> -	.read_delay = 5,
-> -	.write_delay = 5,
-> -
-> -	.status_error_msgs = adis16480_status_error_msgs,
-> -	.status_error_mask = BIT(ADIS16480_DIAG_STAT_XGYRO_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_YGYRO_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_ZGYRO_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_XACCL_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_YACCL_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_ZACCL_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_XMAGN_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_YMAGN_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_ZMAGN_FAIL) |
-> -		BIT(ADIS16480_DIAG_STAT_BARO_FAIL),
-> -
-> -	.enable_irq = adis16480_enable_irq,
-> -};
-> -
->  static int adis16480_config_irq_pin(struct device_node *of_node,
->  				    struct adis16480 *st)
+>  #define OVERCOMMIT_GUESS		0
+>  #define OVERCOMMIT_ALWAYS		1
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 1fc8a29fbe3f..a2a792fdbc64 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>  static unsigned long move_vma(struct vm_area_struct *vma,
+>  		unsigned long old_addr, unsigned long old_len,
+>  		unsigned long new_len, unsigned long new_addr,
+> -		bool *locked, struct vm_userfaultfd_ctx *uf,
+> -		struct list_head *uf_unmap)
+> +		bool *locked, unsigned long flags,
+> +		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
 >  {
-> @@ -1245,22 +1247,6 @@ static int adis16480_get_ext_clocks(struct adis16480 *st)
->  	return 0;
->  }
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct vm_area_struct *new_vma;
+> @@ -408,11 +408,49 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+>  	if (unlikely(vma->vm_flags & VM_PFNMAP))
+>  		untrack_pfn_moved(vma);
 >  
-> -static struct adis_data *adis16480_adis_data_alloc(struct adis16480 *st,
-> -						   struct device *dev)
-> -{
-> -	struct adis_data *data;
-> -
-> -	data = devm_kmalloc(dev, sizeof(struct adis_data), GFP_KERNEL);
-> -	if (!data)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	memcpy(data, &adis16480_data, sizeof(*data));
-> -
-> -	data->timeouts = st->chip_info->timeouts;
-> -
-> -	return data;
-> -}
-> -
->  static int adis16480_probe(struct spi_device *spi)
->  {
->  	const struct spi_device_id *id = spi_get_device_id(spi);
-> @@ -1285,9 +1271,7 @@ static int adis16480_probe(struct spi_device *spi)
->  	indio_dev->info = &adis16480_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
-> -	adis16480_data = adis16480_adis_data_alloc(st, &spi->dev);
-> -	if (IS_ERR(adis16480_data))
-> -		return PTR_ERR(adis16480_data);
-> +	adis16480_data = &st->chip_info->adis_data;
->  
->  	ret = adis_init(&st->adis, indio_dev, spi, adis16480_data);
->  	if (ret)
+> +	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
+> +		if (vm_flags & VM_ACCOUNT) {
+> +			/* Always put back VM_ACCOUNT since we won't unmap */
+> +			vma->vm_flags |= VM_ACCOUNT;
+> +
+> +			vm_acct_memory(vma_pages(new_vma));
+> +		}
+> +
+> +		/*
+> +		 * locked_vm accounting: if the mapping remained the same size
+> +		 * it will have just moved and we don't need to touch locked_vm
+> +		 * because we skip the do_unmap. If the mapping shrunk before
+> +		 * being moved then the do_unmap on that portion will have
+> +		 * adjusted vm_locked. Only if the mapping grows do we need to
+> +		 * do something special; the reason is locked_vm only accounts
+> +		 * for old_len, but we're now adding new_len - old_len locked
+> +		 * bytes to the new mapping.
+> +		 */
+> +		if (vm_flags & VM_LOCKED) {
+> +			/* We always clear VM_LOCKED[ONFAULT] on the old vma */
+> +			vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
+> +
+> +			if (new_len > old_len) {
+> +				mm->locked_vm +=
+> +					(new_len - old_len) >> PAGE_SHIFT;
+> +				*locked = true;
 
+This level of code indentation suggests that code restructuring is
+required.
+
+> +			}
+> +		}
+> +
+> +		goto out;
+> +	}
+> +
+>  	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+>  		/* OOM: unable to split vma, just get accounts right */
+>  		vm_unacct_memory(excess >> PAGE_SHIFT);
+>  		excess = 0;
+>  	}
+> +
+> +	if (vm_flags & VM_LOCKED) {
+> +		mm->locked_vm += new_len >> PAGE_SHIFT;
+> +		*locked = true;
+> +	}
+
+I don't follow why this is required.
+
+> +out:
+>  	mm->hiwater_vm = hiwater_vm;
+>  
+>  	/* Restore VM_ACCOUNT if one or two pieces of vma left */
+> @@ -422,16 +460,12 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+>  			vma->vm_next->vm_flags |= VM_ACCOUNT;
+>  	}
+>  
+> -	if (vm_flags & VM_LOCKED) {
+> -		mm->locked_vm += new_len >> PAGE_SHIFT;
+> -		*locked = true;
+> -	}
+> -
+
+Ah. You moved this piece. Why?
+
+>  	return new_addr;
+>  }
+>  
+>  static struct vm_area_struct *vma_to_resize(unsigned long addr,
+> -	unsigned long old_len, unsigned long new_len, unsigned long *p)
+> +	unsigned long old_len, unsigned long new_len, unsigned long flags,
+> +	unsigned long *p)
+>  {
+>  	struct mm_struct *mm = current->mm;
+>  	struct vm_area_struct *vma = find_vma(mm, addr);
+> @@ -453,6 +487,10 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	if (flags & MREMAP_DONTUNMAP && (!vma_is_anonymous(vma) ||
+> +			vma->vm_flags & VM_SHARED))
+> +		return ERR_PTR(-EINVAL);
+> +
+>  	if (is_vm_hugetlb_page(vma))
+>  		return ERR_PTR(-EINVAL);
+>  
+> @@ -497,7 +535,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+>  
+>  static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  		unsigned long new_addr, unsigned long new_len, bool *locked,
+> -		struct vm_userfaultfd_ctx *uf,
+> +		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+>  		struct list_head *uf_unmap_early,
+>  		struct list_head *uf_unmap)
+>  {
+> @@ -505,7 +543,7 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	struct vm_area_struct *vma;
+>  	unsigned long ret = -EINVAL;
+>  	unsigned long charged = 0;
+> -	unsigned long map_flags;
+> +	unsigned long map_flags = 0;
+>  
+>  	if (offset_in_page(new_addr))
+>  		goto out;
+> @@ -534,9 +572,11 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	if ((mm->map_count + 2) >= sysctl_max_map_count - 3)
+>  		return -ENOMEM;
+>  
+> -	ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+> -	if (ret)
+> -		goto out;
+> +	if (flags & MREMAP_FIXED) {
+
+I think it has to be
+
+	if (!(flags & MREMAP_DONTUNMAP)) {
+
+No?
+
+
+> +		ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+> +		if (ret)
+> +			goto out;
+> +	}
+>  
+>  	if (old_len >= new_len) {
+>  		ret = do_munmap(mm, addr+new_len, old_len - new_len, uf_unmap);
+> @@ -545,13 +585,26 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  		old_len = new_len;
+>  	}
+>  
+> -	vma = vma_to_resize(addr, old_len, new_len, &charged);
+> +	vma = vma_to_resize(addr, old_len, new_len, flags, &charged);
+>  	if (IS_ERR(vma)) {
+>  		ret = PTR_ERR(vma);
+>  		goto out;
+>  	}
+>  
+> -	map_flags = MAP_FIXED;
+> +	/*
+> +	 * MREMAP_DONTUNMAP expands by new_len - (new_len - old_len), we will
+> +	 * check that we can expand by new_len and vma_to_resize will handle
+> +	 * the vma growing which is (new_len - old_len).
+> +	 */
+> +	if (flags & MREMAP_DONTUNMAP &&
+> +		!may_expand_vm(mm, vma->vm_flags, new_len >> PAGE_SHIFT)) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	if (flags & MREMAP_FIXED)
+> +		map_flags |= MAP_FIXED;
+> +
+>  	if (vma->vm_flags & VM_MAYSHARE)
+>  		map_flags |= MAP_SHARED;
+>  
+> @@ -561,10 +614,16 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	if (offset_in_page(ret))
+>  		goto out1;
+>  
+> -	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
+> +	/* We got a new mapping */
+> +	if (!(flags & MREMAP_FIXED))
+> +		new_addr = ret;
+> +
+> +	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf,
+>  		       uf_unmap);
+> +
+>  	if (!(offset_in_page(ret)))
+>  		goto out;
+> +
+>  out1:
+>  	vm_unacct_memory(charged);
+>  
+> @@ -609,12 +668,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	addr = untagged_addr(addr);
+>  	new_addr = untagged_addr(new_addr);
+>  
+> -	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
+> +	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+>  		return ret;
+>  
+>  	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+>  		return ret;
+>  
+> +	/* MREMAP_DONTUNMAP is always a move */
+> +	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_MAYMOVE))
+> +		return ret;
+> +
+>  	if (offset_in_page(addr))
+>  		return ret;
+>  
+> @@ -632,9 +695,10 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	if (down_write_killable(&current->mm->mmap_sem))
+>  		return -EINTR;
+>  
+> -	if (flags & MREMAP_FIXED) {
+> +	if (flags & MREMAP_FIXED || flags & MREMAP_DONTUNMAP) {
+
+	if (flags & (MREMAP_FIXED | MREMAP_DONTUNMAP)) {
+
+>  		ret = mremap_to(addr, old_len, new_addr, new_len,
+> -				&locked, &uf, &uf_unmap_early, &uf_unmap);
+> +				&locked, flags, &uf, &uf_unmap_early,
+> +				&uf_unmap);
+>  		goto out;
+>  	}
+>  
+> @@ -662,7 +726,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	/*
+>  	 * Ok, we need to grow..
+>  	 */
+> -	vma = vma_to_resize(addr, old_len, new_len, &charged);
+> +	vma = vma_to_resize(addr, old_len, new_len, flags, &charged);
+>  	if (IS_ERR(vma)) {
+>  		ret = PTR_ERR(vma);
+>  		goto out;
+> @@ -712,7 +776,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  		}
+>  
+>  		ret = move_vma(vma, addr, old_len, new_len, new_addr,
+> -			       &locked, &uf, &uf_unmap);
+> +			       &locked, flags, &uf, &uf_unmap);
+>  	}
+>  out:
+>  	if (offset_in_page(ret)) {
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
+
+-- 
+ Kirill A. Shutemov
