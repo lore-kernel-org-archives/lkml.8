@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40617C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACF2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8DF206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48E02168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703292;
-	bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
+	s=default; t=1581703302;
+	bh=J12BU6v6skinvk/5A45oPZq3RlG0T1+MQhN1yxEUabk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V3lhtyfcbMIFEcaqMbB5WYG4iRtCgrS7BIQ86dUwt/dmPEeyN/OOb5fqzhGpOKnuh
-	 u9/Hl6ybNjdl3hWNYQIc5RWmoJZa5qI7xJ1VLa4FdIn75XxJ6CO/G2OFYRwMMQp7PC
-	 SxWmvppYqlu4Wtfu+hpfM5J/ztq3YYKh0ZDhW680=
+	b=nlaqz1Tj3nNTcGPlJUzdR1L8Fc+YoCujeiuyK9bELaXqq/k8J24IgXyuaRBFFtd88
+	 rRp5hTVUoKZAutzgTr72VdPwpzt2G2Kwnh9wrbwZWKK+Q6JHWhowuHGkiQiPMeyQMT
+	 eiOCd+WZUfLpAuLjF4EQsdnrWuVeOEclO9+HIH+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389529AbgBNSBa (ORCPT
+        id S1731088AbgBNSBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:01:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731843AbgBNP4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:10 -0500
+        id S1731837AbgBNP4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872462086A;
-        Fri, 14 Feb 2020 15:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F27942468A;
+        Fri, 14 Feb 2020 15:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695770;
-        bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
+        s=default; t=1581695769;
+        bh=J12BU6v6skinvk/5A45oPZq3RlG0T1+MQhN1yxEUabk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gy2I3QzMmn7ZMpyXRsQj8CbZFDydmVIUDh6fagBdSvKkEryCsrkYm6TrijOdhAbO5
-         uVHRum4XnKFC8hskrzffT5EDiV6Sewe6+SI23ZEQvNpPy2t7ruQXj8jVIS+8CKCyl2
-         eKEchITBYEUMWz0erKoUBzDsXPhdEyjULGGuGduA=
+        b=Gv9rPVjmDjoiKqXIE5xky5ey4+I/LevhhqDAn9AGzxXs3EaFTUMdMuEMx85R5QoJx
+         6gfJXFqb13HmyZxGA7FW1GDSvEcPI8KEhw/R0KjrXb0BSi2BMO5KXWcOdq/cakBqMI
+         VAS7/7k6bPOVkemFkaOnKdTBb/HJq52Ahen11kp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 336/542] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Fri, 14 Feb 2020 10:45:28 -0500
-Message-Id: <20200214154854.6746-336-sashal@kernel.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 335/542] ASoC: txx9: Remove unused rtd variable
+Date:   Fri, 14 Feb 2020 10:45:27 -0500
+Message-Id: <20200214154854.6746-335-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,41 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Paul Burton <paulburton@kernel.org>
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+[ Upstream commit ec0f6a4c4a987aa20b2e77e0db2ae555276e45e6 ]
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+Commit a857e073ffc6 ("ASoC: txx9: txx9aclc: remove snd_pcm_ops") removed
+the last use of the rtd variable but didn't remove its definition,
+leading to the following warning/error for MIPS rbtx49xx_defconfig
+builds:
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+sound/soc/txx9/txx9aclc.c: In function 'txx9aclc_pcm_hw_params':
+sound/soc/txx9/txx9aclc.c:54:30: error: unused variable 'rtd'
+    [-Werror=unused-variable]
+  struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+                              ^~~
 
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+Resolve this by removing the unused variable.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: a857e073ffc6 ("ASoC: txx9: txx9aclc: remove snd_pcm_ops")
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Link: https://lore.kernel.org/r/20200109191422.334516-1-paulburton@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/txx9/txx9aclc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index f118c229ed829..d1dc8e6366dcb 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -19,6 +19,8 @@ config SND_ATMEL_SOC_DMA
- 
- config SND_ATMEL_SOC_SSC
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
- 
- config SND_ATMEL_SOC_SSC_PDC
- 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
+diff --git a/sound/soc/txx9/txx9aclc.c b/sound/soc/txx9/txx9aclc.c
+index 33c78d33e5a1d..9a55926ebf07b 100644
+--- a/sound/soc/txx9/txx9aclc.c
++++ b/sound/soc/txx9/txx9aclc.c
+@@ -51,7 +51,6 @@ static int txx9aclc_pcm_hw_params(struct snd_soc_component *component,
+ 				  struct snd_pcm_substream *substream,
+ 				  struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct txx9aclc_dmadata *dmadata = runtime->private_data;
+ 	int ret;
 -- 
 2.20.1
 
