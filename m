@@ -2,127 +2,223 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03677C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE0BC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C777D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D24D24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hQ4SQQcT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UMO/71So"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgBNVsH (ORCPT
+        id S1730532AbgBNVtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:48:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35993 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730464AbgBNVsH (ORCPT
+        Fri, 14 Feb 2020 16:49:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34312 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729473AbgBNVtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:48:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so12322598wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tuhpf2H8a4ZzCABJWxUowWp6EKCvGrriOjGBgmmrUqk=;
-        b=hQ4SQQcTZJYMJuGZ+sQF+Ern+ux0UaPM5+ddU9VsawxMBSNRoBQ5HHGbv2iNajhR2x
-         oLZ6oWB9QvA3XrP3wpvBD8d4G8nrCqZZ8RlFLQfkp0Xe4UypOaGTNap69OXifGgIfN4d
-         806OAX5oL1Eht/84kwnb/N8C5O5eo3AvMGVcM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tuhpf2H8a4ZzCABJWxUowWp6EKCvGrriOjGBgmmrUqk=;
-        b=KVGW6yZwXr22V/a9WHh/05LUlYvWXR9Px94KkbGPGqOlGQwrAwJ+P6rV4EJy/bWgVz
-         nOz0XVeILRNs8Ytn8AwInT/ZidUftyG/JlaYNyMtxgv2dkFXyPnirH6S64ciOwQXUycd
-         HWGzpYNlS+fn5Hd4rPh9BO36r227n3MkXrU7DO+66MRQhIzJMZKlP/8VMkWGi7iqMxZR
-         paxvCD3Fh8cJCpq9NFTjUfjJOYpblZgLGf8xeuAaajG8deL+fGUPPX/BlVWhfuBPJEv+
-         ZkbMOLmuSbHO+DVw7GSBpSLqFb3UPLVqeb06nGjson17Z1yYMAZdlyG8W1mI52eJnlH2
-         F1OA==
-X-Gm-Message-State: APjAAAWnnyXQ4/ZXFdjjIMj11WN13BVnOVIvJ6FhB20dEKzL+WC2+NQW
-        c6yhjqO+eBLvnzkCtI0brf1lXw==
-X-Google-Smtp-Source: APXvYqzPAS+OXaRY2OgIGYMo+NU6m1xw9xivVTbrwWXjQRsZAf0oh5rZLW12uHI+OCzLkzVtHm0Oag==
-X-Received: by 2002:a1c:9ed7:: with SMTP id h206mr6546114wme.67.1581716885231;
-        Fri, 14 Feb 2020 13:48:05 -0800 (PST)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id y12sm8842421wrw.88.2020.02.14.13.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 13:48:04 -0800 (PST)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Fri, 14 Feb 2020 13:47:46 -0800
-Message-Id: <20200214214746.10153-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Feb 2020 16:49:04 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01ELmm4r192255;
+        Fri, 14 Feb 2020 21:48:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=muyQF7/b2Bxrwz2kVesgpTYnE/3qxSslhUJbBnb3gDc=;
+ b=UMO/71SovORFSPWxgVVLxV9Ch03K+uNFy91H/fov697lIucRpx6zXvKa1tEdPY1HMJQ2
+ 2iJJ6oYc+Z807SEhmVY9a+P7LDozVcEKkQImLw97xISoFwB4XanusVa3ZWsNQlBBFddA
+ cIllXoRMkIA6R1OrZfkzPgh/yZZCaBtw0rDcIFdsEoI+dNW+D33F/dSy9bJMsSOwycL0
+ ImTqATmNqN1mLRM61Nf1RIKyxpf4qv9BGOxAJMwoMAYV8lo2tGPRSGFdnYbCB5G1TSFw
+ PfMd7jCZXVsSbQio0rI1BhNctZodjqSZ3jWXWwJC5d8X+erKFJA3vbrdYxIKps+YgOFK Ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y2jx6v3a2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 21:48:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01ELlvW9040202;
+        Fri, 14 Feb 2020 21:48:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2y4k82vu03-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 21:48:42 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01ELmeWw032758;
+        Fri, 14 Feb 2020 21:48:40 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 13:48:39 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH v2 4.9] padata: Remove broken queue flushing
+Date:   Fri, 14 Feb 2020 16:48:34 -0500
+Message-Id: <20200214214834.621513-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200213151856.812892483@linuxfoundation.org>
+References: <20200213151856.812892483@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=2 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140159
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=2 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
+The function padata_flush_queues is fundamentally broken because
+it cannot force padata users to complete the request that is
+underway.  IOW padata has to passively wait for the completion
+of any outstanding work.
 
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+As it stands flushing is used in two places.  Its use in padata_stop
+is simply unnecessary because nothing depends on the queues to
+be flushed afterwards.
+
+The other use in padata_replace is more substantial as we depend
+on it to free the old pd structure.  This patch instead uses the
+pd->refcnt to dynamically free the pd structure once all requests
+are complete.
+
+Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[dj: leave "pd->pinst = pinst" assignment in padata_alloc_pd()]
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 ---
- drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ kernel/padata.c | 45 ++++++++++++---------------------------------
+ 1 file changed, 12 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
-index 7e9975d25066..f1ded03f0229 100644
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -178,6 +178,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
- 	return 0;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 63449fc584da..286c5142a0f7 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -34,6 +34,8 @@
+ 
+ #define MAX_OBJ_NUM 1000
+ 
++static void padata_free_pd(struct parallel_data *pd);
++
+ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ {
+ 	int cpu, target_cpu;
+@@ -301,6 +303,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	struct padata_serial_queue *squeue;
+ 	struct parallel_data *pd;
+ 	LIST_HEAD(local_list);
++	int cnt;
+ 
+ 	local_bh_disable();
+ 	squeue = container_of(serial_work, struct padata_serial_queue, work);
+@@ -310,6 +313,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	list_replace_init(&squeue->serial.list, &local_list);
+ 	spin_unlock(&squeue->serial.lock);
+ 
++	cnt = 0;
++
+ 	while (!list_empty(&local_list)) {
+ 		struct padata_priv *padata;
+ 
+@@ -319,9 +324,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 		list_del_init(&padata->list);
+ 
+ 		padata->serial(padata);
+-		atomic_dec(&pd->refcnt);
++		cnt++;
+ 	}
+ 	local_bh_enable();
++
++	if (atomic_sub_and_test(cnt, &pd->refcnt))
++		padata_free_pd(pd);
  }
  
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -188,6 +205,9 @@ static struct platform_driver iproc_mdio_driver = {
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
+ /**
+@@ -444,7 +452,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	setup_timer(&pd->timer, padata_reorder_timer, (unsigned long)pd);
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+-	atomic_set(&pd->refcnt, 0);
++	atomic_set(&pd->refcnt, 1);
+ 	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+ 
+@@ -469,31 +477,6 @@ static void padata_free_pd(struct parallel_data *pd)
+ 	kfree(pd);
+ }
+ 
+-/* Flush all objects out of the padata queues. */
+-static void padata_flush_queues(struct parallel_data *pd)
+-{
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct padata_serial_queue *squeue;
+-
+-	for_each_cpu(cpu, pd->cpumask.pcpu) {
+-		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+-		flush_work(&pqueue->work);
+-	}
+-
+-	del_timer_sync(&pd->timer);
+-
+-	if (atomic_read(&pd->reorder_objects))
+-		padata_reorder(pd);
+-
+-	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+-		squeue = per_cpu_ptr(pd->squeue, cpu);
+-		flush_work(&squeue->work);
+-	}
+-
+-	BUG_ON(atomic_read(&pd->refcnt) != 0);
+-}
+-
+ static void __padata_start(struct padata_instance *pinst)
+ {
+ 	pinst->flags |= PADATA_INIT;
+@@ -507,10 +490,6 @@ static void __padata_stop(struct padata_instance *pinst)
+ 	pinst->flags &= ~PADATA_INIT;
+ 
+ 	synchronize_rcu();
+-
+-	get_online_cpus();
+-	padata_flush_queues(pinst->pd);
+-	put_online_cpus();
+ }
+ 
+ /* Replace the internal control structure with a new one. */
+@@ -531,8 +510,8 @@ static void padata_replace(struct padata_instance *pinst,
+ 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
+ 		notification_mask |= PADATA_CPU_SERIAL;
+ 
+-	padata_flush_queues(pd_old);
+-	padata_free_pd(pd_old);
++	if (atomic_dec_and_test(&pd_old->refcnt))
++		padata_free_pd(pd_old);
+ 
+ 	if (notification_mask)
+ 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
 -- 
-2.17.1
+2.25.0
 
