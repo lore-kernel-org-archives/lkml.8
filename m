@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26828C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCF5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E622476A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE0224776
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697391;
-	bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
+	s=default; t=1581697396;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qGcufNICAr1pZ837aJEl2gRG8pt1pie92dqNHny/blj9BmytnHA9Yl4rgY/Q1SSFL
-	 nG839+E2ms7mF0S4MF/6OuKjf+01YboSBuImiHOSVGsKgljNG2ZxbInbUuJrNNXCfq
-	 wyMgFvVBFizm49e+C/rw4uVyMi9Hp4lqdt4vVpcg=
+	b=HrIntShwYEPzmdE1LyJsvTKQC6HoOYdnzXknr9E97axALQrifuuSD9rCV1B3wWV/G
+	 zm3EefrYiDCHIyivxCAZ7VKOnrg54NlAjVJuRVspXYxTB2m7fn7GV2a890hMDECsRA
+	 EcioT/1+VQc0n3YFmPK3eJ7eVtpcQrwz35+Lt/Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405552AbgBNQXK (ORCPT
+        id S2405565AbgBNQXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:23:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:23:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393075AbgBNQVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:44 -0500
+        id S2404392AbgBNQVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:21:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB37246C5;
-        Fri, 14 Feb 2020 16:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4E7246AC;
+        Fri, 14 Feb 2020 16:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697304;
-        bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
+        s=default; t=1581697307;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SEuBJEFzuMbG758vb88vmeye+U0Hy+XSdtlLJNuf8UgnJ/BbUu0kFEYkRLNPawEbH
-         t92d50sSk3Wjt1DF7zvA97IEZEVDdxF6d8vuRLCoWxbSYvJel16kSeqNv6Pg032Xkb
-         Ty9E2pOyZmyUFKHq6spzoykMeHDpoH3j2uoZHriM=
+        b=JaHtPS9vqjFLGeIAXKfy8qIf9fwO+roV/ejpA0X3IvWGwatVFZe+a/PHh9LgRj9u3
+         u9xS/9mLGnWbjHBXsBnfj7kRqcCnlCqEXH65ZsTr9vtwEgEqzebK9c45L+bc5xdRGk
+         cRckJAESama3i8d5nFkcIuPtGAE0Jk0V7obAkFx4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: [PATCH AUTOSEL 4.9 016/141] efi/x86: Map the entire EFI vendor string before copying it
-Date:   Fri, 14 Feb 2020 11:19:16 -0500
-Message-Id: <20200214162122.19794-16-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 019/141] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 14 Feb 2020 11:19:19 -0500
+Message-Id: <20200214162122.19794-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -64,67 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
-Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
+
+synchronize_irq() can sleep at runtime.
+
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index b6669d326545a..f08abdf8bb676 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -478,7 +478,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -503,14 +502,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap_ro(efi.systab->fw_vendor,
-+				sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
- 
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
+ 	return 0;
+ }
 -- 
 2.20.1
 
