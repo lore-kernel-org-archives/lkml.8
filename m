@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D95C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261D8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E07B222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38812168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703588;
-	bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
+	s=default; t=1581703593;
+	bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBDcI8wskjnxL+GtZGGs3ahHQuq9DKKZlEsk6n1fDswjLvpZzv9XH5/UEQVfqGcx0
-	 kQNNnhQsWv+abKIFbNH6g+w57ja34ydkWy3NOPz8f6pQe7vnrwYB+h0D0qyd1zAFTv
-	 wNuFXEmOm7Mlj+Y124lGi72NwrHGevy+oXLp0qxE=
+	b=QLksc2+SgseCEEji4Fdd39oGsOERAxjTJm1OpQSu+TtSfPslu37PCCoRox6gVMzzo
+	 9c/C1xPPtN+W38olGiHjprLmDhIsB1bu8DrTQ1EZs6k0tEVoHjcrznfWtKtTjYe6Gq
+	 cy+HsMpSJv93p66F3ntqKLthHsI8N6yhNhk+riPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391955AbgBNSG0 (ORCPT
+        id S2391995AbgBNSGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:06:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:06:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731231AbgBNPyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:54 -0500
+        id S1731605AbgBNPyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0700222C4;
-        Fri, 14 Feb 2020 15:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC40222C4;
+        Fri, 14 Feb 2020 15:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695694;
-        bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
+        s=default; t=1581695690;
+        bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMFWI48WVlJrb5mmIDBQXChl+BElITRLXGkoRDwMEn0h45QCG/+VPfTyP+I38yCjW
-         gx7CZfndXEzJpwT0M4ukQDWfkhE3ctZT4bmHNMUqqmy/BNcg1VCBn93q7z6WcoSrFl
-         2f95LE/ppDA1l1Y0iC8IN8CFdq1goDkX0484naNU=
+        b=btO5qHbpnyrYRJy6kYNATcxP/uT8LXUmWwJI+FrVUCgDscWsUKVuNWWjRyjHnMZq+
+         JiI5l/PTPELjVEbVNlKGqPbKdTMovs4XMM5tVGMJm9il+Hxdo0W5pCNhV3iRB18ZlQ
+         wRMBTCwPpAarIV1rxEpkdDcLzqHGlHWXInitF4nc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiewei Ke <kejiewei.cn@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 277/542] RDMA/rxe: Fix error type of mmap_offset
-Date:   Fri, 14 Feb 2020 10:44:29 -0500
-Message-Id: <20200214154854.6746-277-sashal@kernel.org>
+Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 274/542] reset: uniphier: Add SCSSI reset control for each channel
+Date:   Fri, 14 Feb 2020 10:44:26 -0500
+Message-Id: <20200214154854.6746-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,35 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiewei Ke <kejiewei.cn@gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
+[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
 
-The type of mmap_offset should be u64 instead of int to match the type of
-mminfo.offset. If otherwise, after we create several thousands of CQs, it
-will run into overflow issues.
+SCSSI has reset controls for each channel in the SoCs newer than Pro4,
+so this adds missing reset controls for channel 1, 2 and 3. And more, this
+moves MCSSI reset ID after SCSSI.
 
-Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
-Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/reset/reset-uniphier.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index 95834206c80c3..92de39c4a7c1e 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -408,7 +408,7 @@ struct rxe_dev {
- 	struct list_head	pending_mmaps;
+diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
+index 74e589f5dd6a6..279e535bf5d80 100644
+--- a/drivers/reset/reset-uniphier.c
++++ b/drivers/reset/reset-uniphier.c
+@@ -193,8 +193,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
+ #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
+ 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
  
- 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
--	int			mmap_offset;
-+	u64			mmap_offset;
+-#define UNIPHIER_PERI_RESET_SCSSI(id)			\
+-	UNIPHIER_RESETX((id), 0x110, 17)
++#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
++	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
  
- 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ #define UNIPHIER_PERI_RESET_MCSSI(id)			\
+ 	UNIPHIER_RESETX((id), 0x114, 14)
+@@ -209,7 +209,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
+ 	UNIPHIER_PERI_RESET_I2C(6, 2),
+ 	UNIPHIER_PERI_RESET_I2C(7, 3),
+ 	UNIPHIER_PERI_RESET_I2C(8, 4),
+-	UNIPHIER_PERI_RESET_SCSSI(11),
++	UNIPHIER_PERI_RESET_SCSSI(11, 0),
+ 	UNIPHIER_RESET_END,
+ };
+ 
+@@ -225,8 +225,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
+ 	UNIPHIER_PERI_RESET_FI2C(8, 4),
+ 	UNIPHIER_PERI_RESET_FI2C(9, 5),
+ 	UNIPHIER_PERI_RESET_FI2C(10, 6),
+-	UNIPHIER_PERI_RESET_SCSSI(11),
+-	UNIPHIER_PERI_RESET_MCSSI(12),
++	UNIPHIER_PERI_RESET_SCSSI(11, 0),
++	UNIPHIER_PERI_RESET_SCSSI(12, 1),
++	UNIPHIER_PERI_RESET_SCSSI(13, 2),
++	UNIPHIER_PERI_RESET_SCSSI(14, 3),
++	UNIPHIER_PERI_RESET_MCSSI(15),
+ 	UNIPHIER_RESET_END,
+ };
  
 -- 
 2.20.1
