@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D15C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33519C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F44D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020D02168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704483;
-	bh=gqwbBlP1p3HZ52B2xdObmey5c3N+SJaIq90toCEc2bU=;
+	s=default; t=1581704486;
+	bh=CqYiNBMlMWHKkp/lCav82O14317gOiqR2e73IbrS+zI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcV93FM++x1HRJy6EyuyXyXkTnwskU8EtnLMxbfcJFwICbTCeXOPUWdWmrcCp0r4K
-	 SVhVaYG+7gtRtXK5b0KePysa9vHAta7ZfpxpfgQuE4P5SCFh3ymd0R3kYj2qjJX/wF
-	 4aX2263psutlv788E+hu7j6Rq/YGHU6iO4oitHoQ=
+	b=cb8GPRfqPcBoEtlJcti/aK1qXGFf4grm6XPwQ00wdEKJswLEOroVl/dUt5KD20PmQ
+	 uUZLknYZFI9r3rgc0Ky0pC+1lBedmMonIQHDB40WS6thCXZt2YswQNu5yn6BQ3lczH
+	 8M+tUjGV4V8rauFfJ5TK6vkWeiJNbJcj92bzrkpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgBNPts (ORCPT
+        id S1730184AbgBNPtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:49:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:49:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgBNPto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:44 -0500
+        id S1730060AbgBNPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EC4217F4;
-        Fri, 14 Feb 2020 15:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F018A24654;
+        Fri, 14 Feb 2020 15:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695383;
-        bh=gqwbBlP1p3HZ52B2xdObmey5c3N+SJaIq90toCEc2bU=;
+        s=default; t=1581695377;
+        bh=CqYiNBMlMWHKkp/lCav82O14317gOiqR2e73IbrS+zI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQL//zh0odw0nxd5sz9jATzNV8UuB9b1INxlYJOmk2Dd02JaajR6ymGPdQkBCNWkX
-         NcG3XwrgwqLgi6t6rKlRmxVW7cX5jEg0x+Y+p2vQt+P0Rq3QOcUEy2YVsCURrWpLHi
-         fEUkH/qV8XriUfqSSy16HpjIsbE3u5HON6fdZwk8=
+        b=Y9yjBnN3Cc3qspPMg5aXvaIoMyk+Be8a0Vqyaj8jpw6j1KVGJEh87/wmYdLpSfIw3
+         0gCzp8i6T5HwWSAaj1VqQ9c6nvzv0J3vqolBwD7y9J+OLmEqhMHvDhtrUTPYPEZ64o
+         47CXTMKrc8Qjzm4mdwNVHPK6Oc8+Ud3MYJLqJsvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 038/542] drm/msm/adreno: fix zap vs no-zap handling
-Date:   Fri, 14 Feb 2020 10:40:30 -0500
-Message-Id: <20200214154854.6746-38-sashal@kernel.org>
+Cc:     Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 033/542] ALSA: ctl: allow TLV read operation for callback type of element in locked case
+Date:   Fri, 14 Feb 2020 10:40:25 -0500
+Message-Id: <20200214154854.6746-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,84 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 15ab987c423df561e0949d77fb5043921ae59956 ]
+[ Upstream commit d61fe22c2ae42d9fd76c34ef4224064cca4b04b0 ]
 
-We can have two cases, when it comes to "zap" fw.  Either the fw
-requires zap fw to take the GPU out of secure mode at boot, or it does
-not and we can write RBBM_SECVID_TRUST_CNTL directly.  Previously we
-decided based on whether zap fw load succeeded, but this is not a great
-plan because:
+A design of ALSA control core allows applications to execute three
+operations for TLV feature; read, write and command. Furthermore, it
+allows driver developers to process the operations by two ways; allocated
+array or callback function. In the former, read operation is just allowed,
+thus developers uses the latter when device driver supports variety of
+models or the target model is expected to dynamically change information
+stored in TLV container.
 
-1) we could have zap fw in the filesystem on a device where it is not
-   required
-2) we could have the inverse case
+The core also allows applications to lock any element so that the other
+applications can't perform write operation to the element for element
+value and TLV information. When the element is locked, write and command
+operation for TLV information are prohibited as well as element value.
+Any read operation should be allowed in the case.
 
-Instead, shift to deciding based on whether we have a 'zap-shader' node
-in dt.  In practice, there is only one device (currently) with upstream
-dt that does not use zap (cheza), and it already has a /delete-node/ for
-the zap-shader node.
+At present, when an element has callback function for TLV information,
+TLV read operation returns EPERM if the element is locked. On the
+other hand, the read operation is success when an element has allocated
+array for TLV information. In both cases, read operation is success for
+element value expectedly.
 
-Fixes: abccb9fe3267 ("drm/msm/a6xx: Add zap shader load")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+This commit fixes the bug. This change can be backported to v4.14
+kernel or later.
+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Link: https://lore.kernel.org/r/20191223093347.15279-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 11 +++++++++--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 11 +++++++++--
- 2 files changed, 18 insertions(+), 4 deletions(-)
+ sound/core/control.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index b02e2042547f6..7d9e63e20dedd 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -753,11 +753,18 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
- 		gpu->funcs->flush(gpu, gpu->rb[0]);
- 		if (!a5xx_idle(gpu, gpu->rb[0]))
- 			return -EINVAL;
--	} else {
--		/* Print a warning so if we die, we know why */
-+	} else if (ret == -ENODEV) {
-+		/*
-+		 * This device does not use zap shader (but print a warning
-+		 * just in case someone got their dt wrong.. hopefully they
-+		 * have a debug UART to realize the error of their ways...
-+		 * if you mess this up you are about to crash horribly)
-+		 */
- 		dev_warn_once(gpu->dev->dev,
- 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
- 		gpu_write(gpu, REG_A5XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	} else {
-+		return ret;
- 	}
+diff --git a/sound/core/control.c b/sound/core/control.c
+index 7a4d8690ce41f..08ca7666e84cf 100644
+--- a/sound/core/control.c
++++ b/sound/core/control.c
+@@ -1430,8 +1430,9 @@ static int call_tlv_handler(struct snd_ctl_file *file, int op_flag,
+ 	if (kctl->tlv.c == NULL)
+ 		return -ENXIO;
  
- 	/* Last step - yield the ringbuffer */
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index dc8ec2c94301b..686c34d706b0d 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -537,12 +537,19 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 		a6xx_flush(gpu, gpu->rb[0]);
- 		if (!a6xx_idle(gpu, gpu->rb[0]))
- 			return -EINVAL;
--	} else {
--		/* Print a warning so if we die, we know why */
-+	} else if (ret == -ENODEV) {
-+		/*
-+		 * This device does not use zap shader (but print a warning
-+		 * just in case someone got their dt wrong.. hopefully they
-+		 * have a debug UART to realize the error of their ways...
-+		 * if you mess this up you are about to crash horribly)
-+		 */
- 		dev_warn_once(gpu->dev->dev,
- 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
- 		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
- 		ret = 0;
-+	} else {
-+		return ret;
- 	}
+-	/* When locked, this is unavailable. */
+-	if (vd->owner != NULL && vd->owner != file)
++	/* Write and command operations are not allowed for locked element. */
++	if (op_flag != SNDRV_CTL_TLV_OP_READ &&
++	    vd->owner != NULL && vd->owner != file)
+ 		return -EPERM;
  
- out:
+ 	return kctl->tlv.c(kctl, op_flag, size, buf);
 -- 
 2.20.1
 
