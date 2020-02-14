@@ -2,109 +2,127 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB1C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E102CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15D72082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D372082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581717295;
-	bh=us7Ky2raribzaFr6D817KcoGYvcrvYH7nSrOgKdWyFQ=;
+	s=default; t=1581717298;
+	bh=hYecJEDTMS4sRitWMiS4XFnCF5z2Aq11PjB0ocf5FBA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ooob1A1EV48dwPSUTHWkH+gvgkahC27s0Sel6BQMzcmCNRV5PB7HCYE4Qj57iixBR
-	 s6qedFxp27INjaKU4PUoFNyBmjuto7fCVzS1QmWOZMDwhJ3g03N1mj1UdKdg87K6ZW
-	 eTrdnSjNqEMDpvoacUq8DuBj5IyS4gtgrPWRXYm0=
+	b=HW13/lbyOyBcE1qfULXJFqJYpLZtQWqN5km/LVRmu5vKiRtgDPXi0tx0bP2B05cuA
+	 efguoqksMW6F/e3w/PzX3rB5CHZnZkdHq0BBQkc2CGa8PbpTj8HP/hS4TA4qACJdhU
+	 +75i7X1Hotcr2kwvuhdsQUR8r8LDA6Iq8zZifiuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbgBNVyx (ORCPT
+        id S2387865AbgBNVyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:54:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59778 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:54:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388060AbgBNVyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:54:40 -0500
+        id S2387666AbgBNVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:33 -0500
 Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACBEE24649;
-        Fri, 14 Feb 2020 21:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0823B2168B;
+        Fri, 14 Feb 2020 21:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581717279;
-        bh=us7Ky2raribzaFr6D817KcoGYvcrvYH7nSrOgKdWyFQ=;
+        s=default; t=1581717273;
+        bh=hYecJEDTMS4sRitWMiS4XFnCF5z2Aq11PjB0ocf5FBA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+Tp0/+BdplnjTGfb70mf4eYqIUF66en0cAcKKXwf7/Pkg/vhggrd9q0zqm8wUaPW
-         tPiNHfrq1PIn2Jqp+7BUa1W47vs4SbU6a5k878fIDl/IiAdYFLJLsxXhBcQNm/8qJm
-         y9TLlO9pT0wXfrw/6DFGF9L+kgmUFNeyoXhLK68Q=
-Date:   Fri, 14 Feb 2020 16:50:41 -0500
+        b=efxubQc02cob0OZRWoak22UQRTd1ture8757Wvxpl1sJrxttz+uMoE1OapwO9G/CT
+         rPdHFMetp53Bqm3kwxbnxS2qZXXQ3WMJAncji36qMySi33bKGv75PkcEo9jf6eRl2K
+         p0mUjGuYet/enBHsH62vYCeNBn1zQ0HWcBivjdh8=
+Date:   Fri, 14 Feb 2020 16:48:23 -0500
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 200/542] tty: serial: amba-pl011: remove set
- but unused variable
-Message-ID: <20200214215041.GI4193448@kroah.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH AUTOSEL 5.5 456/542] char: hpet: Use flexible-array member
+Message-ID: <20200214214823.GD4193448@kroah.com>
 References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-200-sashal@kernel.org>
+ <20200214154854.6746-456-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214154854.6746-200-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-456-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:43:12AM -0500, Sasha Levin wrote:
-> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+On Fri, Feb 14, 2020 at 10:47:28AM -0500, Sasha Levin wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 > 
-> [ Upstream commit 94345aee285334e9e12fc70572e3d9380791a64e ]
+> [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
 > 
-> Fix the following warning:
-> drivers/tty/serial/amba-pl011.c: In function check_apply_cts_event_workaround:
-> drivers/tty/serial/amba-pl011.c:1461:15: warning: variable dummy_read set but not used [-Wunused-but-set-variable]
+> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> presence of a "variable length array":
 > 
-> The data read is useless and can be dropped.
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Link: https://lore.kernel.org/r/1575619526-34482-1-git-send-email-wangxiongfeng2@huawei.com
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> There is also 0-byte arrays. Both cases pose confusion for things like
+> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> to declare variable-length types such as the one above is a flexible array
+> member[2] which need to be the last member of a structure and empty-sized:
+> 
+> struct something {
+>         int stuff;
+>         u8 data[];
+> };
+> 
+> Also, by making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> unadvertenly introduced[3] to the codebase from now on.
+> 
+> [1] https://github.com/KSPP/linux/issues/21
+> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
 > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/tty/serial/amba-pl011.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/char/hpet.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 4b28134d596a9..c5e9475feb47a 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -1452,8 +1452,6 @@ static void pl011_modem_status(struct uart_amba_port *uap)
+> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+> index 9ac6671bb5141..aed2c45f7968c 100644
+> --- a/drivers/char/hpet.c
+> +++ b/drivers/char/hpet.c
+> @@ -110,7 +110,7 @@ struct hpets {
+>  	unsigned long hp_delta;
+>  	unsigned int hp_ntimer;
+>  	unsigned int hp_which;
+> -	struct hpet_dev hp_dev[1];
+> +	struct hpet_dev hp_dev[];
+>  };
 >  
->  static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
->  {
-> -	unsigned int dummy_read;
-> -
->  	if (!uap->vendor->cts_event_workaround)
->  		return;
->  
-> @@ -1465,8 +1463,8 @@ static void check_apply_cts_event_workaround(struct uart_amba_port *uap)
->  	 * single apb access will incur 2 pclk(133.12Mhz) delay,
->  	 * so add 2 dummy reads
->  	 */
-> -	dummy_read = pl011_read(uap, REG_ICR);
-> -	dummy_read = pl011_read(uap, REG_ICR);
-> +	pl011_read(uap, REG_ICR);
-> +	pl011_read(uap, REG_ICR);
->  }
->  
->  static irqreturn_t pl011_int(int irq, void *dev_id)
+>  static struct hpets *hpets;
 > -- 
 > 2.20.1
 > 
 
-Please drop.
+Not needed, please drop from all trees.  Along with the other hpet patch
+that fixes the bug this one introduced :)
+
+thanks,
+
+greg k-h
