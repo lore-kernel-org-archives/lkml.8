@@ -2,54 +2,53 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBE1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12B8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7EF246C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72AE246AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696873;
-	bh=fLdj1bfTpZ/AoJbVRl8A14jHH7ap3xGhu/sgu2jrqhE=;
+	s=default; t=1581696878;
+	bh=o3yfZ/jJwJgO7mG0CVWrxOfRI2C8fJSUwc8Kp+NOKCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/r9n+dPrnv3lxr1cAsh3gUyQx+dJka75/Aobq/Q0tahidhdlFgkpQjWlFN2tzZe8
-	 Sgsfpl+fLz9nCYyeWVYxbnA1dFOoyS4nqYzogfxpEcO/dWD3GYVgWeFGOM8wG6kHHM
-	 JxEmAWiwloq0qd2p9/SdFSG7labd4mkDAOpZE7s8=
+	b=CvrLUJADMbSXqZSSIzrE3ryuzvXZhK/w+Xt3e/Nb7LjtFjteonZ0AJ0khHYCMBARd
+	 cjzunV8jUdWrzaE9EURQooTsBdYfKEicAVXLi5Zhc+HLoKBLnwFe+2ZO3rK7LykRsj
+	 Nd17kT8WJAcUzWotgMcWfMLrxz5/MqX+KuErw5p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391834AbgBNQOc (ORCPT
+        id S2404033AbgBNQOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:14:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403967AbgBNQN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:56 -0500
+        id S2388168AbgBNQOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:14:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF174246BD;
-        Fri, 14 Feb 2020 16:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 786CC246BD;
+        Fri, 14 Feb 2020 16:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696835;
-        bh=fLdj1bfTpZ/AoJbVRl8A14jHH7ap3xGhu/sgu2jrqhE=;
+        s=default; t=1581696842;
+        bh=o3yfZ/jJwJgO7mG0CVWrxOfRI2C8fJSUwc8Kp+NOKCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRd5GrF3Cn0q5EXWDdVaEfSElCUIkYug0WbveMP/zsRo5s6mUkjvPe3nxOM5NnKGf
-         siNxdjqhfXrKhXCUWHn74aZcgrmbbRavCSIQjzft51hPfqJVcKQ9qnp2hKXAkvPFHs
-         t8w48fs4thnGkUS/QuFsetqYsO1jX10Jqx7wW24c=
+        b=tT+KxzKgjX6V/7PKz/XFrDhbXw+IPIZ0iouePpxHiP2VKmetdq4gZA0Doa123E1SC
+         sRiXP7zokVn+pjXGotkKTKZo97cLvw9ioaLVwo6rxTgujPmJjEmDfckRovMz+TIyr+
+         p07E9opReo7UlLJ8WpIvdqmt+dvzwdHKs9xNjGqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 100/252] netfilter: nft_tunnel: add the missing ERSPAN_VERSION nla_policy
-Date:   Fri, 14 Feb 2020 11:09:15 -0500
-Message-Id: <20200214161147.15842-100-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 105/252] iwlegacy: Fix -Wcast-function-type
+Date:   Fri, 14 Feb 2020 11:09:20 -0500
+Message-Id: <20200214161147.15842-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -62,36 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 0705f95c332081036d85f26691e9d3cd7d901c31 ]
+[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
 
-ERSPAN_VERSION is an attribute parsed in kernel side, nla_policy
-type should be added for it, like other attributes.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tunnel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index e5444f3ff43fc..5e66042ac3466 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -218,8 +218,9 @@ static int nft_tunnel_obj_vxlan_init(const struct nlattr *attr,
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 57e3b6cca2341..b536ec20eaccb 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -1392,8 +1392,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
  }
  
- static const struct nla_policy nft_tunnel_opts_erspan_policy[NFTA_TUNNEL_KEY_ERSPAN_MAX + 1] = {
-+	[NFTA_TUNNEL_KEY_ERSPAN_VERSION]	= { .type = NLA_U32 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V1_INDEX]	= { .type = NLA_U32 },
--	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]	= { .type = NLA_U8 },
-+	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]		= { .type = NLA_U8 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V2_HWID]	= { .type = NLA_U8 },
- };
+ static void
+-il3945_irq_tasklet(struct il_priv *il)
++il3945_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -3419,7 +3420,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+ 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il3945_irq_tasklet,
++		     il3945_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 280cd8ae1696d..6fc51c74cdb86 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4360,8 +4360,9 @@ il4965_synchronize_irq(struct il_priv *il)
+ }
+ 
+ static void
+-il4965_irq_tasklet(struct il_priv *il)
++il4965_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -6257,7 +6258,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+ 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il4965_irq_tasklet,
++		     il4965_irq_tasklet,
+ 		     (unsigned long)il);
+ }
  
 -- 
 2.20.1
