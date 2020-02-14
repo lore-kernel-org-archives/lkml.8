@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833C5C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCEFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D043222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA794222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701781;
-	bh=yAMzhrXxFbZ4vnf0DkW6RKmts9rNdF5OgSzFYmXih6w=;
+	s=default; t=1581701784;
+	bh=D6q+W0uw71RZQXApkieYo4qW7HwpywQhRGI3KCCb+3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=icXc7Si8DbIyRQ53A2oeRJM/YVoD+XmYbNre2XPyKF8gihJthxSPYlUbLG+s5Wb+s
-	 57nkd5R469E5sRq1AQPYnrTxCXq/yb760YZeijpHQJzTceIYVpTkN34dJ58AIhgjck
-	 jCIClyVhH5RZ6shPY5H7HwRbNAit1L22ihJ3H7Iw=
+	b=wZc5I6VWc84aqX0I5gPlcbzWgfbi8q+TI51s1qRnEdBz+OiFMI8/pWa/LW8XMoSQl
+	 p6n5GyS1SzN1DH6Rw+Ks0yu3BMJrwWnFlSMItoLHJu4Yoh7b9ZDID5e+f0U++NnL1w
+	 4HN15KSwjRbJcsPLqyLNSnc0wYc7MqKFyMdoyfKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390374AbgBNRgU (ORCPT
+        id S1730848AbgBNRgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:36:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:36:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389417AbgBNQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390192AbgBNQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:05:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EF672067D;
-        Fri, 14 Feb 2020 16:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA0C217F4;
+        Fri, 14 Feb 2020 16:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696334;
-        bh=yAMzhrXxFbZ4vnf0DkW6RKmts9rNdF5OgSzFYmXih6w=;
+        s=default; t=1581696333;
+        bh=D6q+W0uw71RZQXApkieYo4qW7HwpywQhRGI3KCCb+3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWcQrPwJ7PMkC+hGgOA5Ny1kHxkqXeIkRZ7D956fd6Nm9ycPyGnRhCcLWgI/m5xOO
-         YJ1L31tk1HR3QZ3wIvDHEENgIdNnkovPiZLlDHzRdgNwIAYGeYG3FjahnbNM68R3TL
-         JwNbgP4wLa15mXlQqL3oTEXIaZqgbADDRcq4qCxA=
+        b=uz9II/afRIVo1edRhrdnV5IyYU95iziYZ9Rqf3d7MHTbceiLp6H6dvE9HR0h8ykLb
+         lhnS9o51TKz2DuoDogppBjobMvHPN+abyGBiDL6zMyjmNecUzFDyIPwXCXDmFpgdjq
+         DwjERsYrBF6T4FZ2uCoQJIttOgeEKa7NT1rZDXIM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 172/459] ARM: exynos_defconfig: Bring back explicitly wanted options
-Date:   Fri, 14 Feb 2020 10:57:02 -0500
-Message-Id: <20200214160149.11681-172-sashal@kernel.org>
+Cc:     Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 171/459] clk: imx: Add correct failure handling for clk based helpers
+Date:   Fri, 14 Feb 2020 10:57:01 -0500
+Message-Id: <20200214160149.11681-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -61,63 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Abel Vesa <abel.vesa@nxp.com>
 
-[ Upstream commit 9f9e2df2e64df197ff6548ef494f76be5b35d08a ]
+[ Upstream commit f60f1c62c3188fcca945581e35e3440ee3fdcc95 ]
 
-Few options KALLSYMS_ALL, SCSI, PM_DEVFREQ and mutex/spinlock debugging
-were removed with savedefconfig because they were selected by other
-options.  However these are user-visible options and they might not be
-selected in the future.  Exactly this happened with commit 0e4a459f56c3
-("tracing: Remove unnecessary DEBUG_FS dependency") removing the
-dependency between DEBUG_FS and TRACING.
+If the clk_hw based API returns an error, trying to return the clk from
+hw will end up in a NULL pointer dereference. So adding the to_clk
+checker and using it inside every clk based macro helper we handle that
+case correctly.
 
-To avoid losing these options in the future, explicitly mention them in
-defconfig.
+This to_clk is also temporary and will go away along with the clk based
+macro helpers once there is no user that need them anymore.
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/exynos_defconfig | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/clk/imx/clk.h | 37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 736ed7a7bcf8e..34d4acbcee347 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -38,6 +38,7 @@ CONFIG_CRYPTO_SHA256_ARM=m
- CONFIG_CRYPTO_SHA512_ARM=m
- CONFIG_CRYPTO_AES_ARM_BS=m
- CONFIG_CRYPTO_CHACHA20_NEON=m
-+CONFIG_KALLSYMS_ALL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_PARTITION_ADVANCED=y
-@@ -92,6 +93,7 @@ CONFIG_BLK_DEV_LOOP=y
- CONFIG_BLK_DEV_CRYPTOLOOP=y
- CONFIG_BLK_DEV_RAM=y
- CONFIG_BLK_DEV_RAM_SIZE=8192
-+CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_CHR_DEV_SG=y
- CONFIG_ATA=y
-@@ -290,6 +292,7 @@ CONFIG_CROS_EC_SPI=y
- CONFIG_COMMON_CLK_MAX77686=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_EXYNOS_IOMMU=y
-+CONFIG_PM_DEVFREQ=y
- CONFIG_DEVFREQ_GOV_PERFORMANCE=y
- CONFIG_DEVFREQ_GOV_POWERSAVE=y
- CONFIG_DEVFREQ_GOV_USERSPACE=y
-@@ -354,4 +357,7 @@ CONFIG_SOFTLOCKUP_DETECTOR=y
- # CONFIG_DETECT_HUNG_TASK is not set
- CONFIG_PROVE_LOCKING=y
- CONFIG_DEBUG_ATOMIC_SLEEP=y
-+CONFIG_DEBUG_RT_MUTEXES=y
-+CONFIG_DEBUG_SPINLOCK=y
-+CONFIG_DEBUG_MUTEXES=y
- CONFIG_DEBUG_USER=y
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index f7a389a50401a..6fe64ff8ffa12 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -51,48 +51,48 @@ struct imx_pll14xx_clk {
+ };
+ 
+ #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
+-	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
++	to_clk(imx_clk_hw_cpu(name, parent_name, div, mux, pll, step))
+ 
+ #define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
+ 				cgr_val, clk_gate_flags, lock, share_count) \
+-	clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
+-				cgr_val, clk_gate_flags, lock, share_count)->clk
++	to_clk(clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
++				cgr_val, clk_gate_flags, lock, share_count))
+ 
+ #define imx_clk_pllv3(type, name, parent_name, base, div_mask) \
+-	imx_clk_hw_pllv3(type, name, parent_name, base, div_mask)->clk
++	to_clk(imx_clk_hw_pllv3(type, name, parent_name, base, div_mask))
+ 
+ #define imx_clk_pfd(name, parent_name, reg, idx) \
+-	imx_clk_hw_pfd(name, parent_name, reg, idx)->clk
++	to_clk(imx_clk_hw_pfd(name, parent_name, reg, idx))
+ 
+ #define imx_clk_gate_exclusive(name, parent, reg, shift, exclusive_mask) \
+-	imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask)->clk
++	to_clk(imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask))
+ 
+ #define imx_clk_fixed_factor(name, parent, mult, div) \
+-	imx_clk_hw_fixed_factor(name, parent, mult, div)->clk
++	to_clk(imx_clk_hw_fixed_factor(name, parent, mult, div))
+ 
+ #define imx_clk_divider2(name, parent, reg, shift, width) \
+-	imx_clk_hw_divider2(name, parent, reg, shift, width)->clk
++	to_clk(imx_clk_hw_divider2(name, parent, reg, shift, width))
+ 
+ #define imx_clk_gate_dis(name, parent, reg, shift) \
+-	imx_clk_hw_gate_dis(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate_dis(name, parent, reg, shift))
+ 
+ #define imx_clk_gate2(name, parent, reg, shift) \
+-	imx_clk_hw_gate2(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate2(name, parent, reg, shift))
+ 
+ #define imx_clk_gate2_flags(name, parent, reg, shift, flags) \
+-	imx_clk_hw_gate2_flags(name, parent, reg, shift, flags)->clk
++	to_clk(imx_clk_hw_gate2_flags(name, parent, reg, shift, flags))
+ 
+ #define imx_clk_gate2_shared2(name, parent, reg, shift, share_count) \
+-	imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count)->clk
++	to_clk(imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count))
+ 
+ #define imx_clk_gate3(name, parent, reg, shift) \
+-	imx_clk_hw_gate3(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate3(name, parent, reg, shift))
+ 
+ #define imx_clk_gate4(name, parent, reg, shift) \
+-	imx_clk_hw_gate4(name, parent, reg, shift)->clk
++	to_clk(imx_clk_hw_gate4(name, parent, reg, shift))
+ 
+ #define imx_clk_mux(name, reg, shift, width, parents, num_parents) \
+-	imx_clk_hw_mux(name, reg, shift, width, parents, num_parents)->clk
++	to_clk(imx_clk_hw_mux(name, reg, shift, width, parents, num_parents))
+ 
+ struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+ 		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
+@@ -195,6 +195,13 @@ struct clk_hw *imx_clk_hw_fixup_mux(const char *name, void __iomem *reg,
+ 			      u8 shift, u8 width, const char * const *parents,
+ 			      int num_parents, void (*fixup)(u32 *val));
+ 
++static inline struct clk *to_clk(struct clk_hw *hw)
++{
++	if (IS_ERR_OR_NULL(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++
+ static inline struct clk *imx_clk_fixed(const char *name, int rate)
+ {
+ 	return clk_register_fixed_rate(NULL, name, NULL, 0, rate);
 -- 
 2.20.1
 
