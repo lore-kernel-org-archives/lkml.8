@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85381C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76DAC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5588424703
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9E824694
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697623;
-	bh=Lhe26MhIkbib9XC4bkspCVFr9AvJN+p0oE/YNus0YLs=;
+	s=default; t=1581697624;
+	bh=rWKJNV9Sbr1m7wRyPB2Ede1g5VawtcrzSvOZgyNhgN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wq+0Z/WugCuGcLMCwvXT6dbibQSGfTaBEOEL3Nhi3BlUA3RxsDZJZhs+FxlnpF2zk
-	 YuGzKGwA7UporDoZ4sj0E5VwCnZVBLU+XnulfrX/tYkMjedCrSavZrwj3WEGnyKKqp
-	 NXjmMQV5juROCHQwqo00anNyiFD33NuVH302N7IQ=
+	b=owfKmLgPSW60YPA3XuaCDtc7Tzjo0DtM8Vm+dqp1xcCi2y3CoVxYz5wrD2kcg/QcH
+	 9wPspKb2bpni2XwAr4lTbeeSxzPjuMUHSb3uJ/c8K1cFtp72h8ENASg+w/RynLFnHH
+	 oX+yDFgbX4oiR/rlTv/+GCwdJQ95FCw87ogkYNxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406542AbgBNQ1C (ORCPT
+        id S2406550AbgBNQ1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34298 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:27:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393351AbgBNQZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:25:08 -0500
+        id S2393359AbgBNQZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:25:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ED9C2479D;
-        Fri, 14 Feb 2020 16:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34EE9247B5;
+        Fri, 14 Feb 2020 16:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697507;
-        bh=Lhe26MhIkbib9XC4bkspCVFr9AvJN+p0oE/YNus0YLs=;
+        s=default; t=1581697509;
+        bh=rWKJNV9Sbr1m7wRyPB2Ede1g5VawtcrzSvOZgyNhgN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VeKdXfH7YHHQdltIq8oXpsjPJ+95+o1esH01sZ/Aa0fDLsPzVivxe8FGbS4kC7/mc
-         SHB5MmThfUc51BRYfw5S6c1Zv5nqXf9cifSum3Ae1JSmEgeoGuB03BS+VcwPClxSDu
-         NDxiAmr5FSNakK/x5clBxLHttOdzTfF+0Rqq150k=
+        b=RvNLADaAM6kmitXq6tjt5//ERnZtpWDTySs7wl2v9i6Kfq2Y4tJgwL8KY+fHjJngF
+         W2MBrf/6N1IUoqdVN+hhPbRJmRsvxj93iXsehlLfTc9bBW1LOUFcu5smPlrPGgKEaA
+         1cG7Rl9oqyQts13Vua9coYTfHtj/NoEemfgX0yQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 034/100] drm/radeon: remove set but not used variable 'blocks'
-Date:   Fri, 14 Feb 2020 11:23:18 -0500
-Message-Id: <20200214162425.21071-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 035/100] drm/radeon: remove set but not used variable 'tv_pll_cntl1'
+Date:   Fri, 14 Feb 2020 11:23:19 -0500
+Message-Id: <20200214162425.21071-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -62,15 +62,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 77441f77949807fda4a0aec0bdf3e86ae863fd56 ]
+[ Upstream commit dc9b3dbd28744510b78490dc6312848a8f918749 ]
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/gpu/drm/radeon/radeon_combios.c: In function radeon_combios_get_power_modes:
-drivers/gpu/drm/radeon/radeon_combios.c:2638:10: warning: variable blocks set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/radeon/radeon_legacy_tv.c: In function radeon_legacy_tv_mode_set:
+drivers/gpu/drm/radeon/radeon_legacy_tv.c:538:24: warning: variable tv_pll_cntl1 set but not used [-Wunused-but-set-variable]
 
-It is introduced by commit 56278a8edace ("drm/radeon/kms:
-pull power mode info from bios tables (v3)"), but never used,
+It is introduced by commit 4ce001abafaf ("drm/radeon/kms:
+add initial radeon tv-out support."), but never used,
 so remove it.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
@@ -78,30 +78,35 @@ Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_combios.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/radeon_legacy_tv.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
-index fcecaf5b55267..7a3e996fe9f6a 100644
---- a/drivers/gpu/drm/radeon/radeon_combios.c
-+++ b/drivers/gpu/drm/radeon/radeon_combios.c
-@@ -2636,7 +2636,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
- {
- 	struct drm_device *dev = rdev->ddev;
- 	u16 offset, misc, misc2 = 0;
--	u8 rev, blocks, tmp;
-+	u8 rev, tmp;
- 	int state_index = 0;
- 	struct radeon_i2c_bus_rec i2c_bus;
+diff --git a/drivers/gpu/drm/radeon/radeon_legacy_tv.c b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
+index 49750d07ab7d4..3133f5dfc239a 100644
+--- a/drivers/gpu/drm/radeon/radeon_legacy_tv.c
++++ b/drivers/gpu/drm/radeon/radeon_legacy_tv.c
+@@ -544,7 +544,7 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
+ 	uint32_t tv_master_cntl, tv_rgb_cntl, tv_dac_cntl;
+ 	uint32_t tv_modulator_cntl1, tv_modulator_cntl2;
+ 	uint32_t tv_vscaler_cntl1, tv_vscaler_cntl2;
+-	uint32_t tv_pll_cntl, tv_pll_cntl1, tv_ftotal;
++	uint32_t tv_pll_cntl, tv_ftotal;
+ 	uint32_t tv_y_fall_cntl, tv_y_rise_cntl, tv_y_saw_tooth_cntl;
+ 	uint32_t m, n, p;
+ 	const uint16_t *hor_timing;
+@@ -716,12 +716,6 @@ void radeon_legacy_tv_mode_set(struct drm_encoder *encoder,
+ 		(((n >> 9) & RADEON_TV_N0HI_MASK) << RADEON_TV_N0HI_SHIFT) |
+ 		((p & RADEON_TV_P_MASK) << RADEON_TV_P_SHIFT);
  
-@@ -2726,7 +2726,6 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
- 		offset = combios_get_table_offset(dev, COMBIOS_POWERPLAY_INFO_TABLE);
- 		if (offset) {
- 			rev = RBIOS8(offset);
--			blocks = RBIOS8(offset + 0x2);
- 			/* power mode 0 tends to be the only valid one */
- 			rdev->pm.power_state[state_index].num_clock_modes = 1;
- 			rdev->pm.power_state[state_index].clock_info[0].mclk = RBIOS32(offset + 0x5 + 0x2);
+-	tv_pll_cntl1 = (((4 & RADEON_TVPCP_MASK) << RADEON_TVPCP_SHIFT) |
+-			((4 & RADEON_TVPVG_MASK) << RADEON_TVPVG_SHIFT) |
+-			((1 & RADEON_TVPDC_MASK) << RADEON_TVPDC_SHIFT) |
+-			RADEON_TVCLK_SRC_SEL_TVPLL |
+-			RADEON_TVPLL_TEST_DIS);
+-
+ 	tv_dac->tv.tv_uv_adr = 0xc8;
+ 
+ 	if (tv_dac->tv_std == TV_STD_NTSC ||
 -- 
 2.20.1
 
