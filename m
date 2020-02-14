@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ADDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51CCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3932187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13FB222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703909;
-	bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
+	s=default; t=1581703914;
+	bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ad5SOHdLFtGT2cX6UoBr3xNOYcMCryoVqOt9wkOl+ohKS74EKbUFkiaEst9XmJ/j3
-	 5LxbeKlEPZnXWowMVxVnAFNdORntzbJNgo1yTVW+GtXf9WhtYj4tSCM9YBU2eSdNOw
-	 SRLxpuwdlmIqy74rmgLJ+e8pULlZEAPyadwjh76I=
+	b=vfZq5If5uiXJ/U+So0N5LhW0xPmrVJJQ8B3RH89j7AyGdMRai6Gz6ApN6/FbkxZL3
+	 Ce8D+lYB+1/EMVkF8dxslG7vNsTJQw9lTsgLCn/FBlDFSOCHxmqAwcV5SQKtvwA+PY
+	 d30r32HNAYOfBAbJsSsXwUnbZyQR6IC/Ob3BBtsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404347AbgBNSLs (ORCPT
+        id S1731212AbgBNPxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:11:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60846 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgBNPxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:25 -0500
+        id S1731105AbgBNPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFDE12467E;
-        Fri, 14 Feb 2020 15:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDF4222C4;
+        Fri, 14 Feb 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695604;
-        bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
+        s=default; t=1581695579;
+        bh=itLd9JKqF/R9iI9reR0IzU5iyER+GtE4XjmRdA9VPJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UXjbLrq1jiG4oOnASO+0R2xECGpHcVo+xdLHetQB/+yScXT8kJg9/S4uAd9F1BrB
-         Jy4jr6CLYp4ZXyZLuvK+I427fk6Eaxc/N0wyPmfhcpwh13UwtYtCtH4F487fBVgOuS
-         utxLwDuwe7wBKcn/Ps16bchPn4UVUoRwXCAJz5TQ=
+        b=LuoWoXiFWyd4DkrtejxB359Bn8zEuQQuiq/f6cO4H100PmIpJWjm/FinhlzqpZWsr
+         AV1yJFLLiK8cRYyWiiyoRlp0HHJs7FpL9cbU8VT52oimQfozmqr0zJLmoDlMD2/Ezr
+         c0wQaJho+YYdoaORh0XIcv8hM+tjt6ZyRYN1uB3s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 208/542] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
-Date:   Fri, 14 Feb 2020 10:43:20 -0500
-Message-Id: <20200214154854.6746-208-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 189/542] arm64: dts: qcom: msm8998: Fix tcsr syscon size
+Date:   Fri, 14 Feb 2020 10:43:01 -0500
+Message-Id: <20200214154854.6746-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
+[ Upstream commit 05caa5bf9cab9983dd7a50428c46b7e617ba20d6 ]
 
-It is possible that there is no drm_framebuffer associated with a given
-plane state.
+The tcsr syscon region is really 0x40000 in size.  We need access to the
+full region so that we can access the axi resets when managing the
+modem subsystem.
 
-v2: Handle drm_plane->state which can be NULL too
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
-# *** extracted tags ***
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Fixes: c7833949564e ("arm64: dts: qcom: msm8998: Add smem related nodes")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191107045948.4341-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index ec32e1c673350..43a015f33e975 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -372,14 +372,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
- 	struct drm_plane_state *state = plane->state;
- 	unsigned int width, height, cpp;
-+	dma_addr_t addr;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index fc7838ea9a010..385b46686194a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -987,7 +987,7 @@
  
--	width = state->crtc->state->adjusted_mode.hdisplay;
--	height = state->crtc->state->adjusted_mode.vdisplay;
--	cpp = state->fb->format->cpp[plane->index];
-+	if (state && state->fb) {
-+		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-+		width = state->crtc->state->adjusted_mode.hdisplay;
-+		height = state->crtc->state->adjusted_mode.vdisplay;
-+		cpp = state->fb->format->cpp[plane->index];
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+-			reg = <0x01f40000 0x20000>;
++			reg = <0x01f40000 0x40000>;
+ 		};
  
--	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
--	priv->dma_hwdesc->cmd = width * height * cpp / 4;
--	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+		priv->dma_hwdesc->addr = addr;
-+		priv->dma_hwdesc->cmd = width * height * cpp / 4;
-+		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+	}
- }
- 
- static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
+ 		tlmm: pinctrl@3400000 {
 -- 
 2.20.1
 
