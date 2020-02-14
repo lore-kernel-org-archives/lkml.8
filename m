@@ -2,221 +2,96 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21982C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C2CC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A61206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nFOW8kz4"
+	by mail.kernel.org (Postfix) with ESMTP id E024624654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581710329;
+	bh=XC5HWZChdpdyVR/sHe3gjLYY5rs5zXxK4u7OywTLHpE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KLLl2uF/dpiV8lnqSNU6bCn318fEnKnFcYjO4Ui5iL58jKgHS5MC4V1VsAb4gewqs
+	 uJgCrjSf8Rpt1fCLG+U9wIiPsEBdPuUovdhR81ZqdnAzUmt+Fnh+CGujXrvz/abKy5
+	 7DnRI5bk9CMEyIvzS93CoGnck/fjG4m2FAYMMfGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389034AbgBNT5t (ORCPT
+        id S2389089AbgBNT6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:57:49 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:46230 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387401AbgBNT5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:57:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581710266; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XGsEWDNrQKidFJwaa50lpYzjGiChrJWUAw/LIJ3LzK8=;
-        b=nFOW8kz4oWxRZZv89gwXAXgdzdUQ6vuwyAGS8GPcI7QxC31O4Mc7CJofL/sK9U3igkeOqH
-        bOyLTFbz58ThR/fT3aR8Hw7c2+SaujkVyqoQYPz7BINeZjbGvtz++QtR8qYWZYAAEwkLs1
-        i33TlGkoyDby/PXq0VJFXN9Y5v9751I=
-Date:   Fri, 14 Feb 2020 16:57:30 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [Letux-kernel] [PATCH v2] net: davicom: dm9000: allow to pass MAC
- address through mac_addr module parameter
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        kernel@pyra-handheld.com,
-        Petr =?UTF-8?b?xaB0ZXRpYXI=?= <ynezz@true.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Message-Id: <1581710250.3.10@crapouillou.net>
-In-Reply-To: <A686A3C7-09A4-4654-A265-2BDBEF41A7C4@goldelico.com>
-References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
-        <1581706048.3.3@crapouillou.net>
-        <996F2206-B261-46E3-9167-B48BA7D3C9FF@goldelico.com>
-        <A686A3C7-09A4-4654-A265-2BDBEF41A7C4@goldelico.com>
+        Fri, 14 Feb 2020 14:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387401AbgBNT6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 14:58:49 -0500
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2889B24670;
+        Fri, 14 Feb 2020 19:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581710328;
+        bh=XC5HWZChdpdyVR/sHe3gjLYY5rs5zXxK4u7OywTLHpE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SY15NjUO9PcKLxh7i6ZwO6NX31YVMxbMgN4ezk3OERsu210IZREbcF5B2w3hN0RwC
+         ia6xMEt7nKfw8QRH0krNClFA+DXf7KMq8Kl/czVtkWG2Kt7JsBt5FoludaVoEKp48q
+         /Qx6We0s8Rv02n9NrPTUFSCnpX/x29Jk1GZ04t+w=
+Received: by mail-qt1-f182.google.com with SMTP id n17so7791614qtv.2;
+        Fri, 14 Feb 2020 11:58:48 -0800 (PST)
+X-Gm-Message-State: APjAAAVPkPL+dsvd7OtXFqP6ZobH84VutkU5Mdb2Pw5V4Auq4lpYE2uK
+        MEI1WIORkYxAy645nrw1+VzT9b4JJ3b8nyNgxw==
+X-Google-Smtp-Source: APXvYqwsXrnW+RM01kek/DuNdK+aWFf5bKCS1++/Ib4hvavk7926vsQnkmnIIg3GmV+0f7UWNCdv+H++sX8uLJIBQKA=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr3980294qtp.224.1581710327072;
+ Fri, 14 Feb 2020 11:58:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <158166060044.9887.549561499483343724.stgit@devnote2> <158166062748.9887.15284887096084339722.stgit@devnote2>
+In-Reply-To: <158166062748.9887.15284887096084339722.stgit@devnote2>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Feb 2020 13:58:35 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+BDfWgGTVtppD-JEFHZRqpc00WaV2N7c6qsPBSaxOEPw@mail.gmail.com>
+Message-ID: <CAL_Jsq+BDfWgGTVtppD-JEFHZRqpc00WaV2N7c6qsPBSaxOEPw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] random: rng-seed source is utf-8
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Mark Salyzyn <salyzyn@android.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 14, 2020 at 12:10 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> From: Mark Salyzyn <salyzyn@android.com>
+>
+> commit 428826f5358c922dc378830a1717b682c0823160
+> ("fdt: add support for rng-seed") makes the assumption that the data
+> in rng-seed is binary, when it is typically constructed of utf-8
 
+Typically? Why is that?
 
-Le ven., f=E9vr. 14, 2020 at 20:38, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
->>  Am 14.02.2020 um 20:24 schrieb H. Nikolaus Schaller=20
->> <hns@goldelico.com>:
->>=20
->>=20
->>>  Am 14.02.2020 um 19:47 schrieb Paul Cercueil=20
->>> <paul@crapouillou.net>:
->>>=20
->>>  Hi Nikolaus,
->>>=20
->>>  What I'd suggest is to write a NVMEM driver for the efuse and=20
->>> retrieve the MAC address cleanly with nvmem_get_mac_address().
->>>=20
->>>  It shouldn't be hard to do (there's already code for it in the=20
->>> non-upstream 3.18 kernel for the CI20) and you remove the=20
->>> dependency on uboot.
->>=20
->>  Interesting approach. I have found this:
->>=20
->>  https://lore.kernel.org/patchwork/patch/868158/
->>=20
->>  but it looks as if it was never finished (I could not locate a V3=20
->> or anything mainline?)
->>  and and it tries to solve other problems as well.
->>=20
-
-Yes, I think it's a bit too complex - it's probably fine to just read=20
-chunks of 4 bytes.
-
->>=20
->>  And it looks to be much more complex than my "solution" to the=20
->> immediate problem.
->>=20
-
-Yes, a proper fix usually means more work ;)
->>=20
->>  I have to study it to know if I can write a nvmem_get_mac_address().
->=20
-> Another question is how to link this very jz4780 specific code to the=20
-> generic davicom dm9000 driver?
-> And where should the new code live. In some jz4780 specific file or=20
-> elsewhere?
-
-In the dm9000's devicetree node you'd have a "mac-address =3D=20
-<&mac_addr>;". The "mac-address" is already a standard property, and=20
-the davicom driver already supports it.
-
-The "mac_addr" should be a pointer to the efuse cell that corresponds=20
-to the MAC address. See the examples at the bottom of=20
-Documentation/devicetree/bindings/nvmem/nvmem.yaml and=20
-Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml.
-
--Paul
-
->=20
->>=20
->>  BR,
->>  Nikolaus
->>=20
->>>=20
->>>  -Paul
->>>=20
->>>=20
->>>  Le ven., f=E9vr. 14, 2020 at 17:07, H. Nikolaus Schaller=20
->>> <hns@goldelico.com> a =E9crit :
->>>>  The MIPS Ingenic CI20 board is shipped with a quite old u-boot
->>>>  (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
->>>>  the MAC address through dm9000.mac_addr=3Dxx:xx:xx:xx:xx:xx
->>>>  kernel module parameter to give the board a fixed MAC address.
->>>>  This is not processed by the dm9000 driver which assigns a random
->>>>  MAC address on each boot, making DHCP assign a new IP address
->>>>  each time.
->>>>  So we add a check for the mac_addr module parameter as a last
->>>>  resort before assigning a random one. This mechanism can also
->>>>  be used outside of u-boot to provide a value through modprobe
->>>>  config.
->>>>  To parse the MAC address in a new function get_mac_addr() we
->>>>  use an copy adapted from the ksz884x.c driver which provides
->>>>  the same functionality.
->>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>  ---
->>>>  drivers/net/ethernet/davicom/dm9000.c | 42=20
->>>> +++++++++++++++++++++++++++
->>>>  1 file changed, 42 insertions(+)
->>>>  diff --git a/drivers/net/ethernet/davicom/dm9000.c=20
->>>> b/drivers/net/ethernet/davicom/dm9000.c
->>>>  index 1ea3372775e6..7402030b0352 100644
->>>>  --- a/drivers/net/ethernet/davicom/dm9000.c
->>>>  +++ b/drivers/net/ethernet/davicom/dm9000.c
->>>>  @@ -1409,6 +1409,43 @@ static struct dm9000_plat_data=20
->>>> *dm9000_parse_dt(struct device *dev)
->>>>  	return pdata;
->>>>  }
->>>>  +static char *mac_addr =3D ":";
->>>>  +module_param(mac_addr, charp, 0);
->>>>  +MODULE_PARM_DESC(mac_addr, "MAC address");
->>>>  +
->>>>  +static void get_mac_addr(struct net_device *ndev, char *macaddr)
->>>>  +{
->>>>  +	int i =3D 0;
->>>>  +	int j =3D 0;
->>>>  +	int got_num =3D 0;
->>>>  +	int num =3D 0;
->>>>  +
->>>>  +	while (j < ETH_ALEN) {
->>>>  +		if (macaddr[i]) {
->>>>  +			int digit;
->>>>  +
->>>>  +			got_num =3D 1;
->>>>  +			digit =3D hex_to_bin(macaddr[i]);
->>>>  +			if (digit >=3D 0)
->>>>  +				num =3D num * 16 + digit;
->>>>  +			else if (':' =3D=3D macaddr[i])
->>>>  +				got_num =3D 2;
->>>>  +			else
->>>>  +				break;
->>>>  +		} else if (got_num) {
->>>>  +			got_num =3D 2;
->>>>  +		} else {
->>>>  +			break;
->>>>  +		}
->>>>  +		if (got_num =3D=3D 2) {
->>>>  +			ndev->dev_addr[j++] =3D (u8)num;
->>>>  +			num =3D 0;
->>>>  +			got_num =3D 0;
->>>>  +		}
->>>>  +		i++;
->>>>  +	}
->>>>  +}
->>>>  +
->>>>  /*
->>>>  * Search DM9000 board, allocate space and register it
->>>>  */
->>>>  @@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
->>>>  			ndev->dev_addr[i] =3D ior(db, i+DM9000_PAR);
->>>>  	}
->>>>  +	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>>>  +		mac_src =3D "param";
->>>>  +		get_mac_addr(ndev, mac_addr);
->>>>  +	}
->>>>  +
->>>>  	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>>>  		inv_mac_addr =3D true;
->>>>  		eth_hw_addr_random(ndev);
->>>>  --
->>>>  2.23.0
->>>=20
->>>=20
->>=20
->>  _______________________________________________
->>  http://projects.goldelico.com/p/gta04-kernel/
->>  Letux-kernel mailing list
->>  Letux-kernel@openphoenux.org
->>  http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
-
-=
-
+> characters which has a bitness of roughly 6 to give appropriate
+> credit due for the entropy.
