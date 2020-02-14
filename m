@@ -2,127 +2,122 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069AAC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6407C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56D020873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="hd9pQmVx"
+	by mail.kernel.org (Postfix) with ESMTP id B244220873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581708708;
+	bh=/JAEGIqjMA55ZU0r9XCw15JIANK1GMaOilE9vDppoNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xKnQ8UXadAVpi7aYrmp2In2jx82xUiLQekbQZ1sjPnVBXGep/nVSnYLvz9/CjR4w6
+	 RadQwZiSQzx6UFgzrfZoCM4+3vA+j/ACn8WX/R2Uj15GuVtH2uvU6bqbEFommve+T+
+	 BMNKy7RnB0R/RLBVf6DHNUN+OUyLPfgdAxB/AFAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbgBNTbN (ORCPT
+        id S1729699AbgBNTbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:31:13 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:32422 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387557AbgBNTbM (ORCPT
+        Fri, 14 Feb 2020 14:31:48 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35165 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbgBNTbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:31:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581708670;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=CVamlJG5fFjEwwaf0KaFiIJGPYXsc97AfdP/JIkpP98=;
-        b=hd9pQmVxPYo6GGmsFtVIYtEPovhIn2hqTkzjf1g/alpjX/e5JEX/LCs+GQcuNZwwLP
-        Ys6kFE0D+GSHA72pYWeNf2kPkZQ+B715u34dT9zC8FO4Kavj+Wr+f1vWJXxq06/iRumO
-        FnHPuL12zH+H4X0032iISB1VuzgsfiMaYuF/+rImXKRSwuzkI78fakF+Lx3/xrBnoOeY
-        50Byx06/9b1IN4U6n26nObzmvDhLv8a8f0pSjEUVgwJcHfiA74S5SqnWRRgR3uz3J9By
-        HRZ3aY5lvScQsy6W+wEItIAdkPWqXAqM/mBTscVcIFuwNofMTj1OKR7PbJe6KC2izHxK
-        VJvQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PuwDOspHA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1EJV0GDZ
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 14 Feb 2020 20:31:00 +0100 (CET)
-Content-Type: text/plain; charset=iso-8859-1
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 03/12] MIPS: CI20: defconfig: configure for supporting modules
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1581707415.3.7@crapouillou.net>
-Date:   Fri, 14 Feb 2020 20:30:59 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AD9439FF-9DEF-4B9A-8A01-F11B626708C1@goldelico.com>
-References: <cover.1581696624.git.hns@goldelico.com> <db4db9e0b024aa3051a6f1f7be07323418d1d453.1581696624.git.hns@goldelico.com> <1581707415.3.7@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 14 Feb 2020 14:31:47 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y73so5357434pfg.2;
+        Fri, 14 Feb 2020 11:31:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uT4LF3JtjMPCIfz0A4aeioVBUJpYe/gQYOFaUkaqtYE=;
+        b=qSFKJiW8EwXhQENOuIpEGjrhOZk/8P3FmjcB5XiyFoaPdPVOe9GdOUlOcz0TgglTv8
+         lneyx2TCciIaQ7qMsCk0f4eE6EVFxvf7ns/ecCUXB3CbuMuDI7v0+pZdm1OmloRvqAB7
+         mTlJajnkyVwnUfeQXnJ5YsoawL2ayADuZ6rjkVITAbBd5OUy33X+KHW0a4KSyUrET5jp
+         /jB5AqyVr7REq1EomEOZgOKS+5BwiaV9ejZlcj8iwUK2SfDUiQLlqsxa+9PNcTvAhOPF
+         76h10DK1Z0NRio2fYEur4YsdWMFkkcQRYH2EpBl2iy2JhKFtf+PveuYtFe0s9/FzgNaN
+         LNgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uT4LF3JtjMPCIfz0A4aeioVBUJpYe/gQYOFaUkaqtYE=;
+        b=VX1g8OVWIDtt01AlIosbOGYmIqmNCY6Y6HsYsCVeO3mJarjX90URb6f578KTQMQI2H
+         A190342ik9NkQmH8W0/Fk5iAekHBpr6fhd4Mmah9B6j2OEg5zI792iiFdEvUS7uQrXKt
+         QLEwIRsTjyKsl9KixPoTH60ljwqL3b4bF2hRHm3aDRc4/aa9g8i2hH3GeBHHFJvScEgE
+         HV76KfbVdlERdP2+MYmbhOxjP+fTlQD3LTIL56KfOHdGH+DtiJbhlqeqtQyyMd59skid
+         S1V8FGfeLV5zTmOo6g0YclVrxj6Neq9F1LDBnGJdycIFuUpt9TjzUFImzSo3pT/GhrGH
+         rrmw==
+X-Gm-Message-State: APjAAAWLaytiSsz3sLrQsiZ0nlUqtEp0oScSAwZIY8noHgqCbkb2KF4M
+        yc29yw9DBPr+aAHc4lhF4cs=
+X-Google-Smtp-Source: APXvYqwcrvP+iS1WufeDpLHfT51y6+7J95QazITjNCI2F/pIBee0K2cLezuh/ZwOqM/1iFn0tCp9xQ==
+X-Received: by 2002:aa7:8703:: with SMTP id b3mr4816766pfo.67.1581708706830;
+        Fri, 14 Feb 2020 11:31:46 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id u12sm7556512pfm.165.2020.02.14.11.31.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 11:31:45 -0800 (PST)
+Date:   Fri, 14 Feb 2020 11:31:43 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Jann Horn <jannh@google.com>, io-uring <io-uring@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v5 1/7] mm: pass task and mm to do_madvise
+Message-ID: <20200214193143.GB165785@google.com>
+References: <20200214170520.160271-1-minchan@kernel.org>
+ <20200214170520.160271-2-minchan@kernel.org>
+ <CAG48ez3S5+EasZ1ZWcMQYZQQ5zJOBtY-_C7oz6DMfG4Gcyig1g@mail.gmail.com>
+ <68044a15-6a31-e432-3105-f2f1af9f4b74@kernel.dk>
+ <20200214184514.GA165785@google.com>
+ <93aadcc6-3ef5-4ea0-be6b-23c06862002e@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93aadcc6-3ef5-4ea0-be6b-23c06862002e@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Fri, Feb 14, 2020 at 12:09:50PM -0700, Jens Axboe wrote:
+> On 2/14/20 11:45 AM, Minchan Kim wrote:
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 63beda9bafc5..1c7e9cd6c8ce 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
+> >  	if (force_nonblock)
+> >  		return -EAGAIN;
+> >  
+> > -	ret = do_madvise(ma->addr, ma->len, ma->advice);
+> > +	ret = do_madvise(NULL, current->mm, ma->addr, ma->len, ma->advice);
+> >  	if (ret < 0)
+> >  		req_set_fail_links(req);
+> >  	io_cqring_add_event(req, ret);
+> 
+> I think we want to use req->work.mm here - it'll be the same as
+> current->mm at this point, but it makes it clear that we're using a
+> grabbed mm.
 
-> Am 14.02.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
-> Patches 03-12 only touch the same two files - ci20.dts and =
-ci20_defconfig.
->=20
-> Unless someone strongly disagrees, I'd suggest to squash all patches =
-that touch each file together (except the ones with a Fixes tag), I =
-don't think we really need that much granularity here.
-
-It comes more from having developed these things quite independently and =
-only collected for submission...
-
-One patch I don't know how to handle: "MIPS: DTS: CI20: add DT node for =
-IR sensor".
-It is from 2015 and has a different author (some Alex Smith but the mail =
-address seems to be broken).
-This information and attribution will be lost if we squash them.
-
-But I can do for V3 and will also fix the fixes tags by adding cc: =
-stable :)
-
-BR and thanks,
-Nikolaus
-
-
->=20
-> -Paul
->=20
->=20
-> Le ven., f=E9vr. 14, 2020 at 17:10, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> Not all drivers need to be compiled into the kernel.
->> Support building and loading of kernel modules.
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/mips/configs/ci20_defconfig | 1 +
->> 1 file changed, 1 insertion(+)
->> diff --git a/arch/mips/configs/ci20_defconfig =
-b/arch/mips/configs/ci20_defconfig
->> index be41df2a81fb..e0d3c9d4c2ae 100644
->> --- a/arch/mips/configs/ci20_defconfig
->> +++ b/arch/mips/configs/ci20_defconfig
->> @@ -1,4 +1,5 @@
->> # CONFIG_LOCALVERSION_AUTO is not set
->> +CONFIG_MODULES=3Dy
->> CONFIG_KERNEL_XZ=3Dy
->> CONFIG_SYSVIPC=3Dy
->> CONFIG_POSIX_MQUEUE=3Dy
->> --
->> 2.23.0
->=20
->=20
-
+Will fix at respin. Thanks for the review!
