@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D78C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1158EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B672168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD977222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701120;
-	bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
+	s=default; t=1581701126;
+	bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnbhPV99C9jX1JihxY68p5M2DVtpme0rpOJ9KlbYchXb+J6jUbuKaNsLZ4w2TYdZJ
-	 wesA222xDHO4gx/3sZhd8sfN/1e4GUbWsWsoygEC6lEXGHeFXrGy+hK38bvgHuYjil
-	 FUD+c8SXWSWb2DTAcmUhR5NwFfYNkMrabKh3poOk=
+	b=kat4hYSbzcgpJk36fmBGp4Pn4mrTl5WkIQCaa9KwIh2GJKAnRSeC7ZS0+14naN/8n
+	 aucVEOth8ShnbW8L+JdSO+K4ZlRnBWNaVBJqOuHRCU7MDaYlNCNDl8gKoY4vc4gRt/
+	 vh10umnKNZQoKqZJ+xKtfDw+OdwfY8VeKd8UrAYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391694AbgBNRZT (ORCPT
+        id S2391086AbgBNQIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:25:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391087AbgBNQIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:54 -0500
+        id S2390894AbgBNQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A4D2467E;
-        Fri, 14 Feb 2020 16:08:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA7B222C2;
+        Fri, 14 Feb 2020 16:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696533;
-        bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
+        s=default; t=1581696495;
+        bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZs9M9EAa5thcKJRj7BYWughQH/naNcpuGA6XKXvoMuA2/pafGf8IlkFRA0yk8iDy
-         T9gq99v8pKVMJCoRbPC0kgNsWStBe8Z8AushMVhqlSwSQDYa7UitrJ5CC169vlMAsM
-         4vWxRnM3pn8lrxx2N73aWhw2A+B2U5fUHRMrPhag=
+        b=v1guLAlOIhd7gexJlXb4Z2HIX8s44vSZM4cXZJfpSEjrZeEb19lZXZrpyNKE7GzLV
+         gu8jUGwLrpdMN8RkMv6Jnx1SBJwNOIEWfZwaVg5YjLulyl07K3kFwcgVtRtLjCbZeE
+         n4ZNY143SoN0XMf8gZJn/xCLUyeor4O2JXYu12kE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 330/459] crypto: essiv - fix AEAD capitalization and preposition use in help text
-Date:   Fri, 14 Feb 2020 10:59:40 -0500
-Message-Id: <20200214160149.11681-330-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, sparmaintainer@unisys.com
+Subject: [PATCH AUTOSEL 5.4 300/459] visorbus: fix uninitialized variable access
+Date:   Fri, 14 Feb 2020 10:59:10 -0500
+Message-Id: <20200214160149.11681-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,38 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ab3d436bf3e9d05f58ceaa85ff7475bfcd6e45af ]
+[ Upstream commit caf82f727e69b647f09d57a1fc56e69d22a5f483 ]
 
-"AEAD" is capitalized everywhere else.
-Use "an" when followed by a written or spoken vowel.
+The setup_crash_devices_work_queue function only partially initializes
+the message it sends to chipset_init, leading to undefined behavior:
 
-Fixes: be1eb7f78aa8fbe3 ("crypto: essiv - create wrapper template for ESSIV generation")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+drivers/visorbus/visorchipset.c: In function 'setup_crash_devices_work_queue':
+drivers/visorbus/visorchipset.c:333:6: error: '((unsigned char*)&msg.hdr.flags)[0]' is used uninitialized in this function [-Werror=uninitialized]
+  if (inmsg->hdr.flags.response_expected)
+
+Set up the entire structure, zero-initializing the 'response_expected'
+flag.
+
+This was apparently found by the patch that added the -O3 build option
+in Kconfig.
+
+Fixes: 12e364b9f08a ("staging: visorchipset driver to provide registration and other services")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200107202950.782951-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/visorbus/visorchipset.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 29472fb795f34..b2cc0ad3792ad 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -500,10 +500,10 @@ config CRYPTO_ESSIV
- 	  encryption.
+diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
+index ca752b8f495fa..cb1eb7e05f871 100644
+--- a/drivers/visorbus/visorchipset.c
++++ b/drivers/visorbus/visorchipset.c
+@@ -1210,14 +1210,17 @@ static void setup_crash_devices_work_queue(struct work_struct *work)
+ {
+ 	struct controlvm_message local_crash_bus_msg;
+ 	struct controlvm_message local_crash_dev_msg;
+-	struct controlvm_message msg;
++	struct controlvm_message msg = {
++		.hdr.id = CONTROLVM_CHIPSET_INIT,
++		.cmd.init_chipset = {
++			.bus_count = 23,
++			.switch_count = 0,
++		},
++	};
+ 	u32 local_crash_msg_offset;
+ 	u16 local_crash_msg_count;
  
- 	  This driver implements a crypto API template that can be
--	  instantiated either as a skcipher or as a aead (depending on the
-+	  instantiated either as an skcipher or as an AEAD (depending on the
- 	  type of the first template argument), and which defers encryption
- 	  and decryption requests to the encapsulated cipher after applying
--	  ESSIV to the input IV. Note that in the aead case, it is assumed
-+	  ESSIV to the input IV. Note that in the AEAD case, it is assumed
- 	  that the keys are presented in the same format used by the authenc
- 	  template, and that the IV appears at the end of the authenticated
- 	  associated data (AAD) region (which is how dm-crypt uses it.)
+ 	/* send init chipset msg */
+-	msg.hdr.id = CONTROLVM_CHIPSET_INIT;
+-	msg.cmd.init_chipset.bus_count = 23;
+-	msg.cmd.init_chipset.switch_count = 0;
+ 	chipset_init(&msg);
+ 	/* get saved message count */
+ 	if (visorchannel_read(chipset_dev->controlvm_channel,
 -- 
 2.20.1
 
