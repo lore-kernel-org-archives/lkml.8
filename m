@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB987C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1EEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881BC2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294C6222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701046;
-	bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
+	s=default; t=1581701051;
+	bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTbu1b3djzM5VM9D3POdpTTTnIAs8GZPC1SvodQVFA0oyKSEfb0SQiVDOMdoFKwqQ
-	 65K2l9F1UlU+LsTvlwjktLvE+isUBlVGEaHoVBaGUeTuZZIbl/MwKEKHDAMlKa+tW7
-	 +BPjayKCiKdN+1O6/F8U8w2q0Zbzvz1wSPmiM1VM=
+	b=hYlyxD3GbDJM3lPZo6c//SyjW6bhDTHOGgJtuVC8GkCa7RPOVn7CQaHgSM3ZEUg1s
+	 2rCs48nmNjLitSRBnZ3PeenCVYvm0f+EH/YzckwvQrAGI5JvCas4c+RNGmvdSaQQ7e
+	 G2WPw9BE0ICNE1vPT4BmiXlhavWng6/QVSuYijiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391842AbgBNRYF (ORCPT
+        id S2404740AbgBNRYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:24:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33538 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:24:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390681AbgBNQJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:14 -0500
+        id S2391214AbgBNQJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:09:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C38CB24681;
-        Fri, 14 Feb 2020 16:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 586942187F;
+        Fri, 14 Feb 2020 16:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696554;
-        bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
+        s=default; t=1581696548;
+        bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R6FqUO4AZqHCUMWuCSfjiQTZfWynTojRN2qY86G1UZaHE4ETuEC9Z560SyKu+Fd63
-         EXNpKDmlm2LUVp0Tp6pP2TVw65lQViku9GSqrRxb+fr1ZbCECu5d7cdCp3twwCokts
-         H9cUu0FldBHJ+vmKFKorreytyWwt+BT3DgXW5RZ0=
+        b=YEi1j8oBpml5UojAgCrH8gwJeMzz2Iu1WWBm2wqczrh6ez9p5Bd7V6Un0XVV023NP
+         2xCl9TxP01Sc8bDAltviQTC26Kwi++VLVpHbTCD96uXt3N36hOp2Jsznchf5vp19bx
+         Y49jmCZuGfKGWLvWaucm1EbOcDixtrBk6V7GIErE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 346/459] watchdog/softlockup: Enforce that timestamp is valid on boot
-Date:   Fri, 14 Feb 2020 10:59:56 -0500
-Message-Id: <20200214160149.11681-346-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 341/459] KVM: PPC: Remove set but not used variable 'ra', 'rs', 'rt'
+Date:   Fri, 14 Feb 2020 10:59:51 -0500
+Message-Id: <20200214160149.11681-341-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,79 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
+[ Upstream commit 4de0a8355463e068e443b48eb5ae32370155368b ]
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:6: warning: variable ra set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:10: warning: variable rs set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:14: warning: variable rt set but not used [-Wunused-but-set-variable]
 
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
+They are not used since commit 2b33cb585f94 ("KVM: PPC: Reimplement
+LOAD_FP/STORE_FP instruction mmio emulation with analyse_instr() input")
 
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/emulate_loadstore.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index f41334ef09713..cbd3cf503c904 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
- 
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
- 
-+#define SOFTLOCKUP_RESET	ULONG_MAX
-+
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -274,7 +276,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- notrace void touch_softlockup_watchdog(void)
-@@ -298,14 +300,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
- 
- void touch_softlockup_watchdog_sync(void)
+diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
+index 2e496eb86e94a..1139bc56e0045 100644
+--- a/arch/powerpc/kvm/emulate_loadstore.c
++++ b/arch/powerpc/kvm/emulate_loadstore.c
+@@ -73,7 +73,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
  {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
+ 	struct kvm_run *run = vcpu->run;
+ 	u32 inst;
+-	int ra, rs, rt;
+ 	enum emulation_result emulated = EMULATE_FAIL;
+ 	int advance = 1;
+ 	struct instruction_op op;
+@@ -85,10 +84,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+ 	if (emulated != EMULATE_DONE)
+ 		return emulated;
  
- static int is_softlockup(unsigned long touch_ts)
-@@ -383,7 +385,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+-	ra = get_ra(inst);
+-	rs = get_rs(inst);
+-	rt = get_rt(inst);
+-
+ 	vcpu->arch.mmio_vsx_copy_nums = 0;
+ 	vcpu->arch.mmio_vsx_offset = 0;
+ 	vcpu->arch.mmio_copy_type = KVMPPC_VSX_COPY_NONE;
 -- 
 2.20.1
 
