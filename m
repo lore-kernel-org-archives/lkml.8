@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10948C3B1AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C03C3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF066206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A315206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702432;
-	bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UdNK9AHF/m5Im2FxoLNaMDq4wEvWEgi3iT88KHOdfUEpa8EPjnJB/XaGXn362R6GJ
-	 s8Zhrh0dOg6wTFxF7/bXu7YTZAPRo8fPp6HPaJAdEgQgXWMnMEhcEe3bXdhzh8yzIN
-	 eqBL93YrTIgn/K5WBo8C/SUGLtP/X6mZG8yywWSA=
+	s=default; t=1581702440;
+	bh=qStBGHPkTXhC16Gn47aKMJJ/N5wTThCfHowY2fSdCRw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ludG2/G+0IpjwXpWr1rdH4aa9rISgHwfZFpVix+g9XK0ovWj/BUO8Q1pEa6K0kBQE
+	 Jgjhb7xpPnwpl8dhdwgYkGd/A5z37mu4qCeUvh1jNonvPBc5+GnJEm77lGXwF8VQUu
+	 4riqHAeHLKnxHMxfFZ+SSWFFeETa3IEFbxgTlvWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389830AbgBNRrM (ORCPT
+        id S2389194AbgBNQBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:47:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:01:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389182AbgBNQB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:01:58 -0500
+        id S2388705AbgBNQBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:01:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50E522067D;
-        Fri, 14 Feb 2020 16:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C815C2067D;
+        Fri, 14 Feb 2020 16:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696118;
-        bh=nJbDNA7aBbKm++/k9gvMPLr0AAdaS0Gjqct3g8AWz18=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7sekgYG8gQSwARRkxVMsNTnWDZ5cmLmY8LQmp35GgIHbBB5EsLXNCrjJ2umxHxOe
-         hHESRSpzwCMcSZUU03yLdfa2BLRdgzcDZ1PS22KeraJ+Yv5/QK4qMNMGbcgq5tQW5h
-         gpSXWJFvZd5YcVeHjmnhonT55+8jMjORXNbKAvbo=
+        s=default; t=1581696111;
+        bh=qStBGHPkTXhC16Gn47aKMJJ/N5wTThCfHowY2fSdCRw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jZVMT4MnUUtf+S/oP2ATc7AbxOUnB5XXWE2J33qHn5fAdyJnch59QpuGdtNIoen9U
+         AmupylHS/9ej5ZxcvfPwL3G/irThWq5gqgqA2xjy0Dsdo7WRJAO6xCxBASPU/3Gzvn
+         Tk9I52t9MQGp9WiR16ayCrho96LmUzVj3mi5CYKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 006/459] nfsd4: avoid NULL deference on strange COPY compounds
-Date:   Fri, 14 Feb 2020 10:54:16 -0500
-Message-Id: <20200214160149.11681-6-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 001/459] drm/amdgpu: remove set but not used variable 'mc_shared_chmap' from 'gfx_v6_0.c' and 'gfx_v7_0.c'
+Date:   Fri, 14 Feb 2020 10:54:11 -0500
+Message-Id: <20200214160149.11681-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,52 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
+[ Upstream commit 747a397d394fac0001e4b3c03d7dce3a118af567 ]
 
-With cross-server COPY we've introduced the possibility that the current
-or saved filehandle might not have fh_dentry/fh_export filled in, but we
-missed a place that assumed it was.  I think this could be triggered by
-a compound like:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-	PUTFH(foreign filehandle)
-	GETATTR
-	SAVEFH
-	COPY
+drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c: In function
+‘gfx_v6_0_constants_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c:1579:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
-Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
-need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
-set and GETATTR does not have OP_HANDLES_WRONGSEC set.
+drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c: In function
+‘gfx_v7_0_gpu_early_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c:4262:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-We should probably also consider tightening the checks in
-check_if_stalefh_allowed and double-checking that we don't assume the
-filehandle is verified elsewhere in the compound.  But I think this
-fixes the immediate issue.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 2cd46ad22383 ("drm/amdgpu: add graphic pipeline implementation for si v8")
+Fixes: d93f3ca706b8 ("drm/amdgpu/gfx7: rework gpu_init()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c | 3 +--
+ drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 4798667af647c..4d1d0bf8e385f 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
- 				clear_current_stateid(cstate);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+index 7f0a63628c43a..31f44d05e606d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v6_0.c
+@@ -1576,7 +1576,7 @@ static void gfx_v6_0_config_init(struct amdgpu_device *adev)
+ static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
+ {
+ 	u32 gb_addr_config = 0;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 sx_debug_1;
+ 	u32 hdp_host_path_cntl;
+ 	u32 tmp;
+@@ -1678,7 +1678,6 @@ static void gfx_v6_0_constants_init(struct amdgpu_device *adev)
  
--			if (need_wrongsec_check(rqstp))
-+			if (current_fh->fh_export &&
-+					need_wrongsec_check(rqstp))
- 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
- 		}
- encode_op:
+ 	WREG32(mmBIF_FB_EN, BIF_FB_EN__FB_READ_EN_MASK | BIF_FB_EN__FB_WRITE_EN_MASK);
+ 
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+index 791ba398f007e..58b7ef97bff54 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v7_0.c
+@@ -4258,7 +4258,7 @@ static int gfx_v7_0_late_init(void *handle)
+ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+ {
+ 	u32 gb_addr_config;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
+ 	u32 tmp;
+ 
+@@ -4335,7 +4335,6 @@ static void gfx_v7_0_gpu_early_init(struct amdgpu_device *adev)
+ 		break;
+ 	}
+ 
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
 -- 
 2.20.1
 
