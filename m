@@ -2,99 +2,111 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293BAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2576C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E00217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698354;
-	bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktft6YNJGgxWR+Ii53Ka5jx7JSw49rATz1m4TazkcIHZIc/wVWGrar5X6zV/ry7/c
-	 N5845BvuZ3FW0RnyC144zVdr8MbVB2Kmh9Iun8Tyh01VvtIHdmdnNFseaD5r/cACin
-	 +uYtDw2jSc0E4rctd1Xcld/qvdHBApDX22JGLG2M=
+	by mail.kernel.org (Postfix) with ESMTP id 98EFA217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqS0dDHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393903AbgBNQjN (ORCPT
+        id S2405471AbgBNQjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:39:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405573AbgBNQXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:17 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 14 Feb 2020 11:39:17 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32719 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393908AbgBNQjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:39:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581698354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ejjWyNnsQ4fYjfK0i4jU0/WTc3mIEUoKR3OpTBufYKo=;
+        b=QqS0dDHD0pEfbFzWJLJMnX8zw0RFJy6FodLvpnGfeh+ztt9TZfH2aHVPjGUa6Q9lqsIKrS
+        xZqKJeprTRjBMBbZ5Z8uR+QzrNuYTOktDOCyZpn/0NOdZPphQCCWk0miZTo+T6OLND4UnU
+        joSrFay8jc4mXedP6T9HIr94yMx5tqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-vWas1kg9MGecCh9FP-ZwqQ-1; Fri, 14 Feb 2020 11:39:09 -0500
+X-MC-Unique: vWas1kg9MGecCh9FP-ZwqQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F1B24764;
-        Fri, 14 Feb 2020 16:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697396;
-        bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNztqH8a/7lg1iFB5xyvjVavR1YSNR2UCIRMFmotyqieeZCQci9O9YVkdMr3OV6tS
-         H9ySMa6PiHr/8pZ1uZr4QEPR6TMzb+5ZyyOFqR9PA4/DYfBguR4shZXv5jlGHmVDQm
-         wKC2QCzM/cR0kejBZnr466ZKJ2QMDoakOaN+YgIs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 090/141] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Fri, 14 Feb 2020 11:20:30 -0500
-Message-Id: <20200214162122.19794-90-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F49F18B9FC2;
+        Fri, 14 Feb 2020 16:39:08 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 739ED10021B2;
+        Fri, 14 Feb 2020 16:39:07 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+Date:   Fri, 14 Feb 2020 10:37:40 -0600
+Message-Id: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+In the second loop of ingenic_pinconf_set(), it annotates the switch
+default case as unreachable().  The annotation is technically correct,
+because that same case would have resulted in an early return in the
+previous loop.
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+However, if a bug were to get introduced later, for example if an
+additional case were added to the first loop without adjusting the
+second loop, it would result in nasty undefined behavior: most likely
+the function's generated code would fall through to the next function.
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+Another issue is that, while objtool normally understands unreachable()
+annotations, there's one special case where it doesn't: when the
+annotation occurs immediately after a 'ret' instruction.  That happens
+to be the case here because unreachable() is immediately before the
+return.
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+So change the unreachable() to BUG() so that the unreachable code, if
+ever executed, would panic instead of introducing undefined behavior.
+This also makes objtool happy.
 
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+This fixes the following objtool warning:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_se=
+t() falls through to next function ingenic_pinconf_group_set()
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/pinctrl-ingenic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 22aec9a1e9a49..838d03a138ca2 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
- 
- config SND_ATMEL_SOC_SSC_DMA
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
- 
- config SND_ATMEL_SOC_SSC
- 	tristate
--- 
-2.20.1
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-=
+ingenic.c
+index 96f04d121ebd..6b61ac6cd4d2 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *=
+pctldev, unsigned int pin,
+ 			break;
+=20
+ 		default:
+-			unreachable();
++			BUG();
+ 		}
+ 	}
+=20
+--=20
+2.21.1
 
