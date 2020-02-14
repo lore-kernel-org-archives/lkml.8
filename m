@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC021C3B1A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E37C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865D92467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8143D2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698525;
-	bh=YfbMbyD05HzVkW76A5HvNdRv/srdjyjD6bLEWEbPA+k=;
+	s=default; t=1581698529;
+	bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJE4dpoeFxiy2HIfOlqF0ptEITl5ZJMzfv7PL2Qgm0cb5FI3GuMMJ9v+hsHPtiKE9
-	 EQcl417da4OIy4DbNcrGbI93fF2AAov1O9PBIyS7pg38R5lQ+A+eEKZXdQioT811uE
-	 i48erx8bbLSYsOjzix8+G2+46gsuKBuygikOclUE=
+	b=tMPpZH0dNQjI2AG9pqgDS1D305vTsM/QwL4bpnFt2Ilh2EWkcfIu/eM41qVNX88Ut
+	 5wyvJ8NacHxIjlrJT96mUep1FKkb0kuNzkCxcTzsX8tpnCoAiPYPuFBr91XFZtodhj
+	 4pb1yqGKGoPV4ApVmXotvamC5Ca8zQIVcm7db94Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393218AbgBNQWZ (ORCPT
+        id S2393992AbgBNQmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:22:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:42:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392929AbgBNQVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:21:12 -0500
+        id S2393208AbgBNQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:22:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912EC246A6;
-        Fri, 14 Feb 2020 16:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B987324752;
+        Fri, 14 Feb 2020 16:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697272;
-        bh=YfbMbyD05HzVkW76A5HvNdRv/srdjyjD6bLEWEbPA+k=;
+        s=default; t=1581697343;
+        bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1n8lqmPqUIZZ+Z1mA1HfvcuS30Nk80zL25mleJnmdyD4EoAhmW9okYehhDbtOCumv
-         6Kchp4RszsBj2xem8GSc+qvERinSATlG8cU0mFCh5y73+wHUYevSejG5J6iVq2Pae6
-         SH61ZlUYRa34AW5JRxcR8hduhbvPRlv6es46PQ+I=
+        b=K8ZyUNOze2oqHVDPsfmn3vwLAC0pVYrT2VSNmkvHts+nL0ihtNT6NfPS6Gckx660t
+         qBSFa+7nqieM0avb2tOT++bpLMY0n6ol/jcUKlW3W40MyT/zM3nD97K8y5w6zh7xuV
+         HE7O+ASDCj7i41TjZodf6P8kKozgBazzaXupLDY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 185/186] virtio_balloon: prevent pfn array overflow
-Date:   Fri, 14 Feb 2020 11:17:14 -0500
-Message-Id: <20200214161715.18113-185-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 048/141] regulator: rk808: Lower log level on optional GPIOs being not available
+Date:   Fri, 14 Feb 2020 11:19:48 -0500
+Message-Id: <20200214162122.19794-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
-References: <20200214161715.18113-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
+(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
+dev_warn() appeared when cleaning this driver to use a more up-to-date
+gpiod API. At least reduce the log level to 'info' as it is totally
+fine to not populate these GPIO on a hardware design.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+This change is trivial but it is worth not polluting the logs during
+bringup phase by having real warnings and errors sorted out
+correctly.
+
+Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/rk808-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 499531608fa26..71970773aad13 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -132,6 +132,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index dfa8d50a5d741..28646e4cf3bae 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -589,7 +589,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
+ 		}
  
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
+ 		if (!pdata->dvs_gpio[i]) {
+-			dev_warn(dev, "there is no dvs%d gpio\n", i);
++			dev_info(dev, "there is no dvs%d gpio\n", i);
+ 			continue;
+ 		}
+ 
 -- 
 2.20.1
 
