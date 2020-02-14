@@ -2,137 +2,127 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D974C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE133C3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9EE2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FEsP6b4P"
+	by mail.kernel.org (Postfix) with ESMTP id D0CAB2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393996AbgBNQmP (ORCPT
+        id S2394006AbgBNQmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:42:15 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51658 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393183AbgBNQWU (ORCPT
+        Fri, 14 Feb 2020 11:42:22 -0500
+Received: from mailoutvs57.siol.net ([185.57.226.248]:53551 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388948AbgBNQmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so10541401wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:22:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uMByKESFF6nm9zU7UWxKm836eFhEE78GS/aSmv36ypo=;
-        b=FEsP6b4PM8K2qgHByFNdjEpNN83Dy0kO3xo64FEZW/HbkCHfGWkwblq/rVxc68lo4m
-         y2TZU7hRlS+LIdoDstsMPoUxOK/eD/qexwlcWEm08t906uNd4KFhYVCTFU9onCXSlV3G
-         5Os73M6PIfRB6aC7ISLMBISqu6x9hErAy6WyBhFnOICVb95hCpeGkl17WpqHSDn5Tyhf
-         +0YvtU6ArO+EK8f8bVRmqeWSG+AKwuVsa24KnR68y3OzT3Vkn+jv3Z+rkLdxOHnKkYnT
-         QNACqSTbYh3FWt2UJKd4aECHPb0nvWIyadlzsJ5/X9BRkiJvidC0eMhpUSr4MxBovQbT
-         FD5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uMByKESFF6nm9zU7UWxKm836eFhEE78GS/aSmv36ypo=;
-        b=rosliqS6jVEeNf0KswxhD95fy4JbZaJQAy/dbX00/JEryHSbpsH27OABI1yjwIUx/M
-         mhxAmdSuBms5irtDOAtFgHoYzDGtdJaakJ4ymrUiddlfj9fl91mVEG/MoQdo3D7Zxdpr
-         /73GHbbIlyGI5X+yJZ2EbTIZDBQUD2X6cLwoqrva9kk8hl8MzLw2kc/F1EmCpXWYkJ05
-         v7tXNNylYt/xc2JqSBMviQy0BqlinfYLC1d4q9d6wNiPohNgJ4sCZzFX2qLAXy+fc6Ek
-         o8ZLucZ3rZCsKXfj/yfg5BVkuN+iSTPFrfFRJBnFmiskh2PLu/5S1q9xTrNDQ8aJL1PD
-         KyNg==
-X-Gm-Message-State: APjAAAXOd7w9f3dQaymgBa3hLtho1Cc/4DQb45iS0ZJ7j3ZtaOrzUakj
-        wO9Ul86Ok5J1h8HLxL7+U8W2UrTkAqI=
-X-Google-Smtp-Source: APXvYqwd1BWya5wKyEDwJf/2EFU6deZJQYKlRpi3dDVo29Tsl6lLtugAnoYgXjnE13cW5icxKPKRqw==
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr5421515wmj.1.1581697335728;
-        Fri, 14 Feb 2020 08:22:15 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id p5sm7489433wrt.79.2020.02.14.08.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 08:22:15 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCHv2] watchdog: Add stop_on_reboot parameter to control reboot policy
-Date:   Fri, 14 Feb 2020 16:22:09 +0000
-Message-Id: <20200214162209.129107-1-dima@arista.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 14 Feb 2020 11:42:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 3F1E752389C;
+        Fri, 14 Feb 2020 17:42:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gPTKP3VPISxT; Fri, 14 Feb 2020 17:42:15 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id D26BF52389B;
+        Fri, 14 Feb 2020 17:42:15 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 8286452389D;
+        Fri, 14 Feb 2020 17:42:14 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
+Date:   Fri, 14 Feb 2020 17:42:13 +0100
+Message-ID: <5326350.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+References: <20200213211427.33004-1-jernej.skrabec@siol.net> <20200213211427.33004-2-jernej.skrabec@siol.net> <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many watchdog drivers use watchdog_stop_on_reboot() helper in order
-to stop the watchdog on system reboot. Unfortunately, this logic is
-coded in driver's probe function and doesn't allows user to decide what
-to do during shutdown/reboot.
+Hi Maxime,
 
-On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
-may be configured to either send NMI or turn off/reboot VM as
-the watchdog action. As the kernel may stuck at any state, sending NMIs
-can't reliably reboot the VM.
+Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
+> Hi Jernej,
+> 
+> Thanks for taking care of this
+> 
+> On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
+> > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix TX6
+> > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
+> > matter if external oscillator was enabled because HW detected error and
+> > fall back to internal one. H6 has same functionality but it's the first
+> > SoC which have "auto switch bypass" bit documented and always enabled in
+> > driver. This prevents RTC to work correctly if external crystal is not
+> > present on board. There are other side effects - all peripherals which
+> > depends on this clock also don't work (HDMI CEC for example).
+> > 
+> > Make clocks property optional. If it is present, select external
+> > oscillator. If not, stay on internal.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > index 852f5f3b3592..538cf7e19034 100644
+> > --- a/drivers/rtc/rtc-sun6i.c
+> > +++ b/drivers/rtc/rtc-sun6i.c
+> > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
+> > device_node *node,> 
+> >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> >  	
+> >  	}
+> > 
+> > -	/* Switch to the external, more precise, oscillator */
+> > -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> > -	if (rtc->data->has_losc_en)
+> > -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > +	/* Switch to the external, more precise, oscillator, if present */
+> > +	if (of_get_property(node, "clocks", NULL)) {
+> > +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
+> > +		if (rtc->data->has_losc_en)
+> > +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > +	}
+> > 
+> >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> >  	
+> >  	/* Yes, I know, this is ugly. */
+> >  	sun6i_rtc = rtc;
+> > 
+> > -	/* Deal with old DTs */
+> > -	if (!of_get_property(node, "clocks", NULL))
+> > -		goto err;
+> > -
+> 
+> Doesn't that prevent the parents to be properly set if there's an
+> external crystal?
 
-At Arista, we benefited from the following set-up: the emulated watchdogs
-trigger VM reset and softdog is set to catch less severe conditions to
-generate vmcore. Just before reboot watchdog's timeout is increased
-to some good-enough value (3 mins). That keeps watchdog always running
-and guarantees that VM doesn't stuck.
+No, why?
 
-Provide new stop_on_reboot module parameter to let user control
-watchdog's reboot policy.
+Check these two clk_summary:
+http://ix.io/2bHY Tanix TX6 (no external crystal)
+http://ix.io/2bI2 OrangePi 3 (external crystal present)
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-watchdog@vger.kernel.org
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
-Changes v1 => v2: Add module parameter instead of ioctl()
+Please disregard ac200_clk in first case, it's part of another work.
 
- drivers/watchdog/watchdog_core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Best regards,
+Jernej
 
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index 861daf4f37b2..5ead96199a0b 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -39,6 +39,10 @@
- 
- static DEFINE_IDA(watchdog_ida);
- 
-+static int stop_on_reboot = -1;
-+module_param(stop_on_reboot, int, 0644);
-+MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
-+
- /*
-  * Deferred Registration infrastructure.
-  *
-@@ -254,6 +258,14 @@ static int __watchdog_register_device(struct watchdog_device *wdd)
- 		}
- 	}
- 
-+	/* Module parameter to force watchdog policy on reboot. */
-+	if (stop_on_reboot != -1) {
-+		if (stop_on_reboot)
-+			set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
-+		else
-+			clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
-+	}
-+
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
- 		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
- 
--- 
-2.25.0
+
 
