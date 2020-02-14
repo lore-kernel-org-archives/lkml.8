@@ -2,96 +2,92 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C475CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979E52067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3FD2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581699580;
+	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bos4Qpp2ORhgORTHOE3xsV8aGVBbgu14wbuWB8BKAO2DyzpYLVC+ec5DI8Ek6v0vd
+	 rzYfV59t+bmEky/5s/KtDrflCaV0hFa0nvCty7ll2s0LMYtt0HT9lt0mPDUChye7UN
+	 cKpXAlwACGYpRtRcv2Hv6vrOzLuJDvVzNkFYKrwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394318AbgBNQ73 (ORCPT
+        id S2394380AbgBNQ7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:59:29 -0500
-Received: from mga05.intel.com ([192.55.52.43]:48333 "EHLO mga05.intel.com"
+        Fri, 14 Feb 2020 11:59:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392624AbgBNQ7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:59:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 08:59:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="407045395"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 14 Feb 2020 08:59:24 -0800
-Date:   Fri, 14 Feb 2020 08:59:24 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kvm/emulate: fix a -Werror=cast-function-type
-Message-ID: <20200214165923.GA20690@linux.intel.com>
-References: <1581695768-6123-1-git-send-email-cai@lca.pw>
+        id S2392665AbgBNQQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:53 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8486624685;
+        Fri, 14 Feb 2020 16:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697013;
+        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zzbYY1/HRjbXf9DxMcA8y94JMwaFgkKLfEtCF9Gvm8HYDwYIRQhkEmfHY/pcC6lL0
+         SQHKm7IUyvm5y9sf8DiH6vD/z3IS6j9pz56GETyQvPbqbC45J05ErcMjODpMGS5cWq
+         Cc3xk8wMazcpBHQRnZPynjkMttMR/gWhNg5u5lGw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 243/252] microblaze: Prevent the overflow of the start
+Date:   Fri, 14 Feb 2020 11:11:38 -0500
+Message-Id: <20200214161147.15842-243-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581695768-6123-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:56:08AM -0500, Qian Cai wrote:
-> arch/x86/kvm/emulate.c: In function 'x86_emulate_insn':
-> arch/x86/kvm/emulate.c:5686:22: error: cast between incompatible
-> function types from 'int (*)(struct x86_emulate_ctxt *)' to 'void
-> (*)(struct fastop *)' [-Werror=cast-function-type]
->     rc = fastop(ctxt, (fastop_t)ctxt->execute);
-> 
-> Fixes: 3009afc6e39e ("KVM: x86: Use a typedef for fastop functions")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/x86/kvm/emulate.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index ddbc61984227..17ae820cf59d 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -5682,10 +5682,12 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
->  		ctxt->eflags &= ~X86_EFLAGS_RF;
->  
->  	if (ctxt->execute) {
-> -		if (ctxt->d & Fastop)
-> -			rc = fastop(ctxt, (fastop_t)ctxt->execute);
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Alternatively, can we do -Wno-cast-function-type?  That's a silly warning
-IMO.
+[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
 
-If not, will either of these work?
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
 
-			rc = fastop(ctxt, (void *)ctxt->execute);
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-or
-			rc = fastop(ctxt, (fastop_t)(void *)ctxt->execute);
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa694..dcba53803fa5f 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
+ 
+-- 
+2.20.1
 
-> -		else
-> +		if (ctxt->d & Fastop) {
-> +			fastop_t fop = (void *)ctxt->execute;
-> +			rc = fastop(ctxt, fop);
-> +		} else {
->  			rc = ctxt->execute(ctxt);
-> +		}
->  		if (rc != X86EMUL_CONTINUE)
->  			goto done;
->  		goto writeback;
-> -- 
-> 1.8.3.1
-> 
