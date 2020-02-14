@@ -2,127 +2,142 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2107FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBB5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B9D206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658FD206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7yeJuzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgBNORQ (ORCPT
+        id S2387466AbgBNORX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 09:17:16 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:38530 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgBNORQ (ORCPT
+        Fri, 14 Feb 2020 09:17:23 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33071 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387441AbgBNORX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 09:17:16 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2bmK-0000fb-M0; Fri, 14 Feb 2020 07:17:12 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2bmJ-0004QP-SP; Fri, 14 Feb 2020 07:17:12 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200212200335.GO23230@ZenIV.linux.org.uk>
-        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
-        <20200212203833.GQ23230@ZenIV.linux.org.uk>
-        <20200212204124.GR23230@ZenIV.linux.org.uk>
-        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-        <87lfp7h422.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
-        <87pnejf6fz.fsf@x220.int.ebiederm.org>
-        <20200213055527.GS23230@ZenIV.linux.org.uk>
-        <CAHk-=wgQnNHYxV7-SyRP=g9vTHyNAK9g1juLLB=eho4=DHVZEQ@mail.gmail.com>
-        <20200213222350.GU23230@ZenIV.linux.org.uk>
-        <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
-Date:   Fri, 14 Feb 2020 08:15:16 -0600
-In-Reply-To: <CAHk-=wjePLiQqUfQGCrNb0wp+EtgRddQbcK-pHH=6rxbdYNNOA@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 13 Feb 2020 14:47:48 -0800")
-Message-ID: <87wo8pb6h7.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 14 Feb 2020 09:17:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so4973678pfn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 06:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=76JpXRWS3a2ABcUF6vWy9HDRZvc+hNwLnaKgXe8RuAI=;
+        b=T7yeJuzzh3K1vLn8EbNBqnwsROHUoo7JAuFO2lfAi/M9FGp05QdjtlRKRIaW6kz+QA
+         j1aBkAbc/kbGlTkKVndGe6TTW/WIto0NBk340o5Eu0J8w5IctHiKj00LkC6RhuMXMHyC
+         02X9Rd1PY0OWnHCWchXDkOeseUL+RBCx64kPQc3fXCq26P5YhdchWt1Nqd476EwPZVED
+         afnHKQlvu9WzWxrc97n0LaUvCyx5ARwBJtJNAo1LcWnjMaIjWigYWr2lbjsbDQoWSKvv
+         qpbD98HgYf3Cgo7j6UUM+EYCo1qb5Fe8F4Ho1CF+E7b3/jLic1oi5zXCrtdY9wLIYgxY
+         AwRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=76JpXRWS3a2ABcUF6vWy9HDRZvc+hNwLnaKgXe8RuAI=;
+        b=oJFBQVL4F7pe2v0Lb7U/v41EdDyBb5o8Y2QrNjzOHA9YuhRBLOmuYsmcqq6EACrf6m
+         aN9PdX1P8yqH80dt6sOlfB+shFV6qC9/e55BrOQQ5ZjW+FS8wTCaAnz1ASF0YhM4xj+J
+         Op4Ngr1kyzEhYMMvpaNJ45/IShffkZYJTMSiil7+Oleo2xGJNUJ+JQ2sq362xDU50Fyx
+         jkPJO00OiuJcNP1CPELczaqoVASeRpNR2POEdM+JLaQNnD5d0wWnsRxWo3+7XcZk6Nux
+         0Iv8Qe/BAWiCuGoG80P9jZhnnNzBjNcss3nSJfD5faHnXgo7FRZBNL9nF8MthKrYNwvK
+         LqRw==
+X-Gm-Message-State: APjAAAU31ffE5//W1tCPadl+6yq3Ia2NkljeMGq4hGaCwegsRm7Mo99a
+        cQ5h10pPvOyy8ObmWOaPq5vQCJWUjQ==
+X-Google-Smtp-Source: APXvYqxYdTLclVLetZph+T3I3PhZRBBc7kOHye8qPgArAilW71/kx17mkRrpQINw3y89d4QYXJ2Y3g==
+X-Received: by 2002:a65:641a:: with SMTP id a26mr3686775pgv.425.1581689841979;
+        Fri, 14 Feb 2020 06:17:21 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:482:690f:50bb:adfb:86f:a4bf])
+        by smtp.gmail.com with ESMTPSA id c11sm7295050pfo.170.2020.02.14.06.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Feb 2020 06:17:20 -0800 (PST)
+Date:   Fri, 14 Feb 2020 19:47:14 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     afaerber@suse.de, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clocksource: owl: Improve owl_timer_init fail messages
+Message-ID: <20200214141714.GA30872@Mani-XPS-13-9360>
+References: <20200214064923.190035-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j2bmJ-0004QP-SP;;;mid=<87wo8pb6h7.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18c96o3FroerQ43pTuS8ANjCZtZB2o8mLY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214064923.190035-1-matheus@castello.eng.br>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Hi,
 
-> I guess a lot of readdir users end up doing a stat on it immediately
-> afterwards. I think right now we do it to get the inode number, and
-> maybe that is a basic requirement (even if I don't think it's really
-> stable - an inode could be evicted and then the ino changes, no?)
+Thanks for the patch!
 
-All I know is proc_fill_cache seemed like a good idea at the time.
-I may have been to clever.
+On Fri, Feb 14, 2020 at 03:49:23AM -0300, Matheus Castello wrote:
+> Adding error messages, in case of not having a defined clock property
+> and in case of an error in clocksource_mmio_init, which may not be
+> fatal, so just adding a pr_err to notify that it failed.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+> 
+> Tested on my Caninos Labrador s500 based board. If the clock property is not
+> set this message would help debug:
+> 
+> ...
+> [    0.000000] Failed to get OF clock for clocksource
+> [    0.000000] Failed to initialize '/soc/timer@b0168000': -2
+> [    0.000000] timer_probe: no matching timers found
+> ...
+> 
+>  drivers/clocksource/timer-owl.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-owl.c b/drivers/clocksource/timer-owl.c
+> index 900fe736145d..f53596f9e86c 100644
+> --- a/drivers/clocksource/timer-owl.c
+> +++ b/drivers/clocksource/timer-owl.c
+> @@ -135,8 +135,10 @@ static int __init owl_timer_init(struct device_node *node)
+>  	}
+> 
+>  	clk = of_clk_get(node, 0);
+> -	if (IS_ERR(clk))
+> +	if (IS_ERR(clk)) {
+> +		pr_err("Failed to get OF clock for clocksource\n");
 
-While I think proc_fill_cache probably exacerbates the issue
-it isn't the reason we have the flushing logic.  The proc
-flushing logic was introduced in around 2.5.9 much earlier
-than the other proc things.
+No need to mention OF here. Just, "Failed to get clock for clocksource"
+is good enough.
 
-commit 0030633355db2bba32d97655df73b04215018ab9
-Author: Alexander Viro <viro@math.psu.edu>
-Date:   Sun Apr 21 23:03:37 2002 -0700
+>  		return PTR_ERR(clk);
+> +	}
+> 
+>  	rate = clk_get_rate(clk);
+> 
+> @@ -144,8 +146,11 @@ static int __init owl_timer_init(struct device_node *node)
+>  	owl_timer_set_enabled(owl_clksrc_base, true);
+> 
+>  	sched_clock_register(owl_timer_sched_read, 32, rate);
+> -	clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
+> -			      rate, 200, 32, clocksource_mmio_readl_up);
+> +	ret = clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
+> +				    rate, 200, 32, clocksource_mmio_readl_up);
+> +
+> +	if (ret)
+> +		pr_err("Failed to register clocksource %d\n", ret);
+> 
 
-    [PATCH] (3/5) sane procfs/dcache interaction
-    
-     - sane dentry retention.  Namely, we don't kill /proc/<pid> dentries at the
-       first opportunity (as the current tree does).  Instead we do the following:
-            * ->d_delete() kills it only if process is already dead.
-            * all ->lookup() in proc/base.c end with checking if process is still
-              alive and unhash if it isn't.
-            * proc_pid_lookup() (lookup for /proc/<pid>) caches reference to dentry
-              in task_struct.  It's _not_ counted in ->d_count.
-            * ->d_iput() resets said reference to NULL.
-            * release_task() (burying a zombie) checks if there is a cached
-              reference and if there is - shrinks the subtree.
-            * tasklist_lock is used for exclusion.
-       That way we are guaranteed that after release_task() all dentries in
-       /proc/<pid> will go away as soon as possible; OTOH, before release_task()
-       we have normal retention policy - they go away under memory pressure with
-       the same rules as for dentries on any other fs.
+Do you want to continue if it fails? I'd bail out.
 
-Tracking down when this logic was introduced I also see that this code
-has broken again and again any time proc changes (like now).  So it is
-definitely subtle and fragile.
+Thanks,
+Mani
 
-Eric
+>  	owl_timer_reset(owl_clkevt_base);
+> 
+> --
+> 2.25.0
+> 
