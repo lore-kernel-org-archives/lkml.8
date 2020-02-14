@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C11C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D248C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5672472C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0DB2472C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697224;
-	bh=nTuhEsUJ/ZNBwAWvy2RhX4lADpGDTGPM2k2rZZ1pgTs=;
+	s=default; t=1581697229;
+	bh=09CLZHhNHNyqqmnT9B63fYO3RiBBKa0IUbToH8AhA4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qcm0wAjBIVYKYTwgPztDQT2HrRyUmOn4DA6Pt3KozB4z2NO8juEc4fuYTEXYayW5D
-	 dQ751p9COKOUiiBRz/6aopR6aBFlC8zBiPYLr/9wMHc0E+wR3qZ2As+ozyEywRr4U9
-	 WsTRKmM6FJOYbjPtLy/0t22h90xj4dRSEczhs6FQ=
+	b=BlFZt0Cd71utymZcfnNXru5kDaKfpBx+4TFL3FN1oCyJt5idTtvXTPFjDX+W1dKDt
+	 jBYzY23tywF9bRvG76uCXCFuMeJ8K1JWn/LBE4hSrwo412QPu1X73FK1UIiuptJ9AK
+	 muXbFxxgjjjV4pdxqdjHANbzKsW/yWOe+jwLx8PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405216AbgBNQUX (ORCPT
+        id S2392848AbgBNQU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:20:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52372 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:20:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404977AbgBNQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:19:20 -0500
+        id S2404324AbgBNQTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:19:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9CC2470B;
-        Fri, 14 Feb 2020 16:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB88F24702;
+        Fri, 14 Feb 2020 16:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697160;
-        bh=nTuhEsUJ/ZNBwAWvy2RhX4lADpGDTGPM2k2rZZ1pgTs=;
+        s=default; t=1581697161;
+        bh=09CLZHhNHNyqqmnT9B63fYO3RiBBKa0IUbToH8AhA4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiAezlQT4uky7XHiXGlC2/LGhj3zAHR7bopmuw5M5Uk+SCnrI0M6HbllR78hAQ668
-         v4tV59AVS8Cf7K2OG3YclQsEWp3M3raqISRxr080b/FiNRVM8TQTC+yEPYkUiff/dH
-         S3zd8ikos48XBbWLFiC/R/S6KWHfE7CzuqmU1tJ4=
+        b=C+Zev86rRxy20Eg8yT37x9fcglTqXDj71piP0GGRIjQTOxLpQXFsb5uguvkaPoitM
+         3AxGHK3PbQMNFWeIcc4/PdfL8evMy4z2yUoo/2idCmyaOMwNfUinp1ZlJaHWJUX1kx
+         KsbreSH3O4xJfR1aO3afUx5Uvq9SHhKQEpPyhofA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 097/186] clk: sunxi-ng: add mux and pll notifiers for A64 CPU clock
-Date:   Fri, 14 Feb 2020 11:15:46 -0500
-Message-Id: <20200214161715.18113-97-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 098/186] ALSA: sh: Fix unused variable warnings
+Date:   Fri, 14 Feb 2020 11:15:47 -0500
+Message-Id: <20200214161715.18113-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
@@ -61,77 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit ec97faff743b398e21f74a54c81333f3390093aa ]
+[ Upstream commit 5da116f164ce265e397b8f59af5c39e4a61d61a5 ]
 
-The A64 PLL_CPU clock has the same instability if some factor changed
-without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
-H3.
+Remove unused variables that are left over after the conversion of new
+PCM ops:
+  sound/sh/sh_dac_audio.c:166:26: warning: unused variable 'runtime'
+  sound/sh/sh_dac_audio.c:186:26: warning: unused variable 'runtime'
+  sound/sh/sh_dac_audio.c:205:26: warning: unused variable 'runtime'
 
-Add the mux and pll notifiers for A64 CPU clock to workaround the
-problem.
-
-Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 1cc2f8ba0b3e ("ALSA: sh: Convert to the new PCM ops")
+Link: https://lore.kernel.org/r/20200104110057.13875-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 ++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ sound/sh/sh_dac_audio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index eaafc038368f5..183985c8c9bab 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -884,11 +884,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
- 	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
- };
- 
-+static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
-+	.common	= &pll_cpux_clk.common,
-+	/* copy from pll_cpux_clk */
-+	.enable	= BIT(31),
-+	.lock	= BIT(28),
-+};
-+
-+static struct ccu_mux_nb sun50i_a64_cpu_nb = {
-+	.common		= &cpux_clk.common,
-+	.cm		= &cpux_clk.mux,
-+	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
-+	.bypass_index	= 1, /* index of 24 MHz oscillator */
-+};
-+
- static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
+index 834b2574786f5..6251b5e1b64a2 100644
+--- a/sound/sh/sh_dac_audio.c
++++ b/sound/sh/sh_dac_audio.c
+@@ -190,7 +190,6 @@ static int snd_sh_dac_pcm_copy(struct snd_pcm_substream *substream,
  {
- 	struct resource *res;
- 	void __iomem *reg;
- 	u32 val;
-+	int ret;
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg = devm_ioremap_resource(&pdev->dev, res);
-@@ -902,7 +917,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+ 	if (copy_from_user_toio(chip->data_buffer + pos, src, count))
+ 		return -EFAULT;
+@@ -210,7 +209,6 @@ static int snd_sh_dac_pcm_copy_kernel(struct snd_pcm_substream *substream,
+ {
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
- 	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
+ 	memcpy_toio(chip->data_buffer + pos, src, count);
+ 	chip->buffer_end = chip->data_buffer + pos + count;
+@@ -229,7 +227,6 @@ static int snd_sh_dac_pcm_silence(struct snd_pcm_substream *substream,
+ {
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
--	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	if (ret)
-+		return ret;
-+
-+	/* Gate then ungate PLL CPU after any rate changes */
-+	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
-+
-+	/* Reparent CPU during PLL CPU rate changes */
-+	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
-+				  &sun50i_a64_cpu_nb);
-+
-+	return 0;
- }
- 
- static const struct of_device_id sun50i_a64_ccu_ids[] = {
+ 	memset_io(chip->data_buffer + pos, 0, count);
+ 	chip->buffer_end = chip->data_buffer + pos + count;
 -- 
 2.20.1
 
