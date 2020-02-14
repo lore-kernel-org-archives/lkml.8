@@ -7,87 +7,198 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857D5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7A6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E39206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050D720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699992;
-	bh=ZRemAd9JUT5EyKEKaCn4ULKhEfB6fsHOgt6oWQ3bx0I=;
+	s=default; t=1581699995;
+	bh=NARawqSoAFd3tsEOnot1lKQQZD+bRGTZ7N6PxcATUR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06s9Z1G+IN9PBP6UTLxLgmq9tbj36sFsGQgG4qdOVHNZhKp85SUCccUYFqCoUhlq2
-	 NZlX9B7E5wwXCmZ3xOa6HkEdre7PIErDvMk3b3yZH/lY2UTyDmf9/2aPf0gDFAM5X9
-	 zoq9dUWJI+vpATvWZJLAo3277rP75Af3K2pzY31s=
+	b=xFW/oH74hO5rLTLxhs7PeedtsWlQraOmMnly4XB673mo4WVkidWf4dm7kROCWDdzG
+	 glGxPcV2p7gAcrvDNCjlh6Yjtmr8fTu4PxHhtUBRIpP5kC4Gb+YmQIFyKehgG0guU3
+	 mIGAs/EdMVxHu2x/CSJyEqlqh2XV/2v81BqTvTUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405447AbgBNRGb (ORCPT
+        id S2394503AbgBNRGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:06:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388816AbgBNQOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:14:50 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B23246D9;
-        Fri, 14 Feb 2020 16:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696890;
-        bh=ZRemAd9JUT5EyKEKaCn4ULKhEfB6fsHOgt6oWQ3bx0I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flWKi5RDem8ibTS5JuGjAg9JCAx+S8YTsAGC53BdogO0Hq4cCG8ESFPwmyIPH5ZmP
-         8v/NYz4gSdkhzbmA+na9KTv5bkojjHOfvXBBzx9nqu7YSyTYsLCJ8y722LV1aVgo89
-         ZZPTA8uGgNKyJjj5RdeHP4M4GfrZj8BHOtntyB8A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 143/252] iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
-Date:   Fri, 14 Feb 2020 11:09:58 -0500
-Message-Id: <20200214161147.15842-143-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+        Fri, 14 Feb 2020 12:06:33 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41419 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404173AbgBNRGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:06:30 -0500
+Received: by mail-pl1-f196.google.com with SMTP id t14so3944859plr.8;
+        Fri, 14 Feb 2020 09:06:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R66XKPvBxqpxo7iMIyU+G3YX3vLAVwMoSg/oCCOPM6c=;
+        b=I0kE/hGL8Zsgc74d67WkWf94B3lrUOTjc1PnWdmkE3Pk2rAq4CLywAIj9CqgPFwD4U
+         /i/SCuPL7Mvju9Y7uTHUXYdvbmfrQTdUunPd5tT1eKug/losWVdNHFIboyvjCKmCrxnk
+         pC9fE8pM+3WNCV5Zfy0Jftj2HaV12cNwvGbH4W7wfcmCCoaJF8fBX5+SPLr8vTMRcCxM
+         fuervFFcOuTBJ1XiyNz8HHSSnAeL94e0t/RySterT2+/SW4e3Gq6LeZYJRVYDLQMCNJE
+         dItl0BRKzgfOSBgCrAEdeUnSHvIxxochJo1wjbFKsjmJTxJCBeQD5xh2tF+UcCU51KOb
+         xM1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=R66XKPvBxqpxo7iMIyU+G3YX3vLAVwMoSg/oCCOPM6c=;
+        b=ik0/Sl4SGiqkKGOC9Fq1Qhf2Rf+UBUgAtl9zR7j68ixgVlEbODisOoQsc8BBFcyMlK
+         6Vi8CGylxKeRB+t0zGPHf0QQk53IEc0mMn7lVqbQBYNxHbBM7LWaQv//tZv/Qld90OuA
+         W4CZxUTJKOEneMXQ0xTyCmRhGBAEVG7uc6VZnuY9E6tMlGt2wL7lmhmuF9mKLeHv6QiP
+         czJUXhunWQ3F27+NrnWlazIieoeTS21UutlfGmm+Asj2knYFxi7ufMsw6tS45gBRTKHr
+         k8CIt+579/iSOwxiMFVX9Lbz9Nz8Ko/6wnTcpZKxSVWAVR4abfEVgriPIvquWuSqQr0z
+         Bw3g==
+X-Gm-Message-State: APjAAAWusyxnKsaKLAtVev1SN43NraQ62ZsmPpAovHUlzFBWqgoW32yA
+        VaOT603cNTcZPS2ZMxN7eqw=
+X-Google-Smtp-Source: APXvYqz5cYkCvXS9hd5Np+Hbagcxe+bpyjSJHEfYShA6ygQz8K5or1mGdHjY13gyXIHKMm0BXLc7aA==
+X-Received: by 2002:a17:902:a610:: with SMTP id u16mr4245899plq.305.1581699989175;
+        Fri, 14 Feb 2020 09:06:29 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id a13sm7662924pfg.65.2020.02.14.09.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 09:06:26 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: [PATCH v5 5/7] mm: support both pid and pidfd for process_madvise
+Date:   Fri, 14 Feb 2020 09:05:18 -0800
+Message-Id: <20200214170520.160271-6-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200214170520.160271-1-minchan@kernel.org>
+References: <20200214170520.160271-1-minchan@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+There is a demand[1] to support pid as well pidfd for process_madvise
+to reduce unnecessary syscall to get pidfd if the user has control of
+the target process(ie, they could guarantee the process is not gone
+or pid is not reused. Or, it might be okay to give a hint to wrong
+process).
 
-[ Upstream commit 935d43ba272e0001f8ef446a3eff15d8175cb11b ]
+This patch aims for supporting both options like waitid(2). So, the
+syscall is currently,
 
-CMDQ_OP_TLBI_NH_VA requires VMID and this was missing since
-commit 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask
-for CMD_TLBI_S2_IPA"). Add it back.
+	int process_madvise(int which, pid_t pid, void *addr,
+		size_t length, int advise, unsigned long flag);
 
-Fixes: 1c27df1c0a82 ("iommu/arm-smmu: Use correct address mask for CMD_TLBI_S2_IPA")
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+@which is actually idtype_t for userspace libray and currently,
+it supports P_PID and P_PIDFD.
+
+[1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+
+Cc: Christian Brauner <christian@brauner.io>
+Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/syscalls.h |  3 ++-
+ mm/madvise.c             | 34 ++++++++++++++++++++++------------
+ 2 files changed, 24 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 2ab7100bcff12..eff1f3aa5ef43 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -810,6 +810,7 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
- 		break;
- 	case CMDQ_OP_TLBI_NH_VA:
-+		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
- 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
- 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
- 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e4cd2c2f8bb4..f5ada20e2943 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -876,7 +876,8 @@ asmlinkage long sys_munlockall(void);
+ asmlinkage long sys_mincore(unsigned long start, size_t len,
+ 				unsigned char __user * vec);
+ asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+-asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
++
++asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
+ 			size_t len, int behavior, unsigned long flags);
+ asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+ 			unsigned long prot, unsigned long pgoff,
+diff --git a/mm/madvise.c b/mm/madvise.c
+index fca3a9e9bd39..bbbfea93396a 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1180,11 +1180,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+ 	return do_madvise(current, current->mm, start, len_in, behavior);
+ }
+ 
+-SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
++SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
+ 		size_t, len_in, int, behavior, unsigned long, flags)
+ {
+ 	int ret;
+-	struct fd f;
+ 	struct pid *pid;
+ 	struct task_struct *task;
+ 	struct mm_struct *mm;
+@@ -1195,20 +1194,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+ 	if (!process_madvise_behavior_valid(behavior))
+ 		return -EINVAL;
+ 
+-	f = fdget(pidfd);
+-	if (!f.file)
+-		return -EBADF;
++	switch (which) {
++	case P_PID:
++		if (upid <= 0)
++			return -EINVAL;
++
++		pid = find_get_pid(upid);
++		if (!pid)
++			return -ESRCH;
++		break;
++	case P_PIDFD:
++		if (upid < 0)
++			return -EINVAL;
+ 
+-	pid = pidfd_pid(f.file);
+-	if (IS_ERR(pid)) {
+-		ret = PTR_ERR(pid);
+-		goto fdput;
++		pid = pidfd_get_pid(upid);
++		if (IS_ERR(pid))
++			return PTR_ERR(pid);
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	task = get_pid_task(pid, PIDTYPE_PID);
+ 	if (!task) {
+ 		ret = -ESRCH;
+-		goto fdput;
++		goto put_pid;
+ 	}
+ 
+ 	mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+@@ -1221,7 +1231,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+ 	mmput(mm);
+ release_task:
+ 	put_task_struct(task);
+-fdput:
+-	fdput(f);
++put_pid:
++	put_pid(pid);
+ 	return ret;
+ }
 -- 
-2.20.1
+2.25.0.265.gbab2e86ba0-goog
 
