@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FBAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9800CC3B1B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31A72168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CB52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703864;
-	bh=udPBDdvdYkxFiN4/6jnqwJPzNWTrlv9XsXtSLkNELoA=;
+	s=default; t=1581703868;
+	bh=Ni2uE3UrzUOKeHuUBp47BRf/YTw6+RTDvh2UjhiuMWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H94Zi+lWeo9O9PLBcPIUylHkYZlqQTXl5lfQC0ICqT4e+/uoapI/ujaSg7EWe72yC
-	 Wmzta2GoOmtpN9Zzt9rPZo/m0t02CPKAF3VurzfyS1JjCjOU4TUewvymyysxE3kJfc
-	 HrIJAUGxAH6vSRlMUp8Wyaf6/rR1FbY671wGd6fo=
+	b=dx6NF9SSqWQYaJVrAoOMKSO7estEYSPr/WCOWOZYaSkp9UvxoZGeKQOWTqhQMHVlP
+	 x/z6qXsIeBNZ1KNUKyvf2Iu+p/9XaNmYg940RvMmHcrNr0xUnZHX8ahs0tGFp3CfOY
+	 5OWZprbLavWrV7yLx7p0RQ2/Q/U5qdqcDgwsry+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404101AbgBNSLE (ORCPT
+        id S1731289AbgBNPxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:11:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32876 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731294AbgBNPxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:53:36 -0500
+        id S1731196AbgBNPxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630E6222C4;
-        Fri, 14 Feb 2020 15:53:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D6522465D;
+        Fri, 14 Feb 2020 15:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695616;
-        bh=udPBDdvdYkxFiN4/6jnqwJPzNWTrlv9XsXtSLkNELoA=;
+        s=default; t=1581695596;
+        bh=Ni2uE3UrzUOKeHuUBp47BRf/YTw6+RTDvh2UjhiuMWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SE4QyeWRhwPZtTVMsFFDRsLkvxI2sQshbHKXS5D2sQyt1RnG96LmQD7oqR4cgJfhT
-         0i6za+23+uztSKFh5ntAJeG+4PRkgQCg8UluB+GYKK6fZxwBEIotPZ9nRYo/Md2CSf
-         YtWyQCS23wdb6eARpU3NWs7zv2JHQ6nzYOC9MVm8=
+        b=zetdz+kUT07mO63PLzYlGX2wN4GNXUulW6SWAtDPO50seA1/1XBUnhpd4jv96BG7s
+         uYK+pEK85v2lxS3E+JsC3PumYW0J8xJusI+wAGYr0PyfKGdGkt7WBO13+RVLkGRH7R
+         mu/tNg3fNa/EmIFTkA///vpPivNYJ+NT0bx0SWnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        bberg@redhat.com, ckellner@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        hdegoede@redhat.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 216/542] x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
-Date:   Fri, 14 Feb 2020 10:43:28 -0500
-Message-Id: <20200214154854.6746-216-sashal@kernel.org>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 201/542] IMA: Check IMA policy flag
+Date:   Fri, 14 Feb 2020 10:43:13 -0500
+Message-Id: <20200214154854.6746-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -66,51 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-[ Upstream commit db1ae0314f47e88ae06679270adf17ffa245afd4 ]
+[ Upstream commit c5563bad88e07017e08cce1142903e501598c80c ]
 
-throttle_active_work() is only called if CONFIG_SYSFS is set, otherwise
-we get a harmless warning:
+process_buffer_measurement() may be called prior to IMA being
+initialized (for instance, when the IMA hook is called when
+a key is added to the .builtin_trusted_keys keyring), which
+would result in a kernel panic.
 
-  arch/x86/kernel/cpu/mce/therm_throt.c:238:13: error: 'throttle_active_work' \
-	  defined but not used [-Werror=unused-function]
+This patch adds the check in process_buffer_measurement()
+to return immediately if IMA is not initialized yet.
 
-Mark the function as __maybe_unused to avoid the warning.
-
-Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: bberg@redhat.com
-Cc: ckellner@redhat.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: hdegoede@redhat.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191210203925.3119091-1-arnd@arndb.de
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/integrity/ima/ima_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index 6c3e1c92f1835..58b4ee3cda777 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -235,7 +235,7 @@ static void get_therm_status(int level, bool *proc_hot, u8 *temp)
- 	*temp = (msr_val >> 16) & 0x7F;
- }
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index d7e987baf1274..9b35db2fc777a 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -655,6 +655,9 @@ void process_buffer_measurement(const void *buf, int size,
+ 	int action = 0;
+ 	u32 secid;
  
--static void throttle_active_work(struct work_struct *work)
-+static void __maybe_unused throttle_active_work(struct work_struct *work)
- {
- 	struct _thermal_state *state = container_of(to_delayed_work(work),
- 						struct _thermal_state, therm_work);
++	if (!ima_policy_flag)
++		return;
++
+ 	/*
+ 	 * Both LSM hooks and auxilary based buffer measurements are
+ 	 * based on policy.  To avoid code duplication, differentiate
 -- 
 2.20.1
 
