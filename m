@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC32C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1A4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61013217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FAA217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581696182;
-	bh=B57KRccJ758jF0xN74+wxNnwCOVOgwAYcSyGiizN5Pg=;
+	s=default; t=1581696184;
+	bh=5qAW3fKsYUAER7k1HoKwBdikbCdoCZjT18pN1xIk1Ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C8l9ROhfNy2AqzUHyBYcVmjo1UUi8F0fySNJU1Im8y6UyEcVDxer+snRZ3TviDAGC
-	 MUbB0Ci36/BD9nzBbwp9xs5W9ylvFjSJjL9SKWz8Q953/UrbigbHlpOW/l5+gNXzkK
-	 wxo8qsM1HiBO/Hw+Kteg15I9jNtfJIJORCcmW4Bw=
+	b=txU3V4GQIOY6jSBjP0jzYRJ13wzKjZvVoP+9iHoYpjW8cLq2xm3dp3m6sTZAvxI2Z
+	 YpbywLgwOf5Er2NjWnm0wY6eKtF6TXd8kGGoaaJKCdp7s6PNC9ewvsT1zaH9Qd0Ns2
+	 MXZuboZYJHKqtt5XLCikZuiSdGsSC2im+RmgHGOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389522AbgBNQDB (ORCPT
+        id S2389149AbgBNQDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:03:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49228 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389426AbgBNQCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:02:40 -0500
+        id S2389434AbgBNQCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:02:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1AE924682;
-        Fri, 14 Feb 2020 16:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C3324686;
+        Fri, 14 Feb 2020 16:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696159;
-        bh=B57KRccJ758jF0xN74+wxNnwCOVOgwAYcSyGiizN5Pg=;
+        s=default; t=1581696162;
+        bh=5qAW3fKsYUAER7k1HoKwBdikbCdoCZjT18pN1xIk1Ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=patKauYOv1Gm8bS7CNJyBbQRftyNuCaM909J0UVmvPkdxF/OT0QsvXJkuD54Mt9zn
-         cowXyrdAUqpJYwEgK9AGQF0eWhw0m3Tec4axviCKqRhlJPzi8Pt5QfviYx9aeL+nUr
-         EMbhXg9c5xYejSWScMjIVLjf3U3Qpl4yd8Q+ZAV4=
+        b=J4eEH6mN3ldeTs4DCio63+Ot+0y3rJ6yqLdUxFHu+7VhM2EKD3fkEctveejaT9xBc
+         R/w9vJroLHXDcTMGjC4mxJuMcxAJtt1bEpcsO65qtcT52gArrEMabTre1a93lxvjmJ
+         53rHLIsrTQm6T8epkmMGYCbs0K54HL0AqpQ400WI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 037/459] media: sun4i-csi: Deal with DRAM offset
-Date:   Fri, 14 Feb 2020 10:54:47 -0500
-Message-Id: <20200214160149.11681-37-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Mark Haywood <mark.haywood@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 039/459] RDMA/netlink: Do not always generate an ACK for some netlink operations
+Date:   Fri, 14 Feb 2020 10:54:49 -0500
+Message-Id: <20200214160149.11681-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,69 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit 249b286171fa9c358e8d5c825b48c4ebea97c498 ]
+[ Upstream commit a242c36951ecd24bc16086940dbe6b522205c461 ]
 
-On Allwinner SoCs, some high memory bandwidth devices do DMA directly
-over the memory bus (called MBUS), instead of the system bus. These
-devices include the CSI camera sensor interface, video (codec) engine,
-display subsystem, etc.. The memory bus has a different addressing
-scheme without the DRAM starting offset.
+In rdma_nl_rcv_skb(), the local variable err is assigned the return value
+of the supplied callback function, which could be one of
+ib_nl_handle_resolve_resp(), ib_nl_handle_set_timeout(), or
+ib_nl_handle_ip_res_resp(). These three functions all return skb->len on
+success.
 
-Deal with this using the "interconnects" property from the device tree,
-or if that is not available, set dev->dma_pfn_offset to PHYS_PFN_OFFSET.
+rdma_nl_rcv_skb() is merely a copy of netlink_rcv_skb(). The callback
+functions used by the latter have the convention: "Returns 0 on success or
+a negative error code".
 
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In particular, the statement (equal for both functions):
+
+   if (nlh->nlmsg_flags & NLM_F_ACK || err)
+
+implies that rdma_nl_rcv_skb() always will ack a message, independent of
+the NLM_F_ACK being set in nlmsg_flags or not.
+
+The fix could be to change the above statement, but it is better to keep
+the two *_rcv_skb() functions equal in this respect and instead change the
+three callback functions in the rdma subsystem to the correct convention.
+
+Fixes: 2ca546b92a02 ("IB/sa: Route SA pathrecord query through netlink")
+Fixes: ae43f8286730 ("IB/core: Add IP to GID netlink offload")
+Link: https://lore.kernel.org/r/20191216120436.3204814-1-haakon.bugge@oracle.com
+Suggested-by: Mark Haywood <mark.haywood@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Tested-by: Mark Haywood <mark.haywood@oracle.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/infiniband/core/addr.c     | 2 +-
+ drivers/infiniband/core/sa_query.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-index f36dc6258900e..b8b07c1de2a8e 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-@@ -155,6 +156,27 @@ static int sun4i_csi_probe(struct platform_device *pdev)
- 	subdev = &csi->subdev;
- 	vdev = &csi->vdev;
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index 606fa6d866851..1753a9801b704 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -139,7 +139,7 @@ int ib_nl_handle_ip_res_resp(struct sk_buff *skb,
+ 	if (ib_nl_is_good_ip_resp(nlh))
+ 		ib_nl_process_good_ip_rsep(nlh);
  
-+	/*
-+	 * On Allwinner SoCs, some high memory bandwidth devices do DMA
-+	 * directly over the memory bus (called MBUS), instead of the
-+	 * system bus. The memory bus has a different addressing scheme
-+	 * without the DRAM starting offset.
-+	 *
-+	 * In some cases this can be described by an interconnect in
-+	 * the device tree. In other cases where the hardware is not
-+	 * fully understood and the interconnect is left out of the
-+	 * device tree, fall back to a default offset.
-+	 */
-+	if (of_find_property(csi->dev->of_node, "interconnects", NULL)) {
-+		ret = of_dma_configure(csi->dev, csi->dev->of_node, true);
-+		if (ret)
-+			return ret;
-+	} else {
-+#ifdef PHYS_PFN_OFFSET
-+		csi->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-+#endif
-+	}
-+
- 	csi->mdev.dev = csi->dev;
- 	strscpy(csi->mdev.model, "Allwinner Video Capture Device",
- 		sizeof(csi->mdev.model));
+-	return skb->len;
++	return 0;
+ }
+ 
+ static int ib_nl_ip_send_msg(struct rdma_dev_addr *dev_addr,
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 17fc2936c077b..bddb5434fbed2 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -1068,7 +1068,7 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
+ 	}
+ 
+ settimeout_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+@@ -1139,7 +1139,7 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
+ 	}
+ 
+ resp_out:
+-	return skb->len;
++	return 0;
+ }
+ 
+ static void free_sm_ah(struct kref *kref)
 -- 
 2.20.1
 
