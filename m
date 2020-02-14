@@ -2,108 +2,134 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C058C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D709C3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA92168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44214222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUooLahy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k37+qER6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgBNNgx (ORCPT
+        id S1729327AbgBNNhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:36:53 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26760 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728083AbgBNNgx (ORCPT
+        Fri, 14 Feb 2020 08:37:18 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41526 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbgBNNhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:36:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581687412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=GPmWxWPeWyJ4yanqYjqxsJb9kwmyfMzyZLJQdEXDG7w=;
-        b=jUooLahymxccqZnQGbXaolLGHi/pEoqo6Rl9WKKlmLG3gyfw2uzBQc5SbHBAhfTqWxdJbF
-        FvRTcWA7dTDSkwN4oUGDNFs+DfHbGuq2lsDHY6RGbPeEnFSAz9LZc8YKXyRyo/Om5WtNub
-        HEBApgfY29BH4bVSeBxgT5gjFgXFuHw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-eg9f1bVuMrOagcdCz0u9Aw-1; Fri, 14 Feb 2020 08:36:50 -0500
-X-MC-Unique: eg9f1bVuMrOagcdCz0u9Aw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 875D8107ACCA;
-        Fri, 14 Feb 2020 13:36:49 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-39.ams2.redhat.com [10.36.117.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A2065DD72;
-        Fri, 14 Feb 2020 13:36:46 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id D33741747F; Fri, 14 Feb 2020 14:36:45 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/qxl: don't take vga ports on rev5+
-Date:   Fri, 14 Feb 2020 14:36:45 +0100
-Message-Id: <20200214133645.30977-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Fri, 14 Feb 2020 08:37:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ue0dwM4RxyC5uuLjE0GUrxieeodoakuxvnrithwTIGM=; b=k37+qER6Nz1Y/fLSCN0cd8pmRV
+        Nzd0eOo1xzqy1MFmt1z3/A/nVaGblkzZ01vqwlm5UuSxYRrIsvoCYKx4oYc5n2hqJ1Va4fr6Jvr8W
+        hZhlxPoZv2u5t3Iu1ZveFtd83tzoavmh6z0qKN1SIanztujXi1p0Ldh/8E9WK1VvcZw4FbykWNpiw
+        vmw8LLdW7poBZnKsryROvGPf1ykPa/EmtZ90zuN8w4S+tqDcP142Gh5UXosidUjxbgaPkTFbYNILI
+        2xwoUDBj3GIJELfeDW7ArJoRkbSbeduKbUcwrVQPS92/RL68UhUUr5hJq8riWBfkYWL1bLGlDHKJT
+        5q1x39vA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2b9b-0003Kl-D5; Fri, 14 Feb 2020 13:37:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8049330257C;
+        Fri, 14 Feb 2020 14:35:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6CCBE20206D9B; Fri, 14 Feb 2020 14:37:08 +0100 (CET)
+Date:   Fri, 14 Feb 2020 14:37:08 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qperret@google.com, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20200214133708.GM14879@hirez.programming.kicks-ass.net>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
+ <20200210132133.GH14897@hirez.programming.kicks-ass.net>
+ <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qemu 5.0 introduces a new qxl hardware revision 5.  Unlike revision 4
-(and below) the device doesn't switch back into vga compatibility mode
-when someone touches the vga ports.  So we don't have to reserve the
-vga ports any more to avoid that happening.
+On Thu, Feb 13, 2020 at 05:49:48PM +0000, Douglas Raillard wrote:
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> > description of it all somewhere.
+> 
+> Now a textual version of it:
+> 
+> em_pd_get_higher_freq() does the following:
+> 
+> # Turn the abstract cost margin on the EM_COST_MARGIN_SCALE into a
+> # concrete value. cost_margin=EM_COST_MARGIN_SCALE will give a concrete
+> # value of "max_cost", which is the highest OPP on that CPU.
+> concrete_margin = (cost_margin * max_cost) / EM_COST_MARGIN_SCALE;
+> 
+> # Then it finds the lowest OPP satisfying min_freq:
+> min_opp = OPP_AT_FREQ(min_freq)
+> 
+> # It takes the cost associated, and finds the highest OPP that has a
+> # cost lower than that:
+> max_cost = COST_OF(min_opp) + concrete_margin
+> 
+> final_freq = MAX(
+> 	FREQ_OF(opp)
+> 	for opp in available_opps
+> 	if COST_OF(opp) <= max_cost
+> )
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 4fda3f9b29f4..afea743989dd 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -93,7 +93,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ret)
- 		goto disable_pci;
- 
--	if (is_vga(pdev)) {
-+	if (is_vga(pdev) && pdev->revision < 5) {
- 		ret = vga_get_interruptible(pdev, VGA_RSRC_LEGACY_IO);
- 		if (ret) {
- 			DRM_ERROR("can't get legacy vga ioports\n");
-@@ -124,7 +124,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- unload:
- 	qxl_device_fini(qdev);
- put_vga:
--	if (is_vga(pdev))
-+	if (is_vga(pdev) && pdev->revision < 5)
- 		vga_put(pdev, VGA_RSRC_LEGACY_IO);
- disable_pci:
- 	pci_disable_device(pdev);
-@@ -155,7 +155,7 @@ qxl_pci_remove(struct pci_dev *pdev)
- 
- 	drm_dev_unregister(dev);
- 	drm_atomic_helper_shutdown(dev);
--	if (is_vga(pdev))
-+	if (is_vga(pdev) && pdev->revision < 5)
- 		vga_put(pdev, VGA_RSRC_LEGACY_IO);
- 	drm_dev_put(dev);
- }
--- 
-2.18.2
+Right; I got that.
 
+> So this means that:
+>    util - util_est_enqueued ~= 0
+
+Only if you assume the task will get scheduled out reasonably frequent.
+
+> => cost_margin              ~= 0
+> => concrete_cost_margin     ~= 0
+> => max_cost   = COST_OF(min_opp) + 0
+> => final_freq = FREQ_OF(min_opp)
+> 
+> The effective boost is ~0, so you will get the current behaviour of
+> schedutil.
+
+But the argument holds; because if things don't get scheduled out, we'll
+peg u = 1 and hit f = 1 and all is well anyway.
+
+Which is a useful property; it shows that in the steady state, this
+patch-set is a NOP, but the above argument only relies on 'util_avg >
+util_est' being used a trigger.
+
+> If the task starts needing more cycles than during its previous period,
+> `util - util_est_enqueued` will grow like util since util_est_enqueued
+> is constant. The longer we wait, the higher the boost, until the task
+> goes to sleep again.
+> 
+> At next wakeup, util_est_enqueued has caught up and either:
+> 1) util becomes stable, so no more boosting
+> 2) util keeps increasing, so go for another round of boosting
+
+Agreed; however elsewhere you wrote:
+
+> 1) If you care more about predictable battery life (or energy bill) than
+> predictability of the boost feature, EM should be used.
+>
+> 2) If you don't have an EM or you care more about having a predictable
+> boost for a given workload, use util (or disable that boost).
+
+This is the part I'm still not sure about; how do the specifics of the
+cost_margin setup lead to 1), or how would some frobbing with frequency
+selection destroy that property.
