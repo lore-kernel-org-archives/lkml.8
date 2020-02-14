@@ -2,82 +2,77 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFA8C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D43C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D459217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4296217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgBNA34 (ORCPT
+        id S1728033AbgBNAaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:29:56 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53563 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727594AbgBNA34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:29:56 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TpvPKhe_1581640185;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TpvPKhe_1581640185)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 14 Feb 2020 08:29:52 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     willy@infradead.org, mhocko@suse.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: migrate.c: migrate PG_readahead flag
-Date:   Fri, 14 Feb 2020 08:29:45 +0800
-Message-Id: <1581640185-95731-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 13 Feb 2020 19:30:14 -0500
+Received: from mga06.intel.com ([134.134.136.31]:24000 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727594AbgBNAaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 19:30:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Feb 2020 16:30:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,438,1574150400"; 
+   d="scan'208";a="313906917"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga001.jf.intel.com with ESMTP; 13 Feb 2020 16:30:11 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com, david@redhat.com,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v5 0/4] cleanup on do_pages_move()
+Date:   Fri, 14 Feb 2020 08:30:13 +0800
+Message-Id: <20200214003017.25558-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently migration code doesn't migrate PG_readahead flag.
-Theoretically this would incur slight performance loss as the
-application might have to ramp its readahead back up again.  Even though
-such problem happens, it might be hidden by something else since
-migration is typically triggered by compaction and NUMA balancing, any
-of which should be more noticeable.
+The logic in do_pages_move() is a little mess for audience to read and has
+some potential error on handling the return value. Especially there are
+three calls on do_move_pages_to_node() and store_status() with almost the
+same form.
 
-Migrate the flag after end_page_writeback() since it may clear
-PG_reclaim flag, which is the same bit as PG_readahead, for the new
-page.
+This patch set tries to make the code a little friendly for audience by
+consolidate the calls.
 
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
-I didn't experience any real problem, found by visual inspection. And, this was
-discussed in thread: https://lore.kernel.org/linux-mm/185ce762-f25d-a013-6daa-8c288f1ff791@linux.alibaba.com/T/#m1977ce1de513401b7d09d6fa14fcffe849580aae
+v5:
+  : rebase on top of latest upstream, "linux/pipe_fs_i.h: fix kernel-doc
+    warnings after @wait was split"
+v4:
+  * rephrase changelog based on suggestion from David Hildenbrand
+  * trivial change on code style and comment
+v3:
+  * rebase on top of Yang Shi's fix "mm: move_pages: report the number of
+    non-attempted pages"
+v2:
+  * remove some unnecessary cleanup
 
- mm/migrate.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index edf42ed..f3c492d 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -647,6 +647,14 @@ void migrate_page_states(struct page *newpage, struct page *page)
- 	if (PageWriteback(newpage))
- 		end_page_writeback(newpage);
- 
-+	/*
-+	 * PG_readahead share the same bit with PG_reclaim, the above
-+	 * end_page_writeback() may clear PG_readahead mistakenly, so set
-+	 * the bit after that.
-+	 */
-+	if (PageReadahead(page))
-+		SetPageReadahead(newpage);
-+
- 	copy_page_owner(page, newpage);
- 
- 	mem_cgroup_migrate(page, newpage);
+Wei Yang (4):
+  mm/migrate.c: no need to check for i > start in do_pages_move()
+  mm/migrate.c: wrap do_move_pages_to_node() and store_status()
+  mm/migrate.c: check pagelist in move_pages_and_store_status()
+  mm/migrate.c: unify "not queued for migration" handling in
+    do_pages_move()
+
+ mm/migrate.c | 88 +++++++++++++++++++++++-----------------------------
+ 1 file changed, 39 insertions(+), 49 deletions(-)
+
 -- 
-1.8.3.1
+2.17.1
 
