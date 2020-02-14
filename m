@@ -2,264 +2,208 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70949C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5193EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3851C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E1A24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gB2ufWCG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYbgLjXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBNM6E (ORCPT
+        id S1728557AbgBNNBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:58:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31756 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726191AbgBNM6E (ORCPT
+        Fri, 14 Feb 2020 08:01:03 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43266 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgBNNBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:58:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581685082;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zCLwBU2AIrLiq97oVJcKrk3eBDD/n+Xy8GshU+OVGfo=;
-        b=gB2ufWCGECpxOKgQUPDR6soK8q+RN6hhtb0XHMPWeu9CdOXzwOuJ6/EKOcSGFL2qsww+L3
-        oKEr0ZETvyJMiuj4wjp3G4oT9zQtpf6H6a3Ai9PmR427RihGu7M3O7jj+kr76+W5nNLeYb
-        RDdYn/cM94Pj9y/thHFu5UkkLOovHOI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-zSDu1ixMO2OxRTz8M6LmzQ-1; Fri, 14 Feb 2020 07:57:58 -0500
-X-MC-Unique: zSDu1ixMO2OxRTz8M6LmzQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6160D13F8;
-        Fri, 14 Feb 2020 12:57:57 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-10.phx2.redhat.com [10.3.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C5B45DA7D;
-        Fri, 14 Feb 2020 12:57:56 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 970F411E8; Fri, 14 Feb 2020 09:57:54 -0300 (BRT)
-Date:   Fri, 14 Feb 2020 09:57:54 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     zhe.he@windriver.com
-Cc:     rostedt@goodmis.org, tstoyanov@vmware.com, hewenliang4@huawei.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools lib traceevent: Take care of return value of
- asprintf
-Message-ID: <20200214125754.GA2974@redhat.com>
-References: <1581665486-20386-1-git-send-email-zhe.he@windriver.com>
+        Fri, 14 Feb 2020 08:01:03 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d18so6865143qtj.10;
+        Fri, 14 Feb 2020 05:01:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=INqRxd+8sC97901fxFtdiCwiWAnkOn0AIA7l8xV1mUM=;
+        b=hYbgLjXh5gYIIzZFugzw45yUlxd1H/x9PCLdaITfXfQX6sq2ELDQm8cYUGqZKmJitg
+         SYuH55OpnJhHy4xM8q/4DkSYx5XzDgO1wY7FHDrXM8Rfv7LQVC4oCQ5jnABH1A0Rd4UB
+         yqlPs1xH8Dz3tL6m4xg35MGuWjp+nwbGQaOmP7/c1RFVeXUP5xxH5A4cnAcBLN0TJs82
+         wb4QiG/+SKVd67qxa3P80pKs3hA0GsJPpx8TNV0TDX9Qu0jyzM5h1N2YX2OMwU9b/d8W
+         ThK/Hj3I8+f1oWy4jDUizS37cD1GlWHl3hC9KXCLGRwvf2WbAM4SMoqZ+cnM5aBsJNxw
+         xCKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=INqRxd+8sC97901fxFtdiCwiWAnkOn0AIA7l8xV1mUM=;
+        b=CPW3VOrIQs5ybL9UHSQ5fS2DyMbxcLqSWR12FWorf0Vk7SiLala5s1I+R+17rUZnrn
+         LSQa4NKqKzz5mFplkJaYWXrp7N3rrLorKEubTiSMJoIPtu/kRJcgoL+feWalhv0/J1xZ
+         qezGyrvncDdHmh7Qh+zdZsv2qR7y3z1fBiAZSDzgTPspq3IxRXQWEN9PrOIH7tVu9f8V
+         gxtVZBWIxEar3W6WsEOBfsNF/0o5N3Z6DtxH+Y1cxDNcmUXOeb8g0Gyt5Ycgjne9HUGO
+         ju96iq2KQYEexBS1/2UrcuCws3JFaDJlqk0oj3YgiSMsgpuNaNb391ScanIS3A4nldL3
+         L28g==
+X-Gm-Message-State: APjAAAWFlqZygLntuC+TzZV9yBnsqR4sN/UaYgB1jz+t9J5R88F8U0CQ
+        Ggp21SkThedgCMVMKpyYlbZ7ec3m370=
+X-Google-Smtp-Source: APXvYqwYTp+wX+BUx3cJsdP/o1uhFSGGi1Xt7wAVkp8uFXagxwEWidkXkqbiQjX4YNXtpc+FF/oW/w==
+X-Received: by 2002:ac8:3863:: with SMTP id r32mr2383068qtb.291.1581685260395;
+        Fri, 14 Feb 2020 05:01:00 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id x41sm3365677qtj.52.2020.02.14.05.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 05:00:59 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5E7F4403AD; Fri, 14 Feb 2020 10:00:57 -0300 (-03)
+Date:   Fri, 14 Feb 2020 10:00:57 -0300
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
+Message-ID: <20200214130057.GB13462@kernel.org>
+References: <20200213122009.31810-1-tmricht@linux.ibm.com>
+ <20200213143048.GA22170@kernel.org>
+ <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
+ <20200213181140.GA28626@kernel.org>
+ <20200214094550.228422235c7785519c7f24cc@kernel.org>
+ <c249efd1-f705-4739-baad-c94257706489@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581665486-20386-1-git-send-email-zhe.he@windriver.com>
+In-Reply-To: <c249efd1-f705-4739-baad-c94257706489@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Feb 14, 2020 at 03:31:26PM +0800, zhe.he@windriver.com escreveu:
-> From: He Zhe <zhe.he@windriver.com>
->=20
-> According to the API, if memory allocation wasn't possible, or some oth=
-er
-> error occurs, asprintf will return -1, and the contents of strp below a=
-re
-> undefined.
->=20
-> int asprintf(char **strp, const char *fmt, ...);
->=20
-> This patch takes care of return value of asprintf to make it less error
-> prone and prevent the following build warning.
->=20
-> ignoring return value of =E2=80=98asprintf=E2=80=99, declared with attr=
-ibute warn_unused_result [-Wunused-result]
+Em Fri, Feb 14, 2020 at 10:44:06AM +0100, Thomas Richter escreveu:
+> On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
+> > On Thu, 13 Feb 2020 15:11:40 -0300
+> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > 
+> >> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
+> >>> On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >>  
+> >>>> Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
+> >>>>> This test places a kprobe to function getname_flags() in the kernel
+> >>>>> which has the following prototype:
+> >>  
+> >>>>>   struct filename *
+> >>>>>   getname_flags(const char __user *filename, int flags, int *empty)
+> >>  
+> >>>>> Variable filename points to a filename located in user space memory.
+> >>>>> Looking at
+> >>>>> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> >>>>> the kprobe should indicate that user space memory is accessed.
+> >>  
+> >>>>> The following patch specifies user space memory access first and if this
+> >>>>> fails use type 'string' in case 'ustring' is not supported.
+> >>  
+> >>>> What are you fixing?
+> >>  
+> >>>> I haven't seen any example of this test failing, and right now testing
+> >>>> it with:
+> >>  
+> >>>> [root@quaco ~]# uname -a
+> >>>> Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
+> >>>> [root@quaco ~]#
+> >>  
+> >>> This bug doesn't happen on x86 or other archs on which user-address space and
+> >>> kernel address space is same. On some arch (ppc64 in this case?) user-address
+> >>> space is partially or completely same as kernel address space. (Yes, they switch
+> >>> the world when running into the kernel) In this case, we need to use different
+> >>> data access functions for each spaces. That is why I introduced "ustring" type
+> >>> for kprobe event.
+> >>> As far as I can see, Thomas's patch is sane.
+> >>
+> >> Well, without his patch, on x86, the test he is claiming to be fixing
+> >> works well, with his patch it stops working, see the rest of my reply.
+> > 
+> > OK, let me see.
+> > 
+> > 
+> >> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> >> index 7cb99b433888..30c1eadbc5be 100644
+> >> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> >> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> >> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
+> >>  	local verbose=$1
+> >>  	if [ $had_vfs_getname -eq 1 ] ; then
+> >>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+> >> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> >> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
+> >> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> >> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
+> >>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> >>  	fi
+> >>  }
+> > 
+> > This looks no good (depends on architecture or debuginfo). In fs/namei.c,
+> > 
+> > struct filename *
+> > getname_flags(const char __user *filename, int flags, int *empty)
+> > ...
+> >         kname = (char *)result->iname;
+> >         result->name = kname;
+> > ...
+> >         result->uptr = filename;
+> >         result->aname = NULL;
+> >         audit_getname(result);
+> >         return result;
+> > }
+> > 
+> > And the line number script, egreps below line.
+> > 
+> >         result->uptr = filename;
+> > 
+> > However, the probe on this line will hit *before* execute this line.
+> > Note that kprobes is a breakpoint, which breaks into this line execution,
+> > not after executed.
+> > 
+> > So, I thik at this point, result->uptr should be NULL, but filename and
+> > result->name already have assigned value.
+> > 
+> > Thus, the fix should be something like below.
+> > 
+> >> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> >> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> >> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
+> > 
+> > Thomas, is this OK for you too, or would you have any reason to trace
+> > result->uptr?
+> > 
+> > Thank you,
+> > 
+> 
+> Thank you very much for your help!!!
+> 
+> I started from scratch and just installed linux 5.6.0rc1 without
+> any changes and got this failure:
+> 
+> [root@m35lp76 perf]# ./perf test  66 67
+> 66: Use vfs_getname probe to get syscall args filenames   : FAILED!
+> 67: Check open filename arg using perf trace + vfs_getname: FAILED!
+> [root@m35lp76 perf]#
+> 
+> Now I applied Masami's patch and this is the result
+> 
+> [root@m35lp76 perf]# ./perf test  66 67
+> 66: Use vfs_getname probe to get syscall args filenames   : Ok
+> 67: Check open filename arg using perf trace + vfs_getname: Ok
+> [root@m35lp76 perf        
+> 
+> Can we commit this patch?
+> Thanks a lot
 
-Sure this fixes problems, but can you make it more compact, i.e. no need
-to add most if not all those 'int ret;' lines, just check the asprintf
-result directly, i.e.:
-
-                             if (asprintf(&str, val ? "TRUE" : "FALSE") <=
- 0)
-                                     str =3D NULL;
-
-saving the return value for that function is interesting when you need
-to know how many bytes it printed to do some extra calculation, but if
-all you need is to know if it failed, checking against < 0 is enough,
-no?
+So, I'll keep authorship to Thomas but will add a committer note stating
+Masami's correction, is that ok?
 
 - Arnaldo
-
-=20
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> ---
->  tools/lib/traceevent/parse-filter.c | 42 +++++++++++++++++++++++++++++=
---------
->  1 file changed, 33 insertions(+), 9 deletions(-)
->=20
-> diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent=
-/parse-filter.c
-> index 20eed71..279b572 100644
-> --- a/tools/lib/traceevent/parse-filter.c
-> +++ b/tools/lib/traceevent/parse-filter.c
-> @@ -1912,6 +1912,7 @@ static char *op_to_str(struct tep_event_filter *f=
-ilter, struct tep_filter_arg *a
->  	int left_val =3D -1;
->  	int right_val =3D -1;
->  	int val;
-> +	int ret;
-> =20
->  	switch (arg->op.type) {
->  	case TEP_FILTER_OP_AND:
-> @@ -1958,7 +1959,9 @@ static char *op_to_str(struct tep_event_filter *f=
-ilter, struct tep_filter_arg *a
->  				default:
->  					break;
->  				}
-> -				asprintf(&str, val ? "TRUE" : "FALSE");
-> +				ret =3D asprintf(&str, val ? "TRUE" : "FALSE");
-> +				if (ret < 0)
-> +					str =3D NULL;
->  				break;
->  			}
->  		}
-> @@ -1976,7 +1979,9 @@ static char *op_to_str(struct tep_event_filter *f=
-ilter, struct tep_filter_arg *a
->  			break;
->  		}
-> =20
-> -		asprintf(&str, "(%s) %s (%s)", left, op, right);
-> +		ret =3D asprintf(&str, "(%s) %s (%s)", left, op, right);
-> +		if (ret < 0)
-> +			str =3D NULL;
->  		break;
-> =20
->  	case TEP_FILTER_OP_NOT:
-> @@ -1992,10 +1997,14 @@ static char *op_to_str(struct tep_event_filter =
-*filter, struct tep_filter_arg *a
->  			right_val =3D 0;
->  		if (right_val >=3D 0) {
->  			/* just return the opposite */
-> -			asprintf(&str, right_val ? "FALSE" : "TRUE");
-> +			ret =3D asprintf(&str, right_val ? "FALSE" : "TRUE");
-> +			if (ret < 0)
-> +				str =3D NULL;
->  			break;
->  		}
-> -		asprintf(&str, "%s(%s)", op, right);
-> +		ret =3D asprintf(&str, "%s(%s)", op, right);
-> +		if (ret < 0)
-> +			str =3D NULL;
->  		break;
-> =20
->  	default:
-> @@ -2010,8 +2019,11 @@ static char *op_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *a
->  static char *val_to_str(struct tep_event_filter *filter, struct tep_fi=
-lter_arg *arg)
->  {
->  	char *str =3D NULL;
-> +	int ret;
-> =20
-> -	asprintf(&str, "%lld", arg->value.val);
-> +	ret =3D asprintf(&str, "%lld", arg->value.val);
-> +	if (ret < 0)
-> +		str =3D NULL;
-> =20
->  	return str;
->  }
-> @@ -2027,6 +2039,7 @@ static char *exp_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *
->  	char *rstr;
->  	char *op;
->  	char *str =3D NULL;
-> +	int ret;
-> =20
->  	lstr =3D arg_to_str(filter, arg->exp.left);
->  	rstr =3D arg_to_str(filter, arg->exp.right);
-> @@ -2069,7 +2082,9 @@ static char *exp_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *
->  		break;
->  	}
-> =20
-> -	asprintf(&str, "%s %s %s", lstr, op, rstr);
-> +	ret =3D asprintf(&str, "%s %s %s", lstr, op, rstr);
-> +	if (ret < 0)
-> +		str =3D NULL;
->  out:
->  	free(lstr);
->  	free(rstr);
-> @@ -2083,6 +2098,7 @@ static char *num_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *
->  	char *rstr;
->  	char *str =3D NULL;
->  	char *op =3D NULL;
-> +	int ret;
-> =20
->  	lstr =3D arg_to_str(filter, arg->num.left);
->  	rstr =3D arg_to_str(filter, arg->num.right);
-> @@ -2113,7 +2129,9 @@ static char *num_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *
->  		if (!op)
->  			op =3D "<=3D";
-> =20
-> -		asprintf(&str, "%s %s %s", lstr, op, rstr);
-> +		ret =3D asprintf(&str, "%s %s %s", lstr, op, rstr);
-> +		if (ret < 0)
-> +			str =3D NULL;
->  		break;
-> =20
->  	default:
-> @@ -2131,6 +2149,7 @@ static char *str_to_str(struct tep_event_filter *=
-filter, struct tep_filter_arg *
->  {
->  	char *str =3D NULL;
->  	char *op =3D NULL;
-> +	int ret;
-> =20
->  	switch (arg->str.type) {
->  	case TEP_FILTER_CMP_MATCH:
-> @@ -2148,8 +2167,10 @@ static char *str_to_str(struct tep_event_filter =
-*filter, struct tep_filter_arg *
->  		if (!op)
->  			op =3D "!~";
-> =20
-> -		asprintf(&str, "%s %s \"%s\"",
-> +		ret =3D asprintf(&str, "%s %s \"%s\"",
->  			 arg->str.field->name, op, arg->str.val);
-> +		if (ret < 0)
-> +			str =3D NULL;
->  		break;
-> =20
->  	default:
-> @@ -2162,10 +2183,13 @@ static char *str_to_str(struct tep_event_filter=
- *filter, struct tep_filter_arg *
->  static char *arg_to_str(struct tep_event_filter *filter, struct tep_fi=
-lter_arg *arg)
->  {
->  	char *str =3D NULL;
-> +	int ret;
-> =20
->  	switch (arg->type) {
->  	case TEP_FILTER_ARG_BOOLEAN:
-> -		asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
-> +		ret =3D asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
-> +		if (ret < 0)
-> +			str =3D NULL;
->  		return str;
-> =20
->  	case TEP_FILTER_ARG_OP:
-> --=20
-> 2.7.4
-
