@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9007C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F68C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B9D2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520A424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701275;
-	bh=p5HfsD/7oSJvIOKScBFttuw+L3MLtwgbJ+C+qro4QB4=;
+	s=default; t=1581701278;
+	bh=jkH9pWg94cm9T1Q+S+xwhjrfK4jGO8fl3b9h2Vti3GA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gBhUwiwHi5mZ/aiN7J84LULJcrMn7N8P0r+giuExc1oY/0Nxyi4+7F9uYm+n6qS7k
-	 SCrMPvKRA0oJultlGHBYV7bYnnlcDP2rFJTrDNzCJNIErLW5yz/hwbp1U8FYbhHRfU
-	 T99yKEghZMS8joeUd7gaPjpG7fAYABi7aGEHQvBQ=
+	b=1O2q3CjJ9V+g0KCkAtghKyaPsfQ5vjf8LqxlR1llkrGkkSyeC8i5C/XCJZMByhC3x
+	 thVXnEiok2z4AQO4GQ8t35MZjSgRZ/dV4azK0e1RGQ4Ii497c+hBIzwrfRmbFGASdl
+	 A9ucPA+0wdJ3pjSMh87U57Q7coGLhKI2qMBGbZ6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391151AbgBNR1y (ORCPT
+        id S2388268AbgBNQIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:27:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:08:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390876AbgBNQIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:13 -0500
+        id S2390678AbgBNQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:07:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8236022314;
-        Fri, 14 Feb 2020 16:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261FC24654;
+        Fri, 14 Feb 2020 16:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696493;
-        bh=p5HfsD/7oSJvIOKScBFttuw+L3MLtwgbJ+C+qro4QB4=;
+        s=default; t=1581696447;
+        bh=jkH9pWg94cm9T1Q+S+xwhjrfK4jGO8fl3b9h2Vti3GA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xb3MV2MnbWV+WTQRo72fH7iWyzjkow26+V/hldrlBg0vlIHKzAB7NwutN5UjtfKRQ
-         y0LugU7FAix4fbEPUQ5l2JNZhRwyyOxB4BRbPrS3/ibP07c0ZWo+hGFSztBqXXCpYn
-         fZ6PCACAXqdKjOHUXsC/+czFtbkbccE8hYwAm1QQ=
+        b=JMZM/OV1xPEAhzBkaJBnxz0o7Upl6gjYSl+COn3W5evKI5eQ56D/GrON+OCCXiySE
+         6mvBaNcBT100a765WmdWi2Ry9sadXU4qK+ASh61I+p77xL/7X/K40IBlAHm6LiCaIr
+         cViwxIFkHJSc7KfsOkekWwGahNDZk8WqZAR7NTMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hongbo Yao <yaohongbo@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 298/459] misc: genwqe: fix compile warnings
-Date:   Fri, 14 Feb 2020 10:59:08 -0500
-Message-Id: <20200214160149.11681-298-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 261/459] ARM: dts: meson8: use the actual frequency for the GPU's 182.1MHz OPP
+Date:   Fri, 14 Feb 2020 10:58:31 -0500
+Message-Id: <20200214160149.11681-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,66 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hongbo Yao <yaohongbo@huawei.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 8edf4cd193067ac5e03fd9580f1affbb6a3f729b ]
+[ Upstream commit fe634a7a9a57fb736e39fb71aa9adc6448a90f94 ]
 
-Using the following command will get compile warnings:
-make W=1 drivers/misc/genwqe/card_ddcb.o ARCH=x86_64
+The clock setup on Meson8 cannot achieve a Mali frequency of exactly
+182.15MHz. The vendor driver uses "FCLK_DIV7 / 2" for this frequency,
+which translates to 2550MHz / 7 / 2 = 182142857Hz.
+Update the GPU operating point to that specific frequency to not confuse
+myself when comparing the frequency from the .dts with the actual clock
+rate on the system.
 
-drivers/misc/genwqe/card_ddcb.c: In function setup_ddcb_queue:
-drivers/misc/genwqe/card_ddcb.c:1024:6: warning: variable rc set but not
-used [-Wunused-but-set-variable]
-drivers/misc/genwqe/card_ddcb.c: In function genwqe_card_thread:
-drivers/misc/genwqe/card_ddcb.c:1190:23: warning: variable rc set but
-not used [-Wunused-but-set-variable]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
-Link: https://lore.kernel.org/r/20191205111655.170382-1-yaohongbo@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7d3f6b536e72c9 ("ARM: dts: meson8: add the Mali-450 MP6 GPU")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/genwqe/card_ddcb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/meson8.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/genwqe/card_ddcb.c b/drivers/misc/genwqe/card_ddcb.c
-index 026c6ca245408..905106579935a 100644
---- a/drivers/misc/genwqe/card_ddcb.c
-+++ b/drivers/misc/genwqe/card_ddcb.c
-@@ -1084,7 +1084,7 @@ static int setup_ddcb_queue(struct genwqe_dev *cd, struct ddcb_queue *queue)
- 				queue->ddcb_daddr);
- 	queue->ddcb_vaddr = NULL;
- 	queue->ddcb_daddr = 0ull;
--	return -ENODEV;
-+	return rc;
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 3c534cd50ee3b..db2033f674c67 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -129,8 +129,8 @@
+ 	gpu_opp_table: gpu-opp-table {
+ 		compatible = "operating-points-v2";
  
- }
- 
-@@ -1179,7 +1179,7 @@ static irqreturn_t genwqe_vf_isr(int irq, void *dev_id)
-  */
- static int genwqe_card_thread(void *data)
- {
--	int should_stop = 0, rc = 0;
-+	int should_stop = 0;
- 	struct genwqe_dev *cd = (struct genwqe_dev *)data;
- 
- 	while (!kthread_should_stop()) {
-@@ -1187,12 +1187,12 @@ static int genwqe_card_thread(void *data)
- 		genwqe_check_ddcb_queue(cd, &cd->queue);
- 
- 		if (GENWQE_POLLING_ENABLED) {
--			rc = wait_event_interruptible_timeout(
-+			wait_event_interruptible_timeout(
- 				cd->queue_waitq,
- 				genwqe_ddcbs_in_flight(cd) ||
- 				(should_stop = kthread_should_stop()), 1);
- 		} else {
--			rc = wait_event_interruptible_timeout(
-+			wait_event_interruptible_timeout(
- 				cd->queue_waitq,
- 				genwqe_next_ddcb_ready(cd) ||
- 				(should_stop = kthread_should_stop()), HZ);
+-		opp-182150000 {
+-			opp-hz = /bits/ 64 <182150000>;
++		opp-182142857 {
++			opp-hz = /bits/ 64 <182142857>;
+ 			opp-microvolt = <1150000>;
+ 		};
+ 		opp-318750000 {
 -- 
 2.20.1
 
