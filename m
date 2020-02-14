@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDFCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209EBC3B19F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC10247CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61D3247E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697565;
-	bh=NifAf0h26zH6D6CNPvJCP6MoQzO4tqRvgabs6pItoNw=;
+	s=default; t=1581697567;
+	bh=0QNtSPm+AoXsO2JMqGV5AUqG6/mCDO+xNWdo/XCLGBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X14ZtVd8mFV4nFsJEC/gQyuvA2+Bn4yayfdZ95mbG/oJNT0TOvxjDapeHXrTqFOfv
-	 WWow6X3tWsZxUzDonZMq4gJRIuZd9ufT9KQ2DoMzEkVHeCPILXeDZTPaOa8/VMOSjy
-	 14cBC7awJtCjYxd7eMcydjavmzalw6qct1hyCULI=
+	b=17utjvKaZTZmcdesDib/vfGNDbQLMbsD5e+c876l2hnMCwE+6+/tcqWSmTJyPM/N+
+	 57v6Bw1xoypNSfwq9QO+BoIurgBM840xhuzG+kpD1qVzykJiEr0F7SU30B3JzcZtRP
+	 u8T7fZbh0Q8UAC4jmt5lSSvJ5QlOhQCp0RNgeoHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406284AbgBNQ0E (ORCPT
+        id S2405935AbgBNQ0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405756AbgBNQX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:56 -0500
+        id S2405777AbgBNQYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 203032477E;
-        Fri, 14 Feb 2020 16:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCCC92478A;
+        Fri, 14 Feb 2020 16:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697436;
-        bh=NifAf0h26zH6D6CNPvJCP6MoQzO4tqRvgabs6pItoNw=;
+        s=default; t=1581697439;
+        bh=0QNtSPm+AoXsO2JMqGV5AUqG6/mCDO+xNWdo/XCLGBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4LeelStkU6YYJNGgpcIWWy7vrfAPGJhz9ahj1TfiTZ+VcDTAt+U2wHSUhy86Ps1f
-         8LrGoVedD6h+23apqYga3GlLDWnHUfP5CRLflbB65OttsUIbr/OjKeDZXRQIP6AjbD
-         Kidkc6EX7nddBmSrict87O4fjv5AFyhXb/zwSEJU=
+        b=m0p1IFqa5/JZlvBZ/pd/CBId/XDIyoH9bNWTlSJPgizoK18UnSg3kVpxeqW4FxVZJ
+         D8GGrJaNZFvgrH/Kh5Ahpk0OPer5WZVpqPoeEfNIjZ3DJL0yvNnl6N0wYFajS7xkxc
+         E9lEzLC3wR93BV1Mhq3JCTOAjfwumjP32JAiOF6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Qing Xu <m1s5p6688@gmail.com>, Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 122/141] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
-Date:   Fri, 14 Feb 2020 11:21:02 -0500
-Message-Id: <20200214162122.19794-122-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 125/141] mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
+Date:   Fri, 14 Feb 2020 11:21:05 -0500
+Message-Id: <20200214162122.19794-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -61,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Qing Xu <m1s5p6688@gmail.com>
 
-[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
+[ Upstream commit b70261a288ea4d2f4ac7cd04be08a9f0f2de4f4d ]
 
-The loop counter addr is a u16 where as the upper limit of the loop
-is an int. In the unlikely event that the il->cfg->eeprom_size is
-greater than 64K then we end up with an infinite loop since addr will
-wrap around an never reach upper loop limit. Fix this by making addr
-an int.
+mwifiex_cmd_append_vsie_tlv() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+Signed-off-by: Qing Xu <m1s5p6688@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 140b6ea8f7cc4..db2373fe8ac32 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
- 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
- 	int sz;
- 	int ret;
--	u16 addr;
-+	int addr;
- 
- 	/* allocate eeprom */
- 	sz = il->cfg->eeprom_size;
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 828c6f5eb83c8..5fde2e2f1fea8 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -2878,6 +2878,13 @@ mwifiex_cmd_append_vsie_tlv(struct mwifiex_private *priv,
+ 			vs_param_set->header.len =
+ 				cpu_to_le16((((u16) priv->vs_ie[id].ie[1])
+ 				& 0x00FF) + 2);
++			if (le16_to_cpu(vs_param_set->header.len) >
++				MWIFIEX_MAX_VSIE_LEN) {
++				mwifiex_dbg(priv->adapter, ERROR,
++					    "Invalid param length!\n");
++				break;
++			}
++
+ 			memcpy(vs_param_set->ie, priv->vs_ie[id].ie,
+ 			       le16_to_cpu(vs_param_set->header.len));
+ 			*buffer += le16_to_cpu(vs_param_set->header.len) +
 -- 
 2.20.1
 
