@@ -2,132 +2,177 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4216EC3B198
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F10C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5A5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFE4222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581685771;
-	bh=S1KcqlRgaFv8iW8vw5VXuHf37fRz7NJhUiPg/24MFmM=;
+	s=default; t=1581685795;
+	bh=PZhB1NcQBOFlKyZ/Wg1snPu8zpk0I6QyaZXQv4UoOYI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g1zUksI+QAG+rqDSaAzc2DwdcmxLNARWGRbVYK3I/KCSMYoJtMSse94j0U2zCcOnN
-	 +2HOBwHPKElbbK/l+WYLQTHrwaCWw94tqyKZvmrJdWUXg6s+5n6cTeBH7m9Hvn9Rpw
-	 6qViYUhq9i6aXnrHHMChueOwMc0kVc7jo/5BRqn8=
+	b=AM/PaVCXZ02DUhEM4hwc5xpEPbmt349+uPUHAsPla+0hGkbpGlFh1+TycBFHX1/oW
+	 sqeYg6W+Os2qt0hE2Qud0KCiX+0nfuy6Ffk58Jli0Ld0FanUNY7ER0akiWAHRCJHCL
+	 m5u4nAgS2ycF+bGgkVhwAZIhs6Duug3ufLzCJpuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgBNNJa (ORCPT
+        id S1729268AbgBNNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 08:09:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:32886 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgBNNJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:09:30 -0500
-Received: from localhost (unknown [106.201.58.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D02F02086A;
-        Fri, 14 Feb 2020 13:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581685769;
-        bh=S1KcqlRgaFv8iW8vw5VXuHf37fRz7NJhUiPg/24MFmM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ew9lNr986QqTsMdVyURhpqV13JrXJfHXSDcBF5HSqYvPETinKZMV+FMEHTwrmmt3U
-         EIcpnBgGSAfUYY4ClcqTE+zYekP6sLxR/JYKRQEhz3TmEIqTSzBlWZuK7Ypjmj4uXs
-         ukwSWiU+C5n8Je0aDM44pz4T1WHEwJoU6Ig29yDk=
-Date:   Fri, 14 Feb 2020 18:39:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, jshriram@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, psodagud@codeaurora.org,
-        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
-        vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 6/7] clk: qcom: gcc: Add global clock controller
- driver for SM8250
-Message-ID: <20200214130923.GV2618@vkoul-mobl>
-References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
- <1579905147-12142-7-git-send-email-vnkgutta@codeaurora.org>
- <20200205194022.C5E8C20730@mail.kernel.org>
+        id S1726191AbgBNNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:09:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31AA91FB;
+        Fri, 14 Feb 2020 05:09:54 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84A23F68F;
+        Fri, 14 Feb 2020 05:09:53 -0800 (PST)
+Date:   Fri, 14 Feb 2020 13:09:52 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v9 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20200214130952.GI4827@sirena.org.uk>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GBuTPvBEOL0MYPgd"
 Content-Disposition: inline
-In-Reply-To: <20200205194022.C5E8C20730@mail.kernel.org>
+In-Reply-To: <20200214114618.29704-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Cookie: Shipping not included.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-02-20, 11:40, Stephen Boyd wrote:
 
-> > +static const struct clk_parent_data gcc_parent_data_2[] = {
-> > +       { .fw_name = "bi_tcxo" },
-> > +       { .fw_name = "sleep_clk", .name = "sleep_clk" },
-> 
-> Please drop .name
+--GBuTPvBEOL0MYPgd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yup, will do
+On Fri, Feb 14, 2020 at 07:46:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
 
-> > +static const struct clk_parent_data gcc_parent_data_5[] = {
-> > +       { .fw_name = "bi_tcxo" },
-> > +       { .hw = &gpll0.clkr.hw },
-> > +       { .fw_name = "aud_ref_clk", .name = "aud_ref_clk" },
-> 
-> Why have .name? Pleas remove it.
+> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
+> +{
+> +	struct cqspi_st *cqspi = dev;
+> +	unsigned int irq_status;
+> +
+> +	/* Read interrupt status */
+> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
+> +
+> +	/* Clear interrupt */
+> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
+> +
+> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
+> +
+> +	if (irq_status)
+> +		complete(&cqspi->transfer_complete);
+> +
+> +	return IRQ_HANDLED;
+> +}
 
-Dropped...
+This will unconditionally handle the interrupt regardless of if the
+hardware was actually flagging an interrupt which will break shared
+interrupts and the fault handling code in genirq.
 
-> > +       { .hw = &gpll0_out_even.clkr.hw },
-> > +       { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> 
-> Please drop these test inputs. I don't see any reason why they're listed.
+> +	tmpbufsize = op->addr.nbytes + op->dummy.nbytes;
+> +	tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
+> +	if (!tmpbuf)
+> +		return -ENOMEM;
 
-Dropped this and rest.
+I'm not clear where tmpbuf gets freed or passed out of this function?
 
-> > +static struct clk_branch gcc_sys_noc_cpuss_ahb_clk = {
-> > +       .halt_reg = 0x48198,
-> > +       .halt_check = BRANCH_HALT_VOTED,
-> > +       .clkr = {
-> > +               .enable_reg = 0x52000,
-> > +               .enable_mask = BIT(0),
-> > +               .hw.init = &(struct clk_init_data){
-> > +                       .name = "gcc_sys_noc_cpuss_ahb_clk",
-> > +                       .parent_data = &(const struct clk_parent_data){
-> > +                               .hw = &gcc_cpuss_ahb_postdiv_clk_src.clkr.hw,
-> > +                       },
-> > +                       .num_parents = 1,
-> > +                       .flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
-> > +                       .ops = &clk_branch2_ops,
-> > +               },
-> > +       },
-> > +};
-> 
-> Is there a need for this clk to be exposed? Why can't we just turn the
-> bit on in probe and ignore it after that? I'd prefer to not have
-> CLK_IS_CRITICAL in this driver unless necessary.
+> +
+> +	if (op->addr.nbytes) {
+> +		for (i = 0; i < op->addr.nbytes; i++)
+> +			tmpbuf[i] = op->addr.val >> (8 * (op->addr.nbytes - i - 1));
+> +
+> +		addr_buf = tmpbuf;
 
-yeah moved it as setting a bit in probe..
+We assign tmpbuf to addr_buf here but addr_buf just gets read from so
+it's not via that AFAICT.
 
-> > +       /*
-> > +        * Keep the clocks always-ON
-> > +        * GCC_VIDEO_AHB_CLK, GCC_CAMERA_AHB_CLK, GCC_DISP_AHB_CLK,
-> > +        * GCC_CPUSS_DVM_BUS_CLK, GCC_GPU_CFG_AHB_CLK
-> > +        */
-> > +       regmap_update_bits(regmap, 0x0b004, BIT(0), BIT(0));
-> > +       regmap_update_bits(regmap, 0x0b008, BIT(0), BIT(0));
-> > +       regmap_update_bits(regmap, 0x0b00c, BIT(0), BIT(0));
-> > +       regmap_update_bits(regmap, 0x4818c, BIT(0), BIT(0));
-> > +       regmap_update_bits(regmap, 0x71004, BIT(0), BIT(0));
-> 
-> These look like the AHB clks above that we just enabled and then ignore.
+> +	}
+> +	/* Invalid address return zero. */
 
-right, I think these are rest of the always-on clocks
+Missing blank line.
 
--- 
-~Vinod
+> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
+> +{
+> +	struct cqspi_st *cqspi = f_pdata->cqspi;
+> +	void __iomem *reg_base = cqspi->iobase;
+> +	unsigned int chip_select = f_pdata->cs;
+> +	unsigned int reg;
+> +
+> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
+> +	reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
+> +
+> +	/* Convert CS if without decoder.
+> +	 * CS0 to 4b'1110
+> +	 * CS1 to 4b'1101
+> +	 * CS2 to 4b'1011
+> +	 * CS3 to 4b'0111
+> +	 */
+> +	chip_select = 0xF & ~(1 << chip_select);
+
+This says "if without decoder" but there's no conditionals here, what if
+we do have a decoder?
+
+> +	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+> +	ddata  = of_device_get_match_data(dev);
+> +	if (ddata) {
+> +		if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
+> +			cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+> +						cqspi->master_ref_clk_hz);
+> +		if (ddata->hwcaps_mask & CQSPI_SUPPORTS_OCTAL)
+> +			master->mode_bits |= SPI_RX_OCTAL;
+> +		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
+> +			cqspi->use_dac_mode = true;
+> +		if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
+> +			master->bus_num = 0;
+> +			master->num_chipselect = 2;
+> +		}
+> +	}
+
+Given that the driver appears to unconditionally dereference match data
+in other places I'd expect this to return an error if there's none,
+otherwise we'll oops in those other code paths later on.
+
+> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
+> +			       pdev->name, cqspi);
+> +	if (ret) {
+> +		dev_err(dev, "Cannot request IRQ.\n");
+> +		goto probe_reset_failed;
+> +	}
+
+Are you sure that it's safe to use devm_request_irq() - what happens if
+the interrupt fires in the process of removing the device?
+
+--GBuTPvBEOL0MYPgd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5GnB8ACgkQJNaLcl1U
+h9C+fgf+Om+8sIQDPfShzyjlZsc5xBZOp8oDvh4pUB/LyqN2yM/zEyliKQW+lWOK
+fR7W7t5WsTnJaHGyniMVPQs3duaCXpHKZYZgM9U7dhvrMnsX+6A6OZgsJDc3HwfZ
++Z1qQ5vEIOjv2A41gp26X6yp6rlG/7HyT2clyKL4fuoszBQQn231DLOYlh2rzIHN
+hpgIOR2aNl0tz9HybLexivn6d5CmqYxrvvpRavkxpFTii9ReX9xNVhGz9BZRCrr0
+xFqXz1MjYnTrB0HdEMjVn+RfT8TbdT5BcmNp4SRc9OigZuQrtraC0NNvrUxZfuIS
+z8eVTgg4kHixNvaVrt5uWJ49071S5g==
+=5DCl
+-----END PGP SIGNATURE-----
+
+--GBuTPvBEOL0MYPgd--
