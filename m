@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CC2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D54CC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512242168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CDD2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703622;
-	bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
+	s=default; t=1581703626;
+	bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4201SV9Nz9HDP1BQLyLRXyvlo/Twfy7A/MIT/dhblD3+14alvshlj+J1q+wNPfbw
-	 Iq68UkerqSbtpecjRlqQA7UfquR/HDBigRMGT6zOZ6fkCTrjrOaikpp1pSppAbAHJT
-	 cM2gb+6W/XMB9wYqAGlktB+o5r50NP795mzAVwEo=
+	b=f/m+rmdz0ieBxSt72W+FrRWP92Iek3gh6OGoWgNTec1Ne841PqqLHe/DblDQ3VCvX
+	 qFBf5VqrTk6gHzBYyAeZyaO7mKZ9TxOe+Wh5cKKDtUXa7BobUhzFjsM3+Y0hV+WAr2
+	 K4wxdziW+hwIDu0mjq74c+zRoo9Pt8+uGCYBLqdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392149AbgBNSHB (ORCPT
+        id S1731615AbgBNPyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:07:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731170AbgBNPyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:54:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731574AbgBNPyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD5E24684;
-        Fri, 14 Feb 2020 15:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C1352467C;
+        Fri, 14 Feb 2020 15:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695682;
-        bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
+        s=default; t=1581695676;
+        bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwMC+UC7EYD9rN+Wa9p/lSvnmW5KE8KoQ7o4TMU/Q1mJwKKFAmbLdzrJ1tFCQVL1r
-         5yZzxTN5iyryegTP/d/y4tJhpB5GbXJmKCbMZC7Pj6wdJWZAUjmRAD3hu1N3RbQwl+
-         83z2aqYS2XdGvpZ++nLyb7plQS5kjvK9AM5mZGts=
+        b=oYKrDpy+k9q+7XLgrLdd2rWLSwZ2Owk9n4NZb6qWxwTI8+JCqc7CiSmB+m9Asp5W1
+         MD49zZ5pI9iIIDKCUGXwjQxsd+buKJ8VDz41D0vlFPXIrqhzzFgMKTdBLrMDpHvpHC
+         w65V/TJEDG6QHWwfrouREeX9IQmmxwRHHDWO+nwk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 268/542] PM / devfreq: exynos-ppmu: Fix excessive stack usage
-Date:   Fri, 14 Feb 2020 10:44:20 -0500
-Message-Id: <20200214154854.6746-268-sashal@kernel.org>
+Cc:     Hechao Li <hechaol@fb.com>, Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 263/542] bpf: Print error message for bpftool cgroup show
+Date:   Fri, 14 Feb 2020 10:44:15 -0500
+Message-Id: <20200214154854.6746-263-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,72 +59,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hechao Li <hechaol@fb.com>
 
-[ Upstream commit d4556f5e99d5f603913bac01adaff8670cb2d08b ]
+[ Upstream commit 1162f844030ac1ac7321b5e8f6c9badc7a11428f ]
 
-Putting a 'struct devfreq_event_dev' object on the stack is generally
-a bad idea and here it leads to a warnig about potential stack overflow:
+Currently, when bpftool cgroup show <path> has an error, no error
+message is printed. This is confusing because the user may think the
+result is empty.
 
-drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
+Before the change:
 
-There is no real need for the device structure, only the string inside
-it, so add an internal helper function that simply takes the string
-as its argument and remove the device structure.
+$ bpftool cgroup show /sys/fs/cgroup
+ID       AttachType      AttachFlags     Name
+$ echo $?
+255
 
-Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+After the change:
+$ ./bpftool cgroup show /sys/fs/cgroup
+Error: can't query bpf programs attached to /sys/fs/cgroup: Operation
+not permitted
+
+v2: Rename check_query_cgroup_progs to cgroup_has_attached_progs
+
+Signed-off-by: Hechao Li <hechaol@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191224011742.3714301-1-hechaol@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ tools/bpf/bpftool/cgroup.c | 56 ++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index 85c7a77bf3f0d..055deea42c373 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
- 	PPMU_EVENT(dmc1_1),
- };
- 
--static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-+static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
- {
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
--		if (!strcmp(edev->desc->name, ppmu_events[i].name))
-+		if (!strcmp(edev_name, ppmu_events[i].name))
- 			return ppmu_events[i].id;
- 
- 	return -EINVAL;
+diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
+index 1ef45e55039e1..2f017caa678dc 100644
+--- a/tools/bpf/bpftool/cgroup.c
++++ b/tools/bpf/bpftool/cgroup.c
+@@ -117,6 +117,25 @@ static int count_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type)
+ 	return prog_cnt;
  }
  
-+static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++static int cgroup_has_attached_progs(int cgroup_fd)
 +{
-+	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
-+}
++	enum bpf_attach_type type;
++	bool no_prog = true;
 +
- /*
-  * The devfreq-event ops structure for PPMU v1.1
-  */
-@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
- 			 * use default if not.
- 			 */
- 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
--				struct devfreq_event_dev edev;
- 				int id;
- 				/* Not all registers take the same value for
- 				 * read+write data count.
- 				 */
--				edev.desc = &desc[j];
--				id = exynos_ppmu_find_ppmu_id(&edev);
-+				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
++	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
++		int count = count_attached_bpf_progs(cgroup_fd, type);
++
++		if (count < 0 && errno != EINVAL)
++			return -1;
++
++		if (count > 0) {
++			no_prog = false;
++			break;
++		}
++	}
++
++	return no_prog ? 0 : 1;
++}
+ static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
+ 				   int level)
+ {
+@@ -161,6 +180,7 @@ static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
+ static int do_show(int argc, char **argv)
+ {
+ 	enum bpf_attach_type type;
++	int has_attached_progs;
+ 	const char *path;
+ 	int cgroup_fd;
+ 	int ret = -1;
+@@ -192,6 +212,16 @@ static int do_show(int argc, char **argv)
+ 		goto exit;
+ 	}
  
- 				switch (id) {
- 				case PPMU_PMNCNT0:
++	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
++	if (has_attached_progs < 0) {
++		p_err("can't query bpf programs attached to %s: %s",
++		      path, strerror(errno));
++		goto exit_cgroup;
++	} else if (!has_attached_progs) {
++		ret = 0;
++		goto exit_cgroup;
++	}
++
+ 	if (json_output)
+ 		jsonw_start_array(json_wtr);
+ 	else
+@@ -212,6 +242,7 @@ static int do_show(int argc, char **argv)
+ 	if (json_output)
+ 		jsonw_end_array(json_wtr);
+ 
++exit_cgroup:
+ 	close(cgroup_fd);
+ exit:
+ 	return ret;
+@@ -228,7 +259,7 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
+ 			   int typeflag, struct FTW *ftw)
+ {
+ 	enum bpf_attach_type type;
+-	bool skip = true;
++	int has_attached_progs;
+ 	int cgroup_fd;
+ 
+ 	if (typeflag != FTW_D)
+@@ -240,22 +271,13 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
+ 		return SHOW_TREE_FN_ERR;
+ 	}
+ 
+-	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
+-		int count = count_attached_bpf_progs(cgroup_fd, type);
+-
+-		if (count < 0 && errno != EINVAL) {
+-			p_err("can't query bpf programs attached to %s: %s",
+-			      fpath, strerror(errno));
+-			close(cgroup_fd);
+-			return SHOW_TREE_FN_ERR;
+-		}
+-		if (count > 0) {
+-			skip = false;
+-			break;
+-		}
+-	}
+-
+-	if (skip) {
++	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
++	if (has_attached_progs < 0) {
++		p_err("can't query bpf programs attached to %s: %s",
++		      fpath, strerror(errno));
++		close(cgroup_fd);
++		return SHOW_TREE_FN_ERR;
++	} else if (!has_attached_progs) {
+ 		close(cgroup_fd);
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
