@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1407C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86877C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD514222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E31222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgBNIMX (ORCPT
+        id S1728963AbgBNIMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:12:23 -0500
-Received: from outbound-smtp17.blacknight.com ([46.22.139.234]:49663 "EHLO
-        outbound-smtp17.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728332AbgBNIMW (ORCPT
+        Fri, 14 Feb 2020 03:12:24 -0500
+Received: from outbound-smtp63.blacknight.com ([46.22.136.252]:46605 "EHLO
+        outbound-smtp63.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728779AbgBNIMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 03:12:22 -0500
+        Fri, 14 Feb 2020 03:12:23 -0500
 Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp17.blacknight.com (Postfix) with ESMTPS id 2EBFF1C2F6C
+        by outbound-smtp63.blacknight.com (Postfix) with ESMTPS id 86F84FAE71
         for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:21 +0000 (GMT)
-Received: (qmail 30718 invoked from network); 14 Feb 2020 08:12:21 -0000
+Received: (qmail 30783 invoked from network); 14 Feb 2020 08:12:21 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
   by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:21 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
@@ -38,9 +38,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 02/12] sched/numa: Trace when no candidate CPU was found on the preferred node
-Date:   Fri, 14 Feb 2020 08:12:09 +0000
-Message-Id: <20200214081219.26352-3-mgorman@techsingularity.net>
+Subject: [PATCH 04/12] sched/fair: reorder enqueue/dequeue_task_fair path
+Date:   Fri, 14 Feb 2020 08:12:11 +0000
+Message-Id: <20200214081219.26352-5-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200214081219.26352-1-mgorman@techsingularity.net>
 References: <20200214081219.26352-1-mgorman@techsingularity.net>
@@ -49,34 +49,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sched:sched_stick_numa is meant to fire when a task is unable to migrate
-to the preferred node. The case where no candidate CPU could be found is
-not traced which is an important gap. The tracepoint is not fired when
-the task is not allowed to run on any CPU on the preferred node or the
-task is already running on the target CPU but neither are interesting
-corner cases.
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
+The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+is split in 2 distinct parts for throttled cfs_rq without any added value
+but making code less readable.
+
+Change the code ordering such that everything related to a cfs_rq
+(throttled or not) will be done in the same loop.
+
+In addition, the same steps ordering is used when updating a cfs_rq:
+- update_load_avg
+- update_cfs_group
+- update *h_nr_running
+
+No functional and performance changes are expected and have been noticed
+during tests.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 ---
- kernel/sched/fair.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ef3eb36ba5c4..d41a2b37694f 100644
+index 6c866fb2129c..4395951b1530 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1848,8 +1848,10 @@ static int task_numa_migrate(struct task_struct *p)
+@@ -5261,32 +5261,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		enqueue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running increment below.
+-		 */
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
++
+ 		flags = ENQUEUE_WAKEUP;
  	}
  
- 	/* No better CPU than the current one was found. */
--	if (env.best_cpu == -1)
-+	if (env.best_cpu == -1) {
-+		trace_sched_stick_numa(p, env.src_cpu, -1);
- 		return -EAGAIN;
-+	}
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running++;
+-		cfs_rq->idle_h_nr_running += idle_h_nr_running;
  
- 	best_rq = cpu_rq(env.best_cpu);
- 	if (env.best_task == NULL) {
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto enqueue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running++;
++		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	}
+ 
++enqueue_throttle:
+ 	if (!se) {
+ 		add_nr_running(rq, 1);
+ 		/*
+@@ -5347,17 +5346,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		dequeue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running decrement below.
+-		*/
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
++
+ 		/* Don't dequeue parent if it has other entities besides us */
+ 		if (cfs_rq->load.weight) {
+ 			/* Avoid re-evaluating load for this entity: */
+@@ -5375,16 +5370,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running--;
+-		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto dequeue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running--;
++		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 	}
+ 
++dequeue_throttle:
+ 	if (!se)
+ 		sub_nr_running(rq, 1);
+ 
 -- 
 2.16.4
 
