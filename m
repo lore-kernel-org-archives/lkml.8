@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB00DC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B6024694
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA52A246FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697836;
-	bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
+	s=default; t=1581697840;
+	bh=L0qBFLCFG7F+X1YVyHV7rV+F3j/WY/ygzye+NRM0wI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlWPKSf+5PXJbLHh27gd/3yphb2MX/o8nYyDsALJ9zdUVJaX9RGa2lKT0fqINyq/J
-	 E/knrRgoUPhBF4ME+W6lTLas3RMt07ATdPXMOkxDZLYqGKw0WOIJ5WuxVw1Wxiugqe
-	 jECsx15YC+TasZIOwCDgsb9CsiTEcBNa271gC2Rs=
+	b=GmXhQgyv8/O9DKVVjWkmBo8kYbiUwYzG0n8duysxeIfGJLUZdtEV54HAkNEHbDtuQ
+	 bWHChIP+AbPFZK2TlPKJrYQrOgPT4YtX+lba849O8GVv3L0a1QPEbThDCyVHxHUKJD
+	 35XWUGIcSQDEPczl1h8Hbjv0WEPebK1DgCl90xQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406783AbgBNQaf (ORCPT
+        id S2406372AbgBNQ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:30:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406387AbgBNQ0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:18 -0500
+        id S2405449AbgBNQYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26BCA2470D;
-        Fri, 14 Feb 2020 16:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8B72478D;
+        Fri, 14 Feb 2020 16:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697577;
-        bh=SONkKqbwf5JAh6hTaH2JVn6iDfa5NTZtilJALl4Cgsw=;
+        s=default; t=1581697453;
+        bh=L0qBFLCFG7F+X1YVyHV7rV+F3j/WY/ygzye+NRM0wI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4FMMVgZ2V+R61gC6SYqLlmuRK8a18MKZganKTyvzTnQHkqEqRHaO6+gjbE39nhtZ
-         7mGpR+wtIFUUrOIxqbe9UX2bXBjja1u6lUbkFNCVAF0C0W3GFzWlWnunVTUbLyEm1p
-         6tmcvdyvnWEkbSchzz781nNBq0UUELHQoiNdmnAA=
+        b=niNcFd+ikwXKqMWB1q4Enx5AHk97UcPrww+tFP6oJP+elOVXNezcb7lddypAvvPuB
+         Sa/TUl1/YoWP8TbK3Z8HPlP0yRZe6aa5UlwOHtAWvw7Xz37OvLua44XN4Zae7+kdlS
+         baY3gjY9UQQItfbbk5SZWoMy+OztYSWWL2F+w/Bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 091/100] docs: i2c: writing-clients: properly name the stop condition
-Date:   Fri, 14 Feb 2020 11:24:15 -0500
-Message-Id: <20200214162425.21071-91-sashal@kernel.org>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 136/141] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+Date:   Fri, 14 Feb 2020 11:21:16 -0500
+Message-Id: <20200214162122.19794-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Ceresoli <luca@lucaceresoli.net>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
+[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
 
-In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
-condition".
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/i2c/writing-clients | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/i2c/writing-clients b/Documentation/i2c/writing-clients
-index a755b141fa4a8..8b0de4334ae90 100644
---- a/Documentation/i2c/writing-clients
-+++ b/Documentation/i2c/writing-clients
-@@ -339,9 +339,9 @@ read/written.
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 0c0cd2768d6e9..d1efbb8dadc53 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -365,7 +365,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
+ 						   struct its_cmd_desc *desc)
+ {
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
  
- This sends a series of messages. Each message can be a read or write,
- and they can be mixed in any way. The transactions are combined: no
--stop bit is sent between transaction. The i2c_msg structure contains
--for each message the client address, the number of bytes of the message
--and the message data itself.
-+stop condition is issued between transaction. The i2c_msg structure
-+contains for each message the client address, the number of bytes of the
-+message and the message data itself.
+ 	its_fixup_cmd(cmd);
  
- You can read the file `i2c-protocol' for more information about the
- actual I2C protocol.
 -- 
 2.20.1
 
