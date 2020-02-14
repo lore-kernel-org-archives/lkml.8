@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7EFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B74C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB96D2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B08024654
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581693677;
-	bh=569NeW8Dm5AkGLXd1hzDBfiVUVN9Yy66W/d/qknuHC4=;
+	s=default; t=1581693682;
+	bh=wS1K8188VxBjcTndjH/k8atrTcAkoLq+yq/N9rfV7ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HB1NaRxTi71bPMqi8IkzjNwY+q0cyoKYXtOkXEM+CcptCoV0/unZiKAp8vjwZ5LZ0
-	 Z3lOoDcKD1AwxA+hrcFz6wIxXu/cb7a+UMH4GGwe41Qeilbg2tJGn4WA3+5jyXwuCB
-	 pTsl08NrrP3OsXEBWGXGNtDHw0GnjzT0kNAoLRDQ=
+	b=VGYAiG0EviF/PfX8duVwv1rbfxEDRBG/m/geNaPRAGiB3U2sSwY4TB8pVSeutWzIz
+	 OvkEuuMoh1S/0K+dPbpgwiI0diB6gR6O4AzJxRW2lUumaoSXj2briitFRlj/Wf8z/N
+	 xGwwi2TloWsWhzlYwFMAmcIcBtEZgTcuMsM0/Apk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbgBNPVR (ORCPT
+        id S2387639AbgBNPVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:21:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387570AbgBNPVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:21:15 -0500
+        id S2387616AbgBNPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:21:19 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743702082F;
-        Fri, 14 Feb 2020 15:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A949C2465D;
+        Fri, 14 Feb 2020 15:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581693674;
-        bh=569NeW8Dm5AkGLXd1hzDBfiVUVN9Yy66W/d/qknuHC4=;
+        s=default; t=1581693678;
+        bh=wS1K8188VxBjcTndjH/k8atrTcAkoLq+yq/N9rfV7ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsF85+YHSPrNVsA48g/Z8BWYatwIgxNCLX4lMER68E1IKun9naiwygADMAlQgFWfk
-         kimOtcjlWvJ1ie5m4BQDJkwu3t3snNLfl90YoVf34cLz8gJJ2WwZ0dIrxM0+VhGD5X
-         FLFCDylfAl7XwCaW8WlvOSm1tJNk5MnDbkpZre5Q=
+        b=R5RLAbi7PAzgNDqij0/ISqfH0lTk7Zmn4WcajWT0bFnFpD1HYbrSIUjlExbonGxe0
+         /w85aOWDVaIxGrgp0otmdXMQh/rYPVZFO4rsBfI8hUO3BE2M1APtdDy0UhjM90uHMq
+         bYW8bGWMC4miv1g485cmGuO4DnWf29iXfs5+JfPk=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j2cPn-0057sw-MG; Fri, 14 Feb 2020 14:57:59 +0000
+        id 1j2cPo-0057sw-UD; Fri, 14 Feb 2020 14:58:01 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 16/20] KVM: arm64: GICv4.1: Allow SGIs to switch between HW and SW interrupts
-Date:   Fri, 14 Feb 2020 14:57:32 +0000
-Message-Id: <20200214145736.18550-17-maz@kernel.org>
+Subject: [PATCH v4 18/20] KVM: arm64: GICv4.1: Reload VLPI configuration on distributor enable/disable
+Date:   Fri, 14 Feb 2020 14:57:34 +0000
+Message-Id: <20200214145736.18550-19-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214145736.18550-1-maz@kernel.org>
 References: <20200214145736.18550-1-maz@kernel.org>
@@ -73,165 +73,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to let a guest buy in the new, active-less SGIs, we
-need to be able to switch between the two modes.
+Each time a Group-enable bit gets flipped, the state of these bits
+needs to be forwarded to the hardware. This is a pretty heavy
+handed operation, requiring all vcpus to reload their GICv4
+configuration. It is thus implemented as a new request type.
 
-Handle this by stopping all guest activity, transfer the state
-from one mode to the other, and resume the guest.
+Of course, we only support Group-1 for now...
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- include/kvm/arm_vgic.h      |  3 ++
- virt/kvm/arm/vgic/vgic-v3.c |  2 +
- virt/kvm/arm/vgic/vgic-v4.c | 96 +++++++++++++++++++++++++++++++++++++
- virt/kvm/arm/vgic/vgic.h    |  1 +
- 4 files changed, 102 insertions(+)
+ arch/arm/include/asm/kvm_host.h   | 1 +
+ arch/arm64/include/asm/kvm_host.h | 1 +
+ virt/kvm/arm/arm.c                | 8 ++++++++
+ virt/kvm/arm/vgic/vgic-mmio-v3.c  | 5 ++++-
+ 4 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 63457908c9c4..69f4164d6477 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -231,6 +231,9 @@ struct vgic_dist {
- 	/* distributor enabled */
- 	bool			enabled;
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+index c3314b286a61..7104babef15a 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -39,6 +39,7 @@
+ #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
+ #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+ #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
++#define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
  
-+	/* Wants SGIs without active state */
-+	bool			nassgireq;
+ DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+ 
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index d87aa609d2b6..90b86f349ceb 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -44,6 +44,7 @@
+ #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
+ #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+ #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
++#define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
+ 
+ DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+ 
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index d65a0faa46d8..d21e17b7af45 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -625,6 +625,14 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+ 
+ 		if (kvm_check_request(KVM_REQ_RECORD_STEAL, vcpu))
+ 			kvm_update_stolen_time(vcpu);
 +
- 	struct vgic_irq		*spis;
- 
- 	struct vgic_io_device	dist_iodev;
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index 1bc09b523486..2c9fc13e2c59 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -540,6 +540,8 @@ int vgic_v3_map_resources(struct kvm *kvm)
- 		goto out;
++		if (kvm_check_request(KVM_REQ_RELOAD_GICv4, vcpu)) {
++			/* The distributor enable bits were changed */
++			preempt_disable();
++			vgic_v4_put(vcpu, false);
++			vgic_v4_load(vcpu);
++			preempt_enable();
++		}
  	}
- 
-+	if (kvm_vgic_global_state.has_gicv4_1)
-+		vgic_v4_configure_vsgis(kvm);
- 	dist->ready = true;
- 
- out:
-diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
-index c2fcde104ea2..063785fd2dc7 100644
---- a/virt/kvm/arm/vgic/vgic-v4.c
-+++ b/virt/kvm/arm/vgic/vgic-v4.c
-@@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
- 	return IRQ_HANDLED;
  }
  
-+static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
-+{
-+	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
-+	vpe->sgi_config[irq->intid].group 	= irq->group;
-+	vpe->sgi_config[irq->intid].priority	= irq->priority;
-+}
-+
-+static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
-+{
-+	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
-+	int i;
-+
-+	/*
-+	 * With GICv4.1, every virtual SGI can be directly injected. So
-+	 * let's pretend that they are HW interrupts, tied to a host
-+	 * IRQ. The SGI code will do its magic.
-+	 */
-+	for (i = 0; i < VGIC_NR_SGIS; i++) {
-+		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
-+		struct irq_desc *desc;
-+		int ret;
-+
-+		if (irq->hw) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
-+		irq->hw = true;
-+		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
-+		vgic_v4_sync_sgi_config(vpe, irq);
-+		/*
-+		 * SGIs are initialised as disabled. Enable them if
-+		 * required by the rest of the VGIC init code.
-+		 */
-+		desc = irq_to_desc(irq->host_irq);
-+		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
-+					      false);
-+		if (!WARN_ON(ret)) {
-+			/* Transfer pending state */
-+			ret = irq_set_irqchip_state(irq->host_irq,
-+						    IRQCHIP_STATE_PENDING,
-+						    irq->pending_latch);
-+			WARN_ON(ret);
-+			irq->pending_latch = false;
-+		}
-+
-+		vgic_put_irq(vcpu->kvm, irq);
-+	}
-+}
-+
-+static void vgic_v4_disable_vsgis(struct kvm_vcpu *vcpu)
-+{
-+	int i;
-+
-+	for (i = 0; i < VGIC_NR_SGIS; i++) {
-+		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
-+		struct irq_desc *desc;
-+		int ret;
-+
-+		if (!irq->hw) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
-+		irq->hw = false;
-+		ret = irq_get_irqchip_state(irq->host_irq,
-+					    IRQCHIP_STATE_PENDING,
-+					    &irq->pending_latch);
-+		WARN_ON(ret);
-+
-+		desc = irq_to_desc(irq->host_irq);
-+		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
-+
-+		vgic_put_irq(vcpu->kvm, irq);
-+	}
-+}
-+
-+/* Must be called with the kvm lock held */
-+void vgic_v4_configure_vsgis(struct kvm *kvm)
-+{
-+	struct vgic_dist *dist = &kvm->arch.vgic;
-+	struct kvm_vcpu *vcpu;
-+	int i;
-+
-+	kvm_arm_halt_guest(kvm);
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (dist->nassgireq)
-+			vgic_v4_enable_vsgis(vcpu);
-+		else
-+			vgic_v4_disable_vsgis(vcpu);
-+	}
-+
-+	kvm_arm_resume_guest(kvm);
-+}
-+
- /**
-  * vgic_v4_init - Initialize the GICv4 data structures
-  * @kvm:	Pointer to the VM being initialized
-diff --git a/virt/kvm/arm/vgic/vgic.h b/virt/kvm/arm/vgic/vgic.h
-index c7fefd6b1c80..769e4802645e 100644
---- a/virt/kvm/arm/vgic/vgic.h
-+++ b/virt/kvm/arm/vgic/vgic.h
-@@ -316,5 +316,6 @@ void vgic_its_invalidate_cache(struct kvm *kvm);
- bool vgic_supports_direct_msis(struct kvm *kvm);
- int vgic_v4_init(struct kvm *kvm);
- void vgic_v4_teardown(struct kvm *kvm);
-+void vgic_v4_configure_vsgis(struct kvm *kvm);
+diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+index 442f3b8c2559..48fd9fc229a2 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
++++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+@@ -132,7 +132,10 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
+ 		if (is_hwsgi != dist->nassgireq)
+ 			vgic_v4_configure_vsgis(vcpu->kvm);
  
- #endif
+-		if (!was_enabled && dist->enabled)
++		if (kvm_vgic_global_state.has_gicv4_1 &&
++		    was_enabled != dist->enabled)
++			kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_RELOAD_GICv4);
++		else if (!was_enabled && dist->enabled)
+ 			vgic_kick_vcpus(vcpu->kvm);
+ 
+ 		mutex_unlock(&vcpu->kvm->lock);
 -- 
 2.20.1
 
