@@ -2,151 +2,136 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73050222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CF32082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581700165;
+	bh=37Tl3sdRVJVadsU+L3wETW4srSquGpwjxB81nM98w+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RpMeVfMuG5ZE8DqxQzkhGccd5WV6UMIHLDI+l5+p9NNmmR7hFVsxlEe9qIJ+TvkOw
+	 RQSSyR10LeqlkXRoommomotTK4+hosu8xmB4M2jm6Vc0hEkv6CDE3yTn8zW6cApM5K
+	 POmPHj31kr7tsVRY4f1X52xAKP2vQ3MzdRMDDQoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394598AbgBNRJR (ORCPT
+        id S2394402AbgBNRJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:09:17 -0500
-Received: from mga06.intel.com ([134.134.136.31]:10149 "EHLO mga06.intel.com"
+        Fri, 14 Feb 2020 12:09:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392336AbgBNRJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:09:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:09:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="223073823"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 14 Feb 2020 09:09:14 -0800
-Date:   Fri, 14 Feb 2020 09:09:14 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}()
- accessors
-Message-ID: <20200214170914.GC20690@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-27-sean.j.christopherson@intel.com>
- <1f918bcf-d36d-f759-5796-2acb2a514888@intel.com>
+        id S2392230AbgBNQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:53 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE2C246CE;
+        Fri, 14 Feb 2020 16:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696833;
+        bh=37Tl3sdRVJVadsU+L3wETW4srSquGpwjxB81nM98w+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jCxEmFam5pfQw4og8DT0logeA36eMH3gMEkp47Gon1S7rvmw6Kizxueh0NIeCphbD
+         AqhIJf2KLvLsAw44oaxFa7MVgrK6mUkQ2M2u+QFHH59IjF6t016ysQK0+Jjl+ghB5W
+         1t1NxMcF974STTvL09IcPVYgNgqmHKfhk5ahibg0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 098/252] fore200e: Fix incorrect checks of NULL pointer dereference
+Date:   Fri, 14 Feb 2020 11:09:13 -0500
+Message-Id: <20200214161147.15842-98-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f918bcf-d36d-f759-5796-2acb2a514888@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 05:44:41PM +0800, Xiaoyao Li wrote:
-> On 2/2/2020 2:51 AM, Sean Christopherson wrote:
-> >@@ -387,7 +388,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
-> >  		entry->ebx |= F(TSC_ADJUST);
-> >  		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
-> >-		f_la57 = entry->ecx & F(LA57);
-> >+		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+From: Aditya Pakki <pakki001@umn.edu>
 
-Note, cpuid_entry_get() is used here.
+[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
 
-> >  		cpuid_mask(&entry->ecx, CPUID_7_ECX);
-> >  		/* Set LA57 based on hardware capability. */
-> >  		entry->ecx |= f_la57;
-> >diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> >index 72a79bdfed6b..64e96e4086e2 100644
-> >--- a/arch/x86/kvm/cpuid.h
-> >+++ b/arch/x86/kvm/cpuid.h
-> >@@ -95,16 +95,10 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
-> >  	return reverse_cpuid[x86_leaf];
-> >  }
-> >-static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-> >+static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
-> >+						  const struct cpuid_reg *cpuid)
-> >  {
-> >-	struct kvm_cpuid_entry2 *entry;
-> >-	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-> >-
-> >-	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
-> >-	if (!entry)
-> >-		return NULL;
-> >-
-> >-	switch (cpuid.reg) {
-> >+	switch (cpuid->reg) {
-> >  	case CPUID_EAX:
-> >  		return &entry->eax;
-> >  	case CPUID_EBX:
-> >@@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
-> >  	}
-> >  }
-> >+static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
-> >+						unsigned x86_feature)
-> >+{
-> >+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-> >+
-> >+	return __cpuid_entry_get_reg(entry, &cpuid);
-> >+}
-> >+
-> >+static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
-> >+					   unsigned x86_feature)
-> >+{
-> >+	u32 *reg = cpuid_entry_get_reg(entry, x86_feature);
-> >+
-> >+	return *reg & __feature_bit(x86_feature);
-> >+}
-> >+
-> 
-> This helper function is unnecessary. There is only one user throughout this
-> series, i.e., cpuid_entry_has() below.
+In fore200e_send and fore200e_close, the pointers from the arguments
+are dereferenced in the variable declaration block and then checked
+for NULL. The patch fixes these issues by avoiding NULL pointer
+dereferences.
 
-And the LA57 case above.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-> And I cannot image other possible use case of it.
-
-The LA57 case, which admittedly goes away soon, was subtle enough (OR in
-the flag instead of querying yes/no) that I wanted keep the accessor around
-in case a similar case popped up in the future.
-
-> >+static __always_inline bool cpuid_entry_has(struct kvm_cpuid_entry2 *entry,
-> >+					    unsigned x86_feature)
-> >+{
-> >+	return cpuid_entry_get(entry, x86_feature);
-> >+}
-> >+
-> >+static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
->                           ^
-> Should be                 u32
-> otherwise, previous patch will be unhappy. :)
-
-Doh, thanks!
+diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
+index 99a38115b0a8f..86aab14872fd0 100644
+--- a/drivers/atm/fore200e.c
++++ b/drivers/atm/fore200e.c
+@@ -1504,12 +1504,14 @@ fore200e_open(struct atm_vcc *vcc)
+ static void
+ fore200e_close(struct atm_vcc* vcc)
+ {
+-    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
+     struct fore200e_vcc*    fore200e_vcc;
++    struct fore200e*        fore200e;
+     struct fore200e_vc_map* vc_map;
+     unsigned long           flags;
  
-> >+{
-> >+	struct kvm_cpuid_entry2 *entry;
-> >+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-> >+
-> >+	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
-> >+	if (!entry)
-> >+		return NULL;
-> >+
-> >+	return __cpuid_entry_get_reg(entry, &cpuid);
-> >+}
-> >+
-> >  static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
-> >  {
-> >  	u32 *reg;
-> >
-> 
+     ASSERT(vcc);
++    fore200e = FORE200E_DEV(vcc->dev);
++
+     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
+     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
+ 
+@@ -1554,10 +1556,10 @@ fore200e_close(struct atm_vcc* vcc)
+ static int
+ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+ {
+-    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
+-    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
++    struct fore200e*        fore200e;
++    struct fore200e_vcc*    fore200e_vcc;
+     struct fore200e_vc_map* vc_map;
+-    struct host_txq*        txq          = &fore200e->host_txq;
++    struct host_txq*        txq;
+     struct host_txq_entry*  entry;
+     struct tpd*             tpd;
+     struct tpd_haddr        tpd_haddr;
+@@ -1570,9 +1572,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+     unsigned char*          data;
+     unsigned long           flags;
+ 
+-    ASSERT(vcc);
+-    ASSERT(fore200e);
+-    ASSERT(fore200e_vcc);
++    if (!vcc)
++        return -EINVAL;
++
++    fore200e = FORE200E_DEV(vcc->dev);
++    fore200e_vcc = FORE200E_VCC(vcc);
++
++    if (!fore200e)
++        return -EINVAL;
++
++    txq = &fore200e->host_txq;
++    if (!fore200e_vcc)
++        return -EINVAL;
+ 
+     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
+ 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
+-- 
+2.20.1
+
