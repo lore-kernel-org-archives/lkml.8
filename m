@@ -2,88 +2,144 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F96C3B192
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6536C3B18F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DDE222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581640929;
-	bh=EmQcxiNvK/x4tD6mRsL2K1pR6nZqCXLY44gaFHE87Po=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=zCC5WxJYfxIILtXAwJxEIl38yyL+sR+Kfj19XSsoMAdy2FRXiFU2Licm/UViSp9lG
-	 qdRGIEEXWw1J+x2eP9NgJHLTP9V38FCVrG6Zps3GsdU0xKU6myrEnvPSIr0vykDIMX
-	 lyOMZjJYIJugjX3CfkW1TPRlIUSvf99yg8LdBV2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 7934D2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 00:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCt0BWX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgBNAmJ (ORCPT
+        id S1728017AbgBNAoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 19:42:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgBNAmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 19:42:08 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D243F2187F;
-        Fri, 14 Feb 2020 00:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581640928;
-        bh=EmQcxiNvK/x4tD6mRsL2K1pR6nZqCXLY44gaFHE87Po=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=suquqWkHTNOPKJHcSWuBa5+udjHJg69mcP0J6LFI8c3sBPo1+RsjCZeUxV2szWM9f
-         6KQ6o6C0tjhJA6rx+cHNAalUJSCAURjiielXCraBCOIhI3EM+JnJ3k2Uu4BdpqvOiH
-         3lG1260MCJHixYp2m8vIGzPBrOuFJ/VGUiER9nNY=
-Subject: Re: [PATCH 5.4 00/96] 5.4.20-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200213151839.156309910@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <fb4e5bfd-5415-801f-5be2-677f18abf3a8@kernel.org>
-Date:   Thu, 13 Feb 2020 17:42:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200213151839.156309910@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Feb 2020 19:44:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42821 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbgBNAoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 19:44:23 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w21so4025692pgl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 16:44:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3kKnrEZnWkNPVAd2iboNdWLqrlgxcpOSWe5JDchkAgM=;
+        b=jCt0BWX3EOA8tmmzwv9m6xgX7LFDTeGfld9TPGumhKfCmQYLgEScq/1kDMuepH8odY
+         adIltx1W8F3H3QNBIVPyTXLE3XS4gzq6tnIONKcdu6XSnlUBdq6JJdQIwoXdeb/hW4Xr
+         6YHBgzWsytRxxhcNm496CW6jToVTSKkfHHoN8Q5eUHYDY08hCxxqbeUD9TctvGdT613K
+         OD8Ipc13FNQyHyH26iDSsAMmCN/ivzXLVToIMGZ+XQzAftiSCm6G48fkwKPvyBWtYqYA
+         HPW6W+0BdjaTzQzzXPOZwPyhiA/qOJEDdogwuLeBUGGOfCR8RfjvW/FbqP8FErdrW4RF
+         Ja6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3kKnrEZnWkNPVAd2iboNdWLqrlgxcpOSWe5JDchkAgM=;
+        b=GSD8qJb69JgileLV0ZVAXjK/N1bZwoEGDwI6gcTlbcAYDggPXYw28w79vHHAxdIkOw
+         SiGgtYtQinLN0BiHq84v6ez1isNyr6JpMlVlkcZb9Qm5NEvYu246m0bnOBep/mSPkhyQ
+         i0Yk9WqZYEFFsBjXbB1f2pLA+Ncso/gE5/ulf5tIkHlR0CFTNnGnsueHYGA+BdWw8Sef
+         SklelJ5AgaOjqYnHAog3o0iPZoGDZnIefUL5lcqXEUJID/EX/puvJwcPMhfN9C8Hmx7d
+         FR25anLTYPl1PDLMSPK5ESsWexdNhpn5AInVzYQXsSSjH4Glne97KgAxgZAVYLDcx9qs
+         LDtw==
+X-Gm-Message-State: APjAAAWwrwShRmGu0mwwBAk2o2pVqAW1K4B1eab16EC4SiDoV3X0ZGNN
+        n7ytHxja7mi5wK9n531Ywa+EKgIthZg=
+X-Google-Smtp-Source: APXvYqyWjsGHbuLmeC0Qkr8LysXeNaNX6lbId4wRg4KfbMI1haOpAJPgKnApW0xvAZLeT6g9ThRvkA==
+X-Received: by 2002:a63:354b:: with SMTP id c72mr550271pga.99.1581641061330;
+        Thu, 13 Feb 2020 16:44:21 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id l29sm4424333pgb.86.2020.02.13.16.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 16:44:20 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Alexander Graf <agraf@suse.de>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: [RFC][PATCH] driver core: Extend returning EPROBE_DEFER for two minutes after late_initcall
+Date:   Fri, 14 Feb 2020 00:44:13 +0000
+Message-Id: <20200214004413.12450-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 8:20 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.20 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 15 Feb 2020 15:16:40 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.20-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+at the end of initcall"), along with commit 25b4e70dcce9
+("driver core: allow stopping deferred probe after init") after
+late_initcall, drivers will stop getting EPROBE_DEFER, and
+instead see an error causing the driver to fail to load.
 
-Compiled and booted on my test system. No dmesg regressions.
+That change causes trouble when trying to use many clk drivers
+as modules, as the clk modules may not load until much later
+after init has started. If a dependent driver loads and gets an
+error instead of EPROBE_DEFER, it won't try to reload later when
+the dependency is met, and will thus fail to load.
 
-thanks,
--- Shuah
+Instead of reverting that patch, this patch tries to extend the
+time that EPROBE_DEFER is retruned by two minutes, to (hopefully)
+ensure that everything has had a chance to load.
+
+Specifically, on db845c, this change allows us to set
+SDM_GPUCC_845, QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and
+get a working system, where as without it the display will fail
+to load.
+
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org
+Fixes: e01afc3250255 ("PM / Domains: Stop deferring probe at the end of initcall")
+Fixes: 25b4e70dcce9 ("driver core: allow stopping deferred probe after init")
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/base/dd.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index b25bcab2a26b..35ebae8b65be 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -311,6 +311,12 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
+ }
+ static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
+ 
++static void deferred_initcall_done_work_func(struct work_struct *work)
++{
++	initcalls_done = true;
++}
++static DECLARE_DELAYED_WORK(deferred_initcall_done_work, deferred_initcall_done_work_func);
++
+ /**
+  * deferred_probe_initcall() - Enable probing of deferred devices
+  *
+@@ -327,7 +333,7 @@ static int deferred_probe_initcall(void)
+ 	driver_deferred_probe_trigger();
+ 	/* Sort as many dependencies as possible before exiting initcalls */
+ 	flush_work(&deferred_probe_work);
+-	initcalls_done = true;
++	schedule_delayed_work(&deferred_initcall_done_work, 120 * HZ);
+ 
+ 	/*
+ 	 * Trigger deferred probe again, this time we won't defer anything
+-- 
+2.17.1
 
