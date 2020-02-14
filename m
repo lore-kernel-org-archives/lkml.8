@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E79C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBB3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9792168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD572187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703712;
-	bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
+	s=default; t=1581703721;
+	bh=jVYpPF/XTTCfs3ewKAAQahe25GceYAwTatt+NUdKAOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MP1g/98miyxFoCbLLeCBysECIEkfcWuxVDOStYiOI46tGtltBovtJZtlOsId4Xpao
-	 kCwQMcb3KRzp4ntIUe+x07E05qUN25oJKSORdFOapgx8ADyKm/TPAnvPRs3iJS5iAv
-	 zdkK//WuLb4R6D+B2y8cvPw4VPcIbLbA3oEq09rQ=
+	b=UxFB1+8SYBNdpUQ+YRBZNGouSgkDnVr15OBVcG6GteyzzJ/YbhdLKrtCWQWNogZrL
+	 RTpds8Upuf27M9Q0JFBBpHFs1MV7SMuOjwHCStVCZT5agOL0CoTN9lh1rXst1PU2rX
+	 /w2sKrGqGrZYFH5NvGvtNTNB1OA4/Ad75cKSnBAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392616AbgBNSIb (ORCPT
+        id S1731471AbgBNPyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:08:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34266 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbgBNPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:21 -0500
+        id S1731435AbgBNPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B36424681;
-        Fri, 14 Feb 2020 15:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE8024685;
+        Fri, 14 Feb 2020 15:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695660;
-        bh=Z6d6zi/9ewk2kMFLw5AZmpLrk8BYR4zguQyQmM1H/aw=;
+        s=default; t=1581695650;
+        bh=jVYpPF/XTTCfs3ewKAAQahe25GceYAwTatt+NUdKAOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvFgRvO151sL7hPiY4rmAHqjatTYv8d47xQCnA4hQSxXCZXPNoWNmzCLkI7CWoCxL
-         sKWF8MnsKqW63bf94BKq3WEL10xU4mmUv/QaiNXY7G1zoU527wXm67ryk6OKo7P1Fi
-         7cEJOIWKrN+V79+GYso8LZtdMUgNViKIz/zLEEdg=
+        b=hGm368M/BR+nWloL+ZuV+RjwzKCXMgsKiw57ZoEalCZyuZOl3cN2h0uqJEikT4lDu
+         jrUMUmxDp+E8T7U8J2Nzqnocz2viSRa+TQxBuXyY42eY0XmPSFcasdk/tOlRZ0IhO6
+         x0f/UpYpfeoKgMQfj6Bk0XFzCe9dLSVJce9SUR4k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 251/542] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
-Date:   Fri, 14 Feb 2020 10:44:03 -0500
-Message-Id: <20200214154854.6746-251-sashal@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 243/542] crypto: amlogic - add unspecified HAS_IOMEM dependency
+Date:   Fri, 14 Feb 2020 10:43:55 -0500
+Message-Id: <20200214154854.6746-243-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit 2e198c395a084ff3015d71896e35de049c40e3a4 ]
+[ Upstream commit 7d07de2c18abd95f72efb28f78a4825e0fc1aa6a ]
 
-The WiFi firmware used on db845c implements the 8bit host-capability
-message, so enable the quirk for this.
+Currently CONFIG_CRYPTO_DEV_AMLOGIC_GXL=y implicitly depends on
+CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+the following build error:
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20191113232245.4039932-1-bjorn.andersson@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ld: drivers/crypto/amlogic/amlogic-gxl-core.o: in function `meson_crypto_probe':
+drivers/crypto/amlogic/amlogic-gxl-core.c:240: undefined reference to `devm_platform_ioremap_resource'
+
+Fix the build error by adding the unspecified dependency.
+
+Reported-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Corentin Labbe <clabbe@baylibre.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/amlogic/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index d100f46791a62..912ba745c0fc9 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -529,6 +529,8 @@
- 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+
-+	qcom,snoc-host-cap-8bit-quirk;
- };
- 
- /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+diff --git a/drivers/crypto/amlogic/Kconfig b/drivers/crypto/amlogic/Kconfig
+index b90850d18965f..cf95476026708 100644
+--- a/drivers/crypto/amlogic/Kconfig
++++ b/drivers/crypto/amlogic/Kconfig
+@@ -1,5 +1,6 @@
+ config CRYPTO_DEV_AMLOGIC_GXL
+ 	tristate "Support for amlogic cryptographic offloader"
++	depends on HAS_IOMEM
+ 	default y if ARCH_MESON
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_ENGINE
 -- 
 2.20.1
 
