@@ -2,132 +2,99 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27425C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96242187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462A1222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 06:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttCnz5S7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mNOYLuie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgBNGqb (ORCPT
+        id S1728761AbgBNGsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 01:46:31 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44805 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgBNGqb (ORCPT
+        Fri, 14 Feb 2020 01:48:40 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3591 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725897AbgBNGsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 01:46:31 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so8140396otj.11;
-        Thu, 13 Feb 2020 22:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RKB2u4zCoEkjwdZrkIjqRIz/kGGuU98/UeeGnME5DaU=;
-        b=ttCnz5S7kxwNor+Pg9JqXzpmTLKABDEHvB7sGge2iEYkklLODvA9iLE16n0zCr0md5
-         LeKRss6HpKBr36JLi8jhVz9ViNQIYqZyGE4wpLx82HCrThF5XBPY01BUY0TySsuWtiX7
-         rBwqw+4xI6lw1sUiH+5YlYeRK3aOPhms+VSGSgl6748lUDIgwRJ0DGHWYTWgExt6EUlP
-         1zjlhXi6eqJSdUliR4iBiefnczuQX3DEUtEffTFeWf0dFW084tA2boUDhTYlpKqrnSA8
-         4H/JWoQZhQvVtd7tO98D0weOOZ1Z4313MtBmtKd1xIbo02a3icnu8ZC3zA+0zRY+h8Gq
-         BUFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RKB2u4zCoEkjwdZrkIjqRIz/kGGuU98/UeeGnME5DaU=;
-        b=EoeNREgU4mEe5aeQAifVsfUHjplk2we95vMwhfbzItN+hiJntNJJwdb5QjOjVqBvHm
-         ODb74B/Zv49jRuMP9KvBbJO9jZ/HXPaNKZAjE01A3QsybPC8ZZd795gZ5jxkQy8hJrJs
-         /fyNVE+WJ9teloYP2kwWAjp6g5nHCgBFzmyEbNizdpxPwMPrbOVVWHW52JKJZj80cLqd
-         EgbixJK8GX/BBAVSkhJ6ICnUchaKhZiEBpeWlLR9mzOb3IGePVECw9EX8YW0zx8axJRn
-         yb+5+ilPFi88cnKLuw0bX66Zt5gFiULyGbxLKcb4i9clV/SqYJXwZPzYDHu0JHIHm/LG
-         Ec1g==
-X-Gm-Message-State: APjAAAWYQCsHJS1uxFUiND4lStilHSN65svfre0lFMTdMLw28KujHhAg
-        xCnQBbmW3JolbdeUP4w2By0=
-X-Google-Smtp-Source: APXvYqxitUmGPjrOI8tNqeeGYBJnMjQ984lWNAoWDD0tVEQdx5xYbkwh5EjRMoQiZimnWfEESY1pHw==
-X-Received: by 2002:a9d:6f85:: with SMTP id h5mr1082932otq.19.1581662790329;
-        Thu, 13 Feb 2020 22:46:30 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id r2sm1676849otk.22.2020.02.13.22.46.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 22:46:29 -0800 (PST)
-Date:   Thu, 13 Feb 2020 23:46:28 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
-Message-ID: <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
-References: <20200208141052.48476-1-natechancellor@gmail.com>
- <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
+        Fri, 14 Feb 2020 01:48:40 -0500
+X-UUID: 8c8f9b2b36a54850b631df62dc69840b-20200214
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=793AtRhL6KTU8oRy5ebaU3z1XDM9P+It3bT3YTeZoSU=;
+        b=mNOYLuie8RFfAObLdxVKO47u9kXFV9XODlwdMQBEcAs/8GHTOLaBqkdm0YIMMXTK6xRaEKjsdVmN3S7XyjLLC8fcRMvcrbQ32vCQvHhtjySMHNWP+RXOIUVsnohSlwPNEbUNU1DMVrz/mMGiepG83AUfnrHOxmDNkYubsbdkY+g=;
+X-UUID: 8c8f9b2b36a54850b631df62dc69840b-20200214
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 313290993; Fri, 14 Feb 2020 14:48:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 14 Feb 2020 14:47:41 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Feb 2020 14:48:32 +0800
+Message-ID: <1581662912.17949.4.camel@mtksdaap41>
+Subject: Re: [PATCH 2/3] drm/mediatek: make sure previous message done or be
+ aborted before send
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
+        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Fri, 14 Feb 2020 14:48:32 +0800
+In-Reply-To: <20200214044954.16923-2-bibby.hsieh@mediatek.com>
+References: <20200214044954.16923-1-bibby.hsieh@mediatek.com>
+         <20200214044954.16923-2-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 12:17:20PM -0800, Joe Perches wrote:
-> On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
-> > of type 'const u8 *' (aka 'const unsigned char *') converts between
-> > pointers to integer
-> > types with different sign [-Wpointer-sign]
-> >                                   (char *) entropy, (char *) entropy,
-> >                                                     ^~~~~~~~~~~~~~~~
-> > ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
-> > parameter 'src' here
-> >                             u8 *dest, const u8 *src, long src_len)
-> >                                                 ^
-> > 2 warnings generated.
-> > 
-> > Fix the cast to match what else is done in this function.
-> > 
-> > Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/862
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  arch/s390/boot/kaslr.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
-> > index 5d12352545c5..5591243d673e 100644
-> > --- a/arch/s390/boot/kaslr.c
-> > +++ b/arch/s390/boot/kaslr.c
-> > @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
-> >  		*(unsigned long *) prng.parm_block ^= seed;
-> >  		for (i = 0; i < 16; i++) {
-> >  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
-> > -				  (char *) entropy, (char *) entropy,
-> > +				  (u8 *) entropy, (u8 *) entropy,
-> 
-> Why not change the function to take void *?
-> 
-> static inline int cpacf_kmc(unsigned long func, void *param,
-> 			    u8 *dest, const u8 *src, long src_len)
-> 
-> vs:
-> 
-> static inline int cpacf_kmc(unsigned long func, void *param,
-> 			    void *dest, const void *src, long src_len)
-> 
-> and remove the casts?
+SGksIEJpYmJ5Og0KDQpPbiBGcmksIDIwMjAtMDItMTQgYXQgMTI6NDkgKzA4MDAsIEJpYmJ5IEhz
+aWVoIHdyb3RlOg0KPiBNZWRpYXRlayBDTURRIGRyaXZlciByZW1vdmVkIGF0b21pYyBwYXJhbWV0
+ZXIgYW5kIGltcGxlbWVudGF0aW9uDQo+IHJlbGF0ZWQgdG8gYXRvbWljLiBEUk0gZHJpdmVyIG5l
+ZWQgdG8gbWFrZSBzdXJlIHByZXZpb3VzIG1lc3NhZ2UNCj4gZG9uZSBvciBiZSBhYm9ydGVkIGJl
+Zm9yZSB3ZSBzZW5kIG5leHQgbWVzc2FnZS4NCj4gDQo+IElmIHByZXZpb3VzIG1lc3NhZ2UgaXMg
+c3RpbGwgd2FpdGluZyBmb3IgZXZlbnQsIGl0IG1lYW5zIHRoZQ0KPiBzZXR0aW5nIGhhc24ndCBi
+ZWVuIHVwZGF0ZWQgaW50byBkaXNwbGF5IGhhcmR3YXJlIHJlZ2lzdGVyLA0KPiB3ZSBjYW4gYWJv
+cnQgdGhlIG1lc3NhZ2UgYW5kIHNlbmQgbmV4dCBtZXNzYWdlIHRvIHVwZGF0ZSB0aGUNCj4gbmV3
+ZXN0IHNldHRpbmcgaW50byBkaXNwbGF5IGhhcmR3YXJlLg0KPiBJZiBwcmV2aW91cyBtZXNzYWdl
+IGFscmVhZHkgc3RhcnRlZCwgd2UgaGF2ZSB0byB3YWl0IGl0IHVudGlsDQo+IHRyYW5zbWlzc2lv
+biBoYXMgYmVlbiBjb21wbGV0ZWQuDQo+IA0KPiBTbyB3ZSBmbHVzaCBtYm94IGNsaWVudCBiZWZv
+cmUgd2Ugc2VuZCBuZXcgbWVzc2FnZSB0byBjb250cm9sbGVyDQo+IGRyaXZlci4NCj4gDQoNClJl
+dmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFRoaXMgcGF0Y2ggZGVw
+ZW5kcyBvbiBwdGFjaDoNCj4gWzAvM10gUmVtb3ZlIGF0b21pY19leGVjDQo+IGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTEzODE2NzcvDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBC
+aWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
+Yy5jDQo+IGluZGV4IDNjNTNlYTIyMjA4Yy4uZTM1YjY2YzViYTBmIDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC00OTEsNiArNDkxLDcgQEAgc3Rh
+dGljIHZvaWQgbXRrX2RybV9jcnRjX2h3X2NvbmZpZyhzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtf
+Y3J0YykNCj4gIAl9DQo+ICAjaWYgSVNfRU5BQkxFRChDT05GSUdfTVRLX0NNRFEpDQo+ICAJaWYg
+KG10a19jcnRjLT5jbWRxX2NsaWVudCkgew0KPiArCQltYm94X2ZsdXNoKG10a19jcnRjLT5jbWRx
+X2NsaWVudC0+Y2hhbiwgMjAwMCk7DQo+ICAJCWNtZHFfaGFuZGxlID0gY21kcV9wa3RfY3JlYXRl
+KG10a19jcnRjLT5jbWRxX2NsaWVudCwgUEFHRV9TSVpFKTsNCj4gIAkJY21kcV9wa3RfY2xlYXJf
+ZXZlbnQoY21kcV9oYW5kbGUsIG10a19jcnRjLT5jbWRxX2V2ZW50KTsNCj4gIAkJY21kcV9wa3Rf
+d2ZlKGNtZHFfaGFuZGxlLCBtdGtfY3J0Yy0+Y21kcV9ldmVudCk7DQoNCg==
 
-I can certainly do that if the maintainers prefer it.
-
-Cheers,
-Nathan
