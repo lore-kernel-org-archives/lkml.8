@@ -7,57 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C01EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E23C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC072467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE57E22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695408;
-	bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+	s=default; t=1581695421;
+	bh=CqNEsGGJ+joZE9+STxSSxsiHVjaZLJByQ0HUUaaZDEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uv2CbUZAOxb55Nqq56Era5R3BhufXsbIHAnfik8B+7vkFtanGJKSZIIWe62bpOzwb
-	 QnVqvB3vPPR3Ma0yrLI+xk2c12wEYGapiagDqb08nWAefKb+EQfyQgFd678QJnfJJ7
-	 8Jp1+j5y4076YgwR4CB4TgP5kMt4F0r0IdwQH6Rg=
+	b=EdJchuMwOlNVDJsWKbLnuPzaXhOQFJEWIdOghqT0aQLtxLLhescnVZntwQyap3btU
+	 o7xv7YweR2V+WfkeDN846nktmCNaT9o5p0Rdp3Kd8MbEUXzAnAtlLZepibRjn2n0SZ
+	 hX8UsYn3PDNDCGu82thzcE5t3RWsgE2Xv/cCRb/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgBNPuG (ORCPT
+        id S1730432AbgBNPuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbgBNPuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:04 -0500
+        id S1730399AbgBNPuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71AAD24684;
-        Fri, 14 Feb 2020 15:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F9A32467E;
+        Fri, 14 Feb 2020 15:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695403;
-        bh=rya72cDI956HviiwG0v5mNpwy6n2E3LyPKsA3FCHJ8Q=;
+        s=default; t=1581695413;
+        bh=CqNEsGGJ+joZE9+STxSSxsiHVjaZLJByQ0HUUaaZDEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBvngliW3akvNHbaL00FHLQn224jOAFQuQveCrd15OgHlbCRkj4xQnUzwejakr4MR
-         xa87qvLiUTrEJV3uYvHSkerCDv52972iXK+G19++gsnldRbpo6teP1RpoewyaTGWTy
-         kNbqV1GbMy/CwwUsuvaWFmlQRdSodu5paqPRgccc=
+        b=pD82pyog/JKm6nIRsFsdYk/3EbZZOqawzC6W6xP1gJReS5fXOx1Z/sdcAspzfqpD2
+         L3Q19NWWtG8RFBCR8dKDgzlvUNrxZ1syT4zT3x7annwdbvi+QTRt/NvxqG6jn55Qry
+         DQlcITwnJR9slMea73op9cefAbqXgMnAV7zWCYbA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 052/542] x86/fpu: Deactivate FPU state after failure during state load
-Date:   Fri, 14 Feb 2020 10:40:44 -0500
-Message-Id: <20200214154854.6746-52-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 060/542] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+Date:   Fri, 14 Feb 2020 10:40:52 -0500
+Message-Id: <20200214154854.6746-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -70,86 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bbc55341b9c67645d1a5471506370caf7dd4a203 ]
+[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
 
-In __fpu__restore_sig(), fpu_fpregs_owner_ctx needs to be reset if the
-FPU state was not fully restored. Otherwise the following may happen (on
-the same CPU):
+Suspending Goodix touchscreens requires changing the interrupt pin to
+output before sending them a power-down command. Followed by wiggling
+the interrupt pin to wake the device up, after which it is put back
+in input mode.
 
-  Task A                     Task B               fpu_fpregs_owner_ctx
-  *active*                                        A.fpu
-  __fpu__restore_sig()
-                             ctx switch           load B.fpu
-                             *active*             B.fpu
-  fpregs_lock()
-  copy_user_to_fpregs_zeroing()
-    copy_kernel_to_xregs() *modify*
-    copy_user_to_xregs() *fails*
-  fpregs_unlock()
-                            ctx switch            skip loading B.fpu,
-                            *active*              B.fpu
+On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+in combination with listing the pin as a normal GpioIo resource.
 
-In the success case, fpu_fpregs_owner_ctx is set to the current task.
+This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+again. In this case byt_gpio_disable_free() calls
+byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+(direct) IRQ no longer triggers.
 
-In the failure case, the FPU state might have been modified by loading
-the init state.
+This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+to byt_gpio_clear_triggering().
 
-In this case, fpu_fpregs_owner_ctx needs to be reset in order to ensure
-that the FPU state of the following task is loaded from saved state (and
-not skipped because it was the previous state).
+Note that byt_gpio_clear_triggering() only gets called from
+byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+from the irq_valid mask by byt_init_irq_valid_mask().
 
-Reset fpu_fpregs_owner_ctx after a failure during restore occurred, to
-ensure that the FPU state for the next task is always loaded.
-
-The problem was debugged-by Yu-cheng Yu <yu-cheng.yu@intel.com>.
-
- [ bp: Massage commit message. ]
-
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Reported-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191220195906.plk6kpmsrikvbcfn@linutronix.de
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/fpu/signal.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 0071b794ed193..400a05e1c1c51 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -352,6 +352,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			fpregs_unlock();
- 			return 0;
- 		}
-+		fpregs_deactivate(fpu);
- 		fpregs_unlock();
- 	}
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 72ffd19448e50..ce9cf50121bd5 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -753,7 +753,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
  
-@@ -403,6 +404,8 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 	}
- 	if (!ret)
- 		fpregs_mark_activate();
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
++	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
++	if (value & BYT_DIRECT_IRQ_EN)
++		/* nothing to do */ ;
 +	else
-+		fpregs_deactivate(fpu);
- 	fpregs_unlock();
- 
- err_out:
++		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
+ 	writel(value, reg);
+ 	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
 -- 
 2.20.1
 
