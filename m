@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9230BC3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA929C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF5A24685
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCFF2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695766;
-	bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+	s=default; t=1581695768;
+	bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUuHomFbn2HV5mrf/snm9UqMP0RApospGVKfNR2S5dAuoLt28Y0S/KOBVGcK1j5/c
-	 DyRmN3/d2cb6OkE/8T4vVGHHPGX6EICkAtuM61Z/uwmYk6cOUwULWNtc7VY8EftNlD
-	 bhwStRU5Wt7uloP+BOAtpQ0fqoBFobf14yNn7xso=
+	b=Iw2q+/xKd4YlshHKy6UoK5ug2p+7vnYjGy9UEUZJHACJfQ+Vi7aBajTl9Eilucy+0
+	 ZKPB4K6XqKXaPQkcB+D0nY5n5kncms9SaLXHvQDmU7QDE9qbo7MP1SCBn2WAspmq4v
+	 4mbVO86Eaxpz2Y0sr5WiibORta01ZyN90c4weh64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbgBNP4F (ORCPT
+        id S1731663AbgBNP4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:56:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37436 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:56:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730958AbgBNP4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:00 -0500
+        id S1731815AbgBNP4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:56:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461F524689;
-        Fri, 14 Feb 2020 15:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9AB424649;
+        Fri, 14 Feb 2020 15:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695759;
-        bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+        s=default; t=1581695763;
+        bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ymxWoFPRfiJbiWQ/3uiGYs7RSruMccRfE+UyYiw7tQePLEDBEE+Y6GXvud5kV3K6f
-         kznUsYrTv5VxUvN0sRZpYRUWt8NXh3Az77GyNjO5PKJF5ncUoK7NmfNE/urze2UN5X
-         kvUmVPJ++jQb57/XU1SPh9ttyGkkN/fi/buqOisw=
+        b=ne4BY4JFRI82kwc/XqNJjA2AEeRSxy8v3YsWGYPATAFDIYpyNmegotNSYxXz8c9Bh
+         gIcTOzoC9aeyYug3xDHRHmv79nuGrO6mMTksEQyytkq8xdjj/LseZdN5WgYIVxcYdn
+         s2rLEhm9AtqGJiNwM4u/k9REO7vhdN4aYxpHHa9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 328/542] clocksource: davinci: only enable clockevents once tim34 is initialized
-Date:   Fri, 14 Feb 2020 10:45:20 -0500
-Message-Id: <20200214154854.6746-328-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 331/542] arm64: dts: rockchip: add reg property to brcmf sub-nodes
+Date:   Fri, 14 Feb 2020 10:45:23 -0500
+Message-Id: <20200214154854.6746-331-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -58,55 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit cea931c25104e6bddc42eb067f58193f355dbdd7 ]
+[ Upstream commit 96ff264bccb22175bbe2185a1eb5204ca3c5f03f ]
 
-The DM365 platform has a strange quirk (only present when using ancient
-u-boot - mainline u-boot v2013.01 and later works fine) where if we
-enable the second half of the timer in periodic mode before we do its
-initialization - the time won't start flowing and we can't boot.
+An experimental test with the command below gives this error:
+rk3399-firefly.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-orangepi.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge-captain.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge-v.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+So fix this by adding a reg property to the brcmf sub node.
+Also add #address-cells and #size-cells to prevent more warnings.
 
-When using more recent u-boot, we can enable the timer, then reinitialize
-it and all works fine.
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
-To work around this issue only enable clockevents once tim34 is
-initialized i.e. move clockevents_config_and_register() below tim34
-initialization.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200110142128.13522-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-davinci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 3 +++
+ arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 3 +++
+ arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 3 +++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
-index 62745c9620498..e421946a91c5a 100644
---- a/drivers/clocksource/timer-davinci.c
-+++ b/drivers/clocksource/timer-davinci.c
-@@ -302,10 +302,6 @@ int __init davinci_timer_register(struct clk *clk,
- 		return rv;
- 	}
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index c706db0ee9ec6..76f5db696009b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -669,9 +669,12 @@
+ 	vqmmc-supply = &vcc1v8_s3;	/* IO line */
+ 	vmmc-supply = &vcc_sdio;	/* card's power */
  
--	clockevents_config_and_register(&clockevent->dev, tick_rate,
--					DAVINCI_TIMER_MIN_DELTA,
--					DAVINCI_TIMER_MAX_DELTA);
--
- 	davinci_clocksource.dev.rating = 300;
- 	davinci_clocksource.dev.read = davinci_clocksource_read;
- 	davinci_clocksource.dev.mask =
-@@ -323,6 +319,10 @@ int __init davinci_timer_register(struct clk *clk,
- 		davinci_clocksource_init_tim34(base);
- 	}
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
  
-+	clockevents_config_and_register(&clockevent->dev, tick_rate,
-+					DAVINCI_TIMER_MIN_DELTA,
-+					DAVINCI_TIMER_MAX_DELTA);
-+
- 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
- 	if (rv) {
- 		pr_err("Unable to register clocksource");
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+index 4944d78a0a1cb..e87a04477440e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+@@ -654,9 +654,12 @@
+ 	sd-uhs-sdr104;
+ 	vqmmc-supply = <&vcc1v8_s3>;
+ 	vmmc-supply = <&vccio_sd>;
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+index 0541dfce924d6..9c659f3115c88 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+@@ -648,9 +648,12 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+ 	sd-uhs-sdr104;
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
 -- 
 2.20.1
 
