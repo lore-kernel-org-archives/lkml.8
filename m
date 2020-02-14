@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33B9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A5BC3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E32520637
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5592206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700236;
-	bh=ZJorePCda0YcuQNvCo5Rl+Qv7CjHpuqxHxskctmSdTY=;
+	s=default; t=1581700242;
+	bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSGx+DKExhcrpXskj+/5W4nUfsMWAo47NfCEazJClpdpiyXc2ydBCBxCOtBVZDbUM
-	 GgGrdMlIvsfY03gT+YxCQhB+obxFA8Z4floJcvytyVoCvrSeinQkzsftSSyXSr/Odk
-	 QUCtubFXkNuIL3k4ch1Ru69sZqmvdfsiOcXnfHzY=
+	b=f+aft6iEwHymMtMp5EOlwnwayAKDJvThMYNaS2qYGkVKeFp+ffK8UkD2NJafGJDRb
+	 GePrkroceFMueVP4o76DDhWH+a+by/vEkrRXl/rv3AHIIIhsc1f1l5U34KLNV1guIt
+	 f3N6nur5AN5XWJFdBod0gBDI1dFFN/xN7qr5JWhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403929AbgBNRKf (ORCPT
+        id S2403975AbgBNRKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:10:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389118AbgBNQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:13:38 -0500
+        id S2391840AbgBNQNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:13:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D87C246AA;
-        Fri, 14 Feb 2020 16:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC51A246C1;
+        Fri, 14 Feb 2020 16:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696818;
-        bh=ZJorePCda0YcuQNvCo5Rl+Qv7CjHpuqxHxskctmSdTY=;
+        s=default; t=1581696815;
+        bh=TAJQ3d5LQOTkR0u/zgFlmI/5rfKu3+mGs9qTStlSToU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgdaz1VRbTMn79ZnK4IAvVzJG2ep+Ggqu9nMuc//DTmpK0aVlOTjIs9O6eMSgRgWh
-         wd0tKTrn1kBgr0bWaY/JbJGQ6zNV6kh/bgHZZmWsmvKi8MEs7vUhVir5QGsWwIDUEH
-         qPr3mMSyblssu8kNz/GbN/pjJNC8FGjwxad2W66c=
+        b=jAPn1FrHr87eZ67gYRaykgPGvp50GCr7Z3dkJ7W7zZZG5QIx97HEzF+zYNiUzLh6r
+         FtSEz59hxjovYdHzPKvK0k+j5Kb4r5KWSjClSInoZpAroliMEPdSMVs8tZxkD0gFmC
+         95llIZ80bsBv5JrYCtX+Y66apfzs2jE0hTH2s5DA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 086/252] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Fri, 14 Feb 2020 11:09:01 -0500
-Message-Id: <20200214161147.15842-86-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 084/252] tty: omap-serial: remove set but unused variable
+Date:   Fri, 14 Feb 2020 11:08:59 -0500
+Message-Id: <20200214161147.15842-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -61,49 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit e83c6587c47caa2278aa3bd603b5a85eddc4cec9 ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+Fix the following warning:
+drivers/tty/serial/omap-serial.c: In function serial_omap_rlsi:
+drivers/tty/serial/omap-serial.c:496:16: warning: variable ch set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The character read is useless according to the table 23-246 of the omap4
+TRM. So we can drop it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/1575617863-32484-1-git-send-email-wangxiongfeng2@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/omap-serial.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 8c86c41a0d25f..3e7baabf64507 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -918,6 +918,8 @@
- 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+index 6420ae581a802..5f808d8dfcd5c 100644
+--- a/drivers/tty/serial/omap-serial.c
++++ b/drivers/tty/serial/omap-serial.c
+@@ -493,10 +493,13 @@ static unsigned int check_modem_status(struct uart_omap_port *up)
+ static void serial_omap_rlsi(struct uart_omap_port *up, unsigned int lsr)
+ {
+ 	unsigned int flag;
+-	unsigned char ch = 0;
  
-@@ -947,6 +949,8 @@
- 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
++	/*
++	 * Read one data character out to avoid stalling the receiver according
++	 * to the table 23-246 of the omap4 TRM.
++	 */
+ 	if (likely(lsr & UART_LSR_DR))
+-		ch = serial_in(up, UART_RX);
++		serial_in(up, UART_RX);
  
+ 	up->port.icount.rx++;
+ 	flag = TTY_NORMAL;
 -- 
 2.20.1
 
