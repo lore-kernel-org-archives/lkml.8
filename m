@@ -2,100 +2,151 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B07EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F8C3B196
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0A6222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFFF2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 12:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OQo8YW+m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HtlEeUgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgBNMVJ (ORCPT
+        id S1729225AbgBNMVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 07:21:09 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:50655 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728036AbgBNMVJ (ORCPT
+        Fri, 14 Feb 2020 07:21:35 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36308 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgBNMVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 07:21:09 -0500
-Received: from [IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef]
- ([IPv6:2001:983:e9a7:1:bd23:d5c7:5f0e:7bef])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 2ZxvjNQoMP9a92ZxwjGslZ; Fri, 14 Feb 2020 13:21:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1581682866; bh=PhqMFnmd2aN7gDvxtHkHxo9Tjtd5wgCucdPCv1i4je8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=OQo8YW+mO7BFRmxx/32cK6cyemqRC7sP4WY0IJMROX2Kh7DdsRbCUEqbKbTSjNZV1
-         is5nwLB+zhtMjClvL4mHf7J6nBS2xed5y7c/GW9spW9SWS1OwjOKLzvCYirNZFkUwa
-         /P2ROepldLmMM2mJX+9p5vyxlWoagzBc2wv1zo+fjdD9nVHT9ndZ8UeBrzEIsNIm5R
-         hfqMOP7IPulZyu/zjjARdAjZugDBoyn7RkSNm56eJ819DtDeuaiIlDGGgFtg9Yk7X8
-         RAAml0sjGDOKweFt8/351drXbkWouMFH39pLhjS6Ob5MlGB+bltUj9DWoBeAPJgrkV
-         /ji1nhlRVUJTw==
-Subject: Re: [PATCH] media: usbvision: Fix a use after free in v4l2_release()
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>, andreyknvl@google.com,
-        bnvandana@gmail.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-References: <20200124141356.365bgzg2lp3tjedm@kili.mountain>
- <d8663b81-e920-3e1d-11d0-f636ea52c6ef@xs4all.nl>
- <20200214112239.GC4831@pendragon.ideasonboard.com>
- <20200214121447.13612-1-hdanton@sina.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <ddc06d75-2f9f-fb91-a73f-b5b2125b036d@xs4all.nl>
-Date:   Fri, 14 Feb 2020 13:21:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 14 Feb 2020 07:21:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=q/Mx/kZS/5BXh5u8pbLrsFR1GPA1vP9LOyYFjWibc6E=; b=HtlEeUgwqsb/n49MjQL2vF0eFo
+        ps0bfM5FkwtI+QymKik7diKuJembZxKn2vBmiPY7bmeNpTqx5YX1Nrbz+xJ4XdZ5UGhY8JN+efdfC
+        RPidqxgAi/Sv5TKel673fEMOfa4QxYFvDWwJhJb8YBRPrUS67fzRCBfi0yJq/Lx9utSn3agfVu2f6
+        0Dqj/DcMGE4uv7PKdoubwA/wZygzuNP+72VpZa5tJ5Pymw7a68IgdFm1y7q0g1u2iy7n2stWeybMo
+        D9y2zlOfi346S7i0UQWRlb1sESN4Ux7pNucw8Xf0/Hg8085XOKB+Fm7gBDTknOIahi9M0YxAteqkM
+        ACZcAzAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2ZyE-00028o-Eh; Fri, 14 Feb 2020 12:21:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D05F430257C;
+        Fri, 14 Feb 2020 13:19:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DA08D20206D87; Fri, 14 Feb 2020 13:21:19 +0100 (CET)
+Date:   Fri, 14 Feb 2020 13:21:19 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas Raillard <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qperret@google.com, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
+Message-ID: <20200214122119.GK14879@hirez.programming.kicks-ass.net>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
+ <20200210132133.GH14897@hirez.programming.kicks-ass.net>
+ <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214121447.13612-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJZ3v3yOtuJD/iTQkXKATl0BqWT6ctGJCU2m9B9Wi30fNB5Ua8uXkmdX1pPt5CoZBnUxGdqk1Alo+C4IotpAO/JITMtDcNRCCatVhDefVMh6tWXOqlz5
- DVLzQApUvH4GGBwWCK+7sDrmzlKUWSp5btTET+ikWdIPYQARC8XPEtUypTGlpsXC7th/3moghrE4IebhC1lZVeXMaaDkTBEOS23ZvHjkWfcpyGs4MhxUrFxp
- QcKE4zpLV0Ed+aym+BFXaqXLY1nUVQQ6s0HvZqL64nwIlglF+BBiNQr6DZ4mo5QZ1eX1cYil0jXkkxYBTMUMz05Bb1hrX4+UiRndAOhQvoDd9yfznq0q2P0d
- adCxqbqncGVs4APbVfeLC02eLciwg9W5KNEfFqgazh0euNVorRAFHuulEaKf/5e1CfX7AhoUoBlMwDwI+j2SzLfTBKv10B5OJWwaRvVdfA5VGs/nAM/snyFt
- +4qBhEzTL/b4g46kY7Si03jk0Y1WZTSPqmMNnjl0Lx0aFb0cC2gAxEPq40nNeG2hOUbC2M531t75/BbmE/PWdNCau+OLPCaRG8GNT3bnNZwLpKkvDnixYJ6m
- 0YW0jb5THMBPyD035vwHM/jnw2znJ5OmIJiq6sAWyKNNbX3BgS9WD8HGq/DgPCXrU1pZYz10fr7V/RqXpKnpuYAyQZYH51NhePegN28XqsEQxnfDCt74Lb1w
- NzmHH3mcqsykSD1oUo6tRIdjtu3gfyftSHtaXbYrGV+QSbTQsdSviE+APsKgovKABG9xsZU7QRdkEhuWajpXs3ZHjaUy2lif05iGlaFfA4ktvSD4HEcj/g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a664419-f5a6-882f-83ee-5bbf20ff33d3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 1:14 PM, Hillf Danton wrote:
+On Thu, Feb 13, 2020 at 05:49:48PM +0000, Douglas Raillard wrote:
+
+> > So even when:
+> > 
+> >   boost = util_avg - util_est
+> > 
+> > is small, despite util_avg being huge (~1024), due to large util_est,
+> > we'll still get an effective boost to max_cost ASSUMING cs[].cost and
+> > cost_margin have the same curve.
 > 
-> On Fri, 14 Feb 2020 12:30:29 +0100 Hans Verkuil wrote:
->>
->> Hillf, if you want your patch to be merged, then make sure it is CC-ed to
->> linux-media as well.
-> 
-> Please pick it up if it makes a sense to you and it was sent with
-> linux-media added on the Cc list as it is known for a while that
-> my mail agent is rejected @vger.kernel.org for what I am not clear
-> about. It makes my day occasionally :P
+> I'm not sure to follow, cs[].cost can be plotted against cs[].freq, but
+> cost_margin is a time-based signal (the boost value), so it would be
+> plotted against time.
 
-I don't I ever received the full patch, only replies to your patch.
+Suppose we have the normalized energy vs frequency curve: x^3
 
-Please mail your patch directly to me so I have a clean version.
+( P ~ V^2 * f, due to lack of better: V ~ f -> P ~ f^3 )
 
-Regards,
+  1 +--------------------------------------------------------------------+
+    |             +             +            +             +            *|
+    |                                                       x**3 ******* |
+    |                                                                **  |
+0.8 |-+                                                            **  +-|
+    |                                                             **     |
+    |                                                            *       |
+    |                                                          **        |
+0.6 |-+                                                       **       +-|
+    |                                                       **           |
+    |                                                     **             |
+    |                                                   ***              |
+0.4 |-+                                               ***              +-|
+    |                                               **                   |
+    |                                            ***                     |
+    |                                          ***                       |
+0.2 |-+                                    ****                        +-|
+    |                                  ****                              |
+    |                            ******                                  |
+    |             +     **********           +             +             |
+  0 +--------------------------------------------------------------------+
+    0            0.2           0.4          0.6           0.8            1
 
-	Hans
 
-> 
-> Thanks
-> Hillf
-> 
+where x is our normalized frequency and y is the normalized energy.
 
+Further, remember that schedutil does (per construction; for lack of
+better):
+
+  f ~ u
+
+So at u=0.6, we're at f=0.6 and P=0.2
+
++               boost = util_avg - util_est_enqueued;
+
+So for util_est = 0.6, we're limited to: boost = 0.4.
+
++       max_cost = pd->table[pd->nr_cap_states - 1].cost;
++       cost_margin = (cost_margin * max_cost) / EM_COST_MARGIN_SCALE;
+
+Which then gives:
+
+  cost_margin = boost = 0.4
+
+And we find that:
+
+  P' = P + cost_margin = 0.2 + 0.4 = 0.6 < 1
+
+So even though set out to allow a 100% boost in energy usage, we were in
+fact incapable of achieving this, because our cost_margin is linear in u
+while the energy (or cost) curve is cubic in u.
+
+That was my argument; but I think that now that I've expanded on it, I
+see a flaw, because when we do have boost = 0.4, this means util_avg =
+1, and we would've selected f = 1, and boosting would've been pointless.
+
+So let me try again:
+
+  f = util_avg, P = f^3, boost = util_avg - util_est
+
+  P' = util_avg ^ 3 + util_avg - util_est
+
+And I'm then failing to make further sense of that; it of course means
+that P'(u) is larger than P(2u) for some u, but I don't think we set
+that as a goal either.
+
+Let me ponder this a little more while I go read the rest of your email.
