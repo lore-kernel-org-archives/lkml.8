@@ -2,129 +2,180 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE2CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A24C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBCB22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMxdoQEr"
+	by mail.kernel.org (Postfix) with ESMTP id B5E3A20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703100;
+	bh=q5ORAojMxwad59xI5c6d6JteflbcHpDRYl9FxkS42AQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NeKKtkxGOelAmXQNV8OYrd32aLqB2s+H9hJ3uH4y9pfT78ibClgkG+ckGQhFDOqAt
+	 KRHN0bd4jJCFVZBhIorHRv+vO+AeUVX5SzDFdEPXYeMzadn4G8NbreTkxFEoxAAcrW
+	 YBuddRXyFbQqsW+OKCvfztWOmnH5ca1idjcTA5ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388863AbgBNR6M (ORCPT
+        id S2387690AbgBNP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:58:12 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32537 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388546AbgBNR6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:58:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581703087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UACjdQjNAv3xbfQac1fzgBHkjusv+pnqBnjrSiF1gFM=;
-        b=CMxdoQErykWNlqOZJzzkMS0oLPkkjdDUy8Al+Ju0pDXmaBh53OxzFi5TK7opxG8NfoEqlP
-        O+TgPiH/3b3lVdnRVOLPolQHceTlC48tEp2Gg8E3aJ43PHQkInWBAwrFo9kzJwHCrtslof
-        KRcfehrecSa2Z9AmkepMoImtkHtQ5TM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-xzsdBgemOAGsM2iDbVFUUg-1; Fri, 14 Feb 2020 12:58:03 -0500
-X-MC-Unique: xzsdBgemOAGsM2iDbVFUUg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 14 Feb 2020 10:57:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387960AbgBNP5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:57:00 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4488D800D53;
-        Fri, 14 Feb 2020 17:58:01 +0000 (UTC)
-Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 315429050E;
-        Fri, 14 Feb 2020 17:58:00 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 11:57:58 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>,
-        linux-tip-commits@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Julien Thierry <jthierry@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [tip: core/objtool] objtool: Fail the kernel build on fatal
- errors
-Message-ID: <20200214175758.s34rdwmwgiq6qwq7@treble>
-References: <f18c3743de0fef673d49dd35760f26bdef7f6fc3.1581359535.git.jpoimboe@redhat.com>
- <158142525822.411.5401976987070210798.tip-bot2@tip-bot2>
- <20200213221100.odwg5gan3dwcpk6g@treble>
- <87sgjeghal.fsf@nanos.tec.linutronix.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id CBD5822314;
+        Fri, 14 Feb 2020 15:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695819;
+        bh=q5ORAojMxwad59xI5c6d6JteflbcHpDRYl9FxkS42AQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GdYT8KJUuJ6uwuTN632TGQPSLn6vuHI/MZ1wzifCvp/l5AZjoTxgMak7QqtYEHwtr
+         kXUgLso+j5VlpX9ontFD2CueKPeQqiDsrsAjIMufyYRjw0uZRjq/1mXL/GcS6icKlx
+         82Wz+ugEu+/Es7jhBKWpDtC/2jrlnvf0sjoQPsV4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 375/542] scsi: ufs: pass device information to apply_dev_quirks
+Date:   Fri, 14 Feb 2020 10:46:07 -0500
+Message-Id: <20200214154854.6746-375-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87sgjeghal.fsf@nanos.tec.linutronix.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 01:10:26AM +0100, Thomas Gleixner wrote:
-> Josh Poimboeuf <jpoimboe@redhat.com> writes:
-> > On Tue, Feb 11, 2020 at 12:47:38PM -0000, tip-bot2 for Josh Poimboeuf wrote:
-> >> The following commit has been merged into the core/objtool branch of tip:
-> >> 
-> >> Commit-ID:     644592d328370af4b3e027b7b1ae9f81613782d8
-> >> Gitweb:        https://git.kernel.org/tip/644592d328370af4b3e027b7b1ae9f81613782d8
-> >> Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-> >> AuthorDate:    Mon, 10 Feb 2020 12:32:38 -06:00
-> >> Committer:     Borislav Petkov <bp@suse.de>
-> >> CommitterDate: Tue, 11 Feb 2020 13:27:03 +01:00
-> >> 
-> >> objtool: Fail the kernel build on fatal errors
-> >> 
-> >> When objtool encounters a fatal error, it usually means the binary is
-> >> corrupt or otherwise broken in some way.  Up until now, such errors were
-> >> just treated as warnings which didn't fail the kernel build.
-> >> 
-> >> However, objtool is now stable enough that if a fatal error is
-> >> discovered, it most likely means something is seriously wrong and it
-> >> should fail the kernel build.
-> >> 
-> >> Note that this doesn't apply to "normal" objtool warnings; only fatal
-> >> ones.
-> >
-> > Clang still has some toolchain issues which need to be sorted out, so
-> > upgrading the fatal errors is causing their CI to fail.
-> 
-> Good. Last time we made it fail they just fixed their stuff.
-> 
-> > So I think we need to drop this one for now.
-> 
-> Why? It's our decision to define which level of toolchain brokeness is
-> tolerable.
-> 
-> > Boris, are you able to just drop it or should I send a revert?
-> 
-> I really want to see a revert which has a proper justification why the
-> issues of clang are tolerable along with a clear statement when this
-> fatal error will come back. And 'when' means a date, not 'when clang is
-> fixed'.
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-Fair enough.  The root cause was actually a bug in binutils which gets
-triggered by a new clang feature.  So instead of reverting the above
-patch, I think I've figured out a way to work around the binutils bug,
-while also improving objtool at the same time (win-win).
+[ Upstream commit c40ad6b7fcd35bc4d36db820c7737e1aa18d5d41 ]
 
-The binutils bug will be fixed in binutils 2.35.
+Pass UFS device information to vendor-specific variant callback
+"apply_dev_quirks" because some platform vendors need to know such
+information to apply special handling or quirks in specific devices.
 
-BTW, to be fair, this was less "Clang has issues" and more "Josh is
-lazy".  I didn't test the patch with Clang -- I tend to rely on 0-day
-bot reports because I don't have the bandwidth to test the
-kernel/config/toolchain combinations.  Nick tells me Clang will soon be
-integrated with the 0-day bot, which should help prevent this type of
-thing in the future.
+At the same time, modify existing vendor implementations according to the
+new interface for those vendor drivers which will be built-in or built as a
+module alone with UFS core driver.
 
+[mkp: clarified commit desc]
+
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Asutosh Das <asutoshd@codeaurora.org>
+Cc: Avri Altman <avri.altman@wdc.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Bean Huo <beanhuo@micron.com>
+Cc: Can Guo <cang@codeaurora.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/r/1578726707-6596-2-git-send-email-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/ufs/ufs-qcom.c | 3 ++-
+ drivers/scsi/ufs/ufshcd.c   | 8 ++++----
+ drivers/scsi/ufs/ufshcd.h   | 7 ++++---
+ 3 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index c69c29a1ceb90..ebb5c66e069fa 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -949,7 +949,8 @@ static int ufs_qcom_quirk_host_pa_saveconfigtime(struct ufs_hba *hba)
+ 	return err;
+ }
+ 
+-static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
++static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba,
++				     struct ufs_dev_desc *card)
+ {
+ 	int err = 0;
+ 
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 7d8300c9a0148..5340a980d24b8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6798,7 +6798,8 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
+ 	return ret;
+ }
+ 
+-static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
++static void ufshcd_tune_unipro_params(struct ufs_hba *hba,
++				      struct ufs_dev_desc *card)
+ {
+ 	if (ufshcd_is_unipro_pa_params_tuning_req(hba)) {
+ 		ufshcd_tune_pa_tactivate(hba);
+@@ -6812,7 +6813,7 @@ static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
+ 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE)
+ 		ufshcd_quirk_tune_host_pa_tactivate(hba);
+ 
+-	ufshcd_vops_apply_dev_quirks(hba);
++	ufshcd_vops_apply_dev_quirks(hba, card);
+ }
+ 
+ static void ufshcd_clear_dbg_ufs_stats(struct ufs_hba *hba)
+@@ -6975,10 +6976,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+ 	}
+ 
+ 	ufs_fixup_device_setup(hba, &card);
++	ufshcd_tune_unipro_params(hba, &card);
+ 	ufs_put_device_desc(&card);
+ 
+-	ufshcd_tune_unipro_params(hba);
+-
+ 	/* UFS device is also active now */
+ 	ufshcd_set_ufs_dev_active(hba);
+ 	ufshcd_force_reset_auto_bkops(hba);
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 2e59f9d8ab89e..46bec0e18c724 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -322,7 +322,7 @@ struct ufs_hba_variant_ops {
+ 	void	(*setup_task_mgmt)(struct ufs_hba *, int, u8);
+ 	void    (*hibern8_notify)(struct ufs_hba *, enum uic_cmd_dme,
+ 					enum ufs_notify_change_status);
+-	int	(*apply_dev_quirks)(struct ufs_hba *);
++	int	(*apply_dev_quirks)(struct ufs_hba *, struct ufs_dev_desc *);
+ 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+ 	void	(*dbg_register_dump)(struct ufs_hba *hba);
+@@ -1057,10 +1057,11 @@ static inline void ufshcd_vops_hibern8_notify(struct ufs_hba *hba,
+ 		return hba->vops->hibern8_notify(hba, cmd, status);
+ }
+ 
+-static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba)
++static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba,
++					       struct ufs_dev_desc *card)
+ {
+ 	if (hba->vops && hba->vops->apply_dev_quirks)
+-		return hba->vops->apply_dev_quirks(hba);
++		return hba->vops->apply_dev_quirks(hba, card);
+ 	return 0;
+ }
+ 
 -- 
-Josh
+2.20.1
 
