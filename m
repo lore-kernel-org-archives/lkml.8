@@ -2,193 +2,376 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20FEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A46C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A6F20726
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FC02082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V83wipgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBNWQb (ORCPT
+        id S1727742AbgBNWRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:16:31 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:45730 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725946AbgBNWQ3 (ORCPT
+        Fri, 14 Feb 2020 17:17:31 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46459 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgBNWRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:16:29 -0500
-Received: from mr4.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01EMGRSE029155
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 17:16:27 -0500
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01EMGMJo017474
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 17:16:27 -0500
-Received: by mail-qt1-f199.google.com with SMTP id c8so6831644qte.22
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:16:27 -0800 (PST)
+        Fri, 14 Feb 2020 17:17:30 -0500
+Received: by mail-qk1-f193.google.com with SMTP id u124so10231058qkh.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:17:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EpAHhN0cyInJreWWweeARToNma6rlTvT9YgtHzWXZsw=;
+        b=V83wipgT/v49rf7JULunCDVfsFC2O1HPVnCk0H8hnz5jKepozJS88aT1805KWfqOy2
+         +ATGbFYeNM4Nu0rZDIFv8ZzpsOC34peo1n8I7BMNTY7F7OdV6VxSoZxWaZrCqPdRjnzj
+         QqnaKawQWWR665lVGbTwzkI67i9J8jGpB9VMAKjiS/Hh/0Z0u3y8VDp8xDRSMLUB89z0
+         hUybvURroRUe9Zk9I1khJ4qw7dR24GHVWshqoNxlZvGBwGHWpvzQeKRJObRR97bi9biY
+         9PM2gfL7r8k34Yj+UHmTA3yUmQrujWbbiTBO+Usb/6yI/ZRgZZbBWtZQthBcIE/wzYN7
+         zPLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=eJQfIN4vckK3hUkjct5X1Ay1QWrTD3wdbdr+ZOUlltA=;
-        b=n0qRgS9TJpiVZeDAg2yNasDa/5QPqIJ1d1iImPU2U8+dLM85ojDEqinsq51njkeh/Z
-         7KtXHIGQF6HD3VLX1ZzmPKZhxSDwBpX/VPr6TLK8vKuVOdQk/9x6iTneGsnRjXbQmSWH
-         5VzIEoLj0xRqW7CQJWv1WebHra3/JeMlZudwB5n9NB9MZ5cqPc790zA6W6ALPaXR1pCP
-         RoBEo0PWC2rAA+JAPXp9K1E1PyPFxclRtyDqk2uSqstzYIIDeKPAuHq/JxBGa4GR0ynS
-         vIJfI/U6KiBWMuLp2jQLXPtDQF1ab6Ikql4N2LPR+FmJTVyoggVdib567w/N4xr3FzTg
-         VWxg==
-X-Gm-Message-State: APjAAAXcu/D4IdntPdpnVjL9L9eD5NSXzIcYFfkO25WIm8fkPTazzuGd
-        4HsL1rHIUI7CJfGajRHgw6wdFVDBZKUsAn7nSCy69JWth265oXpdXkH5jn1envgQ6nGKEik8oJU
-        0UAV97sCAKLRRSh1IFNFNqPRGyfvWC57WNDw=
-X-Received: by 2002:ae9:dc85:: with SMTP id q127mr4618889qkf.460.1581718581952;
-        Fri, 14 Feb 2020 14:16:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyyXhf9ySjiOcoYhCw3Npb8sBi+pCL4GfySWR4dtPZqBKpxKv5rWOUxYeNMQvsuo/hmv53Wiw==
-X-Received: by 2002:ae9:dc85:: with SMTP id q127mr4618857qkf.460.1581718581514;
-        Fri, 14 Feb 2020 14:16:21 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id m204sm4224406qke.35.2020.02.14.14.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 14:16:19 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-In-Reply-To: <20200213211847.GA1734@sasha-vm>
-References: <20190829205631.uhz6jdboneej3j3c@pali> <184209.1567120696@turing-police> <20190829233506.GT5281@sasha-vm> <20190830075647.wvhrx4asnkrfkkwk@pali> <20191016140353.4hrncxa5wkx47oau@pali> <20191016143113.GS31224@sasha-vm> <20191016160349.pwghlg566hh2o7id@pali> <20191016203317.GU31224@sasha-vm> <20191017075008.2uqgdimo3hrktj3i@pali> <20200213000656.hx5wdofkcpg7aoyo@pali>
- <20200213211847.GA1734@sasha-vm>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1581718578_27211P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Feb 2020 17:16:18 -0500
-Message-ID: <86151.1581718578@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EpAHhN0cyInJreWWweeARToNma6rlTvT9YgtHzWXZsw=;
+        b=XzDEBPiwk3LFkH8lGz926BU3R+Jry4C/BNPwuVAJsKXG6AyWmQftUl6obim0G4cH+N
+         qCsAm8qbJbJ1jukZLioMPTtcv7cx1ObL7tB2zQCJWc/qU8eeHCZgWAimI4pPeIXOgWWv
+         UsE6S3Lt9nofDkeGI8ZNx0pmTbMDAPdRkAYJNHsoyvPWx3etBJc4xW2MNSOiq7Y6QWkY
+         aVPSIG5i/mZHSb/I7bOn78xSq3nEQNWopRYErLq+1r5ZOF0AVWWE1j375TDmOtoEtFb6
+         n9JN9uf6aAt1Sk/VfAPOcNIQH59ft+dMVU9mvTyWvmYtlmf7TXnOJF/QhOT/1gYyYZ6d
+         A4Cw==
+X-Gm-Message-State: APjAAAUyI216A/ockX8kKA/BQMtPTV+G+ysrjZpBQhOWgWudeaW/4sZH
+        8LU3vuQWDqnA4OKlvU5zN1JYinGp740/is+2Pcw=
+X-Google-Smtp-Source: APXvYqzo9uxOLQdAS1DTa26MdzW9YO3EpTIBY9HGjc3TwmPTU1iKXLodrOuPRPhs4DuZ8TbPPh1Fye4HrrjwmwCNmpA=
+X-Received: by 2002:a37:e210:: with SMTP id g16mr4614534qki.413.1581718649012;
+ Fri, 14 Feb 2020 14:17:29 -0800 (PST)
+MIME-Version: 1.0
+References: <20200213145416.890080-1-enric.balletbo@collabora.com>
+ <20200213145416.890080-2-enric.balletbo@collabora.com> <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
+ <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
+In-Reply-To: <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Fri, 14 Feb 2020 14:17:02 -0800
+Message-ID: <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver support
+To:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Icenowy Zheng <icenowy@aosc.io>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1581718578_27211P
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 13 Feb 2020 16:18:47 -0500, Sasha Levin said:
-
-> >> I was hoping that it would be possible to easily use secondary FAT t=
-able
-> >> (from TexFAT extension) for redundancy without need to implement ful=
-l
-> >> TexFAT, which could be also backward compatible with systems which d=
-o
-> >> not implement TexFAT extension at all. Similarly like using FAT32 di=
-sk
-> >> with two FAT tables is possible also on system which use first FAT
-> >> table.
-
-OK.. maybe I'm not sufficiently caffeinated, but how do you use 2 FAT tab=
-les on
-a physical device and expect it to work properly on a system that uses ju=
-st the
-first FAT table, if the device is set to =22use second table=22 when you =
-mount it?
-That sounds just too much like the failure modes of running fsck on a mou=
-nted
-filesystem....
-
-> >By the chance, is there any possibility to release TexFAT specificatio=
-n?
-> >Usage of more FAT tables (even for Linux) could help with data recover=
-y.
+On Fri, Feb 14, 2020 at 1:53 PM Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
 >
-> This would be a major pain in the arse to pull off (even more that
-> releasing exFAT itself) because TexFAT is effectively dead and no one
-> here cares about it. It's not even the case that there are devices whic=
-h
-> are now left unsupported, the whole TexFAT scheme is just dead and gone=
-.
+> Hi Vasily,
 >
-> Could I point you to the TexFAT patent instead
-> (https://patents.google.com/patent/US7613738B2/en)? It describes well
-> how TexFAT used to work.
+> Missatge de Vasily Khoruzhick <anarsoul@gmail.com> del dia dv., 14 de
+> febr. 2020 a les 22:36:
+> >
+> > On Thu, Feb 13, 2020 at 6:54 AM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> > >
+> > > From: Nicolas Boichat <drinkcat@chromium.org>
+> > >
+> > > ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
+> > > that has an internal microcontroller.
+> > >
+> > > The only reason a Linux kernel driver is necessary is to reject
+> > > resolutions that require more bandwidth than what is available on
+> > > the DP side. DP bandwidth and lane count are reported by the bridge
+> > > via 2 registers on I2C.
+> >
+> > It is true only for your particular platform where usb-c part is
+> > managed by firmware. Pinephone has the same anx7688 but linux will
+> > need a driver that manages usb-c in addition to DP.
+> >
+> > I'd suggest making it MFD driver from the beginning, or at least make
+> > proper bindings so we don't have to rework it and introduce binding
+> > incompatibilities in future.
+> >
+>
+> Do you have example code on how the ANX7866 is used in pinephone?
+> There is a repo somewhere?
 
-I don't think anybody wants the full TexFAT support - but having a backup=
- copy
-of the FAT would be nice in some circumstances.
+I don't think it's implemented yet. I've CCed Icenowy in case if she
+has anything.
 
-Actually, that raises an question....
-
-What the published spec says:
-
-The File Allocation Table (FAT) region may contain up to two FATs, one in=
- the
-First FAT sub-region and another in the Second FAT sub-region. The Number=
-OfFats
-field describes how many FATs this region contains. The valid values for =
-the
-NumberOfFats field are 1 and 2. Therefore, the First FAT sub-region alway=
-s
-contains a FAT. If the NumberOfFats field is two, then the Second FAT
-sub-region also contains a FAT.
-
-The ActiveFat field of the VolumeFlags field describes which FAT is activ=
-e.
-Only the VolumeFlags field in the Main Boot Sector is current. Implementa=
-tions
-shall treat the FAT which is not active as stale. Use of the inactive FAT=
- and
-switching between FATs is implementation specific.
-
-Sasha:  can you find out what the Windows implementation does regarding t=
-hat
-last sentence?  Does it actively use both FAT sub-regions and switch betw=
-een
-them (probably not), or does it read the ActiveFAT value and use that one=
-, or
-does Windows just use NumberOfFats =3D=3D 1?
-
-I'm assuming that the fact the doc also says =22NumberOfFats =3D=3D 2 is =
-only valid
-for TexFAT volumes=22 possibly means =22Microsoft thinks that's hardcoded=
- at 1=22
-given the death of TexFAT.  That would make adding alternate FAT support =
-a
-major challenge.
-
-On the other hand, if Windows actually looks at the NumberOfFats value, f=
-inds
-a 2, and ActiveFAT =3D=3D1 (meaning use second table) and says =22OK, wha=
-tever=22 and
-just uses the second table from there on out, it becomes a lot easier.
-
-
-
---==_Exmh_1581718578_27211P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXkccMgdmEQWDXROgAQJrXg//bPrYDkf+/qHxzc4KiI24Rxtqdm4U7Az9
-dKL7V6gOwwbrxTrr+xIZvmIKJv49976Gx1CTVDVrWaXt8TssINoO9jmJlQOHMQ4P
-DzgVhXgkzZuLbiJ5mFMMrNT5JLiCnx3clSkgSTVXxKXXsfKNFFtC3N6RqExxSB8R
-mh3bU2o5kyu3+iIwstusdTjHOc6pyUDSTmJ4IgptP1GCiVxUmvzpeNR3MxcPPt0Y
-y8gI2si8AxK9koQHPxmQxrfviTvcBhqZ9dnR+Ap+aLgdPCea1MgXW9/zReficgj/
-sUsdqKOrKvS8lyIZbninbaXqht6jUdnyHmENqvmGfKDz0b5OZjFaS62OAkd1DHPM
-2rtFlgRCNMVcbu3p+pxbl1QiGb+xgakOzYiQEHjKFKQRcsXNcHUp/wstMOQsboF+
-SdnxDhKdK4Vagwur9ZyPeGZfHEOk1CCM4/VCNCOqs+qZo+YBqZbxC8uhMd53/fUl
-231KAF796DKrCeIsMdoGSinaGJOqXvuHzQoXTPKYcpGglnvvje35DYxhkVs33WFU
-U+b0IIoofQhzNBIJeniKpqNai5AsNNHjA4Mrnpp72sb5DA/Zll36RgXIn/+CG52/
-aF2BJpOWIJdCa1X3KGoae3dNdU6n95ZHdTsKqh54ZeITB+El0BwB1uNyzHhgVjhI
-e9fqc6Jcr+8=
-=pN4u
------END PGP SIGNATURE-----
-
---==_Exmh_1581718578_27211P--
+> Thanks,
+>  Enric
+>
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > ---
+> > >
+> > > Changes in v2:
+> > > - Move driver to drivers/gpu/drm/bridge/analogix.
+> > > - Make the driver OF only so we can reduce the ifdefs.
+> > > - Update the Copyright to 2020.
+> > > - Use probe_new so we can get rid of the i2c_device_id table.
+> > >
+> > >  drivers/gpu/drm/bridge/analogix/Kconfig       |  12 ++
+> > >  drivers/gpu/drm/bridge/analogix/Makefile      |   1 +
+> > >  .../drm/bridge/analogix/analogix-anx7688.c    | 188 ++++++++++++++++++
+> > >  3 files changed, 201 insertions(+)
+> > >  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+> > > index e1fa7d820373..af7c2939403c 100644
+> > > --- a/drivers/gpu/drm/bridge/analogix/Kconfig
+> > > +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+> > > @@ -11,6 +11,18 @@ config DRM_ANALOGIX_ANX6345
+> > >           ANX6345 transforms the LVTTL RGB output of an
+> > >           application processor to eDP or DisplayPort.
+> > >
+> > > +config DRM_ANALOGIX_ANX7688
+> > > +       tristate "Analogix ANX7688 bridge"
+> > > +       depends on OF
+> > > +       select DRM_KMS_HELPER
+> > > +       select REGMAP_I2C
+> > > +       help
+> > > +         ANX7688 is an ultra-low power 4k Ultra-HD (4096x2160p60)
+> > > +         mobile HD transmitter designed for portable devices. The
+> > > +         ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HD
+> > > +         including an intelligent crosspoint switch to support
+> > > +         USB Type-C.
+> > > +
+> > >  config DRM_ANALOGIX_ANX78XX
+> > >         tristate "Analogix ANX78XX bridge"
+> > >         select DRM_ANALOGIX_DP
+> > > diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+> > > index 97669b374098..27cd73635c8c 100644
+> > > --- a/drivers/gpu/drm/bridge/analogix/Makefile
+> > > +++ b/drivers/gpu/drm/bridge/analogix/Makefile
+> > > @@ -1,5 +1,6 @@
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > >  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o analogix-i2c-dptx.o
+> > >  obj-$(CONFIG_DRM_ANALOGIX_ANX6345) += analogix-anx6345.o
+> > > +obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+> > >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+> > >  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+> > > diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> > > new file mode 100644
+> > > index 000000000000..10a7cd0f9126
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+> > > @@ -0,0 +1,188 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * ANX7688 HDMI->DP bridge driver
+> > > + *
+> > > + * Copyright 2020 Google LLC
+> > > + */
+> > > +
+> > > +#include <linux/i2c.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <drm/drm_bridge.h>
+> > > +
+> > > +/* Register addresses */
+> > > +#define VENDOR_ID_REG 0x00
+> > > +#define DEVICE_ID_REG 0x02
+> > > +
+> > > +#define FW_VERSION_REG 0x80
+> > > +
+> > > +#define DP_BANDWIDTH_REG 0x85
+> > > +#define DP_LANE_COUNT_REG 0x86
+> > > +
+> > > +#define VENDOR_ID 0x1f29
+> > > +#define DEVICE_ID 0x7688
+> > > +
+> > > +/* First supported firmware version (0.85) */
+> > > +#define MINIMUM_FW_VERSION 0x0085
+> > > +
+> > > +struct anx7688 {
+> > > +       struct drm_bridge bridge;
+> > > +       struct i2c_client *client;
+> > > +       struct regmap *regmap;
+> > > +
+> > > +       bool filter;
+> > > +};
+> > > +
+> > > +static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
+> > > +{
+> > > +       return container_of(bridge, struct anx7688, bridge);
+> > > +}
+> > > +
+> > > +static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
+> > > +                                     const struct drm_display_mode *mode,
+> > > +                                     struct drm_display_mode *adjusted_mode)
+> > > +{
+> > > +       struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
+> > > +       int totalbw, requiredbw;
+> > > +       u8 dpbw, lanecount;
+> > > +       u8 regs[2];
+> > > +       int ret;
+> > > +
+> > > +       if (!anx7688->filter)
+> > > +               return true;
+> > > +
+> > > +       /* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
+> > > +       ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
+> > > +       if (ret < 0) {
+> > > +               dev_err(&anx7688->client->dev,
+> > > +                       "Failed to read bandwidth/lane count\n");
+> > > +               return false;
+> > > +       }
+> > > +       dpbw = regs[0];
+> > > +       lanecount = regs[1];
+> > > +
+> > > +       /* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
+> > > +       if (dpbw > 0x19 || lanecount > 2) {
+> > > +               dev_err(&anx7688->client->dev,
+> > > +                       "Invalid bandwidth/lane count (%02x/%d)\n",
+> > > +                       dpbw, lanecount);
+> > > +               return false;
+> > > +       }
+> > > +
+> > > +       /* Compute available bandwidth (kHz) */
+> > > +       totalbw = dpbw * lanecount * 270000 * 8 / 10;
+> > > +
+> > > +       /* Required bandwidth (8 bpc, kHz) */
+> > > +       requiredbw = mode->clock * 8 * 3;
+> > > +
+> > > +       dev_dbg(&anx7688->client->dev,
+> > > +               "DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
+> > > +               totalbw, dpbw, lanecount, requiredbw);
+> > > +
+> > > +       if (totalbw == 0) {
+> > > +               dev_warn(&anx7688->client->dev,
+> > > +                        "Bandwidth/lane count are 0, not rejecting modes\n");
+> > > +               return true;
+> > > +       }
+> > > +
+> > > +       return totalbw >= requiredbw;
+> > > +}
+> > > +
+> > > +static const struct drm_bridge_funcs anx7688_bridge_funcs = {
+> > > +       .mode_fixup = anx7688_bridge_mode_fixup,
+> > > +};
+> > > +
+> > > +static const struct regmap_config anx7688_regmap_config = {
+> > > +       .reg_bits = 8,
+> > > +       .val_bits = 8,
+> > > +};
+> > > +
+> > > +static int anx7688_i2c_probe(struct i2c_client *client)
+> > > +{
+> > > +       struct device *dev = &client->dev;
+> > > +       struct anx7688 *anx7688;
+> > > +       u16 vendor, device;
+> > > +       u16 fwversion;
+> > > +       u8 buffer[4];
+> > > +       int ret;
+> > > +
+> > > +       anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
+> > > +       if (!anx7688)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       anx7688->bridge.of_node = dev->of_node;
+> > > +       anx7688->client = client;
+> > > +       i2c_set_clientdata(client, anx7688);
+> > > +
+> > > +       anx7688->regmap = devm_regmap_init_i2c(client, &anx7688_regmap_config);
+> > > +
+> > > +       /* Read both vendor and device id (4 bytes). */
+> > > +       ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
+> > > +       if (ret) {
+> > > +               dev_err(dev, "Failed to read chip vendor/device id\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       vendor = (u16)buffer[1] << 8 | buffer[0];
+> > > +       device = (u16)buffer[3] << 8 | buffer[2];
+> > > +       if (vendor != VENDOR_ID || device != DEVICE_ID) {
+> > > +               dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
+> > > +                       vendor, device);
+> > > +               return -ENODEV;
+> > > +       }
+> > > +
+> > > +       ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
+> > > +       if (ret) {
+> > > +               dev_err(&client->dev, "Failed to read firmware version\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       fwversion = (u16)buffer[0] << 8 | buffer[1];
+> > > +       dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
+> > > +                buffer[0], buffer[1]);
+> > > +
+> > > +       /* FW version >= 0.85 supports bandwidth/lane count registers */
+> > > +       if (fwversion >= MINIMUM_FW_VERSION) {
+> > > +               anx7688->filter = true;
+> > > +       } else {
+> > > +               /* Warn, but not fail, for backwards compatibility. */
+> > > +               dev_warn(dev,
+> > > +                        "Old ANX7688 FW version (%02x.%02x), not filtering\n",
+> > > +                        buffer[0], buffer[1]);
+> > > +       }
+> > > +
+> > > +       anx7688->bridge.funcs = &anx7688_bridge_funcs;
+> > > +       drm_bridge_add(&anx7688->bridge);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int anx7688_i2c_remove(struct i2c_client *client)
+> > > +{
+> > > +       struct anx7688 *anx7688 = i2c_get_clientdata(client);
+> > > +
+> > > +       drm_bridge_remove(&anx7688->bridge);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id anx7688_match_table[] = {
+> > > +       { .compatible = "analogix,anx7688", },
+> > > +       { }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, anx7688_match_table);
+> > > +
+> > > +static struct i2c_driver anx7688_driver = {
+> > > +       .probe_new = anx7688_i2c_probe,
+> > > +       .remove = anx7688_i2c_remove,
+> > > +       .driver = {
+> > > +               .name = "anx7688",
+> > > +               .of_match_table = anx7688_match_table,
+> > > +       },
+> > > +};
+> > > +
+> > > +module_i2c_driver(anx7688_driver);
+> > > +
+> > > +MODULE_DESCRIPTION("ANX7688 HDMI->DP bridge driver");
+> > > +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
+> > > +MODULE_LICENSE("GPL");
+> > > --
+> > > 2.25.0
+> > >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
