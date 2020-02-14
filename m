@@ -2,174 +2,232 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DDEC3B199
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAC4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8F72187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WQdKfuQW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pl+lU99i"
+	by mail.kernel.org (Postfix) with ESMTP id A1104222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgBNNRp (ORCPT
+        id S1729247AbgBNNTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:17:45 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58351 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727822AbgBNNRp (ORCPT
+        Fri, 14 Feb 2020 08:19:15 -0500
+Received: from mail.windriver.com ([147.11.1.11]:50844 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728452AbgBNNTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:17:45 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1D3E022011;
-        Fri, 14 Feb 2020 08:17:44 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 14 Feb 2020 08:17:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=yIcERtbjOyld2DTwCIiHP6QaU/B
-        JF9w5HQlKcFGKTqs=; b=WQdKfuQWVKuQkxuiJmdm+s7miq9OD8UDZVzDXhSV/7V
-        6IFHZ2erktu6UYLpcevB9m6KLlRNFGoRdKPln5CZ8NX8nMRWyl2mTi5yNjeRDr+n
-        NAS6wsX5tiLzqQbwhe50CcLft3bHM1BAJ1AtGMEcnRVYoTVG2T3WnROGs4NNXtwM
-        xa2pZBj2YekfMqoA0bZ7RbOe93TGWroGHUZJH0kUGhvVulpxmpjWHlLt/mcFaBYS
-        BeB0Z9wpu9kf74g10Ni4V5UKHvslWpL772dE33j1Z2u7iOu21d7PtejL/d7mZRev
-        PqftQHsI95oX0f5/1Ssrf3+jGV8UQWtkSC8BA6kw1Gg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yIcERt
-        bjOyld2DTwCIiHP6QaU/BJF9w5HQlKcFGKTqs=; b=Pl+lU99itVieG6AcpLX1pU
-        XIlYCZb0ZCOYY1ODsCrbz72dEjqMv28mZLnBk3i04GPoectac56cpM5IbBLbG2IF
-        zkAolA4dS+NQoLRp1FgHpaNTv+MJgXDhbBCQUuodeecu3yDVpGSoGVXioMUVoLl9
-        mBrpjbTP78+jyd9djbTyn4zYiAT9PghSJurLWzlE2bf5yNRWTGxAdar4d54HsIif
-        nwE2zEkVyQZ/qJlTc7XRZpBZDtCAMBkwPW+jjrqLqrskVoQeQ+lunk7xiPVWeGNA
-        tW58lS2QuCUdLVCo58mBuRFwvwfiOOhWDJoHQrwoX9z0QIq3OCYlEJVFRTT0Ursw
-        ==
-X-ME-Sender: <xms:951GXnGN9YQzLWi9Q1Sqycw5Gea-yPLD1IJEPitZwLoql4dq7JBeVQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdehudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:951GXsgRlWqR3IOfir4_gCjDQOqBOKAmjp5p16ZSirRv1IhSg5Nz5w>
-    <xmx:951GXgdUGyPA9ncKDrp2nwBwzMRjinwZXSx-5z4uTTwlU4vCneTMGQ>
-    <xmx:951GXiw3hljaGpNlTsWBcLqvTS04oORq9s-3Egz4gqFFdvMT-UDgJQ>
-    <xmx:-J1GXrt1AsDKbfoi3XoKFQDmLaZHUo6-wtD9avk5veTDzGJJ2KC3qg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 25C4D30606E9;
-        Fri, 14 Feb 2020 08:17:43 -0500 (EST)
-Date:   Fri, 14 Feb 2020 14:17:41 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
-Message-ID: <20200214131741.u46urhpwzzjpflfb@gilmour.lan>
-References: <20200210103552.3210406-1-agriveaux@deutnet.info>
- <20200211131517.e7lpjtz2njekadee@gilmour.lan>
- <864838c2-1b1d-433a-ca04-0d91c8b5b8ca@deutnet.info>
+        Fri, 14 Feb 2020 08:19:14 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 01EDHVwX002356
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 14 Feb 2020 05:17:32 -0800 (PST)
+Received: from [128.224.162.175] (128.224.162.175) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 14 Feb
+ 2020 05:17:30 -0800
+Subject: Re: [PATCH] tools lib traceevent: Take care of return value of
+ asprintf
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CC:     <rostedt@goodmis.org>, <tstoyanov@vmware.com>,
+        <hewenliang4@huawei.com>, <linux-kernel@vger.kernel.org>
+References: <1581665486-20386-1-git-send-email-zhe.he@windriver.com>
+ <20200214125754.GA2974@redhat.com>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <076aa690-3781-97b4-7850-5ec0e2f5e13e@windriver.com>
+Date:   Fri, 14 Feb 2020 21:17:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ar2jus4mu24srbt4"
-Content-Disposition: inline
-In-Reply-To: <864838c2-1b1d-433a-ca04-0d91c8b5b8ca@deutnet.info>
+In-Reply-To: <20200214125754.GA2974@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.175]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ar2jus4mu24srbt4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Feb 12, 2020 at 10:45:03AM +0100, Alexandre GRIVEAUX wrote:
-> Le 11/02/2020 =E0 14:15, Maxime Ripard a =E9crit=A0:
-> > On Mon, Feb 10, 2020 at 11:35:52AM +0100, agriveaux@deutnet.info wrote:
-> >> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-> >>
-> >> Add Inet 86V Rev 2 support, based upon Inet 86VS.
-> >>
-> >> Missing things:
-> >> - Accelerometer (MXC6225X)
-> >> - Touchpanel (Sitronix SL1536)
-> >> - Nand (29F32G08CBACA)
-> >> - Camera (HCWY0308)
-> >>
-> >> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-> > Please read the documentation I sent you yesterday. In particular,
-> > when submitting multiple versions, you should remove have the version
-> > number in the title and a changelog.
-> >
-> > Also, please ask questions if you're unsure about something, or
-> > discuss something you do not agree with instead of ignoring the
-> > comment.
-> >
-> > Maxime
+On 2/14/20 8:57 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Feb 14, 2020 at 03:31:26PM +0800, zhe.he@windriver.com escreveu:
+>> From: He Zhe <zhe.he@windriver.com>
+>>
+>> According to the API, if memory allocation wasn't possible, or some other
+>> error occurs, asprintf will return -1, and the contents of strp below are
+>> undefined.
+>>
+>> int asprintf(char **strp, const char *fmt, ...);
+>>
+>> This patch takes care of return value of asprintf to make it less error
+>> prone and prevent the following build warning.
+>>
+>> ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
+> Sure this fixes problems, but can you make it more compact, i.e. no need
+> to add most if not all those 'int ret;' lines, just check the asprintf
+> result directly, i.e.:
 >
+>                              if (asprintf(&str, val ? "TRUE" : "FALSE") < 0)
+>                                      str = NULL;
 >
-> Seem I misusing 'git send-email' because i already changed the subject
-> line (same apply to u-boot):
+> saving the return value for that function is interesting when you need
+> to know how many bytes it printed to do some extra calculation, but if
+> all you need is to know if it failed, checking against < 0 is enough,
+> no?
+
+OK. Thanks. I'll send v2.
+
+Zhe
+
 >
-> git send-email --from agriveaux@deutnet.info --to
-> robh+dt@kernel.org,mark.rutland@arm.com,mripard@kernel.org,wens@csie.org
-> --cc
-> linux-kernel@vger.kernel.org,devicetree@vger.kernel.org,agriveaux@deutnet=
-=2Einfo
-> --subject '[v2] ARM: dts: sun5i: Add dts for inet86v_rev2' --compose
-> /tmp/linux/0001-ARM-dts-sun5i-Add-dts-for-inet86v_rev2.patch
+> - Arnaldo
 >
-> It's the first time i use git send-email, previously i used mutt to send
-> patchsets (on mips mostly).
->
->
-> Effectively i've forgot the changelog...
+>  
+>> Signed-off-by: He Zhe <zhe.he@windriver.com>
+>> ---
+>>  tools/lib/traceevent/parse-filter.c | 42 +++++++++++++++++++++++++++++--------
+>>  1 file changed, 33 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+>> index 20eed71..279b572 100644
+>> --- a/tools/lib/traceevent/parse-filter.c
+>> +++ b/tools/lib/traceevent/parse-filter.c
+>> @@ -1912,6 +1912,7 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+>>  	int left_val = -1;
+>>  	int right_val = -1;
+>>  	int val;
+>> +	int ret;
+>>  
+>>  	switch (arg->op.type) {
+>>  	case TEP_FILTER_OP_AND:
+>> @@ -1958,7 +1959,9 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+>>  				default:
+>>  					break;
+>>  				}
+>> -				asprintf(&str, val ? "TRUE" : "FALSE");
+>> +				ret = asprintf(&str, val ? "TRUE" : "FALSE");
+>> +				if (ret < 0)
+>> +					str = NULL;
+>>  				break;
+>>  			}
+>>  		}
+>> @@ -1976,7 +1979,9 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+>>  			break;
+>>  		}
+>>  
+>> -		asprintf(&str, "(%s) %s (%s)", left, op, right);
+>> +		ret = asprintf(&str, "(%s) %s (%s)", left, op, right);
+>> +		if (ret < 0)
+>> +			str = NULL;
+>>  		break;
+>>  
+>>  	case TEP_FILTER_OP_NOT:
+>> @@ -1992,10 +1997,14 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+>>  			right_val = 0;
+>>  		if (right_val >= 0) {
+>>  			/* just return the opposite */
+>> -			asprintf(&str, right_val ? "FALSE" : "TRUE");
+>> +			ret = asprintf(&str, right_val ? "FALSE" : "TRUE");
+>> +			if (ret < 0)
+>> +				str = NULL;
+>>  			break;
+>>  		}
+>> -		asprintf(&str, "%s(%s)", op, right);
+>> +		ret = asprintf(&str, "%s(%s)", op, right);
+>> +		if (ret < 0)
+>> +			str = NULL;
+>>  		break;
+>>  
+>>  	default:
+>> @@ -2010,8 +2019,11 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+>>  static char *val_to_str(struct tep_event_filter *filter, struct tep_filter_arg *arg)
+>>  {
+>>  	char *str = NULL;
+>> +	int ret;
+>>  
+>> -	asprintf(&str, "%lld", arg->value.val);
+>> +	ret = asprintf(&str, "%lld", arg->value.val);
+>> +	if (ret < 0)
+>> +		str = NULL;
+>>  
+>>  	return str;
+>>  }
+>> @@ -2027,6 +2039,7 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  	char *rstr;
+>>  	char *op;
+>>  	char *str = NULL;
+>> +	int ret;
+>>  
+>>  	lstr = arg_to_str(filter, arg->exp.left);
+>>  	rstr = arg_to_str(filter, arg->exp.right);
+>> @@ -2069,7 +2082,9 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  		break;
+>>  	}
+>>  
+>> -	asprintf(&str, "%s %s %s", lstr, op, rstr);
+>> +	ret = asprintf(&str, "%s %s %s", lstr, op, rstr);
+>> +	if (ret < 0)
+>> +		str = NULL;
+>>  out:
+>>  	free(lstr);
+>>  	free(rstr);
+>> @@ -2083,6 +2098,7 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  	char *rstr;
+>>  	char *str = NULL;
+>>  	char *op = NULL;
+>> +	int ret;
+>>  
+>>  	lstr = arg_to_str(filter, arg->num.left);
+>>  	rstr = arg_to_str(filter, arg->num.right);
+>> @@ -2113,7 +2129,9 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  		if (!op)
+>>  			op = "<=";
+>>  
+>> -		asprintf(&str, "%s %s %s", lstr, op, rstr);
+>> +		ret = asprintf(&str, "%s %s %s", lstr, op, rstr);
+>> +		if (ret < 0)
+>> +			str = NULL;
+>>  		break;
+>>  
+>>  	default:
+>> @@ -2131,6 +2149,7 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  {
+>>  	char *str = NULL;
+>>  	char *op = NULL;
+>> +	int ret;
+>>  
+>>  	switch (arg->str.type) {
+>>  	case TEP_FILTER_CMP_MATCH:
+>> @@ -2148,8 +2167,10 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  		if (!op)
+>>  			op = "!~";
+>>  
+>> -		asprintf(&str, "%s %s \"%s\"",
+>> +		ret = asprintf(&str, "%s %s \"%s\"",
+>>  			 arg->str.field->name, op, arg->str.val);
+>> +		if (ret < 0)
+>> +			str = NULL;
+>>  		break;
+>>  
+>>  	default:
+>> @@ -2162,10 +2183,13 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+>>  static char *arg_to_str(struct tep_event_filter *filter, struct tep_filter_arg *arg)
+>>  {
+>>  	char *str = NULL;
+>> +	int ret;
+>>  
+>>  	switch (arg->type) {
+>>  	case TEP_FILTER_ARG_BOOLEAN:
+>> -		asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
+>> +		ret = asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
+>> +		if (ret < 0)
+>> +			str = NULL;
+>>  		return str;
+>>  
+>>  	case TEP_FILTER_ARG_OP:
+>> -- 
+>> 2.7.4
 
-A simpler way, especially for a single patch, would be to use
-
-git send-email -v2 --to $recipients --annotate $COMMIT^..$COMMIT
-
-You can even keep the change log in the commit log itself by using ---
-as a separator, so something like:
-
-ARM: dts: my super title
-
-Some nice awesome change
-
----
-
-Changes from v1:
-  - Whatever.
-
-> At why do we need another device tree:
->
-> inet86vs use a GSL1680 touchpanel controller and 4GB nand [0]
->
-> inet86vsuse a Sitonix SL1536 touchpanel controller and 8GB nand (can
-> have 16GB nand)[1]
-
-NAND size will be discovered so it's not really a concern. For the
-touchscreen, you should make that clear in your commit log.
-
-Maxime
-
---ar2jus4mu24srbt4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkad9QAKCRDj7w1vZxhR
-xZpWAP9pFTRWCaqwBVNYBKiE2xBXLEgGjm4qKL3sDt2A4qc+jQEA7egdAvStILOP
-lE8wqwqZROoKZ3bdJi2AwXA9ZxiyjwU=
-=ZA/T
------END PGP SIGNATURE-----
-
---ar2jus4mu24srbt4--
