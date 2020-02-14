@@ -2,226 +2,299 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E0FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D57C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0904A222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2EC9222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 07:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="bleUDWSX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Utrfj7xC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CNM3cYNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgBNHFQ (ORCPT
+        id S1728849AbgBNHG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 02:05:16 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:42919 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726048AbgBNHFP (ORCPT
+        Fri, 14 Feb 2020 02:06:26 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43107 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726181AbgBNHGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:05:15 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id E55A1898;
-        Fri, 14 Feb 2020 02:05:13 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 14 Feb 2020 02:05:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:in-reply-to:date:cc
-        :subject:from:to:message-id; s=fm2; bh=J/xK9WSxZn6pwBpZ8Sb94hZCh
-        NXIWKamVckS3haCEuw=; b=bleUDWSXiN9zrvP4uBkvK+Fo+g9BmfNq23Wp/u6SN
-        Y7L0g4zA+TgQ/YqTZdkgEjR331XEjHY0i2N//O686XKNyDd+JRPSg6M2Lo0u3NhF
-        LqPbfbFA1yF44tRXci0wx38U9O/6NVR02booXV66zUxjwkpKkP4rPUnbPbUEdmmR
-        wPwiCD66teXAsdczDIcC4tOJgl4a5FmXBs4qUJo0CkzC/BKSoGBTOYGLkx7WKkSK
-        gDHD8lziFupCKW8ki7dTC0eJCcM69W6hEYJm8EKS2DrcZfs/ro+j3vUeIQq3PH45
-        yI5kxc+lZai/rivqk0iuMgemvsF7oABN4J6gjBNIMy3ZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=J/xK9W
-        SxZn6pwBpZ8Sb94hZChNXIWKamVckS3haCEuw=; b=Utrfj7xCmi2TNgxLurbBVu
-        6WOSpLh/5+wnNtCYPW9UQwgVP5WhxZgDiaQEmvmVOl30Po/2tgJA8OKATUOGBPL3
-        PzDT9sDH34Q3gbeI5Njr98dbXq6V2vKPwRCGrq/bcD5FVcw8qQum4nUsOt2Pjd/b
-        +BmHJF3vyaijFOF0yPNBs22GX05lU23V2l5HVYg0zfS5O5e5RRmewiBqsReQRJY6
-        F9mxwe7fI703q8BQC9IjNhA3OI+ZrZlGCPiOy1NSihgl6I9JBHixE2RXIZLGYtb8
-        xYHjB1FGPbnNZBdYK9tTwPIUa0e9kmKOB7PHgFbP7WB0gggT+Rvt/fvHxjzjaGvg
-        ==
-X-ME-Sender: <xms:pUZGXituUua_qG_zcGvTKXTLG6IrkNsNGrUboMDh4IOW4pFPuqF2Dg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrieelgddutdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdljedtmdenucfjughrpefgtggjfffuhffvkfesthhqredttddtjeen
-    ucfhrhhomhepfdffrghnihgvlhcuighufdcuoegugihusegugihuuhhurdighiiiqeenuc
-    fkphepudeifedruddugedrudefvddrfeenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiii
-X-ME-Proxy: <xmx:pUZGXrubWyDfr8oFgdqgFwy0V3r7WA8GQBM0PWXs2mBZHEOjF4sGSQ>
-    <xmx:pUZGXtsF2rWq5LHktbTkriFlms2h5C1SLtIxxtiQf57qwavkSGC2tA>
-    <xmx:pUZGXiWxhr0s6ZfFDLlHkka9RPrfuGefbIXQdHI9g36CoPiJjvTYaQ>
-    <xmx:qUZGXnQlzAGBOvkvAgdrssiEsPRNYLCQj1FQfVMlu4b0IjV79EXWZSV_9TU>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5B6473060BD1;
-        Fri, 14 Feb 2020 02:05:05 -0500 (EST)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Originaldate: Tue Feb 11, 2020 at 11:30 AM
-Originalfrom: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
-Original: =?utf-8?q?On_Mon,_Feb_10,_2020_at_12:09_PM_Daniel_Xu_<dxu@dxuuu.xyz>_wrot?=
- =?utf-8?q?e:=0D=0A>=0D=0A>_Add_a_selftest_to_test:=0D=0A>=0D=0A>_*_defaul?=
- =?utf-8?q?t_bpf=5Fread=5Fbranch=5Frecords()_behavior=0D=0A>_*_BPF=5FF=5FG?=
- =?utf-8?q?ET=5FBRANCH=5FRECORDS=5FSIZE_flag_behavior=0D=0A>_*_error_path_?=
- =?utf-8?q?on_non_branch_record_perf_events=0D=0A>_*_using_helper_to_write?=
- =?utf-8?q?_to_stack=0D=0A>_*_using_helper_to_write_to_map=0D=0A>=0D=0A>_O?=
- =?utf-8?q?n_host_with_hardware_counter_support:=0D=0A>=0D=0A>_____#_./tes?=
- =?utf-8?q?t=5Fprogs_-t_perf=5Fbranches=0D=0A>_____#27/1_perf=5Fbranches?=
- =?utf-8?q?=5Fhw:OK=0D=0A>_____#27/2_perf=5Fbranches=5Fno=5Fhw:OK=0D=0A>__?=
- =?utf-8?q?___#27_perf=5Fbranches:OK=0D=0A>_____Summary:_1/2_PASSED,_0_SKI?=
- =?utf-8?q?PPED,_0_FAILED=0D=0A>=0D=0A>_On_host_without_hardware_counter_s?=
- =?utf-8?q?upport_(VM):=0D=0A>=0D=0A>_____#_./test=5Fprogs_-t_perf=5Fbranc?=
- =?utf-8?q?hes=0D=0A>_____#27/1_perf=5Fbranches=5Fhw:OK=0D=0A>_____#27/2_p?=
- =?utf-8?q?erf=5Fbranches=5Fno=5Fhw:OK=0D=0A>_____#27_perf=5Fbranches:OK?=
- =?utf-8?q?=0D=0A>_____Summary:_1/2_PASSED,_1_SKIPPED,_0_FAILED=0D=0A>=0D?=
- =?utf-8?q?=0A>_Also_sync_tools/include/uapi/linux/bpf.h.=0D=0A>=0D=0A>_Si?=
- =?utf-8?q?gned-off-by:_Daniel_Xu_<dxu@dxuuu.xyz>=0D=0A>_---=0D=0A>__tools?=
- =?utf-8?q?/include/uapi/linux/bpf.h________________|__25_++-=0D=0A>__.../?=
- =?utf-8?q?selftests/bpf/prog=5Ftests/perf=5Fbranches.c__|_182_+++++++++++?=
- =?utf-8?q?+++++++=0D=0A>__.../selftests/bpf/progs/test=5Fperf=5Fbranches.?=
- =?utf-8?q?c__|__74_+++++++=0D=0A>__3_files_changed,_280_insertions(+),_1_?=
- =?utf-8?q?deletion(-)=0D=0A>__create_mode_100644_tools/testing/selftests/?=
- =?utf-8?q?bpf/prog=5Ftests/perf=5Fbranches.c=0D=0A>__create_mode_100644_t?=
- =?utf-8?q?ools/testing/selftests/bpf/progs/test=5Fperf=5Fbranches.c=0D=0A?=
- =?utf-8?q?>=0D=0A=0D=0A[...]=0D=0A=0D=0A>_+_______/*_generate_some_branch?=
- =?utf-8?q?es_on_cpu_0_*/=0D=0A>_+_______CPU=5FZERO(&cpu=5Fset);=0D=0A>_+_?=
- =?utf-8?q?______CPU=5FSET(0,_&cpu=5Fset);=0D=0A>_+_______err_=3D_pthread?=
- =?utf-8?q?=5Fsetaffinity=5Fnp(pthread=5Fself(),_sizeof(cpu=5Fset),_&cpu?=
- =?utf-8?q?=5Fset);=0D=0A>_+_______if_(CHECK(err,_"set=5Faffinity",_"cpu_#?=
- =?utf-8?q?0,_err_%d\n",_err))=0D=0A>_+_______________goto_out=5Ffree=5Fpb?=
- =?utf-8?q?;=0D=0A>_+_______/*_spin_the_loop_for_a_while_(random_high_numb?=
- =?utf-8?q?er)_*/=0D=0A>_+_______for_(i_=3D_0;_i_<_1000000;_++i)=0D=0A>_+_?=
- =?utf-8?q?______________++j;=0D=0A>_+=0D=0A=0D=0Atest=5Fperf=5Fbranches?=
- =?utf-8?q?=5F=5Fdetach_here=3F=0D=0A=0D=0A>_+_______/*_read_perf_buffer_*?=
- =?utf-8?q?/=0D=0A>_+_______err_=3D_perf=5Fbuffer=5F=5Fpoll(pb,_500);=0D?=
- =?utf-8?q?=0A>_+_______if_(CHECK(err_<_0,_"perf=5Fbuffer=5F=5Fpoll",_"err?=
- =?utf-8?q?_%d\n",_err))=0D=0A>_+_______________goto_out=5Ffree=5Fpb;=0D?=
- =?utf-8?q?=0A>_+=0D=0A>_+_______if_(CHECK(!ok,_"ok",_"not_ok\n"))=0D=0A>_?=
- =?utf-8?q?+_______________goto_out=5Ffree=5Fpb;=0D=0A>_+=0D=0A=0D=0A[...]?=
- =?utf-8?q?=0D=0A=0D=0A>_diff_--git_a/tools/testing/selftests/bpf/progs/te?=
- =?utf-8?q?st=5Fperf=5Fbranches.c_b/tools/testing/selftests/bpf/progs/test?=
- =?utf-8?q?=5Fperf=5Fbranches.c=0D=0A>_new_file_mode_100644=0D=0A>_index_0?=
- =?utf-8?q?00000000000..60327d512400=0D=0A>_---_/dev/null=0D=0A>_+++_b/too?=
- =?utf-8?q?ls/testing/selftests/bpf/progs/test=5Fperf=5Fbranches.c=0D=0A>_?=
- =?utf-8?q?@@_-0,0_+1,74_@@=0D=0A>_+//_SPDX-License-Identifier:_GPL-2.0=0D?=
- =?utf-8?q?=0A>_+//_Copyright_(c)_2019_Facebook=0D=0A>_+=0D=0A>_+#include_?=
- =?utf-8?q?<stddef.h>=0D=0A>_+#include_<linux/ptrace.h>=0D=0A>_+#include_<?=
- =?utf-8?q?linux/bpf.h>=0D=0A>_+#include_<bpf/bpf=5Fhelpers.h>=0D=0A>_+#in?=
- =?utf-8?q?clude_"bpf=5Ftrace=5Fhelpers.h"=0D=0A>_+=0D=0A>_+struct_fake=5F?=
- =?utf-8?q?perf=5Fbranch=5Fentry_{=0D=0A>_+_______=5F=5Fu64_=5Fa;=0D=0A>_+?=
- =?utf-8?q?_______=5F=5Fu64_=5Fb;=0D=0A>_+_______=5F=5Fu64_=5Fc;=0D=0A>_+}?=
- =?utf-8?q?;=0D=0A>_+=0D=0A>_+struct_output_{=0D=0A>_+_______int_required?=
- =?utf-8?q?=5Fsize;=0D=0A>_+_______int_written=5Fstack;=0D=0A>_+_______int?=
- =?utf-8?q?_written=5Fmap;=0D=0A>_+};=0D=0A>_+=0D=0A>_+struct_{=0D=0A>_+__?=
- =?utf-8?q?_____=5F=5Fuint(type,_BPF=5FMAP=5FTYPE=5FPERF=5FEVENT=5FARRAY);?=
- =?utf-8?q?=0D=0A>_+_______=5F=5Fuint(key=5Fsize,_sizeof(int));=0D=0A>_+__?=
- =?utf-8?q?_____=5F=5Fuint(value=5Fsize,_sizeof(int));=0D=0A>_+}_perf=5Fbu?=
- =?utf-8?q?f=5Fmap_SEC(".maps");=0D=0A>_+=0D=0A>_+typedef_struct_fake=5Fpe?=
- =?utf-8?q?rf=5Fbranch=5Fentry_fpbe=5Ft[30];=0D=0A>_+=0D=0A>_+struct_{=0D?=
- =?utf-8?q?=0A>_+_______=5F=5Fuint(type,_BPF=5FMAP=5FTYPE=5FARRAY);=0D=0A>?=
- =?utf-8?q?_+_______=5F=5Fuint(max=5Fentries,_1);=0D=0A>_+_______=5F=5Ftyp?=
- =?utf-8?q?e(key,_=5F=5Fu32);=0D=0A>_+_______=5F=5Ftype(value,_fpbe=5Ft);?=
- =?utf-8?q?=0D=0A>_+}_scratch=5Fmap_SEC(".maps");=0D=0A=0D=0ACan_you_pleas?=
- =?utf-8?q?e_use_global_variables_instead_of_array_and=0D=0Aperf=5Fevent?=
- =?utf-8?q?=5Farray=3F_Would_make_BPF_side_clearer_and_userspace_simpler.?=
- =?utf-8?q?=0D=0Astruct_output_member_will_just_become_variables.=0D=0A=0D?=
- =?utf-8?q?=0A[...]=0D=0A?=
-In-Reply-To: <CAEf4BzZfGXHL36ntjkQsTTEEa9yzqnS=Xs4XCibejpo5AKGpuQ@mail.gmail.com>
-Date:   Thu, 13 Feb 2020 23:05:03 -0800
-Cc:     "bpf" <bpf@vger.kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        "Andrii Nakryiko" <andriin@fb.com>,
-        "open list" <linux-kernel@vger.kernel.org>,
-        "Kernel Team" <kernel-team@fb.com>,
-        "Peter Ziljstra" <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Subject: Re: [PATCH v7 bpf-next RESEND 2/2] selftests/bpf: add
- bpf_read_branch_records() selftest
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
-Message-Id: <C0LP269G4WO4.1Q4M8CK4K92SU@dlxu-fedora-R90QNFJV>
+        Fri, 14 Feb 2020 02:06:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581663983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=joi4hdbT/PEqrxIlM8FM0lvHAsXkV/1ju6c1JWExbtc=;
+        b=CNM3cYNTP+s1U9VI8aZ5848T/Z0Kc8cgPRriAaq3OdPMKipktnbeCMYxc1UgTliM+kfjz4
+        K3fQojVpl287cRnAZRkOdZDhi7OaMfjDl6i9YhSssFh9YKoQ27nTJ9m6a9ZQIbX/hJg6AW
+        7LXWMDvjnWqQQ2vgSxiKnOCm0bYuhOc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-366-189JdSDdMgumh3q8RY9wlg-1; Fri, 14 Feb 2020 02:06:21 -0500
+X-MC-Unique: 189JdSDdMgumh3q8RY9wlg-1
+Received: by mail-wr1-f72.google.com with SMTP id n23so3543510wra.20
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 23:06:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=joi4hdbT/PEqrxIlM8FM0lvHAsXkV/1ju6c1JWExbtc=;
+        b=tbXVSthFqBhzh7HLFk/n8noTeJWYb9UM0hk3WJI7zWri8CkP4/DrPpOpcx9jCaRgHq
+         CvCHjRuMyNeGZ7Lf5z758u0MF+FKjMPTGw1W9dDtJ688Yj7BeJawGnlIm1slA+RmB+Zy
+         +/4vsjfn0Vy9d+JUgI5la8gr8rZFYSimP128BYD2qf6s+MLvwYaYbIAT+oxU++3ejBoa
+         oIJYycP0ZhK/cBfPxDjBXCcUVlkwXK/MzjTy8hlUbXj5dISZHrGrsF+WTwXFou0xgGJU
+         QSOcacK7WNm9U4FSJc0Rqdg7gDTrFptnYgf3kbXKYIFJUR/ctSqbnehbRkH5gsy5X4Qp
+         rq7g==
+X-Gm-Message-State: APjAAAVVTUUVgKT86KC2OR5Jl7OiRA2BpaUeiDhiiODX5hSBi66lrH28
+        jhk0+XG6L7LTpT0yvrkYu42Av6eaboH6jc/Wpv2jTXLNFl/6FRb6nY0OTy5kGj+xmEzypy09JFK
+        gqfv5Qj2mMyIToWZe6IUGG7Z/
+X-Received: by 2002:adf:9c8d:: with SMTP id d13mr2366682wre.392.1581663980167;
+        Thu, 13 Feb 2020 23:06:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy/hl6Fu9TcFxtBPEUCswq44byuSe4qYHucXXSp7h5vRi4HvogGKz4tM4My1eXz5pD3XgMNCQ==
+X-Received: by 2002:adf:9c8d:: with SMTP id d13mr2366647wre.392.1581663979871;
+        Thu, 13 Feb 2020 23:06:19 -0800 (PST)
+Received: from eperezma.remote.csb (189.140.78.188.dynamic.jazztel.es. [188.78.140.189])
+        by smtp.gmail.com with ESMTPSA id l6sm5980807wrn.26.2020.02.13.23.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2020 23:06:19 -0800 (PST)
+Message-ID: <bd9c9b4d99abd20d5420583af5a4954ea1cf4618.camel@redhat.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
+ random crashes in KVM guests after reboot
+From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Date:   Fri, 14 Feb 2020 08:06:17 +0100
+In-Reply-To: <2dc1df65-1431-3917-40e5-c2b12096e2a7@de.ibm.com>
+References: <20200107042401-mutt-send-email-mst@kernel.org>
+         <20200120012724-mutt-send-email-mst@kernel.org>
+         <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+         <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+         <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
+         <20200206171349-mutt-send-email-mst@kernel.org>
+         <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
+         <20200207025806-mutt-send-email-mst@kernel.org>
+         <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
+         <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
+         <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
+         <e299afca8e22044916abbf9fbbd0bff6b0ee9e13.camel@redhat.com>
+         <4c3f70b7-723a-8b0f-ac49-babef1bcc180@de.ibm.com>
+         <50a79c3491ac483583c97df2fac29e2c3248fdea.camel@redhat.com>
+         <8fbbfb49-99d1-7fee-e713-d6d5790fe866@de.ibm.com>
+         <2364d0728c3bb4bcc0c13b591f774109a9274a30.camel@redhat.com>
+         <bb9fb726-306c-5330-05aa-a86bd1b18097@de.ibm.com>
+         <468983fad50a5e74a739f71487f0ea11e8d4dfd1.camel@redhat.com>
+         <2dc1df65-1431-3917-40e5-c2b12096e2a7@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Feb 11, 2020 at 11:30 AM, Andrii Nakryiko wrote:
-> On Mon, Feb 10, 2020 at 12:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-[...]
+Hi Christian.
 
->=20
-> > +       /* generate some branches on cpu 0 */
-> > +       CPU_ZERO(&cpu_set);
-> > +       CPU_SET(0, &cpu_set);
-> > +       err =3D pthread_setaffinity_np(pthread_self(), sizeof(cpu_set),=
- &cpu_set);
-> > +       if (CHECK(err, "set_affinity", "cpu #0, err %d\n", err))
-> > +               goto out_free_pb;
-> > +       /* spin the loop for a while (random high number) */
-> > +       for (i =3D 0; i < 1000000; ++i)
-> > +               ++j;
-> > +
->
->=20
-> test_perf_branches__detach here?
+Sorry, that was meant to be applied over previous debug patch.
 
-Yeah, good idea.
+Here I inline the one meant to be applied over eccb852f1fe6bede630e2e4f1a121a81e34354ab.
 
-[...]
+Thanks!
 
-> > +struct fake_perf_branch_entry {
-> > +       __u64 _a;
-> > +       __u64 _b;
-> > +       __u64 _c;
-> > +};
-> > +
-> > +struct output {
-> > +       int required_size;
-> > +       int written_stack;
-> > +       int written_map;
-> > +};
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> > +       __uint(key_size, sizeof(int));
-> > +       __uint(value_size, sizeof(int));
-> > +} perf_buf_map SEC(".maps");
-> > +
-> > +typedef struct fake_perf_branch_entry fpbe_t[30];
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_ARRAY);
-> > +       __uint(max_entries, 1);
-> > +       __type(key, __u32);
-> > +       __type(value, fpbe_t);
-> > +} scratch_map SEC(".maps");
->
->=20
-> Can you please use global variables instead of array
+From d978ace99e4844b49b794d768385db3d128a4cc0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+Date: Fri, 14 Feb 2020 08:02:26 +0100
+Subject: [PATCH] vhost: disable all features and trace last_avail_idx and
+ ioctl calls
 
-If you mean `scratch_map`, sure.
+---
+ drivers/vhost/net.c   | 20 +++++++++++++++++---
+ drivers/vhost/vhost.c | 25 +++++++++++++++++++++++--
+ drivers/vhost/vhost.h | 10 +++++-----
+ 3 files changed, 45 insertions(+), 10 deletions(-)
 
-> and perf_event_array?
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index e158159671fa..e4d5f843f9c0 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1505,10 +1505,13 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 
+ 	mutex_lock(&n->dev.mutex);
+ 	r = vhost_dev_check_owner(&n->dev);
+-	if (r)
++	if (r) {
++		pr_debug("vhost_dev_check_owner index=%u fd=%d rc r=%d", index, fd, r);
+ 		goto err;
++	}
+ 
+ 	if (index >= VHOST_NET_VQ_MAX) {
++		pr_debug("vhost_dev_check_owner index=%u fd=%d MAX=%d", index, fd, VHOST_NET_VQ_MAX);
+ 		r = -ENOBUFS;
+ 		goto err;
+ 	}
+@@ -1518,22 +1521,26 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 
+ 	/* Verify that ring has been setup correctly. */
+ 	if (!vhost_vq_access_ok(vq)) {
++		pr_debug("vhost_net_set_backend index=%u fd=%d !vhost_vq_access_ok", index, fd);
+ 		r = -EFAULT;
+ 		goto err_vq;
+ 	}
+ 	sock = get_socket(fd);
+ 	if (IS_ERR(sock)) {
+ 		r = PTR_ERR(sock);
++		pr_debug("vhost_net_set_backend index=%u fd=%d get_socket err r=%d", index, fd, r);
+ 		goto err_vq;
+ 	}
+ 
+ 	/* start polling new socket */
+ 	oldsock = vq->private_data;
+ 	if (sock != oldsock) {
++		pr_debug("sock=%p != oldsock=%p index=%u fd=%d vq=%p", sock, oldsock, index, fd, vq);
+ 		ubufs = vhost_net_ubuf_alloc(vq,
+ 					     sock && vhost_sock_zcopy(sock));
+ 		if (IS_ERR(ubufs)) {
+ 			r = PTR_ERR(ubufs);
++			pr_debug("ubufs index=%u fd=%d err r=%d vq=%p", index, fd, r, vq);
+ 			goto err_ubufs;
+ 		}
+ 
+@@ -1541,11 +1548,15 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 		vq->private_data = sock;
+ 		vhost_net_buf_unproduce(nvq);
+ 		r = vhost_vq_init_access(vq);
+-		if (r)
++		if (r) {
++			pr_debug("init_access index=%u fd=%d r=%d vq=%p", index, fd, r, vq);
+ 			goto err_used;
++		}
+ 		r = vhost_net_enable_vq(n, vq);
+-		if (r)
++		if (r) {
++			pr_debug("enable_vq index=%u fd=%d r=%d vq=%p", index, fd, r, vq);
+ 			goto err_used;
++		}
+ 		if (index == VHOST_NET_VQ_RX)
+ 			nvq->rx_ring = get_tap_ptr_ring(fd);
+ 
+@@ -1559,6 +1570,8 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 
+ 	mutex_unlock(&vq->mutex);
+ 
++	pr_debug("sock=%p", sock);
++
+ 	if (oldubufs) {
+ 		vhost_net_ubuf_put_wait_and_free(oldubufs);
+ 		mutex_lock(&vq->mutex);
+@@ -1710,6 +1723,7 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
+ 
+ 	switch (ioctl) {
+ 	case VHOST_NET_SET_BACKEND:
++		pr_debug("VHOST_NET_SET_BACKEND");
+ 		if (copy_from_user(&backend, argp, sizeof backend))
+ 			return -EFAULT;
+ 		return vhost_net_set_backend(n, backend.index, backend.fd);
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index b5a51b1f2e79..ec25ba32fe81 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1642,15 +1642,30 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+ 			r = -EINVAL;
+ 			break;
+ 		}
++
++		if (vq->last_avail_idx || vq->avail_idx) {
++			pr_debug(
++				"strange VHOST_SET_VRING_BASE [vq=%p][s.index=%u][s.num=%u]",
++				vq, s.index, s.num);
++			dump_stack();
++			r = 0;
++			break;
++		}
+ 		vq->last_avail_idx = s.num;
+ 		/* Forget the cached index value. */
+ 		vq->avail_idx = vq->last_avail_idx;
++		pr_debug(
++			"VHOST_SET_VRING_BASE [vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][s.index=%u][s.num=%u]",
++			vq, vq->last_avail_idx, vq->avail_idx, s.index, s.num);
+ 		break;
+ 	case VHOST_GET_VRING_BASE:
+ 		s.index = idx;
+ 		s.num = vq->last_avail_idx;
+ 		if (copy_to_user(argp, &s, sizeof s))
+ 			r = -EFAULT;
++		pr_debug(
++			"VHOST_GET_VRING_BASE [vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][s.index=%u][s.num=%u]",
++			vq, vq->last_avail_idx, vq->avail_idx, s.index, s.num);
+ 		break;
+ 	case VHOST_SET_VRING_KICK:
+ 		if (copy_from_user(&f, argp, sizeof f)) {
+@@ -2239,8 +2254,8 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
+ 
+ 		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
+-			vq_err(vq, "Guest moved used index from %u to %u",
+-				last_avail_idx, vq->avail_idx);
++			vq_err(vq, "Guest moved vq %p used index from %u to %u",
++				vq, last_avail_idx, vq->avail_idx);
+ 			return -EFAULT;
+ 		}
+ 
+@@ -2316,6 +2331,9 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
+ 
+ 	/* On success, increment avail index. */
++	pr_debug(
++		"[vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][vq->ndescs=%d][vq->first_desc=%d]",
++		vq, vq->last_avail_idx, vq->avail_idx, vq->ndescs, vq->first_desc);
+ 	vq->last_avail_idx++;
+ 
+ 	return 0;
+@@ -2432,6 +2450,9 @@ EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+ /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+ void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+ {
++	pr_debug(
++		"DISCARD [vq=%p][vq->last_avail_idx=%u][vq->avail_idx=%u][n=%d]",
++		vq, vq->last_avail_idx, vq->avail_idx, n);
+ 	vq->last_avail_idx -= n;
+ }
+ EXPORT_SYMBOL_GPL(vhost_discard_vq_desc);
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 661088ae6dc7..08f6d2ccb697 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -250,11 +250,11 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
+ 	} while (0)
+ 
+ enum {
+-	VHOST_FEATURES = (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
+-			 (1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
+-			 (1ULL << VIRTIO_RING_F_EVENT_IDX) |
+-			 (1ULL << VHOST_F_LOG_ALL) |
+-			 (1ULL << VIRTIO_F_ANY_LAYOUT) |
++	VHOST_FEATURES = /* (1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) | */
++			 /* (1ULL << VIRTIO_RING_F_INDIRECT_DESC) | */
++			 /* (1ULL << VIRTIO_RING_F_EVENT_IDX) | */
++			 /* (1ULL << VHOST_F_LOG_ALL) | */
++			 /* (1ULL << VIRTIO_F_ANY_LAYOUT) | */
+ 			 (1ULL << VIRTIO_F_VERSION_1)
+ };
+ 
+-- 
+2.18.1
 
-Do you mean replace the perf ring buffer with global variables? I think
-that would limit the number of samples we validate in userspace to a fixed
-number. It might be better to validate as many as the system gives us.
 
-Let me know what you think. I might be overthinking it.
-
-> Would make BPF side clearer and userspace simpler.
-> struct output member will just become variables.
-
-
-Thanks,
-Daniel
