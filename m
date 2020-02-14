@@ -2,89 +2,180 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A849C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCDBC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB8E20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:05:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Yi0s3b6s"
+	by mail.kernel.org (Postfix) with ESMTP id 69812222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgBNJFo (ORCPT
+        id S1729013AbgBNJIQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:05:44 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:35912 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgBNJFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:05:44 -0500
-Received: from zn.tnic (p200300EC2F0D5A00F0C2F03C7F1C4548.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5a00:f0c2:f03c:7f1c:4548])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A4A821EC0570;
-        Fri, 14 Feb 2020 10:05:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581671142;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5j3ZjigwZ3zGXN14rYl0tUEzvt2zvOdTA+Q2q/hVZ4M=;
-        b=Yi0s3b6sgjbqizw1/UtzB9JEUktNWqOCShbVh5RnH/3pZDhOwLs6TYkU0h2dMtkBauYLKN
-        6uY5bo/IuXywdXg94fDEINl8hXjF1NIFA9zAUBTuaS9n0KC8VokgHEFpzIFEpxvf5lEzVH
-        6mfUM2FivlBAzaSSeXL5BHmx14/BF6Q=
-Date:   Fri, 14 Feb 2020 10:05:38 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] x86/mce: Change default mce logger to check
- mce->handled
-Message-ID: <20200214090537.GF13395@zn.tnic>
-References: <20200212204652.1489-1-tony.luck@intel.com>
- <20200212204652.1489-6-tony.luck@intel.com>
- <20200213170820.GN31799@zn.tnic>
- <20200213222750.GC21107@agluck-desk2.amr.corp.intel.com>
+        Fri, 14 Feb 2020 04:08:16 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:35868 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728691AbgBNJIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 04:08:16 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01E97nY8000710, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01E97nY8000710
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 17:07:49 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 14 Feb 2020 17:07:49 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 14 Feb 2020 17:07:49 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Fri, 14 Feb 2020 17:07:49 +0800
+From:   Hau <hau@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+CC:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Subject: RE: SFP+ support for 8168fp/8117
+Thread-Topic: SFP+ support for 8168fp/8117
+Thread-Index: AQHVwTo87C9FPgb4q0K7N9j/9Mzg+6fW+ByAgAAXwwCAAE15gIAAfZ0AgECGEQCAAkeigA==
+Date:   Fri, 14 Feb 2020 09:07:49 +0000
+Message-ID: <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
+References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+ <20200102152143.GB1397@lunn.ch>
+ <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
+ <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
+ <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
+ <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
+In-Reply-To: <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.157]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200213222750.GC21107@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:27:50PM -0800, Luck, Tony wrote:
-> That's pretty hard with a chain.  I think folks will have a conniptions
-
-LOL. And they do already for other things so let's spare them :-)
-
-> if we invent an error return from a notifier chain function that means
-> "Go back and start over". Though if we did it would make the "handled"
-> field useful for functions that didn't want to redo ... they'd just
-> check if "their" bit in handled was already set.
+> Chun-Hao,
 > 
-> Still, seems like a terrible idea.
+> > On Jan 3, 2020, at 12:53, Kai-Heng Feng <kai.heng.feng@canonical.com>
+> wrote:
+> >
+> >
+> >
+> >> On Jan 3, 2020, at 05:24, Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >>
+> >> On 02.01.2020 17:46, Kai-Heng Feng wrote:
+> >>> Hi Andrew,
+> >>>
+> >>>> On Jan 2, 2020, at 23:21, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>>>
+> >>>> On Thu, Jan 02, 2020 at 02:59:42PM +0800, Kai Heng Feng wrote:
+> >>>>> Hi Heiner,
+> >>>>>
+> >>>>> There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy
+> device ID matches "Generic FE-GE Realtek PHY" nevertheless.
+> >>>>> The problems is that, since it uses SFP+, both BMCR and BMSR read
+> are always zero, so Realtek phylib never knows if the link is up.
+> >>>>>
+> >>>>> However, the old method to read through MMIO correctly shows the
+> link is up:
+> >>>>> static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private
+> >>>>> *tp) {
+> >>>>>     return RTL_R8(tp, PHYstatus) & LinkStatus; }
+> >>>>>
+> >>>>> Few ideas here:
+> >>>>> - Add a link state callback for phylib like phylink's
+> phylink_fixed_state_cb(). However there's no guarantee that other parts of
+> this chip works.
+> >>>>> - Add SFP+ support for this chip. However the phy device matches to
+> "Generic FE-GE Realtek PHY" which may complicate things.
+> >>>>>
+> >>>>> Any advice will be welcome.
+> >>>>
+> >>>> Hi Kai
+> >>>>
+> >>>> Is the i2c bus accessible?
+> >>>
+> >>> I don't think so. It seems to be a regular Realtek 8168 device with generic
+> PCI ID [10ec:8168].
+> >>>
+> >>>> Is there any documentation or example code?
+> >>>
+> >>> Unfortunately no.
+> >>>
+> >>>>
+> >>>> In order to correctly support SFP+ cages, we need access to the i2c
+> >>>> bus to determine what sort of module has been inserted. It would
+> >>>> also be good to have access to LOS, transmitter disable, etc, from
+> >>>> the SFP cage.
+> >>>
+> >>> Seems like we need Realtek to provide more information to support this
+> chip with SFP+.
+> >>>
+> >> Indeed it would be good to have some more details how this chip
+> >> handles SFP+, therefore I add Hau to the discussion.
+> >>
+> >> As I see it the PHY registers are simply dummies on this chip. Or
+> >> does this chip support both, PHY and SFP+? Hopefully SFP presence can
+> >> be autodetected, we could skip the complete PHY handling in this
+> >> case. Interesting would be which parts of the SFP interface are exposed
+> how via (proprietary) registers.
+> >> Recently the STMMAC driver was converted from phylib to phylink,
+> >> maybe we have to do the same with r8169 one fine day. But w/o more
+> >> details this is just speculation, much appreciated would be
+> >> documentation from Realtek about the
+> >> SFP+ interface.
+> >>
+> >> Kai, which hardware/board are we talking about?
+> >
+> > It's a regular Intel PC.
+> >
+> > The ethernet is function 1 of the PCI device, function 0 isn't bound to any
+> driver:
+> > 02:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd.
+> > Device [10ec:816e] (rev 1a)
+> > 02:00.1 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> > RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168]
+> > (rev 22)
+> 
+> Would it be possible to share some info on SFP support?
+Hi Kai-Heng,
 
-Yap.
+Could you use r8168 to dump hardware info with following command.
+cat /proc/net/r8168/ethx/*
 
-> If some driver really wants multiple bites at an error on the
-> chain it could register more than one handler with different
-> priorities.  In which case we should have "enum" names for the
-> highest and lowest priorities so such a driver can go "first"
-> or "last" (though such a thing would be dependent on whether
-> some other driver was attempting to add a "first" or "last"
-> entry on the chain).
+I want to make sure which chip you use and try to add support it in r8168/r8169.
 
-Yap, makes sense. I'm fine with us even having a possible way to do
-this, *if* someone decides she wants it.
-
-Ok, thanks!
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Hau
+> 
+> Kai-Heng
+> 
+> >
+> > Kai-Heng
+> >
+> >>
+> >>> Kai-Heng
+> >>>
+> >>>>
+> >>>> Andrew
+> >>>
+> >> Heiner
+> >
+> 
+> 
+> ------Please consider the environment before printing this e-mail.
