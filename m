@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160D9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23C5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CB7246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD89A24696
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698111;
-	bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
+	s=default; t=1581698117;
+	bh=uWRAqrrz8QGRmZbaK0xqB+Wr/NpuVq0kBoEB4W7u2Og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsR3Kkq3joMtaJtNw8gG+CIO1bxIP29DBULStyRDhaPzn+6ACCiJFFerY0ss82LHp
-	 DxzDtTMQ7JiUsXvnXSNcN9AU7lPwGXpVVuytMaUVFIP/adcn9Ap8nvDiBIg/nCixIa
-	 32i/tM5pH0yUlwhIVvOcO4WQspQD1f/vd+Eb3YoY=
+	b=DW9qMcSS4uUmp9IQk8WnPbjkUOZ9U4q55n0yDOsuTSVvjfvtGC/XFHsJ3p/ZrdrzB
+	 lsW9SK/mQ4WptKeMbohT7sjCtk2v1eOlu+ppblVslpOFnbdS4zYdX+C8/a/1wzChdM
+	 G9yA8m5a8HgeVRczhLi16nVC0R512bfvU1E5JbX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406423AbgBNQfL (ORCPT
+        id S2406666AbgBNQfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:35:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:35:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405991AbgBNQYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2405979AbgBNQYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 11:24:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F8FD247A4;
-        Fri, 14 Feb 2020 16:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50003247A6;
+        Fri, 14 Feb 2020 16:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697489;
-        bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
+        s=default; t=1581697488;
+        bh=uWRAqrrz8QGRmZbaK0xqB+Wr/NpuVq0kBoEB4W7u2Og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rG0fup8D8P3HGQ73nRT84OJvqKOQGCa00b/+dTizXmn9fABXKavQckTNS/PMT1PsK
-         lZyLhqTKcOS0S9T6BbKovfsmjJv3voHFvdo8hmhd9C1bN8kCVAGwJBGSQ0Hp4ZSXqH
-         c34TsKf7Hg75HTJVhCiUkirwcURzbs02dJGkRr6U=
+        b=LhkDQqHOXKMBPpMgtETTlOl+QWY6rRILOWtGDgOefi6cz+hGQOZTJOR0Rb9vvxhXy
+         zCeeqL6+K4OaZzCXop6QvhzjH6mYDG6yuKsTv1OEJftYsWlilXPAKIviiuMub3IGUS
+         teIH6018GUVPxJeRjFOhw0519a2dt4mS7XMw+vGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 019/100] kconfig: fix broken dependency in randconfig-generated .config
-Date:   Fri, 14 Feb 2020 11:23:03 -0500
-Message-Id: <20200214162425.21071-19-sashal@kernel.org>
+Cc:     Nicolai Stange <nstange@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 018/100] libertas: make lbs_ibss_join_existing() return error code on rates overflow
+Date:   Fri, 14 Feb 2020 11:23:02 -0500
+Message-Id: <20200214162425.21071-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
 References: <20200214162425.21071-1-sashal@kernel.org>
@@ -59,44 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Nicolai Stange <nstange@suse.de>
 
-[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
+[ Upstream commit 1754c4f60aaf1e17d886afefee97e94d7f27b4cb ]
 
-Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
-produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
-which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing() and made it to return on overflow.
 
-This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
-CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
-value of CONFIG_EFI is calculated.
+However, the aforementioned commit doesn't set the return value accordingly
+and thus, lbs_ibss_join_existing() would return with zero even though it
+failed.
 
-When this happens, the has_changed flag should be set.
+Make lbs_ibss_join_existing return -EINVAL in case the bounds check on the
+number of supplied rates fails.
 
-Currently, it takes the result from the last iteration. It should
-accumulate all the results of the loop.
-
-Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
-Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/confdata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 138d7f100f7e8..4216940e875df 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -1236,7 +1236,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
- 
- 		sym_calc_value(csym);
- 		if (mode == def_random)
--			has_changed = randomize_choice_values(csym);
-+			has_changed |= randomize_choice_values(csym);
- 		else {
- 			set_all_choice_values(csym);
- 			has_changed = true;
+diff --git a/drivers/net/wireless/libertas/cfg.c b/drivers/net/wireless/libertas/cfg.c
+index 803684eed142c..7d55de21b1903 100644
+--- a/drivers/net/wireless/libertas/cfg.c
++++ b/drivers/net/wireless/libertas/cfg.c
+@@ -1854,6 +1854,7 @@ static int lbs_ibss_join_existing(struct lbs_private *priv,
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
+ 			rcu_read_unlock();
++			ret = -EINVAL;
+ 			goto out;
+ 		}
+ 		rates = cmd.bss.rates;
 -- 
 2.20.1
 
