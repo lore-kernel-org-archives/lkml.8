@@ -2,111 +2,104 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2576C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD3DC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EFA217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqS0dDHD"
+	by mail.kernel.org (Postfix) with ESMTP id 4EC52217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581698363;
+	bh=Euz8prmoV/9Omi9CY0OJt7pU2e0BfM7/YWlxm/rXuLE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DhcdTEqdnc6pvB3mv6BwwCmlgpHOURIPZ7hBSoc+VuqViUGHOi5w9InvwqI0NLaGk
+	 c8f1y8ONL4TkHcM+pAumAtpJhE5M6FW8NA9jTHHqY5O5B643uYMf9Fw7Urqj/Z/ffH
+	 U7+45mvkr/U7zRCTEuSwXw/osWhHfK3/JgoKhdOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405471AbgBNQjR (ORCPT
+        id S2405597AbgBNQjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:39:17 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393908AbgBNQjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:39:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581698354;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ejjWyNnsQ4fYjfK0i4jU0/WTc3mIEUoKR3OpTBufYKo=;
-        b=QqS0dDHD0pEfbFzWJLJMnX8zw0RFJy6FodLvpnGfeh+ztt9TZfH2aHVPjGUa6Q9lqsIKrS
-        xZqKJeprTRjBMBbZ5Z8uR+QzrNuYTOktDOCyZpn/0NOdZPphQCCWk0miZTo+T6OLND4UnU
-        joSrFay8jc4mXedP6T9HIr94yMx5tqE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-vWas1kg9MGecCh9FP-ZwqQ-1; Fri, 14 Feb 2020 11:39:09 -0500
-X-MC-Unique: vWas1kg9MGecCh9FP-ZwqQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 14 Feb 2020 11:39:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405677AbgBNQXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F49F18B9FC2;
-        Fri, 14 Feb 2020 16:39:08 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 739ED10021B2;
-        Fri, 14 Feb 2020 16:39:07 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-Date:   Fri, 14 Feb 2020 10:37:40 -0600
-Message-Id: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF9224784;
+        Fri, 14 Feb 2020 16:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581697416;
+        bh=Euz8prmoV/9Omi9CY0OJt7pU2e0BfM7/YWlxm/rXuLE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l7/S2o3nc+sqBYWT4gJXeWCFzY061Sm4YuUCNRaRGfOrXPJWjUSKTHe18i9Ofsde3
+         /gv/mVpk6l8CX8hcXalgiXzrEfZGmfQq4lmqz0J5rHTqbtQRXCIgXWfn7h5Hy5epqF
+         c77UQzX6tCJZAnVHHzkvGrsjbu0FqK+0R7KcmavA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 106/141] ide: remove set but not used variable 'hwif'
+Date:   Fri, 14 Feb 2020 11:20:46 -0500
+Message-Id: <20200214162122.19794-106-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the second loop of ingenic_pinconf_set(), it annotates the switch
-default case as unreachable().  The annotation is technically correct,
-because that same case would have resulted in an early return in the
-previous loop.
+From: Wang Hai <wanghai38@huawei.com>
 
-However, if a bug were to get introduced later, for example if an
-additional case were added to the first loop without adjusting the
-second loop, it would result in nasty undefined behavior: most likely
-the function's generated code would fall through to the next function.
+[ Upstream commit 98949a1946d70771789def0c9dbc239497f9f138 ]
 
-Another issue is that, while objtool normally understands unreachable()
-annotations, there's one special case where it doesn't: when the
-annotation occurs immediately after a 'ret' instruction.  That happens
-to be the case here because unreachable() is immediately before the
-return.
+Fix the following gcc warning:
 
-So change the unreachable() to BUG() so that the unreachable code, if
-ever executed, would panic instead of introducing undefined behavior.
-This also makes objtool happy.
+drivers/ide/pmac.c: In function pmac_ide_setup_device:
+drivers/ide/pmac.c:1027:14: warning: variable hwif set but not used
+[-Wunused-but-set-variable]
 
-This fixes the following objtool warning:
-
-  drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_se=
-t() falls through to next function ingenic_pinconf_group_set()
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: d58b0c39e32f ("powerpc/macio: Rework hotplug media bay support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ide/pmac.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-=
-ingenic.c
-index 96f04d121ebd..6b61ac6cd4d2 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *=
-pctldev, unsigned int pin,
- 			break;
-=20
- 		default:
--			unreachable();
-+			BUG();
- 		}
+diff --git a/drivers/ide/pmac.c b/drivers/ide/pmac.c
+index b20025a5a8d93..9c48ff85bbbbb 100644
+--- a/drivers/ide/pmac.c
++++ b/drivers/ide/pmac.c
+@@ -1024,7 +1024,6 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
+ 	struct device_node *np = pmif->node;
+ 	const int *bidp;
+ 	struct ide_host *host;
+-	ide_hwif_t *hwif;
+ 	struct ide_hw *hws[] = { hw };
+ 	struct ide_port_info d = pmac_port_info;
+ 	int rc;
+@@ -1080,7 +1079,7 @@ static int pmac_ide_setup_device(pmac_ide_hwif_t *pmif, struct ide_hw *hw)
+ 		rc = -ENOMEM;
+ 		goto bail;
  	}
-=20
---=20
-2.21.1
+-	hwif = pmif->hwif = host->ports[0];
++	pmif->hwif = host->ports[0];
+ 
+ 	if (on_media_bay(pmif)) {
+ 		/* Fixup bus ID for media bay */
+-- 
+2.20.1
 
