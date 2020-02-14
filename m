@@ -2,118 +2,102 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B15C3B1BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D8FC3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43DB2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034B124650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HmWCZB+s"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="v0JLbJHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbgBNTCe (ORCPT
+        id S1729759AbgBNTDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:02:34 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:51406 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729444AbgBNTCe (ORCPT
+        Fri, 14 Feb 2020 14:03:20 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38348 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729479AbgBNTDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:02:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581706951; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yvCOCg562GCkzsEcg5HQ6kirpT7S0uOjNf100aPmIzw=;
-        b=HmWCZB+seF4VoaFtudUXtxPcGvJyCFWed1h8dyYi0eEuCbC9s9gAehGzTtjNvxZ2VZvSaJ
-        FN5Tdx8kBJ37s66o65/yhtTGh1PvFQuzvuRsPgpThWEvo9UFbj2NnB5bz/mJDmXfDdA5jl
-        Eu+KOwTBwLPnD6C4oAnB/M5g4j9q8BA=
-Date:   Fri, 14 Feb 2020 16:02:18 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Message-Id: <1581706938.3.5@crapouillou.net>
-In-Reply-To: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
-References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+        Fri, 14 Feb 2020 14:03:20 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j17so4300374pjz.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:03:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X67Mr7JHgMW0MtPbY5RUDBc6idW8KEYPReWaSuRnXh4=;
+        b=v0JLbJHanSqJgxnGB542gdGMsejEY6woNkilQ94b+P9gJ+YAMQgsu9ur6JPedZ9A3Y
+         F2taOjVCszau/FtGTE4KIYWb00umSwqDTMoeIGGck0H4ZjPOUWqry7S8K5Fh6x28E6iF
+         SmB56gTFYXn3LYMGEXqJsCBWipK43wSQa3ZDgo9lFxdMW4DVx4MCAFdqH4uMq98UCSIy
+         c/9MmVX/DzPYfTZvGTwAJ5SMGNPcSMRjI7NG0ecOjiyy9p2kZXVm4ZJcMAnPZQlkGSPK
+         XMzeJo/tveLYVOhGY1FueG8X0zp7bDjMGTcFGvf/espDzfHyJ5pmJJVFdkWZzoJOr9qB
+         0RLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X67Mr7JHgMW0MtPbY5RUDBc6idW8KEYPReWaSuRnXh4=;
+        b=EijBEN0NTksSE8yor9xvoOSvRPh+zOMXTPR+0HFj4FNCwbm08qWXsuI3cjNExj1hYy
+         vS6vsub/y+fVFuWVhNdBJgqmJQtr9Mw9V9lAYQVWL0zwh6A01A+JwtJp5Ec2coZU1BYf
+         hlajJ2nKuggEx7n+RSUZujF239MPq1eytIwbZMMaj98+AK+o2aDgRnEJYmsY67+3Eypb
+         JD2Pm6lsMgaGVawxmWDU/oJj/ilSKSILmcRwCEMJvmqF2Nc97/JtvDXFWDKQs+SFFb7K
+         OgPxD1Km7oyZr1tNpwqGDuj7Jtc05jX9jog4MUtlG8PZ2qXhzhjhwTsU7fu5sYCYeWbt
+         lw2A==
+X-Gm-Message-State: APjAAAUJM4wDQ/ADz1ZfZhKLJdf1S06iGkRDNE5yyrqAhY5AAM8h1X1X
+        4je61rhJlK2QzNvmzrOSLGg/yw==
+X-Google-Smtp-Source: APXvYqwcwuUZwJSa7Do9y4rRp+P0PvJ6ZLvjFhDsEpfTEuG614CCQQrcH1qgYMDHXD8v2yUJD9C+uQ==
+X-Received: by 2002:a17:90a:fe02:: with SMTP id ck2mr5267083pjb.10.1581706997875;
+        Fri, 14 Feb 2020 11:03:17 -0800 (PST)
+Received: from cisco ([2001:420:c0c8:1005::22c])
+        by smtp.gmail.com with ESMTPSA id r6sm7877667pfh.91.2020.02.14.11.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 11:03:17 -0800 (PST)
+Date:   Fri, 14 Feb 2020 12:03:14 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, smbarber@chromium.org,
+        Seth Forshee <seth.forshee@canonical.com>,
+        linux-security-module@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Subject: Re: [PATCH v2 19/28] stat: handle fsid mappings
+Message-ID: <20200214190314.GD22883@cisco>
+References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+ <20200214183554.1133805-20-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214183554.1133805-20-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josh,
+On Fri, Feb 14, 2020 at 07:35:45PM +0100, Christian Brauner wrote:
+> @@ -471,8 +484,13 @@ static long cp_new_stat64(struct kstat *stat, struct stat64 __user *statbuf)
+>  #endif
+>  	tmp.st_mode = stat->mode;
+>  	tmp.st_nlink = stat->nlink;
+> -	tmp.st_uid = from_kuid_munged(current_user_ns(), stat->uid);
+> -	tmp.st_gid = from_kgid_munged(current_user_ns(), stat->gid);
+> +	if (stat->userns_visible) {
+> +		tmp.st_uid, from_kuid_munged(current_user_ns(), stat->uid);
+> +		tmp.st_gid, from_kgid_munged(current_user_ns(), stat->gid);
+> +	} else {
+> +		tmp.st_uid, from_kfsuid_munged(current_user_ns(), stat->uid);
+> +		tmp.st_gid, from_kfsgid_munged(current_user_ns(), stat->gid);
+> +	}
 
+I suppose this should be = ?
 
-Le ven., f=E9vr. 14, 2020 at 10:37, Josh Poimboeuf <jpoimboe@redhat.com>=20
-a =E9crit :
-> In the second loop of ingenic_pinconf_set(), it annotates the switch
-> default case as unreachable().  The annotation is technically correct,
-> because that same case would have resulted in an early return in the
-> previous loop.
->=20
-> However, if a bug were to get introduced later, for example if an
-> additional case were added to the first loop without adjusting the
-> second loop, it would result in nasty undefined behavior: most likely
-> the function's generated code would fall through to the next function.
->=20
-> Another issue is that, while objtool normally understands=20
-> unreachable()
-> annotations, there's one special case where it doesn't: when the
-> annotation occurs immediately after a 'ret' instruction.  That happens
-> to be the case here because unreachable() is immediately before the
-> return.
->=20
-> So change the unreachable() to BUG() so that the unreachable code, if
-> ever executed, would panic instead of introducing undefined behavior.
-> This also makes objtool happy.
-
-I don't like the idea that you change this driver's code just to work=20
-around a bug in objtool, and I don't like the idea of working around a=20
-future bug that shouldn't be introduced in the first place.
-
--Paul
-
->=20
-> This fixes the following objtool warning:
->=20
->   drivers/pinctrl/pinctrl-ingenic.o: warning: objtool:=20
-> ingenic_pinconf_set() falls through to next function=20
-> ingenic_pinconf_group_set()
->=20
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  drivers/pinctrl/pinctrl-ingenic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 96f04d121ebd..6b61ac6cd4d2 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct=20
-> pinctrl_dev *pctldev, unsigned int pin,
->  			break;
->=20
->  		default:
-> -			unreachable();
-> +			BUG();
->  		}
->  	}
->=20
-> --
-> 2.21.1
->=20
-
-=
-
+Tycho
