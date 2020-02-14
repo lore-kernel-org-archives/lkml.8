@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89E9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA01C3B1A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934C224689
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5113024673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695531;
-	bh=Ff9aojnCxvJNKh/uQrHeECcEeScxqOiWDzlfY4OG+x8=;
+	s=default; t=1581695537;
+	bh=viIBm9b3VhN1DKXhLg9bkTkhgxwWO6/AiWhtmjD5vHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJ9v4X1jl9jIPjsWzm3Z7hacu9Epg9nrQR+aO/l6pMaheXZ0YttpjoYuUUvvsSt0l
-	 w8XIHzPsvK4a0XfJLZQenRIHXxwVZ7RBGvMO5u4jlnpY5du0Y7sOq0yp25kzWvrIDj
-	 HRft2hrgiibY2vj8OtX8M4nEeYpv2WjhvnZsQSmQ=
+	b=X7QiFFwYNO3DTL8BuCJ8BmbND31rvucK+ZtWFmy/En5rYn4DWelxRl5CUf/DIZK9h
+	 luB9+BheT3WLlX7SAQxIwAG8eEY+7nEZbkut42A3WN3vURsiNBxu1O5v2ED3vMPxeR
+	 oHmaFh3zUN/eqVzYzSZLzfm+LeOzI0q/l8NufO38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbgBNPwK (ORCPT
+        id S1730543AbgBNPwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57152 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:52:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbgBNPvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:52 -0500
+        id S1730898AbgBNPvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1495A2465D;
-        Fri, 14 Feb 2020 15:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84F924684;
+        Fri, 14 Feb 2020 15:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695512;
-        bh=Ff9aojnCxvJNKh/uQrHeECcEeScxqOiWDzlfY4OG+x8=;
+        s=default; t=1581695514;
+        bh=viIBm9b3VhN1DKXhLg9bkTkhgxwWO6/AiWhtmjD5vHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pP/cZCgOXDKB5DYJH45SRukx5ZBMnC69Yhi2v9WcS4wC5/dJuD432BItKq7ApAjEB
-         tSPy4fGkdDezFx2Ujhird/sTer0qCBHrwgttiRUTkKtsx0bFeRAOWlyUKOJdUG2rI/
-         qkWxxwADLtd9pokIhXL2SYosVerfMBIEFysVuVlQ=
+        b=oQOTmkBPTSEP4/OFWA8VOG/I0nbtEgF/+zIl11z3Lirx8sPOCuSkRtSufmV0vEM4l
+         7FkavKMI2ZDjMCH1474p6rQH25e4NiERTA/cTGAsYNtIK8bGHhOyCvv1aF5ueqkrZx
+         FNOzo3pvV/9pPvbmb8RUKBBNBGhSvFvcIafuHdEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin KaFai Lau <kafai@fb.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 136/542] bpf: Improve bucket_log calculation logic
-Date:   Fri, 14 Feb 2020 10:42:08 -0500
-Message-Id: <20200214154854.6746-136-sashal@kernel.org>
+Cc:     Eric Yang <Eric.Yang2@amd.com>, Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 138/542] drm/amd/display: Renoir chroma viewport WA
+Date:   Fri, 14 Feb 2020 10:42:10 -0500
+Message-Id: <20200214154854.6746-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -63,67 +61,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Eric Yang <Eric.Yang2@amd.com>
 
-[ Upstream commit 88d6f130e5632bbf419a2e184ec7adcbe241260b ]
+[ Upstream commit 1cad8ff7ecc6b70a062b8e8b74a0cd08c928341d ]
 
-It was reported that the max_t, ilog2, and roundup_pow_of_two macros have
-exponential effects on the number of states in the sparse checker.
+[Why]
+For unknown reason, immediate flip with host VM translation on NV12
+surface will underflow on last row of PTE.
 
-This patch breaks them up by calculating the "nbuckets" first so that the
-"bucket_log" only needs to take ilog2().
+[How]
+Hack chroma viewport height to make fetch one more row of PTE.
+Note that this will cause hubp underflow on all video underlay
+cases, but the underflow is not user visible since it is in
+blank region.
 
-In addition, Linus mentioned:
-
-  Patch looks good, but I'd like to point out that it's not just sparse.
-
-  You can see it with a simple
-
-    make net/core/bpf_sk_storage.i
-    grep 'smap->bucket_log = ' net/core/bpf_sk_storage.i | wc
-
-  and see the end result:
-
-      1  365071 2686974
-
-  That's one line (the assignment line) that is 2,686,974 characters in
-  length.
-
-  Now, sparse does happen to react particularly badly to that (I didn't
-  look to why, but I suspect it's just that evaluating all the types
-  that don't actually ever end up getting used ends up being much more
-  expensive than it should be), but I bet it's not good for gcc either.
-
-Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Link: https://lore.kernel.org/bpf/20200207081810.3918919-1-kafai@fb.com
+Signed-off-by: Eric Yang <Eric.Yang2@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/bpf_sk_storage.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dc.h           |  2 +
+ .../gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c | 65 ++++++++++++++++++-
+ .../drm/amd/display/dc/dcn21/dcn21_resource.c |  1 +
+ 3 files changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index 458be6b3eda97..3ab23f698221c 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -643,9 +643,10 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
- 		return ERR_PTR(-ENOMEM);
- 	bpf_map_init_from_attr(&smap->map, attr);
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 0416a17b0897c..320f4eeebf84c 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -417,6 +417,8 @@ struct dc_debug_options {
+ 	bool cm_in_bypass;
+ #endif
+ 	int force_clock_mode;/*every mode change.*/
++
++	bool nv12_iflip_vm_wa;
+ };
  
-+	nbuckets = roundup_pow_of_two(num_possible_cpus());
- 	/* Use at least 2 buckets, select_bucket() is undefined behavior with 1 bucket */
--	smap->bucket_log = max_t(u32, 1, ilog2(roundup_pow_of_two(num_possible_cpus())));
--	nbuckets = 1U << smap->bucket_log;
-+	nbuckets = max_t(u32, 2, nbuckets);
-+	smap->bucket_log = ilog2(nbuckets);
- 	cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
+ struct dc_debug_data {
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+index 2f5a5867e6749..1ddd6ae221558 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+@@ -164,6 +164,69 @@ static void hubp21_setup(
  
- 	ret = bpf_map_charge_init(&smap->map.memory, cost);
+ }
+ 
++void hubp21_set_viewport(
++	struct hubp *hubp,
++	const struct rect *viewport,
++	const struct rect *viewport_c)
++{
++	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
++	int patched_viewport_height = 0;
++	struct dc_debug_options *debug = &hubp->ctx->dc->debug;
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_DIMENSION, 0,
++		  PRI_VIEWPORT_WIDTH, viewport->width,
++		  PRI_VIEWPORT_HEIGHT, viewport->height);
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_START, 0,
++		  PRI_VIEWPORT_X_START, viewport->x,
++		  PRI_VIEWPORT_Y_START, viewport->y);
++
++	/*for stereo*/
++	REG_SET_2(DCSURF_SEC_VIEWPORT_DIMENSION, 0,
++		  SEC_VIEWPORT_WIDTH, viewport->width,
++		  SEC_VIEWPORT_HEIGHT, viewport->height);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_START, 0,
++		  SEC_VIEWPORT_X_START, viewport->x,
++		  SEC_VIEWPORT_Y_START, viewport->y);
++
++	/*
++	 *	Work around for underflow issue with NV12 + rIOMMU translation
++	 *	+ immediate flip. This will cause hubp underflow, but will not
++	 *	be user visible since underflow is in blank region
++	 */
++	patched_viewport_height = viewport_c->height;
++	if (viewport_c->height != 0 && debug->nv12_iflip_vm_wa) {
++		int pte_row_height = 0;
++		int pte_rows = 0;
++
++		REG_GET(DCHUBP_REQ_SIZE_CONFIG,
++			PTE_ROW_HEIGHT_LINEAR, &pte_row_height);
++
++		pte_row_height = 1 << (pte_row_height + 3);
++		pte_rows = (viewport_c->height + pte_row_height - 1) / pte_row_height;
++		patched_viewport_height = pte_rows * pte_row_height + 3;
++	}
++
++
++	/* DC supports NV12 only at the moment */
++	REG_SET_2(DCSURF_PRI_VIEWPORT_DIMENSION_C, 0,
++		  PRI_VIEWPORT_WIDTH_C, viewport_c->width,
++		  PRI_VIEWPORT_HEIGHT_C, patched_viewport_height);
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_START_C, 0,
++		  PRI_VIEWPORT_X_START_C, viewport_c->x,
++		  PRI_VIEWPORT_Y_START_C, viewport_c->y);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_DIMENSION_C, 0,
++		  SEC_VIEWPORT_WIDTH_C, viewport_c->width,
++		  SEC_VIEWPORT_HEIGHT_C, patched_viewport_height);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_START_C, 0,
++		  SEC_VIEWPORT_X_START_C, viewport_c->x,
++		  SEC_VIEWPORT_Y_START_C, viewport_c->y);
++}
++
+ void hubp21_set_vm_system_aperture_settings(struct hubp *hubp,
+ 		struct vm_system_aperture_param *apt)
+ {
+@@ -211,7 +274,7 @@ static struct hubp_funcs dcn21_hubp_funcs = {
+ 	.hubp_set_vm_system_aperture_settings = hubp21_set_vm_system_aperture_settings,
+ 	.set_blank = hubp1_set_blank,
+ 	.dcc_control = hubp1_dcc_control,
+-	.mem_program_viewport = min_set_viewport,
++	.mem_program_viewport = hubp21_set_viewport,
+ 	.set_cursor_attributes	= hubp2_cursor_set_attributes,
+ 	.set_cursor_position	= hubp1_cursor_set_position,
+ 	.hubp_clk_cntl = hubp1_clk_cntl,
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index b29b2c99a564e..fe0ed4c09ad0a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -847,6 +847,7 @@ static const struct dc_debug_options debug_defaults_drv = {
+ 		.scl_reset_length10 = true,
+ 		.sanity_checks = true,
+ 		.disable_48mhz_pwrdwn = false,
++		.nv12_iflip_vm_wa = true
+ };
+ 
+ static const struct dc_debug_options debug_defaults_diags = {
 -- 
 2.20.1
 
