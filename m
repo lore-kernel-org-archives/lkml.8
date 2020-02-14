@@ -2,190 +2,118 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2574C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D695C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3282467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 13:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007392187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 14:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581688653;
-	bh=JguufGpWzwvIpvrtP0sfAB21qYZ27aIdQiVnlZgKcH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a7bY34qvOjyHv/UwiKU+M59nMDxfjBdNtXu0ipbOn6BwdR5wo5UlIHwYVN6tBTj4Y
-	 9pSJ8KjUsiCtWx4bOksbM94+sXF8o2KUlUjP0bWMNDVEkNk7SA6h9rNPrFFuEvdDmt
-	 HGBJjKXIqLHFsja3SwhIkiNzEna51Cjy6Zb3O4vQ=
+	s=default; t=1581688863;
+	bh=k3JruLTLqPVnQICLCs3Zof0FamkKoL45HVos9LEVuRY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=GcK/cVafTa6gxFlI2Gqt/49+cPz6PjgIwiAP2xujwCytdLXAYETBEXLN97S16yP7i
+	 6ttkqz4xq/4f47lPjoXHj4iNyrIc01cflF5StVSVRi1XCr2I6neOCzdk7R8YS83047
+	 BDqhEyDppGg0tPey6NHB50qogCpcNLXi6QopmKwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgBNN5c (ORCPT
+        id S1729278AbgBNOBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 08:57:32 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:38094 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgBNN5c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 08:57:32 -0500
-Received: by mail-qv1-f65.google.com with SMTP id g6so4301403qvy.5;
-        Fri, 14 Feb 2020 05:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pRCR8JFRteiLiVzqAfjfoL4EPL1tfp3Ime2M/1tWd2A=;
-        b=Xt+4QjfcAQFD4vbXwLw142jzmUR/mbfyWcR2LGQxEG3Q4CI4VnpvrtZdxIzjAMG0NM
-         12gk7hnv23oml5u4GPRoSAR1zri9vwXrb4GXVszIma+EJWc+TMedI/TsHu9IB/yiwvYl
-         l9tmJ9l3SL8pc7gpPoKNofC0lO0V1mMt/tZfMprNr3xounTF0mzLJ/zcCN7ETn//1KVY
-         o8dDRv2rXzXiog5yCkv1sCoPDAeKuTOzemq55dKXyAPWVs+wzVeCeYAfolPGJ5Vik8aP
-         ddWHw6bWMPQ7qFme1giV2oPfdSwVecasRRbWE2WJQN4DJ9FWqkiRq3DGzyLJC1eYmFjF
-         zDFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=pRCR8JFRteiLiVzqAfjfoL4EPL1tfp3Ime2M/1tWd2A=;
-        b=QwETe9g+1cZCFJ9Sg7V95PXzeHj90TS7A9X9qDS/7TbEgkhIWFLGZb814BNif+hk4f
-         pkUYZzf0l1ZMY1K6rFtKtxIBCaH0o0+UKiupLFr/Ew7et4jetELwPHBhTIAmYYXJTJ/M
-         9PbT4PkQZDOP9Ynr535ixcBICmVHlApZ+yXCZALQfvGzwbK/RXdimI907OxVXjpCceYx
-         TlnqI9zDmQkH/A/AZcDL9Zn74FqPeMEXlkh082gVbuOSfXLzLZMlMCA3UCUtQu+YHhTg
-         Qhu8zuiyY7Vi5/iEX0NczoPYuRl7FvUf3KaF4j95nFGLhTDsazeycmal4e3BPZ8TjIHX
-         637w==
-X-Gm-Message-State: APjAAAVVfi2mfhmYv9VhzyuZeEksR6/TGN345XaB0344+qDyRJztumgl
-        8hNc+N6bP+YF4GPXTSkwH/Q=
-X-Google-Smtp-Source: APXvYqwMGPF1vQTzvjZZAzqYcaur4NxkkfsQZNmn2Qcu3JNVWIdK1pxN9mTSXfJCZUr4riuWjBkKbw==
-X-Received: by 2002:ad4:4dc9:: with SMTP id cw9mr2299790qvb.0.1581688651050;
-        Fri, 14 Feb 2020 05:57:31 -0800 (PST)
-Received: from localhost ([71.172.127.161])
-        by smtp.gmail.com with ESMTPSA id c26sm3149342qtn.19.2020.02.14.05.57.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 05:57:30 -0800 (PST)
-Date:   Fri, 14 Feb 2020 08:57:28 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200214135728.GK88887@mtj.thefacebook.com>
-References: <20200203215201.GD6380@cmpxchg.org>
- <20200211164753.GQ10636@dhcp22.suse.cz>
- <20200212170826.GC180867@cmpxchg.org>
- <20200213074049.GA31689@dhcp22.suse.cz>
- <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
+        Fri, 14 Feb 2020 09:01:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728173AbgBNOBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 09:01:01 -0500
+Received: from [192.168.1.8] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E48E2187F;
+        Fri, 14 Feb 2020 14:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581688861;
+        bh=k3JruLTLqPVnQICLCs3Zof0FamkKoL45HVos9LEVuRY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FyMQK7lQ1e9TOy9MWfOfZbMjZsbr55fkQJYguwndjCdhj0ixPPCuDTxqHFsrhpKpu
+         Nqru7G3jzhkZX/AIQ446R9Dd5HSQM6bzOYnch7NwqDOcGk+fFUkWQg9G8FF9t3MqnP
+         NDVWO958TthJM60h0p5JVNP6L8W+OkJJORz8Mu5I=
+Subject: Re: [PATCH] ARM: dts: socfpga: arria10: Increase boot partition size
+ for NAND
+To:     Ley Foon Tan <ley.foon.tan@intel.com>
+Cc:     Chin Liang See <chin.liang.see@intel.com>,
+        Tien Fong Chee <tien.fong.chee@intel.com>,
+        linux-kernel@vger.kernel.org, Ley Foon Tan <lftan.linux@gmail.com>
+References: <20200213180027.9239-1-ley.foon.tan@intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c9889fa6-d10d-4636-7e44-dc341c914e0a@kernel.org>
+Date:   Fri, 14 Feb 2020 08:00:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214071537.GL31689@dhcp22.suse.cz>
+In-Reply-To: <20200213180027.9239-1-ley.foon.tan@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Fri, Feb 14, 2020 at 08:15:37AM +0100, Michal Hocko wrote:
-> > Yes, it can set up the control knobs as directed but it doesn't ship
-> > with any material resource configurations or has conventions set up
-> > around it.
+
+On 2/13/20 12:00 PM, Ley Foon Tan wrote:
+> Increase boot partition size to 32MB to support bigger size kernel image
+> and FPGA bitstream.
 > 
-> Right. But services might use those knobs, right? And that means that if
-> somebody wants a memory protection then the service file is going to use 
-> MemoryLow=$FOO and that is likely not going to work properly without an
-> an additional hassles, e.g. propagate upwards, which systemd doesn't do
-> unless I am mistaken.
-
-While there are applications where strict protection makes sense, in a
-lot of cases, resource decisions have to consider factors global to
-the system - how much is there and for what purpose the system is
-being set up. Static per-service configuration for sure doesn't work
-and neither will dynamic configuration without considering system-wide
-factors.
-
-Another aspect is that as configuration gets more granular and
-stricter with memory knobs, the configuration becomes less
-work-conserving. Kernel's MM keeps track of dynamic behavior and adapt
-to the dynamic usage, these configurations can't.
-
-So, while individual applications may indicate what its resource
-dispositions are, a working configuration is not gonna come from each
-service declaring how many bytes they want.
-
-This doesn't mean configurations are more tedious or difficult. In
-fact, in a lot of cases, categorizing applications on the system
-broadly and assigning ballpark weights and memory protections from the
-higher level is sufficient.
-
-> > > Besides that we are talking about memcg features which are available only
-> > > unified hieararchy and that is what systemd is using already.
-> > 
-> > I'm not quite sure what the above sentence is trying to say.
+> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> ---
+>  arch/arm/boot/dts/socfpga_arria10_socdk_nand.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> I meant to say that once the unified hierarchy is used by systemd you
-> cannot configure it differently to suit your needs without interfering
-> with systemd.
 
-I haven't experienced systemd getting in the way of structuring cgroup
-hierarchy and configuring them. It's pretty flexible and easy to
-configure. Do you have any specific constraints on mind?
+Applied, thanks!
 
-> > There's a plan to integrate streamlined implementation of oomd into
-> > systemd. There was a thread somewhere but the only thing I can find
-> > now is a phoronix link.
-> > 
-> >   https://www.phoronix.com/scan.php?page=news_item&px=Systemd-Facebook-OOMD
-> 
-> I am not sure I see how that is going to change much wrt. resource
-> distribution TBH. Is the existing cgroup hierarchy going to change for
-> the OOMD to be deployed?
-
-It's not a hard requirement but it'll be a lot more useful with actual
-resource hierarchy. As more resource control features get enabled, I
-think it'll converge that way because that's more useful.
-
-> > Yeah, exactly, all it needs to do is placing scopes / services
-> > according to resource hierarchy and configure overall policy at higher
-> > level slices, which is exactly what the memory.low semantics change
-> > will allow.
-> 
-> Let me ask more specifically. Is there any plan or existing API to allow
-> to configure which services are related resource wise?
-
-At kernel level, no. They seem like pretty high level policy decisions
-to me.
-
-> > > That being said, I do not really blame systemd here. We are not making
-> > > their life particularly easy TBH.
-> > 
-> > Do you mind elaborating a bit?
-> 
-> I believe I have already expressed the configurability concern elsewhere
-> in the email thread. It boils down to necessity to propagate
-> protection all the way up the hierarchy properly if you really need to
-> protect leaf cgroups that are organized without a resource control in
-> mind. Which is what systemd does.
-
-But that doesn't work for other controllers at all. I'm having a
-difficult time imagining how making this one control mechanism work
-that way makes sense. Memory protection has to be configured together
-with IO protection to be actually effective.
-
-As for cgroup hierarchy being unrelated to how controllers behave, it
-frankly reminds me of cgroup1 memcg flat hierarchy thing I'm not sure
-how that would actually work in terms of resource isolation. Also, I'm
-not sure how systemd forces such configurations and I'd think systemd
-folks would be happy to fix them if there are such problems. Is the
-point you're trying to make "because of systemd, we have to contort
-how memory controller behaves"?
-
-Thanks.
-
--- 
-tejun
+Dinh
