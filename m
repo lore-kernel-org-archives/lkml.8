@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39373C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BB7C3B195
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B92E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21A4222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 08:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgBNIM1 (ORCPT
+        id S1729023AbgBNIMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 03:12:27 -0500
-Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:58292 "EHLO
+        Fri, 14 Feb 2020 03:12:31 -0500
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:50890 "EHLO
         outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726004AbgBNIMY (ORCPT
+        by vger.kernel.org with ESMTP id S1728773AbgBNIMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 03:12:24 -0500
 Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id F0B6C1C2F69
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:20 +0000 (GMT)
-Received: (qmail 30689 invoked from network); 14 Feb 2020 08:12:20 -0000
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id 9EBEA1C2F75
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 08:12:21 +0000 (GMT)
+Received: (qmail 30804 invoked from network); 14 Feb 2020 08:12:21 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:20 -0000
+  by 81.17.254.9 with ESMTPA; 14 Feb 2020 08:12:21 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 01/12] sched/fair: Allow a per-CPU kthread waking a task to stack on the same CPU, to fix XFS performance regression
-Date:   Fri, 14 Feb 2020 08:12:08 +0000
-Message-Id: <20200214081219.26352-2-mgorman@techsingularity.net>
+Subject: [PATCH 05/12] sched/numa: replace runnable_load_avg by load_avg
+Date:   Fri, 14 Feb 2020 08:12:12 +0000
+Message-Id: <20200214081219.26352-6-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200214081219.26352-1-mgorman@techsingularity.net>
 References: <20200214081219.26352-1-mgorman@techsingularity.net>
@@ -49,189 +49,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following XFS commit:
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-  8ab39f11d974 ("xfs: prevent CIL push holdoff in log recovery")
+Similarly to what has been done for the normal load balance, we can
+replace runnable_load_avg by load_avg in numa load balancing and track
+other statistics like the utilization and the number of running tasks to
+get to better view of the current state of a node.
 
-changed the logic from using bound workqueues to using unbound
-workqueues. Functionally this makes sense but it was observed at the
-time that the dbench performance dropped quite a lot and CPU migrations
-were increased.
-
-The current pattern of the task migration is straight-forward. With XFS,
-an IO issuer delegates work to xlog_cil_push_work ()on an unbound kworker.
-This runs on a nearby CPU and on completion, dbench wakes up on its old CPU
-as it is still idle and no migration occurs. dbench then queues the real
-IO on the blk_mq_requeue_work() work item which runs on a bound kworker
-which is forced to run on the same CPU as dbench. When IO completes,
-the bound kworker wakes dbench but as the kworker is a bound but,
-real task, the CPU is not considered idle and dbench gets migrated by
-select_idle_sibling() to a new CPU. dbench may ping-pong between two CPUs
-for a while but ultimately it starts a round-robin of all CPUs sharing
-the same LLC. High-frequency migration on each IO completion has poor
-performance overall. It has negative implications both in commication
-costs and power management. mpstat confirmed that at low thread counts
-that all CPUs sharing an LLC has low level of activity.
-
-Note that even if the CIL patch was reverted, there still would
-be migrations but the impact is less noticeable. It turns out that
-individually the scheduler, XFS, blk-mq and workqueues all made sensible
-decisions but in combination, the overall effect was sub-optimal.
-
-This patch special cases the IO issue/completion pattern and allows
-a bound kworker waker and a task wakee to stack on the same CPU if
-there is a strong chance they are directly related. The expectation
-is that the kworker is likely going back to sleep shortly. This is not
-guaranteed as the IO could be queued asynchronously but there is a very
-strong relationship between the task and kworker in this case that would
-justify stacking on the same CPU instead of migrating. There should be
-few concerns about kworker starvation given that the special casing is
-only when the kworker is the waker.
-
-DBench on XFS
-MMTests config: io-dbench4-async modified to run on a fresh XFS filesystem
-
-UMA machine with 8 cores sharing LLC
-                          5.5.0-rc7              5.5.0-rc7
-                  tipsched-20200124           kworkerstack
-Amean     1        22.63 (   0.00%)       20.54 *   9.23%*
-Amean     2        25.56 (   0.00%)       23.40 *   8.44%*
-Amean     4        28.63 (   0.00%)       27.85 *   2.70%*
-Amean     8        37.66 (   0.00%)       37.68 (  -0.05%)
-Amean     64      469.47 (   0.00%)      468.26 (   0.26%)
-Stddev    1         1.00 (   0.00%)        0.72 (  28.12%)
-Stddev    2         1.62 (   0.00%)        1.97 ( -21.54%)
-Stddev    4         2.53 (   0.00%)        3.58 ( -41.19%)
-Stddev    8         5.30 (   0.00%)        5.20 (   1.92%)
-Stddev    64       86.36 (   0.00%)       94.53 (  -9.46%)
-
-NUMA machine, 48 CPUs total, 24 CPUs share cache
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Amean     1         58.69 (   0.00%)       30.21 *  48.53%*
-Amean     2         60.90 (   0.00%)       35.29 *  42.05%*
-Amean     4         66.77 (   0.00%)       46.55 *  30.28%*
-Amean     8         81.41 (   0.00%)       68.46 *  15.91%*
-Amean     16       113.29 (   0.00%)      107.79 *   4.85%*
-Amean     32       199.10 (   0.00%)      198.22 *   0.44%*
-Amean     64       478.99 (   0.00%)      477.06 *   0.40%*
-Amean     128     1345.26 (   0.00%)     1372.64 *  -2.04%*
-Stddev    1          2.64 (   0.00%)        4.17 ( -58.08%)
-Stddev    2          4.35 (   0.00%)        5.38 ( -23.73%)
-Stddev    4          6.77 (   0.00%)        6.56 (   3.00%)
-Stddev    8         11.61 (   0.00%)       10.91 (   6.04%)
-Stddev    16        18.63 (   0.00%)       19.19 (  -3.01%)
-Stddev    32        38.71 (   0.00%)       38.30 (   1.06%)
-Stddev    64       100.28 (   0.00%)       91.24 (   9.02%)
-Stddev    128      186.87 (   0.00%)      160.34 (  14.20%)
-
-Dbench has been modified to report the time to complete a single "load
-file". This is a more meaningful metric for dbench that a throughput
-metric as the benchmark makes many different system calls that are not
-throughput-related
-
-Patch shows a 9.23% and 48.53% reduction in the time to process a load
-file with the difference partially explained by the number of CPUs sharing
-a LLC. In a separate run, task migrations were almost eliminated by the
-patch for low client counts. In case people have issue with the metric
-used for the benchmark, this is a comparison of the throughputs as
-reported by dbench on the NUMA machine.
-
-dbench4 Throughput (misleading but traditional)
-                           5.5.0-rc7              5.5.0-rc7
-                   tipsched-20200124      kworkerstack-v1r2
-Hmean     1        321.41 (   0.00%)      617.82 *  92.22%*
-Hmean     2        622.87 (   0.00%)     1066.80 *  71.27%*
-Hmean     4       1134.56 (   0.00%)     1623.74 *  43.12%*
-Hmean     8       1869.96 (   0.00%)     2212.67 *  18.33%*
-Hmean     16      2673.11 (   0.00%)     2806.13 *   4.98%*
-Hmean     32      3032.74 (   0.00%)     3039.54 (   0.22%)
-Hmean     64      2514.25 (   0.00%)     2498.96 *  -0.61%*
-Hmean     128     1778.49 (   0.00%)     1746.05 *  -1.82%*
-
-Note that this is somewhat specific to XFS and ext4 shows no performance
-difference as it does not rely on kworkers in the same way. No major
-problem was observed running other workloads on different machines although
-not all tests have completed yet.
-
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200128154006.GD3466@techsingularity.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c  | 11 -----------
- kernel/sched/fair.c  | 14 ++++++++++++++
- kernel/sched/sched.h | 13 +++++++++++++
- 3 files changed, 27 insertions(+), 11 deletions(-)
+ kernel/sched/fair.c | 97 ++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 70 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 377ec26e9159..e94819d573be 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1447,17 +1447,6 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- 
- #ifdef CONFIG_SMP
- 
--static inline bool is_per_cpu_kthread(struct task_struct *p)
--{
--	if (!(p->flags & PF_KTHREAD))
--		return false;
--
--	if (p->nr_cpus_allowed != 1)
--		return false;
--
--	return true;
--}
--
- /*
-  * Per-CPU kthreads are allowed to run on !active && online CPUs, see
-  * __set_cpus_allowed_ptr() and select_fallback_rq().
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a7e11b1bb64c..ef3eb36ba5c4 100644
+index 4395951b1530..52e74b53d6e7 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5970,6 +5970,20 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
+@@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ 	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
+ }
  
+-static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
+-
+-static unsigned long cpu_runnable_load(struct rq *rq)
+-{
+-	return cfs_rq_runnable_load_avg(&rq->cfs);
+-}
++/*
++ * 'numa_type' describes the node at the moment of load balancing.
++ */
++enum numa_type {
++	/* The node has spare capacity that can be used to run more tasks.  */
++	node_has_spare = 0,
 +	/*
-+	 * Allow a per-cpu kthread to stack with the wakee if the
-+	 * kworker thread and the tasks previous CPUs are the same.
-+	 * The assumption is that the wakee queued work for the
-+	 * per-cpu kthread that is now complete and the wakeup is
-+	 * essentially a sync wakeup. An obvious example of this
-+	 * pattern is IO completions.
++	 * The node is fully used and the tasks don't compete for more CPU
++	 * cycles. Nevertheless, some tasks might wait before running.
 +	 */
-+	if (is_per_cpu_kthread(current) &&
-+	    prev == smp_processor_id() &&
-+	    this_rq()->nr_running <= 1) {
-+		return prev;
++	node_fully_busy,
++	/*
++	 * The node is overloaded and can't provide expected CPU cycles to all
++	 * tasks.
++	 */
++	node_overloaded
++};
+ 
+ /* Cached statistics for all CPUs within a node */
+ struct numa_stats {
+ 	unsigned long load;
+-
++	unsigned long util;
+ 	/* Total compute capacity of CPUs on a node */
+ 	unsigned long compute_capacity;
++	unsigned int nr_running;
++	unsigned int weight;
++	enum numa_type node_type;
+ };
+ 
+-/*
+- * XXX borrowed from update_sg_lb_stats
+- */
+-static void update_numa_stats(struct numa_stats *ns, int nid)
+-{
+-	int cpu;
+-
+-	memset(ns, 0, sizeof(*ns));
+-	for_each_cpu(cpu, cpumask_of_node(nid)) {
+-		struct rq *rq = cpu_rq(cpu);
+-
+-		ns->load += cpu_runnable_load(rq);
+-		ns->compute_capacity += capacity_of(cpu);
+-	}
+-
+-}
+-
+ struct task_numa_env {
+ 	struct task_struct *p;
+ 
+@@ -1521,6 +1518,47 @@ struct task_numa_env {
+ 	int best_cpu;
+ };
+ 
++static unsigned long cpu_load(struct rq *rq);
++static unsigned long cpu_util(int cpu);
++
++static inline enum
++numa_type numa_classify(unsigned int imbalance_pct,
++			 struct numa_stats *ns)
++{
++	if ((ns->nr_running > ns->weight) &&
++	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
++		return node_overloaded;
++
++	if ((ns->nr_running < ns->weight) ||
++	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
++		return node_has_spare;
++
++	return node_fully_busy;
++}
++
++/*
++ * XXX borrowed from update_sg_lb_stats
++ */
++static void update_numa_stats(struct task_numa_env *env,
++			      struct numa_stats *ns, int nid)
++{
++	int cpu;
++
++	memset(ns, 0, sizeof(*ns));
++	for_each_cpu(cpu, cpumask_of_node(nid)) {
++		struct rq *rq = cpu_rq(cpu);
++
++		ns->load += cpu_load(rq);
++		ns->util += cpu_util(cpu);
++		ns->nr_running += rq->cfs.h_nr_running;
++		ns->compute_capacity += capacity_of(cpu);
 +	}
 +
- 	/* Check a recently used CPU as a potential idle candidate: */
- 	recent_used_cpu = p->recent_used_cpu;
- 	if (recent_used_cpu != prev &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 878910e8b299..2be96f9e5b1e 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2484,3 +2484,16 @@ static inline void membarrier_switch_mm(struct rq *rq,
- {
- }
- #endif
++	ns->weight = cpumask_weight(cpumask_of_node(nid));
 +
-+#ifdef CONFIG_SMP
-+static inline bool is_per_cpu_kthread(struct task_struct *p)
-+{
-+	if (!(p->flags & PF_KTHREAD))
-+		return false;
-+
-+	if (p->nr_cpus_allowed != 1)
-+		return false;
-+
-+	return true;
++	ns->node_type = numa_classify(env->imbalance_pct, ns);
 +}
-+#endif
++
+ static void task_numa_assign(struct task_numa_env *env,
+ 			     struct task_struct *p, long imp)
+ {
+@@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+ 	long orig_src_load, orig_dst_load;
+ 	long src_capacity, dst_capacity;
+ 
++
++	/* If dst node has spare capacity, there is no real load imbalance */
++	if (env->dst_stats.node_type == node_has_spare)
++		return false;
++
+ 	/*
+ 	 * The load is corrected for the CPU capacity available on each node.
+ 	 *
+@@ -1788,10 +1831,10 @@ static int task_numa_migrate(struct task_struct *p)
+ 	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+ 	taskweight = task_weight(p, env.src_nid, dist);
+ 	groupweight = group_weight(p, env.src_nid, dist);
+-	update_numa_stats(&env.src_stats, env.src_nid);
++	update_numa_stats(&env, &env.src_stats, env.src_nid);
+ 	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
+ 	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
+-	update_numa_stats(&env.dst_stats, env.dst_nid);
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
+ 
+ 	/* Try to find a spot on the preferred nid. */
+ 	task_numa_find_cpu(&env, taskimp, groupimp);
+@@ -1824,7 +1867,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 
+ 			env.dist = dist;
+ 			env.dst_nid = nid;
+-			update_numa_stats(&env.dst_stats, env.dst_nid);
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
+ 			task_numa_find_cpu(&env, taskimp, groupimp);
+ 		}
+ 	}
 -- 
 2.16.4
 
