@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E015C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8516C3B1A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FC02067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783A12067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699324;
-	bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
+	s=default; t=1581699327;
+	bh=UCPkVsg1Wh+eYd1npQcsJePrOX58JECIZXQdAyf4FFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWuTYLT6YhrROkp2ioQkUoUdkIpyXbcO1nbd4BSucsl3q6LQWfCOB+6UaUFvxpYm7
-	 DfXeW2XkSDAbAii3rmzbX3gWBtFzwe83Me2VmrfPi5cLEQFFNoQaac7SqGxbBKX7rJ
-	 xxF1qk2ePJABxoVCQntKk+9gQDBucvExrMlFSThI=
+	b=WIHRs6qjkRhWPT9NK7gxkH6ypAONgona5s1LOe8yjYRSJTQxc5eeoDYDiwJgdoPxG
+	 dLlby5bgZQfZQuEruNoeXRFdwAF3oePO04Rb6qfhLZjW09A3/O+Cej3rbDGKsqP6q7
+	 IoCSLx7qk+U6SDctKytmacoj1brDFXSwfp6TJ198=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404687AbgBNQSU (ORCPT
+        id S2394256AbgBNQz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:18:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392486AbgBNQRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:17:25 -0500
+        id S2404680AbgBNQSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:18:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B1E246EB;
-        Fri, 14 Feb 2020 16:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FE7424688;
+        Fri, 14 Feb 2020 16:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697044;
-        bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
+        s=default; t=1581697100;
+        bh=UCPkVsg1Wh+eYd1npQcsJePrOX58JECIZXQdAyf4FFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycr2ocT9S0Welts6SYrdnjbx7imm8AFo4BqisAadsVLiVP6/7gk79wL1h6POUh4yp
-         FuNok4S3LA+74iTW+dQVzWOFCyVulKn7H8xR/oU0Nyo+Acjyzd6WeR+JEznT5lWhwF
-         OllrYfSRgvRrtAa/XCQ8gqdV0clCTM95Ux2E/PMs=
+        b=VS+HTwxB17narbp76FlPHE1SZcxSfFQfrJ7DrJD/yiLYJfhJT1MDIWUEP+xOMbsmi
+         eIT0MdZRNm/sHh31Uvis/FkxwjudO+v7vH8s2SUqFPGfwcmgzkZuCXnoBOckwpeW1b
+         4T9TENehidw9oc2mu6YpLblxPjsiV6keyMRD1zsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 006/186] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-Date:   Fri, 14 Feb 2020 11:14:15 -0500
-Message-Id: <20200214161715.18113-6-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 050/186] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
+Date:   Fri, 14 Feb 2020 11:14:59 -0500
+Message-Id: <20200214161715.18113-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
 References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,89 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
+[ Upstream commit e98042db2cb8d0b728cd76e05b9c2e1c84b7f72b ]
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
+‘gfx_v8_0_gpu_early_init’:
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
+‘mc_shared_chmap’ set but not used [-Wunused-but-set-variable]
 
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
-
-	BP				AP
-
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
-
-					... available to run kthreads ...
-
-	    stop_machine_unpark()
-	      stopper->enable = true;
-
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
-
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
+Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw parts")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 49273130e4f1e..96c0a868232ef 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -494,8 +494,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
- 
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
- 
- 	/*
-@@ -1064,8 +1063,8 @@ void notify_cpu_starting(unsigned int cpu)
- 
- /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
-  */
- void cpuhp_online_idle(enum cpuhp_state state)
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+index 85bcd236890ec..d61de169a06fc 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+@@ -1653,7 +1653,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct amdgpu_device *adev)
+ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
  {
-@@ -1075,6 +1074,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
- 		return;
+ 	u32 gb_addr_config;
+-	u32 mc_shared_chmap, mc_arb_ramcfg;
++	u32 mc_arb_ramcfg;
+ 	u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_addr_map;
+ 	u32 tmp;
+ 	int ret;
+@@ -1792,7 +1792,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
+ 		break;
+ 	}
  
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete_ap_thread(st, true);
- }
+-	mc_shared_chmap = RREG32(mmMC_SHARED_CHMAP);
+ 	adev->gfx.config.mc_arb_ramcfg = RREG32(mmMC_ARB_RAMCFG);
+ 	mc_arb_ramcfg = adev->gfx.config.mc_arb_ramcfg;
+ 
 -- 
 2.20.1
 
