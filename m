@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B19C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C555C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B8C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4568D222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581700862;
-	bh=qx0feBG45tvPbKDjRUD1++ZyJhdGAaL+17Qi5700Nos=;
+	s=default; t=1581700871;
+	bh=vhpiEMlWQv0v5UwFHSylEGlkZZ/fZXGpzw+pW9F2NEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0pSp8lMlHnM+uZ4zCsXxw3n1gwvAS79iW0yG14YYcR4a59NEQ/1+mbmJcx5ritgY
-	 tWccVcmC/5yPX2eGPGJWdODLlYbCthDDDH5WEULO7Un+Ojihz2eDl5xB+4C5dPJryj
-	 p/O1r+IBANYtYEsi+mdHjhjlGsdwrixgulxcfDzI=
+	b=fAvPOc5fzHt7k3WYBJl9nHPmkG8H+n69keJE0kEKAHGZZ3NPqCjA5IhdFPp9TiHxZ
+	 9vxVFL3pr4FoDJqtQUDgrZS1lckQ8vYPs1SJgwk7eDGZUvCBg+JmkXtoMdXRngcvts
+	 26Abtg8nPTQXXv+H83Kemq3vaghxb6s1TFUNkKyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391492AbgBNQK1 (ORCPT
+        id S2391814AbgBNRVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:10:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:21:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391369AbgBNQJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:09:56 -0500
+        id S2391474AbgBNQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:10:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978B524676;
-        Fri, 14 Feb 2020 16:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C52552468C;
+        Fri, 14 Feb 2020 16:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696596;
-        bh=qx0feBG45tvPbKDjRUD1++ZyJhdGAaL+17Qi5700Nos=;
+        s=default; t=1581696624;
+        bh=vhpiEMlWQv0v5UwFHSylEGlkZZ/fZXGpzw+pW9F2NEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqPJ1Q0z4kXj2kKczyMTuFOfA/u/lPnabOdY1zV5yUHxddbTpQu9YFzdkyAllWVea
-         B9wqvLKMUjKCtisgPpgBPjclhf5euFGxJw+KqSkxdj5JK6TyKlY5kmxtYrQhIOiP/q
-         2PHtd7BU4eYweE7QQLvCGKYChvxWv0xK+Q+XAcOQ=
+        b=Vf7ihSTbddNekNrOuLmAdBpr1p5iAAiedK1SyYdF2peCxcN1HleUbRNkgSiRJIsL5
+         g6nQ8dB9OyC8RoSq8meJrOIqo0/zy//Op6M8ZuqBC2cwNWdQkatCgp6oTA4m8yYpoD
+         /1vtnfTHCy8uKOIp3StDEd0QmlRpsJMcOSr2xmE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 382/459] powerpc/ptdump: Only enable PPC_CHECK_WX with STRICT_KERNEL_RWX
-Date:   Fri, 14 Feb 2020 11:00:32 -0500
-Message-Id: <20200214160149.11681-382-sashal@kernel.org>
+Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 405/459] ath10k: pci: Only dump ATH10K_MEM_REGION_TYPE_IOREG when safe
+Date:   Fri, 14 Feb 2020 11:00:55 -0500
+Message-Id: <20200214160149.11681-405-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,35 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit f509247b08f2dcf7754d9ed85ad69a7972aa132b ]
+[ Upstream commit d239380196c4e27a26fa4bea73d2bf994c14ec2d ]
 
-ptdump_check_wx() is called from mark_rodata_ro() which only exists
-when CONFIG_STRICT_KERNEL_RWX is selected.
+ath10k_pci_dump_memory_reg() will try to access memory of type
+ATH10K_MEM_REGION_TYPE_IOREG however, if a hardware restart is in progress
+this can crash a system.
 
-Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/922d4939c735c6b52b4137838bcc066fffd4fc33.1578989545.git.christophe.leroy@c-s.fr
+Individual ioread32() time has been observed to jump from 15-20 ticks to >
+80k ticks followed by a secure-watchdog bite and a system reset.
+
+Work around this corner case by only issuing the read transaction when the
+driver state is ATH10K_STATE_ON.
+
+Tested-on: QCA9988 PCI 10.4-3.9.0.2-00044
+
+Fixes: 219cc084c6706 ("ath10k: add memory dump support QCA9984")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
-index c59920920ddc4..b915fe6589792 100644
---- a/arch/powerpc/Kconfig.debug
-+++ b/arch/powerpc/Kconfig.debug
-@@ -371,7 +371,7 @@ config PPC_PTDUMP
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 347bb92e4130d..0a727502d14c5 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1604,11 +1604,22 @@ static int ath10k_pci_dump_memory_reg(struct ath10k *ar,
+ {
+ 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
+ 	u32 i;
++	int ret;
++
++	mutex_lock(&ar->conf_mutex);
++	if (ar->state != ATH10K_STATE_ON) {
++		ath10k_warn(ar, "Skipping pci_dump_memory_reg invalid state\n");
++		ret = -EIO;
++		goto done;
++	}
  
- config PPC_DEBUG_WX
- 	bool "Warn on W+X mappings at boot"
--	depends on PPC_PTDUMP
-+	depends on PPC_PTDUMP && STRICT_KERNEL_RWX
- 	help
- 	  Generate a warning if any W+X mappings are found at boot.
+ 	for (i = 0; i < region->len; i += 4)
+ 		*(u32 *)(buf + i) = ioread32(ar_pci->mem + region->start + i);
  
+-	return region->len;
++	ret = region->len;
++done:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
+ }
+ 
+ /* if an error happened returns < 0, otherwise the length */
+@@ -1704,7 +1715,11 @@ static void ath10k_pci_dump_memory(struct ath10k *ar,
+ 			count = ath10k_pci_dump_memory_sram(ar, current_region, buf);
+ 			break;
+ 		case ATH10K_MEM_REGION_TYPE_IOREG:
+-			count = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			ret = ath10k_pci_dump_memory_reg(ar, current_region, buf);
++			if (ret < 0)
++				break;
++
++			count = ret;
+ 			break;
+ 		default:
+ 			ret = ath10k_pci_dump_memory_generic(ar, current_region, buf);
 -- 
 2.20.1
 
