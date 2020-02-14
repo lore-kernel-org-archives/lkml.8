@@ -2,165 +2,112 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87233C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED8BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A62A2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86A220656
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581699785;
+	bh=aTkwBG4IKOurcW/xcYirLZ4nz5+6vBqxuGUZY+UNv+U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fB8VI5QRzu0dE3aYDoLYj47xkBNJNo0sT9Usi3bZaybl5nNC7+fDQu+uYjrdx+Z+i
+	 TKRFmk45JAnd9lyzBsR1oHS8dADOX9PgW0V5RiREwE5wbUIiCzkULwuFci0ojQ2lTM
+	 c0cssAjLJLJxcCJ4iZTn6Tu4rOHB6PQC0vdGgUgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404205AbgBNRC6 (ORCPT
+        id S2404183AbgBNQP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:02:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34684 "EHLO mx2.suse.de"
+        Fri, 14 Feb 2020 11:15:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394040AbgBNRCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:02:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 18392B15A;
-        Fri, 14 Feb 2020 17:02:48 +0000 (UTC)
-From:   Roman Penyaev <rpenyaev@suse.de>
-Cc:     Roman Penyaev <rpenyaev@suse.de>,
-        Max Neunhoeffer <max@arangodb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] kselftest: introduce new epoll test case
-Date:   Fri, 14 Feb 2020 18:02:11 +0100
-Message-Id: <20200214170211.561524-2-rpenyaev@suse.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200214170211.561524-1-rpenyaev@suse.de>
-References: <20200214170211.561524-1-rpenyaev@suse.de>
+        id S2392021AbgBNQPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:02 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EB9E246E5;
+        Fri, 14 Feb 2020 16:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696901;
+        bh=aTkwBG4IKOurcW/xcYirLZ4nz5+6vBqxuGUZY+UNv+U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JYM53RSv599PQMMCYaL4CTxGLttCvbIHcwGEcHVVdruii+e42vflz2Uxj0v3TwxUx
+         4PibD4hefYgybFgM73117Sq+df6326Wz/QP0MB+42SpFZwF3hSt5JuMwPZ1pxHuXPp
+         kX7wGkbxLsPA4v21CbqVfSn5Ew3Upmxrw7y3C/hs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 152/252] Input: edt-ft5x06 - work around first register access error
+Date:   Fri, 14 Feb 2020 11:10:07 -0500
+Message-Id: <20200214161147.15842-152-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This testcase repeats epollbug.c from the bug:
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=205933
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
-What it tests? It tests the race between epoll_ctl() and epoll_wait().
-New event mask passed to epoll_ctl() triggers wake up, which can be
-missed because of the bug described in the link.  Reproduction is 100%,
-so easy to fix. Kudos, Max, for wonderful test case.
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Cc: Max Neunhoeffer <max@arangodb.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Christopher Kohlhoff <chris.kohlhoff@clearpool.io>
-Cc: Davidlohr Bueso <dbueso@suse.de>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
+
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Nothing was changed in v3
- Nothing interesting in v2:
-     changed the comment a bit
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../filesystems/epoll/epoll_wakeup_test.c     | 67 ++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-index 37a04dab56f0..11eee0b60040 100644
---- a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-+++ b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-@@ -7,13 +7,14 @@
- #include <pthread.h>
- #include <sys/epoll.h>
- #include <sys/socket.h>
-+#include <sys/eventfd.h>
- #include "../../kselftest_harness.h"
- 
- struct epoll_mtcontext
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 1e18ca0d1b4e1..3fdaa644a82c1 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -968,6 +968,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
  {
- 	int efd[3];
- 	int sfd[4];
--	int count;
-+	volatile int count;
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -1037,6 +1038,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
  
- 	pthread_t main;
- 	pthread_t waiter;
-@@ -3071,4 +3072,68 @@ TEST(epoll58)
- 	close(ctx.sfd[3]);
- }
- 
-+static void *epoll59_thread(void *ctx_)
-+{
-+	struct epoll_mtcontext *ctx = ctx_;
-+	struct epoll_event e;
-+	int i;
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
 +
-+	for (i = 0; i < 100000; i++) {
-+		while (ctx->count == 0)
-+			;
-+
-+		e.events = EPOLLIN | EPOLLERR | EPOLLET;
-+		epoll_ctl(ctx->efd[0], EPOLL_CTL_MOD, ctx->sfd[0], &e);
-+		ctx->count = 0;
-+	}
-+
-+	return NULL;
-+}
-+
-+/*
-+ *        t0
-+ *      (p) \
-+ *           e0
-+ *     (et) /
-+ *        e0
-+ *
-+ * Based on https://bugzilla.kernel.org/show_bug.cgi?id=205933
-+ */
-+TEST(epoll59)
-+{
-+	pthread_t emitter;
-+	struct pollfd pfd;
-+	struct epoll_event e;
-+	struct epoll_mtcontext ctx = { 0 };
-+	int i, ret;
-+
-+	signal(SIGUSR1, signal_handler);
-+
-+	ctx.efd[0] = epoll_create1(0);
-+	ASSERT_GE(ctx.efd[0], 0);
-+
-+	ctx.sfd[0] = eventfd(1, 0);
-+	ASSERT_GE(ctx.sfd[0], 0);
-+
-+	e.events = EPOLLIN | EPOLLERR | EPOLLET;
-+	ASSERT_EQ(epoll_ctl(ctx.efd[0], EPOLL_CTL_ADD, ctx.sfd[0], &e), 0);
-+
-+	ASSERT_EQ(pthread_create(&emitter, NULL, epoll59_thread, &ctx), 0);
-+
-+	for (i = 0; i < 100000; i++) {
-+		ret = epoll_wait(ctx.efd[0], &e, 1, 1000);
-+		ASSERT_GT(ret, 0);
-+
-+		while (ctx.count != 0)
-+			;
-+		ctx.count = 1;
-+	}
-+	if (pthread_tryjoin_np(emitter, NULL) < 0) {
-+		pthread_kill(emitter, SIGUSR1);
-+		pthread_join(emitter, NULL);
-+	}
-+	close(ctx.efd[0]);
-+	close(ctx.sfd[0]);
-+}
-+
- TEST_HARNESS_MAIN
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
-2.24.1
+2.20.1
 
