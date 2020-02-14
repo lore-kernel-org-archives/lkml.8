@@ -2,125 +2,168 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CA6C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C287C35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B247824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA8924649
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581717274;
-	bh=4EaJD4cBQj2ixLoQQ9Ro1z/eRAHDR7cjQ7KLJA2dnYQ=;
+	s=default; t=1581717279;
+	bh=ia4+nQ8WRA03MfSonkT9d7c8bMEztR6s5yKzyl1EbO4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZCAOzA3IUvgVid4W+ymrcWqoz4BIhFfA+YbaIN/r5WQcd59jeeeME9eK7gaP8z4Ga
-	 cM5ce/uhbPxnisCLmHuSiGKOYtZKTGUdQlWJd4avhaFJNtFkN+XO2kyGwQHyA0WvLc
-	 ejKK1RhYYSGTmYIysk48rpfL4t3v9At7D0wSZO7E=
+	b=vuyqNxVsMQseroUI00jzc581pZnX+U2tS6/YrTzmOXRAFtAuDCfIQPP5lfr/Y/YJX
+	 xBzfH7AoxDdm5yDmUQ0z6Aw8brtXYzu4N5HHE6P6EU0GepA4uChH5ET9E0SK5zrK9i
+	 ZjXBIdm9ZsvRIeEiMtTJeBpkm7uRJBL2X69ys/Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbgBNVye (ORCPT
+        id S2388032AbgBNVyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 16:54:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 16:54:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgBNVyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:54:32 -0500
+        id S2387816AbgBNVyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:54:36 -0500
 Received: from localhost (unknown [65.119.211.164])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A914A24649;
-        Fri, 14 Feb 2020 21:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89ABC2081E;
+        Fri, 14 Feb 2020 21:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581717271;
-        bh=4EaJD4cBQj2ixLoQQ9Ro1z/eRAHDR7cjQ7KLJA2dnYQ=;
+        s=default; t=1581717275;
+        bh=ia4+nQ8WRA03MfSonkT9d7c8bMEztR6s5yKzyl1EbO4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cH50z6/hQ484QtdtM5AbiW5rhX8uAxBJ1xvtyDj7AaCp7i2VBV/JQskY7FIW/iJEK
-         qb+yMvXEQrefwv+MBxWKsHs94qopKbTcKYeH7mwqR5UFKZ2KRvwzXt2SDqNx1hrBca
-         VV0MIrjMZotasSKN6+pva+GYlfR5aLKTZIPWmGyw=
-Date:   Fri, 14 Feb 2020 16:47:30 -0500
+        b=SZHeKsvXMgrIUKjUJpQ0UCeB5pXbdeuwq6GwZ8fs8jL2xGr/3rlygof7h9lgcZJRR
+         0i0OiSwTjJj/JqvZHmnJMpGZmLKwY9jo942qx0eqGnnlFuGgZ0Fwiuhhl73pUHn8mv
+         HV/BzoLrbU4DD1JDaTrBQniQewBd/KzK66DF94I8=
+Date:   Fri, 14 Feb 2020 16:49:02 -0500
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
-        John Garry <john.garry@huawei.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 253/542] PCI/ATS: Restore EXPORT_SYMBOL_GPL()
- for pci_{enable,disable}_ats()
-Message-ID: <20200214214730.GC4193448@kroah.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: [PATCH AUTOSEL 5.5 451/542] tty: n_hdlc: Use flexible-array
+ member and struct_size() helper
+Message-ID: <20200214214902.GF4193448@kroah.com>
 References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-253-sashal@kernel.org>
+ <20200214154854.6746-451-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214154854.6746-253-sashal@kernel.org>
+In-Reply-To: <20200214154854.6746-451-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:44:05AM -0500, Sasha Levin wrote:
-> From: Greg Kroah-Hartman <gregkh@google.com>
+On Fri, Feb 14, 2020 at 10:47:23AM -0500, Sasha Levin wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 > 
-> [ Upstream commit bb950bca5d522119f8b9ce3f6cbac4841c6d6517 ]
+> [ Upstream commit 85f4c95172d606dd66f7ee1fa50c45a245535ffd ]
 > 
-> Commit d355bb209783 ("PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()")
-> unexported a bunch of symbols from the PCI core since the only external
-> users were non-modular IOMMU drivers. Although most of those symbols
-> can remain private for now, 'pci_{enable,disable_ats()' is required for
-> the ARM SMMUv3 driver to build as a module, otherwise we get a build
-> failure as follows:
+> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> presence of a "variable length array":
 > 
->   | ERROR: "pci_enable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
->   | ERROR: "pci_disable_ats" [drivers/iommu/arm-smmu-v3.ko] undefined!
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
 > 
-> Re-export these two functions so that the ARM SMMUv3 driver can be build
-> as a module.
+> struct something *instance;
 > 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@google.com>
-> [will: rewrote commit message]
-> Signed-off-by: Will Deacon <will@kernel.org>
-> Tested-by: John Garry <john.garry@huawei.com> # smmu v3
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> There is also 0-byte arrays. Both cases pose confusion for things like
+> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> to declare variable-length types such as the one above is a flexible array
+> member[2] which need to be the last member of a structure and empty-sized:
+> 
+> struct something {
+>         int stuff;
+>         u8 data[];
+> };
+> 
+> Also, by making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> Lastly, make use of the struct_size() helper to safely calculate the
+> allocation size for instances of struct n_hdlc_buf and avoid any potential
+> type mistakes[4][5].
+> 
+> [1] https://github.com/KSPP/linux/issues/21
+> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> [4] https://lore.kernel.org/lkml/60e14fb7-8596-e21c-f4be-546ce39e7bdb@embeddedor.com/
+> [5] commit 553d66cb1e86 ("iommu/vt-d: Use struct_size() helper")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Reviewed-by: Jiri Slaby <jslaby@suse.cz>
+> Link: https://lore.kernel.org/r/20200121172138.GA3162@embeddedor
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/pci/ats.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/tty/n_hdlc.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index b6f064c885c37..3ef0bb281e7cc 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -69,6 +69,7 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
->  	dev->ats_enabled = 1;
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(pci_enable_ats);
+> diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+> index 98361acd3053f..27b506bf03ced 100644
+> --- a/drivers/tty/n_hdlc.c
+> +++ b/drivers/tty/n_hdlc.c
+> @@ -115,11 +115,9 @@
+>  struct n_hdlc_buf {
+>  	struct list_head  list_item;
+>  	int		  count;
+> -	char		  buf[1];
+> +	char		  buf[];
+>  };
 >  
->  /**
->   * pci_disable_ats - disable the ATS capability
-> @@ -87,6 +88,7 @@ void pci_disable_ats(struct pci_dev *dev)
+> -#define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
+> -
+>  struct n_hdlc_buf_list {
+>  	struct list_head  list;
+>  	int		  count;
+> @@ -524,7 +522,8 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *data,
+>  		/* no buffers in free list, attempt to allocate another rx buffer */
+>  		/* unless the maximum count has been reached */
+>  		if (n_hdlc->rx_buf_list.count < MAX_RX_BUF_COUNT)
+> -			buf = kmalloc(N_HDLC_BUF_SIZE, GFP_ATOMIC);
+> +			buf = kmalloc(struct_size(buf, buf, maxframe),
+> +				      GFP_ATOMIC);
+>  	}
+>  	
+>  	if (!buf) {
+> @@ -853,7 +852,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
 >  
->  	dev->ats_enabled = 0;
->  }
-> +EXPORT_SYMBOL_GPL(pci_disable_ats);
->  
->  void pci_restore_ats_state(struct pci_dev *dev)
->  {
+>  	/* allocate free rx buffer list */
+>  	for(i=0;i<DEFAULT_RX_BUF_COUNT;i++) {
+> -		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
+> +		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+>  		if (buf)
+>  			n_hdlc_buf_put(&n_hdlc->rx_free_buf_list,buf);
+>  		else if (debuglevel >= DEBUG_LEVEL_INFO)	
+> @@ -862,7 +861,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+>  	
+>  	/* allocate free tx buffer list */
+>  	for(i=0;i<DEFAULT_TX_BUF_COUNT;i++) {
+> -		buf = kmalloc(N_HDLC_BUF_SIZE, GFP_KERNEL);
+> +		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
+>  		if (buf)
+>  			n_hdlc_buf_put(&n_hdlc->tx_free_buf_list,buf);
+>  		else if (debuglevel >= DEBUG_LEVEL_INFO)	
 > -- 
 > 2.20.1
 > 
 
-This isn't needed to be backported as the problem it solves is not in
-the 5.5 or older kernels, it only showed up in 5.6-rc1, and this was
-part of a larger patchset.
+There's no need for any of these variable length array patches to be
+backported anywhere.
 
-So please drop from everywhere, thanks.
+thanks,
 
 greg k-h
