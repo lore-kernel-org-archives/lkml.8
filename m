@@ -2,135 +2,120 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C2EC3B194
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA47C3B194
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420A322314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QMhZXkRH"
+	by mail.kernel.org (Postfix) with ESMTP id 64542217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 02:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581647099;
+	bh=9aNLoYnRCmB2kTD1dounOdkBMu8wUb3Wpo5I/7VnTRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cTTCjcA1koLez+rrEy520VyDGf/Z53rZz+fFQFHisesbdi331UxndWbE4uE+eY+k5
+	 UYZmtVKXN9atb/GtYqog3JOYfej5cy2RhmhU0Q10VoiKi61BASQbayLCQKLYjKWUHH
+	 Glsy2ERxXPU5YqvehZqtFAuC1jr1I0pLZTav3Wus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgBNCYo (ORCPT
+        id S1728328AbgBNCY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 21:24:44 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34932 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgBNCYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 21:24:44 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3130201plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Feb 2020 18:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=zyr5zP62gxcn2MAM+lzUD5xLGxMnttBVg2RA3RQEg8s=;
-        b=QMhZXkRH4oIy65/M0l0BfR39ISgMZgR3qAmeoxWLhNzfYAUHeaGBO3BZUfNJruc1wf
-         jkfc3m8Y47UwUuWq9OOJsyPSEzF934STkcLaakWYPovEWNA6/2VHTAvYHd5EqpRIjYPz
-         +mktNyNpU67YqZt3TvUHClkKp04eKzPmfdChc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=zyr5zP62gxcn2MAM+lzUD5xLGxMnttBVg2RA3RQEg8s=;
-        b=t+4VXw8qDA24Mq2ESg0KR2pZcAy4TtKgnfKqNtG/1LcHNC3RCMf4RwWSKGtcMRkHK3
-         dfaAbtefh91kH4xzfP4dGF42Hrkuq56HZlPLCaaOkd79yLz43WmHG4g90B5w93aEhwP9
-         v9PPAP8RTXWv3i59scy3keHe5uPfRACaCjJmFJtsg755DB1MMne7d15OdkAG0iZlJsMA
-         FfMrCCZ/JyQYv5XwqE1VpyQh3qTrz3+J6v7xfk+bM2WCiDPkz5Q49zPvzPoVqve7gSq6
-         pr7laFiHDBsY8qNZOvWD2ziPFmoFT8u0tBoUYylUhDojgnir4+cyJCINN7Cn5yVau6Iw
-         JiPA==
-X-Gm-Message-State: APjAAAXe5pOLrl5j8hS/UDDbK49pJdhVYyFj5gbMUEWdehll+kY4BIy7
-        UynURV0a3dnvv5uam6Sl18EfYQ==
-X-Google-Smtp-Source: APXvYqxC2SJX1aAT6Gi5b3eS3JrHpxTtQH2y3axskLceSfHZHxtwyCHLbO1LRBrAThMLQXULz2yjYA==
-X-Received: by 2002:a17:90a:b010:: with SMTP id x16mr708199pjq.130.1581647083461;
-        Thu, 13 Feb 2020 18:24:43 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q8sm3883284pje.2.2020.02.13.18.24.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 18:24:43 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200211005059.1377279-2-bjorn.andersson@linaro.org>
-References: <20200211005059.1377279-1-bjorn.andersson@linaro.org> <20200211005059.1377279-2-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info binding
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 13 Feb 2020 21:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgBNCY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 21:24:58 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6792168B;
+        Fri, 14 Feb 2020 02:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581647097;
+        bh=9aNLoYnRCmB2kTD1dounOdkBMu8wUb3Wpo5I/7VnTRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rWpkKX18iZG8yYDuJmt37sqyvvy/7FcW9xrmyixAoKlakGtAOb/sHSS23q4nnJ1wI
+         lCvLN6329IIMorvhKjwayfrM83q1KKKK5fQtg+NC41QIeEewTw3LcHixdBSBN4uCUW
+         cGQb2C2h0uoAXnDz75EG9wE2ofJirXyuG/cnGRSs=
+Date:   Fri, 14 Feb 2020 10:24:51 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 13 Feb 2020 18:24:42 -0800
-Message-ID: <158164708228.184098.14137448846934888082@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: Add proximity sensor
+Message-ID: <20200214022450.GD22842@dragon>
+References: <e0434a87d8d46211a076c8a7c75c9f47b9e963c7.1579536647.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e0434a87d8d46211a076c8a7c75c9f47b9e963c7.1579536647.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-02-10 16:50:52)
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.y=
-aml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> new file mode 100644
-> index 000000000000..8386a4da6030
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm peripheral image loader relocation info binding
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description:
-> +  This document defines the binding for describing the Qualcomm peripher=
-al
+On Mon, Jan 20, 2020 at 05:12:55PM +0100, Guido Günther wrote:
+> Support for the vcnl4040 landet a while ago so add it and the
+> corresponding pinmux. The irq is currently unused in the driver so don't
+> configure it yet.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  .../boot/dts/freescale/imx8mq-librem5-devkit.dts     | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index c8627f6614ae..b87c2e39b16c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -448,6 +448,12 @@
+>  		VDDIO-supply = <&reg_1v8_p>;
+>  	};
+>  
+> +	prox@60 {
 
-Maybe drop "This document defines the binding for describing".
+I changed node name to proximity-sensor and applied the patch.
 
-> +  image loader relocation memory region, in IMEM, which is used for post=
- mortem
-> +  debugging of remoteprocs.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,pil-reloc-info
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    imem@146bf000 {
-> +      compatible =3D "syscon", "simple-mfd";
-> +      reg =3D <0 0x146bf000 0 0x1000>;
-> +
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <1>;
-> +
-> +      pil-reloc {
+Shawn
 
-Should that be pil-reloc@94c?
-
-> +        compatible =3D"qcom,pil-reloc-info";
-> +        reg =3D <0x94c 200>;
-> +      };
-> +    };
+> +		compatible = "vishay,vcnl4040";
+> +		reg = <0x60>;
+> +		pinctrl-0 = <&pinctrl_prox>;
+> +	};
+> +
+>  	accel-gyro@6a {
+>  		compatible = "st,lsm9ds1-imu";
+>  		reg = <0x6a>;
+> @@ -550,6 +556,12 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_prox: proxgrp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x80  /* prox intr */
+> +		>;
+> +	};
+> +
+>  	pinctrl_pwr_en: pwrengrp {
+>  		fsl,pins = <
+>  			MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8	0x06
+> -- 
+> 2.23.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
