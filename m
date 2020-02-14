@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD14C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB452067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F063D206CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699498;
-	bh=fOSHoDKMooQZW89QIAlUy6Vwu9W+gfJFSE/5lcgXbOk=;
+	s=default; t=1581699508;
+	bh=uCw4b9kqzYE6LWAY5bUvM5sqyYD1BlxbEqaUQv+llWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqHGrks45iKBRF42BzUYhY7D+1TpW0B6HZt2lckgV4wOjxK3vwNisvaCsOuyZuDGi
-	 4LSaG+vM3BX6vJsleyELIxaRezZhQdO9JzHGFTSHzuh9cAxkjEcssDfGvl3xaFzm/R
-	 s7uqDi9tJi826qVv39z4Y+0QA8nS/ZS7J+oqYKFg=
+	b=LFVKFIvyxhO6TeIrK+GjWDUFNZ0+2PxCsQpgayPaIDGX0eKJklpk3cd98OHWam63i
+	 ufo41fYa6RCiFRaOI5YB3FdJyQj0njsPSb5W0YqGuXpOli2wy+UtSOcguR90U9FSlD
+	 YjCmV6q1prlTK9lHL+N4AzSVk97WJ/Yqkr8GPCSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404453AbgBNQR1 (ORCPT
+        id S2392302AbgBNQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47254 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391621AbgBNQQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:28 -0500
+        id S2392337AbgBNQRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:17:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E28E24676;
-        Fri, 14 Feb 2020 16:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F3CD246A7;
+        Fri, 14 Feb 2020 16:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696987;
-        bh=fOSHoDKMooQZW89QIAlUy6Vwu9W+gfJFSE/5lcgXbOk=;
+        s=default; t=1581697041;
+        bh=uCw4b9kqzYE6LWAY5bUvM5sqyYD1BlxbEqaUQv+llWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iT3oJFMFTPulpUL8wn9lgkSmG1IpKMzGtUZkSetsY4aXGoxVznmxy7MgqrjG9X0Vw
-         7FBz/3PfJsGlM/zUhA6YBwjLkLlrhnNgXi3Gavqnj2ojGzn2MmZ0oSB5jqTSLlWoOu
-         POEsLvGlnAlA1ibUzTlkwTlHRgcFQU88uXALe2cI=
+        b=FwSi0fBPmTYvnAKarrK8QyCao1unhu5nh5TxCFQeRz5XlSRZGPLSvbRXPsQDQqIrf
+         CA/Rk9DxSp4/K4aKUscTySerotuDSP9FKh2vrfiMoh6V4hq4JQ5kuoOHCgaQDe+1YH
+         39rukDV/pJ690TFm89PLp9uQsl+0aKIuXB6rHXa4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 222/252] rtlwifi: rtl8192ee: remove unused variables
-Date:   Fri, 14 Feb 2020 11:11:17 -0500
-Message-Id: <20200214161147.15842-222-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 004/186] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
+Date:   Fri, 14 Feb 2020 11:14:13 -0500
+Message-Id: <20200214161715.18113-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214161715.18113-1-sashal@kernel.org>
+References: <20200214161715.18113-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,156 +60,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 253e5aba937973fd29bd5c559d21e35d0642242e ]
+[ Upstream commit 800cd6fb76f0ec7711deb72a86c924db1ae42648 ]
 
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:15:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:61:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:97:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+There are a number of problems with cpm_muram_alloc() and its
+callers. Most callers assign the return value to some variable and
+then use IS_ERR_VALUE to check for allocation failure. However, when
+that variable is not sizeof(long), this leads to warnings - and it is
+indeed broken to do e.g.
 
-These variable is never used, so remove them.
+  u32 foo = cpm_muram_alloc();
+  if (IS_ERR_VALUE(foo))
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+on a 64-bit platform, since the condition
+
+  foo >= (unsigned long)-ENOMEM
+
+is tautologically false. There are also callers that ignore the
+possibility of error, and then there are those that check for error by
+comparing the return value to 0...
+
+One could fix that by changing all callers to store the return value
+temporarily in an "unsigned long" and test that. However, use of
+IS_ERR_VALUE() is error-prone and should be restricted to things which
+are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
+for changing to the standard kernel style
+
+  int foo = cpm_muram_alloc();
+  if (foo < 0)
+    deal_with_it()
+  some->where = foo;
+
+Changing the return type from unsigned long to s32 (aka signed int)
+doesn't change the value that gets stored into any of the callers'
+variables except if the caller was storing the result in a u64 _and_
+the allocation failed, so in itself this patch should be a no-op.
+
+Another problem with cpm_muram_alloc() is that it can certainly
+validly return 0 - and except if some cpm_muram_alloc_fixed() call
+interferes, the very first cpm_muram_alloc() call will return just
+that. But that shows that both ucc_slow_free() and ucc_fast_free() are
+buggy, since they assume that a value of 0 means "that field was never
+allocated". We'll later change cpm_muram_free() to accept (and ignore)
+a negative offset, so callers can use a sentinel of -1 instead of 0
+and just unconditionally call cpm_muram_free().
+
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/realtek/rtlwifi/rtl8192ee/dm.c   | 118 ------------------
- 1 file changed, 118 deletions(-)
+ drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
+ include/soc/fsl/qe/qe.h        | 16 ++++++++--------
+ 2 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-index faed6e2dedf6e..2965a033549f8 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-@@ -34,124 +34,6 @@
- #include "fw.h"
- #include "trx.h"
+diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
+index 104e68d9b84f2..4f60724b06b7c 100644
+--- a/drivers/soc/fsl/qe/qe_common.c
++++ b/drivers/soc/fsl/qe/qe_common.c
+@@ -35,7 +35,7 @@ static phys_addr_t muram_pbase;
  
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,		/* 0, +6.0dB */
--	0x788001e2,		/* 1, +5.5dB */
--	0x71c001c7,		/* 2, +5.0dB */
--	0x6b8001ae,		/* 3, +4.5dB */
--	0x65400195,		/* 4, +4.0dB */
--	0x5fc0017f,		/* 5, +3.5dB */
--	0x5a400169,		/* 6, +3.0dB */
--	0x55400155,		/* 7, +2.5dB */
--	0x50800142,		/* 8, +2.0dB */
--	0x4c000130,		/* 9, +1.5dB */
--	0x47c0011f,		/* 10, +1.0dB */
--	0x43c0010f,		/* 11, +0.5dB */
--	0x40000100,		/* 12, +0dB */
--	0x3c8000f2,		/* 13, -0.5dB */
--	0x390000e4,		/* 14, -1.0dB */
--	0x35c000d7,		/* 15, -1.5dB */
--	0x32c000cb,		/* 16, -2.0dB */
--	0x300000c0,		/* 17, -2.5dB */
--	0x2d4000b5,		/* 18, -3.0dB */
--	0x2ac000ab,		/* 19, -3.5dB */
--	0x288000a2,		/* 20, -4.0dB */
--	0x26000098,		/* 21, -4.5dB */
--	0x24000090,		/* 22, -5.0dB */
--	0x22000088,		/* 23, -5.5dB */
--	0x20000080,		/* 24, -6.0dB */
--	0x1e400079,		/* 25, -6.5dB */
--	0x1c800072,		/* 26, -7.0dB */
--	0x1b00006c,		/* 27. -7.5dB */
--	0x19800066,		/* 28, -8.0dB */
--	0x18000060,		/* 29, -8.5dB */
--	0x16c0005b,		/* 30, -9.0dB */
--	0x15800056,		/* 31, -9.5dB */
--	0x14400051,		/* 32, -10.0dB */
--	0x1300004c,		/* 33, -10.5dB */
--	0x12000048,		/* 34, -11.0dB */
--	0x11000044,		/* 35, -11.5dB */
--	0x10000040,		/* 36, -12.0dB */
--	0x0f00003c,		/* 37, -12.5dB */
--	0x0e400039,		/* 38, -13.0dB */
--	0x0d800036,		/* 39, -13.5dB */
--	0x0cc00033,		/* 40, -14.0dB */
--	0x0c000030,		/* 41, -14.5dB */
--	0x0b40002d,		/* 42, -15.0dB */
--};
--
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}  /* 32, -16.0dB */
--};
--
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}  /* 32, -16.0dB */
--};
--
- static void rtl92ee_dm_false_alarm_counter_statistics(struct ieee80211_hw *hw)
+ struct muram_block {
+ 	struct list_head head;
+-	unsigned long start;
++	s32 start;
+ 	int size;
+ };
+ 
+@@ -113,13 +113,14 @@ int cpm_muram_init(void)
+  * @algo: algorithm for alloc.
+  * @data: data for genalloc's algorithm.
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  */
+-static unsigned long cpm_muram_alloc_common(unsigned long size,
+-		genpool_algo_t algo, void *data)
++static s32 cpm_muram_alloc_common(unsigned long size,
++				  genpool_algo_t algo, void *data)
  {
- 	u32 ret_value;
+ 	struct muram_block *entry;
+-	unsigned long start;
++	s32 start;
+ 
+ 	if (!muram_pool && cpm_muram_init())
+ 		goto out2;
+@@ -140,7 +141,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+ out1:
+ 	gen_pool_free(muram_pool, start, size);
+ out2:
+-	return (unsigned long)-ENOMEM;
++	return -ENOMEM;
+ }
+ 
+ /*
+@@ -148,13 +149,14 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+  * @size: number of bytes to allocate
+  * @align: requested alignment, in bytes
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
++s32 cpm_muram_alloc(unsigned long size, unsigned long align)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_align muram_pool_data;
+ 
+@@ -171,7 +173,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
+  * cpm_muram_free - free a chunk of multi-user ram
+  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
+  */
+-int cpm_muram_free(unsigned long offset)
++int cpm_muram_free(s32 offset)
+ {
+ 	unsigned long flags;
+ 	int size;
+@@ -197,13 +199,14 @@ EXPORT_SYMBOL(cpm_muram_free);
+  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
+  * @offset: offset of allocation start address
+  * @size: number of bytes to allocate
+- * This function returns an offset into the muram area
++ * This function returns @offset if the area was available, a negative
++ * errno otherwise.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_fixed muram_pool_data_fixed;
+ 
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index b3d1aff5e8ad5..deb6238416947 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -102,26 +102,26 @@ static inline void qe_reset(void) {}
+ int cpm_muram_init(void);
+ 
+ #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
+-int cpm_muram_free(unsigned long offset);
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
++s32 cpm_muram_alloc(unsigned long size, unsigned long align);
++int cpm_muram_free(s32 offset);
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
+ void __iomem *cpm_muram_addr(unsigned long offset);
+ unsigned long cpm_muram_offset(void __iomem *addr);
+ dma_addr_t cpm_muram_dma(void __iomem *addr);
+ #else
+-static inline unsigned long cpm_muram_alloc(unsigned long size,
+-					    unsigned long align)
++static inline s32 cpm_muram_alloc(unsigned long size,
++				  unsigned long align)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int cpm_muram_free(unsigned long offset)
++static inline int cpm_muram_free(s32 offset)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
+-						  unsigned long size)
++static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
++					unsigned long size)
+ {
+ 	return -ENOSYS;
+ }
 -- 
 2.20.1
 
