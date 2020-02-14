@@ -2,141 +2,110 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D28C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96DAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82DA2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80314222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 09:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhzdPMys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDZxTrRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgBNJQk (ORCPT
+        id S1729069AbgBNJXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 04:16:40 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45022 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgBNJQj (ORCPT
+        Fri, 14 Feb 2020 04:23:12 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:38043 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgBNJXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 04:16:39 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so8747075oia.11;
-        Fri, 14 Feb 2020 01:16:39 -0800 (PST)
+        Fri, 14 Feb 2020 04:23:11 -0500
+Received: by mail-wr1-f53.google.com with SMTP id y17so10054433wrh.5;
+        Fri, 14 Feb 2020 01:23:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yJIG2+5rAA/omb/XOuOyU/XY01fpqVjXiUmRI7jlVsY=;
-        b=OhzdPMysleAxFIa7tsDq1Ei3imWZgu66zPkITqJATuRSJ02hM2QCWESz8Zzr2N6+Kv
-         zqZQdVVuAa1ZpqS/pLAVL+Tgx6LBFzqvgP3t3ott9+2BIaR25/sW5pEpT3CWXyq8wr2o
-         CWgRR/+239LizvfgZfvKDsSSS9/SRV7oytIrycLS20rD/TLNCzGB2HkjtM1/5PGhpM6G
-         1H6Hu86r+oGeHLebNrDSgFJjAH7njngDfFN981JpsCl1w9A6llOhArl28ePzuKv4mFfP
-         qhivzjXS/9o7xLwq0p3wlZFeUs7UPJdorISawh1e0s1cXsR1+D8Z97eeTZWswGkOmyaD
-         EK4Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HSsfBY73FO1UU5jzBVaE+iGEtOR0A4j37n3sHs5sps4=;
+        b=uDZxTrRpXta3sKqqut6QK4COszMH5GkzhZtwp1xtigiRMsqMsLeWtR2By294F3MxR4
+         fWNe2MZUcQTO4apSXNIJz8K7xh4RaqtXf03mlxfFXRVD4xbi4dz6eyEOH9D9WououKCw
+         xZHnzEZ+7DXjUy5rTPZWybSYulgBhsW73ooGaC24Zx56Husw4PSUeNgCcGdgi/FMfvav
+         y71r5kubDkJ6gI34zb9fRaCtPgDfcsQaBhSrCe1WErIeiXDXBM1EwW4ZdvGfXGpTqYZm
+         7eHSENHGLBsXMcXoD4YzdhuOKvJUXn9IXepoM3vdArjgXCBi6QmulnkBpHHjKGrafFqE
+         l5bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yJIG2+5rAA/omb/XOuOyU/XY01fpqVjXiUmRI7jlVsY=;
-        b=sY0CjFqiSymf/pfc/x7RPNOi/nHr4sdKrMaRZZAjNcPAYIZ2bPQp88dAzEx91sqbCp
-         zVZG9Mv8YUVZWmxaXERJvJioe32T2BQ7jlLratmYpuZ/QHLbcdRR6Ihj5Uksqg61eg1d
-         QrP01tnUN8FmGru01fl09Yj0GM1N7IcoPcxJB7onwRtYEcw0ugZH4U9hAjBHG1ull8yz
-         s5Y/E1Nv7L0N07mguploCi4NAGQ0GC1KnSxnqkURRSh8+PH/Aj5vlo8/JxIGa4sVU/9Y
-         VsEWQIzoBwDRC8iVlBYmwsF01YItYPLtcGANAd//p1mhNyu8oH+PxJLifqqiFzfBftdR
-         pnyw==
-X-Gm-Message-State: APjAAAWv7kKtFDJToVe/KAHiwMYMe48l8gzQPgtHJx3+J1VIf3Jm9cZv
-        GnmuzJ7S/T2j2MYkJVu5yXxWKs9S8oF2SLmoI4vW0tG0lg4=
-X-Google-Smtp-Source: APXvYqy46/3PWFWzsB9YfYAq2ltYbwzagbLttlQg6ScSiwe+seEKxbquh7gEBmLKFz1xqkzDM1lIM31Q/N61CtrCeqE=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr1147247oii.141.1581671798823;
- Fri, 14 Feb 2020 01:16:38 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HSsfBY73FO1UU5jzBVaE+iGEtOR0A4j37n3sHs5sps4=;
+        b=YIRPl4Wn11gr7U6A5RBideUQ830Fe2ZujBbcYnWTOSoEs1JkG904um2uNbXVMNLuol
+         eUIfQ2U1moys7u32tUEi1w6MC70jOkGpwAOI9W3uEma70y6ptrX4bsceVuUgnb2asbCu
+         8XsNX1jO5kTvcHOLXxjBfrtcXdkyTQ7FnZI5wp1g65vVuVp3EilkwWFaOvYLkZ1ATLSP
+         xCy9drXzBMmbrHHotoFV01Sse7LYVmJyLDKIqKy3Nc1pqcDWhF2wzanBkQMnHlGCz1ce
+         4s5w2jrHBCVkxwzkpprH4mc45jaGGwa6XxNzufYO/yTcY1FHFwCH0DL2lsrfTHM5cpFX
+         E4XA==
+X-Gm-Message-State: APjAAAXTbYZQrB35QU6ex7KxxvK8pPRXNi73FtRb6cmAxgdUNrIlUyN3
+        v8U0Acawfn8Pu6eKHFlhqMaTLHA4iooCpybA6C10A+ZRuLA=
+X-Google-Smtp-Source: APXvYqzZhItrGvjmEVClJemEdRwzFF3r8PKOpw8V1evmgfA844Rpa8qbof9FRLCpxj7UY6GFXwkSfPjbqcW82VPMH9Y=
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr3139782wrn.124.1581672189119;
+ Fri, 14 Feb 2020 01:23:09 -0800 (PST)
 MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Fri, 14 Feb 2020 17:16:28 +0800
-Message-ID: <CANRm+CznPq3LQUyiXr8nA7uP5q+d8Ud-Ki-W7vPCo_BjDJtOSw@mail.gmail.com>
-Subject: [PATCH v2] KVM: X86: Grab KVM's srcu lock when accessing hv assist page
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+ <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
+ <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com> <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org>
+In-Reply-To: <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Fri, 14 Feb 2020 17:22:57 +0800
+Message-ID: <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Salman Qazi <sqazi@google.com>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>,
+        Jesse Barnes <jsbarnes@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wanpeng li <wanpengli@tencent.com>
+On Fri, Feb 14, 2020 at 1:50 PM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2020-02-13 11:21, Salman Qazi wrote:
+> > AFAICT, This is not actually sufficient, because the issuer of the bio
+> > is waiting for the entire bio, regardless of how it is split later.
+> > But, also there isn't a good mapping between the size of the secure
+> > discard and how long it will take.  If given the geometry of a flash
+> > device, it is not hard to construct a scenario where a relatively
+> > small secure discard (few thousand sectors) will take a very long time
+> > (multiple seconds).
+> >
+> > Having said that, I don't like neutering the hung task timer either.
+>
+> Hi Salman,
+>
+> How about modifying the block layer such that completions of bio
+> fragments are considered as task activity? I think that bio splitting is
+> rare enough for such a change not to affect performance of the hot path.
 
-For the duration of mapping eVMCS, it derefences ->memslots without holding
-->srcu or ->slots_lock when accessing hv assist page. This patch fixes it by
-moving nested_sync_vmcs12_to_shadow to prepare_guest_switch, where the SRCU
-is already taken.
+Are you sure that the task hung warning won't be triggered in case of
+non-splitting?
 
-It can be reproduced by running kvm's evmcs_test selftest.
+>
+> How about setting max_discard_segments such that a discard always
+> completes in less than half the hung task timeout? This may make
+> discards a bit slower for one particular block driver but I think that's
+> better than hung task complaints.
 
-  =============================
-  warning: suspicious rcu usage
-  5.6.0-rc1+ #53 tainted: g        w ioe
-  -----------------------------
-  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+I am afraid you can't find a golden setting max_discard_segments working
+for every drivers. Even it is found, the performance  may have been affected.
 
-  other info that might help us debug this:
+So just wondering why not take the simple approach used in blk_execute_rq()?
 
-   rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/8507:
-   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
-kvm_vcpu_ioctl+0x85/0x680 [kvm]
-
-  stack backtrace:
-  cpu: 6 pid: 8507 comm: evmcs_test tainted: g        w ioe     5.6.0-rc1+ #53
-  hardware name: dell inc. optiplex 7040/0jctf8, bios 1.4.9 09/12/2016
-  call trace:
-   dump_stack+0x68/0x9b
-   kvm_read_guest_cached+0x11d/0x150 [kvm]
-   kvm_hv_get_assist_page+0x33/0x40 [kvm]
-   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
-   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
-   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
-   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
-   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
-   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
-   kvm_vcpu_ioctl+0x370/0x680 [kvm]
-   ksys_ioctl+0x235/0x850
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x77/0x780
-   entry_syscall_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/vmx/vmx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9a66648..6bd6ca4 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1214,6 +1214,9 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
-
-     vmx_set_host_fs_gs(host_state, fs_sel, gs_sel, fs_base, gs_base);
-     vmx->guest_state_loaded = true;
-+
-+    if (vmx->nested.need_vmcs12_to_shadow_sync)
-+        nested_sync_vmcs12_to_shadow(vcpu);
- }
-
- static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
-@@ -6480,9 +6483,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-         vmcs_write32(PLE_WINDOW, vmx->ple_window);
-     }
-
--    if (vmx->nested.need_vmcs12_to_shadow_sync)
--        nested_sync_vmcs12_to_shadow(vcpu);
--
-     if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
-         vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
-     if (kvm_register_is_dirty(vcpu, VCPU_REGS_RIP))
---
-2.7.4
+Thanks,
+Ming Lei
