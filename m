@@ -2,109 +2,149 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFD5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2EFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645272187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A206F2187F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581703976;
+	bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oaxJLOClAQMoFMaN41YzKKynLAyiDDJM5hdbNmET3hYaLr1ituUk2c4AtAT08Wk85
+	 6nNTeDz7Dv19ohOJPEQWfkOCMch2quFf4gIcH4NjT621bYHysIrsMJi3fR62MeQPnW
+	 THWN/9RYOzxaXMHcUqW96AW4IiCtoHVeAa1jH9MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393050AbgBNSMu (ORCPT
+        id S2404108AbgBNSMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:12:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:42760 "EHLO foss.arm.com"
+        Fri, 14 Feb 2020 13:12:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389702AbgBNSMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:12:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92AB4328;
-        Fri, 14 Feb 2020 10:12:45 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917163F68E;
-        Fri, 14 Feb 2020 10:12:44 -0800 (PST)
-Subject: Re: [PATCH] x86/resctrl: Preserve CDP enable over cpuhp
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-References: <20200212185359.163111-1-james.morse@arm.com>
- <8aab67d7-c13e-19f1-9bec-85b7cca55146@intel.com>
- <720c9253-d590-82d5-2338-7f577a71b791@arm.com>
- <1e1ee570-8deb-688e-1875-94b84eef7641@intel.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <75bcb664-d840-96ed-c49f-34eefa010143@arm.com>
-Date:   Fri, 14 Feb 2020 18:12:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1731004AbgBNPxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:53:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE56C24649;
+        Fri, 14 Feb 2020 15:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695580;
+        bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pN1IfJ+IDglbjMo9V6xRYl6Y1dXUtkHEGGPRxV3Z5KfF8LQVHxzWvihfNYGey3uOv
+         6oJga1K2xDUYg0/zQ/AcY0+FYYh6YDX5F33cNhGEj9hNdex9TOHuZ8D6XIwOG1LeN3
+         Fk7pKunesyjJjtcYQJKEcC/465t916jpB+LSAfnU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, rsiddoji@codeaurora.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 190/542] selinux: ensure we cleanup the internal AVC counters on error in avc_insert()
+Date:   Fri, 14 Feb 2020 10:43:02 -0500
+Message-Id: <20200214154854.6746-190-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1e1ee570-8deb-688e-1875-94b84eef7641@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Reinette,
+From: Paul Moore <paul@paul-moore.com>
 
-On 13/02/2020 19:45, Reinette Chatre wrote:
-> On 2/13/2020 9:42 AM, James Morse wrote:
->> On 12/02/2020 22:53, Reinette Chatre wrote:
->>> On 2/12/2020 10:53 AM, James Morse wrote:
->>>> mounted, and that cpus remember their CDP-enabled state over cpu
->>>> hotplug.
->>>>
->>>> This goes wrong when resctrl's CDP-enabled state changes while all
->>>> the cpus in a domain are offline.
->>>>
->>>> When a domain comes online, enable (or disable!) CDP to match resctrl's
->>>> current setting.
+[ Upstream commit d8db60cb23e49a92cf8cada3297395c7fa50fdf8 ]
 
->> ... I think you're describing adding:
+Fix avc_insert() to call avc_node_kill() if we've already allocated
+an AVC node and the code fails to insert the node in the cache.
 
-[...]
+Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
+Reported-by: rsiddoji@codeaurora.org
+Suggested-by: Stephen Smalley <sds@tycho.nsa.gov>
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/selinux/avc.c | 51 ++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
->> to rdtgroup.c and using that from core.c?
-> 
-> If I understand this correctly the CDP configuration will be done twice
-> for each CDP resource, and four times for each CDP resource on a system
-> supporting both L2 and L3 CDP. I think it is possible to do
-> configuration once for each. Also take care on systems that support MBA
-> that would not be caught by the first if statement. A system supporting
-> MBA and CDP may thus attempt the configuration even more. It should be
-> possible to use the resource parameter for a positive test and then just
-> let the other resources fall through? Considering this, what do you
-> think of something like below?
-> 
-> void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
-> {
-> 	if (!r->alloc_capable)
-> 		return;
-> 
-> 	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
-> 		l2_qos_cfg_update(&r->alloc_enabled);
-> 
-> 	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
-> 		l3_qos_cfg_update(&r->alloc_enabled);
-> }
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 23dc888ae3056..6646300f7ccb2 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -617,40 +617,37 @@ static struct avc_node *avc_insert(struct selinux_avc *avc,
+ 	struct avc_node *pos, *node = NULL;
+ 	int hvalue;
+ 	unsigned long flag;
++	spinlock_t *lock;
++	struct hlist_head *head;
+ 
+ 	if (avc_latest_notif_update(avc, avd->seqno, 1))
+-		goto out;
++		return NULL;
+ 
+ 	node = avc_alloc_node(avc);
+-	if (node) {
+-		struct hlist_head *head;
+-		spinlock_t *lock;
+-		int rc = 0;
+-
+-		hvalue = avc_hash(ssid, tsid, tclass);
+-		avc_node_populate(node, ssid, tsid, tclass, avd);
+-		rc = avc_xperms_populate(node, xp_node);
+-		if (rc) {
+-			kmem_cache_free(avc_node_cachep, node);
+-			return NULL;
+-		}
+-		head = &avc->avc_cache.slots[hvalue];
+-		lock = &avc->avc_cache.slots_lock[hvalue];
++	if (!node)
++		return NULL;
+ 
+-		spin_lock_irqsave(lock, flag);
+-		hlist_for_each_entry(pos, head, list) {
+-			if (pos->ae.ssid == ssid &&
+-			    pos->ae.tsid == tsid &&
+-			    pos->ae.tclass == tclass) {
+-				avc_node_replace(avc, node, pos);
+-				goto found;
+-			}
++	avc_node_populate(node, ssid, tsid, tclass, avd);
++	if (avc_xperms_populate(node, xp_node)) {
++		avc_node_kill(avc, node);
++		return NULL;
++	}
++
++	hvalue = avc_hash(ssid, tsid, tclass);
++	head = &avc->avc_cache.slots[hvalue];
++	lock = &avc->avc_cache.slots_lock[hvalue];
++	spin_lock_irqsave(lock, flag);
++	hlist_for_each_entry(pos, head, list) {
++		if (pos->ae.ssid == ssid &&
++			pos->ae.tsid == tsid &&
++			pos->ae.tclass == tclass) {
++			avc_node_replace(avc, node, pos);
++			goto found;
+ 		}
+-		hlist_add_head_rcu(&node->list, head);
+-found:
+-		spin_unlock_irqrestore(lock, flag);
+ 	}
+-out:
++	hlist_add_head_rcu(&node->list, head);
++found:
++	spin_unlock_irqrestore(lock, flag);
+ 	return node;
+ }
+ 
+-- 
+2.20.1
 
-Sold!
-
-(the !r->alloc_capable are already filtered out by the caller, but checking is the
-least-surprise option)
-
-I'll send a v2 shortly with your suggested-by. I'd like to keep the lockdep annotations as
-the MPAM tree tries to stop the arch code taking the rdtgroup_mutex. Those patches
-changing these annotations makes it nice and clear what is going on.
-
-
-
-Thanks,
-
-James
