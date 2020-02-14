@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4E6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544B8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B1324688
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ECF24684
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695711;
-	bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+	s=default; t=1581695716;
+	bh=kghje1weHDXaNnkhjKVQVyo+h5Uf7vFFAzcwhw0XdyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0B9ZPddwCmyeab1O+cuSFNsvNGkcWflFUY64VT56HvdX4Zx8kLR8uOK0bWtbVPafz
-	 7hTeCysGFdlD0nsadNEA/shRzrNjBeH3s98/v6Hp+9ZfFQLL5s7Tu7HK575VAuqW3y
-	 gLoprcoaQR3NKoMyNuGeLT50LWeKFJk8lI1xxdZw=
+	b=m8FJiVerWPZhnAzyMQRO23JgVjADYUsQsDYk2dwslmg80+DSioz+A/oErvtJ35ee4
+	 JqziVEogS8Lj20ZumpRhgv4vsxXvBqYSil+zehVeCCLjx99Uc0hFsyd23JM264Zt9R
+	 7umcJecBk/37m1SWwlvzQiKmTr4hUEBPhao996p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbgBNPzK (ORCPT
+        id S1731723AbgBNPzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:55:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:55:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731274AbgBNPzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:55:01 -0500
+        id S1731113AbgBNPzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:55:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D105D24686;
-        Fri, 14 Feb 2020 15:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208E8222C4;
+        Fri, 14 Feb 2020 15:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695700;
-        bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+        s=default; t=1581695702;
+        bh=kghje1weHDXaNnkhjKVQVyo+h5Uf7vFFAzcwhw0XdyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNfdHl+zv+D0ZItSon68bSG/N4awyNnXUinALs9X+QMiHK9a20ND2ozB7Xey9lYS8
-         z6KwM9db4eqhcIStf7ATtaeVRd4wVuIgPv2GotnFybJkwbRz3XUu9Au8Lb72N5oCjD
-         jpKTRb97PABLgAnXd4RPbHWtABJEtD02+nlKBvLg=
+        b=wc1vnLekU0V6e2vbCBOZHYY3gWlQmolCqENwpXOpIeINtyflAipsiYKi4yVKHAJO6
+         pkJPJhPjRrpWX823e1rmNTH89w5QrD0ZBOetTHxxYp5dybrmANAD73tDarCDhjVJ48
+         kcT9SXM7dxynieiiisHpKGJlcfuAubVLLAtkq3as=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 282/542] clk: uniphier: Add SCSSI clock gate for each channel
-Date:   Fri, 14 Feb 2020 10:44:34 -0500
-Message-Id: <20200214154854.6746-282-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 284/542] ALSA: sh: Fix compile warning wrt const
+Date:   Fri, 14 Feb 2020 10:44:36 -0500
+Message-Id: <20200214154854.6746-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,61 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
+[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
 
-SCSSI has clock gates for each channel in the SoCs newer than Pro4,
-so this adds missing clock gates for channel 1, 2 and 3. And more, this
-moves MCSSI clock ID after SCSSI.
+A long-standing compile warning was seen during build test:
+  sound/sh/aica.c: In function 'load_aica_firmware':
+  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ sound/sh/aica.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
-index 9caa52944b1c5..3e32db9dad815 100644
---- a/drivers/clk/uniphier/clk-uniphier-peri.c
-+++ b/drivers/clk/uniphier/clk-uniphier-peri.c
-@@ -18,8 +18,8 @@
- #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
- 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index bf1fb0d8a9306..f69072d2564c8 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -101,10 +101,10 @@ static void spu_memset(u32 toi, u32 what, int length)
+ }
  
--#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
--	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
-+#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
-+	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
- 
- #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
- 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
-@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_I2C(6, 2),
- 	UNIPHIER_PERI_CLK_I2C(7, 3),
- 	UNIPHIER_PERI_CLK_I2C(8, 4),
--	UNIPHIER_PERI_CLK_SCSSI(11),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
- 	{ /* sentinel */ }
- };
- 
-@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_FI2C(8, 4),
- 	UNIPHIER_PERI_CLK_FI2C(9, 5),
- 	UNIPHIER_PERI_CLK_FI2C(10, 6),
--	UNIPHIER_PERI_CLK_SCSSI(11),
--	UNIPHIER_PERI_CLK_MCSSI(12),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
-+	UNIPHIER_PERI_CLK_SCSSI(12, 1),
-+	UNIPHIER_PERI_CLK_SCSSI(13, 2),
-+	UNIPHIER_PERI_CLK_SCSSI(14, 3),
-+	UNIPHIER_PERI_CLK_MCSSI(15),
- 	{ /* sentinel */ }
- };
+ /* spu_memload - write to SPU address space */
+-static void spu_memload(u32 toi, void *from, int length)
++static void spu_memload(u32 toi, const void *from, int length)
+ {
+ 	unsigned long flags;
+-	u32 *froml = from;
++	const u32 *froml = from;
+ 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
+ 	int i;
+ 	u32 val;
 -- 
 2.20.1
 
