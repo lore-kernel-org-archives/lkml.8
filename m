@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33D0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48548C3B1AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9035324654
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2593120873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702606;
-	bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+	s=default; t=1581702615;
+	bh=AWcXrUPmg1Ok0gkYHL79LaRTs1+QfXtcYfPh5YIhW2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtbBpZDGLDLHG4KvJiabWMMHZuFx5Er4tgwCN968HLLQpYNH9Iw3oydir7MzfdtEG
-	 soYUkKEN2aWp08Ow70Lst3LYdjivktXu0unpXb/pFHN+2E97KxVbc15c9W5LenkQGa
-	 YZchLTBRTS3H4iC9+eY8RvmhmV8PWqlwH9+32toQ=
+	b=iaQqIViVhKf7UX89HJMEUbN2jUMC2zqIVgiO86LuBv90NNs0XVu4SV3zn0LuB0UDo
+	 pv5tub70EECc8iGcy35w1kEHFDdzHkCP+U9SXNRPYrBNaCC9F2vgmDeK0PMwnWHXhR
+	 E1EbLo0iy9IlFzhWHmsIeUd/KZ2oCMldHvlBLt80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388304AbgBNRuE (ORCPT
+        id S2388812AbgBNP7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:50:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388827AbgBNP7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:59:12 -0500
+        id S2388740AbgBNP64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:58:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E1524682;
-        Fri, 14 Feb 2020 15:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B802467C;
+        Fri, 14 Feb 2020 15:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695951;
-        bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+        s=default; t=1581695935;
+        bh=AWcXrUPmg1Ok0gkYHL79LaRTs1+QfXtcYfPh5YIhW2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhauuT0v8rxHhaPChXTUiEV4qvqv/MFe9SLHLa9MJR0Oj6UrzoXSdUefjPvpFFZRs
-         GH/NwGbmJiDNbqtkFFivOSm6gLJsDwcQcr+3jWRTds1bdHb+eQGWAzKL54cy7z3GZc
-         71bv+wi05XzIiLA1IPN1598L2JnxPSvC0KDWfRFI=
+        b=FSlTUjqBqkTlCgefOQNUhLzg1x8O9OST6mdesnqR0dX83/cW/sO+PgNISqmbGgHOC
+         s48PLn0gNgB8IkbxhQlcfo3/vnPivOEpdo9P7KgE4v/hriaWAURu4BERzxCw2UJqgf
+         FmYU1x1WHJjMa8v7twAp52RQ8ANXYNvPb1YmboQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 482/542] bpf: map_seq_next should always increase position index
-Date:   Fri, 14 Feb 2020 10:47:54 -0500
-Message-Id: <20200214154854.6746-482-sashal@kernel.org>
+Cc:     Nicola Lunghi <nick83ola@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.5 470/542] ALSA: usb-audio: add quirks for Line6 Helix devices fw>=2.82
+Date:   Fri, 14 Feb 2020 10:47:42 -0500
+Message-Id: <20200214154854.6746-470-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -60,46 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Nicola Lunghi <nick83ola@gmail.com>
 
-[ Upstream commit 90435a7891a2259b0f74c5a1bc5600d0d64cba8f ]
+[ Upstream commit b81cbf7abfc94878a3c6f0789f2185ee55b1cc21 ]
 
-If seq_file .next fuction does not change position index,
-read after some lseek can generate an unexpected output.
+With firmware 2.82 Line6 changed the usb id of some of the Helix
+devices but the quirks is still needed.
 
-See also: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Add it to the quirk list for line6 helix family of devices.
 
-v1 -> v2: removed missed increment in end of function
+Thanks to Jens for pointing out the missing ids.
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/eca84fdd-c374-a154-d874-6c7b55fc3bc4@virtuozzo.com
+Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
+Link: https://lore.kernel.org/r/20200125150917.5040-1-nick83ola@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/usb/format.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index ecf42bec38c00..6f22e0e74ef24 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -196,6 +196,7 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 	void *key = map_iter(m)->key;
- 	void *prev_key;
- 
-+	(*pos)++;
- 	if (map_iter(m)->done)
- 		return NULL;
- 
-@@ -208,8 +209,6 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 		map_iter(m)->done = true;
- 		return NULL;
- 	}
--
--	++(*pos);
- 	return key;
- }
- 
+diff --git a/sound/usb/format.c b/sound/usb/format.c
+index d79db71305f63..53922f73467f4 100644
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -296,6 +296,9 @@ static int line6_parse_audio_format_rates_quirk(struct snd_usb_audio *chip,
+ 	case USB_ID(0x0E41, 0x4242): /* Line6 Helix Rack */
+ 	case USB_ID(0x0E41, 0x4244): /* Line6 Helix LT */
+ 	case USB_ID(0x0E41, 0x4246): /* Line6 HX-Stomp */
++	case USB_ID(0x0E41, 0x4248): /* Line6 Helix >= fw 2.82 */
++	case USB_ID(0x0E41, 0x4249): /* Line6 Helix Rack >= fw 2.82 */
++	case USB_ID(0x0E41, 0x424a): /* Line6 Helix LT >= fw 2.82 */
+ 		/* supported rates: 48Khz */
+ 		kfree(fp->rate_table);
+ 		fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
 -- 
 2.20.1
 
