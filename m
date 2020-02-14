@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3B3C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0807C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA22822314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A9324677
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 21:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581716429;
-	bh=V6ishEWu7VDWMflxPRIPVYneSY4aw7KtvqZHI4s+X/c=;
+	s=default; t=1581716430;
+	bh=oa+kZsrKTSn+2u96HUaHzFL+l3Q38YOUBibk/3f6Tdg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vsBa1E60tkPiyfcdfKVMFbjcNnkyOSwtA2IgaluK+oc/qu5yHZLywhhGWwNtck4Dn
-	 ngW8DEmJT/OuVOlCSV9hIC7KSjJcuJhCv0wYMK3Q8PK/r7uDku5LP7VyPa4wR9gjBF
-	 2aVs9KoiLZlRXntr/GrqvTeWkmRChVoUnChjduNE=
+	b=p+PX/INJ/Mvs4OAaih70UXXr0NusZQ0sBb0IQLscIJfppOXOVR3ZoaJkrcB+ub2do
+	 o3cZwQTxd3c++/NoDwT1hWPwKfDdCy0z4lWBQXBsbKL8mSjSEki7oXoFNaPkjahYL/
+	 wO4q974h3otdHydaDeK7n2A6Y/Gr4QsijGWHDkv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388673AbgBNVk3 (ORCPT
+        id S2389292AbgBNVk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 14 Feb 2020 16:40:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55056 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387936AbgBNVk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 16:40:28 -0500
-Subject: Re: [git pull] drm fixes for 5.6-rc2
+        id S2388153AbgBNVk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 16:40:29 -0500
+Subject: Re: [GIT PULL] Power management fixes for v5.6-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581716428;
-        bh=V6ishEWu7VDWMflxPRIPVYneSY4aw7KtvqZHI4s+X/c=;
+        bh=oa+kZsrKTSn+2u96HUaHzFL+l3Q38YOUBibk/3f6Tdg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1a9aGdLX3JlvKUWjX0JxMYmLd213dwgn09iICZQ35ZWVNXOfpqil5aAgRKL2uxjpv
-         TMTHbjEoYy/nMfuGcYqHCwuX/qXJqcMfNJIEggs/Ap4nFRQPUZVYQVj+NIfuL3Bvh/
-         A1+F9rVzlqcoR7JcQBuJhfWgXM6x9HrE+2FKr02w=
+        b=wyVW0923HjVqQYiM0tCbnrEhweANOhbyJUTyjAmx+x6KC++tnKKK70NBkElgeLsPK
+         Sep65wro5qZsbkPNaVwxXG5sKWM77zFUt/lRMfeyPly1yONUZMJlu6CLaCLRiSn+e2
+         IiWHNw2aeXVi33nKBpR3K0JC6lI/lUxFZWHyfY0g=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tzpGGiPB7oOkhjEn9MifjjVQ4TdH4GTtJeBf74SBn-NKg@mail.gmail.com>
-References: <CAPM=9tzpGGiPB7oOkhjEn9MifjjVQ4TdH4GTtJeBf74SBn-NKg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hpEebbSFUFdtRnLWvXhyruzNgNaL9o-Od1a3jkgYRQKg@mail.gmail.com>
+References: <CAJZ5v0hpEebbSFUFdtRnLWvXhyruzNgNaL9o-Od1a3jkgYRQKg@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tzpGGiPB7oOkhjEn9MifjjVQ4TdH4GTtJeBf74SBn-NKg@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2020-02-14
-X-PR-Tracked-Commit-Id: 6f4134b30b6ee33e2fd4d602099e6c5e60d0351a
+X-PR-Tracked-Message-Id: <CAJZ5v0hpEebbSFUFdtRnLWvXhyruzNgNaL9o-Od1a3jkgYRQKg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.6-rc2
+X-PR-Tracked-Commit-Id: 3629ac5b92535793ba6226e243c2324a20c35fae
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3f0d329371c08dfa3227f1716e522f3a8a081155
-Message-Id: <158171642816.8400.15995893936760198591.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 4e03e4e6d2a03a9f2edeefaec12d4f336dee824d
+Message-Id: <158171642868.8400.10585778113157556990.pr-tracker-bot@kernel.org>
 Date:   Fri, 14 Feb 2020 21:40:28 +0000
-To:     Dave Airlie <airlied@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Feb 2020 14:15:53 +1000:
+The pull request you sent on Fri, 14 Feb 2020 11:24:55 +0100:
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-02-14
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.6-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3f0d329371c08dfa3227f1716e522f3a8a081155
+https://git.kernel.org/torvalds/c/4e03e4e6d2a03a9f2edeefaec12d4f336dee824d
 
 Thank you!
 
