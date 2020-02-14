@@ -2,53 +2,52 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ADFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38882467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CF824681
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695650;
-	bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
+	s=default; t=1581695653;
+	bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uEzCLA4KmECJBakrYDHl4IeO0TUF7r9EpQ60bHA9tpvQ2G87FZbaqWpMR/HKw2mBn
-	 HnnmuMjUrhOUq52tlWGQ2p5wRrwlvpYnRazaU49BpurdaEiuVTJgl89k/o1pgVfbN7
-	 6kE4aHP+5c15qMrkcp4REAojprDh+xnbBqgtmKAI=
+	b=BapSzXWPCntfh/WZCEY8k+QkNCz7UCrLoErJYra3R+EbTLr9YMBzTakmWkDiSJkGr
+	 qhmMDQWisK4Z7THOymtalO+XkoSxiFh/W+Vfye5FIkVR5mwcgeO1sZtKHDiJHdGr2L
+	 mx0PBO7OpLiGu/ghiyXueZEO8EU8/mCA+1UuDhtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgBNPyJ (ORCPT
+        id S1731027AbgBNPyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731385AbgBNPyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:02 -0500
+        id S1730420AbgBNPyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6465B2465D;
-        Fri, 14 Feb 2020 15:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D7324673;
+        Fri, 14 Feb 2020 15:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695641;
-        bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
+        s=default; t=1581695648;
+        bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VewLqZUvU+hrGGXd9aWmgEBS/nMQ7hQKMmP8HMQTc6mVkhV6GT714hy4SKZFlnshX
-         v00R/36KJOJ9F85sIy8v7+M3jDJPh+W0plGc2NRAAO98e5YjCBeeR7ibKKkLtnxdEW
-         y4kPcBSQ8rpQjpJJlICb9uoLzGZSJCWHWBnYUnc0=
+        b=erdbXurocbHAz+9r622ZjrWUgzfL0I3PjcohQ1ySgjY7R9YQLef0qqrqC2LxSauHx
+         oYtvdejThXZNY/tSgVg/ak4GzcrloSg2p/mVaQieS4LR98MAtE+AnShbD/O+4EBt+k
+         /hdSa7Y3GtGci1gzJ/Fe7RJu424TRQhUxY3pYOjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 236/542] clk: qcom: smd: Add missing bimc clock
-Date:   Fri, 14 Feb 2020 10:43:48 -0500
-Message-Id: <20200214154854.6746-236-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.5 241/542] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+Date:   Fri, 14 Feb 2020 10:43:53 -0500
+Message-Id: <20200214154854.6746-241-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,46 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 87ec9adcca71801a44ddb311185b17df09839ab5 ]
+[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
 
-It turns out booting the modem is dependent on a bimc vote from Linux on
-msm8998.  To make the modem happy, add the bimc clock to rely on the
-default vote from rpmcc.  Once we have interconnect support, bimc should
-be controlled properly.
+Clang warns:
 
-Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lkml.kernel.org/r/20191217165409.4919-1-jeffrey.l.hugo@gmail.com
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+                        ^
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
+is here
+                        if (syncrate == &ahc_syncrates[maxsync])
+                        ^
+1 warning generated.
+
+This warning occurs because there is a space amongst the tabs on this
+line. Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+This has been a problem since the beginning of git history hence no fixes
+tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/817
+Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-smd-rpm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 930fa4a4c52a8..e5c3db11bf26c 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
- };
- 
- /* msm8998 */
-+DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
- DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
- DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
- DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
- static struct clk_smd_rpm *msm8998_clks[] = {
-+	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
- 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
- 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
- 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index a9d40d3b90efc..4190a025381a5 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -2314,7 +2314,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
+ 			 * At some speeds, we only support
+ 			 * ST transfers.
+ 			 */
+-		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
++			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+ 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
+ 			break;
+ 		}
 -- 
 2.20.1
 
