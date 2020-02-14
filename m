@@ -2,148 +2,153 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F48FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D6AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435A32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFED72081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 22:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LYB/2WoT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D6dgUOIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBNWiW (ORCPT
+        id S1727789AbgBNWkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 17:38:22 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:37374 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727529AbgBNWiW (ORCPT
+        Fri, 14 Feb 2020 17:40:25 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:52920 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgBNWkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 17:38:22 -0500
-Received: by mail-yb1-f193.google.com with SMTP id k69so5571766ybk.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 14:38:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UhXhwNSRwdSyi+H9zMRuLq0WFPtWCQTooj0QtYbRLG8=;
-        b=LYB/2WoTc0NUWQ7WAgvwRxpic7dTAP9/iI+IjkZnQRJx+5k39FyA4S4N3pmh8wcWqz
-         AvLEKE2SjemIzT9ZtDMYJ5uqfQfwIBVHdbyFYDdMnzm8nm8qRGQ7OcBlUWfrU4zHwvZb
-         PhUuwhIPS3pSexguM+13PMLeT8PeHqXx37bpMydKP8fZVFkdxVBVbBNTMz/IMIkXGKFs
-         oE2s8v7rPEwjU9xEMptc3TmOHtHV/g5owFopfH0Fm7rh7Hr8J5cZw9cTWP5dmeyCnXNn
-         rq3L8OW1us+mcfcgMy3ATrfW0PSGDZglwVRh7HmIoFZvLw78Vnokrdl77eiZ6m4SVJW0
-         eoXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UhXhwNSRwdSyi+H9zMRuLq0WFPtWCQTooj0QtYbRLG8=;
-        b=BF5vR4Z/3WbaLRJ8QzG9PP4YG2NoRVOko9TVeK1DPn9eJxNGMRfNUAfw5YKHKl6lNg
-         GmlqbBO5b0bjZpBYZsPcKz2KPQDs5JQW05sk0vX/ws350nA3ZnBHCdhJurgK5FHfY5g5
-         3SLjE0m5AIUM7AOHDEAsgw1fJFmUDqQD03ES/xnAfvkBvk5nmnwgBw1Sfoa/PngzN/se
-         VjOFmy05iUsTd8LpjPMdnILOwJ8C74cZB9uft7sRhR27sUx9rddVa48GDaYa6CrekTxT
-         veT8gXFPpt09fscu6v0m+bDNuLxhUdwkwN2k38g69thYsmeM/zwtckj4RhHxMXPjb8jz
-         uYpQ==
-X-Gm-Message-State: APjAAAVuX5Sa1ww1GahFih+ZDw0C/pu4CbPVIOFOFZtYrqgdcPSiuzAz
-        21eXMAzA9wMJXgRMHvdlgHn88DVy5PiTGgh9Pbu9/Q==
-X-Google-Smtp-Source: APXvYqz+ZZXlYqlAQb5giYd0uucVgxWoIM7WTe+nBKxOuFOoTQpgJCgcsNG7WFknrZTkO08/9TW493jWkTycKh+Cw5c=
-X-Received: by 2002:a25:80c5:: with SMTP id c5mr4632219ybm.364.1581719899696;
- Fri, 14 Feb 2020 14:38:19 -0800 (PST)
+        Fri, 14 Feb 2020 17:40:24 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EMdg8f027271;
+        Fri, 14 Feb 2020 22:39:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=gILrYO0aXAH8y/Wij5TG98HDn4g81XDUozQjMEyF/tc=;
+ b=D6dgUOIzSw9Db7JHx2qckHzbTAG4bEE9fs27UwFs+cULm7Tf2CwPFy1oJ8HE3UHEYdVl
+ NzctlHD9XQJLzI55Og09mZw+QAQrsdcw6f3CB2ly7Tw7UZopo+PfIgmwGIiiaGYAqgKa
+ BBAZgPmBJEmPtojqcPi9il/bw+REpFliyxgKbVkizR4H8L7OVMitAysY5OWxghoslPLV
+ IWgfP09GChvGFrWysyLoEZEJEr/VQ/KvhBv4xi23QjLzibYzB4U5dvuQqzo8D4RybCAa
+ bxRRJyF+wPocJreiYtz3GuhbfiW12vnC9m6wHtLUm/KaRWIHH+62Gp4Nd5yRRDsRScPM eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2y2p3t3y09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 22:39:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EMbVTv165340;
+        Fri, 14 Feb 2020 22:39:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2y5dthyadt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 22:39:57 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01EMdtdK032493;
+        Fri, 14 Feb 2020 22:39:55 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 14:39:55 -0800
+Subject: Re: [Xen-devel] [PATCH 14/30] x86/xen: Add missing annotation for
+ xen_pte_lock()
+To:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        boqun.feng@gmail.com,
+        "maintainer:X86 ARCHITECTURE 32-BIT AND 64-BIT" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "moderated list:XEN HYPERVISOR INTERFACE" 
+        <xen-devel@lists.xenproject.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <0/30> <20200214204741.94112-1-jbi.octave@gmail.com>
+ <20200214204741.94112-15-jbi.octave@gmail.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
+ PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
+ MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
+ C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
+ d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
+ woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
+ FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
+ SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
+ Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
+ 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
+ b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
+ CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
+ 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
+ JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
+ VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
+ jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
+ qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
+ tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
+ kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
+ m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
+ nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
+ hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
+ Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
+ yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
+ kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
+ KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
+ BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
+ gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
+ XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
+ 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
+ kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
+ SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
+ jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
+ 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
+ PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
+ u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
+ qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
+ t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
+ ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
+ Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
+ 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
+ Jg6OxFYd01z+a+oL
+Message-ID: <c4206641-4570-3cbd-1d96-f18aa98e86be@oracle.com>
+Date:   Fri, 14 Feb 2020 17:40:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200214222415.181467-1-shakeelb@google.com>
-In-Reply-To: <20200214222415.181467-1-shakeelb@google.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 14 Feb 2020 14:38:08 -0800
-Message-ID: <CANn89iLe7KVjaechEhtV4=QRy4s8qBQDiX9e8LX_xq8tunrQNA@mail.gmail.com>
-Subject: Re: [PATCH v2] cgroup: memcg: net: do not associate sock with
- unrelated cgroup
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200214204741.94112-15-jbi.octave@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:24 PM Shakeel Butt <shakeelb@google.com> wrote:
->
-> We are testing network memory accounting in our setup and noticed
-> inconsistent network memory usage and often unrelated cgroups network
-> usage correlates with testing workload. On further inspection, it
-> seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
-> irq context specially for cgroup v1.
->
-> mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
-> and kind of assumes that this can only happen from sk_clone_lock()
-> and the source sock object has already associated cgroup. However in
-> cgroup v1, where network memory accounting is opt-in, the source sock
-> can be unassociated with any cgroup and the new cloned sock can get
-> associated with unrelated interrupted cgroup.
->
-> Cgroup v2 can also suffer if the source sock object was created by
-> process in the root cgroup or if sk_alloc() is called in irq context.
-> The fix is to just do nothing in interrupt.
-
-So, when will the association be done ?
-At accept() time ?
-Is it done already ?
-
-Thanks
 
 
+On 2/14/20 3:47 PM, Jules Irenge wrote:
+> Sparse reports warning at xen_pte_lock()
 >
-> Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
-> Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
+> warning: context imbalance in xen_pte_lock() - wrong count at exit
 >
-> Changes since v1:
-> - Fix cgroup_sk_alloc() too.
+> The root cause is the missing annotation at xen_pte_lock()
+> Add the missing __acquires(ptl) annotation
 >
->  kernel/cgroup/cgroup.c | 4 ++++
->  mm/memcontrol.c        | 4 ++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index 9a8a5ded3c48..46e5f5518fba 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -6449,6 +6449,10 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
->                 return;
->         }
->
-> +       /* Do not associate the sock with unrelated interrupted task's memcg. */
-> +       if (in_interrupt())
-> +               return;
-> +
->         rcu_read_lock();
->
->         while (true) {
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 63bb6a2aab81..f500da82bfe8 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6697,6 +6697,10 @@ void mem_cgroup_sk_alloc(struct sock *sk)
->                 return;
->         }
->
-> +       /* Do not associate the sock with unrelated interrupted task's memcg. */
-> +       if (in_interrupt())
-> +               return;
-> +
->         rcu_read_lock();
->         memcg = mem_cgroup_from_task(current);
->         if (memcg == root_mem_cgroup)
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+although I'd prefer this and the next patch to be merged into a single one.
+
+
