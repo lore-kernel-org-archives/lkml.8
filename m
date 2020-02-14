@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E423C3B19F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AEAC3B19D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A9D24649
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63D22168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 15:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581695487;
-	bh=Amu1KTqCN4P6t1vXY0a3P/q88+UfLBw0ouCocJKKAAs=;
+	s=default; t=1581695490;
+	bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XPawaf8j+9MniHQ0O3RM4YCan/8JDu6ewatogKKhTfWY/YbrZuRTjMYvJOyZAyjuS
-	 MXByUaYlM/Hbsa6nN/fVcRTAnr083uD6/fGi1V4ahkszAvoli5/qbUPjRa5qSwtb38
-	 8kuQTvEpkm6VVQUJ1f9b8at4vg7DYexLI663jmNQ=
+	b=BM9U8nUPm4RyNbmqiB9RlCSqNwZAlw54pdFPzUqirnWmAZW9TQza9YbtY1fkBuX8x
+	 jKaszXt1L7eJrWDkSl01ubqAgeC8q0kyUA7kX5iD/WIa1pnYpnSDKd73FKFCphlhzE
+	 K1zAZSq3fYv9Kxd/7uRvyxN7NYlxVDj7HCk1d3Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgBNPv0 (ORCPT
+        id S1730782AbgBNPva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:51:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 10:51:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730693AbgBNPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:51:12 -0500
+        id S1730729AbgBNPvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:51:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A2A24670;
-        Fri, 14 Feb 2020 15:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890CB2168B;
+        Fri, 14 Feb 2020 15:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695472;
-        bh=Amu1KTqCN4P6t1vXY0a3P/q88+UfLBw0ouCocJKKAAs=;
+        s=default; t=1581695477;
+        bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdO7hB93XzhelOkpmGp92M3jJAgvUvOC+7SH8MIp4l5tiiALf9Zp/J67ZRhV9+OEK
-         PYPb0E4vEl0S/J7G0EXckk3XtzTbsQGOMhpwiZ+6YDE/k6YFfRKtfHGxXQ3nPXFIps
-         KIQvU0RW7Uc71BTqnlHnuLp9RgVUEFI1+T+PJHOw=
+        b=wNO1mdywvv4ZtQ8+g4yT4e/9eZJk1dXv6qgUUYDrBu/me1neYILUI+FRXtwdKj7Q4
+         ALZbOSI78oV/ni+oRxPNyT9J+HJzlZr/T1RMcH2BoFbXJxcKZsL54vIE22n9+37bIu
+         gHS1YDHJi5WL5JVzAuIK86VjHzTOwkhMzkTzmP9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 106/542] ext4, jbd2: ensure panic when aborting with zero errno
-Date:   Fri, 14 Feb 2020 10:41:38 -0500
-Message-Id: <20200214154854.6746-106-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 110/542] brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
+Date:   Fri, 14 Feb 2020 10:41:42 -0500
+Message-Id: <20200214154854.6746-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,74 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
+[ Upstream commit 8c8e60fb86a90a30721bbd797f58f96b3980dcc1 ]
 
-JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
-aborted, and then __ext4_abort() and ext4_handle_error() can invoke
-panic if ERRORS_PANIC is specified. But if the journal has been aborted
-with zero errno, jbd2_journal_abort() didn't set this flag so we can
-no longer panic. Fix this by always record the proper errno in the
-journal superblock.
+Commit 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling
+brcmf_bus_started()") changed the initialization order of the brcmfmac
+SDIO driver. Unfortunately since brcmf_sdiod_intr_register() is now
+called before the sdiodev->bus_if initialization, it reads the wrong
+chip ID and fails to initialize the GPIO on brcm43362. Thus the chip
+cannot send interrupts and fails to probe:
 
-Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+[   12.517023] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+[   12.531214] ieee80211 phy0: brcmf_bus_started: failed: -110
+[   12.536976] ieee80211 phy0: brcmf_attach: dongle is not responding: err=-110
+[   12.566467] brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+
+Initialize the bus interface earlier to ensure that
+brcmf_sdiod_intr_register() properly sets up the OOB interrupt.
+
+BugLink: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908438
+Fixes: 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling brcmf_bus_started()")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/checkpoint.c |  2 +-
- fs/jbd2/journal.c    | 15 ++++-----------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
-index 8fff6677a5da4..96bf33986d030 100644
---- a/fs/jbd2/checkpoint.c
-+++ b/fs/jbd2/checkpoint.c
-@@ -164,7 +164,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
- 				       "journal space in %s\n", __func__,
- 				       journal->j_devname);
- 				WARN_ON(1);
--				jbd2_journal_abort(journal, 0);
-+				jbd2_journal_abort(journal, -EIO);
- 			}
- 			write_lock(&journal->j_state_lock);
- 		} else {
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 6847b18455068..8479e84159675 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2156,12 +2156,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 1dea0178832ea..a935993a3c514 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -4226,6 +4226,12 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 	}
  
- 	__jbd2_journal_abort_hard(journal);
+ 	if (err == 0) {
++		/* Assign bus interface call back */
++		sdiod->bus_if->dev = sdiod->dev;
++		sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
++		sdiod->bus_if->chip = bus->ci->chip;
++		sdiod->bus_if->chiprev = bus->ci->chiprev;
++
+ 		/* Allow full data communication using DPC from now on. */
+ 		brcmf_sdiod_change_state(bus->sdiodev, BRCMF_SDIOD_DATA);
  
--	if (errno) {
--		jbd2_journal_update_sb_errno(journal);
--		write_lock(&journal->j_state_lock);
--		journal->j_flags |= JBD2_REC_ERR;
--		write_unlock(&journal->j_state_lock);
--	}
-+	jbd2_journal_update_sb_errno(journal);
-+	write_lock(&journal->j_state_lock);
-+	journal->j_flags |= JBD2_REC_ERR;
-+	write_unlock(&journal->j_state_lock);
- }
+@@ -4242,12 +4248,6 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
  
- /**
-@@ -2203,11 +2201,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
-  * failure to disk.  ext3_error, for example, now uses this
-  * functionality.
-  *
-- * Errors which originate from within the journaling layer will NOT
-- * supply an errno; a null errno implies that absolutely no further
-- * writes are done to the journal (unless there are any already in
-- * progress).
-- *
-  */
+ 	sdio_release_host(sdiod->func1);
  
- void jbd2_journal_abort(journal_t *journal, int errno)
+-	/* Assign bus interface call back */
+-	sdiod->bus_if->dev = sdiod->dev;
+-	sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
+-	sdiod->bus_if->chip = bus->ci->chip;
+-	sdiod->bus_if->chiprev = bus->ci->chiprev;
+-
+ 	err = brcmf_alloc(sdiod->dev, sdiod->settings);
+ 	if (err) {
+ 		brcmf_err("brcmf_alloc failed\n");
 -- 
 2.20.1
 
