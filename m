@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49EDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E94B20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B956B206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702126;
-	bh=IuS2CtTqepTc4chmTYqBB1uenb3nV/CDnvFzzHUVADM=;
+	s=default; t=1581702135;
+	bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zpg37TxyNlbuKn4KY1s4cjKtU9VUf225+aD+80t96oEI0PV09ay1usUdBrXO45WRk
-	 8ixGaICp6s2+6j0xD1nEkT1leXtfwbsaxPfPnhsaWP55nHBlg6crAJB0RRD1hHRrpp
-	 S1oqLNutkMZ10S3Iv7u/ws1jEs039l4Tv4dQIE/w=
+	b=havPEd76f3his/GxEXtp4ukGA0A9hjo7rAMqAMCYkNgWojg0VOR1ynWPaUI4W8J3c
+	 F8ugsho7z/S7Vv1Vsr26igwGpbQ+JSc0aybPb9EYPLc38ZEbZ5CjHkl1hi3uNfhV1r
+	 ybUd3he2OU90JeydQWp5iF2/xkvYBlVCBTons0Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389821AbgBNRmF (ORCPT
+        id S2389739AbgBNRmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:42:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50800 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:42:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389671AbgBNQDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:33 -0500
+        id S2389640AbgBNQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 340C32187F;
-        Fri, 14 Feb 2020 16:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B854724680;
+        Fri, 14 Feb 2020 16:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696213;
-        bh=IuS2CtTqepTc4chmTYqBB1uenb3nV/CDnvFzzHUVADM=;
+        s=default; t=1581696208;
+        bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYuWh1GvweCmS22pLM61U4ofQBCr2O/FfWhq6JUQ8sZ4K/sVSPyw3lVX/beOk3Sr7
-         KQCCMCSDtSc/00ab85LvkbxuB46dx03zs59ueZ/v1Trl2/OvLt2IBIhgdEKd28J5dB
-         HY0zOGc3xopfVY/jtT1S8fTIoJfS7z0GfbuyXku8=
+        b=wxQbX2q5d/EoZh1Yr5fNrvqlD8AfvyXwQDffrsFoBDfetMLjjtiVpIoHfQApM7cAU
+         wDx7Aq42xftGlKq4/04IEYjDGdVKK9IufQbMVcRv47tyUHZJRE1qxFy0MBahuzK2ay
+         t2JHcPv2n8UPuW/BmUGav0kooKPox6HwDoNKzFz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 077/459] pwm: omap-dmtimer: Simplify error handling
-Date:   Fri, 14 Feb 2020 10:55:27 -0500
-Message-Id: <20200214160149.11681-77-sashal@kernel.org>
+Cc:     Kai Li <li.kai4@h3c.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 073/459] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+Date:   Fri, 14 Feb 2020 10:55:23 -0500
+Message-Id: <20200214160149.11681-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,80 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Kai Li <li.kai4@h3c.com>
 
-[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
+[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
 
-Instead of doing error handling in the middle of ->probe(), move error
-handling and freeing the reference to timer to the end.
+If the journal is dirty when the filesystem is mounted, jbd2 will replay
+the journal but the journal superblock will not be updated by
+journal_reset() because JBD2_ABORT flag is still set (it was set in
+journal_init_common()). This is problematic because when a new transaction
+is then committed, it will be recorded in block 1 (journal->j_tail was set
+to 1 in journal_reset()). If unclean shutdown happens again before the
+journal superblock is updated, the new recorded transaction will not be
+replayed during the next mount (because of stale sb->s_start and
+sb->s_sequence values) which can lead to filesystem corruption.
 
-This fixes a resource leak as dm_timer wasn't freed when allocating
-*omap failed.
-
-Implementation note: The put: label was never reached without a goto and
-ret being unequal to 0, so the removed return statement is fine.
-
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ fs/jbd2/journal.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 00772fc534906..6cfeb0e1cc679 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -298,15 +298,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 		goto put;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index ef485f892d1b0..389c9be4e7919 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1682,6 +1682,11 @@ int jbd2_journal_load(journal_t *journal)
+ 		       journal->j_devname);
+ 		return -EFSCORRUPTED;
  	}
- 
--put:
--	of_node_put(timer);
--	if (ret < 0)
--		return ret;
--
- 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
- 	if (!omap) {
--		pdata->free(dm_timer);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_alloc_omap;
- 	}
- 
- 	omap->pdata = pdata;
-@@ -339,13 +334,28 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 	ret = pwmchip_add(&omap->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM\n");
--		omap->pdata->free(omap->dm_timer);
--		return ret;
-+		goto err_pwmchip_add;
- 	}
- 
-+	of_node_put(timer);
-+
- 	platform_set_drvdata(pdev, omap);
- 
- 	return 0;
-+
-+err_pwmchip_add:
-+
 +	/*
-+	 * *omap is allocated using devm_kzalloc,
-+	 * so no free necessary here
++	 * clear JBD2_ABORT flag initialized in journal_init_common
++	 * here to update log tail information with the newest seq.
 +	 */
-+err_alloc_omap:
-+
-+	pdata->free(dm_timer);
-+put:
-+	of_node_put(timer);
-+
-+	return ret;
- }
++	journal->j_flags &= ~JBD2_ABORT;
  
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ 	/* OK, we've finished with the dynamic journal bits:
+ 	 * reinitialise the dynamic contents of the superblock in memory
+@@ -1689,7 +1694,6 @@ int jbd2_journal_load(journal_t *journal)
+ 	if (journal_reset(journal))
+ 		goto recovery_error;
+ 
+-	journal->j_flags &= ~JBD2_ABORT;
+ 	journal->j_flags |= JBD2_LOADED;
+ 	return 0;
+ 
 -- 
 2.20.1
 
