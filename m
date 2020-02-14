@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56087C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F463C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2904420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F4A2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581699759;
-	bh=iwSWngSiPS1H8sZA+l77XD5uRqfwE4ICMQOEh5fxG+g=;
+	s=default; t=1581699761;
+	bh=RM5bJZqD6fBIu+hMD74+5St8AFmtMUWd4KMgCZxZTrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8FNUaBXzE4hMKuEYgbrTlIwdBFQDjmDOPw/GYd5KcMbhQYbHrGy36euYVl4YgeK9
-	 8eSZMYItd6RXxahk5QXUvSCeS/mKSzzzp3SipWLS+Mavb9GCTSvfRVZ7b64QlFdnBf
-	 A8/CWqBqX1zbpj6b8EPzYap2wi/JAJyWrI5izCto=
+	b=jazBVfiFYZWusAdph21GIvytZcfjZ1MdahWDA3GoWdkbMwlj/KYKc0PWmlaQZa/27
+	 nPPkojr5JFwqGtiR+Jr6rC9TZKO4xgspI7VzmetSqDlm0lMEfXsmK6rVewMEqiN1aS
+	 PJhKyP9GG7wvyrxGZrKBqh2e0SsnFD+tP+RtqIdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394395AbgBNRCh (ORCPT
+        id S2404208AbgBNQQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:16:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404223AbgBNQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:16:06 -0500
+        id S2404090AbgBNQPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:15:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945F1246F0;
-        Fri, 14 Feb 2020 16:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39274246D6;
+        Fri, 14 Feb 2020 16:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696966;
-        bh=iwSWngSiPS1H8sZA+l77XD5uRqfwE4ICMQOEh5fxG+g=;
+        s=default; t=1581696908;
+        bh=RM5bJZqD6fBIu+hMD74+5St8AFmtMUWd4KMgCZxZTrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGnUhj43PIYwfnKPwMg2G9hJ8djRTdjmjQMGCj/roHlOswH5VPYQL0toxvVU1zFF5
-         pphwBCbwfZr2VVmqMvIg5kTEXZyc+JCBHrNGSvPVQ2cfPs5mG6/YZe/23KjteXDs8a
-         GXYzIbbTUpDCRMOueuwrwfiMrw0lLKah5EiXzX6o=
+        b=MnAwbbPaYIpd/4mhQCFglQIBWXGpH94hVemS6pQfJk88MK18+ddUzR9n19XIq8nWc
+         Pw/1cbSaR+KOdwzf70YlIawQfzLJUfRFyPtAC8+u/2eIx1sezHoVaVdGQxwfKFoXGC
+         ZKjzzNjpcxh4+yySdj3AYUWWJtSDLPz/xkzU8Xa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 205/252] driver core: platform: fix u32 greater or equal to zero comparison
-Date:   Fri, 14 Feb 2020 11:11:00 -0500
-Message-Id: <20200214161147.15842-205-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Michael Guralnik <michaelgur@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 157/252] RDMA/uverbs: Remove needs_kfree_rcu from uverbs_obj_type_class
+Date:   Fri, 14 Feb 2020 11:10:12 -0500
+Message-Id: <20200214161147.15842-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
 References: <20200214161147.15842-1-sashal@kernel.org>
@@ -60,39 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
+[ Upstream commit 8bdf9dd984c18375d1090ddeb1792511f619c5c1 ]
 
-Currently the check that a u32 variable i is >= 0 is always true because
-the unsigned variable will never be negative, causing the loop to run
-forever.  Fix this by changing the pre-decrement check to a zero check on
-i followed by a decrement of i.
+After device disassociation the uapi_objects are destroyed and freed,
+however it is still possible that core code can be holding a kref on the
+uobject. When it finally goes to uverbs_uobject_free() via the kref_put()
+it can trigger a use-after-free on the uapi_object.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Since needs_kfree_rcu is a micro optimization that only benefits file
+uobjects, just get rid of it. There is no harm in using kfree_rcu even if
+it isn't required, and the number of involved objects is small.
+
+Link: https://lore.kernel.org/r/20200113143306.GA28717@ziepe.ca
+Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/rdma_core.c | 23 +----------------------
+ include/rdma/uverbs_types.h         |  1 -
+ 2 files changed, 1 insertion(+), 23 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 1d3a50ac21664..d1f901b58f755 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -427,7 +427,7 @@ int platform_device_add(struct platform_device *pdev)
- 		pdev->id = PLATFORM_DEVID_AUTO;
- 	}
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index c4118bcd51035..c2c9bd72b350f 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -49,13 +49,7 @@ void uverbs_uobject_get(struct ib_uobject *uobject)
  
--	while (--i >= 0) {
-+	while (i--) {
- 		struct resource *r = &pdev->resource[i];
- 		if (r->parent)
- 			release_resource(r);
+ static void uverbs_uobject_free(struct kref *ref)
+ {
+-	struct ib_uobject *uobj =
+-		container_of(ref, struct ib_uobject, ref);
+-
+-	if (uobj->uapi_object->type_class->needs_kfree_rcu)
+-		kfree_rcu(uobj, rcu);
+-	else
+-		kfree(uobj);
++	kfree_rcu(container_of(ref, struct ib_uobject, ref), rcu);
+ }
+ 
+ void uverbs_uobject_put(struct ib_uobject *uobject)
+@@ -753,20 +747,6 @@ const struct uverbs_obj_type_class uverbs_idr_class = {
+ 	.lookup_put = lookup_put_idr_uobject,
+ 	.destroy_hw = destroy_hw_idr_uobject,
+ 	.remove_handle = remove_handle_idr_uobject,
+-	/*
+-	 * When we destroy an object, we first just lock it for WRITE and
+-	 * actually DESTROY it in the finalize stage. So, the problematic
+-	 * scenario is when we just started the finalize stage of the
+-	 * destruction (nothing was executed yet). Now, the other thread
+-	 * fetched the object for READ access, but it didn't lock it yet.
+-	 * The DESTROY thread continues and starts destroying the object.
+-	 * When the other thread continue - without the RCU, it would
+-	 * access freed memory. However, the rcu_read_lock delays the free
+-	 * until the rcu_read_lock of the READ operation quits. Since the
+-	 * exclusive lock of the object is still taken by the DESTROY flow, the
+-	 * READ operation will get -EBUSY and it'll just bail out.
+-	 */
+-	.needs_kfree_rcu = true,
+ };
+ EXPORT_SYMBOL(uverbs_idr_class);
+ 
+@@ -954,7 +934,6 @@ const struct uverbs_obj_type_class uverbs_fd_class = {
+ 	.lookup_put = lookup_put_fd_uobject,
+ 	.destroy_hw = destroy_hw_fd_uobject,
+ 	.remove_handle = remove_handle_fd_uobject,
+-	.needs_kfree_rcu = false,
+ };
+ EXPORT_SYMBOL(uverbs_fd_class);
+ 
+diff --git a/include/rdma/uverbs_types.h b/include/rdma/uverbs_types.h
+index acb1bfa3cc99a..f70155cc73979 100644
+--- a/include/rdma/uverbs_types.h
++++ b/include/rdma/uverbs_types.h
+@@ -97,7 +97,6 @@ struct uverbs_obj_type_class {
+ 	int __must_check (*destroy_hw)(struct ib_uobject *uobj,
+ 				       enum rdma_remove_reason why);
+ 	void (*remove_handle)(struct ib_uobject *uobj);
+-	u8    needs_kfree_rcu;
+ };
+ 
+ struct uverbs_obj_type {
 -- 
 2.20.1
 
