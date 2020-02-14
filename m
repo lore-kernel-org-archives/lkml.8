@@ -2,53 +2,54 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F83C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D2FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E357D2187F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3332168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581703761;
-	bh=649NZDVYL+p8ThW/UiVi+KFQPMEzqzfn6phgBIZ5fOM=;
+	s=default; t=1581703767;
+	bh=a+0P4OBWj0cgdkkZQxHaAz1SpkpOLfghHWdDzLg8tj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z04BR9gDIEvYA9TxxkxSuhzs7JywG8iaACD3nc4SYTtnIvHIgcCIKwl/70ufro9jZ
-	 tmJqyDirB++gXh9Elo4F7Et7Iw2OLTDQb+KjmUrgG+k7xOgs+Gneh0O3DjJXyglwrs
-	 CfgNTXPDnafzxfWz9k1ivn6bA5mK51WjlqadO6jE=
+	b=A+bI6vAZph+9yUkW9OzwTQH8gY6tfXYOqOwRnTNShVulpvISnVXPopH37TQdVYCZC
+	 CA9n7QC2lvtrBhChkOyfoGypBSLZejDZkr2JanizNT6ehzUr7HRpqecDXV5WL3B9px
+	 hRE1clzfrOCVIdvX+pLc2ec5hb7oJW/Jset/3VDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388885AbgBNSJU (ORCPT
+        id S2392913AbgBNSJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 13:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33724 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:09:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731405AbgBNPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:04 -0500
+        id S1731398AbgBNPyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBB12467E;
-        Fri, 14 Feb 2020 15:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBEFE24673;
+        Fri, 14 Feb 2020 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695644;
-        bh=649NZDVYL+p8ThW/UiVi+KFQPMEzqzfn6phgBIZ5fOM=;
+        s=default; t=1581695642;
+        bh=a+0P4OBWj0cgdkkZQxHaAz1SpkpOLfghHWdDzLg8tj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ps1HMwNoTxsnMd6eYJ+WCeFIsiamiv2MV5pVFac+0RRrkJBMQvI98K/oXOQz0teLT
-         4nUinGzrAenTsOYAfWX4OUONA54C4uLSfx99abIzAc9k4QLT2vkbKTZlPhlR9yKbve
-         TZAr+byuEisyKbQFQhl822WssZcWzZ8+RF1u72zI=
+        b=Swwb9bs7DMktFX0cPgSP7+MBPh+yd+qDaqrH5fwBDa7ncF0NNfhyzIwbGqh/zZ/p/
+         BD5rFHEQbI/DMNHExaG+rOKXxXmXv9ZzHFVR0rW8AKDYwgplBiVIRhw5Q5LA7qczir
+         R8H6g7qm/9NgYFrs5KnLwLdYnzBEF/cnvtIJRR/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 238/542] nfsd: Clone should commit src file metadata too
-Date:   Fri, 14 Feb 2020 10:43:50 -0500
-Message-Id: <20200214154854.6746-238-sashal@kernel.org>
+Cc:     Erik Kaneda <erik.kaneda@intel.com>,
+        Elia Geretto <elia.f.geretto@gmail.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.5 237/542] ACPICA: Disassembler: create buffer fields in ACPI_PARSE_LOAD_PASS1
+Date:   Fri, 14 Feb 2020 10:43:49 -0500
+Message-Id: <20200214154854.6746-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -61,67 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit 57f64034966fb945fc958f95f0c51e47af590344 ]
+[ Upstream commit 5ddbd77181dfca61b16d2e2222382ea65637f1b9 ]
 
-vfs_clone_file_range() can modify the metadata on the source file too,
-so we need to commit that to stable storage as well.
+ACPICA commit 29cc8dbc5463a93625bed87d7550a8bed8913bf4
 
-Reported-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Acked-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+create_buffer_field is a deferred op that is typically processed in
+load pass 2. However, disassembly of control method contents walk the
+parse tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are
+processed in a later walk. This is a problem when there is a control
+method that has the same name as the AML_CREATE object. In this case,
+any use of the name segment will be detected as a method call rather
+than a reference to a buffer field. If this is detected as a method
+call, it can result in a mal-formed parse tree if the control methods
+have parameters.
+
+This change in processing AML_CREATE ops earlier solves this issue by
+inserting the named object in the ACPI namespace so that references
+to this name would be detected as a name string rather than a method
+call.
+
+Link: https://github.com/acpica/acpica/commit/29cc8dbc
+Reported-by: Elia Geretto <elia.f.geretto@gmail.com>
+Tested-by: Elia Geretto <elia.f.geretto@gmail.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/acpi/acpica/dsfield.c |  2 +-
+ drivers/acpi/acpica/dswload.c | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index f0bca0e87d0c4..82cf80dde5c71 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -280,19 +280,25 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
-  * Commit metadata changes to stable storage.
-  */
- static int
--commit_metadata(struct svc_fh *fhp)
-+commit_inode_metadata(struct inode *inode)
- {
--	struct inode *inode = d_inode(fhp->fh_dentry);
- 	const struct export_operations *export_ops = inode->i_sb->s_export_op;
+diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
+index faa38a22263ad..ae713d746c8b8 100644
+--- a/drivers/acpi/acpica/dsfield.c
++++ b/drivers/acpi/acpica/dsfield.c
+@@ -243,7 +243,7 @@ acpi_ds_create_buffer_field(union acpi_parse_object *op,
+  * FUNCTION:    acpi_ds_get_field_names
+  *
+  * PARAMETERS:  info            - create_field info structure
+- *  `           walk_state      - Current method state
++ *              walk_state      - Current method state
+  *              arg             - First parser arg for the field name list
+  *
+  * RETURN:      Status
+diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
+index c88fd31208a5b..4bcf15bf03ded 100644
+--- a/drivers/acpi/acpica/dswload.c
++++ b/drivers/acpi/acpica/dswload.c
+@@ -410,6 +410,27 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
+ 	ACPI_DEBUG_PRINT((ACPI_DB_DISPATCH, "Op=%p State=%p\n", op,
+ 			  walk_state));
  
--	if (!EX_ISSYNC(fhp->fh_export))
--		return 0;
--
- 	if (export_ops->commit_metadata)
- 		return export_ops->commit_metadata(inode);
- 	return sync_inode_metadata(inode, 1);
- }
++	/*
++	 * Disassembler: handle create field operators here.
++	 *
++	 * create_buffer_field is a deferred op that is typically processed in load
++	 * pass 2. However, disassembly of control method contents walk the parse
++	 * tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are processed
++	 * in a later walk. This is a problem when there is a control method that
++	 * has the same name as the AML_CREATE object. In this case, any use of the
++	 * name segment will be detected as a method call rather than a reference
++	 * to a buffer field.
++	 *
++	 * This earlier creation during disassembly solves this issue by inserting
++	 * the named object in the ACPI namespace so that references to this name
++	 * would be a name string rather than a method call.
++	 */
++	if ((walk_state->parse_flags & ACPI_PARSE_DISASSEMBLE) &&
++	    (walk_state->op_info->flags & AML_CREATE)) {
++		status = acpi_ds_create_buffer_field(op, walk_state);
++		return_ACPI_STATUS(status);
++	}
++
+ 	/* We are only interested in opcodes that have an associated name */
  
-+static int
-+commit_metadata(struct svc_fh *fhp)
-+{
-+	struct inode *inode = d_inode(fhp->fh_dentry);
-+
-+	if (!EX_ISSYNC(fhp->fh_export))
-+		return 0;
-+	return commit_inode_metadata(inode);
-+}
-+
- /*
-  * Go over the attributes and take care of the small differences between
-  * NFS semantics and what Linux expects.
-@@ -537,6 +543,9 @@ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
- 	if (sync) {
- 		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
- 		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
-+
-+		if (!status)
-+			status = commit_inode_metadata(file_inode(src));
- 		if (status < 0)
- 			return nfserrno(status);
- 	}
+ 	if (!(walk_state->op_info->flags & (AML_NAMED | AML_FIELD))) {
 -- 
 2.20.1
 
