@@ -2,141 +2,100 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38117C3B1A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFBEC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB582168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9184824682
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581701109;
+	bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W6nwya+HcvrKmpmtXr8T02sV2YtB3CV5vC6CPijxD28NvZlYWBeY6wvjgf84TDkUX
+	 gILtRz9nI7ZptHADvRnjqlmrOU/KBSILC446mD250UqOJ1Sgvt5MYc9hFY+R4x5Nsg
+	 G+SnJOnDwPezCGSdXmi4Z4mL4haMtJ0BKQe+/TQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbgBNRZC (ORCPT
+        id S2391105AbgBNQIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:25:02 -0500
-Received: from mga17.intel.com ([192.55.52.151]:43172 "EHLO mga17.intel.com"
+        Fri, 14 Feb 2020 11:08:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390928AbgBNRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 12:24:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:24:56 -0800
-X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
-   d="scan'208";a="223081205"
-Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.204.146]) ([10.254.204.146])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Feb 2020 09:24:54 -0800
-Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
- checking
-To:     Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     mike.marciniszyn@intel.com,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
- <20200114165740.GB22037@ziepe.ca>
- <74adec84-ec5b-ea1b-7adf-3f8608838259@intel.com>
- <25133367-6544-d0af-ae30-5178909748b1@intel.com>
- <CAF65HP0RsW5FMRRf5Lia2=MTKex-KwO7-_NsCUef94YKBg+pfA@mail.gmail.com>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <c773894a-b011-2419-683a-3b851583fc73@intel.com>
-Date:   Fri, 14 Feb 2020 12:24:52 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S2390901AbgBNQIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D67524676;
+        Fri, 14 Feb 2020 16:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696497;
+        bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RnU4OqHsLAv8JEIvOjACM/VZqt8xx090SAMbEwhK45lu+UE88IShph7XqrvNmr6ut
+         MPFMLpoAKyFm56hfnweih9jiOzv56Z/990cG8oB/xogRgCJuFev1vUsIxrAdOQMZl8
+         8wLaj97EoM0g/aes93GIKh/5709Vj1OK5RwJUqkU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 302/459] driver core: Print device when resources present in really_probe()
+Date:   Fri, 14 Feb 2020 10:59:12 -0500
+Message-Id: <20200214160149.11681-302-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAF65HP0RsW5FMRRf5Lia2=MTKex-KwO7-_NsCUef94YKBg+pfA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/2020 10:43 AM, Madhuparna Bhowmik wrote:
-> 
-> 
-> On Wed, Jan 15, 2020 at 12:05 AM <madhuparnabhowmik04@gmail.com 
-> <mailto:madhuparnabhowmik04@gmail.com>> wrote:
-> 
->     From: Dennis Dalessandro <dennis.dalessandro@intel.com
->     <mailto:dennis.dalessandro@intel.com>>
-> 
->     On 1/14/2020 12:00 PM, Dennis Dalessandro wrote:
->      > On 1/14/2020 11:57 AM, Jason Gunthorpe wrote:
->      >> On Tue, Jan 14, 2020 at 09:53:45PM +0530,
->      >> madhuparnabhowmik04@gmail.com
->     <mailto:madhuparnabhowmik04@gmail.com> wrote:
->      >>> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com
->     <mailto:madhuparnabhowmik04@gmail.com>>
->      >>>
->      >>> list_for_each_entry_rcu has built-in RCU and lock checking.
->      >>> Pass cond argument to list_for_each_entry_rcu.
->      >>>
->      >>> Signed-off-by: Madhuparna Bhowmik
->     <madhuparnabhowmik04@gmail.com <mailto:madhuparnabhowmik04@gmail.com>>
->      >>>   drivers/infiniband/hw/hfi1/verbs.c | 2 +-
->      >>>   1 file changed, 1 insertion(+), 1 deletion(-)
->      >>>
->      >>> diff --git a/drivers/infiniband/hw/hfi1/verbs.c
->      >>> b/drivers/infiniband/hw/hfi1/verbs.c
->      >>> index 089e201d7550..22f2d4fd2577 100644
->      >>> +++ b/drivers/infiniband/hw/hfi1/verbs.c
->      >>> @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct
->      >>> hfi1_packet *packet,
->      >>>                          opa_get_lid(packet->dlid, 9B));
->      >>>           if (!mcast)
->      >>>               goto drop;
->      >>> -        list_for_each_entry_rcu(p, &mcast->qp_list, list) {
->      >>> +        list_for_each_entry_rcu(p, &mcast->qp_list, list,
->      >>> lockdep_is_held(&(ibp->rvp.lock))) {
->      >>
->      >> Okay, this looks reasonable
->      >>
->      >> Mike, Dennis, is this the right lock to test?
->      >>
->      >
->      > I'm looking at that right now actually, I don't think this is
->     correct.
->      > Wanted to talk to Mike before I send a response though.
->      >
->      > -Denny
-> 
->     That's definitely going to throw a ton of lock dep messages. It's not
->     really the right lock either. Instead what we probably need to do is
->     what we do in the non-multicast part of the code and take the
->     rcu_read_lock().
-> 
->     I'd say hold off on this and we'll fix it right. Same goes for the
->     qib one.
-> 
->     Alright, thank you for reviewing.
-> 
->     The rdmavt one though looks to be OK. I'll give it a test.
-> 
-> Hi,
-> I just wanted to follow up on this.
-> Any updates?
-> Also, is the bug fixed now?
-> 
-> Thank you,
-> Madhuparna
-> 
->     Thank you,
->     Madhuparna
-> 
->     -Denny
-> 
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I've got a patch going through internal discussion and testing for 
-adding rcu read locking.
+[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
 
-The RDMAVT patch, I was OK with going in, I guess I just mentioned that 
-in a reply rather than adding an RB tag. Let me go ahead and do that.
+If a device already has devres items attached before probing, a warning
+backtrace is printed.  However, this backtrace does not reveal the
+offending device, leaving the user uninformed.  Furthermore, using
+WARN_ON() causes systems with panic-on-warn to reboot.
 
--Denny
+Fix this by replacing the WARN_ON() by a dev_crit() message.
+Abort probing the device, to prevent doing more damage to the device's
+resources.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/base/dd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index d811e60610d33..b25bcab2a26bd 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -516,7 +516,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	atomic_inc(&probe_count);
+ 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
+ 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+-	WARN_ON(!list_empty(&dev->devres_head));
++	if (!list_empty(&dev->devres_head)) {
++		dev_crit(dev, "Resources present before probing\n");
++		return -EBUSY;
++	}
+ 
+ re_probe:
+ 	dev->driver = drv;
+-- 
+2.20.1
+
