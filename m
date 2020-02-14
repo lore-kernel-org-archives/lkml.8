@@ -2,241 +2,295 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4053C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04114C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B88222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20F724676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 20:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hYQs8qzD"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jDGp5etZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgBNURl (ORCPT
+        id S1729945AbgBNUSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 15:17:41 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:36150 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgBNURl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:17:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581711458; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a/zhSyvE1L0ykH8hxQYOmjimsDW2eODa3fdTJzm0SwY=;
-        b=hYQs8qzDxPenmkK2cX6VNtIX8OrIrlFy7EBN5Rn4QmDVhf80D2NaqxBf6tpStHXHVKL+ko
-        5jwCvieIXGTS5opGMZOshmoAfxqHWNyR1LPRyvkOKNlt7B+pUNzzBC0iRCBi8aTkrbm0NH
-        HUAA4///ih5DGiEM7/ZBZwwJy3xJ07s=
-Date:   Fri, 14 Feb 2020 17:17:21 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [Letux-kernel] [PATCH v2] net: davicom: dm9000: allow to pass MAC
- address through mac_addr module parameter
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel@pyra-handheld.com,
-        Petr =?UTF-8?b?xaB0ZXRpYXI=?= <ynezz@true.cz>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Message-Id: <1581711441.3.11@crapouillou.net>
-In-Reply-To: <85A043D6-118A-4940-9DB2-5C6517DBCC78@goldelico.com>
-References: <0d6b4d383bb29ed5d4710e9706e5ad6c7f92d9da.1581696454.git.hns@goldelico.com>
-        <1581706048.3.3@crapouillou.net>
-        <996F2206-B261-46E3-9167-B48BA7D3C9FF@goldelico.com>
-        <A686A3C7-09A4-4654-A265-2BDBEF41A7C4@goldelico.com>
-        <85A043D6-118A-4940-9DB2-5C6517DBCC78@goldelico.com>
+        Fri, 14 Feb 2020 15:18:22 -0500
+Received: from mail-bn8nam12on2049.outbound.protection.outlook.com ([40.107.237.49]:6231
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725932AbgBNUSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 15:18:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XdlPXZoCRQshof855KrAbRdXOe0BBjcT1UlYikT2QkESuzJ2wnZx6RZOS3zWHCf73YcVUpCjG9ebEuxSjSo1D+j/HDmE6orijsSd5U1IVbc1XksJmIsb/kf3xUBvYfGbbmv+w4PFoUX6Rb/q6BC41w6SGCrYFiYMM5YH2GivB3SAIx5PbzjGmKHrcZJ6za8EP9tsJgipHceFcmLj0Ug/BxsRdQRzhyQeB9cFDjVHCYi88SQzKfLDHViwKXPO+bhxUokniNj/ZJWtfDXOsyisVKyeWz3KsTT3W8/tR0aEj5dv0mj9pJ0Wq++78hRSd5IQKn2Eb78GPA8BMQJUZPrFmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AN0DV+/ZLZD5ghIpF4dnqKP4KWABZo7JdPDV5vZtQFk=;
+ b=YDgd5WdwyTeeWNKpKx4Rz7j9VVkF0Up3LFehsEmK7oO4EPlw7JdNadgtdELk93po2bFntALQDVwzQ9HHVq0waAcPRDP3I3XpxACcpQBauFQ+O8NyeADyOMuOhu8Sfe/EdVqx90rJKq1iEQiWvdRTcP51VsqXDH9GNN9Mk3zQrqZG7G8b+GrsJbGOG8HRfteM7Qug33XxCfVzBNAW3myU/RuIcS11HuIoa5FEN81Ja9q9W3WWflQKA2XV3AFHBlneaAmcNkcaQ1U39LOda4TBEuAUkx2M6DTcpmuYeIiyn6YT64v8OnfT2m/WTEOEaWVcfAG2AT9WdfZH9Zf4rCjbAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AN0DV+/ZLZD5ghIpF4dnqKP4KWABZo7JdPDV5vZtQFk=;
+ b=jDGp5etZfl0NIzfScDTOXk35kYho/EBduSE8rvg4Jlo/HZn9Is1nSiUAng0G9JZ+sUYNz54t+r1hwLWOeL8XAdKkhhHOGGszmWrORseGy+0Gky1AzMY1We3LVIftM7MGPRAEzUwXjZAoAukmOuuM64NGij3VbFfM2ku6ZqOJU0M=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2688.namprd12.prod.outlook.com (52.135.103.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Fri, 14 Feb 2020 20:18:14 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2729.025; Fri, 14 Feb 2020
+ 20:18:14 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, kim.phillips@amd.com
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Babu Moger <babu.moger@amd.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luwei Kang <luwei.kang@intel.com>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3] x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+Date:   Fri, 14 Feb 2020 14:18:05 -0600
+Message-Id: <20200214201805.13830-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.25.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR08CA0013.namprd08.prod.outlook.com
+ (2603:10b6:805:66::26) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Received: from fritz.amd.com (165.204.77.1) by SN6PR08CA0013.namprd08.prod.outlook.com (2603:10b6:805:66::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Fri, 14 Feb 2020 20:18:13 +0000
+X-Mailer: git-send-email 2.25.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 33a1e85d-db57-4772-bc61-08d7b18b052d
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2688:|SN6PR12MB2688:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB26888DAB863AA6CEA9CFAA2687150@SN6PR12MB2688.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-Forefront-PRVS: 03137AC81E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(366004)(136003)(39860400002)(199004)(189003)(2906002)(66476007)(86362001)(52116002)(6486002)(478600001)(1076003)(36756003)(66574012)(7696005)(7416002)(6666004)(81156014)(81166006)(186003)(316002)(2616005)(956004)(5660300002)(8676002)(966005)(44832011)(66946007)(110136005)(54906003)(8936002)(16526019)(26005)(66556008)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2688;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qk0ZrazXEaqYhaIyVZIme/cTDZKxhS523d5/Bew5q7UC8PuTJgV0MHuflap9tyZ+SqXp3yu+/9hTa0fJGKCLrmgp8O20ZcNLF25m5YNDWko9sfj6+Dpd3+8kz45Fnh9ONVKqa1hvKxUoMk7Iv886CX8lg/CqpxgF4ZrC9+F/caobpyV+tFdCXWXpQM62UtoVziH0PMi/walFIKzK8doRK+ywiegbOUnrl0zjCsSyC4f9q9nthzkIuVn3P0uPg7yRM+jojARThtRLkE/maT7Kpfv+gKNlrDC1bqtJiv++Q39o4nAagVndMrSQdrFMRgnolCBvzTR77G3hyw28LvovulkhvYWvr9kcAklreGsrCY7yMr6UCn8eKhmCbdDJoaaGsAdxA3IjCQQ9bTGBACr7h6Q8ci1f/vpZdus68NmB4cX6es+C/2TGRYkSCRXm4q9H3Ks0oOvz90wk6xF5cH3CT9JSiDkm8cyukp1tJ3xDoKe1VdOWeVqxyjVlhg8KEJRBLW+sHXJmBurRGZdPV07PxQ==
+X-MS-Exchange-AntiSpam-MessageData: s4pXM8zz+4XbOXAx/AlHUOVeFfkx3QNmhr2V8jOwiRm2T8o9oT5q1tVc7h/2zdDhgGRMSZsXUqI1YN+yxdDKmuOvd6dVe0pjnYUqC2EGLoZMIPQfKAK9+P39kddJCbTzIZ5L576UEnqXCTl3kDEmpQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33a1e85d-db57-4772-bc61-08d7b18b052d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 20:18:14.3757
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jypQ9pCIyJGCPsyVDS1FQ9x6ziK7yjYapVzEnY2tg6plD5TlIIXzgzjPaPCE2/I1oIBuhMYr9rTJ6f/mvRSVhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2688
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions
+Retired) performance counter") added support for access to the
+free-running counter via 'perf -e msr/irperf/', but when exercised,
+we always get a 0 count:
 
+BEFORE:
 
-Le ven., f=E9vr. 14, 2020 at 21:05, H. Nikolaus Schaller=20
-<hns@goldelico.com> a =E9crit :
->=20
->>  Am 14.02.2020 um 20:38 schrieb H. Nikolaus Schaller=20
->> <hns@goldelico.com>:
->>=20
->>=20
->>>  Am 14.02.2020 um 20:24 schrieb H. Nikolaus Schaller=20
->>> <hns@goldelico.com>:
->>>=20
->>>=20
->>>>  Am 14.02.2020 um 19:47 schrieb Paul Cercueil=20
->>>> <paul@crapouillou.net>:
->>>>=20
->>>>  Hi Nikolaus,
->>>>=20
->>>>  What I'd suggest is to write a NVMEM driver for the efuse and=20
->>>> retrieve the MAC address cleanly with nvmem_get_mac_address().
->>>>=20
->>>>  It shouldn't be hard to do (there's already code for it in the=20
->>>> non-upstream 3.18 kernel for the CI20) and you remove the=20
->>>> dependency on uboot.
->>>=20
->>>  Interesting approach. I have found this:
->>>=20
->>>  https://lore.kernel.org/patchwork/patch/868158/
->>>=20
->>>  but it looks as if it was never finished (I could not locate a V3=20
->>> or anything mainline?)
->>>  and and it tries to solve other problems as well.
->>>=20
->>>  And it looks to be much more complex than my "solution" to the=20
->>> immediate problem.
->>>=20
->>>  I have to study it to know if I can write a=20
->>> nvmem_get_mac_address().
->>=20
->>  Another question is how to link this very jz4780 specific code to=20
->> the generic davicom dm9000 driver?
->>  And where should the new code live. In some jz4780 specific file or=20
->> elsewhere?
->=20
-> Ok, got it.
->=20
-> nvmem_get_mac_address() is looking for a nvmem cell "mac-address".
->=20
-> So some jz4780 specific driver must provide such cells.
+$ sudo perf stat -e instructions,msr/irperf/ true
 
-No, the jz4780 specific driver should just provide the functionality.
+ Performance counter stats for 'true':
 
-The cells are provided in devicetree, just like in the two=20
-documentation files I listed before.
+           624,833      instructions
+                 0      msr/irperf/
 
--Paul
+Simply set its enable bit - HWCR bit 30 - to make it start counting.
 
->=20
-> There aren't many examples but it appears as if=20
-> arch/arm/mach-davinci/board-da830-evm.c
-> defines and registers nvmem cells.
->=20
-> But maybe it is not difficult to teach the 2018 driver to provide=20
-> such cells.
->=20
-> BR and thanks,
-> Nikolaus
->=20
->=20
->>=20
->>>=20
->>>  BR,
->>>  Nikolaus
->>>=20
->>>>=20
->>>>  -Paul
->>>>=20
->>>>=20
->>>>  Le ven., f=E9vr. 14, 2020 at 17:07, H. Nikolaus Schaller=20
->>>> <hns@goldelico.com> a =E9crit :
->>>>>  The MIPS Ingenic CI20 board is shipped with a quite old u-boot
->>>>>  (ci20-v2013.10 see https://elinux.org/CI20_Dev_Zone). This passes
->>>>>  the MAC address through dm9000.mac_addr=3Dxx:xx:xx:xx:xx:xx
->>>>>  kernel module parameter to give the board a fixed MAC address.
->>>>>  This is not processed by the dm9000 driver which assigns a random
->>>>>  MAC address on each boot, making DHCP assign a new IP address
->>>>>  each time.
->>>>>  So we add a check for the mac_addr module parameter as a last
->>>>>  resort before assigning a random one. This mechanism can also
->>>>>  be used outside of u-boot to provide a value through modprobe
->>>>>  config.
->>>>>  To parse the MAC address in a new function get_mac_addr() we
->>>>>  use an copy adapted from the ksz884x.c driver which provides
->>>>>  the same functionality.
->>>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>>  ---
->>>>>  drivers/net/ethernet/davicom/dm9000.c | 42=20
->>>>> +++++++++++++++++++++++++++
->>>>>  1 file changed, 42 insertions(+)
->>>>>  diff --git a/drivers/net/ethernet/davicom/dm9000.c=20
->>>>> b/drivers/net/ethernet/davicom/dm9000.c
->>>>>  index 1ea3372775e6..7402030b0352 100644
->>>>>  --- a/drivers/net/ethernet/davicom/dm9000.c
->>>>>  +++ b/drivers/net/ethernet/davicom/dm9000.c
->>>>>  @@ -1409,6 +1409,43 @@ static struct dm9000_plat_data=20
->>>>> *dm9000_parse_dt(struct device *dev)
->>>>>  	return pdata;
->>>>>  }
->>>>>  +static char *mac_addr =3D ":";
->>>>>  +module_param(mac_addr, charp, 0);
->>>>>  +MODULE_PARM_DESC(mac_addr, "MAC address");
->>>>>  +
->>>>>  +static void get_mac_addr(struct net_device *ndev, char *macaddr)
->>>>>  +{
->>>>>  +	int i =3D 0;
->>>>>  +	int j =3D 0;
->>>>>  +	int got_num =3D 0;
->>>>>  +	int num =3D 0;
->>>>>  +
->>>>>  +	while (j < ETH_ALEN) {
->>>>>  +		if (macaddr[i]) {
->>>>>  +			int digit;
->>>>>  +
->>>>>  +			got_num =3D 1;
->>>>>  +			digit =3D hex_to_bin(macaddr[i]);
->>>>>  +			if (digit >=3D 0)
->>>>>  +				num =3D num * 16 + digit;
->>>>>  +			else if (':' =3D=3D macaddr[i])
->>>>>  +				got_num =3D 2;
->>>>>  +			else
->>>>>  +				break;
->>>>>  +		} else if (got_num) {
->>>>>  +			got_num =3D 2;
->>>>>  +		} else {
->>>>>  +			break;
->>>>>  +		}
->>>>>  +		if (got_num =3D=3D 2) {
->>>>>  +			ndev->dev_addr[j++] =3D (u8)num;
->>>>>  +			num =3D 0;
->>>>>  +			got_num =3D 0;
->>>>>  +		}
->>>>>  +		i++;
->>>>>  +	}
->>>>>  +}
->>>>>  +
->>>>>  /*
->>>>>  * Search DM9000 board, allocate space and register it
->>>>>  */
->>>>>  @@ -1679,6 +1716,11 @@ dm9000_probe(struct platform_device *pdev)
->>>>>  			ndev->dev_addr[i] =3D ior(db, i+DM9000_PAR);
->>>>>  	}
->>>>>  +	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>>>>  +		mac_src =3D "param";
->>>>>  +		get_mac_addr(ndev, mac_addr);
->>>>>  +	}
->>>>>  +
->>>>>  	if (!is_valid_ether_addr(ndev->dev_addr)) {
->>>>>  		inv_mac_addr =3D true;
->>>>>  		eth_hw_addr_random(ndev);
->>>>>  --
->>>>>  2.23.0
->>>>=20
->>>>=20
->>>=20
->>>  _______________________________________________
->>>  http://projects.goldelico.com/p/gta04-kernel/
->>>  Letux-kernel mailing list
->>>  Letux-kernel@openphoenux.org
->>>  http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
->>=20
->>  _______________________________________________
->>  http://projects.goldelico.com/p/gta04-kernel/
->>  Letux-kernel mailing list
->>  Letux-kernel@openphoenux.org
->>  http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
->=20
+Enablement is restricted to all machines advertising IRPERF capability,
+except those susceptible to an erratum that makes the IRPERF return
+bad values.
 
-=
+That erratum occurs in Family 17h models 00-1fh [1], but not in F17h
+models 20h and above [2].
+
+AFTER (on a family 17h model 31h machine):
+
+$ sudo perf stat -e instructions,msr/irperf/ true
+
+ Performance counter stats for 'true':
+
+           621,690      instructions
+           622,490      msr/irperf/
+
+[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors
+[2] Revision Guide for AMD Family 17h Models 30h-3Fh Processors
+
+The revision guides are available from the bugzilla Link below.
+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Frank van der Linden <fllinden@amazon.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jan Beulich <jbeulich@suse.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Luwei Kang <luwei.kang@intel.com>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Fixes: aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired) performance counter")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+---
+v3: Removed null stalled cycles per insn from perf example output,
+    since it got fixed, also address comments from Borislav Petkov:
+
+    https://lkml.org/lkml/2020/2/11/395
+
+    - rephrase commit text to not say "this patch".
+    - uploaded both rev. guides (and all public F17h PPRs)
+      to a new "Add AMD x86 documents for future reference"
+      bug, and reference that in a Link: tag.
+    - rename X86_BUG_AMD_E1054 -> X86_BUG_IRPERF
+    - add a full stop to a sentence in a comment
+
+v2 got resent, adding Michael Petlan to cc. Original v2:
+
+    https://lore.kernel.org/lkml/20200121171232.28839-2-kim.phillips@amd.com/
+
+v2: Based on Andi Kleen's review:
+
+    https://lore.kernel.org/lkml/20200116040324.GI302770@tassilo.jf.intel.com/
+
+    Add an amd_erratum_1054 and use cpu_has_bug infrastructure
+    instead of open-coding the {family,model} check.
+
+ arch/x86/include/asm/cpufeatures.h |  1 +
+ arch/x86/include/asm/msr-index.h   |  2 ++
+ arch/x86/kernel/cpu/amd.c          | 17 +++++++++++++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index f3327cb56edf..8979d6fcc79c 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -404,5 +404,6 @@
+ #define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+ #define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
+ #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
++#define X86_BUG_IRPERF			X86_BUG(24) /* CPU is affected by Instructions Retired counter Erratum 1054 */
+ 
+ #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index ebe1685e92dd..d5e517d1c3dd 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -512,6 +512,8 @@
+ #define MSR_K7_HWCR			0xc0010015
+ #define MSR_K7_HWCR_SMMLOCK_BIT		0
+ #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
++#define MSR_K7_HWCR_IRPERF_EN_BIT	30
++#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
+ #define MSR_K7_FID_VID_CTL		0xc0010041
+ #define MSR_K7_FID_VID_STATUS		0xc0010042
+ 
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index ac83a0fef628..deebc728e2aa 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -28,6 +28,7 @@
+ 
+ static const int amd_erratum_383[];
+ static const int amd_erratum_400[];
++static const int amd_erratum_1054[];
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
+ 
+ /*
+@@ -694,6 +695,9 @@ static void early_init_amd(struct cpuinfo_x86 *c)
+ 	if (cpu_has_amd_erratum(c, amd_erratum_400))
+ 		set_cpu_bug(c, X86_BUG_AMD_E400);
+ 
++	if (cpu_has_amd_erratum(c, amd_erratum_1054))
++		set_cpu_bug(c, X86_BUG_IRPERF);
++
+ 	early_detect_mem_encrypt(c);
+ 
+ 	/* Re-enable TopologyExtensions if switched off by BIOS */
+@@ -972,6 +976,15 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+ 	if (!cpu_has(c, X86_FEATURE_XENPV))
+ 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
++
++	/*
++	 * Turn on the Instructions Retired free counter on machines not
++	 * susceptible to erratum #1054 "Instructions Retired Performance
++	 * Counter May Be Inaccurate".
++	 */
++	if (cpu_has(c, X86_FEATURE_IRPERF) &&
++	    !cpu_has_bug(c, X86_BUG_IRPERF))
++		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
+ }
+ 
+ #ifdef CONFIG_X86_32
+@@ -1099,6 +1112,10 @@ static const int amd_erratum_400[] =
+ static const int amd_erratum_383[] =
+ 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
+ 
++/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
++static const int amd_erratum_1054[] =
++	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
++
+ 
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
+ {
+-- 
+2.25.0
 
