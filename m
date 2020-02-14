@@ -2,91 +2,119 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1069DC3B1BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D753FC3B1BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09FC222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4620222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 19:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="usRelqHJ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MyO7QGdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388071AbgBNTIT (ORCPT
+        id S2388019AbgBNTJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 14:08:19 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57666 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387995AbgBNTIS (ORCPT
+        Fri, 14 Feb 2020 14:09:54 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43130 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387603AbgBNTJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 14:08:18 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01EJ8IQg052303
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:08:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581707298;
-        bh=dAnRFRULQT7vNL0nAlIsw9Ukq2ALrmhmYSiJyP4+Qk4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=usRelqHJLeZbUZbpeAD5xevCPQIo8HifLSXh5fET7SyPjnEqCCPMtOOa+q58m4mxX
-         Bu2Xp3j5khZZvQNsKfFo/2ntpJl9xRMtyoyxHwFhqTf+rwU6NTt2qgINKhu8ixjSTE
-         7abvjOR1syWYWizaf7rpJN6SaGgd+UPUnafWydAQ=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01EJ8Imc092174
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 13:08:18 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
- Feb 2020 13:08:17 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 14 Feb 2020 13:08:17 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01EJ8GU4073290;
-        Fri, 14 Feb 2020 13:08:17 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 2/2] phy: ti: gmii-sel: do not fail in case of gmii
-Date:   Fri, 14 Feb 2020 21:08:01 +0200
-Message-ID: <20200214190801.3030-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214190801.3030-1-grygorii.strashko@ti.com>
-References: <20200214190801.3030-1-grygorii.strashko@ti.com>
+        Fri, 14 Feb 2020 14:09:54 -0500
+Received: by mail-io1-f67.google.com with SMTP id n21so11671819ioo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 11:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3nQft3zNgFt5uQU8oAfUWTsZHLYmMf56s+RYaheimZE=;
+        b=MyO7QGdH+798UZjnAMYOkuj8AFhvD2grF/mlXVN0vybPurAJxYZ3oL+IKZCAWZdcy+
+         6FvlmOcxSEeyW8GYOiu92uMLIpGO5GXj3ROj/POgPywHF+Dt2fQxlx1GIav6E7x8zu1c
+         CTgCm8fggVi5/kFqoAyeAhSdRpnkaQluMrEathIPxVTtnDPqtth+G/BB5JjQt+WUNXJ9
+         jTURq56vwZzGFlpQN6IhytUiG3E2ru0w7HUvwsQRSSwxhzmPCj1Kew74eBYQZNib9FRM
+         aCVMOfr4k5v9e+J+g08mdNKZWQHugVJLIgsInifA26Ph3dd5Xl2RBoil6Z1ALotLGyjj
+         NqYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3nQft3zNgFt5uQU8oAfUWTsZHLYmMf56s+RYaheimZE=;
+        b=KKj80IWeMBPCqf3/bAyn8TRPPh/hUJIIksUvp0OqaBrcxjMicdVY8J+1wjVdSJLulo
+         GLXJN+rJ/ajnOEE9kHnlyb00W+3ufymSfsMop0blVt3k8gRzSIzykzFiY8KxCf1BruTq
+         4J+EimYoBaeqUzFpHueb/LnC3XdimNqtT7Miqiiz/0Xcv9OQ2IGN07c8m28iyhhBmdod
+         JeVRlTKwCttr32jrvXy9LElrhLTkeoLJ+K81L5HCgagTtp461PE16VwjdlnmP1EdJIj1
+         GTDiovi4yMg2Nb3Y75RK36QBcU6BytXT+vhNQRjTpWnWMYXWYGIDilbtviVLTjbOtyrO
+         vEMw==
+X-Gm-Message-State: APjAAAUJMjkPEWwDVMbOA/sXtazIIkJtCcPjCXoMuCWbSZtvZxJV2dzD
+        IViBmz+X39KTc4B8PJzf9ulcCA==
+X-Google-Smtp-Source: APXvYqxw24vmx09MidR6SM+oAC5IbyGhplcGKEG/Y6qBp3Q33Biv24Xoj209dgWP5oW04FL2GGkyzA==
+X-Received: by 2002:a02:cab0:: with SMTP id e16mr3903013jap.6.1581707393584;
+        Fri, 14 Feb 2020 11:09:53 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id z21sm1692252ioj.21.2020.02.14.11.09.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 11:09:53 -0800 (PST)
+Subject: Re: [PATCH v5 1/7] mm: pass task and mm to do_madvise
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, io-uring <io-uring@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+References: <20200214170520.160271-1-minchan@kernel.org>
+ <20200214170520.160271-2-minchan@kernel.org>
+ <CAG48ez3S5+EasZ1ZWcMQYZQQ5zJOBtY-_C7oz6DMfG4Gcyig1g@mail.gmail.com>
+ <68044a15-6a31-e432-3105-f2f1af9f4b74@kernel.dk>
+ <20200214184514.GA165785@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <93aadcc6-3ef5-4ea0-be6b-23c06862002e@kernel.dk>
+Date:   Fri, 14 Feb 2020 12:09:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200214184514.GA165785@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "gmii" PHY interface mode is supported on TI AM335x/437x/5xx SoCs, so
-don't fail if it's selected.
+On 2/14/20 11:45 AM, Minchan Kim wrote:
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 63beda9bafc5..1c7e9cd6c8ce 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
+>  	if (force_nonblock)
+>  		return -EAGAIN;
+>  
+> -	ret = do_madvise(ma->addr, ma->len, ma->advice);
+> +	ret = do_madvise(NULL, current->mm, ma->addr, ma->len, ma->advice);
+>  	if (ret < 0)
+>  		req_set_fail_links(req);
+>  	io_cqring_add_event(req, ret);
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/phy/ti/phy-gmii-sel.c | 1 +
- 1 file changed, 1 insertion(+)
+I think we want to use req->work.mm here - it'll be the same as
+current->mm at this point, but it makes it clear that we're using a
+grabbed mm.
 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index e998e9cd8d1f..1c536fc03c83 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -80,6 +80,7 @@ static int phy_gmii_sel_mode(struct phy *phy, enum phy_mode mode, int submode)
- 		break;
- 
- 	case PHY_INTERFACE_MODE_MII:
-+	case PHY_INTERFACE_MODE_GMII:
- 		gmii_sel_mode = AM33XX_GMII_SEL_MODE_MII;
- 		break;
- 
 -- 
-2.17.1
+Jens Axboe
 
