@@ -2,110 +2,135 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6BCC3B1B1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4984206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702665;
-	bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFL/U8HQn0dkTVZoO/PtYtTZ9uQYVU9LAtBGjXI8Ovesb+vNza519aiCiskw08AyU
-	 ZAISv0DePyFJDwjxB2CGx7Y+nz7xzvdFYBbbrFEFYCfP5ixdcT8awTEHQ/negj/Q9a
-	 zVPOGYTReWgs62tQRqMXCaacTwmTvJnDvh8+5BfA=
+	by mail.kernel.org (Postfix) with ESMTP id 64E0920873
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388709AbgBNRvD (ORCPT
+        id S2390282AbgBNRvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:51:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388756AbgBNP66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:51:07 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:39840 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2388139AbgBNP66 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 10:58:58 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034402082F;
-        Fri, 14 Feb 2020 15:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695938;
-        bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t63++IiJAExcZwSDQx362gnOxyMSPokco6W8Dz3M2pKSudvHCtbWV8cGkC/84SoX7
-         dSU+YYFJBhmfOgIK2G974OqQJzsw4wYPgvtGSXo7D6bN4Di4PGE3Zdwqx2XzlRVrna
-         N+uSPSC7ZbIB6FoGpKh1thL0yL9NPJwkqdIuOO9w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.5 472/542] hostap: Adjust indentation in prism2_hostapd_add_sta
-Date:   Fri, 14 Feb 2020 10:47:44 -0500
-Message-Id: <20200214154854.6746-472-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+Received: (qmail 3236 invoked by uid 2102); 14 Feb 2020 10:58:57 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 14 Feb 2020 10:58:57 -0500
+Date:   Fri, 14 Feb 2020 10:58:57 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-arch@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: Re: [RFC 3/3] tools/memory-model: Add litmus test for RMW +
+ smp_mb__after_atomic()
+In-Reply-To: <20200214040132.91934-4-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002141049310.1579-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, 14 Feb 2020, Boqun Feng wrote:
 
-[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
+> We already use a litmus test in atomic_t.txt to describe atomic RMW +
+> smp_mb__after_atomic() is "strong acquire" (both the read and the write
+> part is ordered).
 
-Clang warns:
+"strong acquire" is not an appropriate description -- there is no such
+thing as a strong acquire in the LKMM -- nor is it a good name for the
+litmus test.  A better description would be "stronger than acquire", as
+in the sentence preceding the litmus test in atomic_t.txt.
 
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        if (sta->tx_supp_rates & WLAN_RATE_5M5)
-        ^
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
-previous statement is here
-        if (sta->tx_supp_rates & WLAN_RATE_2M)
-        ^
-1 warning generated.
+>  So make it a litmus test in memory-model litmus-tests
+> directory, so that people can access the litmus easily.
+> 
+> Additionally, change the processor numbers "P1, P2" to "P0, P1" in
+> atomic_t.txt for the consistency with the processor numbers in the
+> litmus test, which herd can handle.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  Documentation/atomic_t.txt                    |  6 ++--
+>  ...+mb__after_atomic-is-strong-acquire.litmus | 29 +++++++++++++++++++
+>  tools/memory-model/litmus-tests/README        |  5 ++++
+>  3 files changed, 37 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/memory-model/litmus-tests/Atomic-RMW+mb__after_atomic-is-strong-acquire.litmus
+> 
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index ceb85ada378e..e3ad4e4cd9ed 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -238,14 +238,14 @@ strictly stronger than ACQUIRE. As illustrated:
+>    {
+>    }
+>  
+> -  P1(int *x, atomic_t *y)
+> +  P0(int *x, atomic_t *y)
+>    {
+>      r0 = READ_ONCE(*x);
+>      smp_rmb();
+>      r1 = atomic_read(y);
+>    }
+>  
+> -  P2(int *x, atomic_t *y)
+> +  P1(int *x, atomic_t *y)
+>    {
+>      atomic_inc(y);
+>      smp_mb__after_atomic();
+> @@ -260,7 +260,7 @@ This should not happen; but a hypothetical atomic_inc_acquire() --
+>  because it would not order the W part of the RMW against the following
+>  WRITE_ONCE.  Thus:
+>  
+> -  P1			P2
+> +  P0			P1
+>  
+>  			t = LL.acq *y (0)
+>  			t++;
+> diff --git a/tools/memory-model/litmus-tests/Atomic-RMW+mb__after_atomic-is-strong-acquire.litmus b/tools/memory-model/litmus-tests/Atomic-RMW+mb__after_atomic-is-strong-acquire.litmus
+> new file mode 100644
+> index 000000000000..e7216cf9d92a
+> --- /dev/null
+> +++ b/tools/memory-model/litmus-tests/Atomic-RMW+mb__after_atomic-is-strong-acquire.litmus
+> @@ -0,0 +1,29 @@
+> +C Atomic-RMW+mb__after_atomic-is-strong-acquire
+> +
+> +(*
+> + * Result: Never
+> + *
+> + * Test of an atomic RMW followed by a smp_mb__after_atomic() is
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+s/Test of/Test that/
 
-Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
-Link: https://github.com/ClangBuiltLinux/linux/issues/813
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> + * "strong-acquire": both the read and write part of the RMW is ordered before
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-index 0094b1d2b5770..3ec46f48cfde1 100644
---- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
-+++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-@@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
- 		sta->supported_rates[0] = 2;
- 	if (sta->tx_supp_rates & WLAN_RATE_2M)
- 		sta->supported_rates[1] = 4;
-- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
-+	if (sta->tx_supp_rates & WLAN_RATE_5M5)
- 		sta->supported_rates[2] = 11;
- 	if (sta->tx_supp_rates & WLAN_RATE_11M)
- 		sta->supported_rates[3] = 22;
--- 
-2.20.1
+This should say "stronger than a normal acquire".  And "part" should be
+"parts", and "is ordered" should be "are ordered".
+
+Also, please try to arrange the line breaks so that the comment lines
+don't have vastly different lengths.
+
+Similar changes should be made for the text added to README.
+
+Alan Stern
 
