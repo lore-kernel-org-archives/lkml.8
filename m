@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47D9C3B1A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09274C3B1A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13E924684
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C182082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701630;
-	bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+	s=default; t=1581701633;
+	bh=Ib/kJYQoRP9+Z4hzql8Gs1MBOxNuMCCSr6QAxvEN8RM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xzQUZvzWg42dOmAi+vs7dKq8MOzATISXRGPWpHJ9aWoIoN5CjGbUDPVpuqFH5TnzK
-	 GUckzVoJVGw17w5//OpJq0AiZSZaD40sAnKsBFyKYTvgvO7pphFcKjaDlumwD00Yi1
-	 LsOQxf2G89oXBmtY1u80y3W4EGKL4vsO1YJrdmaw=
+	b=IDFMTER0yCnGKOQJFGXMg5hrHeWtZYoGnxnlt5/c0WSgUESkC/x7X3EDPxMR+VHZI
+	 mN+cMNaynbjDjEkzYpEZEaRHzAX4RrfDZT2IM9kuBEUlzjS7Qv4rGtJxuv7uYQopGy
+	 G02EG+p9dO8bfOXDEVrtQoeK8k0OFuzsXV0nrJTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390381AbgBNQGR (ORCPT
+        id S2390771AbgBNRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:06:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:33:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390197AbgBNQFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:05:37 -0500
+        id S2390373AbgBNQGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 482CB246A1;
-        Fri, 14 Feb 2020 16:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77812067D;
+        Fri, 14 Feb 2020 16:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696336;
-        bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+        s=default; t=1581696375;
+        bh=Ib/kJYQoRP9+Z4hzql8Gs1MBOxNuMCCSr6QAxvEN8RM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ryF86zmTumbCAJC6Wpe+n5ZrnmI9wom/IfZVQZ6vJokqAemP9gjaIJlZn9xdFasRA
-         xZMmx5/zF4XKQgIErLFRzlcNJ1PElXCIEZVUJ2BFsEnVimsPaXpRtFv6SaIRvKp4uy
-         HW3iN+sgk+K47+SFkSmLuhMSZqrts1RI3WWQ7OOc=
+        b=Ks9tuMRhLMqHPOU8V7g2/NI48aQuFRV+k2PMg+WXjoTP+Qmtc0jkKAfwmaEwxMU6I
+         Tm+NKJfgKH7Q947Qw1cfyVZ48slxeKlTXegscUjsYYsKH2foz7jdRJ8ZnmGPZdeWap
+         pm83waQGOtiJmxvL53cB2Zyjdxc0YgrvfUlFK5y0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 173/459] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
-Date:   Fri, 14 Feb 2020 10:57:03 -0500
-Message-Id: <20200214160149.11681-173-sashal@kernel.org>
+Cc:     Monk Liu <Monk.Liu@amd.com>, Emily Deng <Emily.Deng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 204/459] drm/amdgpu: fix KIQ ring test fail in TDR of SRIOV
+Date:   Fri, 14 Feb 2020 10:57:34 -0500
+Message-Id: <20200214160149.11681-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -63,67 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Monk Liu <Monk.Liu@amd.com>
 
-[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
+[ Upstream commit 5a7489a7e189ee2be889485f90c8cf24ea4b9a40 ]
 
-RDU2 production units come with resistor connecting WP pin to
-correpsonding GPIO DNPed for both SD card slots. Drop any WP related
-configuration and mark both slots with "disable-wp".
+issues:
+MEC is ruined by the amdkfd_pre_reset after VF FLR done
 
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+fix:
+amdkfd_pre_reset() would ruin MEC after hypervisor finished the VF FLR,
+the correct sequence is do amdkfd_pre_reset before VF FLR but there is
+a limitation to block this sequence:
+if we do pre_reset() before VF FLR, it would go KIQ way to do register
+access and stuck there, because KIQ probably won't work by that time
+(e.g. you already made GFX hang)
+
+so the best way right now is to simply remove it.
+
+Signed-off-by: Monk Liu <Monk.Liu@amd.com>
+Reviewed-by: Emily Deng <Emily.Deng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 93be00a60c887..7b5c0e9b0fcff 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -627,7 +627,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc2>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -640,7 +640,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc3>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -1055,7 +1055,6 @@
- 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
- 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
- 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
- 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
- 		>;
- 	};
-@@ -1068,7 +1067,6 @@
- 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
- 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
- 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
- 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 7a6c837c0a85f..13694d5eba474 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3466,8 +3466,6 @@ static int amdgpu_device_reset_sriov(struct amdgpu_device *adev,
+ 	if (r)
+ 		return r;
  
- 		>;
+-	amdgpu_amdkfd_pre_reset(adev);
+-
+ 	/* Resume IP prior to SMC */
+ 	r = amdgpu_device_ip_reinit_early_sriov(adev);
+ 	if (r)
 -- 
 2.20.1
 
