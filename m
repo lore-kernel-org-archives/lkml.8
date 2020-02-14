@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7921EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14F1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469042467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05EB24676
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581698261;
-	bh=P9jEKKyfNmkT4yHp4U4ESLCvkX7RR/kRv7QnsR0c6rM=;
+	s=default; t=1581698270;
+	bh=gH2BIg6EpDo663xGfq3hBDFg5Bu3WvFw9PnUKPXMqgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2USze0g/Gh2fAdYfjNjmFNh7XmmWtqBdn6EtliQhOtiH2HP/5NNZuXIbdWo8Jr3hu
-	 TscguREc9wOKssWQXWURAK6DPahq0en84KO11YDl45/64e6Mycuien86mGpm7SpI5z
-	 /FOtsGXfpZqCOYsGZk+3ERPpCDnKN6w4mOprHYtg=
+	b=aJB5W7Ape8sHyY7KN5D9JLp2XoCiJogAsYZVKJObIDDirX7v+YL/gW1iUF1ilGuQi
+	 1GakI9tv0Prdy6xkl+fU5sz7TchGGaJpJWgR9PqBNVcTV/+EbHu3GFd8jSpoZWU0OD
+	 bOVh435Y2FVBVNc4EOnijT47wkVUBK16K4Xp0+E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405741AbgBNQXw (ORCPT
+        id S2393797AbgBNQht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:23:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405378AbgBNQWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:22:06 -0500
+        id S2405723AbgBNQXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:23:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E667246D3;
-        Fri, 14 Feb 2020 16:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE6924782;
+        Fri, 14 Feb 2020 16:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697325;
-        bh=P9jEKKyfNmkT4yHp4U4ESLCvkX7RR/kRv7QnsR0c6rM=;
+        s=default; t=1581697428;
+        bh=gH2BIg6EpDo663xGfq3hBDFg5Bu3WvFw9PnUKPXMqgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G9hI1ilu6qcZaQbWPPrXmRDT/gLwpCQZKpSXTXVKbVJ24Gd456tS3EWEVlYW0uVJX
-         fIavEH3+EkGwF3WkjMJ3PFnngwINwhXLKm/ZUuscnHC80wawMebOJfSKWZZXFHSCvN
-         DSRE6RX8PKuCuHMzvIX0C5vHB9h7tZo2byqFf9To=
+        b=izDTTttXOtqKVJBIBDZD32praz0KfPGkV3wxAgF6mXDU/aDOxKtRXKHKKWEt8pmPY
+         GHxg21+6eMsbf0VbiSeHfqhXbI/CvfPKEGV53+O7hVweENY2jyQo8//Z3ivL84BTcG
+         Nz4B+I+ypRzGKWk2JigH0CsAUFlzSvFZjf3qOzF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 034/141] drm/amdgpu: remove set but not used variable 'dig'
-Date:   Fri, 14 Feb 2020 11:19:34 -0500
-Message-Id: <20200214162122.19794-34-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 117/141] ARM: 8951/1: Fix Kexec compilation issue.
+Date:   Fri, 14 Feb 2020 11:20:57 -0500
+Message-Id: <20200214162122.19794-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 References: <20200214162122.19794-1-sashal@kernel.org>
@@ -61,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit d1d09dc417826f5a983e0f4f212f227beeb65e29 ]
+[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+find a memblock in a range.
+SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+these conditions results in a build error:
 
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c: In function
-‘amdgpu_atombios_dp_link_train’:
-drivers/gpu/drm/amd/amdgpu/atombios_dp.c:716:34: warning: variable ‘dig’
-set but not used [-Wunused-but-set-variable]
+  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+             crash_size, SECTION_SIZE);
+                         ^~~~~~~~~~~~
+                         SECTIONS_WIDTH
+  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+     is reported only once for each function it appears in
+  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+     failed
 
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Make KEXEC depend on MMU to fix the compilation issue.
+
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_dp.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-index d712dee892545..8abe9beab0343 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_dp.c
-@@ -710,7 +710,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
- 	struct drm_device *dev = encoder->dev;
- 	struct amdgpu_device *adev = dev->dev_private;
- 	struct amdgpu_encoder *amdgpu_encoder = to_amdgpu_encoder(encoder);
--	struct amdgpu_encoder_atom_dig *dig;
- 	struct amdgpu_connector *amdgpu_connector;
- 	struct amdgpu_connector_atom_dig *dig_connector;
- 	struct amdgpu_atombios_dp_link_train_info dp_info;
-@@ -718,7 +717,6 @@ void amdgpu_atombios_dp_link_train(struct drm_encoder *encoder,
- 
- 	if (!amdgpu_encoder->enc_priv)
- 		return;
--	dig = amdgpu_encoder->enc_priv;
- 
- 	amdgpu_connector = to_amdgpu_connector(connector);
- 	if (!amdgpu_connector->con_priv)
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 74a70f91b01a4..56bd9beb6a35c 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -2020,7 +2020,7 @@ config XIP_PHYS_ADDR
+ config KEXEC
+ 	bool "Kexec system call (EXPERIMENTAL)"
+ 	depends on (!SMP || PM_SLEEP_SMP)
+-	depends on !CPU_V7M
++	depends on MMU
+ 	select KEXEC_CORE
+ 	help
+ 	  kexec is a system call that implements the ability to shutdown your
 -- 
 2.20.1
 
