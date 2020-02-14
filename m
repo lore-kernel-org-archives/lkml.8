@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95978C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B43BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAA624700
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C723A24705
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 16:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581697583;
-	bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SXN2KaMMJY3UM3gRdLLi0VRW4/XwL+S9JfZVJtj1FMIBqP6p4wQUfYOTKHnzKPaYe
-	 tUwCytc5Qb4aSe8k19Y5rUZfxAzBmjbs40e8OiIakHeu7AnAnYLyYeL1Y2j8PoLtId
-	 Um+nLaoiz6g1y7mUHmpRhL8UkN5gRCCt9As2gI0E=
+	s=default; t=1581697591;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kaIKFCp0dVXyKT8wyI2O4iti2lCMgLe9Xdlidu95pZseapl8nj6wkxxoZYSQhWTEL
+	 hKg0vtCAaalhLvrD+KwPWHpEk/Q79rp/F29BGDZ/w8ENb5Zbs4jTJLgE5X6K7b1Acq
+	 LUxsLoi1YBW5lhB9zWGtMNJstWasAH7D41kGKn8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406405AbgBNQ0W (ORCPT
+        id S2406449AbgBNQ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393148AbgBNQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:24:27 -0500
+        id S2405931AbgBNQYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A27524787;
-        Fri, 14 Feb 2020 16:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CECA424790;
+        Fri, 14 Feb 2020 16:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697467;
-        bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AeHlXbkbad8+3HMTQCMF/Fyg74QgzxHbQ0YzMhpwoRLBb2zXOBN99LQuVQguJQ7HM
-         8vv49+HhpfwWVigoTU0WKRgb5mcBMKnHnODCpTzQl2sT7C9qAy8w1sZgKpt8WKhW5u
-         Rnsw5CXhnAPV0p6NQ7+s29XGZpCvwAs6sDM/Ymjs=
+        s=default; t=1581697478;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wOX9Xk52fGKVa+Kk9u9N6tM5NZLt8paakjTtEclMdyoyV4AW2aBqHn6YCHIidBIRY
+         k3BatvVA4ilpObxE9d6zTRibq+wj/39Zj462EUArYEP7Ac5AVS8h6UylNmaVeZvOnV
+         I50fHLqAYjv+TIejXIB9t9KAfxFDl5OsUnQzdRx0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 001/100] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Fri, 14 Feb 2020 11:22:45 -0500
-Message-Id: <20200214162425.21071-1-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 010/100] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 14 Feb 2020 11:22:54 -0500
+Message-Id: <20200214162425.21071-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,59 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
+synchronize_irq() can sleep at runtime.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index 2eaf1b31c7bd8..ef60bb1971951 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -533,6 +533,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
- 	bytespp = sizes->surface_bpp / 8;
-@@ -542,8 +543,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
-+
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
+ 	return 0;
+ }
 -- 
 2.20.1
 
