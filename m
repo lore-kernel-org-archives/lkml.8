@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C920C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAA4C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A47E2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C056A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581702067;
-	bh=rog4S8kKkpdVoDJmXj+R/TFG1zA4ySKA0SBKLmZGv/Q=;
+	s=default; t=1581702068;
+	bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C8GroIE2swJBlfEiOCdtSo3YMsTgsD3+YjoZRo9KUz/idAYA+tER8mMzsOLWrMMV7
-	 snWEegRHvqQRMTZsxkp9QSfC0D12z2uFNPmcvQd0lIPZ82XD14MjGlHRHOtx8vhFXo
-	 6+rnWY8pScC3Atxuy4TVGW/vcr+0BAzWM1AjGEXg=
+	b=wFEDb6AMaBHwcFv2aM6sK4SVRAzXEVpOEjDcJT/zUQBjDAKp+IBek7lSr2nF7TbM8
+	 w3UuPRo3St+ud8IPXo/vI8+yrEjuBNegoVIrl5xy9H5Oy3MO0QOQD/2ZbQW9v+7tlG
+	 jINw9QsR+mDqmT1jjEW/PcChs+zBCNYoQj1shc5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390016AbgBNRlF (ORCPT
+        id S2389750AbgBNQDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 11:03:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389758AbgBNQDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:50 -0500
+        id S2389697AbgBNQDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BB0B24697;
-        Fri, 14 Feb 2020 16:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84B52082F;
+        Fri, 14 Feb 2020 16:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696229;
-        bh=rog4S8kKkpdVoDJmXj+R/TFG1zA4ySKA0SBKLmZGv/Q=;
+        s=default; t=1581696216;
+        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddQv051IjReIyROeIhLbv+lYG1xDfNYFTL7HMcWX+r34PHefHgBNSQryyDKYeFY9c
-         ko374/0bP3flpG7unAtMYpEhRItN0mudj5vgyahtdZDXW8cOM4JG18zWYRdrBfCU8D
-         PORNxDppTMHZX0+6oH3AO1UI1b7k8pCzamY82EV8=
+        b=BkFOzB6hZAlLBqKg2uWvbLleEtoAy6M8wQAmuyYqfsNig30v2bvRxSMmE657Ehh5+
+         09v68FqzPUaTB7/zoxRphtAy7pz5PoYy3KlH0124DG8y+rmeU4UN4/fawBYOLUHZ59
+         eN2h67XwlKoK5rWGG2+UZpy8CEELcgFNHiLr2ueo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 091/459] ext4, jbd2: ensure panic when aborting with zero errno
-Date:   Fri, 14 Feb 2020 10:55:41 -0500
-Message-Id: <20200214160149.11681-91-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Peng Ma <peng.ma@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 080/459] dmaengine: fsl-qdma: fix duplicated argument to &&
+Date:   Fri, 14 Feb 2020 10:55:30 -0500
+Message-Id: <20200214160149.11681-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -59,74 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
+[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
 
-JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
-aborted, and then __ext4_abort() and ext4_handle_error() can invoke
-panic if ERRORS_PANIC is specified. But if the journal has been aborted
-with zero errno, jbd2_journal_abort() didn't set this flag so we can
-no longer panic. Fix this by always record the proper errno in the
-journal superblock.
+There is duplicated argument to && in function fsl_qdma_free_chan_resources,
+which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
+fix it.
+Detected with coccinelle.
 
-Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Reviewed-by: Peng Ma <peng.ma@nxp.com>
+Tested-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/checkpoint.c |  2 +-
- fs/jbd2/journal.c    | 15 ++++-----------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ drivers/dma/fsl-qdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
-index a1909066bde66..62cf497f18eb4 100644
---- a/fs/jbd2/checkpoint.c
-+++ b/fs/jbd2/checkpoint.c
-@@ -164,7 +164,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
- 				       "journal space in %s\n", __func__,
- 				       journal->j_devname);
- 				WARN_ON(1);
--				jbd2_journal_abort(journal, 0);
-+				jbd2_journal_abort(journal, -EIO);
- 			}
- 			write_lock(&journal->j_state_lock);
- 		} else {
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 389c9be4e7919..65e78d3a2f64c 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2123,12 +2123,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 89792083d62c5..95cc0256b3878 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
  
- 	__jbd2_journal_abort_hard(journal);
+ 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
  
--	if (errno) {
--		jbd2_journal_update_sb_errno(journal);
--		write_lock(&journal->j_state_lock);
--		journal->j_flags |= JBD2_REC_ERR;
--		write_unlock(&journal->j_state_lock);
--	}
-+	jbd2_journal_update_sb_errno(journal);
-+	write_lock(&journal->j_state_lock);
-+	journal->j_flags |= JBD2_REC_ERR;
-+	write_unlock(&journal->j_state_lock);
- }
+-	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
++	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
+ 		return;
  
- /**
-@@ -2170,11 +2168,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
-  * failure to disk.  ext3_error, for example, now uses this
-  * functionality.
-  *
-- * Errors which originate from within the journaling layer will NOT
-- * supply an errno; a null errno implies that absolutely no further
-- * writes are done to the journal (unless there are any already in
-- * progress).
-- *
-  */
- 
- void jbd2_journal_abort(journal_t *journal, int errno)
+ 	list_for_each_entry_safe(comp_temp, _comp_temp,
 -- 
 2.20.1
 
