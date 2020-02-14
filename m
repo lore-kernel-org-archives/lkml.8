@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A82EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E33C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3365A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0E24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701196;
-	bh=4aRcImrOu4g+QNWzAc/R2LGYo6/49kmJ5ZApdm2P06U=;
+	s=default; t=1581701198;
+	bh=phf4HqE68XCKbFg1reAJJO/6GEjapnOI+S3Dadwzkvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sas4IcK+HCH7kYuKHMX+JYL6rgd8HjUu4faasAtSdz6ezKSk0bz28zo7txwFqeOuM
-	 AtA3hlb24QhwjRfjL9ATnqFvL6Y83nx2AFfWvxA9KGiiYKW/lYv9h2Fpq5dv7T2I3+
-	 NeWuzNJoRX5UMQoXyF59EkyygzRnNRcvn/N7elWY=
+	b=MaLCWXlv966dTOzx3sxswMAHZSc8Ke8gNDfclBsArXlUhYTRTVYudpipWH5fKJiXL
+	 dsn6RIPX4geS0Ihp+Q7hQHJF1lYkrSokKOAU/szgGu3fBqyPmr59I70cZ2Odt83eHT
+	 ASRhgLAzXpK0Cv1av1ND1Ix2GjqbyOpnIo69l8e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390993AbgBNQId (ORCPT
+        id S2394471AbgBNR0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 11:08:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:26:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390770AbgBNQHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:07:48 -0500
+        id S2390996AbgBNQIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1952067D;
-        Fri, 14 Feb 2020 16:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F0E22314;
+        Fri, 14 Feb 2020 16:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696467;
-        bh=4aRcImrOu4g+QNWzAc/R2LGYo6/49kmJ5ZApdm2P06U=;
+        s=default; t=1581696513;
+        bh=phf4HqE68XCKbFg1reAJJO/6GEjapnOI+S3Dadwzkvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vanaCxTWOgzopwBEfoZcp9f7eOIlVk7kwzfSyoPJdsJu5UR3BqxV+0ocQL8gv293B
-         qlb+wBSTCMaITNi65OO7dm0YO0b/aInyzaiwdyTT/dfsWAb4xmFftRPOiQgjUGaDh6
-         LHJoxK3ArZUSGkgnQlPKAH8tutU75lpmF+5Lslo0=
+        b=oSMNuxaOxVB9DmaWPCVNlo3ObBiz+thhPonAFOQQFXutV71+glrTuFpg9aYUIKxuy
+         0q7jsgtmXb7KV/zXTauIZ8idqgOBxK73QNlYm/TNDHKhf6NpQhA3tNgBh0bowwar3O
+         TbfdRD2MOfPZXw8jrr/K0NB6mvnCLTcuQC3Cbwd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Karl=20Rudb=C3=A6k=20Olsen?= <karl@micro-technic.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 277/459] ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
-Date:   Fri, 14 Feb 2020 10:58:47 -0500
-Message-Id: <20200214160149.11681-277-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 315/459] gpiolib: Set lockdep class for hierarchical irq domains
+Date:   Fri, 14 Feb 2020 10:59:25 -0500
+Message-Id: <20200214160149.11681-315-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,176 +64,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da ]
+[ Upstream commit c34f6dc8c9e6bbe9fba1d53acd6d9a3889599da3 ]
 
-Currently the maximum rate for peripheral clock is calculated based on a
-typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
-ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
-device trees to match the maximum rate based on 166MHz.
+I see the following lockdep splat in the qcom pinctrl driver when
+attempting to suspend the device.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+ ============================================
+ WARNING: possible recursive locking detected
+ 5.4.2 #2 Tainted: G S
+ --------------------------------------------
+ cat/6536 is trying to acquire lock:
+ ffffff814787ccc0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+
+ but task is already holding lock:
+ ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   lock(&irq_desc_lock_class);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 7 locks held by cat/6536:
+  #0: ffffff8140e0c420 (sb_writers#7){.+.+}, at: vfs_write+0xc8/0x19c
+  #1: ffffff8121eec480 (&of->mutex){+.+.}, at: kernfs_fop_write+0x128/0x1f4
+  #2: ffffff8147cad668 (kn->count#263){.+.+}, at: kernfs_fop_write+0x130/0x1f4
+  #3: ffffffd011446000 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x354
+  #4: ffffff814302b970 (&dev->mutex){....}, at: __device_suspend+0x16c/0x420
+  #5: ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+  #6: ffffff81479b8c10 (&pctrl->lock){....}, at: msm_gpio_irq_set_wake+0x48/0x7c
+
+ stack backtrace:
+ CPU: 4 PID: 6536 Comm: cat Tainted: G S                5.4.2 #2
+ Call trace:
+  dump_backtrace+0x0/0x174
+  show_stack+0x20/0x2c
+  dump_stack+0xdc/0x144
+  __lock_acquire+0x52c/0x2268
+  lock_acquire+0x1dc/0x220
+  _raw_spin_lock_irqsave+0x64/0x80
+  __irq_get_desc_lock+0x64/0x94
+  irq_set_irq_wake+0x40/0x144
+  msm_gpio_irq_set_wake+0x5c/0x7c
+  set_irq_wake_real+0x40/0x5c
+  irq_set_irq_wake+0x70/0x144
+  cros_ec_rtc_suspend+0x38/0x4c
+  platform_pm_suspend+0x34/0x60
+  dpm_run_callback+0x64/0xcc
+  __device_suspend+0x314/0x420
+  dpm_suspend+0xf8/0x298
+  dpm_suspend_start+0x84/0xb4
+  suspend_devices_and_enter+0xbc/0x628
+  pm_suspend+0x214/0x354
+  state_store+0xb0/0x108
+  kobj_attr_store+0x14/0x24
+  sysfs_kf_write+0x4c/0x64
+  kernfs_fop_write+0x158/0x1f4
+  __vfs_write+0x54/0x18c
+  vfs_write+0xdc/0x19c
+  ksys_write+0x7c/0xe4
+  __arm64_sys_write+0x20/0x2c
+  el0_svc_common+0xa8/0x160
+  el0_svc_compat_handler+0x2c/0x38
+  el0_svc_compat+0x8/0x10
+
+This is because the msm_gpio_irq_set_wake() function calls
+irq_set_irq_wake() as a backup in case the irq comes in during the path
+to idle. Given that we're calling irqchip functions from within an
+irqchip we need to set the lockdep class to be different for this child
+controller vs. the default one that the parent irqchip gets.
+
+This used to be done before this driver was converted to hierarchical
+irq domains in commit e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in
+hierarchy") via the gpiochip_irq_map() function. With hierarchical irq
+domains this function has been replaced by
+gpiochip_hierarchy_irq_domain_alloc(). Therefore, set the lockdep class
+like was done previously in the irq domain path so we can avoid this
+lockdep warning.
+
+Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20200114231103.85641-1-swboyd@chromium.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi      | 28 ++++++++++++++--------------
- arch/arm/boot/dts/sama5d3_can.dtsi  |  4 ++--
- arch/arm/boot/dts/sama5d3_uart.dtsi |  4 ++--
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ drivers/gpio/gpiolib.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index f770aace0efd6..203d40be70a51 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1188,49 +1188,49 @@
- 					usart0_clk: usart0_clk {
- 						#clock-cells = <0>;
- 						reg = <12>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					usart1_clk: usart1_clk {
- 						#clock-cells = <0>;
- 						reg = <13>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					usart2_clk: usart2_clk {
- 						#clock-cells = <0>;
- 						reg = <14>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					usart3_clk: usart3_clk {
- 						#clock-cells = <0>;
- 						reg = <15>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					twi0_clk: twi0_clk {
- 						reg = <18>;
- 						#clock-cells = <0>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi1_clk: twi1_clk {
- 						#clock-cells = <0>;
- 						reg = <19>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi2_clk: twi2_clk {
- 						#clock-cells = <0>;
- 						reg = <20>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					mci0_clk: mci0_clk {
-@@ -1246,19 +1246,19 @@
- 					spi0_clk: spi0_clk {
- 						#clock-cells = <0>;
- 						reg = <24>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					spi1_clk: spi1_clk {
- 						#clock-cells = <0>;
- 						reg = <25>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					tcb0_clk: tcb0_clk {
- 						#clock-cells = <0>;
- 						reg = <26>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					pwm_clk: pwm_clk {
-@@ -1269,7 +1269,7 @@
- 					adc_clk: adc_clk {
- 						#clock-cells = <0>;
- 						reg = <29>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					dma0_clk: dma0_clk {
-@@ -1300,13 +1300,13 @@
- 					ssc0_clk: ssc0_clk {
- 						#clock-cells = <0>;
- 						reg = <38>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					ssc1_clk: ssc1_clk {
- 						#clock-cells = <0>;
- 						reg = <39>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					sha_clk: sha_clk {
-diff --git a/arch/arm/boot/dts/sama5d3_can.dtsi b/arch/arm/boot/dts/sama5d3_can.dtsi
-index cf06a018ed0f2..2470dd3fff25e 100644
---- a/arch/arm/boot/dts/sama5d3_can.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_can.dtsi
-@@ -36,13 +36,13 @@
- 					can0_clk: can0_clk {
- 						#clock-cells = <0>;
- 						reg = <40>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					can1_clk: can1_clk {
- 						#clock-cells = <0>;
- 						reg = <41>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
-diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-index 4316bdbdc25dd..cb62adbd28ed6 100644
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -41,13 +41,13 @@
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart1_clk: uart1_clk {
- 						#clock-cells = <0>;
- 						reg = <17>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 2476306e7030e..4ab855df9048d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1924,6 +1924,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 				     parent_type);
+ 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
+ 		  irq, parent_hwirq);
++	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
+ 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
+ 	if (ret)
+ 		chip_err(gc,
 -- 
 2.20.1
 
