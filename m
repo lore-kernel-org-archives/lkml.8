@@ -2,147 +2,275 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90962C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C339BC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A2522314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B42217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 01:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581642823;
-	bh=1I5Av8GRv6y5/2c2uoawZIwNDflYotcNf7jvh+xAvMQ=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=z4GeA2tetnPj4itlpJWIOVU99rH80SOAn/whdaSsm+h7I1NwsVpbdVLIJdJRaEfSE
-	 lnjlq42bTmUGvJRqphBRNlpyLSEW6N8EG16EL9uuTGe9xpMb/iiQhNu/mtU2nMmLPR
-	 yKrJIpj3F/5Zg/Bf1KNM0Y+hG4wYuO3gflSWamUE=
+	s=default; t=1581642998;
+	bh=eiSjsv6BVwQMRhw+Uv7Tqcv/+MIQOgHsjv5SveMgvag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t4Q1y/U3YWfIbrCjGNqWYjGz0MEpry9itCTE95ClaJDS2hXbiXD0uV5fBh4fza/TT
+	 AJyHAkqYBHQMkHwPmHzEM2vc7/5q5g23ZC1uHaaYEfsTV6QbBP41GkO1DdpWD/u2xL
+	 y+/xfuci4BFnH+SJ6ykLVRRFrnAClH7CrBQIMgGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgBNBNm (ORCPT
+        id S1728156AbgBNBQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 20:13:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45054 "EHLO mail.kernel.org"
+        Thu, 13 Feb 2020 20:16:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbgBNBNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 20:13:42 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1727604AbgBNBQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Feb 2020 20:16:37 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D2520848;
-        Fri, 14 Feb 2020 01:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B33520848;
+        Fri, 14 Feb 2020 01:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581642821;
-        bh=1I5Av8GRv6y5/2c2uoawZIwNDflYotcNf7jvh+xAvMQ=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=v2abwC2WVOaYOIj2aei7KvR6/8EzZiRm8Elb0H6S2EYUbykAaSgfDJ7aVt0hjwMeM
-         KB6aTrHtl2imXOEESVoA8NgrBEJHIW2qE5lOleX4ehqpFX3OsJzqETvqaXnWBvEOh/
-         fGvDcHnoLsTwKAWGD4ehninq9w75Ue+nLlJf5N7c=
-Date:   Thu, 13 Feb 2020 20:13:39 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     dsterba@suse.cz, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 4.9 083/116] btrfs: free block groups after freeing fs
- trees
-Message-ID: <20200214011339.GB1734@sasha-vm>
-References: <20200213151842.259660170@linuxfoundation.org>
- <20200213151915.106400155@linuxfoundation.org>
- <20200213205533.GR2902@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200213205533.GR2902@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1581642996;
+        bh=eiSjsv6BVwQMRhw+Uv7Tqcv/+MIQOgHsjv5SveMgvag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BH2npapkpkRcmG65yPNJa/78MyLyL60qH94gV91hp/eAzE+qY3FDJwHcG9eVCErZH
+         aWdR1Du5ZsZQzcqbqH/GdxREKpMMNXbQ45CVUZgwEgocFpw+BSoY69kOuHvSGBi6MV
+         V+IItdmstOeGergsexP7gnUIoNjwCORNPSgNiwZY=
+Date:   Fri, 14 Feb 2020 10:16:30 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] random: add rng-seed= command line option
+Message-Id: <20200214101630.0bad4830bec186c26d894caa@kernel.org>
+In-Reply-To: <2dc50225-10e2-01dc-c376-6f9e73087242@android.com>
+References: <20200207150809.19329-1-salyzyn@android.com>
+        <20200207155828.GB122530@mit.edu>
+        <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
+        <20200208004922.GE122530@mit.edu>
+        <20200207195326.0344ef82@oasis.local.home>
+        <20200213202454.f1bb0e65ccc429bde039111b@kernel.org>
+        <20200214000343.a3b49deb2f0455568b371d0e@kernel.org>
+        <2dc50225-10e2-01dc-c376-6f9e73087242@android.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 09:55:33PM +0100, David Sterba wrote:
->On Thu, Feb 13, 2020 at 07:20:27AM -0800, Greg Kroah-Hartman wrote:
->> From: Josef Bacik <josef@toxicpanda.com>
->>
->> [ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
->>
->> Sometimes when running generic/475 we would trip the
->> WARN_ON(cache->reserved) check when free'ing the block groups on umount.
->> This is because sometimes we don't commit the transaction because of IO
->> errors and thus do not cleanup the tree logs until at umount time.
->>
->> These blocks are still reserved until they are cleaned up, but they
->> aren't cleaned up until _after_ we do the free block groups work.  Fix
->> this by moving the free after free'ing the fs roots, that way all of the
->> tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
->> loops of generic/475 confirmed this fixes the problem.
->>
->> CC: stable@vger.kernel.org # 4.9+
->> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
->> Reviewed-by: David Sterba <dsterba@suse.com>
->> Signed-off-by: David Sterba <dsterba@suse.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  fs/btrfs/disk-io.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
->> index eab5a9065f093..439b5f5dc3274 100644
->> --- a/fs/btrfs/disk-io.c
->> +++ b/fs/btrfs/disk-io.c
->> @@ -3864,6 +3864,15 @@ void close_ctree(struct btrfs_root *root)
->>  	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
->>  	free_root_pointers(fs_info, true);
->>
->> +	/*
->> +	 * We must free the block groups after dropping the fs_roots as we could
->> +	 * have had an IO error and have left over tree log blocks that aren't
->> +	 * cleaned up until the fs roots are freed.  This makes the block group
->> +	 * accounting appear to be wrong because there's pending reserved bytes,
->> +	 * so make sure we do the block group cleanup afterwards.
->> +	 */
->> +	btrfs_free_block_groups(fs_info);
->
->Something's wrong here.  The patch 4e19443da1 moves the
->btrfs_free_block_groups() call and the stable backport lacks the "-"
->line. However the patch applies cleanly on 4.9.213.
->
->3855         btrfs_free_block_groups(fs_info);
->^^^^
->
->3856
->3857         /*
->3858          * we must make sure there is not any read request to
->3859          * submit after we stopping all workers.
->3860          */
->3861         invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
->3862         btrfs_stop_all_workers(fs_info);
->3863
->3864         clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
->3865         free_root_pointers(fs_info, 1);
->3866
->3867         /*
->3868          * We must free the block groups after dropping the fs_roots as we could
->3869          * have had an IO error and have left over tree log blocks that aren't
->3870          * cleaned up until the fs roots are freed.  This makes the block group
->3871          * accounting appear to be wrong because there's pending reserved bytes,
->3872          * so make sure we do the block group cleanup afterwards.
->3873          */
->3874         btrfs_free_block_groups(fs_info);
->
->The first one should not be there.
+Hi Mark,
 
-Sigh, sorry about that. The story behind this is that for this patch to
-apply, we first must have 5cdd7db6c5c9 ("Btrfs: fix assertion failure
-when freeing block groups at close_ctree()") which moves the
-btrfs_free_block_groups() call to line 3863 in your code above.
+On Thu, 13 Feb 2020 10:44:59 -0800
+Mark Salyzyn <salyzyn@android.com> wrote:
 
-I somehow goofed up picking it up and (probably) messed up the rebase
-when it went missing, sorry again.
+> On 2/13/20 7:03 AM, Masami Hiramatsu wrote:
+> > On Thu, 13 Feb 2020 20:24:54 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> >>>> My preference would be to pass in the random seed *not* on the
+> >>>> command-line at all, but as a separate parameter which is passed to
+> >>>> the bootloader, just as we pass in the device-tree, the initrd and the
+> >>>> command-line as separate things.  The problem is that how we pass in
+> >>>> extra boot parameters is architecture specific, and how we might do it
+> >>>> for x86 is different than for arm64.  So yeah, it's a bit more
+> >>>> inconvenient to do things that way; but I think it's also much
+> >>>> cleaner.
+> >>> Hmm, if the boot loader could add on to the bootconfig that Masami just
+> >>> added, then it could add some "random" seed for each boot! The
+> >>> bootconfig is just an appended file at the end of the initrd.
+> >> Yeah, it is easy to add bootconfig support to a bootloader. It can add
+> >> a entropy number as "rng.seed=XXX" text after initrd image with size
+> >> and checksum. That is architecutre independent way to pass such hidden
+> >> parameter.
+> >> (hidden key must be filtered out when printing out the /proc/bootconfig,
+> >> but that is very easy too, just need a strncmp)
+> >>
+> > And here is the patch to support "random.rng_seed = XXX" option by
+> > bootconfig. Now you can focus on what you want to do. No need to
+> > modify command line strings.
+> 
+> LGTM, our virtualized emulator (cuttlefish) folks believe they can do it 
+> this way. Albeit keep in mind that there are _thousands_ of embedded 
+> bootloaders out there that are comfortable updating DT and kernel 
+> command line, but few that add boot configs, so this may add complexity. 
 
-I'll fix it up for the next release.
+I see, since the bootconfig is a new feature, it will take a time to
+be supported widely. Even though, maybe they can use DT for that
+purpose.
+
+> For our use case that caused us to need this, the cuttlefish Android 
+> emulated device, not a problem though.
+> 
+> However, the entropy _data_ has not been added (see below)
+
+Oh, I missed that.
+
+> 
+> Could you please formally re-submit your patch mhiramet@ with a change 
+> to push the _data_ as well to the entropy?
+
+Yes, I'll do.
+
+> 
+> -- Mark
+> 
+> >
+> > BTW, if you think you need to pass UTF-8 code as a data, I'm happy to
+> > update the bootconfig to support it. Just for the safeness, I have
+> > limited it by isprint() || isspace().
+> >
+> > Thank you,
+> >
+> > diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+> > index 26956c006987..43fbbd307204 100644
+> > --- a/drivers/char/Kconfig
+> > +++ b/drivers/char/Kconfig
+> > @@ -554,6 +554,7 @@ config RANDOM_TRUST_CPU
+> >   
+> >   config RANDOM_TRUST_BOOTLOADER
+> >   	bool "Trust the bootloader to initialize Linux's CRNG"
+> > +	select BOOT_CONFIG
+> >   	help
+> >   	Some bootloaders can provide entropy to increase the kernel's initial
+> >   	device randomness. Say Y here to assume the entropy provided by the
+> > diff --git a/drivers/char/random.c b/drivers/char/random.c
+> > index c7f9584de2c8..0ae33bbbd338 100644
+> > --- a/drivers/char/random.c
+> > +++ b/drivers/char/random.c
+> > @@ -2311,3 +2311,11 @@ void add_bootloader_randomness(const void *buf, unsigned int size)
+> >   		add_device_randomness(buf, size);
+> >   }
+> >   EXPORT_SYMBOL_GPL(add_bootloader_randomness);
+> > +
+> > +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
+> > +/* caller called add_device_randomness, but it is from a trusted source */
+> > +void __init credit_trusted_entropy_bits(unsigned int nbits)
+> > +{
+> > +	credit_entropy_bits(&input_pool, nbits);
+> > +}
+> > +#endif
+> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
+> > index 9955d75c0585..aace466c56ed 100644
+> > --- a/fs/proc/bootconfig.c
+> > +++ b/fs/proc/bootconfig.c
+> > @@ -36,6 +36,9 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
+> >   		ret = xbc_node_compose_key(leaf, key, XBC_KEYLEN_MAX);
+> >   		if (ret < 0)
+> >   			break;
+> > +		/* For keeping security reason, remove randomness key */
+> > +		if (!strcmp(key, RANDOM_SEED_XBC_KEY))
+> > +			continue;
+> >   		ret = snprintf(dst, rest(dst, end), "%s = ", key);
+> >   		if (ret < 0)
+> >   			break;
+> > diff --git a/include/linux/random.h b/include/linux/random.h
+> > index d319f9a1e429..c8f41ab4f342 100644
+> > --- a/include/linux/random.h
+> > +++ b/include/linux/random.h
+> > @@ -20,6 +20,13 @@ struct random_ready_callback {
+> >   
+> >   extern void add_device_randomness(const void *, unsigned int);
+> >   extern void add_bootloader_randomness(const void *, unsigned int);
+> > +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
+> > +extern void __init credit_trusted_entropy_bits(unsigned int nbits);
+> > +#else
+> > +static inline void credit_trusted_entropy_bits(unsigned int nbits) {}
+> > +#endif
+> > +
+> > +#define RANDOM_SEED_XBC_KEY "random.rng_seed"
+> >   
+> >   #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+> >   static inline void add_latent_entropy(void)
+> > diff --git a/init/main.c b/init/main.c
+> > index f95b014a5479..6c3f51bc76d5 100644
+> > --- a/init/main.c
+> > +++ b/init/main.c
+> > @@ -776,6 +776,32 @@ void __init __weak arch_call_rest_init(void)
+> >   	rest_init();
+> >   }
+> >   
+> > +static __always_inline void __init collect_entropy(const char *command_line)
+> > +{
+> > +	/*
+> > +	 * For best initial stack canary entropy, prepare it after:
+> > +	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
+> > +	 * - timekeeping_init() for ktime entropy used in rand_initialize()
+> > +	 * - rand_initialize() to get any arch-specific entropy like RDRAND
+> > +	 * - add_latent_entropy() to get any latent entropy
+> > +	 * - adding command line entropy
+> > +	 */
+> > +	rand_initialize();
+> > +	add_latent_entropy();
+> > +	add_device_randomness(command_line, strlen(command_line));
+> > +	if (IS_BUILTIN(CONFIG_RANDOM_TRUST_BOOTLOADER)) {
+> > +		/*
+> > +		 * Added bootconfig device randomness above,
+> 
+> This part is incorrect, the rng_seed collected below was _not_ added to 
+> the device_randomness.
+> 
+> add_device_randomness(rng_seed, strlen(rng_seed)) needs to be pushed 
+> below along with the credit.
+
+OK, as same as above command_line, I'll add that.
+
+Thank you,
+
+> 
+> > +		 * now add entropy credit for just random.rng_seed=<data>
+> > +		 */
+> > +		const char *rng_seed = xbc_find_value(RANDOM_SEED_XBC_KEY, NULL);
+> > +
+> > +		if (rng_seed)
+> > +			credit_trusted_entropy_bits(strlen(rng_seed) * 6);
+> > +	}
+> > +	boot_init_stack_canary();
+> > +}
+> > +
+> >   asmlinkage __visible void __init start_kernel(void)
+> >   {
+> >   	char *command_line;
+> > @@ -887,18 +913,7 @@ asmlinkage __visible void __init start_kernel(void)
+> >   	softirq_init();
+> >   	timekeeping_init();
+> >   
+> > -	/*
+> > -	 * For best initial stack canary entropy, prepare it after:
+> > -	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
+> > -	 * - timekeeping_init() for ktime entropy used in rand_initialize()
+> > -	 * - rand_initialize() to get any arch-specific entropy like RDRAND
+> > -	 * - add_latent_entropy() to get any latent entropy
+> > -	 * - adding command line entropy
+> > -	 */
+> > -	rand_initialize();
+> > -	add_latent_entropy();
+> > -	add_device_randomness(command_line, strlen(command_line));
+> > -	boot_init_stack_canary();
+> > +	collect_entropy(command_line);
+> >   
+> >   	time_init();
+> >   	printk_safe_init();
+> >
+> 
+
 
 -- 
-Thanks,
-Sasha
+Masami Hiramatsu <mhiramat@kernel.org>
