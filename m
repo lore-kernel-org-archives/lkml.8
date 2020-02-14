@@ -2,142 +2,238 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A87C35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A260EC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581AC22314
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601DD2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 03:54:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D6qb35it"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgBNDvR (ORCPT
+        id S1728527AbgBNDyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Feb 2020 22:51:17 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:35780 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbgBNDvR (ORCPT
+        Thu, 13 Feb 2020 22:54:35 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28943 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728242AbgBNDyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Feb 2020 22:51:17 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2S0a-0007Cp-F5; Thu, 13 Feb 2020 20:51:16 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j2S0Z-0006vA-4D; Thu, 13 Feb 2020 20:51:16 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
-        <20200210150519.538333-8-gladkov.alexey@gmail.com>
-        <87v9odlxbr.fsf@x220.int.ebiederm.org>
-        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
-        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-        <87v9obipk9.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
-        <20200212200335.GO23230@ZenIV.linux.org.uk>
-        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
-        <20200212203833.GQ23230@ZenIV.linux.org.uk>
-Date:   Thu, 13 Feb 2020 21:49:20 -0600
-In-Reply-To: <20200212203833.GQ23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Wed, 12 Feb 2020 20:38:33 +0000")
-Message-ID: <87sgjdde0v.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 13 Feb 2020 22:54:35 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581652474; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=4UHqL6bjW/vnI7OaSnkCdEA0I9yXZqgpgEgOHp79HNw=; b=D6qb35it6lN+h9V+/yVhbHKYX0FdSBa1Rtn6NMv6aSX7t88wZzgBSTaMAOCmEfHS1QddFlV4
+ /vmeROnbL5QmDcXxBoLeETrq6eYHqUxPZu7Jv7z8/+PdTaGEVJCbuAsKNqprAoxwyR9p999+
+ dyD2gI+I30cru8stKCTxYZgaY+E=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4619f8.7fe9bacb31f0-smtp-out-n02;
+ Fri, 14 Feb 2020 03:54:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CCA08C4479C; Fri, 14 Feb 2020 03:54:32 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59AB5C43383;
+        Fri, 14 Feb 2020 03:54:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59AB5C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Fri, 14 Feb 2020 09:24:25 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: fix the panic in do_checkpoint()
+Message-ID: <20200214035425.GA20234@codeaurora.org>
+References: <1581503665-19914-1-git-send-email-stummala@codeaurora.org>
+ <5d5903e6-f089-7ecf-f1ff-ad341c4cef56@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j2S0Z-0006vA-4D;;;mid=<87sgjdde0v.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18hwn2iY2MOovMvLUTHlMeKjuKGlG2T5jo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v8 07/11] proc: flush task dcache entries from all procfs instances
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d5903e6-f089-7ecf-f1ff-ad341c4cef56@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
+Hi Chao,
 
-> On Wed, Feb 12, 2020 at 12:35:04PM -0800, Linus Torvalds wrote:
->> On Wed, Feb 12, 2020 at 12:03 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->> >
->> > What's to prevent racing with fs shutdown while you are doing the second part?
->> 
->> I was thinking that only the proc_flush_task() code would do this.
->> 
->> And that holds a ref to the vfsmount through upid->ns.
->> 
->> So I wasn't suggesting doing this in general - just splitting up the
->> implementation of d_invalidate() so that proc_flush_task_mnt() could
->> delay the complex part to after having traversed the RCU-protected
->> list.
->> 
->> But hey - I missed this part of the problem originally, so maybe I'm
->> just missing something else this time. Wouldn't be the first time.
->
-> Wait, I thought the whole point of that had been to allow multiple
-> procfs instances for the same userns?  Confused...
+On Fri, Feb 14, 2020 at 10:26:18AM +0800, Chao Yu wrote:
+> Hi Sahitya,
+> 
+> On 2020/2/12 18:34, Sahitya Tummala wrote:
+> > There could be a scenario where f2fs_sync_meta_pages() will not
+> > ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
+> > resulting in the below panic in do_checkpoint() -
+> > 
+> > f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+> > 				!f2fs_cp_error(sbi));
+> > 
+> > This can happen in a low-memory condition, where shrinker could
+> > also be doing the writepage operation (stack shown below)
+> > at the same time when checkpoint is running on another core.
+> > 
+> > schedule
+> > down_write
+> > f2fs_submit_page_write -> by this time, this page in page cache is tagged
+> > 			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
+> > 			is cleared, due to which f2fs_sync_meta_pages()
+> > 			cannot sync this page in do_checkpoint() path.
+> > f2fs_do_write_meta_page
+> > __f2fs_write_meta_page
+> > f2fs_write_meta_page
+> > shrink_page_list
+> > shrink_inactive_list
+> > shrink_node_memcg
+> > shrink_node
+> > kswapd
+> 
+> IMO, there may be one more simple fix here:
+> 
+> -	f2fs_do_write_meta_page(sbi, page, io_type);
+> 	dec_page_count(sbi, F2FS_DIRTY_META);
+> 
+> +	f2fs_do_write_meta_page(sbi, page, io_type);
+> 
+> If we can remove F2FS_DIRTY_META reference count before we clear
+> PAGECACHE_TAG_DIRTY, we can avoid this race condition.
+> 
+> - dec_page_count(sbi, F2FS_DIRTY_META);
+> - f2fs_do_write_meta_page
+>  - set_page_writeback
+>   - __test_set_page_writeback
+>    - xas_clear_mark(&xas, PAGECACHE_TAG_DIRTY);
+> 
+> Thoughts?
 
-Multiple procfs instances for the same pidns.  Exactly.
+I believe it will be a problem because let's say the shrinker path is 
+still in the below stack -
 
-Which would let people have their own set of procfs mount
-options without having to worry about stomping on someone else.
+f2fs_submit_page_write();
+->down_write(&io->io_rwsem);
 
-The fundamental problem with multiple procfs instances per pidns
-is there isn't an obvous place to put a vfs mount.
+Then, the current f2fs_wait_on_all_pages_writeback() will not wait for
+that page as it is not yet tagged as F2FS_WB_CP_DATA. Hence, the checkpoint
+may proceed without waiting for this meta page to be written to disk.
 
+> 
+> > 
+> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > ---
+> >  fs/f2fs/checkpoint.c | 16 ++++++++--------
+> >  fs/f2fs/f2fs.h       |  2 +-
+> >  fs/f2fs/super.c      |  2 +-
+> >  3 files changed, 10 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> > index ffdaba0..2b651a3 100644
+> > --- a/fs/f2fs/checkpoint.c
+> > +++ b/fs/f2fs/checkpoint.c
+> > @@ -1250,14 +1250,14 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
+> >  	f2fs_unlock_all(sbi);
+> >  }
+> >  
+> > -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
+> > +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+> >  {
+> >  	DEFINE_WAIT(wait);
+> >  
+> >  	for (;;) {
+> >  		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
+> >  
+> > -		if (!get_pages(sbi, F2FS_WB_CP_DATA))
+> > +		if (!get_pages(sbi, type))
+> >  			break;
+> >  
+> >  		if (unlikely(f2fs_cp_error(sbi)))
+> > @@ -1384,8 +1384,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  
+> >  	/* Flush all the NAT/SIT pages */
+> >  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+> > -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+> > -					!f2fs_cp_error(sbi));
+> > +	/* Wait for all dirty meta pages to be submitted for IO */
+> > +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+> 
+> I'm afraid calling f2fs_wait_on_all_pages() after we call
+> f2fs_sync_meta_pages() is low efficient, as we only want to write out
+> dirty meta pages instead of wait for writebacking them to device cache.
+> 
 
-...
+I have modified the existing function f2fs_wait_on_all_pages_writeback() to
+a generic one f2fs_wait_on_all_pages(), where it will wait according to the
+requested type. In this case, it will only wait for dirty F2FS_DIRTY_META pages
+but not for the writeback to device cache.
 
+Thanks,
 
-Which means we need some way to keep the file system from going away
-while anyone in the kernel is running proc_flush_task.
+> Thanks,
+> 
+> >  
+> >  	/*
+> >  	 * modify checkpoint
+> > @@ -1493,11 +1493,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  
+> >  	/* Here, we have one bio having CP pack except cp pack 2 page */
+> >  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+> > -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+> > -					!f2fs_cp_error(sbi));
+> > +	/* Wait for all dirty meta pages to be submitted for IO */
+> > +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+> >  
+> >  	/* wait for previous submitted meta pages writeback */
+> > -	f2fs_wait_on_all_pages_writeback(sbi);
+> > +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+> >  
+> >  	/* flush all device cache */
+> >  	err = f2fs_flush_device_cache(sbi);
+> > @@ -1506,7 +1506,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  
+> >  	/* barrier and flush checkpoint cp pack 2 page if it can */
+> >  	commit_checkpoint(sbi, ckpt, start_blk);
+> > -	f2fs_wait_on_all_pages_writeback(sbi);
+> > +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+> >  
+> >  	/*
+> >  	 * invalidate intermediate page cache borrowed from meta inode
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 5a888a0..b0e0535 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -3196,7 +3196,7 @@ bool f2fs_is_dirty_device(struct f2fs_sb_info *sbi, nid_t ino,
+> >  void f2fs_update_dirty_page(struct inode *inode, struct page *page);
+> >  void f2fs_remove_dirty_inode(struct inode *inode);
+> >  int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
+> > -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
+> > +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
+> >  int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
+> >  void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
+> >  int __init f2fs_create_checkpoint_caches(void);
+> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> > index 5111e1f..084633b 100644
+> > --- a/fs/f2fs/super.c
+> > +++ b/fs/f2fs/super.c
+> > @@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
+> >  	/* our cp_error case, we can wait for any writeback page */
+> >  	f2fs_flush_merged_writes(sbi);
+> >  
+> > -	f2fs_wait_on_all_pages_writeback(sbi);
+> > +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
+> >  
+> >  	f2fs_bug_on(sbi, sbi->fsync_node_num);
+> >  
+> > 
 
-One was I can see to solve this that would give us cheap readers, is to
-have a percpu count of the number of processes in proc_flush_task.
-That would work something like mnt_count.
-
-Then forbid proc_kill_sb from removing any super block from the list
-or otherwise making progress until the proc_flush_task_count goes
-to zero.
-
-
-f we wanted cheap readers and an expensive writer
-kind of flag that proc_kill_sb can
-
-Thinking out loud perhaps we have add a list_head on task_struct
-and a list_head in proc_inode.  That would let us find the inodes
-and by extention the dentries we care about quickly.
-
-Then in evict_inode we could remove the proc_inode from the list.
-
-
-Eric
-
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
