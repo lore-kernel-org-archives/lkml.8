@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD6DC35242
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885BBC35242
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91A92072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635AF206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 23:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581724591;
-	bh=kwoRjwghjouGORVQT28JH43vJOyFgoRNW5ZaMzKqNck=;
+	s=default; t=1581724594;
+	bh=z/2snwWYS6lPAT5kl+oy5uQQY78M2650jQPM28iMAsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2XvgCtzteISeNDZ3j7fu3njNX5CTgexULoU3jWsiWsHPoeDAiPVFzLPhhxvNC3vA
-	 wWBQcNmkXl755rGN/MaYRJis1kIuhnqKzdNTm69dl8YPX3KGsfi2hpRyoCxb+UPZ2a
-	 4owbXt86k9C12H4O79hu3+dgrQWB2N8r2P79baUI=
+	b=DihwmFGmJ28/EqL7+AnTDDwJrkxUqMNpcPWZV1edrwIjWsfxr84xCA/AfFs7KzXTE
+	 svS/JpYV2f+AM6bYPkECfpm83bbUtXUvmETlnVJTd0hJeiioHfZWoiVm3UMr4nnCHv
+	 MQSSJi5V203jR1RURS7fz/NrisIw++lo3D5E1MZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgBNX4a (ORCPT
+        id S1728489AbgBNX4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 18:56:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 18:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbgBNX42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 18:56:28 -0500
+        id S1727959AbgBNX4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 18:56:32 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C3924650;
-        Fri, 14 Feb 2020 23:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0EDB24673;
+        Fri, 14 Feb 2020 23:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581724588;
-        bh=kwoRjwghjouGORVQT28JH43vJOyFgoRNW5ZaMzKqNck=;
+        s=default; t=1581724592;
+        bh=z/2snwWYS6lPAT5kl+oy5uQQY78M2650jQPM28iMAsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJEbCip6ux14xv4+i8P9JHP4+p1FfxlAkMvhuMsGILswrsKiQPOxxoM1IgIGgmwyc
-         bMxHMT2uEC9uNRgpJC3yVyRvMJy7ReJDqIgrySGAaiUNCiyBzCk48xDINTeaTkg3MG
-         MIPrA9Beh1lj/sVSLyx5HAFaDEesEfOdu+xRjP/U=
+        b=jVoVpijKzfWJfwVgLZ8uIEDZqcU/TeOsXZoqJxAVbY57RwRl8kABYpwhMF+l3KBMq
+         zkTOFUs/dety0SyWSluV6bBkT3zsQgYt9Pvla0gEaB0aPDSMJOhKXHyxheUtmm9Q9d
+         olGr3by9qSgbyp3TzcgMNUcJPnW8nn1XW8CE5W18=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 05/30] rcu: Add WRITE_ONCE() to rcu_node ->qsmask update
-Date:   Fri, 14 Feb 2020 15:55:42 -0800
-Message-Id: <20200214235607.13749-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 06/30] rcu: Add WRITE_ONCE to rcu_node ->exp_seq_rq store
+Date:   Fri, 14 Feb 2020 15:55:43 -0800
+Message-Id: <20200214235607.13749-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200214235536.GA13364@paulmck-ThinkPad-P72>
 References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
@@ -61,8 +61,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The rcu_node structure's ->qsmask field is read locklessly, so this
-commit adds the WRITE_ONCE() to an update in order to provide proper
+The rcu_node structure's ->exp_seq_rq field is read locklessly, so
+this commit adds the WRITE_ONCE() to a load in order to provide proper
 documentation and READ_ONCE()/WRITE_ONCE() pairing.
 
 This data race was reported by KCSAN.  Not appropriate for backporting
@@ -70,22 +70,22 @@ due to failure being unlikely.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 2 +-
+ kernel/rcu/tree_exp.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d91c915..bb57c24 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1881,7 +1881,7 @@ static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
- 		WARN_ON_ONCE(oldmask); /* Any child must be all zeroed! */
- 		WARN_ON_ONCE(!rcu_is_leaf_node(rnp) &&
- 			     rcu_preempt_blocked_readers_cgp(rnp));
--		rnp->qsmask &= ~mask;
-+		WRITE_ONCE(rnp->qsmask, rnp->qsmask & ~mask);
- 		trace_rcu_quiescent_state_report(rcu_state.name, rnp->gp_seq,
- 						 mask, rnp->qsmask, rnp->level,
- 						 rnp->grplo, rnp->grphi,
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index d7e0484..85b009e 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -314,7 +314,7 @@ static bool exp_funnel_lock(unsigned long s)
+ 				   sync_exp_work_done(s));
+ 			return true;
+ 		}
+-		rnp->exp_seq_rq = s; /* Followers can wait on us. */
++		WRITE_ONCE(rnp->exp_seq_rq, s); /* Followers can wait on us. */
+ 		spin_unlock(&rnp->exp_lock);
+ 		trace_rcu_exp_funnel_lock(rcu_state.name, rnp->level,
+ 					  rnp->grplo, rnp->grphi, TPS("nxtlvl"));
 -- 
 2.9.5
 
