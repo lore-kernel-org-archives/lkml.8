@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EDAC3B1B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB11CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9922467C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADD422314
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 18:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581704411;
-	bh=fPl5CA2wmeIK8jarfsPxfk2GQe02TOM2RTLnsYOCum4=;
+	s=default; t=1581704417;
+	bh=URkh1b8UiRSNyvBORbxFf1FqHBMydbBaRt0r6nWpiPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cym4r+sd8W87N/Qf4Y6OH7nkbdGy5kUVfdsBPr5x7iqhyumzYMB6kU+Zm+e+n14EV
-	 0roJLUci+duCkYfiemRsM9IXeAkiYQUnsXlh3mBk8XhuiKWIsJ0o3c3DXucHjIqrhE
-	 TRSjGCzgqn/6sBT1JUVUuOVtPlUdImXw9m0bXGqA=
+	b=Lz1be8GppwrsLuMc5Xtf+Kj0edsp/o8Q5cB4ZQjWu2DxF5UKJ+yXjPs2EvFFLgPtH
+	 E8fHwnSwXvGzRPfW9S4LOLha18gSjlxsbf2GVYB2H+6DcCjac3Fs8nxfLdeyz0lHfn
+	 ZZxf69fh1S6VrO+gMc6SZCEmHv4nPcyVYykaw/W8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgBNPuO (ORCPT
+        id S2394826AbgBNSUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 10:50:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 13:20:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgBNPuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:50:08 -0500
+        id S1730379AbgBNPuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77AF022314;
-        Fri, 14 Feb 2020 15:50:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110E32467D;
+        Fri, 14 Feb 2020 15:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695408;
-        bh=fPl5CA2wmeIK8jarfsPxfk2GQe02TOM2RTLnsYOCum4=;
+        s=default; t=1581695410;
+        bh=URkh1b8UiRSNyvBORbxFf1FqHBMydbBaRt0r6nWpiPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/HPU+EiBE6C9xNlcbtLUibnz5fgFYpA+dD8TwLiS45QQ5TQSOhIpbWprbuT8YZP+
-         8TkyseSg3lBccH1Oec3XbLxNGe7a/OlDSmG6rqsT9uxZWwmRcy/3Ra7UmM5Sps4uKQ
-         E10w4jqspNfgraPXv5c6xoKqwUbXMFhtAa7mIGpM=
+        b=NpbLhW8H4yytVpNBgkY+2ar2oeHpD8ERCz9yTtSgQBsbqzu4fnxq0efsOvP9F61PN
+         Wpe9mZljy0IXC6Gl7EauJRNTDnuxjTcx4QxZ1fOpis17Diaj9p4wWxdyWGOSOzdWIV
+         3V99xWf/WvCxztzlXEuxDTSKwUuHAsJ0luGtGW4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 056/542] kernel/module: Fix memleak in module_add_modinfo_attrs()
-Date:   Fri, 14 Feb 2020 10:40:48 -0500
-Message-Id: <20200214154854.6746-56-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 058/542] PCI/switchtec: Fix vep_vector_number ioread width
+Date:   Fri, 14 Feb 2020 10:40:50 -0500
+Message-Id: <20200214154854.6746-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -59,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit f6d061d617124abbd55396a3bc37b9bf7d33233c ]
+[ Upstream commit 9375646b4cf03aee81bc6c305aa18cc80b682796 ]
 
-In module_add_modinfo_attrs() if sysfs_create_file() fails
-on the first iteration of the loop (so i = 0), we forget to
-free the modinfo_attrs.
+vep_vector_number is actually a 16 bit register which should be read with
+ioread16() instead of ioread32().
 
-Fixes: bc6f2a757d52 ("kernel/module: Fix mem leak in module_add_modinfo_attrs")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Link: https://lore.kernel.org/r/20200106190337.2428-3-logang@deltatee.com
+Reported-by: Doug Meyer <dmeyer@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index b56f3224b161b..8785e31c2dd0f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1781,6 +1781,8 @@ static int module_add_modinfo_attrs(struct module *mod)
- error_out:
- 	if (i > 0)
- 		module_remove_modinfo_attrs(mod, --i);
-+	else
-+		kfree(mod->modinfo_attrs);
- 	return error;
- }
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 88091bbfe77f2..29412451f9e1f 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1276,7 +1276,7 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
+-	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
++	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
+ 	if (event_irq < 0 || event_irq >= nvecs)
+ 		return -EFAULT;
  
 -- 
 2.20.1
