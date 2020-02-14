@@ -2,102 +2,141 @@ Return-Path: <SRS0=fG1M=4C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8831FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38117C3B1A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB482168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581701100;
-	bh=mYIjXR2TDwDD7rXhlHDJq22WjdivDPfHAdeOikRsJ7c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qB9FvU5yBkYz4HTpvBVQ7eWdMi2wAi3DfauCPZk10JTporFiULZj7z2Ta/eOwBlw/
-	 rx8T65JS+4sQp7z6Az5kN8TiI7hp9VcR+aXJUUFJvM2oEtlQY6QxWiAo6mxxgVEpYl
-	 lpa3nOlTmvY4dvLpglesvchteRMMMdw8JXh3ySgM=
+	by mail.kernel.org (Postfix) with ESMTP id 1FB582168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Feb 2020 17:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391294AbgBNRY7 (ORCPT
+        id S2391245AbgBNRZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 12:24:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 12:25:02 -0500
+Received: from mga17.intel.com ([192.55.52.151]:43172 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391111AbgBNQI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C55424650;
-        Fri, 14 Feb 2020 16:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696536;
-        bh=mYIjXR2TDwDD7rXhlHDJq22WjdivDPfHAdeOikRsJ7c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6X4kNXK6U+e2eWB2DzUgXkCheFS80Tjt2YssGl5K1r1vz/UWjNPUyVzV0o+KouZW
-         ECrM0cSk6pwkL1e7b5VT2NBRUt/9ciV4+C7zHSjdO4xx/K/tl8ne6D5Og2gvUlkQOB
-         7P37+V0Q0MBDr+v3hWEI4/ZzsZ4T1wWIXw//prf8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Hao <haokexin@gmail.com>, kbuild test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 332/459] gpio: Fix the no return statement warning
-Date:   Fri, 14 Feb 2020 10:59:42 -0500
-Message-Id: <20200214160149.11681-332-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
-References: <20200214160149.11681-1-sashal@kernel.org>
+        id S2390928AbgBNRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 12:24:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 09:24:56 -0800
+X-IronPort-AV: E=Sophos;i="5.70,441,1574150400"; 
+   d="scan'208";a="223081205"
+Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.204.146]) ([10.254.204.146])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Feb 2020 09:24:54 -0800
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+To:     Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mike.marciniszyn@intel.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Amol Grover <frextrite@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
+ <20200114165740.GB22037@ziepe.ca>
+ <74adec84-ec5b-ea1b-7adf-3f8608838259@intel.com>
+ <25133367-6544-d0af-ae30-5178909748b1@intel.com>
+ <CAF65HP0RsW5FMRRf5Lia2=MTKex-KwO7-_NsCUef94YKBg+pfA@mail.gmail.com>
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Message-ID: <c773894a-b011-2419-683a-3b851583fc73@intel.com>
+Date:   Fri, 14 Feb 2020 12:24:52 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <CAF65HP0RsW5FMRRf5Lia2=MTKex-KwO7-_NsCUef94YKBg+pfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+On 2/14/2020 10:43 AM, Madhuparna Bhowmik wrote:
+> 
+> 
+> On Wed, Jan 15, 2020 at 12:05 AM <madhuparnabhowmik04@gmail.com 
+> <mailto:madhuparnabhowmik04@gmail.com>> wrote:
+> 
+>     From: Dennis Dalessandro <dennis.dalessandro@intel.com
+>     <mailto:dennis.dalessandro@intel.com>>
+> 
+>     On 1/14/2020 12:00 PM, Dennis Dalessandro wrote:
+>      > On 1/14/2020 11:57 AM, Jason Gunthorpe wrote:
+>      >> On Tue, Jan 14, 2020 at 09:53:45PM +0530,
+>      >> madhuparnabhowmik04@gmail.com
+>     <mailto:madhuparnabhowmik04@gmail.com> wrote:
+>      >>> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com
+>     <mailto:madhuparnabhowmik04@gmail.com>>
+>      >>>
+>      >>> list_for_each_entry_rcu has built-in RCU and lock checking.
+>      >>> Pass cond argument to list_for_each_entry_rcu.
+>      >>>
+>      >>> Signed-off-by: Madhuparna Bhowmik
+>     <madhuparnabhowmik04@gmail.com <mailto:madhuparnabhowmik04@gmail.com>>
+>      >>>   drivers/infiniband/hw/hfi1/verbs.c | 2 +-
+>      >>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>      >>>
+>      >>> diff --git a/drivers/infiniband/hw/hfi1/verbs.c
+>      >>> b/drivers/infiniband/hw/hfi1/verbs.c
+>      >>> index 089e201d7550..22f2d4fd2577 100644
+>      >>> +++ b/drivers/infiniband/hw/hfi1/verbs.c
+>      >>> @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct
+>      >>> hfi1_packet *packet,
+>      >>>                          opa_get_lid(packet->dlid, 9B));
+>      >>>           if (!mcast)
+>      >>>               goto drop;
+>      >>> -        list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+>      >>> +        list_for_each_entry_rcu(p, &mcast->qp_list, list,
+>      >>> lockdep_is_held(&(ibp->rvp.lock))) {
+>      >>
+>      >> Okay, this looks reasonable
+>      >>
+>      >> Mike, Dennis, is this the right lock to test?
+>      >>
+>      >
+>      > I'm looking at that right now actually, I don't think this is
+>     correct.
+>      > Wanted to talk to Mike before I send a response though.
+>      >
+>      > -Denny
+> 
+>     That's definitely going to throw a ton of lock dep messages. It's not
+>     really the right lock either. Instead what we probably need to do is
+>     what we do in the non-multicast part of the code and take the
+>     rcu_read_lock().
+> 
+>     I'd say hold off on this and we'll fix it right. Same goes for the
+>     qib one.
+> 
+>     Alright, thank you for reviewing.
+> 
+>     The rdmavt one though looks to be OK. I'll give it a test.
+> 
+> Hi,
+> I just wanted to follow up on this.
+> Any updates?
+> Also, is the bug fixed now?
+> 
+> Thank you,
+> Madhuparna
+> 
+>     Thank you,
+>     Madhuparna
+> 
+>     -Denny
+> 
 
-[ Upstream commit 9c6722d85e92233082da2b3623685bba54d6093e ]
+I've got a patch going through internal discussion and testing for 
+adding rcu read locking.
 
-In commit 242587616710 ("gpiolib: Add support for the irqdomain which
-doesn't use irq_fwspec as arg") we have changed the return type of
-gpiochip_populate_parent_fwspec_twocell/fourcell() from void to void *,
-but forgot to add a return statement for these two dummy functions.
-Add "return NULL" to fix the build warnings.
+The RDMAVT patch, I was OK with going in, I guess I just mentioned that 
+in a reply rather than adding an RB tag. Let me go ahead and do that.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Link: https://lore.kernel.org/r/20200116095003.30324-1-haokexin@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/gpio/driver.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 5dd9c982e2cbe..d7dc2b425532e 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -545,6 +545,7 @@ static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chi
- 						    unsigned int parent_hwirq,
- 						    unsigned int parent_type)
- {
-+	return NULL;
- }
- 
- static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
-@@ -552,6 +553,7 @@ static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *ch
- 						     unsigned int parent_hwirq,
- 						     unsigned int parent_type)
- {
-+	return NULL;
- }
- 
- #endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
--- 
-2.20.1
-
+-Denny
