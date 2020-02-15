@@ -2,109 +2,97 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895A6C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D6CC352A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD4E2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJo4dbZ9"
+	by mail.kernel.org (Postfix) with ESMTP id 4D32F2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgBOVNe (ORCPT
+        id S1727842AbgBOVSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 16:13:34 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53235 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgBOVNe (ORCPT
+        Sat, 15 Feb 2020 16:18:03 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34904 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgBOVSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 16:13:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so13497970wmc.2
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 13:13:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=eQWTXpjUDuUW0wmVjEqb5kR2EtspQyyxoUZ3RX5b6yc=;
-        b=ZJo4dbZ99IAg/Off3zIJPKiTRvf+JLpHpOpQRge2U8thVSS9RjWFukQNLQ1dx4bOQd
-         bp8O6Gba5nu03ZmBiVNZsH9YZKEfJOZ4RRPKJXVrUI6YuiiAbonBXb3uqvupv36ehNSQ
-         DDw+4qZnP6uDzqf2YjXDkk44RKjqkDK3TbE+Gq8lJnDRIGFPIRnXhr4hJSHJsFXNWe78
-         cInZB9mkAJJRf1yneWx0oKYkVllZyKUCNuniiDYD3cb7wdZhYz11iSxIGvEaK7PcdjDD
-         8+M0r4m4SC7AZdoqLqCRSOPFfaKDXbjdZLHBrDaP1atZAkH1MYGnuVre1WEL09KGPMDz
-         KZ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=eQWTXpjUDuUW0wmVjEqb5kR2EtspQyyxoUZ3RX5b6yc=;
-        b=J3bz22igjhsq47sgULljWasBTytKh3QGvWBcBS7mTqvXm1AFi85kZv03Tl2M5ZNDAb
-         PWKq7VTxtWQYhcjDg8RGSrapcPp8ffhRu9vfsWcBoCF/95+ZcVnCIZDTGvsAd5XGq4gq
-         ZcCIWsxjBSuYcgVDDJ+Hbj7t9BxSxwSUFTa2Qcu+LEbFFWZkTcEd/13X4epSYU7Ep8eD
-         AHlL3TSPEFZaIHPRFXS2UPU/GlztjACw7olns0PrOk1P1o8uU9EEpNuwGdiutOzmblKH
-         3yMp+3cPfO212hupwGY2RBZdo23l5Sp97J9V0SPU4N6+JoDCFc3KGna5k1veudgtksC+
-         LO8Q==
-X-Gm-Message-State: APjAAAX4irSaZsEgeGHnM+eWKZhVzOhX2xD/zjyKmmzgz6XorfQWeYy+
-        LW/II82KELF/mwQ9Aj5oog==
-X-Google-Smtp-Source: APXvYqxm4PPfWmXjjVQmNfjd+0mqu1Kn9niQOa1Z/8jvjYj69Hfz7b7axgKDdFZ+ExJeELaRhmXLCA==
-X-Received: by 2002:a1c:ddd6:: with SMTP id u205mr12831995wmg.151.1581801210697;
-        Sat, 15 Feb 2020 13:13:30 -0800 (PST)
-Received: from ninjahub.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.gmail.com with ESMTPSA id n1sm12846151wrw.52.2020.02.15.13.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 13:13:30 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
-Date:   Sat, 15 Feb 2020 21:13:12 +0000 (GMT)
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        boqun.feng@gmail.com,
-        "maintainer:X86 ARCHITECTURE 32-BIT AND 64-BIT" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "moderated list:XEN HYPERVISOR INTERFACE" 
-        <xen-devel@lists.xenproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Xen-devel] [PATCH 14/30] x86/xen: Add missing annotation for
- xen_pte_lock()
-In-Reply-To: <c4206641-4570-3cbd-1d96-f18aa98e86be@oracle.com>
-Message-ID: <alpine.LFD.2.21.2002151601230.31459@ninjahub.org>
-References: <0/30> <20200214204741.94112-1-jbi.octave@gmail.com> <20200214204741.94112-15-jbi.octave@gmail.com> <c4206641-4570-3cbd-1d96-f18aa98e86be@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 15 Feb 2020 16:18:02 -0500
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id C667D29B2B; Sat, 15 Feb 2020 16:18:01 -0500 (EST)
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Chris Zankel <chris@zankel.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <0adf9819ded56830f460cd1643e9ce013ed33f6d.1581800613.git.fthain@telegraphics.com.au>
+In-Reply-To: <cover.1581800613.git.fthain@telegraphics.com.au>
+References: <cover.1581800613.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH net-next 3/7] net/sonic: Remove redundant next_tx variable
+Date:   Sun, 16 Feb 2020 08:03:32 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the feedback. I will send the merged version then if it s fine 
-with you.
-Regards,
-Jules
+The eol_tx variable is the one that matters to the tx algorithm because
+packets are always placed at the end of the list. The next_tx variable
+just confuses things so remove it.
 
-On Fri, 14 Feb 2020, Boris Ostrovsky wrote:
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ drivers/net/ethernet/natsemi/sonic.c | 8 ++++----
+ drivers/net/ethernet/natsemi/sonic.h | 1 -
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-> 
-> 
-> On 2/14/20 3:47 PM, Jules Irenge wrote:
-> > Sparse reports warning at xen_pte_lock()
-> >
-> > warning: context imbalance in xen_pte_lock() - wrong count at exit
-> >
-> > The root cause is the missing annotation at xen_pte_lock()
-> > Add the missing __acquires(ptl) annotation
-> >
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> 
-> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> 
-> although I'd prefer this and the next patch to be merged into a single one.
-> 
-> 
-> 
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index c066510b348e..9ecdd67e1410 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -300,7 +300,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	spin_lock_irqsave(&lp->lock, flags);
+ 
+-	entry = lp->next_tx;
++	entry = (lp->eol_tx + 1) & SONIC_TDS_MASK;
+ 
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ 	sonic_tda_put(dev, entry, SONIC_TD_FRAG_COUNT, 1);   /* single fragment */
+@@ -321,8 +321,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 				  sonic_tda_get(dev, lp->eol_tx, SONIC_TD_LINK) & ~SONIC_EOL);
+ 	lp->eol_tx = entry;
+ 
+-	lp->next_tx = (entry + 1) & SONIC_TDS_MASK;
+-	if (lp->tx_skb[lp->next_tx] != NULL) {
++	entry = (entry + 1) & SONIC_TDS_MASK;
++	if (lp->tx_skb[entry]) {
+ 		/* The ring is full, the ISR has yet to process the next TD. */
+ 		netif_dbg(lp, tx_queued, dev, "%s: stopping queue\n", __func__);
+ 		netif_stop_queue(dev);
+@@ -811,7 +811,7 @@ static int sonic_init(struct net_device *dev)
+ 
+ 	SONIC_WRITE(SONIC_UTDA, lp->tda_laddr >> 16);
+ 	SONIC_WRITE(SONIC_CTDA, lp->tda_laddr & 0xffff);
+-	lp->cur_tx = lp->next_tx = 0;
++	lp->cur_tx = 0;
+ 	lp->eol_tx = SONIC_NUM_TDS - 1;
+ 
+ 	/*
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index 053f12f5cf4a..3cbb62c860c8 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -321,7 +321,6 @@ struct sonic_local {
+ 	unsigned int cur_tx;           /* first unacked transmit packet */
+ 	unsigned int eol_rx;
+ 	unsigned int eol_tx;           /* last unacked transmit packet */
+-	unsigned int next_tx;          /* next free TD */
+ 	int msg_enable;
+ 	struct device *device;         /* generic device */
+ 	struct net_device_stats stats;
+-- 
+2.24.1
+
