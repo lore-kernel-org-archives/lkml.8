@@ -2,183 +2,121 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0CAC7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EA8C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 19:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7350C20726
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E072082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 19:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5KiWRSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBOS4h (ORCPT
+        id S1726702AbgBOTls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 13:56:37 -0500
-Received: from out28-121.mail.aliyun.com ([115.124.28.121]:60803 "EHLO
-        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727799AbgBOS4T (ORCPT
+        Sat, 15 Feb 2020 14:41:48 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43012 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgBOTlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 13:56:19 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08278246|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.656193-0.0159137-0.327893;DS=CONTINUE|ham_system_inform|0.00787411-0.000299376-0.991826;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GoTIZgt_1581792955;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GoTIZgt_1581792955)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Sun, 16 Feb 2020 02:56:12 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com,
-        mips-creator-ci20-dev@googlegroups.com
-Subject: [PATCH v5 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Date:   Sun, 16 Feb 2020 02:55:30 +0800
-Message-Id: <1581792932-108032-7-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Sat, 15 Feb 2020 14:41:47 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p11so5129011plq.10;
+        Sat, 15 Feb 2020 11:41:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
+        b=p5KiWRSowO/6u32QdyYfJ5yyQFaKgUISB2YGGY7oCcluRXj+MNEUd4h9e9b3JsCGll
+         NS6XKq9O7lWsE7CECeQLIfHWJt0qYt1AB4+SeDBk9qYX35VfsteWw12J3tUXpCyvujdv
+         QIXSZltmC6ana0ehKkrKWrwkL8/VYp115YluWHwHKWjnIHEJAwc7UZlLFRZZBruDuVAg
+         1Q0lDNbZvEC4Q3wqTa6qDEDRHi7YnL9ZqgsWfEquUqoOF0lCnP4W8j4QO2QSwx5JNwlY
+         4gbfDfc8jjifYlC+wT/na2tnV5kdIe5xDUaYV+1vKWUmd6haYCLVJhMe8c4k4+Dsbx2H
+         rsSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qD7p9omT3ZqLHQdscsqkNZErSP6L23JqC4boqGiD0ds=;
+        b=efohZYsrP3K28qfmHjKsCZXpXrFBhDBAhH64pANKZotfc7fN79TtbPFsUxqUMFY7Qt
+         X55Zq0l5Mf+vq+j1umYJ9fqWQpvB8wDQFwNbrkotOvexL2JQVaZkcWY/mBpMcrx0rQQy
+         8dyiFG1rQwpdE+W2oEN79wy+5srudcpju7h8HqrY4OKrctiETLlWxiOo/ESxiqwVgHPk
+         4dbrCo0jtEU/Et5DQCk8Hc9Cl837XdJUN6xQcGUuJJsrPVVsHMru8UcjMhcyf8kGaYZw
+         BHQD7jIZInOXrnXLqEqOe2Iwm+54TDdr7HveY5DwqWl2BpLf76eWq28EtX4QLkYvQwmg
+         ga1g==
+X-Gm-Message-State: APjAAAXq+Td2P1LcWkbEFdcMJ+hjcSF2uOdFWUBrQLnKWZVnXLP3IdRw
+        OQFWFBvIguLHcJmmVjmJAcQVL4xWDk8=
+X-Google-Smtp-Source: APXvYqx1UNOFEF981/5DjEL2KCCokmkGTRXof8tt88zvZJE6QH8INHw+Aur0m8x1jRinDEn2qTQLrg==
+X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr11239396pjr.17.1581795706570;
+        Sat, 15 Feb 2020 11:41:46 -0800 (PST)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id q4sm11802751pfl.175.2020.02.15.11.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2020 11:41:46 -0800 (PST)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RESEND PATCH v3 01/17] media: entity: Pass entity to get_fwnode_pad operation
+Date:   Sat, 15 Feb 2020 11:41:20 -0800
+Message-Id: <20200215194136.10131-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200215194136.10131-1-slongerbeam@gmail.com>
+References: <20200215194136.10131-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the available properties for the SoC root node and the
-CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+Add a missing pointer to the entity in the media_entity operation
+get_fwnode_pad. There are no implementers of this op yet, but a future
+entity that does so will almost certainly need a reference to itself
+to carry out the work.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Fixes: ae45cd5efc120 ("[media] media: entity: Add get_fwnode_pad entity
+operation")
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
+ drivers/media/mc/mc-entity.c | 2 +-
+ include/media/media-entity.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Notes:
-    v1->v2:
-    Change the two Document from txt to yaml.
-    
-    v2->v3:
-    Fix formatting errors.
-    
-    v3->v4:
-    Fix bugs in the two yaml files.
-    
-    v4->v5:
-    No change.
-
- .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
- .../bindings/mips/ingenic/ingenic,soc.yaml         | 35 ++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-new file mode 100644
-index 00000000..cb600ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic XBurst family CPUs
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic XBurst family CPUs shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: ingenic,xburst
-+      - const: ingenic,xburst2
-+
-+  reg:
-+    description: |
-+      The number of the CPU.
-+
-+required:
-+  - device_type
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cpus {
-+    	#address-cells = <1>;
-+    	#size-cells = <0>;
-+
-+    	cpu0: cpu@0 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <0>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CPU>;
-+    		clock-names = "cpu";
-+    	};
-+
-+    	cpu1: cpu@1 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <1>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CORE1>;
-+    		clock-names = "cpu";
-+    	};
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-new file mode 100644
-index 00000000..11e5cde
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic SoCs with XBurst CPU inside.
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic SoCs with XBurst CPU inside shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: ingenic,jz4740
-+      - const: ingenic,jz4725b
-+      - const: ingenic,jz4760
-+      - const: ingenic,jz4760b
-+      - const: ingenic,jz4770
-+      - const: ingenic,jz4780
-+      - const: ingenic,x1000
-+      - const: ingenic,x1000e
-+      - const: ingenic,x1500
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    #address-cells = <1>;
-+    #size-cells = <1>;
-+    compatible = "ingenic,jz4780";
-+...
+diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
+index 7c429ce98bae..c333320f790a 100644
+--- a/drivers/media/mc/mc-entity.c
++++ b/drivers/media/mc/mc-entity.c
+@@ -386,7 +386,7 @@ int media_entity_get_fwnode_pad(struct media_entity *entity,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = entity->ops->get_fwnode_pad(&endpoint);
++	ret = entity->ops->get_fwnode_pad(entity, &endpoint);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 8cb2c504a05c..cde80ad029b7 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -212,7 +212,8 @@ struct media_pad {
+  *    mutex held.
+  */
+ struct media_entity_operations {
+-	int (*get_fwnode_pad)(struct fwnode_endpoint *endpoint);
++	int (*get_fwnode_pad)(struct media_entity *entity,
++			      struct fwnode_endpoint *endpoint);
+ 	int (*link_setup)(struct media_entity *entity,
+ 			  const struct media_pad *local,
+ 			  const struct media_pad *remote, u32 flags);
 -- 
-2.7.4
+2.17.1
 
