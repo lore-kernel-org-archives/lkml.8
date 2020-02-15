@@ -2,223 +2,108 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711EDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E10C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F772083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40E92073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ha24+qV2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fXNn7AqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgBOBa0 (ORCPT
+        id S1727894AbgBOBjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 20:30:26 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45228 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbgBOBa0 (ORCPT
+        Fri, 14 Feb 2020 20:39:48 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:37153 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbgBOBjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 20:30:26 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F1PvL3051691;
-        Sat, 15 Feb 2020 01:30:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=W4WBnCPJdshCN1zK9DcIDCHmcoScNhw42HD6f1pSjl4=;
- b=ha24+qV2PVvVm93+t3rJ2QVyg6UWP4NiCFZ/3wvXzHa1rsyjqPa9qAVpGs5HKhIlXZAe
- 9/iEnbd3oJDFgve0ke/XBPNDkJT2STYctWeoFLd/BwQNijoXiK/Rd6AVAAvnHTGPio+P
- Lcz4nT1TdxCF/Nl0/wJcSD37dItHy69WCtg+d7MHfkSKw6QTMr1kV+liEKsalOGdUyOw
- cJJVEIKgI4H97p+Dzw2epdeFH/AjuTnWasdKDre87NtdbrbyX9Iw5R0Jrgn6GLesIX7U
- pSak1MD5ACUbuRU4Lkd6f6FsLN+pKuUPBvDA5b9GyDLrcL/hMUdyIx/NalcLylhBKVo0 OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2y2p3t4ab6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 01:30:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F1RjaO007150;
-        Sat, 15 Feb 2020 01:30:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y4k3fmn3v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 01:30:11 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01F1U94I010653;
-        Sat, 15 Feb 2020 01:30:09 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 14 Feb 2020 17:30:09 -0800
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v2 4.4] padata: Remove broken queue flushing
-Date:   Fri, 14 Feb 2020 20:30:01 -0500
-Message-Id: <20200215013001.892060-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200213151832.123934030@linuxfoundation.org>
-References: <20200213151832.123934030@linuxfoundation.org>
+        Fri, 14 Feb 2020 20:39:47 -0500
+Received: by mail-ua1-f68.google.com with SMTP id h32so4278321uah.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 17:39:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kMs0i+uoo9dEPE33t+AXfXB1++1njbxKLeTu5JqtYr0=;
+        b=fXNn7AqPrZ5ZwcZLjbkNrdxYZMTjnSacepUQ1h0/QR7892FFCnDn7C47Us/bBOetFQ
+         X01EKp+TRXzsQl9vd1FlE3GKII5nj2LbiJppR9s/S2uzzT4zkgje6NSiNxGdoxERSlWK
+         X5PypfkyXAc9TEycom6L8cgdPWAn8V93M3Y/ZexYz+o/TvKMLwHxv0cPaTDSTuVjESNE
+         WoUDTfsgE/FIneJ49vWD5j8PvgRKWutgdNraTDfzQZSQazElkfpYxqL8Jyg+Fjxjt76D
+         U0Nsmg15IT6ho38kecVo+Dr3/Y0NwKk68sqs5mDih8NUxyFnczcsucgY/Go1UUTmJTes
+         dM3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kMs0i+uoo9dEPE33t+AXfXB1++1njbxKLeTu5JqtYr0=;
+        b=jRV1XPGlSArgckxLNlmhb2LtqL0Cd8+FdUHN000xaBPaE4dNG1morXvOf8SELA0RDe
+         xaNmK4ZLMSuuLUWxwd4HhVTugJVhBIOPE9Z+HPlUU4emx1B2gAyhkcVxRz0CvouqOKT9
+         lBBrXr3Vw2Bx5qy5vweSUugjCzsAaWs0YMFsc+88D5MGMPeVMg2+KE2/PA5e5xWWmzHH
+         O9QNCpY6QownAptdOpndhQR83kioQh2A1REWR7E/AFfwp7szTaWd3p+7djdBuVLEamf8
+         k4e43YWK09xsXyQDvhCNM626+e4+JE2sq+hrzZvyTbegLcqd2XkChTF0/rxCL0F0QXSr
+         +kjA==
+X-Gm-Message-State: APjAAAXb12NFPq7Bxy/2Zdks4oUF8gnB9Ld6MpL4kQGiWpWqPmU357O1
+        vlq5lQPxsxnVgojzltQKwO2uTzurdlJA92jGM24a5k6Jxhs=
+X-Google-Smtp-Source: APXvYqyRF8/JMZJhylgjcPF+Qhj2QxTzBoJcSQm2A3xYu1dpgHXvJA+yiR3FUgFfdj8dXU/4MSre36eYYR9XKPHdYUk=
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr2955494uak.22.1581730786453;
+ Fri, 14 Feb 2020 17:39:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 adultscore=0
- bulkscore=0 malwarescore=0 phishscore=0 suspectscore=2 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002150008
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=2 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002150008
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
+ <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net> <CAODwPW-d_PpV4Jhg2CC+7Tfyrrh=gh6hRfcEKFb4gj+LB6vrWw@mail.gmail.com>
+In-Reply-To: <CAODwPW-d_PpV4Jhg2CC+7Tfyrrh=gh6hRfcEKFb4gj+LB6vrWw@mail.gmail.com>
+From:   Evan Benn <evanbenn@google.com>
+Date:   Sat, 15 Feb 2020 12:39:22 +1100
+Message-ID: <CAKz_xw3NH7saKUda3o0uz3qf4rSc63Yn6E0KrHW=ncxVsk78ZQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] watchdog: Add new arm_smc_wdt watchdog driver
+To:     Julius Werner <jwerner@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Olof Johansson <olof@lixom.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, linux-watchdog@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Anson Huang <Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+> > As written, one would assume this to work on all systems implementing
+> > ARM secure firmware, which is not the case. Please select a different
+> > name, and provide information about the systems where this is actually
+> > supported.
 
-[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
+> Back when I wrote this I was hoping it could be something that other
+> platforms can pick up if they want to, but that hasn't happened yet
+> and the code on the Trusted Firmware side is still MediaTek-specific.
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
+Thanks, I will re-word as mediatek,mt8173-smc-wdt, and address other comments.
+In the event this does become a standard arm watchdog interface, I assume
+but do not know that it will be straightforward to change the name here.
 
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
+I am not sure how to proceed with modifying Julius' authored patch in
+kernel preferred way.
+I can add myself as co-authored-by and modify patch 2, or add a patch
+3 to make preferred changes.
 
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
-
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[dj: leave "pd->pinst = pinst" assignment in padata_alloc_pd()]
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
----
- kernel/padata.c | 45 ++++++++++++---------------------------------
- 1 file changed, 12 insertions(+), 33 deletions(-)
-
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 282b489a286d..0d7ec5fd520b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -33,6 +33,8 @@
- 
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
-+
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
- {
- 	int cpu, target_cpu;
-@@ -300,6 +302,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
- 
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -309,6 +312,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
- 
-+	cnt = 0;
-+
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
- 
-@@ -318,9 +323,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
- 	}
- 	local_bh_enable();
-+
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
- }
- 
- /**
-@@ -443,7 +451,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	setup_timer(&pd->timer, padata_reorder_timer, (unsigned long)pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
-+	atomic_set(&pd->refcnt, 1);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
- 
-@@ -468,31 +476,6 @@ static void padata_free_pd(struct parallel_data *pd)
- 	kfree(pd);
- }
- 
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
--{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
--
--	del_timer_sync(&pd->timer);
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
--}
--
- static void __padata_start(struct padata_instance *pinst)
- {
- 	pinst->flags |= PADATA_INIT;
-@@ -506,10 +489,6 @@ static void __padata_stop(struct padata_instance *pinst)
- 	pinst->flags &= ~PADATA_INIT;
- 
- 	synchronize_rcu();
--
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
- 
- /* Replace the internal control structure with a new one. */
-@@ -530,8 +509,8 @@ static void padata_replace(struct padata_instance *pinst,
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
- 
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--- 
-2.25.0
-
+I will use approach 2 for now unless otherwise advised.
