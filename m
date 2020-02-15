@@ -2,163 +2,361 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11FFC7114E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ACBC7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C3824649
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B614D20718
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoT9Ba5v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6F/vFAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgBOWRo (ORCPT
+        id S1726512AbgBOWfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 17:17:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37090 "EHLO
+        Sat, 15 Feb 2020 17:35:16 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37244 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgBOWRo (ORCPT
+        with ESMTP id S1726273AbgBOWfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 17:17:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a6so14604083wme.2;
-        Sat, 15 Feb 2020 14:17:42 -0800 (PST)
+        Sat, 15 Feb 2020 17:35:15 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a6so14623126wme.2;
+        Sat, 15 Feb 2020 14:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=sender:subject:to:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6CyS3ovMTI3rLTwxaFUWikmoGbQY45rGievk0K7pkXs=;
-        b=QoT9Ba5vwhWGe5BhQyrXiNAb4BHAJciC3YyMro1VVl0leRo63jYo2Be+uiIikz289g
-         i4FlxPcBDaTlmn7BSZNvB8zZJPqDXGnHvNpRHO6JEPKhu3qxaEhinW96BQ1Uhbog3gSy
-         U9Hc8Fv2DNkYAPPGYjLNppDTBRSsfTcBFwTCJLdTPK2EQOSHQnhyXkyaG1vRvWBJgtSg
-         uLUYI2EEkKuxtxfoqJFKuiZOhB0d2tlhqi3kBKLAN1HgvJJciqYF1N8xvojuqvvVLW3Q
-         byNkQ9IvqNEHnRQu5agcmhqPeWWddWMkg6Q8i0zVlBYZ9i8i2FaZX7yhC/aUX/t1hMGZ
-         nCgA==
+        bh=2khPxLYsoc4+D8Ncqx/2OdNVdlVtfOiZCN9IRxVRVyk=;
+        b=Z6F/vFABZnDYPVuSDcCHdmTVE5nbEGpKQdXxdBhEYCA5KFFIkiJP+VW5T1n69zmn5L
+         A92TUkYmInXX6AeKHzuzofF4pWrIbZ8l1hXYBcdVihYmv1fzg5nHP9RyZCDCX84H7NoA
+         /3oBhcpPBpVqyajEGhLC/xsYKlDprjgtHXcdkrhEbJsGC+o+AZqcdfMjkKUdG3ygjOgj
+         cPg+G0De4dJR7enJVnuwWUzh1XJcAzMuWi6Mk2PsjO+rwkuYz0MLPol92KKjWiADYBrP
+         Cz/e6k5aqspGN4B+aHkW6ddrVI/PCKFdmDpw7e/Hu27L+vHQ7nZK1l7de4DJKF9dJ3P1
+         /+SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6CyS3ovMTI3rLTwxaFUWikmoGbQY45rGievk0K7pkXs=;
-        b=GjC+VYCEpyiIVsI/rNP4LhWCf18ABhr58ar3Q2Dhr7U5pdoOGkqpm0Omui2LaNfDrp
-         P1saYO9PYC+v0Ju/fRoe/+iO05GAIxH3h2mACFkhklJOoVN/3GqJb4mHxGs0sqC1wlNk
-         LxNDC4NvqYIcu1dCyHs5Lbkcjnp+ZOfsx256YQkS1B7fsTFTuXrOSdCmuqd/W6NzMxLT
-         azEQA1D5KNRwYTAb+F85DmIkz/tj61+cKXILxd4KJfTEk299taKKRqlyp9SKTXaIlLIU
-         56TNMlxBsBGIut1Ph8qp4jSZktEAtPPzTPBnQrGThd1aMKPdo+OVl8yMJKypV+3v7qxX
-         +Xbw==
-X-Gm-Message-State: APjAAAWc0ZQ1a3GgmnKnIlAakXjPnMYRd97OksjbPJN1Va3QL7+kOM5n
-        6kuyl4mmsjsJglmXeU2AGBg=
-X-Google-Smtp-Source: APXvYqwB0GmNLQ3gRXb6Nnv1U7xrRXgUT0KVZYH9DYmJv29qnWT/qNBPoOyJ/ea5dsP9oOa4iJDCRg==
-X-Received: by 2002:a1c:9ed7:: with SMTP id h206mr12281354wme.67.1581805061815;
-        Sat, 15 Feb 2020 14:17:41 -0800 (PST)
-Received: from localhost.localdomain ([109.126.146.5])
-        by smtp.gmail.com with ESMTPSA id u14sm12888802wrm.51.2020.02.15.14.17.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 14:17:41 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH liburing 1/2] splice: add splice(2) helpers
-Date:   Sun, 16 Feb 2020 01:16:53 +0300
-Message-Id: <bbb5b5bb4344d931c0296855c5ba8ae2eb0e89ff.1581804801.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1581804801.git.asml.silence@gmail.com>
-References: <cover.1581804801.git.asml.silence@gmail.com>
+        h=x-gm-message-state:sender:subject:to:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=2khPxLYsoc4+D8Ncqx/2OdNVdlVtfOiZCN9IRxVRVyk=;
+        b=kCLVbszCyloruChLnSVGS0LvAdImO7kLBYkTYfPRfQO81XJlt3cbk9Wpa5X3YL3ckn
+         HH6FfBhXPAXANvDhRwzq/pZ/EXYoLsvfww6s7l4iyLDzHTCvkyuuy0K0p6uPo0TGbcvZ
+         CkvaDFeFeZwp/MYb+TbvC4vd130huehaxEQjznQ/me6Z4AbfFOMJ7xO5ImSVV3J+qYZE
+         4UPli4KV6aYrSC9Nto5KGburH14Y6GZAcQOdj8CpRRVHesNTqhM60jgLRoCRZRjvK0lO
+         PCvkmKHWYinoSK0rr00N0capneRb0ieXv4+jGh4Kkysj5z5oKndcOQxJo/kHERSbpinN
+         zM5A==
+X-Gm-Message-State: APjAAAUSKVjsqX51vS5wlzcWDmNrq4tWHdIO6VtSxaBsr/7IyPk5QvZ6
+        TXUL/HWJsiCbB73NabyYqOT7luMIZD8=
+X-Google-Smtp-Source: APXvYqyyWtqmnFzmS/M1rSDPE0eB1BT5eC4zyK3nvUXZJged/3vEtVNdV8v1WY7L8DxcKoGlv1Ra8w==
+X-Received: by 2002:a1c:e388:: with SMTP id a130mr12368514wmh.176.1581806112517;
+        Sat, 15 Feb 2020 14:35:12 -0800 (PST)
+Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
+        by smtp.gmail.com with ESMTPSA id k13sm13009491wrx.59.2020.02.15.14.35.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Feb 2020 14:35:12 -0800 (PST)
+Subject: Re: [PATCH] MIPS: configs: Cleanup old Kconfig options
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200130192926.3635-1-krzk@kernel.org>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Autocrypt: addr=f4bug@amsat.org; keydata=
+ mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
+ u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
+ HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
+ YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
+ ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
+ dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
+ ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
+ Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
+ HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
+ Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
+ YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
+ klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
+ jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
+ 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
+ loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
+ sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
+ JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
+ 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
+ K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
+ n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
+ CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
+Message-ID: <465a49f2-2ff0-eb96-c528-f5ef2fe29c0a@amsat.org>
+Date:   Sat, 15 Feb 2020 23:35:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200130192926.3635-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add splice helpers and update io_uring.h
+On 1/30/20 8:29 PM, Krzysztof Kozlowski wrote:
+> CONFIG_MTD_NAND_IDS is gone and not needed (part of CONFIG_MTD_NAND)
+> since commit f16bd7ca0457 ("mtd: nand: Kill the MTD_NAND_IDS Kconfig
+> option").
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+OK.
 
-Quick update for extra newline and the fixed fd comment
+> 
+> CONFIG_IOSCHED_DEADLINE, CONFIG_IOSCHED_CFQ and CONFIG_DEFAULT_NOOP are
+> gone since commit f382fb0bcef4 ("block: remove legacy IO schedulers").
 
- src/include/liburing.h          | 11 +++++++++++
- src/include/liburing/io_uring.h | 14 +++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+OK.
 
-diff --git a/src/include/liburing.h b/src/include/liburing.h
-index 8ca6cd9..0628255 100644
---- a/src/include/liburing.h
-+++ b/src/include/liburing.h
-@@ -191,6 +191,17 @@ static inline void io_uring_prep_rw(int op, struct io_uring_sqe *sqe, int fd,
- 	sqe->__pad2[0] = sqe->__pad2[1] = sqe->__pad2[2] = 0;
- }
- 
-+static void io_uring_prep_splice(struct io_uring_sqe *sqe,
-+				 int fd_in, loff_t off_in,
-+				 int fd_out, loff_t off_out,
-+				 unsigned int nbytes, int splice_flags)
-+{
-+	io_uring_prep_rw(IORING_OP_SPLICE, sqe, fd_out, (void *)off_in,
-+			 nbytes, off_out);
-+	sqe->splice_fd_in = fd_in;
-+	sqe->splice_flags = splice_flags;
-+}
-+
- static inline void io_uring_prep_readv(struct io_uring_sqe *sqe, int fd,
- 				       const struct iovec *iovecs,
- 				       unsigned nr_vecs, off_t offset)
-diff --git a/src/include/liburing/io_uring.h b/src/include/liburing/io_uring.h
-index 424fb4b..dc78697 100644
---- a/src/include/liburing/io_uring.h
-+++ b/src/include/liburing/io_uring.h
-@@ -23,7 +23,10 @@ struct io_uring_sqe {
- 		__u64	off;	/* offset into file */
- 		__u64	addr2;
- 	};
--	__u64	addr;		/* pointer to buffer or iovecs */
-+	union {
-+		__u64	addr;	/* pointer to buffer or iovecs */
-+		__u64	off_in;
-+	};
- 	__u32	len;		/* buffer size or number of iovecs */
- 	union {
- 		__kernel_rwf_t	rw_flags;
-@@ -37,6 +40,7 @@ struct io_uring_sqe {
- 		__u32		open_flags;
- 		__u32		statx_flags;
- 		__u32		fadvise_advice;
-+		__u32		splice_flags;
- 	};
- 	__u64	user_data;	/* data to be passed back at completion time */
- 	union {
-@@ -45,6 +49,7 @@ struct io_uring_sqe {
- 			__u16	buf_index;
- 			/* personality to use, if used */
- 			__u16	personality;
-+			__u32	splice_fd_in;
- 		};
- 		__u64	__pad2[3];
- 	};
-@@ -113,6 +118,7 @@ enum {
- 	IORING_OP_RECV,
- 	IORING_OP_OPENAT2,
- 	IORING_OP_EPOLL_CTL,
-+	IORING_OP_SPLICE,
- 
- 	/* this goes last, obviously */
- 	IORING_OP_LAST,
-@@ -128,6 +134,12 @@ enum {
-  */
- #define IORING_TIMEOUT_ABS	(1U << 0)
- 
-+/*
-+ * sqe->splice_flags
-+ * extends splice(2) flags
-+ */
-+#define SPLICE_F_FD_IN_FIXED	(1U << 31) /* the last bit of __u32 */
-+
- /*
-  * IO completion data structure (Completion Queue Entry)
-  */
--- 
-2.24.0
+> 
+> The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
+> now enabled by default (along with MQ_IOSCHED_KYBER).
 
+Selected as module in lemote2f_defconfig and loongson3_defconfig, OK.
+
+> 
+> The BFQ_GROUP_IOSCHED is the only multiqueue scheduler which comes with
+> group scheduling so select it in configs previously choosing
+> CFQ_GROUP_IOSCHED.
+
+You select CONFIG_IOSCHED_BFQ dependence in loongson3_defconfig, OK.
+
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+
+> ---
+>  arch/mips/configs/ar7_defconfig                 | 1 -
+>  arch/mips/configs/ath25_defconfig               | 1 -
+>  arch/mips/configs/ath79_defconfig               | 1 -
+>  arch/mips/configs/bcm63xx_defconfig             | 2 --
+>  arch/mips/configs/bmips_be_defconfig            | 2 --
+>  arch/mips/configs/bmips_stb_defconfig           | 2 --
+>  arch/mips/configs/db1xxx_defconfig              | 1 -
+>  arch/mips/configs/generic/board-ni169445.config | 1 -
+>  arch/mips/configs/lasat_defconfig               | 2 --
+>  arch/mips/configs/lemote2f_defconfig            | 2 +-
+>  arch/mips/configs/loongson3_defconfig           | 5 +++--
+>  arch/mips/configs/msp71xx_defconfig             | 2 --
+>  arch/mips/configs/pnx8335_stb225_defconfig      | 2 --
+>  arch/mips/configs/rb532_defconfig               | 1 -
+>  arch/mips/configs/rt305x_defconfig              | 1 -
+>  arch/mips/configs/xway_defconfig                | 1 -
+>  16 files changed, 4 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/mips/configs/ar7_defconfig b/arch/mips/configs/ar7_defconfig
+> index cef2754bd408..cf9c6329b807 100644
+> --- a/arch/mips/configs/ar7_defconfig
+> +++ b/arch/mips/configs/ar7_defconfig
+> @@ -21,7 +21,6 @@ CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  CONFIG_PARTITION_ADVANCED=y
+>  CONFIG_BSD_DISKLABEL=y
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
+> index c35add2fd716..7143441f5476 100644
+> --- a/arch/mips/configs/ath25_defconfig
+> +++ b/arch/mips/configs/ath25_defconfig
+> @@ -22,7 +22,6 @@ CONFIG_HZ_100=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  # CONFIG_COMPACTION is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+> diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
+> index 4ffc59cab436..3d14d67dc746 100644
+> --- a/arch/mips/configs/ath79_defconfig
+> +++ b/arch/mips/configs/ath79_defconfig
+> @@ -23,7 +23,6 @@ CONFIG_PCI=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/bcm63xx_defconfig b/arch/mips/configs/bcm63xx_defconfig
+> index 54e2f9a659fb..861f680184b9 100644
+> --- a/arch/mips/configs/bcm63xx_defconfig
+> +++ b/arch/mips/configs/bcm63xx_defconfig
+> @@ -21,8 +21,6 @@ CONFIG_PCI=y
+>  CONFIG_PCCARD=y
+>  CONFIG_PCMCIA_BCM63XX=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_UNIX=y
+>  CONFIG_INET=y
+> diff --git a/arch/mips/configs/bmips_be_defconfig b/arch/mips/configs/bmips_be_defconfig
+> index f669a40e085b..032bb51defe8 100644
+> --- a/arch/mips/configs/bmips_be_defconfig
+> +++ b/arch/mips/configs/bmips_be_defconfig
+> @@ -12,8 +12,6 @@ CONFIG_NR_CPUS=4
+>  # CONFIG_SECCOMP is not set
+>  CONFIG_MIPS_O32_FP64_SUPPORT=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_PACKET_DIAG=y
+> diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
+> index a0b775893dba..625bd2d7e685 100644
+> --- a/arch/mips/configs/bmips_stb_defconfig
+> +++ b/arch/mips/configs/bmips_stb_defconfig
+> @@ -21,8 +21,6 @@ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+>  CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
+>  CONFIG_BMIPS_CPUFREQ=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_PACKET_DIAG=y
+> diff --git a/arch/mips/configs/db1xxx_defconfig b/arch/mips/configs/db1xxx_defconfig
+> index bc9b6ae046b2..e6f3e8e3da39 100644
+> --- a/arch/mips/configs/db1xxx_defconfig
+> +++ b/arch/mips/configs/db1xxx_defconfig
+> @@ -28,7 +28,6 @@ CONFIG_PCMCIA_ALCHEMY_DEVBOARD=y
+>  CONFIG_FIRMWARE_MEMMAP=y
+>  CONFIG_BLK_DEV_BSGLIB=y
+>  CONFIG_PARTITION_ADVANCED=y
+> -CONFIG_DEFAULT_NOOP=y
+>  CONFIG_CMA=y
+>  CONFIG_CMA_DEBUG=y
+>  CONFIG_NET=y
+> diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
+> index 1ed0d3e8715e..fc3580e4e6bc 100644
+> --- a/arch/mips/configs/generic/board-ni169445.config
+> +++ b/arch/mips/configs/generic/board-ni169445.config
+> @@ -19,7 +19,6 @@ CONFIG_MTD_NAND_ECC_SW_HAMMING=y
+>  CONFIG_MTD_NAND_ECC_SW_BCH=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_GPIO=y
+> -CONFIG_MTD_NAND_IDS=y
+>  
+>  CONFIG_MTD_UBI=y
+>  CONFIG_MTD_UBI_BLOCK=y
+> diff --git a/arch/mips/configs/lasat_defconfig b/arch/mips/configs/lasat_defconfig
+> index c66ca3785655..00cf461db971 100644
+> --- a/arch/mips/configs/lasat_defconfig
+> +++ b/arch/mips/configs/lasat_defconfig
+> @@ -16,8 +16,6 @@ CONFIG_HZ_1000=y
+>  # CONFIG_SECCOMP is not set
+>  CONFIG_PCI=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
+> index f9f93427c9bd..8254d7d1396f 100644
+> --- a/arch/mips/configs/lemote2f_defconfig
+> +++ b/arch/mips/configs/lemote2f_defconfig
+> @@ -26,7 +26,7 @@ CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  CONFIG_MODVERSIONS=y
+>  CONFIG_BLK_DEV_INTEGRITY=y
+> -CONFIG_IOSCHED_DEADLINE=m
+> +CONFIG_MQ_IOSCHED_DEADLINE=m
+>  CONFIG_BINFMT_MISC=m
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+> diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+> index 360c6b2d397a..51675f5000d6 100644
+> --- a/arch/mips/configs/loongson3_defconfig
+> +++ b/arch/mips/configs/loongson3_defconfig
+> @@ -38,8 +38,9 @@ CONFIG_MODULE_UNLOAD=y
+>  CONFIG_MODULE_FORCE_UNLOAD=y
+>  CONFIG_MODVERSIONS=y
+>  CONFIG_PARTITION_ADVANCED=y
+> -CONFIG_IOSCHED_DEADLINE=m
+> -CONFIG_CFQ_GROUP_IOSCHED=y
+> +CONFIG_MQ_IOSCHED_DEADLINE=m
+> +CONFIG_IOSCHED_BFQ=y
+> +CONFIG_BFQ_GROUP_IOSCHED=y
+>  CONFIG_BINFMT_MISC=m
+>  CONFIG_KSM=y
+>  CONFIG_NET=y
+> diff --git a/arch/mips/configs/msp71xx_defconfig b/arch/mips/configs/msp71xx_defconfig
+> index 0fdc03fda12e..6ad1a2381226 100644
+> --- a/arch/mips/configs/msp71xx_defconfig
+> +++ b/arch/mips/configs/msp71xx_defconfig
+> @@ -14,8 +14,6 @@ CONFIG_PCI=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  CONFIG_MODVERSIONS=y
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_UNIX=y
+>  CONFIG_XFRM_USER=y
+> diff --git a/arch/mips/configs/pnx8335_stb225_defconfig b/arch/mips/configs/pnx8335_stb225_defconfig
+> index 738ba3b1374b..d06db6b87959 100644
+> --- a/arch/mips/configs/pnx8335_stb225_defconfig
+> +++ b/arch/mips/configs/pnx8335_stb225_defconfig
+> @@ -14,8 +14,6 @@ CONFIG_HZ_128=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+> -# CONFIG_IOSCHED_DEADLINE is not set
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
+> index 5b947183852b..252d472387aa 100644
+> --- a/arch/mips/configs/rb532_defconfig
+> +++ b/arch/mips/configs/rb532_defconfig
+> @@ -23,7 +23,6 @@ CONFIG_MODULE_UNLOAD=y
+>  CONFIG_PARTITION_ADVANCED=y
+>  CONFIG_MAC_PARTITION=y
+>  CONFIG_BSD_DISKLABEL=y
+> -# CONFIG_IOSCHED_CFQ is not set
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/rt305x_defconfig b/arch/mips/configs/rt305x_defconfig
+> index 110948bc6b39..8c2ead53007a 100644
+> --- a/arch/mips/configs/rt305x_defconfig
+> +++ b/arch/mips/configs/rt305x_defconfig
+> @@ -21,7 +21,6 @@ CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  CONFIG_PARTITION_ADVANCED=y
+> -# CONFIG_IOSCHED_CFQ is not set
+>  # CONFIG_COREDUMP is not set
+>  # CONFIG_COMPACTION is not set
+>  CONFIG_NET=y
+> diff --git a/arch/mips/configs/xway_defconfig b/arch/mips/configs/xway_defconfig
+> index 49b5ea6eff62..9abbc0debc2a 100644
+> --- a/arch/mips/configs/xway_defconfig
+> +++ b/arch/mips/configs/xway_defconfig
+> @@ -23,7 +23,6 @@ CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  CONFIG_PARTITION_ADVANCED=y
+> -# CONFIG_IOSCHED_CFQ is not set
+>  # CONFIG_COREDUMP is not set
+>  # CONFIG_COMPACTION is not set
+>  CONFIG_NET=y
+> 
