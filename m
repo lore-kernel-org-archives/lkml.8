@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1C3C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29F9C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3E3207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C753206CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727304;
-	bh=VUkpiAnzyt7OTRrDXr8sI89PTPa7eWlAXWxwXQF1RRc=;
+	s=default; t=1581727309;
+	bh=UaNRIzw8PdKi+H1pVKj+hGEjageya5/rTyvnZCayyqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cw/My+1EHJsEuAVJlEQR9hU0wGxJVrPZPZToLx02U/QZAtJ/v0YRO/fi8CV3pEEpE
-	 Ftp8DXkgwmQD35qdCtqC/vY+L3sJQgmvZcgqsD3utTOgzo4R5HnzyuWari7Bm2Jg47
-	 xLL1toLrFl71o+N2pEmoQ4VK3RyZWl5yR/fjGv2E=
+	b=NBeZyD671iK9dMs776IpRH+uiS2KxdrJbfnLjEC5MvqNdl8fa+T73M+nYwVAD1ziq
+	 5H6QC2CSspj5CYufgM7bzyvbjk/FNL+D4sxfF31bvmLtj6YE3tnGIi+uU8N9O+q7VJ
+	 +yaKm07uS+R0wClHGWdhBgiyH7zrvGIp5fcUPOjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgBOAln (ORCPT
+        id S1727943AbgBOAls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:41:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48582 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgBOAlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:41:42 -0500
+        id S1725924AbgBOAlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:41:46 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68813217F4;
-        Sat, 15 Feb 2020 00:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C82B322314;
+        Sat, 15 Feb 2020 00:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727302;
-        bh=VUkpiAnzyt7OTRrDXr8sI89PTPa7eWlAXWxwXQF1RRc=;
+        s=default; t=1581727306;
+        bh=UaNRIzw8PdKi+H1pVKj+hGEjageya5/rTyvnZCayyqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTu2lpL7VeD6/3Wj9SbFp/ClYH3SZKvnk6ukfZ8MDt8FQEo42uSBu9+RG2isllsdq
-         aan7xaDkzxDpGNOy3sqpoBrmLtSYb7JwXqU2J90DuaGKjl4UbBEBvOlbsI03wERxcf
-         fUfZb3mX4fJwoteGmSpnt6NR5E7R6+pXTHL3Z4t4=
+        b=Bm067/TUzBOiKDLeWS5/Je0OAv27Tw/uB9I0UtT9t7gIhsNXu//ryAK1AwyKupUNd
+         kxgI82uHPlFHQsnPNPEUUoKviYlBrx0VxvYtshWVUd4jbf1AqFyqILd4c0KoayQz1r
+         CfRTCuEoicLz3eQt4jiEPzWChRPCYf7quvdKuE4Y=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 10/18] rcutorture: Make kvm-find-errors.sh abort on bad directory
-Date:   Fri, 14 Feb 2020 16:41:17 -0800
-Message-Id: <20200215004125.16953-4-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 11/18] rcutorture: Fix rcu_torture_one_read()/rcu_torture_writer() data race
+Date:   Fri, 14 Feb 2020 16:41:18 -0800
+Message-Id: <20200215004125.16953-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
 References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
@@ -61,30 +61,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, kvm-find-errors.sh gives a usage prompt when given a bad
-directory, but then soldiers on, giving a series of confusing error
-messages.  This commit therefore prints an error message and exits when
-given a bad directory, hopefully reducing confusion.
+The ->rtort_pipe_count field in the rcu_torture structure checks for
+too-short grace periods, and is therefore read by rcutorture's readers
+while being updated by rcutorture's writers.  This commit therefore
+adds the needed READ_ONCE() and WRITE_ONCE() invocations.
+
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely and due to this being rcutorture.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/kvm-find-errors.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/rcu/rcutorture.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-find-errors.sh b/tools/testing/selftests/rcutorture/bin/kvm-find-errors.sh
-index 1871d00..6f50722 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-find-errors.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-find-errors.sh
-@@ -20,7 +20,9 @@
- rundir="${1}"
- if test -z "$rundir" -o ! -d "$rundir"
- then
-+	echo Directory "$rundir" not found.
- 	echo Usage: $0 directory
-+	exit 1
- fi
- editor=${EDITOR-vi}
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 5efd950..edd9746 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -375,11 +375,12 @@ rcu_torture_pipe_update_one(struct rcu_torture *rp)
+ {
+ 	int i;
  
+-	i = rp->rtort_pipe_count;
++	i = READ_ONCE(rp->rtort_pipe_count);
+ 	if (i > RCU_TORTURE_PIPE_LEN)
+ 		i = RCU_TORTURE_PIPE_LEN;
+ 	atomic_inc(&rcu_torture_wcount[i]);
+-	if (++rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
++	WRITE_ONCE(rp->rtort_pipe_count, i + 1);
++	if (rp->rtort_pipe_count >= RCU_TORTURE_PIPE_LEN) {
+ 		rp->rtort_mbtest = 0;
+ 		return true;
+ 	}
+@@ -1015,7 +1016,8 @@ rcu_torture_writer(void *arg)
+ 			if (i > RCU_TORTURE_PIPE_LEN)
+ 				i = RCU_TORTURE_PIPE_LEN;
+ 			atomic_inc(&rcu_torture_wcount[i]);
+-			old_rp->rtort_pipe_count++;
++			WRITE_ONCE(old_rp->rtort_pipe_count,
++				   old_rp->rtort_pipe_count + 1);
+ 			switch (synctype[torture_random(&rand) % nsynctypes]) {
+ 			case RTWS_DEF_FREE:
+ 				rcu_torture_writer_state = RTWS_DEF_FREE;
+@@ -1291,7 +1293,7 @@ static bool rcu_torture_one_read(struct torture_random_state *trsp)
+ 		atomic_inc(&n_rcu_torture_mberror);
+ 	rtrsp = rcutorture_loop_extend(&readstate, trsp, rtrsp);
+ 	preempt_disable();
+-	pipe_count = p->rtort_pipe_count;
++	pipe_count = READ_ONCE(p->rtort_pipe_count);
+ 	if (pipe_count > RCU_TORTURE_PIPE_LEN) {
+ 		/* Should not happen, but... */
+ 		pipe_count = RCU_TORTURE_PIPE_LEN;
 -- 
 2.9.5
 
