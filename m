@@ -2,149 +2,82 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B3C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D66C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566CA2082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECD02082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgBOG31 (ORCPT
+        id S1726141AbgBOG3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 01:29:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725799AbgBOG31 (ORCPT
+        Sat, 15 Feb 2020 01:29:33 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56508 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgBOG3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 01:29:27 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01F6Od3D147756;
-        Sat, 15 Feb 2020 01:29:05 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6b53gbr5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Feb 2020 01:29:05 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01F6PZNS010259;
-        Sat, 15 Feb 2020 06:29:04 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02dal.us.ibm.com with ESMTP id 2y6895h839-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Feb 2020 06:29:04 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01F6T2Oe53150192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 06:29:02 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE4E2BE05B;
-        Sat, 15 Feb 2020 06:29:02 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63DCCBE04F;
-        Sat, 15 Feb 2020 06:29:00 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.178.59])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sat, 15 Feb 2020 06:29:00 +0000 (GMT)
-Message-ID: <546ce4737f308a4ba99a53f550de5b44abc06444.camel@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/8xx: Fix clearing of bits 20-23 in ITLB miss
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Sat, 15 Feb 2020 03:28:58 -0300
-In-Reply-To: <4f70c2778163affce8508a210f65d140e84524b4.1581272050.git.christophe.leroy@c-s.fr>
-References: <4f70c2778163affce8508a210f65d140e84524b4.1581272050.git.christophe.leroy@c-s.fr>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-5kXEsvSYMa1jJ9ldR3mf"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sat, 15 Feb 2020 01:29:32 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2qxG-00D47H-OY; Sat, 15 Feb 2020 06:29:30 +0000
+Date:   Sat, 15 Feb 2020 06:29:30 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Atul Gupta <atul.gupta@chelsio.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] almost certain bug in
+ drivers/crypto/chelsio/chcr_algo.c:create_authenc_wr()
+Message-ID: <20200215062930.GA23230@ZenIV.linux.org.uk>
+References: <20200215061416.GZ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-15_01:2020-02-14,2020-02-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
- spamscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002150052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200215061416.GZ23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+	Another fairly bug in there (this time in
+drivers/crypto/chelsio/chtls/chtls_io.c):
 
---=-5kXEsvSYMa1jJ9ldR3mf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+/* Read TLS header to find content type and data length */
+static int tls_header_read(struct tls_hdr *thdr, struct iov_iter *from)  
+{
+        if (copy_from_iter(thdr, sizeof(*thdr), from) != sizeof(*thdr))
+                return -EFAULT;
+        return (__force int)cpu_to_be16(thdr->length);
+}
 
-On Sun, 2020-02-09 at 18:14 +0000, Christophe Leroy wrote:
-> In ITLB miss handled the line supposed to clear bits 20-23 on the
-> L2 ITLB entry is buggy and does indeed nothing, leading to undefined
-> value which could allow execution when it shouldn't.
->=20
-> Properly do the clearing with the relevant instruction.
->=20
-> Fixes: 74fabcadfd43 ("powerpc/8xx: don't use r12/SPRN_SPRG_SCRATCH2 in TL=
-B Miss handlers")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/kernel/head_8xx.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8x=
-x.S
-> index 9922306ae512..073a651787df 100644
-> --- a/arch/powerpc/kernel/head_8xx.S
-> +++ b/arch/powerpc/kernel/head_8xx.S
-> @@ -256,7 +256,7 @@ InstructionTLBMiss:
->  	 * set.  All other Linux PTE bits control the behavior
->  	 * of the MMU.
->  	 */
-> -	rlwimi	r10, r10, 0, 0x0f00	/* Clear bits 20-23 */
-> +	rlwinm	r10, r10, 0, ~0x0f00	/* Clear bits 20-23 */
->  	rlwimi	r10, r10, 4, 0x0400	/* Copy _PAGE_EXEC into bit 21 */
->  	ori	r10, r10, RPN_PATTERN | 0x200 /* Set 22 and 24-27 */
->  	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
+For one thing, that kind of force-casts is pretty much always wrong.
+This one clearly says "should've used be16_to_cpu()".  And that includes
+annotating tls_hdr ->length as __be16; no idea about the other field
+in there (->version, that is).
 
-Looks a valid change.
-rlwimi  r10, r10, 0, 0x0f00 means:=20
-r10 =3D ((r10 << 0) & 0x0f00) | (r10 & ~0x0f00) which ends up being
-r10 =3D r10=20
+For another, the only caller is
+                        recordsz = tls_header_read(&hdr, &msg->msg_iter);
+                        size -= TLS_HEADER_LENGTH;
+                        copied += TLS_HEADER_LENGTH;
+                        csk->tlshws.txleft = recordsz;
+                        csk->tlshws.type = hdr.type;
+                        if (skb)
+                                ULP_SKB_CB(skb)->ulp.tls.type = hdr.type;
+which doesn't look like something that'll work if you get -EFAULT out of
+that function.  If anything, that smells like we want
+                        recordsz = tls_header_read(&hdr, &msg->msg_iter);
+			if (recordsz < 0)
+				goto do_fault;
+			...
 
-On ISA, rlwinm is recommended for clearing high order bits.
-rlwinm  r10, r10, 0, ~0x0f00 means:
-r10 =3D (r10 << 0) & ~0x0f00
+What's more, we do *not* want a header that has faulted halfway through
+to be consumed.  IOW, we want copy_from_iter_full():
 
-Which does exactly what the comments suggests.
+static int tls_header_read(struct tls_hdr *thdr, struct iov_iter *from)  
+{
+        if (!copy_from_iter_full(thdr, sizeof(*thdr), from))
+                return -EFAULT;
+        return be16_to_cpu(thdr->length);
+}
 
-FWIW:
-Reviwed-by: Leonardo Bras <leonardo@linux.ibm.com>
-
---=-5kXEsvSYMa1jJ9ldR3mf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5Hj6oACgkQlQYWtz9S
-ttQWoxAAkMDIynrGqSBGS3wqJaf0Wkr6UJnb2oJd8WOg7ZQB9a2IG9QtKadFz1sk
-MahuBsMwfQBTntHszpiU0v4v1Z/6S3ibDOvacTaD6iRETl++yPojxoUSw4VyfJQQ
-WaHYTotuFPjCIo5qQJXuyV1mfXBCQ2SuxuX9gu/eQI0yIfKhRR5zdX9XbaTyytjQ
-BgU/OLXJJmeJfuAvGk+qzws703XdotG8JhK3Neodqn+4yQSibd4P7Cpqwh4gAOPN
-Uo2D7yABPrAZ2dEyJYpsRuesaOOptxnks+0B3pQ/kXj0JggkOu67GrNWYERo0xXp
-rneL+fc966WhwXtblzBqXsSb/6OuhhPH7EEMqJyOJgmn5jX5Ua39bATz7F453ZLz
-ksBYKA3c+zUOH5L9u5jiJ0ldfHf0UlxEU6t9Qp4QckEIwVaOwDX4/+hijtY1fTmp
-iW7CyKrvsdeuPe2b4+MSx/EwYD5Ab5N1OgKpxswz8QVuvdrzSmpCZyu0UHru1Rmd
-mqmzbf5MVw5P54u2xrppiOhRiIP6P/PRzX2EbDDl7PHhI0kf9AOgCM2SiBb1Xrc+
-7lcXxebPlZttPWyI0Hx1mt7qhH3z/Ht/FTPr5t2SiHr8Wt1fA5tkOw8yETzXpQ+F
-NREgXa6DoyomToxuOZcyla0yVJ38gPGEzqQwj8U2Qks1uE0akmA=
-=Z6FN
------END PGP SIGNATURE-----
-
---=-5kXEsvSYMa1jJ9ldR3mf--
-
+in addition to that missing check in the caller...
