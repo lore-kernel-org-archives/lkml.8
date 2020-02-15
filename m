@@ -2,59 +2,73 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12FEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391F8C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFD42081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10F42072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ipYruDIP"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XpYT65RR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBOBR0 (ORCPT
+        id S1727849AbgBOBU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 20:17:26 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51340 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbgBOBRZ (ORCPT
+        Fri, 14 Feb 2020 20:20:58 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39486 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727649AbgBOBU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 20:17:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=BGvB+FUoLlv3HEvXBrhnN6JC/LJ+icLfki58Vl6nukc=; b=ipYruDIPj+zk6cpFBRObvJS06t
-        isg4YhZtjLeVW5eANUzKiagfCMgZN7EByJnT7ohok/+UsWjhxyxzrFq0jahiqPl+rmYWktsIzxzp9
-        ojbtGe4koFplx0wlQN2DgCQEJ1w0Whuwbo1ECTPacv+hQK4w0hioXsah9oWDPPtScrxClhuA4XXUr
-        kQHVJViJq73EoU+GihPEr5nit1FuU+ahQiqSFDmFKf+ltK/eBfqH4iCTbXSXcvoRbTH/IaivA6iFv
-        kEPTnVWoz+xXBbkbn6zOeBhH+piiLwuItzGAY+9UejAH1WU61yqgk4StQBiJmgSDcGjPSs6EHfiiG
-        biprHyjA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2m5D-00088W-MI; Sat, 15 Feb 2020 01:17:23 +0000
-Subject: Re: [PATCH] hugetlb: fix CONFIG_CGROUP_HUGETLB ifdefs
-To:     Mina Almasry <almasrymina@google.com>, linux-mm@kvack.org,
-        linux-next@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <7ff9e944-1c6c-f7c1-d812-e12817c7a317@oracle.com>
- <20200214204544.231482-1-almasrymina@google.com>
- <CAHS8izMjyLzCsSga59dE+zDC3sLBuA=_u4EtsShN+EZQ1EQitw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5237b9bc-2614-0a3a-afa5-5015f30d28bc@infradead.org>
-Date:   Fri, 14 Feb 2020 17:17:21 -0800
+        Fri, 14 Feb 2020 20:20:57 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j15so5797717pgm.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 17:20:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kq5+zg+BjWYmBTuTOQDyEJGh1pC/f5gJH8KP9SmE9fg=;
+        b=XpYT65RR0Fi4QsHUQLu3MF7Hoh1ULvt2aa9HhPIww9v/ulAN+5OD5QeZsoRNTQKRVu
+         pptPtLqwblpNiw0bFy8+N3Ka+gpX1rEnvjFaSjFJfYh3BH+iECY9n3LFtt0FHLvmQu0R
+         rdqP2WfinfVvWWsSVaZMDWwd+FVhOAeMQkwwTJvGtAd26aII1GBSWjcR28K3oN1mVi1w
+         XYNccYp6c9hCBG+4nIcKpczRRlFWgGGcv3zWIL3t4abUSNedJTn24AALa/IPQNYmOgGv
+         1pAqwpKqU4zZ0pyQBFoDY1NG44ExZTKzs51eseFiC7/S228ehhCOB7GmJerLdycMWqp7
+         XThw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kq5+zg+BjWYmBTuTOQDyEJGh1pC/f5gJH8KP9SmE9fg=;
+        b=Jth+rA9BxGlHO1jUNqCbVRG5rpiO7qT1LDMSCPb2fcxFa5Zwqn3sZqh0A51ya5gy7T
+         2AwKwOJD0yC4Q5XxcDUxmjBpeL6UiIwdvaOWC0uXoM37RPtlzAdsvHzMXMF09cpaYbh6
+         DI8+yNTukTFn4t3E6pri9kaumajMUhdsZByztRGvwMu08WN/GBsrmNDqEAhGPRGb5fWw
+         EpV9b1Fv3vLOsWmNNn/subSeLi8vvP1x11VCDkTNRh831Xi+iUvYxUleDbRWZeqYN078
+         O66u2Q+r7nweKc5eMNby8TeBC79UynwBhxeiNWhEe69IpLUeK8kVezwknKwTaEgxQSIL
+         Yr3w==
+X-Gm-Message-State: APjAAAU0zty8DK0+TjxFB44Op+KexYteFxDF+GI9dHddpPzIDCCBp2wi
+        fMYEaBO6OAmFi5bfxFOJoh+UNTV2GsY=
+X-Google-Smtp-Source: APXvYqzL/dVBWz2L9E/f9zq7JCtYavJdmzKMwmTGXxYnq9BfNcmSMoYZ/kGg/y4DyOxFXOqZ60EMRg==
+X-Received: by 2002:a63:d04c:: with SMTP id s12mr6373035pgi.105.1581729655556;
+        Fri, 14 Feb 2020 17:20:55 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id p3sm8492017pfg.184.2020.02.14.17.20.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2020 17:20:55 -0800 (PST)
+Subject: Re: [GIT PULL] io_uring fixes for 5.6-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <d72d51a9-488d-c75b-4daf-bb74960c7531@kernel.dk>
+ <CAHk-=wixEw+wKJzwfEFnBYLNt5zU6zA2kpNVu_36e33_zsawKA@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ba8f3ef7-a696-0e47-eadb-7772e6aba725@kernel.dk>
+Date:   Fri, 14 Feb 2020 18:20:53 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAHS8izMjyLzCsSga59dE+zDC3sLBuA=_u4EtsShN+EZQ1EQitw@mail.gmail.com>
+In-Reply-To: <CAHk-=wixEw+wKJzwfEFnBYLNt5zU6zA2kpNVu_36e33_zsawKA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,76 +77,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 1:00 PM, Mina Almasry wrote:
-> On Fri, Feb 14, 2020 at 12:46 PM Mina Almasry <almasrymina@google.com> wrote:
+On 2/14/20 3:07 PM, Linus Torvalds wrote:
+> On Fri, Feb 14, 2020 at 8:45 AM Jens Axboe <axboe@kernel.dk> wrote:
 >>
->> Fixes an #ifdef bug in the patch referred to below that was
->> causing a build error when CONFIG_DEBUG_VM &&
->> !CONFIG_CCGROUP_HUGETLB.
+>> Here's a set of fixes for io_uring that should go into this release.
+> 
+> Whaa?
+> 
+>           for_each_node(node) {
+> +                if (!node_online(node))
+> +                        continue;
+> 
+> that's just silly.
+> 
+> We have 'for_each_online_node()' for this.
+> 
+> There's something like four patterns of that pointless thing.
 
-Hi Mina,
+Sorry, that definitely should have been for_each_online_node() for
+those, guess I didn't think of that when making the change.
 
-I don't know if this was supposed to fix the 2 build reports that I made,
-but this does not apply cleanly to mmotm (and it's a reply email so it's
-more difficult to apply anyway):
+> And in io_wq_create(), do you really want to allocate that wqe for
+> nodes that aren't online? Right now you _allocate_ the node data for
+> them (using a non-node-specific allocation), but then you won't
+> actually create the thread for them io_wq_manager().
 
-Applying patch mm-hugetlb-fix-CONFIG_CGROUP_HUGETLB.patch
-patching file mm/hugetlb.c
-Hunk #1 succeeded at 289 with fuzz 1.
-Hunk #2 succeeded at 325 with fuzz 2.
-Hunk #3 FAILED at 435.
-1 out of 3 hunks FAILED -- rejects in file mm/hugetlb.c
+I was thinking about this a bit, and as far as I know there's no good
+way to get notified of nodes coming and going. And I'd really like
+to avoid having to add that to the fast path.
 
+So this seemed like the lesser of evils, we setup the wqe just in
+case the node does come online, and then rely on the manager
+creating the thread when we need it. Not sure what setup was run
+to create it, I haven't come across any boxes where we have nodes
+that are present but not online.
 
->> Fixes: b5f16a533ce8a ("hugetlb: support file_region coalescing again")
->> Signed-off-by: Mina Almasry <almasrymina@google.com>
->> Cc: David Rientjes <rientjes@google.com>
->> Cc: Greg Thelen <gthelen@google.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Shakeel Butt <shakeelb@google.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  mm/hugetlb.c | 8 +++++---
->>  1 file changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index ee6d262fe6ac0..95d34c58981d2 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -289,7 +289,7 @@ static bool has_same_uncharge_info(struct file_region *rg,
->>  #endif
->>  }
->>
->> -#ifdef CONFIG_DEBUG_VM
->> +#if defined(CONFIG_DEBUG_VM) && defined(CONFIG_CGROUP_HUGETLB)
->>  static void dump_resv_map(struct resv_map *resv)
->>  {
->>         struct list_head *head = &resv->regions;
->> @@ -325,6 +325,10 @@ static void check_coalesce_bug(struct resv_map *resv)
->>                 }
->>         }
->>  }
->> +#else
->> +static void check_coalesce_bug(struct resv_map *resv)
->> +{
->> +}
->>  #endif
->>
->>  static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
->> @@ -431,9 +435,7 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->>         }
->>
->>         VM_BUG_ON(add < 0);
->> -#ifdef CONFIG_DEBUG_VM
->>         check_coalesce_bug(resv);
->> -#endif
->>         return add;
->>  }
->>
->> --
->> 2.25.0.265.gbab2e86ba0-goog
+> Plus if the node online status changes, it looks like you'll mess up
+> _anyway_, in that  io_wq_manager() will first create the workers on
+> one set of nodes, but then perhaps set the state flags for a
+> completely different set of nodes if some onlining/offlining has
+> happened.
 
-thanks.
+We'll look into making this more clear and bullet proof.
+
+> I've pulled this, but Jens, you need to be more careful. This all
+> looks like completely random state that nobody spent any time thinking
+> about.
+> 
+> Seriously, this "io_uring FIXES ONLY" needs to be stricter than what
+> you seem to be doing here. This "fix" is opening up a lot of new
+> possibilities for inconsistencies in the data structures.
+
+We'll get it sorted for 5.6. Thanks for pulling.
+
 -- 
-~Randy
+Jens Axboe
 
