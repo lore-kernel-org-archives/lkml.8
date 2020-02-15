@@ -2,121 +2,122 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931EC4741C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BA6C7114D
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 14:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447722086A
+	by mail.kernel.org (Postfix) with ESMTP id 6BE4B217F4
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 14:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DPrn0GIx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4/+fPTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgBOO1L (ORCPT
+        id S1726389AbgBOOaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 09:27:11 -0500
-Received: from mout.web.de ([212.227.15.3]:50529 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbgBOO1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 09:27:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1581776620;
-        bh=+IsS2bFBZiIpX31dAAhhhaGIroM/ypljk2P1XOPGPYI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DPrn0GIxjtuEzcJ0799clUcaCqcY8ig/WiPGbC7V9sICZ8TSgacuRJ6OZ3edSJg5n
-         VoO71BRcNDu/BzBdWzTj6V4BhaIZQlu9GqxNHkd5m49VzO9RfqXzQsZ4hm4sXQ4vDI
-         ggWqKn14fDhChtS2QSAwBVKjCKGYdz1ibInuF8CQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [167.87.37.157] ([95.157.55.156]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MTuQz-1itnOE30Ur-00QiAG; Sat, 15
- Feb 2020 15:23:39 +0100
-Subject: Re: [PATCH v2 1/3] riscv: Add support for mem=
-To:     Nikolay Borisov <nborisov@suse.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1581767384.git.jan.kiszka@web.de>
- <617f75f4eaacb02cd9d0a7044434e3e9b65e9e8b.1581767384.git.jan.kiszka@web.de>
- <24bf6fae-27f4-dbdc-fcc5-6c3b65733ae6@suse.com>
-From:   Jan Kiszka <jan.kiszka@web.de>
-Message-ID: <0848ebec-3283-bb78-ace4-fd15360b41fe@web.de>
-Date:   Sat, 15 Feb 2020 15:23:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 15 Feb 2020 09:30:15 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37467 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgBOOaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 09:30:14 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t7so3219757edr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 06:30:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ShrD9ez7moVL0/KalK5SkFzM7anSQi4PH6FlFUNAEA=;
+        b=d4/+fPTDgctzavwCqmuiCCpsgLpn+jIUknYPDSs61cauQl9+FYGv9YzmKn3Wrroo53
+         F7dNMtXDA59M/xigNzrR/dV6BDUZvDXDQc39qjvJxBZ46kmsoJDFYuje49T6dTndd96l
+         KXFpiNuELLr9x9rKX7zcpkE0LMbZeRM5uHuGI/CF00ur9fSUyDujltY2n0LnrWtzHNC1
+         mK2FXEOJJZ4PL8ruMGoRgi245CpMlQkIUEMdE5bYPfbIsaHnJazTm2tUFWLm8bF1VHbW
+         3L7YX2ODo1xoHmZ/ETWFjmEjejsYeJEHQf+AOIL1HRgkBSL2meHKgcbQFsvWY52pItYT
+         W8Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4ShrD9ez7moVL0/KalK5SkFzM7anSQi4PH6FlFUNAEA=;
+        b=lJ2hGIBg0Us7W1d4luP0NRpf2RK24Z8pJMfbAtPkXwq2havxbWLT4zTIz8N2DSrCIt
+         8FvDvFZ/KzL71KBtPlYtxwWj+N6fNcCweV5KDAeFpC/dYetAEqgmgx/PKA0b4W9z4Mlc
+         FRdy0tX48hnkxwu7sOBkQHYZb9DT6b+8Ar/OkIfmgwDo1pGMSDdc6FplQMikmws9fFFb
+         nhEAp6fN8y+31gR9ozyLO5OW5UgcrVS600MZzIgzSNQlaLsHLFjC3WU5ZmwtQ97KuM5I
+         I4KXr+ooy9wrQOkzTTad7UCACfNGH+w0SD6K5L6lUgq/g+X49qB+ZOkFGrXmmPaYggNM
+         JpUg==
+X-Gm-Message-State: APjAAAUqQevuuEzOmge81DM02AD2Aq/j9ciZ1J4ZFkG07rOH2MGNcnwg
+        haRYCaHXDjRuGB4mKDZ8flo9A9DTUsOe/8MgI7Jhiw==
+X-Google-Smtp-Source: APXvYqwxM323KPHil1X5yz/uLQsIal7NBKyJgPA1syNh9U9MbZ4PqkU9BAuUeOiWYJWGtnMTY9sCxcsEMQGtS493ka8=
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr6917583edb.146.1581777012854;
+ Sat, 15 Feb 2020 06:30:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <24bf6fae-27f4-dbdc-fcc5-6c3b65733ae6@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fpm+FTunoennvKmEhkKqsmWdYkI9FYpf+Rt9Y43H5GVqEoVLTof
- dD4zMclz6SGsLhdvpnBVCl7Mh1Sqb4W9bmFSxi1CAUv/blKfXteB3Jp5B8cD2Y4MpvO5waG
- PTU4LWo7AoFvWSoQy/qYM10rzCVJzW/s21ABSPalow+IA/i3YEXmH5a0nUue7DOAnrCe8ky
- f7xHEA6yOGhrmP8p86rWw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:32RsqgmBv5U=:ZN1deSqh2tESCvEIZnshLz
- GPMF7mx23OAZQ72p6gfmSGdG1WEDMQOSd1x2bHDJUIKjeOVsJsbaf1Ja70cqk0hbUEz4hGruY
- gedS/cSuyWnEgKgAVIs3W1Pf3afdcx0lwrGTRP2hk5P7teeQoBwLZ3KuOQUM4ZyzePCokvdPJ
- Hp+L/xTia1Okk9LsVOvgzs6tAhVvYcHhifDKEP/SN3fUf/d/acCu/bSTckuFzNvgRVtnMdOs8
- wL7vHRq9G8Q/8zGKXs2MGcLUpC+yFQY+ZHDFXnsrkWpAuVqF7669Q6egV53iM09oOfLWMjVtw
- T1nV4TMwJnpGHbjuyhfWYiPaJU0m0ZdqJNsqEPJnk96AG2A4IYdsqur09/+ckeKUjTjsMu/ZQ
- g6omVa7tAP0GgjdVvnC/gr1izyyXlXN9u/DcW0tnEippE3WweXqL4sBn1GVhoAWOVSaHspH9K
- 9Nt7YUR8RpRaOOpUEU5WUFoW3d48WRGcegg3GmGIQbivpgaJM0DUTY/sTBB+XGVukV6p7mZqY
- zDWolbukJIY02phLOZxoHe6dfo5o9TmXC3IXb+Tu+PSjTsNCVJBZuZxC8jJvDDFxYzz7A0rKi
- 8lKG30uftTmbvHBXpk51g71HzhOjXLQn6ASHxQJjAckON947J0M9O7pi4GjGrM+tRV7kzjDSZ
- e8GffjkLuUgQAtWfg1FFJnpMoekhGqdSohg4LnFhzqdyZP6z+VD7oHHHvRU/d4fvUKHWp4D6a
- kkWyCvv9Jx5c+DyBTfuk4Wk1rFwTH5lLoJJKwA1LiinihZbD0UuzbbW8ChZNv/x1afJ3OqcOb
- jVn9vMjPBQYlCRnMiPm+YXWK8MkLNl/gJ/uhLRTa1aq9DjqjNfHD0LH/3JhSVTFqeZ9IoKg+R
- Rwz6OGS3vvkNPNC4xEvQzXy1cSWz6UOrhJ98538dya919SLIJFk7Zp5+W+t8Vl0wHvxr8yfVu
- NrX6Qbzho1GrSvYT2Gnd34R8hb0aG6m4xsTx0HFyMtM1PbohEYYB3/oKomMaOy8WsdzVRIGbo
- DAVVXwaSX8LyRg7SgP1fjz5ZHUYvXFnjgUk9UYPWYCqY3FEOG/L9KQcEcfiyGM9hgi2bns+pd
- nqjwzyLsAUqCcemCzJlwZrn3m+T6si2Pjpea3sXu2Dx2J2eA9gK2RKLTXEQ1QR8A0VXPaPVPE
- zJVkBcOy67ImkClaiVZchqv2m6v9YaFuZa0BN9A+C+JIdsIj26W0wZfMIgTovIDN4jEXckEG6
- VhDtCGchvT5f3ynHH
+References: <20200214225849.108108-1-bgeffon@google.com> <20200214231954.GA29849@redhat.com>
+In-Reply-To: <20200214231954.GA29849@redhat.com>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Sat, 15 Feb 2020 09:29:46 -0500
+Message-ID: <CADyq12w3tBO5NfZ33R__B3jvF=ed7ys+o4horGwyUO3bNevObg@mail.gmail.com>
+Subject: Re: [RFC PATCH] userfaultfd: Address race after fault.
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Peter Xu <peterx@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.02.20 14:44, Nikolay Borisov wrote:
->
->
-> On 15.02.20 =D0=B3. 13:49 =D1=87., Jan Kiszka wrote:
->> From: Jan Kiszka <jan.kiszka@siemens.com>
->>
->> This sets a memory limit provided via mem=3D3D on the command line,
->> analogously to many other architectures.
->>
->> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->> =3D2D--
->>   arch/riscv/mm/init.c | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> index 965a8cf4829c..aec39a56d6cf 100644
->> =3D2D-- a/arch/riscv/mm/init.c
->> +++ b/arch/riscv/mm/init.c
->> @@ -118,6 +118,23 @@ static void __init setup_initrd(void)
->>   }
->>   #endif /* CONFIG_BLK_DEV_INITRD */
->>
->> +static phys_addr_t memory_limit =3D3D PHYS_ADDR_MAX;
->
-> 3d is the ascii code for =3D, meaning your client is somehow br0ken?
+Hi Andrea,
+Thanks for the quick reply. That's great to hear that Peter has been
+working on those improvements. I didn't try the entire patchset but I
+did confirm that patch 13, not surprisingly, also resolves that issue
+on at least on x86:
+  https://lkml.org/lkml/2019/9/26/179
 
-The client is called git send-email, and I just checked what was passed
-to it - all fine. It must be my beloved freemail provider that enables
-quoted-printable encoding for this series (interestingly not for another
-one I sent to a different community today). I've resent the same patch
-files to both corporate and private providers, and only the latter shows
-this behavior. Sigh.
-
-IIRC, git am processes this correctly, but I can resent via the
-corporate server as well, whatever is preferred.
+Given that seems pretty low risk and it definitely resolves a pretty
+big issue for the non-cooperative userfaultfd case, any chance it
+could be landed ahead of the rest of the series?
 
 Thanks,
-Jan
+Brian
+
+On Fri, Feb 14, 2020 at 6:20 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> Hello,
+>
+> this and other enhancements have already implemented by Peter (CC'ed)
+> and in the right way, by altering the retry logic in the page fault
+> code. This is a requirement for other kind of usages too, notably the
+> UFFD_WRITEPROTECT ioctl after which multiple consecutive faults can
+> happen and must be handled.
+>
+> IIRC Kirill asked at last LSF-MM uffd-wp talk if there's any
+> particular reason the fault couldn't be retried currently. I had no
+> sure answer other than there's apparently no strong reason why
+> VM_FAULT_RETRY is only allowed 1 time currently, so there should be no
+> issue in lifting that artificial restriction.
+>
+> I'm running with this patchset applied in my systems since Nov with no
+> regression at all. I got sidetracked by various other issues, so
+> unfortunately I didn' post a proper reviewed-by on the last submit yet
+> (pending), but I did at least test it and it was rock solid so far.
+>
+> https://lore.kernel.org/lkml/20190926093904.5090-1-peterx@redhat.com/
+>
+> Can you test and verify it too if it solves your use case?
+>
+> Also note the complete uffd-WP support submit also from Peter:
+>
+> https://lore.kernel.org/lkml/20190620022008.19172-1-peterx@redhat.com/
+>
+> https://github.com/xzpeter/linux/tree/uffd-wp-merged
+>
+> Thanks,
+> Andrea
+>
