@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B2DC35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6946206CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38413206CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727312;
-	bh=QDaV75XnBlFRQ31qZEJLn6dpbJkOPQueivDtsRfSAcg=;
+	s=default; t=1581727315;
+	bh=8Kxm3zyAZ3fmYD0WfbKmxTzytBdFkh6lWSPKacF2s0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCl+NqY2xDRA+z8FfqW19KKHfWN0AQNvTW05Rc0vFPeXFDzbBKsNKlhWXQ5gKwrqb
-	 z0uvWBwcDwQWAMnkAUoEk4+zlFtEV71F3jM/l2h1mCNte4LSWx8qGGINWTzTv3+W0A
-	 H7nBixd9pFxRavu2YsryVyBVfpOFOtjGr6kDnrvI=
+	b=x46Mq4SwuyHtdUmtV/YVVE4xKRlmrTFI6F5NCGTGam1kLT45GmqD3Z9fPggNlJ2Qb
+	 cO5QSLsDDEO+jWDUy+/xyRsZ9uEKHbLGyy9kCE7H/9lwErRqE4+6xu+lSge9aJQIM0
+	 tuyQjcWhiPn6v0vRvwOlnVI+It+ttcUq4G76HP/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgBOAlv (ORCPT
+        id S1728015AbgBOAly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:41:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:41:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgBOAlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:41:50 -0500
+        id S1725924AbgBOAlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:41:53 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F1E72081E;
-        Sat, 15 Feb 2020 00:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2305A222C4;
+        Sat, 15 Feb 2020 00:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727309;
-        bh=QDaV75XnBlFRQ31qZEJLn6dpbJkOPQueivDtsRfSAcg=;
+        s=default; t=1581727313;
+        bh=8Kxm3zyAZ3fmYD0WfbKmxTzytBdFkh6lWSPKacF2s0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJgNXEvwZCcaI62QHVUmj//qq9YGXWvFUsmr0ySovHgoNFVS95ZDn3y8BRni8YoC9
-         74LdeAFgHxj/bPqFeiWW7bRGwjX+T/rgeOF9Uip1OzbFOD98v0fs4JxXFxzP5LQN7y
-         UX0rhtsGIlAcd5qKwDstiLFx7gme6tMuJdDEaA0o=
+        b=x/PDvtCIpq7PWjm7ixuyovbCCGsSAnJGJX/pftT6d7bJ2Xo6zyCm1xifW9MfN/k4/
+         LK9UAbduoISJy3JNjIEW9rGCi4Lnox2rrsQ2zkJ+898UT42rCVOy/3wLk3m4mdR7XE
+         P63TmHc32Chm2Ugg//FNKzrTimXcl8JYQ+J+JeyE=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 12/18] rcutorture: Fix stray access to rcu_fwd_cb_nodelay
-Date:   Fri, 14 Feb 2020 16:41:19 -0800
-Message-Id: <20200215004125.16953-6-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 13/18] rcutorture: Add READ_ONCE() to rcu_torture_count and rcu_torture_batch
+Date:   Fri, 14 Feb 2020 16:41:20 -0800
+Message-Id: <20200215004125.16953-7-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
 References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
@@ -61,33 +61,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The rcu_fwd_cb_nodelay variable suppresses excessively long read-side
-delays while carrying out an rcutorture forward-progress test.  As such,
-it is accessed both by readers and updaters, and most of the accesses
-therefore use *_ONCE().  Except for one in rcu_read_delay(), which this
-commit fixes.
+The rcutorture rcu_torture_count and rcu_torture_batch per-CPU variables
+are read locklessly, so this commit adds the READ_ONCE() to a load in
+order to avoid various types of compiler vandalism^Woptimization.
 
-This data race was reported by KCSAN.  Not appropriate for backporting
-due to this being rcutorture.
+This data race was reported by KCSAN. Not appropriate for backporting
+due to failure being unlikely and due to this being rcutorture.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/rcutorture.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index edd9746..124160a 100644
+index 124160a..0b9ce9a 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -339,7 +339,7 @@ rcu_read_delay(struct torture_random_state *rrsp, struct rt_read_seg *rtrsp)
- 	 * period, and we want a long delay occasionally to trigger
- 	 * force_quiescent_state. */
+@@ -1413,8 +1413,8 @@ rcu_torture_stats_print(void)
  
--	if (!rcu_fwd_cb_nodelay &&
-+	if (!READ_ONCE(rcu_fwd_cb_nodelay) &&
- 	    !(torture_random(rrsp) % (nrealreaders * 2000 * longdelay_ms))) {
- 		started = cur_ops->get_gp_seq();
- 		ts = rcu_trace_clock_local();
+ 	for_each_possible_cpu(cpu) {
+ 		for (i = 0; i < RCU_TORTURE_PIPE_LEN + 1; i++) {
+-			pipesummary[i] += per_cpu(rcu_torture_count, cpu)[i];
+-			batchsummary[i] += per_cpu(rcu_torture_batch, cpu)[i];
++			pipesummary[i] += READ_ONCE(per_cpu(rcu_torture_count, cpu)[i]);
++			batchsummary[i] += READ_ONCE(per_cpu(rcu_torture_batch, cpu)[i]);
+ 		}
+ 	}
+ 	for (i = RCU_TORTURE_PIPE_LEN - 1; i >= 0; i--) {
 -- 
 2.9.5
 
