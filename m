@@ -2,155 +2,75 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F11C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0586CC35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72D72081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dMAR4DoA"
+	by mail.kernel.org (Postfix) with ESMTP id CE1642081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBOB5E (ORCPT
+        id S1727921AbgBOCAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 20:57:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbgBOB5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 20:57:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=aPLaqzQiC2oJA5/Vp51UZ2aCFqPxWRiK5NqiMLTMznc=; b=dMAR4DoA0Gv7jeXKJeNuYkD3YD
-        45d0Dh809kj2THRXdsWLabVKvR2DD8YszgGorTQWrG72vcQdBw8yZd/m8RECx4q/A0RxOBd/8pwVR
-        i52tknsKXcF5fB/M9dOtFn96w0BDHzStEPbp8TuI3ufYyrEWPbJClW+LAmHWPK0vIpiM/DfrwWHuD
-        8jjd5orYMNrdQNs4ANogJmlpR7kisXksF647BebNYCzmrJK9MABjwfnavX9eQB3f2WY0uJrmAkLXh
-        yEXX09xDmSTG+V+kwBDpKqYBEplhhyfQo1X4CuPLs0AQQ3KcIpItLRIGa+ucK5CBRSe5k2yiPiDGx
-        UmVJCs3g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2mhV-0005yR-Ta; Sat, 15 Feb 2020 01:56:57 +0000
-Subject: Re: [PATCH] hugetlb: fix CONFIG_CGROUP_HUGETLB ifdefs
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Mina Almasry <almasrymina@google.com>, linux-mm@kvack.org,
-        linux-next@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <7ff9e944-1c6c-f7c1-d812-e12817c7a317@oracle.com>
- <20200214204544.231482-1-almasrymina@google.com>
- <CAHS8izMjyLzCsSga59dE+zDC3sLBuA=_u4EtsShN+EZQ1EQitw@mail.gmail.com>
- <5237b9bc-2614-0a3a-afa5-5015f30d28bc@infradead.org>
-Message-ID: <f0fd4a6b-1d4a-8e7d-65c0-a454fbf550a2@infradead.org>
-Date:   Fri, 14 Feb 2020 17:56:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 21:00:23 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2997 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727639AbgBOCAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 21:00:22 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id E9C182F6DADF3E965247;
+        Sat, 15 Feb 2020 10:00:16 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 15 Feb 2020 10:00:16 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Sat, 15 Feb 2020 10:00:16 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Sat, 15 Feb 2020 10:00:16 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: Add the check and free to avoid unknown errors.
+Thread-Topic: [PATCH] KVM: Add the check and free to avoid unknown errors.
+Thread-Index: AdXjojDYOXFel9aeTuSYbbuVH1Y8wQ==
+Date:   Sat, 15 Feb 2020 02:00:16 +0000
+Message-ID: <fdc45fbc0b9c4c38ab539c1abf0f1e4a@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <5237b9bc-2614-0a3a-afa5-5015f30d28bc@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 5:17 PM, Randy Dunlap wrote:
-> On 2/14/20 1:00 PM, Mina Almasry wrote:
->> On Fri, Feb 14, 2020 at 12:46 PM Mina Almasry <almasrymina@google.com> wrote:
->>>
->>> Fixes an #ifdef bug in the patch referred to below that was
->>> causing a build error when CONFIG_DEBUG_VM &&
->>> !CONFIG_CCGROUP_HUGETLB.
-> 
-> Hi Mina,
-> 
-> I don't know if this was supposed to fix the 2 build reports that I made,
-> but this does not apply cleanly to mmotm (and it's a reply email so it's
-> more difficult to apply anyway):
-> 
-> Applying patch mm-hugetlb-fix-CONFIG_CGROUP_HUGETLB.patch
-> patching file mm/hugetlb.c
-> Hunk #1 succeeded at 289 with fuzz 1.
-> Hunk #2 succeeded at 325 with fuzz 2.
-> Hunk #3 FAILED at 435.
-> 1 out of 3 hunks FAILED -- rejects in file mm/hugetlb.c
-> 
-
-OK, I applied this patch manually and it does fix most of the reported build problems.
-The only one remaining is this:
-
-  CC      mm/migrate.o
-In file included from ../mm/migrate.c:39:0:
-../include/linux/hugetlb_cgroup.h:146:21: warning: ‘struct file_region’ declared inside parameter list will not be visible outside of this definition or declaration
-              struct file_region *rg,
-                     ^~~~~~~~~~~
-../include/linux/hugetlb_cgroup.h:145:63: warning: ‘struct resv_map’ declared inside parameter list will not be visible outside of this definition or declaration
- static inline void hugetlb_cgroup_uncharge_file_region(struct resv_map *resv,
-                                                               ^~~~~~~~
-../include/linux/hugetlb_cgroup.h:233:59: warning: ‘struct resv_map’ declared inside parameter list will not be visible outside of this definition or declaration
- static inline void hugetlb_cgroup_uncharge_counter(struct resv_map *resv,
-                                                           ^~~~~~~~
-
-> 
->>> Fixes: b5f16a533ce8a ("hugetlb: support file_region coalescing again")
->>> Signed-off-by: Mina Almasry <almasrymina@google.com>
->>> Cc: David Rientjes <rientjes@google.com>
->>> Cc: Greg Thelen <gthelen@google.com>
->>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->>> Cc: Shakeel Butt <shakeelb@google.com>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> ---
->>>  mm/hugetlb.c | 8 +++++---
->>>  1 file changed, 5 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>> index ee6d262fe6ac0..95d34c58981d2 100644
->>> --- a/mm/hugetlb.c
->>> +++ b/mm/hugetlb.c
->>> @@ -289,7 +289,7 @@ static bool has_same_uncharge_info(struct file_region *rg,
->>>  #endif
->>>  }
->>>
->>> -#ifdef CONFIG_DEBUG_VM
->>> +#if defined(CONFIG_DEBUG_VM) && defined(CONFIG_CGROUP_HUGETLB)
->>>  static void dump_resv_map(struct resv_map *resv)
->>>  {
->>>         struct list_head *head = &resv->regions;
->>> @@ -325,6 +325,10 @@ static void check_coalesce_bug(struct resv_map *resv)
->>>                 }
->>>         }
->>>  }
->>> +#else
->>> +static void check_coalesce_bug(struct resv_map *resv)
->>> +{
->>> +}
->>>  #endif
->>>
->>>  static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
->>> @@ -431,9 +435,7 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->>>         }
->>>
->>>         VM_BUG_ON(add < 0);
->>> -#ifdef CONFIG_DEBUG_VM
->>>         check_coalesce_bug(resv);
->>> -#endif
->>>         return add;
->>>  }
->>>
->>> --
->>> 2.25.0.265.gbab2e86ba0-goog
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+SGk6DQpIYWl3ZWkgTGkgPGxpaGFpd2VpLmtlcm5lbEBnbWFpbC5jb20+IHdyb3RlOg0KPiBGcm9t
+OiBIYWl3ZWkgTGkgPGxpaGFpd2VpQHRlbmNlbnQuY29tPg0KPg0KPiBJZiAna3ZtX2NyZWF0ZV92
+bV9kZWJ1Z2ZzKCknIGZhaWxzIGluICdremFsbG9jKHNpemVvZigqc3RhdF9kYXRhKSwgLi4uKScs
+ICdrdm1fZGVzdHJveV92bV9kZWJ1Z2ZzKCknIHdpbGwgYmUgY2FsbGVkIGJ5IHRoZSBmaW5hbCBm
+cHV0KGZpbGUpIGluICdrdm1fZGV2X2lvY3RsX2NyZWF0ZV92bSgpJy4NCj4NCj4gQWRkIHRoZSBj
+aGVjayBhbmQgZnJlZSB0byBhdm9pZCB1bmtub3duIGVycm9ycy4NCg0KQWRkIHRoZSBjaGVjayBh
+bmQgZnJlZT8gQWNjb3JkaW5nIHRvIHRoZSBjb2RlLGl0IHNlZW0gd2hhdCB5b3UgbWVhbiBpcyAi
+YWRkIHRoZSBjaGVjayBhZ2FpbnN0IGZyZWUiID8NCiANCj4NCj4gU2lnbmVkLW9mZi1ieTogSGFp
+d2VpIExpIDxsaWhhaXdlaUB0ZW5jZW50LmNvbT4NCj4NCj4gICAJaWYgKGt2bS0+ZGVidWdmc19z
+dGF0X2RhdGEpIHsNCj4gLQkJZm9yIChpID0gMDsgaSA8IGt2bV9kZWJ1Z2ZzX251bV9lbnRyaWVz
+OyBpKyspDQo+ICsJCWZvciAoaSA9IDA7IGkgPCBrdm1fZGVidWdmc19udW1fZW50cmllczsgaSsr
+KSB7DQo+ICsJCQlpZiAoIWt2bS0+ZGVidWdmc19zdGF0X2RhdGFbaV0pDQo+ICsJCQkJYnJlYWs7
+DQo+ICAgCQkJa2ZyZWUoa3ZtLT5kZWJ1Z2ZzX3N0YXRfZGF0YVtpXSk7DQo+ICsJCX0NCj4gICAJ
+CWtmcmVlKGt2bS0+ZGVidWdmc19zdGF0X2RhdGEpOw0KPiAgIAl9DQo+ICAgfQ0KDQpJZiAoIWt2
+bS0+ZGVidWdmc19zdGF0X2RhdGFbaV0pIGlzIGNoZWNrZWQgaW4ga2ZyZWUoKSBpbnRlcm5hbC4g
+QW5kIGJyZWFrIGVhcmx5IHNlZW1zIGhhdmUgbm8gZGlmZmVyZW50IGVmZmVjdC4NCkNvdWxkIHlv
+dSBwbGVhc2UgZXhwbGFpbiB3aGF0IHVua25vd24gZXJyb3JzIG1heSBvY2N1cj8gQW5kIGhvdz8g
+VGhhbmtzLg0KDQo=
