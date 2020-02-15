@@ -2,160 +2,114 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17382C47409
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C26C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94832081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3982067D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTqabMbI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VXZRxTZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgBOAqa (ORCPT
+        id S1727777AbgBOAug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:46:30 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39444 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbgBOAqa (ORCPT
+        Fri, 14 Feb 2020 19:50:36 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:58738 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgBOAug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:46:30 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so5765487pgm.6;
-        Fri, 14 Feb 2020 16:46:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yq48rcKsoBJadqH8CrxKLMuvLWBQ4Q7pHZITM4ZIuPs=;
-        b=GTqabMbIs14z8FNs/mlnRvM0hdYUdH2278vKKh2S8VaMb9X8bGCBWhIKkXzNhBaSn8
-         NtewMkPNnUtd4+fXpivheJBFO0aHHceumXDGSYcfBFSVfHJrszrYSjYXYNB34eKwnB7n
-         YU0OR3VsEPbPgpZulU1BDTMTYH6HEHAZyVaWOqiblwxjf6V8xbFxki/wsRrZYv/HdzB/
-         bFl/u/TN3stRABQWiZR2tHuKHtuLKT9NX70OvMJPXY3A7ALmJKpHjeynZo4FVkOx4f4G
-         PVR2/m/Khy7PHpWaxUKAAkxCXilCGhsSeZcIxvoDkD1GjBaZFiwzEZdoHjUUY56Gr0ho
-         gwZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yq48rcKsoBJadqH8CrxKLMuvLWBQ4Q7pHZITM4ZIuPs=;
-        b=hc3kjEYqvjOIyh74SSxpse/TaN9cBMwez15KSH3cyp2reObMHph7OM+DDIVvM62n08
-         MJVanDvDs3GQ6rESME/yyLMteCUQ6d/d05acFW3dbBJ7uKaHu3yLVd9/PupHvMdxBSOT
-         2T/oTinP74ctx51g+5YHtab7lmBq4G7Evn6UzFX4u2cOmQdCkh7Z/+0Xk6WMKZ35ILcI
-         QW4WPbYQJdfgGLSYJyWWejhrxpjKrTLb9f6fuBAtYVjXDFr3z9nBaluNXvdZK97NLP+u
-         fnFK8tL+ydDNLAB2gOFXiPp1CLf5Ezge6LlbjIukdwJ+ZK/CzBSNrmSrDdQm8BgPiK1B
-         mHUg==
-X-Gm-Message-State: APjAAAUEvrrg15DR2neq+4t+TiCj8oHI2uKU0mnFqFppkXOfqF14nQag
-        VusUcyxW/NC32hpDuvk2tlQ=
-X-Google-Smtp-Source: APXvYqxGypd7xlEUpYWu5JLzosw54btkTR/5wb7n5Fl/MdXFSmiDUo4BQqbqhWIevUam2M88DtoC1w==
-X-Received: by 2002:a63:7419:: with SMTP id p25mr6117307pgc.430.1581727589339;
-        Fri, 14 Feb 2020 16:46:29 -0800 (PST)
-Received: from pek-khao-d2.corp.ad.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
-        by smtp.gmail.com with ESMTPSA id 13sm8046633pfj.68.2020.02.14.16.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 16:46:28 -0800 (PST)
-Date:   Sat, 15 Feb 2020 08:46:20 +0800
-From:   Kevin Hao <haokexin@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 332/459] gpio: Fix the no return statement
- warning
-Message-ID: <20200215004620.GB499724@pek-khao-d2.corp.ad.wrs.com>
-References: <20200214160149.11681-1-sashal@kernel.org>
- <20200214160149.11681-332-sashal@kernel.org>
+        Fri, 14 Feb 2020 19:50:36 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F0mN80095832;
+        Sat, 15 Feb 2020 00:50:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=O1PJ+4+ziITIIDCQTVcIjvVNxViqJQWUnTHw+Th26V8=;
+ b=VXZRxTZQ2qgIBBqwFKH5ijK5H99sawjGv5ald0By6jX1Lyxvfz1CSEpnTKO9TShUc4rp
+ Fdi7ymZp/8MLDbLW2oOwyfGP0SahHyWAz92R/QHuRAr0c0YnEYA3eTzqLGH/dj4oP1oZ
+ JohC9KPdlZ5EO5xstF2wwWW2Q3oFRhj4wXenabQyba1lf2h+TCbBJ9XIlPv2NT36HyG/
+ Q8Rw9N49X+QgjyPPJl2vjWzBeD/8tSnw9fGmxB0+bj7nZ4iOQTeoLJ0f5cI3MQ0pv1Qy
+ FSX/vBG8atTSoS3+yvp1A7W6hpcnNYiJyNtSU6StqUmoVPZtOr67iRIMMR/qJjFOOj7q 0A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y2p3t486q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 15 Feb 2020 00:50:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F0lI9Q047814;
+        Sat, 15 Feb 2020 00:50:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2y4k9nnn1t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 15 Feb 2020 00:50:28 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01F0oRcg025724;
+        Sat, 15 Feb 2020 00:50:27 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 16:50:27 -0800
+Subject: Re: [PATCH v12 2/9] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211213128.73302-2-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <791880db-bdb0-8d34-ea9a-be6e4996fc0d@oracle.com>
+Date:   Fri, 14 Feb 2020 16:50:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
-Content-Disposition: inline
-In-Reply-To: <20200214160149.11681-332-sashal@kernel.org>
+In-Reply-To: <20200211213128.73302-2-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 spamscore=0
+ adultscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002150002
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002150002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/11/20 1:31 PM, Mina Almasry wrote:
+> Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
+> usage or hugetlb reservation counter.
+> 
+> Adds a new interface to uncharge a hugetlb_cgroup counter via
+> hugetlb_cgroup_uncharge_counter.
+> 
+> Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
+> hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
 
---5I6of5zJg18YgZEa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the suggested changes.  It will make the code easier to
+read and understand.
 
-On Fri, Feb 14, 2020 at 10:59:42AM -0500, Sasha Levin wrote:
-> From: Kevin Hao <haokexin@gmail.com>
->=20
-> [ Upstream commit 9c6722d85e92233082da2b3623685bba54d6093e ]
->=20
-> In commit 242587616710 ("gpiolib: Add support for the irqdomain which
-> doesn't use irq_fwspec as arg") we have changed the return type of
-> gpiochip_populate_parent_fwspec_twocell/fourcell() from void to void *,
-> but forgot to add a return statement for these two dummy functions.
-> Add "return NULL" to fix the build warnings.
->=20
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Kevin Hao <haokexin@gmail.com>
-> Link: https://lore.kernel.org/r/20200116095003.30324-1-haokexin@gmail.com
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com
+
 > ---
->  include/linux/gpio/driver.h | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 5dd9c982e2cbe..d7dc2b425532e 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -545,6 +545,7 @@ static inline void gpiochip_populate_parent_fwspec_tw=
-ocell(struct gpio_chip *chi
->  						    unsigned int parent_hwirq,
->  						    unsigned int parent_type)
->  {
-> +	return NULL;
-
-Hi Sasha,
-
-This commit shouldn't go to the v5.4.x kernel. This is a fix for the=20
-commit 242587616710, but that commit doesn't exist in the v5.4.x kernel,
-then it will trigger a build warning due to the wrong returning type.      =
-                                                                           =
-                                       =20
-
-Thanks,
-Kevin
->  }
-> =20
->  static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_=
-chip *chip,
-> @@ -552,6 +553,7 @@ static inline void gpiochip_populate_parent_fwspec_fo=
-urcell(struct gpio_chip *ch
->  						     unsigned int parent_hwirq,
->  						     unsigned int parent_type)
->  {
-> +	return NULL;
->  }
-> =20
->  #endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
-> --=20
-> 2.20.1
->=20
-
---5I6of5zJg18YgZEa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEHc6qFoLCZqgJD98Zk1jtMN6usXEFAl5HP1wACgkQk1jtMN6u
-sXFjBAf9HJVjCr0SihI4ekE3g+yTdTEkNc3DNI0tCJMgjjEB5Jai7YvCWDsxRWpQ
-w1Ibx5b8foGIRc1NUsBBYrblvNG1n53JFWYLtamZiBFBPaMLH0Q/krVSBBFkcFgv
-92SU//b78eYlh+RQx4w/8ty+wA6J2WiJJywqCXeb0ie+lXm1n54v7U4Q3UMN3g8F
-BdzZ+/LpRH4rdnwNNJGoiNboKhjSyFN6WF2BYyPpqJ1WlixxKX9vz24K67ulqBP1
-dDnuzi+3XblIoVo/Qzoa/eK60mG3MC4SzLLD8VEGs0Kh8vi4amVW5SG/TepkQC19
-XeY2/Gu6tNvm1C993bSGGTzPE+YeXA==
-=M8Oq
------END PGP SIGNATURE-----
-
---5I6of5zJg18YgZEa--
+> 
+> Changes in v12:
+> - Instead of true/false param for rsvd or non-rsvd calls, now there is:
+> hugetlb_cgroup_*() call for non-rsvd
+> hugetlb_cgroup_*_rsvd() call for rsvd
+> __hugetlb_cgroup_*(, bool) for both.
+> - Removed review tags as this patch changed quite a bit.
