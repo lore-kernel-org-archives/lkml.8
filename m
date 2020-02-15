@@ -2,65 +2,73 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686EC71150
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475D7C352A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92762086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A942187F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581801920;
+	bh=fPP7yJYCvLi2TK3zlW//4tloB0mKikOCRSbh4oIOQ+8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=xuTdBFxMkO6uGZOQbglO5xb6BTbR2AUgZAIjTXNwwzknkKZftropGIpIEs6WbEaXD
+	 5AWUyDi3isF31q9Hpd4JKL3u1E+UfEVRnE7zmjH+0FOCP0WGq9ixNsWt9hj6JAQVHu
+	 H8mlhQk7lF1t5+3XpDj+3qO0ZhMlN3mmVFLh2kpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgBOVS3 (ORCPT
+        id S1727843AbgBOVZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 16:18:29 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34906 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgBOVSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 16:18:02 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id D1EA229B2E; Sat, 15 Feb 2020 16:18:01 -0500 (EST)
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <aab0449ddb0bc15bce268f86d0b2ee7afb0e49c6.1581800613.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1581800613.git.fthain@telegraphics.com.au>
-References: <cover.1581800613.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net-next 4/7] net/sonic: Remove redundant netif_start_queue()
- call
-Date:   Sun, 16 Feb 2020 08:03:32 +1100
+        Sat, 15 Feb 2020 16:25:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgBOVZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 16:25:18 -0500
+Subject: Re: [GIT PULL] perf fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581801918;
+        bh=fPP7yJYCvLi2TK3zlW//4tloB0mKikOCRSbh4oIOQ+8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=H0mXHDCD0tFGtp5blvqw9Tv6v6eKRQSrpWHO5bvt+Ss7I9GXBMRKEyIgMPoZ55QED
+         56aOD/wzH84cSjuPdUmo5AJUYuaGUPj4wYpgkrtXFm+f81Yj1LpBoNbm6H0uJzrbi0
+         CccesRu3NAekEZmJExpSb+aKokQLbU5EXlUwv6xw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200215085316.GA12477@gmail.com>
+References: <20200215085316.GA12477@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200215085316.GA12477@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ perf-urgent-for-linus
+X-PR-Tracked-Commit-Id: dfb9b69e3b84791e4c6b954ac3cc0c4a545484f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: da99f9355b53ebc565747d0072ff038f3d9fa875
+Message-Id: <158180191840.10388.14357198641955865109.pr-tracker-bot@kernel.org>
+Date:   Sat, 15 Feb 2020 21:25:18 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The transmit queue must be running already otherwise sonic_send_packet()
-would not have been called. If the queue was stopped by the interrupt
-handler, the interrupt handler will restart it again.
+The pull request you sent on Sat, 15 Feb 2020 09:53:16 +0100:
 
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 9ecdd67e1410..1d6de6706875 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -327,7 +327,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 		netif_dbg(lp, tx_queued, dev, "%s: stopping queue\n", __func__);
- 		netif_stop_queue(dev);
- 		/* after this packet, wait for ISR to free up some TDAs */
--	} else netif_start_queue(dev);
-+	}
- 
- 	netif_dbg(lp, tx_queued, dev, "%s: issuing Tx command\n", __func__);
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/da99f9355b53ebc565747d0072ff038f3d9fa875
+
+Thank you!
+
 -- 
-2.24.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
