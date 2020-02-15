@@ -2,178 +2,97 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D62BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B19C352A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8752083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684152187F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgBOGuB (ORCPT
+        id S1726097AbgBOGuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 01:50:01 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40600 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbgBOGuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 01:50:01 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01F6mtq3041788;
-        Sat, 15 Feb 2020 01:49:48 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4qyuxrt8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Feb 2020 01:49:48 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01F6j3HL001799;
-        Sat, 15 Feb 2020 06:49:47 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 2y6895hc4n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Feb 2020 06:49:47 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01F6nkbk13632184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 06:49:47 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1C0F112063;
-        Sat, 15 Feb 2020 06:49:46 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3FD4112062;
-        Sat, 15 Feb 2020 06:49:44 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.178.59])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 15 Feb 2020 06:49:44 +0000 (GMT)
-Message-ID: <59cdcd821f794a9cbd8ab315b441a7ee2e43e431.camel@linux.ibm.com>
-Subject: Re: [PATCH] selftests/vm: Fix map_hugetlb length used for testing
- read and write
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Date:   Sat, 15 Feb 2020 03:49:38 -0300
-In-Reply-To: <9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr>
-References: <9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ZEi+P+decY37pq44DvhU"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sat, 15 Feb 2020 01:50:24 -0500
+Received: from sauhun.de ([88.99.104.3]:37672 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbgBOGuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 01:50:24 -0500
+Received: from localhost (p5486C46A.dip0.t-ipconnect.de [84.134.196.106])
+        by pokefinder.org (Postfix) with ESMTPSA id A395A2C08B8;
+        Sat, 15 Feb 2020 07:50:21 +0100 (CET)
+Date:   Sat, 15 Feb 2020 07:50:18 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Robert Richter <rrichter@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] i2c: convert SMBus alert setup function to return an
+ ERRPTR
+Message-ID: <20200215065018.GA1005@ninjato>
+References: <20200210172929.6001-1-wsa+renesas@sang-engineering.com>
+ <20200210172929.6001-2-wsa+renesas@sang-engineering.com>
+ <20200215072020.75b1b772@endymion>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-15_01:2020-02-14,2020-02-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- impostorscore=0 spamscore=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002150056
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Disposition: inline
+In-Reply-To: <20200215072020.75b1b772@endymion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-ZEi+P+decY37pq44DvhU
-Content-Type: text/plain; charset="UTF-8"
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Christophe, thank you for the patch.
-
-On Thu, 2020-02-06 at 08:42 +0000, Christophe Leroy wrote:
-> Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and
-> page size in map_hugetlb") added the possibility to change the size
-> of memory mapped for the test, but left the read and write test using
-> the default value. This is unnoticed when mapping a length greater
-> than the default one, but segfaults otherwise.
+On Sat, Feb 15, 2020 at 07:20:20AM +0100, Jean Delvare wrote:
+> Hi Wolfram,
 >=20
-> Fix read_bytes() and write_bytes() by giving them the real length.
+> On Mon, 10 Feb 2020 18:29:25 +0100, Wolfram Sang wrote:
+> > Only few drivers use this call, so drivers and I2C core are converted at
+> > once with this patch. By simply using i2c_new_client_device() instead of
+> > i2c_new_device(), we easily can return an ERRPTR for this function as
+> > well. To make out of tree users aware that something changed, the
+> > function is renamed to i2c_install_smbus_alert().
 >=20
-> Also fix the call to munmap().
->=20
-> Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page=
- size in map_hugetlb")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  tools/testing/selftests/vm/map_hugetlb.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/vm/map_hugetlb.c b/tools/testing/sel=
-ftests/vm/map_hugetlb.c
-> index 5a2d7b8efc40..6af951900aa3 100644
-> --- a/tools/testing/selftests/vm/map_hugetlb.c
-> +++ b/tools/testing/selftests/vm/map_hugetlb.c
-> @@ -45,20 +45,20 @@ static void check_bytes(char *addr)
->  	printf("First hex is %x\n", *((unsigned int *)addr));
->  }
-> =20
-> -static void write_bytes(char *addr)
-> +static void write_bytes(char *addr, size_t length)
->  {
->  	unsigned long i;
-> =20
-> -	for (i =3D 0; i < LENGTH; i++)
-> +	for (i =3D 0; i < length; i++)
->  		*(addr + i) =3D (char)i;
->  }
-> =20
-> -static int read_bytes(char *addr)
-> +static int read_bytes(char *addr, size_t length)
->  {
->  	unsigned long i;
-> =20
->  	check_bytes(addr);
-> -	for (i =3D 0; i < LENGTH; i++)
-> +	for (i =3D 0; i < length; i++)
->  		if (*(addr + i) !=3D (char)i) {
->  			printf("Mismatch at %lu\n", i);
->  			return 1;
-> @@ -96,11 +96,11 @@ int main(int argc, char **argv)
-> =20
->  	printf("Returned address is %p\n", addr);
->  	check_bytes(addr);
-> -	write_bytes(addr);
-> -	ret =3D read_bytes(addr);
-> +	write_bytes(addr, length);
-> +	ret =3D read_bytes(addr, length);
-> =20
->  	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
-> -	if (munmap(addr, LENGTH)) {
-> +	if (munmap(addr, length)) {
->  		perror("munmap");
->  		exit(1);
->  	}
+> I wouldn't bother renaming the function. Chances that there actually
+> are out-of-tree users of this function are pretty small, and if that is
+> the case, they can adjust their code easily in a way that is still
+> compatible with old kernels.
 
-I agree with you, it's a needed fix.
+Agreed, it is easy. But they need to *know* that they need to adjust.
+Build error makes it obvious. Otherwise, the code will compile and
+silently not work anymore, I am afraid.
 
-FWIW:
-Reviwed-by: Leonardo Bras <leonardo@linux.ibm.com>
 
---=-ZEi+P+decY37pq44DvhU
+--+QahgC5+KEYLbs62
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5HlIIACgkQlQYWtz9S
-ttS7OxAAwH0NauZuTxADtbg3X+UGv2GluaVEy2mQL3aZfSNO6caYZ7vkFMh2x7Ot
-JahcPBeMG0b9nw/lz3CNjVy9ZELdcFT/740aYibRRM2jyXRu3SCu3SKZj7FS/fg2
-JGRTibi5yRoGnhyHIlukySLnUtPD8AE2uIqiwsmlBPqma8Ny7jZ5ngXeVf70vTG1
-ofchi7BFHFmv2ujuMvj7PlKMoZVA+AzOu+bpK84kF8fb2GLPy5VdvIh1tVoIx0KW
-VpNJSvhJTYcBYRdh8z1/FnfMWgR9wRHl7l4GC+ArAtQQJhzcaxPR5kko2VrLn29D
-oxUU0CmuKGazbiJkLjD5IzLXdRs3ZD2VjZpRoTqUdZO+6rozDnt2ku4RzzTaQDQW
-kOiPrF3ozMPvrNXLae85q7/XZCQUpIfzib9A2D8Tbyu86XcDkigrdeD5/IuJMkR8
-9VzSYuE+RYISRmwygFHWms1CXWFrmPkurMdmNuakpbKh8wDsq5uOMR24f3gAY3EK
-BJwaDMeMZgGMfZpjf4H/i2gpXxt+GQxDu8IXI8j7lpF1qMnRmszC4KZcC/4mzi4y
-3qSnuDCbj9O3gwUqBXJJ/tghN/g376Q6DTe+J7pMEMJ4h+T9BaTflRBENV9USsLd
-S2S0dh0mWWiXGc0JD0cTd2haFR1OubCmhpNCJduE3ORRzvTT1xI=
-=oY9v
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5HlKUACgkQFA3kzBSg
+KbaemRAAtggqw4SVtbyQCRrmfxnLHzx6kn4nh+llG1MMVBv0T00C1mN/VwljvQAO
+lD+fOgYcon9hqXh8NS7CruNfVhOQ0DsWsPEEbagy7ajWiEnMuKWaxlu9hKDdFaWx
+FAuPxhY7i5aS8jkZOK+5d3m3xXJR18dT6NwlwVNAEde4deevE2CnnVixwNwiPZbC
+pOfktojkOIb3YFyC5XO/2Qq0bHnU1XM7nyjHHMqo9wwxZxV8Y+PlQ3M5sjEIN4af
+VSeoIRjaii6cKSlANDylKxpyrF8R24tiJuD8eCUOZR+piG+iQ5eCnhs18f3s5ISC
+nZ3CsbK3yd6dpujDAACaklbIVXEjuVnfQCVmrvIp/HVDO6ttvqx9ecuERRvjdPjO
+w3DuKLRk3+VqkxGt2SsnXU4oih0I410wjRrhq0zvT3toTjocWj6r0zRXn2PW9IoC
+cGebBHvPMsyVQQNCQ04dUmg4P+BY5aa4BFcvQeaVWcy+9sltcpNcLWkmZH/+q964
+w0wtZh4aRemO8GGLDStdU8wXx2hGdPyzMoj7xjPnyXnE+PBnym9Wd0CDvofxa//o
+WFg3eKkSiCxfkqHd9NwvNTiKV1bYllfusWrlaTCjZswJm3wf/PTnyWRXJbLtIer2
+ztTcsLx9CtA/vvAbn3zsOXqcS6N7cxOTAoi1rNzEId64QnIUxJE=
+=XNJq
 -----END PGP SIGNATURE-----
 
---=-ZEi+P+decY37pq44DvhU--
-
+--+QahgC5+KEYLbs62--
