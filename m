@@ -2,120 +2,104 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBB7C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6050C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D525F2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74BB2081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Qf0utu9E"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="svIz3e/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgBOLco (ORCPT
+        id S1726307AbgBOLua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:32:44 -0500
-Received: from mout.gmx.net ([212.227.15.19]:39455 "EHLO mout.gmx.net"
+        Sat, 15 Feb 2020 06:50:30 -0500
+Received: from mout.web.de ([212.227.17.11]:58951 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgBOLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:32:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581766354;
-        bh=pOPA4vdkKum60vU2Sw008KD8mzmXUtj1ve/fnDeNt4o=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Qf0utu9Er9uCdJjAwIzlzWlVbbgyK77QXdz28zP1NE6MmoSGyV4BTiZDEAUycMdKC
-         ChVzDBXeqTF3HN0gASznRlZucFRzgNYRHRFa/nHVwUQU1UUixmYr11MGwpE5pFWC4n
-         5sKGsOezwDtIFumElWLBjjs4JNIjnGKo7MAag2eM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([146.60.76.54]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFsUv-1jGQM11c2p-00HKFQ; Sat, 15
- Feb 2020 12:32:34 +0100
-Date:   Sat, 15 Feb 2020 12:32:31 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     David Gow <davidgow@google.com>
-Cc:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        corbet@lwn.net, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, frowand.list@gmail.com,
-        Tim.Bird@sony.com
-Subject: Re: [PATCH v3] Documentation: kunit: Make the KUnit documentation
- less UML-specific
-Message-ID: <20200215113231.GB2031@latitude>
-References: <20200214235723.254228-1-davidgow@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
-Content-Disposition: inline
-In-Reply-To: <20200214235723.254228-1-davidgow@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:rGamt5ZN+2JamTtxWa+949Bwc4ai74Nlldylw7ATa7hNww9D7BE
- /bziJu0IK7eIOEiblDQYdQvIiKXW/z+dRk/GH/2ESakG545IBuzDzYU1R9YY3ttXbj9r2P7
- IYOjeUjc2quFYT6rlom6QWid4LXtrAm8OSawzbeqiKK46W2hYLkL3Lu/UzlqENMmcY/rN7S
- DPjN9jGvI6ZMj+Hdd62OA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l56jit/555c=:OJcEhGVVIC44B/SxTchbcX
- Fr8/OnlUjSULPzJDoaXWtq33lqaLjHW3/2u8N7nVjjkVNOZoyw4ryZtXv7ezG8lbiDk1F5e2b
- mNExcqwEkFKiGjtnTyHU1icDXMbf/D2OSsTi20uBf0zNGBW3/p/gX+vwzeZZ/+rBbd+XG3XbN
- btjhXaZPCqQQSKSpz4+kAR52llMT7pw3jkYlBaKSo391QF+qDQdX6qLFJip+Ss1OtuF2bHzAz
- 7Uylg6+/4Y+mDNl6HpwHnQyYtbqvAe4BJD9Dfof2CQNL3pGrhMZxw9A0CdY6i0VQ/vigo4w5j
- 2qZIIQCeSZBvvmFmTwHeSCZHErUSGFWFKoRAFEebxz1sW6aYS9Q9boOakVKf3OP2Y/o7wSJrA
- gvjPQW/4Ptz3LmkfnzqNDyuVzPBw1XoJrmKcBbE3ZAFgndf0IGPU46SykodQ9nSNuL0X9BMlh
- PeRDhtWBRu1VKOyh3E4wmMjoExvS8nsykk07VmioJpZIJBVou+IW0KEfhf+fZWBh+vd/ajGuR
- N8tyx7flL1sSZKhc6YBzUnyY1FZzpEzo1O3x9ws6zI/dxLL3JpesUZ6tMyyhUMaUuI3ghPBgc
- /qiBS5Zaj392Vot3z0oyKGLFQTAogoxKGVz2d0SakOSIy8tS8VV+2wV89sjFmkl2VrLHERI14
- 3123MROhEXUYAlnl794FwZWXMmRJD5uRI3TqaCtghfhjtC8ByYR5pRBTseUdD0EGP1AJxRk1P
- mmvrF/ldCS1zzWQ97X7t8hjeBV3cCHzg7ODv/U3YWCtfxKmMi0YfFXuOCFm8pahxg9wy121Eq
- wXL1iG3dlT/im9vzNj3zLMjA3AbhkPM3xrXjD9WllZBd2WxG//uNI3FdX4MgEDzYkI/Dg0rP2
- jxeM800TA1zyISpGmKTtUo30Sup1bzhYAnYTRDcp/j/Hqdqx6cAcya4mD/7EPhXAg4Bkr3m60
- sHx4MeYL3LRg+nNNWfJRuCNKVqOJjTEbcB3zDvMYWcsbDfr9xLsCKrJZVIrn5lMM59zGOGVDY
- FJmbACqTT3wdV7mDfuSGCDnRZJOGQMv6dQMZF1NnEmRMghHEWKOnDAzulZhIbMbIv5M6EN/9s
- mocio8OP8kgpsfFziQOu35hb3rLIJy60Bwr9yLJqCykRsgCPjEKyswx/2PwVDiMolJ146pf/T
- bFxILHzLeHppk5AVvPys5F1rs21pULO/v0ZQCuseO9SehJf/MxXRW2npjTp8d67Yigt589/ry
- 2XUOug4X8C71RUIpp
+        id S1726007AbgBOLua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:50:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1581767418;
+        bh=jCA+u/iWeunXisbMKKiKA03JHhtYvtZt9+PJ1WArJLs=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References:
+         In-Reply-To:References;
+        b=svIz3e/SRwMfRYktOnp10mrv0KT3SN7Sf3QB7z7Taq7Iqod+wP9H4AozfN+WU/Xly
+         RUttwDku9m4AkgE9SSl0Ut0nn7nxyLb+Lw/1f19tGsBmJnEqUDXp/D6SB8HDjyxVaP
+         FK/yPv3HbAKxuJ9LT1I74K8TV9kL34hxeFjMPJus=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from md1f2u6c.ww002.siemens.net ([95.157.55.156]) by smtp.web.de
+ (mrweb102 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 0MfqAq-1ioYKz3qVQ-00N8Df; Sat, 15 Feb 2020 12:50:18 +0100
+From:   Jan Kiszka <jan.kiszka@web.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] riscv: End kernel region search in setup_bootmem earlier
+Date:   Sat, 15 Feb 2020 12:49:43 +0100
+Message-Id: <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <cover.1581767384.git.jan.kiszka@web.de>
+References: <cover.1581767384.git.jan.kiszka@web.de>
+In-Reply-To: <cover.1581767384.git.jan.kiszka@web.de>
+References: <cover.1581767384.git.jan.kiszka@web.de>
+X-Provags-ID: V03:K1:dRJ78LiuZpsCOAaRFt2kX6CRQY/zfwNmeS/wQDiU3z1AmAFRFhs
+ a7pkspN8g5TqXQti6GoOwOTcxgRVpyBAlFa2EVziRbawhY4KUUiD3I1zy4Lq8ZsWFN+e6A7
+ Com3Vi66HeXM9fYCztbS55ZxjeSj1+Ty1jIUpdedhzMyzAONSnzJ3u1FDDZ5BIv8FQLimun
+ ok88tzo/ZaDd94JCMqDvA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:h4l0FGfFSd8=:fcKAdv9BAbt2EL6f6a/gnV
+ XDc+YpOCOmmpw5Jp3Vf6XlH/UWBcdQnDFV44NqM4kAc5oNlPgOkrvYcScwcoCV52QV1dy3bO9
+ NlWJ/Souni9qfUD5D4XoYkd7kjuv40xQvLDPB1PP5FUmBfCsidbNwrsBoRpQADynbELRhui5D
+ WLI6MwPCKxettX+mH19d5W+T2tUezhfZFdtIonKLWukREWLFUXVK9cDMY0UaM4ntnGoH/aU4Z
+ aq+TKlC5SWF46s4iJhT71Ly7GRDaIsf4B3vZYNdZRHzz70fWpR4Ips/BQhwFqJrW2XFZHVUre
+ zZt88wwNbgkTIWOwlVFwKOFHdeIxRlx0DbEhLvuh2zROEkKSKXcDrU5A6UzhroK/khKd+eXVC
+ M6UKThz43vnyVpknsDrgAMCZTvLw2HkJXFJzIchUY20V3TdGlTx6yIPABi0+gB4V4gSspQ/2h
+ K8e0en6TmHPWW9OzgikSHpRidAM0WMBxp1OpDE3wqQn2A01kSdVhPpyR/TX5twZn8zgsQFeMv
+ AVpIyln9OS9KpsuK+T3zSZtmge4qRv663UYveu28/KEdxOBLTJCdtIGk8cf6uYO2FQ95Cok4I
+ zoi/PZdUrgCxItKxd+LcPj+ntp0D7Iet+23K7Do4a9fKNRVX81/01GcRmjFj9kBhbaNq3zgSB
+ 0f3DXSQoje+FJXJkUxt3TGH0EpNlaiySAnIdz9YVLLz5dTB1TBc5Bn5tZywz9QKxVyN7eCWAg
+ HP+/JB6FY6zd9MPjYbE77A50g4ntoDcoCb3+2fZTqSgPZH2ivq6wiWZ2PcUTTMn5URGye2qWt
+ ukwBGnxKtJPJkPdfzpHfXqo3R23oVQnc2fVJ+/LyDmuzBGHffZ+6EfhesP9k+ayVUaCzPW0xX
+ hmSqAmLgJMibFEHKXFTE//Ps4EpI7S2vRRvjvlBNZTbZTy1AqUb/g8kyJRJ0UyU8F2C56jkfN
+ Zj7LRnPykC813bq+JK7Dj8wGma8aDILHJOabhx5RE+Tjw68Mjx2WP+CwK0+lRjajpK+UkrUXI
+ AXALhvcd159vwoyDN2z+Ls1F/1fEHwOymLGgqXz503JaJ2aOzHYkSK5YhL7hQFGHy0Ovx5DmP
+ Q8JSoBrJKe/uMtULDUyNpnHEcsmlmvWnQ/cz8SP1u1XUuxLiXVXSToJxrzLiShG4CMIp4eqBz
+ zvIx6EUxxodLvTGvGG/XIjFhl/MhFoTOck8Rh9uVUvp/Z2bBNg/FbcZgUhOeuysNiLfL9vORl
+ jxUgSQKNrv44U5AMB
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No need to look further when that single region is found.
 
-Hi,
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+=2D--
+ arch/riscv/mm/init.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Fri, Feb 14, 2020 at 03:57:23PM -0800, David Gow wrote:
-[...]
-> +To make running these tests (and reading the results) easier, KUnit offs=
-ers
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index aec39a56d6cf..a774547e9021 100644
+=2D-- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -160,6 +160,8 @@ void __init setup_bootmem(void)
+ 			if (reg->base + mem_size < end)
+ 				memblock_remove(reg->base + mem_size,
+ 						end - reg->base - mem_size);
++
++			break;
+ 		}
+ 	}
+ 	BUG_ON(mem_size =3D=3D 0);
+=2D-
+2.16.4
 
-There's a typo here: s/offsers/offers/
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---VrqPEDrXMn8OVzN4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5H1sgACgkQCDBEmo7z
-X9vbGA//YSsL2+AzYJ+tyrjnjNWwnhgSigy7m6uufz/KqC0eU8Sfs6UXO+GwwnvD
-SoqCqelP5QF7zyeGZT3mCFfl7XbfcIzK1xTfyxEEr9MBvCQRKDvXjxQbNS0rahAm
-2V0YppxFHu05UNrc/FNpEsCvHoYQwd/91N8iJkIIknAPn/lcMdrJQIjqXuuuyCQd
-QmawN8LZOh7dZwAxjIGCXFlP5ip7gHcLKzi+my0gtCs2z7yYrUm9jBNZfyut2Lfd
-VUVOP7sYqXzMc0P0WpAd/5f5ivwKortWo6J2wK++trbpEIXjMvqx2dR1DA9n6SKb
-eGYhCDzEdxhlw7bU9DPdT75yo36zk8HlWmFxvC7Cg5TSoqbJEHHSQDRUd2VSoNVb
-ACRLtvGtpOhd4s0aaR9uPt1Q6Fs2c6vqAh3hPSEM8684rB+71A8R3U+KcSj3Zjus
-b8KnOsIGIV8Vwt1/q99AXXMrGrQ2ggya9i692yD8VvCBWygA96CZ42bdUwMKSbjn
-dcWIe3bL16ZXDRrf3CeNDNOQ3znkixw1J4aaRJ31PxuvKZGX+q9RerhwVf2ICtut
-5Aop/DS1pULN6D5Mcm3FPDk3Ank6c4h/pTtgsVXj3PjB74WNr5Iyt45VqBd0UqqG
-FqmVBpkZb6MKSepIXWBc7kz9RwPmW4hVngIwt9a/KRXBZCmwshQ=
-=awkR
------END PGP SIGNATURE-----
-
---VrqPEDrXMn8OVzN4--
