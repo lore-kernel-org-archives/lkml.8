@@ -2,104 +2,68 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F6EC7114E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 19:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA10C7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 20:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00492084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 19:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5972083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 20:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581797363;
+	bh=WrnU7XfWECRF/CKZymfuMIZWVJ3S3RUxCGbaHCZNUrU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yBEk9sO+tOGnlX8n/JFZK383Zvy+ezNYpnv/lEBgzvr/NOd9xU4SZHqM8DL7mTswG
+	 x6WGk7ksnYlwtYRmuq6HcrBZL5NIkNimpH79V+jrKPUssiisG8ogWM8EiTez++Q/j+
+	 LAXkKv0pF+PPHnRGAB6hH8AkK6MWCQZMW99kB+n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgBOT7w (ORCPT
+        id S1727686AbgBOUJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 14:59:52 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50846 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgBOT7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 14:59:52 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8981B1C1CBB; Sat, 15 Feb 2020 20:59:50 +0100 (CET)
-Date:   Sat, 15 Feb 2020 20:59:49 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
-Subject: Re: 5.6-rc0.95: /dev/motmdm no longer there
-Message-ID: <20200215195949.GB10344@amd>
-References: <20200209213422.GA3009@amd>
- <20200209213717.GD64767@atomide.com>
+        Sat, 15 Feb 2020 15:09:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgBOUJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 15:09:20 -0500
+Received: from kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com (c-71-202-252-80.hsd1.ca.comcast.net [71.202.252.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551F320675;
+        Sat, 15 Feb 2020 20:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581797359;
+        bh=WrnU7XfWECRF/CKZymfuMIZWVJ3S3RUxCGbaHCZNUrU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X6c909bmFmOxlUKAN1VniiVse+LFnx91xbloy7OEJW4GSA/fxhJB6AmlNviJtxObN
+         0KdwBU1GHERRvrsd+uK8U64ACFXEXPDel4cQ6ZJkhry7aCiw7RWWT4NYZyUDc+WW34
+         8Gx+//J/zjaxMyzPdtr+QPfDY6PIu80ywR3GQlzI=
+Date:   Sat, 15 Feb 2020 12:09:17 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC patch 00/19] bpf: Make BPF and PREEMPT_RT co-exist
+Message-ID: <20200215120917.2c21e31f@kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com>
+In-Reply-To: <20200214133917.304937432@linutronix.de>
+References: <20200214133917.304937432@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GID0FwUMdk1T2AWN"
-Content-Disposition: inline
-In-Reply-To: <20200209213717.GD64767@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 14 Feb 2020 14:39:17 +0100 Thomas Gleixner wrote:
+>    1) All interrupts, which are not explicitely marked IRQF_NO_THREAD, are
 
---GID0FwUMdk1T2AWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > 5.6-rc0.95 -- based on:
-> >=20
-> > commit fdfa3a6778b194974df77b384cc71eb2e503639a
-> > Merge: 291abfea4746 e0a514259378
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Sat Feb 8 17:24:41 2020 -0800
-> >=20
-> >     Merge tag 'scsi-misc' of
-> >     git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> >=20
-> >=20
-> > /dev/motmdm* is not there for me. Unfortunately,
-> > drivers/mfd/motorola-mdm.c is not mainline, so I can't just try with
-> > the mainline....
-> >=20
-> > Does it work for you?
-> >=20
-> > I have ... rather a lot of warnings in dmesg :-(. /dev/ttyUSB4 works
-> > ok for me.
-> >=20
-> > Can I somehow help get /dev/motmdmX upstream?
->=20
-> Heh yeah actually I'm cleaning up those patches right now :)
->=20
-> Meanwhile, try droid4-pending-v5.5 branch or pick the related
-> patches from there.
-
-Thanks, that branch works fine for me. I guess I should try to get my
-Droid into state where it can be used as a primary phone.
-
-Best regards,
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---GID0FwUMdk1T2AWN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5ITbUACgkQMOfwapXb+vIKOACgn6mIIDmlx9TU0KIt9aeaHQ3b
-TLkAniPVNkucHHFfsaAAyssKqsyoP2/Y
-=E/d4
------END PGP SIGNATURE-----
-
---GID0FwUMdk1T2AWN--
+nit: s/explicitely/explicitly/ throughout (incl. code comments)
