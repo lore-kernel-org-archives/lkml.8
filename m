@@ -2,94 +2,107 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B87BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0FD2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581780516;
-	bh=hLSGZEQWdxHnGb3NCznVMrshFsU5QAvYHIqnrYcr84c=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=zFJdfxmJM1+p18QyHDfErcmEcNvst0nVkdFpaUm2TIW5nWVQCEii59TyXknDw8wUp
-	 8F1BlIH1RigU2qmzSqHx6B+Am/YjsTPQa0qKS5ln36F1AwRC9CsiUbTaNRnRdWElSc
-	 g8mBvIYRSp5DFe4xB9VK8ZEcZNfwbyU5Li1tbT1Q=
+	by mail.kernel.org (Postfix) with ESMTP id B17642081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBOP2f (ORCPT
+        id S1726346AbgBOPdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 10:28:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgBOP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 10:28:34 -0500
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C00B22081E;
-        Sat, 15 Feb 2020 15:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581780514;
-        bh=hLSGZEQWdxHnGb3NCznVMrshFsU5QAvYHIqnrYcr84c=;
-        h=From:To:Subject:Date:From;
-        b=JpqT9cL8K0KPKzQA05xkkrWZkSO1u/inIKPw2Z5dQwCdp4JIsuJO8fjfqajSxSMWG
-         A+QbmnJCLQyk7x2Xtmxgqus+QPinGVxBccvqOPfRLHvckIBo/5VhOdScx18PVQ3GfO
-         kc9yP1uKxFxFLK6xHRCGwmmcJPcc+9tczXyVwfAU=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2] sh: sh4a: Bring back tmu3_device early device
-Date:   Sat, 15 Feb 2020 16:28:28 +0100
-Message-Id: <20200215152828.28439-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 15 Feb 2020 10:33:15 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:35371 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgBOPdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 10:33:14 -0500
+Received: by mail-il1-f200.google.com with SMTP id h18so10301993ilc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 07:33:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=i1ZtrzvsphpDvmdslly7GxdVaV3LFE9gOyvz4k2Kd4o=;
+        b=V05DkVlFNC8uae0AWVZyApAo0jMIbzwIEtFGuvmsDlNVqpjHGSpF3vs6Equ8xBG7YX
+         ucS+GAbwxVoYp1+4YBDth3B+Wo+lsGGRcVd62j1ImTlHGQpjYHtbhSkjYpN6C3bUw5ng
+         +802bUDFTnqIxGmJu7wCQo1jvD9B+y1QAHrW0Pippr8W0Af/cqSuTbEKHw7ApqXZKX3Y
+         yJRK/1hGlCuznwehrdvCYMzZbEde5EpO6EnsSCJZe0xjo9zZ/bbx/bgTtW/8ihxm8rui
+         EJqBk7xtPiJVsoChyQxUqqZ3j7vqeJDJFkDyQ10DLIjAeSvba+Ky7BP0rUp8U7UMlIsH
+         k5VA==
+X-Gm-Message-State: APjAAAWQvcJ0BYxcl/Ip2YDodNSLFIiF1h1P0R+xnWNPQxZFzpGWXWIn
+        IePRu9Pxv0fvlrU7IIPsesM4pu8qo+7GHKSwjQTQ3Tgv28I/
+X-Google-Smtp-Source: APXvYqwaf1rvNvL+yMEH5bZ2WsGu2SzzPqdBvJEz74lk96rib3k0fOVblHOHXJfNsAW+wX5QVomcBi9oS1AMk6CC1Qg43VCdt2Z2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:80d6:: with SMTP id h22mr6058924ior.129.1581780793813;
+ Sat, 15 Feb 2020 07:33:13 -0800 (PST)
+Date:   Sat, 15 Feb 2020 07:33:13 -0800
+In-Reply-To: <000000000000fd119d0597d12a56@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000053f643059e9f0a89@google.com>
+Subject: Re: kernel panic: stack is corrupted in vhost_net_ioctl
+From:   syzbot <syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        jasowang@redhat.com, john.fastabend@gmail.com, kuba@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1399c195ef50 ("sh: Switch to new style TMU device") converted
-tmu3_device platform device to new style of platform data but removed it
-from sh7786_early_devices array effectively removing last three timers
-and causing a warning:
+syzbot has found a reproducer for the following crash on:
 
-    arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
-        warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
+HEAD commit:    2019fc96 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1677602de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6780df5a5f208964
+dashboard link: https://syzkaller.appspot.com/bug?extid=f2a62d07a5198c819c7b
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16dcd87ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1135fa31e00000
 
-Fixes: 1399c195ef50 ("sh: Switch to new style TMU device")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
----
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13204371e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10a04371e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17204371e00000
 
-Changes since v1:
-1. Add tmu3_device to early device list, as suggested by Geert.
-2. Add Fixes tag.
----
- arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 1 +
- 1 file changed, 1 insertion(+)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
 
-diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-index 4b0db8259e3d..74620f30b19b 100644
---- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-+++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-@@ -391,6 +391,7 @@ static struct platform_device *sh7786_early_devices[] __initdata = {
- 	&tmu0_device,
- 	&tmu1_device,
- 	&tmu2_device,
-+	&tmu3_device,
- };
- 
- static struct platform_device *sh7786_devices[] __initdata = {
--- 
-2.17.1
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: vhost_net_ioctl+0x1d83/0x1db0 drivers/vhost/net.c:366
+CPU: 0 PID: 8673 Comm: syz-executor239 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __stack_chk_fail+0x1f/0x20 kernel/panic.c:667
+ vhost_net_ioctl+0x1d83/0x1db0 drivers/vhost/net.c:366
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl fs/ioctl.c:763 [inline]
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
+ __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440259
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdeb5890b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440259
+RDX: 0000000020f1dff8 RSI: 000000004008af30 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401ae0
+R13: 0000000000401b70 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
