@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA17C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79DBC7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D292084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9524A20675
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaKum9z1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BT7OC1Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBOWC0 (ORCPT
+        id S1727860AbgBOWC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 17:02:26 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37095 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgBOWCY (ORCPT
+        Sat, 15 Feb 2020 17:02:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34164 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727799AbgBOWC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 17:02:24 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a6so14585744wme.2;
-        Sat, 15 Feb 2020 14:02:23 -0800 (PST)
+        Sat, 15 Feb 2020 17:02:27 -0500
+Received: by mail-wm1-f68.google.com with SMTP id s144so4565092wme.1;
+        Sat, 15 Feb 2020 14:02:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=KGaOhDjvd7/47O4h5yLjj5gIn3lPBQYnlraxVtTV/Iw=;
-        b=AaKum9z1hR/GpU4R3E8Dw9ya0aT/oY878btwx9OK5+UQz6QTt6HsVMbZiD7rN7bleV
-         8eJHv7pxGaVG5If+kSESuJuTTOpJEDMqDJOmQggkRegoYYKjp+/AbaGNB+r8EM7bsq3G
-         D82Dar8Ws6/sqtoslkZB3R/jhq/DY6bNhYLW7rfe5/cJQ7Q5oaoJir6xIRJB94ROIk71
-         PNuz0BClH0qKW6IX0YIxxz+GL9xDjAGlzOV7F5mfW4KA7b9lfvG/BUdO8X7tqbVeSeyz
-         9VsubRxE7/kVN/TaqO97h52YfB2e2IyTiD8p/ZL0bwKZn4TZobTKphk7cPxYdjKaeExy
-         KIYg==
+        bh=ZtyBEtRM46yR9gJsWJ+ymmdAshH7nDc1v1/d7ItMGoA=;
+        b=BT7OC1QmnxOvnIDo+iCTM2Oi6RPFB5czAj7fFgWiIJqrg/+P+/eSKRTbiEly4xntZp
+         QWJq788/kTkE86HhbpdIp+WOs5QWwqxA33wcYzwyv4YpUMpbvNshEcrYEsftEkb834jO
+         kUlX89gxRUc0iEBDHbLiTT9CieUkvO3TNfhbq2BUSFrTikhL7CC1+5BzpjQnw5mCZJOS
+         fKpTezIxvteT1X6/l32HN8ZDabyEhQ5kyyHnvE9wKQGoLbI66OEmmYhtCA4tRAkcEbCw
+         nt2cIvyOq7egbAmoqWq3zTs2XYbvXLGeMdubteb/2uJim/kvGO6LfAM51UnYBwosArP3
+         53rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KGaOhDjvd7/47O4h5yLjj5gIn3lPBQYnlraxVtTV/Iw=;
-        b=n5aMR4fQL55x3BCCPrvbQYfnqhD87xadWlEzn6UPF8WvMO5Iym0TZec/rUhnNuOsCx
-         3xRrr9v+oTEHbIUyMQRzvSkc9K9jC8fnH7h/8ua83CL4kZFPzxKM7iXWfDKRJoh8ugry
-         Wtp6KVt3X7iGlAFylo5B6oRVViLGfRFPSvjeMRhNFs+FlSzPr4lSaKI5IM9FAerc/nOg
-         rssLzHm8l4Igr7LML035vCQ4Hl6RdNpli4EaEItPkKbDNGn/uDnp1teIG5SMeklvpD+N
-         Q3A596x6WFt9qAaU86+REyi30SiwVpGvjK7I5YgB6VTNgrkrnr1qgsCB7AfqzYUjM0k8
-         WbUA==
-X-Gm-Message-State: APjAAAXEHLlTmFMWWnkucFL50wkLYOkBUIHvoMPtdMq1d26KqkxPG9av
-        XHHlBgg8n/o+elejaRRVs5Wxr9DO
-X-Google-Smtp-Source: APXvYqwqKfZ92Iz2t+RVLmUQ/6dTTuTN0shCZ8SgyXd+yk9CocI2QpPTFaRBA31ouUCCsRSyByiUjA==
-X-Received: by 2002:a1c:a9c3:: with SMTP id s186mr11863491wme.64.1581804142385;
-        Sat, 15 Feb 2020 14:02:22 -0800 (PST)
+        bh=ZtyBEtRM46yR9gJsWJ+ymmdAshH7nDc1v1/d7ItMGoA=;
+        b=Ur9DJWSbMWN8vcKZWFvBjNkldcwfBiLS+KXaiO+XxXPkj9FHGrCnmggC5C7wtV3aXC
+         X9ST7rwD19fl3J9lmCFNwrfgL2JaJMVLSMtU0AZtV61ZSS5VNV11HZFu6rcntTJ8c7Iz
+         0Pgb4iIaSnU4NdH4TSFfhioplzDmsmOtu0msQaMBpvK7Z40aVIrO4KVkm9xTQDKiwLBJ
+         i31iaxilXmuE3wOMgv39FoaF3ilITSB/K+qBMrLCiPb7f2upALK6DTHRIvHi2dHikxqN
+         z/2D/vv7uYBStD0QhBd8xIhb+SJu7iOasHMw526p0RsB4LY2CHPWqsYdPPVIKemi5lyQ
+         AflQ==
+X-Gm-Message-State: APjAAAUa1BduXkq92kg0gulAa5/KWXD/6uLcAoLBVU5OfV1Zo0nS3Pk0
+        eW0Vwlc1Xan323SIGiWI1Qvucl5i
+X-Google-Smtp-Source: APXvYqwMYj0sLrZL420zldAMVbjYPIt90X7shF4D1dqMK4E0hvG9yUi8e6b1pOrx9jlga2DbFxrKcQ==
+X-Received: by 2002:a1c:1b42:: with SMTP id b63mr12576943wmb.16.1581804145462;
+        Sat, 15 Feb 2020 14:02:25 -0800 (PST)
 Received: from localhost.localdomain ([109.126.146.5])
-        by smtp.gmail.com with ESMTPSA id b18sm13377021wru.50.2020.02.15.14.02.20
+        by smtp.gmail.com with ESMTPSA id b18sm13377021wru.50.2020.02.15.14.02.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 14:02:21 -0800 (PST)
+        Sat, 15 Feb 2020 14:02:25 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] io_uring: add missing io_req_cancelled()
-Date:   Sun, 16 Feb 2020 01:01:18 +0300
-Message-Id: <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
+Subject: [PATCH v2 3/5] io_uring: don't call work.func from sync ctx
+Date:   Sun, 16 Feb 2020 01:01:20 +0300
+Message-Id: <e84c16af73611955fc1ba2ab28a400b1464f9af8.1581785642.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1581785642.git.asml.silence@gmail.com>
 References: <cover.1581785642.git.asml.silence@gmail.com>
@@ -73,37 +73,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fallocate_finish() is missing cancellation check. Add it.
-It's safe to do that, as only flags setup and sqe fields copy are done
-before it gets into __io_fallocate().
+Many operations define custom work.func before getting into an io-wq.
+There are several points against:
+- it calls io_wq_assign_next() from outside io-wq, that may be confusing
+- sync context would go unnecessary through io_req_cancelled()
+- prototypes are quite different, so work!=old_work looks strange
+- makes async/sync responsibilities fuzzy
+- adds extra overhead
+
+Don't call generic path and io-wq handlers from each other, but use
+helpers instead
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- fs/io_uring.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/io_uring.c | 76 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 38 insertions(+), 38 deletions(-)
 
 diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5a826017ebb8..7a132be72863 100644
+index 1dc83d887183..0dd2f10d8ad8 100644
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -2517,6 +2517,9 @@ static void io_fallocate_finish(struct io_wq_work **workptr)
- 	struct io_kiocb *nxt = NULL;
+@@ -2468,23 +2468,28 @@ static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
+ 	}
+ }
+ 
+-static void io_fsync_finish(struct io_wq_work **workptr)
++static void __io_fsync(struct io_kiocb *req, struct io_kiocb **nxt)
+ {
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+ 	loff_t end = req->sync.off + req->sync.len;
+-	struct io_kiocb *nxt = NULL;
  	int ret;
  
+-	if (io_req_cancelled(req))
+-		return;
+-
+ 	ret = vfs_fsync_range(req->file, req->sync.off,
+ 				end > 0 ? end : LLONG_MAX,
+ 				req->sync.flags & IORING_FSYNC_DATASYNC);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+-	io_put_req_find_next(req, &nxt);
++	io_put_req_find_next(req, nxt);
++}
++
++static void io_fsync_finish(struct io_wq_work **workptr)
++{
++	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
++	struct io_kiocb *nxt = NULL;
++
 +	if (io_req_cancelled(req))
 +		return;
-+
- 	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
- 				req->sync.len);
- 	if (ret < 0)
-@@ -2904,6 +2907,7 @@ static void io_close_finish(struct io_wq_work **workptr)
- 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
- 	struct io_kiocb *nxt = NULL;
- 
-+	/* not cancellable, don't do io_req_cancelled() */
- 	__io_close_finish(req, &nxt);
++	__io_fsync(req, &nxt);
  	if (nxt)
  		io_wq_assign_next(workptr, nxt);
+ }
+@@ -2492,26 +2497,18 @@ static void io_fsync_finish(struct io_wq_work **workptr)
+ static int io_fsync(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		    bool force_nonblock)
+ {
+-	struct io_wq_work *work, *old_work;
+-
+ 	/* fsync always requires a blocking context */
+ 	if (force_nonblock) {
+ 		io_put_req(req);
+ 		req->work.func = io_fsync_finish;
+ 		return -EAGAIN;
+ 	}
+-
+-	work = old_work = &req->work;
+-	io_fsync_finish(&work);
+-	if (work && work != old_work)
+-		*nxt = container_of(work, struct io_kiocb, work);
++	__io_fsync(req, nxt);
+ 	return 0;
+ }
+ 
+-static void io_fallocate_finish(struct io_wq_work **workptr)
++static void __io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt)
+ {
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct io_kiocb *nxt = NULL;
+ 	int ret;
+ 
+ 	if (io_req_cancelled(req))
+@@ -2522,7 +2519,15 @@ static void io_fallocate_finish(struct io_wq_work **workptr)
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+-	io_put_req_find_next(req, &nxt);
++	io_put_req_find_next(req, nxt);
++}
++
++static void io_fallocate_finish(struct io_wq_work **workptr)
++{
++	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
++	struct io_kiocb *nxt = NULL;
++
++	__io_fallocate(req, &nxt);
+ 	if (nxt)
+ 		io_wq_assign_next(workptr, nxt);
+ }
+@@ -2542,8 +2547,6 @@ static int io_fallocate_prep(struct io_kiocb *req,
+ static int io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			bool force_nonblock)
+ {
+-	struct io_wq_work *work, *old_work;
+-
+ 	/* fallocate always requiring blocking context */
+ 	if (force_nonblock) {
+ 		io_put_req(req);
+@@ -2551,11 +2554,7 @@ static int io_fallocate(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		return -EAGAIN;
+ 	}
+ 
+-	work = old_work = &req->work;
+-	io_fallocate_finish(&work);
+-	if (work && work != old_work)
+-		*nxt = container_of(work, struct io_kiocb, work);
+-
++	__io_fallocate(req, nxt);
+ 	return 0;
+ }
+ 
+@@ -2959,21 +2958,27 @@ static int io_prep_sfr(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	return 0;
+ }
+ 
+-static void io_sync_file_range_finish(struct io_wq_work **workptr)
++static void __io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt)
+ {
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct io_kiocb *nxt = NULL;
+ 	int ret;
+ 
+-	if (io_req_cancelled(req))
+-		return;
+-
+ 	ret = sync_file_range(req->file, req->sync.off, req->sync.len,
+ 				req->sync.flags);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+-	io_put_req_find_next(req, &nxt);
++	io_put_req_find_next(req, nxt);
++}
++
++
++static void io_sync_file_range_finish(struct io_wq_work **workptr)
++{
++	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
++	struct io_kiocb *nxt = NULL;
++
++	if (io_req_cancelled(req))
++		return;
++	__io_sync_file_range(req, &nxt);
+ 	if (nxt)
+ 		io_wq_assign_next(workptr, nxt);
+ }
+@@ -2981,8 +2986,6 @@ static void io_sync_file_range_finish(struct io_wq_work **workptr)
+ static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			      bool force_nonblock)
+ {
+-	struct io_wq_work *work, *old_work;
+-
+ 	/* sync_file_range always requires a blocking context */
+ 	if (force_nonblock) {
+ 		io_put_req(req);
+@@ -2990,10 +2993,7 @@ static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		return -EAGAIN;
+ 	}
+ 
+-	work = old_work = &req->work;
+-	io_sync_file_range_finish(&work);
+-	if (work && work != old_work)
+-		*nxt = container_of(work, struct io_kiocb, work);
++	__io_sync_file_range(req, nxt);
+ 	return 0;
+ }
+ 
 -- 
 2.24.0
 
