@@ -2,230 +2,149 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350B4C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB1AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061212084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581774133;
-	bh=e+K6J5Imwf8+3EtNhLEBthJf1zwhCeCSdnbwHieNtp0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jKNwOYaCJ2AYXAzFo79sbSwjlb0up+c0A7/5dSgtukMmTZqJ2/BbYB6rA6aEBNOck
-	 VXDkRLiRkJ4Unqw00Pid/8xOxtbVNidOoLJJtl0xOE6X8BwdbT5AQ6AnM8akuz7tGn
-	 yO2D4+cz+2AhxPZHz4ef17urHI69S5U9sMcvOZkM=
+	by mail.kernel.org (Postfix) with ESMTP id 0A874207FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgBONmM (ORCPT
+        id S1726307AbgBONon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 08:42:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42798 "EHLO mail.kernel.org"
+        Sat, 15 Feb 2020 08:44:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39956 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgBONmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 08:42:12 -0500
-Received: from paulmck-ThinkPad-P72.home (206-137-99-82.bluetone.cz [82.99.137.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF52C2083B;
-        Sat, 15 Feb 2020 13:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581774130;
-        bh=e+K6J5Imwf8+3EtNhLEBthJf1zwhCeCSdnbwHieNtp0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=MJhb2fYJKHSuduvv8K0wfY4w+tZoSYL146GwKL5QgVYNwSM/jbvqtb9L/8wjaCN+I
-         FzjtDF+spPLvmR2XegLKBSOcgq4ODOaKQtX6mi/JBNz7xo3a68il/UM+J33OSBtD1H
-         XfB1wgZEqqIyKKM6D7hNLtYGRdWm3Ae/KczmRjUQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D9FC83520CAB; Sat, 15 Feb 2020 05:42:08 -0800 (PST)
-Date:   Sat, 15 Feb 2020 05:42:08 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH tip/core/rcu 22/30] rcu: Don't flag non-starting GPs
- before GP kthread is running
-Message-ID: <20200215134208.GA9879@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-22-paulmck@kernel.org>
- <20200214225305.48550d6a@oasis.local.home>
- <20200215110111.GZ2935@paulmck-ThinkPad-P72>
+        id S1725977AbgBONom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 08:44:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 49C5BAED6;
+        Sat, 15 Feb 2020 13:44:40 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] riscv: Add support for mem=
+To:     Jan Kiszka <jan.kiszka@web.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1581767384.git.jan.kiszka@web.de>
+ <617f75f4eaacb02cd9d0a7044434e3e9b65e9e8b.1581767384.git.jan.kiszka@web.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ xsFNBFiKBz4BEADNHZmqwhuN6EAzXj9SpPpH/nSSP8YgfwoOqwrP+JR4pIqRK0AWWeWCSwmZ
+ T7g+RbfPFlmQp+EwFWOtABXlKC54zgSf+uulGwx5JAUFVUIRBmnHOYi/lUiE0yhpnb1KCA7f
+ u/W+DkwGerXqhhe9TvQoGwgCKNfzFPZoM+gZrm+kWv03QLUCr210n4cwaCPJ0Nr9Z3c582xc
+ bCUVbsjt7BN0CFa2BByulrx5xD9sDAYIqfLCcZetAqsTRGxM7LD0kh5WlKzOeAXj5r8DOrU2
+ GdZS33uKZI/kZJZVytSmZpswDsKhnGzRN1BANGP8sC+WD4eRXajOmNh2HL4P+meO1TlM3GLl
+ EQd2shHFY0qjEo7wxKZI1RyZZ5AgJnSmehrPCyuIyVY210CbMaIKHUIsTqRgY5GaNME24w7h
+ TyyVCy2qAM8fLJ4Vw5bycM/u5xfWm7gyTb9V1TkZ3o1MTrEsrcqFiRrBY94Rs0oQkZvunqia
+ c+NprYSaOG1Cta14o94eMH271Kka/reEwSZkC7T+o9hZ4zi2CcLcY0DXj0qdId7vUKSJjEep
+ c++s8ncFekh1MPhkOgNj8pk17OAESanmDwksmzh1j12lgA5lTFPrJeRNu6/isC2zyZhTwMWs
+ k3LkcTa8ZXxh0RfWAqgx/ogKPk4ZxOXQEZetkEyTFghbRH2BIwARAQABzSJOaWtvbGF5IEJv
+ cmlzb3YgPG5ib3Jpc292QHN1c2UuZGU+wsF4BBMBAgAiBQJYijkSAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAAKCRBxvoJG5T8oV/B6D/9a8EcRPdHg8uLEPywuJR8URwXzkofT5bZE
+ IfGF0Z+Lt2ADe+nLOXrwKsamhweUFAvwEUxxnndovRLPOpWerTOAl47lxad08080jXnGfYFS
+ Dc+ew7C3SFI4tFFHln8Y22Q9075saZ2yQS1ywJy+TFPADIprAZXnPbbbNbGtJLoq0LTiESnD
+ w/SUC6sfikYwGRS94Dc9qO4nWyEvBK3Ql8NkoY0Sjky3B0vL572Gq0ytILDDGYuZVo4alUs8
+ LeXS5ukoZIw1QYXVstDJQnYjFxYgoQ5uGVi4t7FsFM/6ykYDzbIPNOx49Rbh9W4uKsLVhTzG
+ BDTzdvX4ARl9La2kCQIjjWRg+XGuBM5rxT/NaTS78PXjhqWNYlGc5OhO0l8e5DIS2tXwYMDY
+ LuHYNkkpMFksBslldvNttSNei7xr5VwjVqW4vASk2Aak5AleXZS+xIq2FADPS/XSgIaepyTV
+ tkfnyreep1pk09cjfXY4A7qpEFwazCRZg9LLvYVc2M2eFQHDMtXsH59nOMstXx2OtNMcx5p8
+ 0a5FHXE/HoXz3p9bD0uIUq6p04VYOHsMasHqHPbsMAq9V2OCytJQPWwe46bBjYZCOwG0+x58
+ fBFreP/NiJNeTQPOa6FoxLOLXMuVtpbcXIqKQDoEte9aMpoj9L24f60G4q+pL/54ql2VRscK
+ d87BTQRYigc+ARAAyJSq9EFk28++SLfg791xOh28tLI6Yr8wwEOvM3wKeTfTZd+caVb9gBBy
+ wxYhIopKlK1zq2YP7ZjTP1aPJGoWvcQZ8fVFdK/1nW+Z8/NTjaOx1mfrrtTGtFxVBdSCgqBB
+ jHTnlDYV1R5plJqK+ggEP1a0mr/rpQ9dFGvgf/5jkVpRnH6BY0aYFPprRL8ZCcdv2DeeicOO
+ YMobD5g7g/poQzHLLeT0+y1qiLIFefNABLN06Lf0GBZC5l8hCM3Rpb4ObyQ4B9PmL/KTn2FV
+ Xq/c0scGMdXD2QeWLePC+yLMhf1fZby1vVJ59pXGq+o7XXfYA7xX0JsTUNxVPx/MgK8aLjYW
+ hX+TRA4bCr4uYt/S3ThDRywSX6Hr1lyp4FJBwgyb8iv42it8KvoeOsHqVbuCIGRCXqGGiaeX
+ Wa0M/oxN1vJjMSIEVzBAPi16tztL/wQtFHJtZAdCnuzFAz8ue6GzvsyBj97pzkBVacwp3/Mw
+ qbiu7sDz7yB0d7J2tFBJYNpVt/Lce6nQhrvon0VqiWeMHxgtQ4k92Eja9u80JDaKnHDdjdwq
+ FUikZirB28UiLPQV6PvCckgIiukmz/5ctAfKpyYRGfez+JbAGl6iCvHYt/wAZ7Oqe/3Cirs5
+ KhaXBcMmJR1qo8QH8eYZ+qhFE3bSPH446+5oEw8A9v5oonKV7zMAEQEAAcLBXwQYAQIACQUC
+ WIoHPgIbDAAKCRBxvoJG5T8oV1pyD/4zdXdOL0lhkSIjJWGqz7Idvo0wjVHSSQCbOwZDWNTN
+ JBTP0BUxHpPu/Z8gRNNP9/k6i63T4eL1xjy4umTwJaej1X15H8Hsh+zakADyWHadbjcUXCkg
+ OJK4NsfqhMuaIYIHbToi9K5pAKnV953xTrK6oYVyd/Rmkmb+wgsbYQJ0Ur1Ficwhp6qU1CaJ
+ mJwFjaWaVgUERoxcejL4ruds66LM9Z1Qqgoer62ZneID6ovmzpCWbi2sfbz98+kW46aA/w8r
+ 7sulgs1KXWhBSv5aWqKU8C4twKjlV2XsztUUsyrjHFj91j31pnHRklBgXHTD/pSRsN0UvM26
+ lPs0g3ryVlG5wiZ9+JbI3sKMfbdfdOeLxtL25ujs443rw1s/PVghphoeadVAKMPINeRCgoJH
+ zZV/2Z/myWPRWWl/79amy/9MfxffZqO9rfugRBORY0ywPHLDdo9Kmzoxoxp9w3uTrTLZaT9M
+ KIuxEcV8wcVjr+Wr9zRl06waOCkgrQbTPp631hToxo+4rA1jiQF2M80HAet65ytBVR2pFGZF
+ zGYYLqiG+mpUZ+FPjxk9kpkRYz61mTLSY7tuFljExfJWMGfgSg1OxfLV631jV1TcdUnx+h3l
+ Sqs2vMhAVt14zT8mpIuu2VNxcontxgVr1kzYA/tQg32fVRbGr449j1gw57BV9i0vww==
+Message-ID: <24bf6fae-27f4-dbdc-fcc5-6c3b65733ae6@suse.com>
+Date:   Sat, 15 Feb 2020 15:44:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200215110111.GZ2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <617f75f4eaacb02cd9d0a7044434e3e9b65e9e8b.1581767384.git.jan.kiszka@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 03:01:11AM -0800, Paul E. McKenney wrote:
-> On Fri, Feb 14, 2020 at 10:53:05PM -0500, Steven Rostedt wrote:
-> > On Fri, 14 Feb 2020 15:55:59 -0800
-> > paulmck@kernel.org wrote:
-> > 
-> > > @@ -1252,10 +1252,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-> > >   */
-> > >  static void rcu_gp_kthread_wake(void)
-> > >  {
-> > > -	if ((current == rcu_state.gp_kthread &&
-> > > +	if ((current == READ_ONCE(rcu_state.gp_kthread) &&
-> > >  	     !in_irq() && !in_serving_softirq()) ||
-> > >  	    !READ_ONCE(rcu_state.gp_flags) ||
-> > > -	    !rcu_state.gp_kthread)
-> > > +	    !READ_ONCE(rcu_state.gp_kthread))
-> > >  		return;
-> > 
-> > This looks buggy. You have two instances of
-> > READ_ONCE(rcu_state.gp_thread), which means they can be different. Is
-> > that intentional?
+
+
+On 15.02.20 г. 13:49 ч., Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
 > 
-> It might well be a bug, but let's see...
+> This sets a memory limit provided via mem=3D on the command line,
+> analogously to many other architectures.
 > 
-> The rcu_state.gp_kthread field is initially NULL and transitions only once
-> to the non-NULL pointer to the RCU grace-period kthread's task_struct
-> structure.  So yes, this does work, courtesy of the compiler not being
-> allowed to change the order of READ_ONCE() instances and conherence-order
-> rules for READ_ONCE() and WRITE_ONCE().
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> =2D--
+>  arch/riscv/mm/init.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> But it would clearly be way better to do just one READ_ONCE() into a
-> local variable and test that local variable twice.
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 965a8cf4829c..aec39a56d6cf 100644
+> =2D-- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -118,6 +118,23 @@ static void __init setup_initrd(void)
+>  }
+>  #endif /* CONFIG_BLK_DEV_INITRD */
 > 
-> I will make this change, and thank you for calling my attention to it!
+> +static phys_addr_t memory_limit =3D PHYS_ADDR_MAX;
 
-And does the following V2 look better?
+3d is the ascii code for =, meaning your client is somehow br0ken?
+> +
+> +/*
+> + * Limit the memory size that was specified via FDT.
+> + */
+> +static int __init early_mem(char *p)
+> +{
+> +	if (!p)
+> +		return 1;
+> +
+> +	memory_limit =3D memparse(p, &p) & PAGE_MASK;
 
-							Thanx, Paul
+ditto
 
-------------------------------------------------------------------------
-
-commit 35f7c539d30d5b595718302d07334146f8eb7304
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Tue Jan 21 12:30:22 2020 -0800
-
-    rcu: Don't flag non-starting GPs before GP kthread is running
-    
-    Currently rcu_check_gp_start_stall() complains if a grace period takes
-    too long to start, where "too long" is roughly one RCU CPU stall-warning
-    interval.  This has worked well, but there are some debugging Kconfig
-    options (such as CONFIG_EFI_PGT_DUMP=y) that can make booting take a
-    very long time, so much so that the stall-warning interval has expired
-    before RCU's grace-period kthread has even been spawned.
-    
-    This commit therefore resets the rcu_state.gp_req_activity and
-    rcu_state.gp_activity timestamps just before the grace-period kthread
-    is spawned, and modifies the checks and adds ordering to ensure that
-    if rcu_check_gp_start_stall() sees that the grace-period kthread
-    has been spawned, that it will also see the resets applied to the
-    rcu_state.gp_req_activity and rcu_state.gp_activity timestamps.
-    
-    Reported-by: Qian Cai <cai@lca.pw>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    [ paulmck: Fix whitespace issues reported by Qian Cai. ]
-    Tested-by: Qian Cai <cai@lca.pw>
-    [ paulmck: Simplify grace-period wakeup check per Steve Rostedt feedback. ]
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 62383ce..4a4a975 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1202,7 +1202,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
- 	trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("Startedroot"));
- 	WRITE_ONCE(rcu_state.gp_flags, rcu_state.gp_flags | RCU_GP_FLAG_INIT);
- 	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
--	if (!rcu_state.gp_kthread) {
-+	if (!READ_ONCE(rcu_state.gp_kthread)) {
- 		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
- 		goto unlock_out;
- 	}
-@@ -1237,12 +1237,13 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
- }
- 
- /*
-- * Awaken the grace-period kthread.  Don't do a self-awaken (unless in
-- * an interrupt or softirq handler), and don't bother awakening when there
-- * is nothing for the grace-period kthread to do (as in several CPUs raced
-- * to awaken, and we lost), and finally don't try to awaken a kthread that
-- * has not yet been created.  If all those checks are passed, track some
-- * debug information and awaken.
-+ * Awaken the grace-period kthread.  Don't do a self-awaken (unless in an
-+ * interrupt or softirq handler, in which case we just might immediately
-+ * sleep upon return, resulting in a grace-period hang), and don't bother
-+ * awakening when there is nothing for the grace-period kthread to do
-+ * (as in several CPUs raced to awaken, we lost), and finally don't try
-+ * to awaken a kthread that has not yet been created.  If all those checks
-+ * are passed, track some debug information and awaken.
-  *
-  * So why do the self-wakeup when in an interrupt or softirq handler
-  * in the grace-period kthread's context?  Because the kthread might have
-@@ -1252,10 +1253,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-  */
- static void rcu_gp_kthread_wake(void)
- {
--	if ((current == rcu_state.gp_kthread &&
--	     !in_irq() && !in_serving_softirq()) ||
--	    !READ_ONCE(rcu_state.gp_flags) ||
--	    !rcu_state.gp_kthread)
-+	struct task_struct *t = READ_ONCE(rcu_state.gp_kthread);
-+
-+	if ((current == t && !in_irq() && !in_serving_softirq()) ||
-+	    !READ_ONCE(rcu_state.gp_flags) || !t)
- 		return;
- 	WRITE_ONCE(rcu_state.gp_wake_time, jiffies);
- 	WRITE_ONCE(rcu_state.gp_wake_seq, READ_ONCE(rcu_state.gp_seq));
-@@ -3554,7 +3555,10 @@ static int __init rcu_spawn_gp_kthread(void)
- 	}
- 	rnp = rcu_get_root();
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
--	rcu_state.gp_kthread = t;
-+	WRITE_ONCE(rcu_state.gp_activity, jiffies);
-+	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
-+	// Reset .gp_activity and .gp_req_activity before setting .gp_kthread.
-+	smp_store_release(&rcu_state.gp_kthread, t);  /* ^^^ */
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	wake_up_process(t);
- 	rcu_spawn_nocb_kthreads();
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 488b71d..16ad7ad 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -578,6 +578,7 @@ void show_rcu_gp_kthreads(void)
- 	unsigned long jw;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
-+	struct task_struct *t = READ_ONCE(rcu_state.gp_kthread);
- 
- 	j = jiffies;
- 	ja = j - READ_ONCE(rcu_state.gp_activity);
-@@ -585,8 +586,7 @@ void show_rcu_gp_kthreads(void)
- 	jw = j - READ_ONCE(rcu_state.gp_wake_time);
- 	pr_info("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
- 		rcu_state.name, gp_state_getname(rcu_state.gp_state),
--		rcu_state.gp_state,
--		rcu_state.gp_kthread ? rcu_state.gp_kthread->state : 0x1ffffL,
-+		rcu_state.gp_state, t ? t->state : 0x1ffffL,
- 		ja, jr, jw, (long)READ_ONCE(rcu_state.gp_wake_seq),
- 		(long)READ_ONCE(rcu_state.gp_seq),
- 		(long)READ_ONCE(rcu_get_root()->gp_seq_needed),
-@@ -633,7 +633,8 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
- 
- 	if (!IS_ENABLED(CONFIG_PROVE_RCU) || rcu_gp_in_progress() ||
- 	    ULONG_CMP_GE(READ_ONCE(rnp_root->gp_seq),
--			 READ_ONCE(rnp_root->gp_seq_needed)))
-+			 READ_ONCE(rnp_root->gp_seq_needed)) ||
-+	    !smp_load_acquire(&rcu_state.gp_kthread)) // Get stable kthread.
- 		return;
- 	j = jiffies; /* Expensive access, and in common case don't get here. */
- 	if (time_before(j, READ_ONCE(rcu_state.gp_req_activity) + gpssdelay) ||
+> +	pr_notice("Memory limited to %lldMB\n", memory_limit >> 20);
+> +
+> +	return 0;
+> +}
+> +early_param("mem", early_mem);
+> +
+>  static phys_addr_t dtb_early_pa __initdata;
+> 
+>  void __init setup_bootmem(void)
+> @@ -127,6 +144,8 @@ void __init setup_bootmem(void)
+>  	phys_addr_t vmlinux_end =3D __pa_symbol(&_end);
+>  	phys_addr_t vmlinux_start =3D __pa_symbol(&_start);
+> 
+> +	memblock_enforce_memory_limit(memory_limit);
+> +
+>  	/* Find the memory region containing the kernel */
+>  	for_each_memblock(memory, reg) {
+>  		phys_addr_t end =3D reg->base + reg->size;
+> =2D-
+> 2.16.4
+> 
+> 
