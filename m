@@ -2,88 +2,92 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B521EC352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0715BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F6B2067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D329C2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgBOGOG (ORCPT
+        id S1726024AbgBOGOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 01:14:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46250 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgBOGOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 01:14:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 06BA1AC8F;
-        Sat, 15 Feb 2020 06:14:03 +0000 (UTC)
-Date:   Sat, 15 Feb 2020 07:14:02 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 495/542] docs: i2c: writing-clients:
- properly name the stop condition
-Message-ID: <20200215071402.027c9120@endymion>
-In-Reply-To: <20200214154854.6746-495-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
-        <20200214154854.6746-495-sashal@kernel.org>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Sat, 15 Feb 2020 01:14:19 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56382 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgBOGOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 01:14:18 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2qiW-00D3pz-L1; Sat, 15 Feb 2020 06:14:16 +0000
+Date:   Sat, 15 Feb 2020 06:14:16 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Atul Gupta <atul.gupta@chelsio.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC][PATCH] almost certain bug in
+ drivers/crypto/chelsio/chcr_algo.c:create_authenc_wr()
+Message-ID: <20200215061416.GZ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 10:48:07 -0500, Sasha Levin wrote:
-> From: Luca Ceresoli <luca@lucaceresoli.net>
-> 
-> [ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
-> 
-> In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
-> condition".
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Reported-by: Jean Delvare <jdelvare@suse.de>
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  Documentation/i2c/writing-clients.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
-> index ced309b5e0cc8..3869efdf84cae 100644
-> --- a/Documentation/i2c/writing-clients.rst
-> +++ b/Documentation/i2c/writing-clients.rst
-> @@ -357,9 +357,9 @@ read/written.
->  
->  This sends a series of messages. Each message can be a read or write,
->  and they can be mixed in any way. The transactions are combined: no
-> -stop bit is sent between transaction. The i2c_msg structure contains
-> -for each message the client address, the number of bytes of the message
-> -and the message data itself.
-> +stop condition is issued between transaction. The i2c_msg structure
-> +contains for each message the client address, the number of bytes of the
-> +message and the message data itself.
->  
->  You can read the file ``i2c-protocol`` for more information about the
->  actual I2C protocol.
+        kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
+                - sizeof(chcr_req->key_ctx);
+can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
+KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
+sees
+	b0 b1 b2 b3
+in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
+shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
+gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
 
-I wouldn't bother backporting this documentation patch to stable and
-longterm trees. That's a minor vocabulary thing really, it does not
-qualify.
+Sounds reasonable, but on b-e we get
+b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
+yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
+Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
 
--- 
-Jean Delvare
-SUSE L3 Support
+Then we increase it some more and pass to alloc_skb() as size.
+Somehow I doubt that we really want a quarter-gigabyte skb allocation
+here...
+
+Note that when you are building those values in
+#define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
+                htonl(KEY_CONTEXT_VALID_V(1) | \
+                      KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
+                      KEY_CONTEXT_MK_SIZE_V(mk_size) | \
+                      KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
+                      KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
+                      KEY_CONTEXT_SALT_PRESENT_V(1) | \
+                      KEY_CONTEXT_CTX_LEN_V((ctx_len)))
+ctx_len ends up in the first octet (i.e. b0 in the above), which
+matches the current behaviour on l-e.  If that's the intent, this
+thing should've been
+        kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
+                - sizeof(chcr_req->key_ctx);
+instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 8) + b3,
+shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on l-e and
+on b-e.
+
+PS: when sparse warns you about endianness problems, it might be worth checking
+if there really is something wrong.  And I don't mean "slap __force cast on it"...
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff -urN a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2351,7 +2351,7 @@ static struct sk_buff *create_authenc_wr(struct aead_request *req,
+ 	snents = sg_nents_xlen(req->src, req->assoclen + req->cryptlen,
+ 			       CHCR_SRC_SG_SIZE, 0);
+ 	dst_size = get_space_for_phys_dsgl(dnents);
+-	kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
++	kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
+ 		- sizeof(chcr_req->key_ctx);
+ 	transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
+ 	reqctx->imm = (transhdr_len + req->assoclen + req->cryptlen) <
