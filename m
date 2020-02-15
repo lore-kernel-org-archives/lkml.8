@@ -2,131 +2,163 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F4C71150
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11FFC7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBE32073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C3824649
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvCGI3TR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoT9Ba5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgBOWMp (ORCPT
+        id S1727723AbgBOWRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 17:12:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35217 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgBOWMp (ORCPT
+        Sat, 15 Feb 2020 17:17:44 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37090 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgBOWRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 17:12:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w12so15183948wrt.2;
-        Sat, 15 Feb 2020 14:12:43 -0800 (PST)
+        Sat, 15 Feb 2020 17:17:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a6so14604083wme.2;
+        Sat, 15 Feb 2020 14:17:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=jsC0gm1MrUFPLxkGggWB2x4nz39/Gtx7ObXiq8PjvPQ=;
-        b=DvCGI3TRvR+8GKlr6+o+6hsUJlXBMbvXV1/Gh16SDpMw/lpY9ebTuGIjrGMzAxHsKO
-         aVZKxZRTiriJWpKpw25Y2UFEFM/JAXX96PuSIFqPPt1EzAq42D3ygu28CnDuzjwY23rZ
-         k5j0KOCY/G2VDVzjPorE/3JjqbHLmIUCOL2rqBzIe70A9d6S7Hc+PDKyAQ9BnmmACXoD
-         XNydKzx1brv07p9HL0emznfBpCdrXY4Y4RgMW9i8enPjj1MHUOoh8coCjAONt86sDGFE
-         NzSEojbMmMm7rGEHkdfubnDOAMD8LZOecOhHzDVnhJXHLQfDcCJN+hi/f4DBqINCH38P
-         /lIw==
+        bh=6CyS3ovMTI3rLTwxaFUWikmoGbQY45rGievk0K7pkXs=;
+        b=QoT9Ba5vwhWGe5BhQyrXiNAb4BHAJciC3YyMro1VVl0leRo63jYo2Be+uiIikz289g
+         i4FlxPcBDaTlmn7BSZNvB8zZJPqDXGnHvNpRHO6JEPKhu3qxaEhinW96BQ1Uhbog3gSy
+         U9Hc8Fv2DNkYAPPGYjLNppDTBRSsfTcBFwTCJLdTPK2EQOSHQnhyXkyaG1vRvWBJgtSg
+         uLUYI2EEkKuxtxfoqJFKuiZOhB0d2tlhqi3kBKLAN1HgvJJciqYF1N8xvojuqvvVLW3Q
+         byNkQ9IvqNEHnRQu5agcmhqPeWWddWMkg6Q8i0zVlBYZ9i8i2FaZX7yhC/aUX/t1hMGZ
+         nCgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jsC0gm1MrUFPLxkGggWB2x4nz39/Gtx7ObXiq8PjvPQ=;
-        b=SItYrHjxzysIgtEiRjD0rA/O2OVP4i/0sijqQnmJB/Om8VqxB/4czmvAmuLS7AeCfk
-         YvoFYRsgMrMsIYR4kGGGl91jrV0xqwoMw9sQw6wlVZu3slxVnqAmHSLes145M2jCnSlm
-         8Z3i4MTWRGSow1r1tuC8ZL6mNbx3wbALLmqydiS6eYnyneH5bE6uol5Av0XqpIqnhscI
-         lRu+eilVeqG6mNcJ0FirxKNuEY5hSqXYTuCZ8+/UK9rFVifyB/0TTyemapvspIuk6Vvl
-         jkofon+qMmkVDDsPOjBab4yZ8KXqZKGLi2XI2w8wYJxgY46kIuaVwHao0+CtZD8A7iAi
-         RtQw==
-X-Gm-Message-State: APjAAAU2nsrshIL9UP2BFc2sqsXNqr2WIN1rq8RjFHvWUve+m1eWXn9q
-        tttiverej8Km1VYUyADQh+xTOdz+ubI=
-X-Google-Smtp-Source: APXvYqzLra39kj8Y8cnO1XeZdzNgccAYiyWRTQavK7rjCcKZJkbHKuoEpjSnhq480pJxPYdTGjQ8lg==
-X-Received: by 2002:a5d:5007:: with SMTP id e7mr11865988wrt.228.1581804762727;
-        Sat, 15 Feb 2020 14:12:42 -0800 (PST)
-Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
-        by smtp.gmail.com with ESMTPSA id w22sm12999727wmk.34.2020.02.15.14.12.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Feb 2020 14:12:41 -0800 (PST)
-Subject: Re: [PATCH] arch/mips: change duplicated word in NUMA help text
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
-References: <8e127f9a-6c73-e0f5-4fb5-f3ab3656221f@infradead.org>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <00af0774-931f-9d60-4cfa-fa3d398ee921@amsat.org>
-Date:   Sat, 15 Feb 2020 23:12:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6CyS3ovMTI3rLTwxaFUWikmoGbQY45rGievk0K7pkXs=;
+        b=GjC+VYCEpyiIVsI/rNP4LhWCf18ABhr58ar3Q2Dhr7U5pdoOGkqpm0Omui2LaNfDrp
+         P1saYO9PYC+v0Ju/fRoe/+iO05GAIxH3h2mACFkhklJOoVN/3GqJb4mHxGs0sqC1wlNk
+         LxNDC4NvqYIcu1dCyHs5Lbkcjnp+ZOfsx256YQkS1B7fsTFTuXrOSdCmuqd/W6NzMxLT
+         azEQA1D5KNRwYTAb+F85DmIkz/tj61+cKXILxd4KJfTEk299taKKRqlyp9SKTXaIlLIU
+         56TNMlxBsBGIut1Ph8qp4jSZktEAtPPzTPBnQrGThd1aMKPdo+OVl8yMJKypV+3v7qxX
+         +Xbw==
+X-Gm-Message-State: APjAAAWc0ZQ1a3GgmnKnIlAakXjPnMYRd97OksjbPJN1Va3QL7+kOM5n
+        6kuyl4mmsjsJglmXeU2AGBg=
+X-Google-Smtp-Source: APXvYqwB0GmNLQ3gRXb6Nnv1U7xrRXgUT0KVZYH9DYmJv29qnWT/qNBPoOyJ/ea5dsP9oOa4iJDCRg==
+X-Received: by 2002:a1c:9ed7:: with SMTP id h206mr12281354wme.67.1581805061815;
+        Sat, 15 Feb 2020 14:17:41 -0800 (PST)
+Received: from localhost.localdomain ([109.126.146.5])
+        by smtp.gmail.com with ESMTPSA id u14sm12888802wrm.51.2020.02.15.14.17.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2020 14:17:41 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH liburing 1/2] splice: add splice(2) helpers
+Date:   Sun, 16 Feb 2020 01:16:53 +0300
+Message-Id: <bbb5b5bb4344d931c0296855c5ba8ae2eb0e89ff.1581804801.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1581804801.git.asml.silence@gmail.com>
+References: <cover.1581804801.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8e127f9a-6c73-e0f5-4fb5-f3ab3656221f@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/1/20 2:55 AM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix wording in NUMA help text.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> ---
->  arch/mips/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200131.orig/arch/mips/Kconfig
-> +++ linux-next-20200131/arch/mips/Kconfig
-> @@ -2676,7 +2676,7 @@ config NUMA
->  	  Say Y to compile the kernel to support NUMA (Non-Uniform Memory
->  	  Access).  This option improves performance on systems with more
->  	  than two nodes; on two node systems it is generally better to
-> -	  leave it disabled; on single node systems disable this option
-> +	  leave it disabled; on single node systems leave this option
->  	  disabled.
->  
->  config SYS_SUPPORTS_NUMA
-> 
+Add splice helpers and update io_uring.h
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+
+Quick update for extra newline and the fixed fd comment
+
+ src/include/liburing.h          | 11 +++++++++++
+ src/include/liburing/io_uring.h | 14 +++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/src/include/liburing.h b/src/include/liburing.h
+index 8ca6cd9..0628255 100644
+--- a/src/include/liburing.h
++++ b/src/include/liburing.h
+@@ -191,6 +191,17 @@ static inline void io_uring_prep_rw(int op, struct io_uring_sqe *sqe, int fd,
+ 	sqe->__pad2[0] = sqe->__pad2[1] = sqe->__pad2[2] = 0;
+ }
+ 
++static void io_uring_prep_splice(struct io_uring_sqe *sqe,
++				 int fd_in, loff_t off_in,
++				 int fd_out, loff_t off_out,
++				 unsigned int nbytes, int splice_flags)
++{
++	io_uring_prep_rw(IORING_OP_SPLICE, sqe, fd_out, (void *)off_in,
++			 nbytes, off_out);
++	sqe->splice_fd_in = fd_in;
++	sqe->splice_flags = splice_flags;
++}
++
+ static inline void io_uring_prep_readv(struct io_uring_sqe *sqe, int fd,
+ 				       const struct iovec *iovecs,
+ 				       unsigned nr_vecs, off_t offset)
+diff --git a/src/include/liburing/io_uring.h b/src/include/liburing/io_uring.h
+index 424fb4b..dc78697 100644
+--- a/src/include/liburing/io_uring.h
++++ b/src/include/liburing/io_uring.h
+@@ -23,7 +23,10 @@ struct io_uring_sqe {
+ 		__u64	off;	/* offset into file */
+ 		__u64	addr2;
+ 	};
+-	__u64	addr;		/* pointer to buffer or iovecs */
++	union {
++		__u64	addr;	/* pointer to buffer or iovecs */
++		__u64	off_in;
++	};
+ 	__u32	len;		/* buffer size or number of iovecs */
+ 	union {
+ 		__kernel_rwf_t	rw_flags;
+@@ -37,6 +40,7 @@ struct io_uring_sqe {
+ 		__u32		open_flags;
+ 		__u32		statx_flags;
+ 		__u32		fadvise_advice;
++		__u32		splice_flags;
+ 	};
+ 	__u64	user_data;	/* data to be passed back at completion time */
+ 	union {
+@@ -45,6 +49,7 @@ struct io_uring_sqe {
+ 			__u16	buf_index;
+ 			/* personality to use, if used */
+ 			__u16	personality;
++			__u32	splice_fd_in;
+ 		};
+ 		__u64	__pad2[3];
+ 	};
+@@ -113,6 +118,7 @@ enum {
+ 	IORING_OP_RECV,
+ 	IORING_OP_OPENAT2,
+ 	IORING_OP_EPOLL_CTL,
++	IORING_OP_SPLICE,
+ 
+ 	/* this goes last, obviously */
+ 	IORING_OP_LAST,
+@@ -128,6 +134,12 @@ enum {
+  */
+ #define IORING_TIMEOUT_ABS	(1U << 0)
+ 
++/*
++ * sqe->splice_flags
++ * extends splice(2) flags
++ */
++#define SPLICE_F_FD_IN_FIXED	(1U << 31) /* the last bit of __u32 */
++
+ /*
+  * IO completion data structure (Completion Queue Entry)
+  */
+-- 
+2.24.0
+
