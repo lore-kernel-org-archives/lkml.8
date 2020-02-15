@@ -2,86 +2,146 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F28C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85F1C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2002082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914EE207FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727335;
-	bh=HqPklbUHPAKE7xzj27oVOEQl4YeBYJpuGITsXNi0X2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVFio3Koy3DGUFGRvETw5MMQBlo8A3TXzi/0UMRmtqUNctlyLkBci6T9SZ1uTL7v2
-	 j/F/TDd2YDupVP8rULh20dHdkZReb4Ko9j5LuVSe7vebIvWlWoCmF8IfJiO9mXeXj0
-	 raoWt20LUEcgynEk64U8vLShznieGVhnbzcK9BsI=
+	s=default; t=1581727395;
+	bh=0UAAK02GitBI6FTXefoYEPz9/ZW54ed8x6IUi26cUHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yed2WXu5wOu3lOC+GOmZ6UkbkdeLIs/JscE9EZjzV3IBKMZaLoQh/s1cuJTbWmBWy
+	 +GN3C7dhsgFAj4wjQSkdcFDsJcrftyYX61nB1Cs0MWX92EgaYklkMZ0WcKkJmnCCSi
+	 IuzdEtGMLj6HAkw6iKbQ1wK1a9Ap6n3VnmJN5w4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgBOAmO (ORCPT
+        id S1727847AbgBOAnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:42:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:43:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728099AbgBOAmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:42:11 -0500
-Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727567AbgBOAnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:43:14 -0500
+Received: from localhost (unknown [38.98.37.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDA9F2083B;
-        Sat, 15 Feb 2020 00:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02278206CC;
+        Sat, 15 Feb 2020 00:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727330;
-        bh=HqPklbUHPAKE7xzj27oVOEQl4YeBYJpuGITsXNi0X2w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7P8rtso61MC/7U+bxLnRuP3VcidzYbSzHn4pXxscJaM1aOv9GfGTy2OU/MD55DwO
-         TcWmCb0HIbCkuDgtj9Q3Wvja6oRjI9B0aCjdUxBIs9YAFIUtYtpHHGO4/2HFyYdwMn
-         aQMbjr/V5IV7e9YZQkk2RAORARTpyi3mdpa4SqA0=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 18/18] rcutorture: Set KCSAN Kconfig options to detect more data races
-Date:   Fri, 14 Feb 2020 16:41:25 -0800
-Message-Id: <20200215004125.16953-12-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
-References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
+        s=default; t=1581727393;
+        bh=0UAAK02GitBI6FTXefoYEPz9/ZW54ed8x6IUi26cUHI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gv0P4a/rT4LBRqfYd4yV+05ufIKtFjrjAINPkiGxdf1xzuM0TsfXuZmUI6XabSC29
+         BKZqBILAA/HmRQe/QKN4jsdAv5xbPE+bNIa5guSOtRZQylAhdlBWeT44QctUWJcRwV
+         3pi9Lf8sUqTIuyRDXpyyBBlSM/pASyyGzRQrEgXo=
+Date:   Fri, 14 Feb 2020 19:03:55 -0500
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH AUTOSEL 4.4 080/100] char: hpet: Use flexible-array member
+Message-ID: <20200215000355.GA5524@kroah.com>
+References: <20200214162425.21071-1-sashal@kernel.org>
+ <20200214162425.21071-80-sashal@kernel.org>
+ <20200214174314.GA250980@gmail.com>
+ <20200214233650.GF1734@sasha-vm>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214233650.GF1734@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Fri, Feb 14, 2020 at 06:36:50PM -0500, Sasha Levin wrote:
+> On Fri, Feb 14, 2020 at 09:43:14AM -0800, Eric Biggers wrote:
+> > On Fri, Feb 14, 2020 at 11:24:04AM -0500, Sasha Levin wrote:
+> > > From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> > > 
+> > > [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
+> > > 
+> > > Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> > > presence of a "variable length array":
+> > > 
+> > > struct something {
+> > >     int length;
+> > >     u8 data[1];
+> > > };
+> > > 
+> > > struct something *instance;
+> > > 
+> > > instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> > > instance->length = size;
+> > > memcpy(instance->data, source, size);
+> > > 
+> > > There is also 0-byte arrays. Both cases pose confusion for things like
+> > > sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> > > to declare variable-length types such as the one above is a flexible array
+> > > member[2] which need to be the last member of a structure and empty-sized:
+> > > 
+> > > struct something {
+> > >         int stuff;
+> > >         u8 data[];
+> > > };
+> > > 
+> > > Also, by making use of the mechanism above, we will get a compiler warning
+> > > in case the flexible array does not occur last in the structure, which
+> > > will help us prevent some kind of undefined behavior bugs from being
+> > > unadvertenly introduced[3] to the codebase from now on.
+> > > 
+> > > [1] https://github.com/KSPP/linux/issues/21
+> > > [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > > Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  drivers/char/hpet.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+> > > index 5b38d7a8202a1..38c2ae93ce492 100644
+> > > --- a/drivers/char/hpet.c
+> > > +++ b/drivers/char/hpet.c
+> > > @@ -112,7 +112,7 @@ struct hpets {
+> > >  	unsigned long hp_delta;
+> > >  	unsigned int hp_ntimer;
+> > >  	unsigned int hp_which;
+> > > -	struct hpet_dev hp_dev[1];
+> > > +	struct hpet_dev hp_dev[];
+> > >  };
+> > > 
+> > 
+> > Umm, why are you backporting this without the commit that fixes it?  Does your
+> 
+> mhm, for some reason it failed to apply to 4.19 and older. I can look at
+> that.
+> 
+> > AUTOSEL process really still not pay attention to Fixes tags?  They are there
+> > for a reason.
+> 
+> Yes, it looks at the Fixes tag, thank you for the explanation.
+> 
+> > And for that matter, why are you backporting it all, given that this is a
+> > cleanup and not a fix?
+> 
+> If I recall correctly CONFIG_FORTIFY_SOURCE=y results in user visible
+> warnings, which we try to fix in the stable kernel.
 
-This commit enables the KCSAN Kconfig options that (1) detect data
-races between reads and writes even when the writes do not change the
-variable's value and (2) detect data races involving plain C-language
-writes.  These changes only affect scripted rcutorture runs and can be
-overridden using the kvm.sh --kconfig argument.
+I don't think that's the case here, that build option does not turn on
+this build warning from what I recall based on the original thread that
+started this type of conversion.  I know I sure do not see those
+warnings :)
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/testing/selftests/rcutorture/configs/rcu/CFcommon | 2 ++
- 1 file changed, 2 insertions(+)
+thanks,
 
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-index e19a444..0e92d85 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-@@ -3,3 +3,5 @@ CONFIG_PRINTK_TIME=y
- CONFIG_HYPERVISOR_GUEST=y
- CONFIG_PARAVIRT=y
- CONFIG_KVM_GUEST=y
-+CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n
-+CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n
--- 
-2.9.5
-
+greg k-h
