@@ -2,108 +2,94 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6963DC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8F8C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DA8217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7301D206CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581727064;
+	bh=64QHb1k1b5l5Sao9tVo4racHv6KhnJTPOsWRA6w8thg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kQ031W3gZZTh4JXFQSFbi2ulHJZGUtuNY1k0vydf0hsdpo33PCwwIUW9/+Tg234+a
+	 zGTT/mm9t+dK1iH4wJsEB1m+LbD/pZOTn77GvLZxZk22EOAoTdExiCVQDaorI+LKMb
+	 CJfai/yOKRCqI5JMzwsGZWVggSjkckmVtB39UDDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgBOAhj (ORCPT
+        id S1728077AbgBOAhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:37:39 -0500
-Received: from mga18.intel.com ([134.134.136.126]:9977 "EHLO mga18.intel.com"
+        Fri, 14 Feb 2020 19:37:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgBOAhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:37:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Feb 2020 16:37:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,442,1574150400"; 
-   d="scan'208";a="234636549"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga003.jf.intel.com with ESMTP; 14 Feb 2020 16:37:34 -0800
-Date:   Sat, 15 Feb 2020 08:37:53 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com
-Subject: Re: [PATCH v2] mm/vmscan.c: only adjust related kswapd cpu affinity
- when online cpu
-Message-ID: <20200215003753.GA32682@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200214073320.28735-1-richardw.yang@linux.intel.com>
- <20200214085113.GP31689@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214085113.GP31689@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728023AbgBOAhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:37:36 -0500
+Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69C6924650;
+        Sat, 15 Feb 2020 00:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581727056;
+        bh=64QHb1k1b5l5Sao9tVo4racHv6KhnJTPOsWRA6w8thg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qTBWVpTOkKxFSaECtTDAAmlsNIBBPJSz5RbeCZjh2wzWztrEG0Qnqe+Z/LwJtevpS
+         +UapSsP7YRAYjJBXlAbGaEFVS5fGb/Xn4aUYtCrhA1ME9D4bTtvSj8go8pYerwP5ii
+         c5oZ0Fkph232pabMAd+ZO0AXD/pIRIWFLA8UHfsQ=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 06/18] rcutorture: Suppress boottime bad-sequence warnings
+Date:   Fri, 14 Feb 2020 16:36:59 -0800
+Message-Id: <20200215003711.16463-6-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
+References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:51:13AM +0100, Michal Hocko wrote:
->On Fri 14-02-20 15:33:20, Wei Yang wrote:
->> When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
->> affinity.
->> 
->> Current routine does like this:
->> 
->>   a) Iterate all the numa node
->>   b) Adjust cpu affinity when node has an online cpu
->> 
->> For a) this is not necessary, since the particular online cpu belongs to
->> a particular numa node. So it is not necessary to iterate on every nodes
->> on the system. This new onlined cpu just affect kswapd cpu affinity of
->> this particular node.
->> 
->> For b) several cpumask operation is used to check whether the node has
->> an online CPU. Since at this point we are sure one of our CPU onlined,
->> we can set the cpu affinity directly to current cpumask_of_node().
->> 
->> This patch simplifies the logic by set cpu affinity of the affected
->> kswapd.
->
->How have you tested this patch?
->
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-I online one cpu and confirm the "cpu" is the one we just onlined.
+In normal production, an excessively long wait on a grace period
+(synchronize_rcu(), for example) at boottime is often just as bad
+as at any other time.  In fact, given the desire for fast boot, any
+sort of long wait at boot is a bad idea.  However, heavy rcutorture
+testing on large hyperthreaded systems can generate such long waits
+during boot as a matter of course.  This commit therefore causes
+the rcupdate.rcu_cpu_stall_suppress_at_boot kernel boot parameter to
+suppress reporting of bootime bad-sequence warning due to excessively
+long grace-period waits.
 
-If my understanding is correct, this is the expected behavior.
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/rcutorture.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->Also this is an old code and quite convoluted but does it still work as
->inteded? I mean, I do not see any cpu offline callback to reduce the
->cpu mask as all the CPUs for the given node go offline? Wouldn't the
-
-You are right, I didn't see the counterpart for cpu offline. This is the
-question I want to ask. Seems we didn't handle it at the very beginning.
-
->scheduler simply go and fallback to no affinity if that happens?
->In other words what is the value of kswapd_cpu_online in the first
->place?
-
-Some cases may this function be useful.
-
-If we have a memory node which doesn't have any online cpu, the default
-cpumask is not set. After one of the cpu online, we want to change cpu
-affinity.
-
-Or we want to add more cpu to the system, we could allow kswapd use more cpu
-resources. Otherwise, kswapd would be limited to those original cpus.
-
->-- 
->Michal Hocko
->SUSE Labs
-
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 16c84ec..5efd950 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -1423,7 +1423,8 @@ rcu_torture_stats_print(void)
+ 	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
+ 	pr_cont("rtc: %p %s: %lu tfle: %d rta: %d rtaf: %d rtf: %d ",
+ 		rcu_torture_current,
+-		rcu_torture_current ? "ver" : "VER",
++		rcu_torture_current && !rcu_stall_is_suppressed_at_boot()
++			? "ver" : "VER",
+ 		rcu_torture_current_version,
+ 		list_empty(&rcu_torture_freelist),
+ 		atomic_read(&n_rcu_torture_alloc),
 -- 
-Wei Yang
-Help you, Help me
+2.9.5
+
