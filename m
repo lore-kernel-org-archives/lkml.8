@@ -2,75 +2,130 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0586CC35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783F6C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1642081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503C02081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="erSLoIYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgBOCAX (ORCPT
+        id S1727884AbgBOCMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 21:00:23 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2997 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727639AbgBOCAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 21:00:22 -0500
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id E9C182F6DADF3E965247;
-        Sat, 15 Feb 2020 10:00:16 +0800 (CST)
-Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 15 Feb 2020 10:00:16 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Sat, 15 Feb 2020 10:00:16 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Sat, 15 Feb 2020 10:00:16 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Haiwei Li <lihaiwei.kernel@gmail.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: Add the check and free to avoid unknown errors.
-Thread-Topic: [PATCH] KVM: Add the check and free to avoid unknown errors.
-Thread-Index: AdXjojDYOXFel9aeTuSYbbuVH1Y8wQ==
-Date:   Sat, 15 Feb 2020 02:00:16 +0000
-Message-ID: <fdc45fbc0b9c4c38ab539c1abf0f1e4a@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 14 Feb 2020 21:12:55 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15167 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727680AbgBOCMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 21:12:54 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581732773; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=FWN168EASJBq5LyNsiOFzXjZn7DYbmkiFzZr0eZ3VcM=; b=erSLoIYAywXvR74DKvBvQC0JXH4irHG2kBO9AMCMTRjHoHJPYwmXYSw7uuPWsstT99tb+wFn
+ sEdemgo0REFf3zSBXi26p/okjfz84tmRxsyN6rrAOLaAEkQ9YWZnE0qJoIocTGgLqcf4Z//7
+ SUHy3Da4iq5Izn53hpvrJP2dHQs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e47539f.7f03a1d35148-smtp-out-n03;
+ Sat, 15 Feb 2020 02:12:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38597C4479C; Sat, 15 Feb 2020 02:12:47 +0000 (UTC)
+Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D828C43383;
+        Sat, 15 Feb 2020 02:12:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D828C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+From:   Mike Tipton <mdtipton@codeaurora.org>
+To:     sboyd@kernel.org, tdas@codeaurora.org
+Cc:     bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH] clk: qcom: clk-rpmh: Wait for completion when enabling clocks
+Date:   Fri, 14 Feb 2020 18:12:32 -0800
+Message-Id: <20200215021232.1149-1-mdtipton@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGk6DQpIYWl3ZWkgTGkgPGxpaGFpd2VpLmtlcm5lbEBnbWFpbC5jb20+IHdyb3RlOg0KPiBGcm9t
-OiBIYWl3ZWkgTGkgPGxpaGFpd2VpQHRlbmNlbnQuY29tPg0KPg0KPiBJZiAna3ZtX2NyZWF0ZV92
-bV9kZWJ1Z2ZzKCknIGZhaWxzIGluICdremFsbG9jKHNpemVvZigqc3RhdF9kYXRhKSwgLi4uKScs
-ICdrdm1fZGVzdHJveV92bV9kZWJ1Z2ZzKCknIHdpbGwgYmUgY2FsbGVkIGJ5IHRoZSBmaW5hbCBm
-cHV0KGZpbGUpIGluICdrdm1fZGV2X2lvY3RsX2NyZWF0ZV92bSgpJy4NCj4NCj4gQWRkIHRoZSBj
-aGVjayBhbmQgZnJlZSB0byBhdm9pZCB1bmtub3duIGVycm9ycy4NCg0KQWRkIHRoZSBjaGVjayBh
-bmQgZnJlZT8gQWNjb3JkaW5nIHRvIHRoZSBjb2RlLGl0IHNlZW0gd2hhdCB5b3UgbWVhbiBpcyAi
-YWRkIHRoZSBjaGVjayBhZ2FpbnN0IGZyZWUiID8NCiANCj4NCj4gU2lnbmVkLW9mZi1ieTogSGFp
-d2VpIExpIDxsaWhhaXdlaUB0ZW5jZW50LmNvbT4NCj4NCj4gICAJaWYgKGt2bS0+ZGVidWdmc19z
-dGF0X2RhdGEpIHsNCj4gLQkJZm9yIChpID0gMDsgaSA8IGt2bV9kZWJ1Z2ZzX251bV9lbnRyaWVz
-OyBpKyspDQo+ICsJCWZvciAoaSA9IDA7IGkgPCBrdm1fZGVidWdmc19udW1fZW50cmllczsgaSsr
-KSB7DQo+ICsJCQlpZiAoIWt2bS0+ZGVidWdmc19zdGF0X2RhdGFbaV0pDQo+ICsJCQkJYnJlYWs7
-DQo+ICAgCQkJa2ZyZWUoa3ZtLT5kZWJ1Z2ZzX3N0YXRfZGF0YVtpXSk7DQo+ICsJCX0NCj4gICAJ
-CWtmcmVlKGt2bS0+ZGVidWdmc19zdGF0X2RhdGEpOw0KPiAgIAl9DQo+ICAgfQ0KDQpJZiAoIWt2
-bS0+ZGVidWdmc19zdGF0X2RhdGFbaV0pIGlzIGNoZWNrZWQgaW4ga2ZyZWUoKSBpbnRlcm5hbC4g
-QW5kIGJyZWFrIGVhcmx5IHNlZW1zIGhhdmUgbm8gZGlmZmVyZW50IGVmZmVjdC4NCkNvdWxkIHlv
-dSBwbGVhc2UgZXhwbGFpbiB3aGF0IHVua25vd24gZXJyb3JzIG1heSBvY2N1cj8gQW5kIGhvdz8g
-VGhhbmtzLg0KDQo=
+The current implementation always uses rpmh_write_async, which doesn't
+wait for completion. That's fine for disable requests since there's no
+immediate need for the clocks and they can be disabled in the
+background. However, for enable requests we need to ensure the clocks
+are actually enabled before returning to the client. Otherwise, clients
+can end up accessing their HW before the necessary clocks are enabled,
+which can lead to bus errors.
+
+Use the synchronous version of this API (rpmh_write) for enable requests
+in the active set to ensure completion.
+
+Completion isn't required for sleep/wake sets, since they don't take
+effect until after we enter sleep. All rpmh requests are automatically
+flushed prior to entering sleep.
+
+Fixes: 9c7e47025a6b ("clk: qcom: clk-rpmh: Add QCOM RPMh clock driver")
+Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+---
+ drivers/clk/qcom/clk-rpmh.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index 12bd8715dece..3137595a736b 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -143,6 +143,19 @@ static inline bool has_state_changed(struct clk_rpmh *c, u32 state)
+ 		!= (c->aggr_state & BIT(state));
+ }
+ 
++static int clk_rpmh_send(struct clk_rpmh *c, enum rpmh_state state,
++			 struct tcs_cmd *cmd, bool wait_for_completion)
++{
++	int ret;
++
++	if (wait_for_completion)
++		ret = rpmh_write(c->dev, state, cmd, 1);
++	else
++		ret = rpmh_write_async(c->dev, state, cmd, 1);
++
++	return ret;
++}
++
+ static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
+ {
+ 	struct tcs_cmd cmd = { 0 };
+@@ -159,7 +172,8 @@ static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
+ 			if (cmd_state & BIT(state))
+ 				cmd.data = on_val;
+ 
+-			ret = rpmh_write_async(c->dev, state, &cmd, 1);
++			ret = clk_rpmh_send(c, state, &cmd,
++				cmd_state && state == RPMH_ACTIVE_ONLY_STATE);
+ 			if (ret) {
+ 				dev_err(c->dev, "set %s state of %s failed: (%d)\n",
+ 					!state ? "sleep" :
+@@ -267,7 +281,7 @@ static int clk_rpmh_bcm_send_cmd(struct clk_rpmh *c, bool enable)
+ 	cmd.addr = c->res_addr;
+ 	cmd.data = BCM_TCS_CMD(1, enable, 0, cmd_state);
+ 
+-	ret = rpmh_write_async(c->dev, RPMH_ACTIVE_ONLY_STATE, &cmd, 1);
++	ret = clk_rpmh_send(c, RPMH_ACTIVE_ONLY_STATE, &cmd, enable);
+ 	if (ret) {
+ 		dev_err(c->dev, "set active state of %s failed: (%d)\n",
+ 			c->res_name, ret);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
