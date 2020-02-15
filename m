@@ -2,280 +2,233 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B1C4741C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3624C4741C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090CD2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581783494;
-	bh=SjBxbXgKPacb0msm/7ulb6L6nFanyd0zVvaIhtYxB/k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Jp9SNUMvpwBrLhwXPFQPH3Wb4Wv4Qft3foifumDQu4KSmsnfDcEHTBrjj9tQ6De45
-	 gPXw0clGq1BqOt7nfxa0DSAf1vvkmr4QiXMrDmFIZIuRuRc6TmsuES2JW9NtNeiOjk
-	 nnBGrbd4QzK9/zKIM/P7TybG5MqB+8Xz1akR6vZg=
+	by mail.kernel.org (Postfix) with ESMTP id 6B0772083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MsW84Y1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgBOQSN (ORCPT
+        id S1726307AbgBOQUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 11:18:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
+        Sat, 15 Feb 2020 11:20:08 -0500
+Received: from mout.gmx.net ([212.227.17.22]:36187 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbgBOQSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 11:18:13 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C1352083B;
-        Sat, 15 Feb 2020 16:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581783491;
-        bh=SjBxbXgKPacb0msm/7ulb6L6nFanyd0zVvaIhtYxB/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IBgEI7ZmJiEzJ4nkjxvYC60qf2e1rSlLqnnLYwFo0wIuIBF3SAFN6N/HEVazjv2vT
-         pQb54gCEjuhAw1R+ssEoovm97Tg+SHvcL1COTcLdPRLq9bB8f9gY68xXlE0W16LyhX
-         EqNeq3QnjmktwU70/ANmKTYssJHCsHQK2jmda/QQ=
-Date:   Sat, 15 Feb 2020 16:18:08 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: iio: dac: Add docs for AD5770R DAC
-Message-ID: <20200215161808.12873c95@archlinux>
-In-Reply-To: <20200213113916.28070-3-alexandru.tachici@analog.com>
-References: <20200213113916.28070-1-alexandru.tachici@analog.com>
-        <20200213113916.28070-3-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726137AbgBOQUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 11:20:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1581783602;
+        bh=GV2bO+K3BBjG8099+gXOw00KLzwouWCa0j3JtlJMHIA=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=MsW84Y1emIJqWo9ObILRkTprra2DBmyD14Q7+MKnY1QkaV64rZ7Y26WCRDsGdvohF
+         03KtN/A6pPy9LS+h59xCvgAx+omWhyTVANHqb/ioTZHl8FGl0XMdg0z+Eb1LoANlB4
+         eo+sNW87YN7YBuWSARKMUUKUXx54j/uIlndW8MGk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.24] ([77.10.148.10]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNsw4-1ine700i6q-00ODdo; Sat, 15
+ Feb 2020 17:20:02 +0100
+To:     intel-gfx <intel-gfx@lists.freedesktop.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+Subject: kernel 5.5.4: BUG: kernel NULL pointer dereference, address:
+ 000000000000000
+Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
+ mQSuBFKhflgRDADrUSTZ9WJm+pL686syYr9SrBnaqul7zWKSq8XypEq0RNds0nEtAyON96pD
+ xuMj26LNztqsEA0sB69PQq4yHno0TxA5+Fe3ulrDxAGBftSPgo/rpVKB//d6B8J8heyBlbiV
+ y1TpPrOh3BEWzfqw6MyRwzxnRq6LlrRpiCRa/qAuxJXZ9HTEOVcLbeA6EdvLEBscz5Ksj/eH
+ 9Q3U97jr26sjFROwJ8YVUg+JKzmjQfvGmVOChmZqDb8WZJIE7yV6lJaPmuO4zXJxPyB3Ip6J
+ iXor1vyBZYeTcf1eiMYAkaW0xRMYslZzV5RpUnwDIIXs4vLKt9W9/vzFS0Aevp8ysLEXnjjm
+ e88iTtN5/wgVoRugh7hG8maZCdy3ArZ8SfjxSDNVsSdeisYQ3Tb4jRMlOr6KGwTUgQT2exyC
+ 2noq9DcBX0itNlX2MaLL/pPdrgUVz+Oui3Q4mCNC8EprhPz+Pj2Jw0TwAauZqlb1IdxfG5fD
+ tFmV8VvG3BAE2zeGTS8sJycBAI+waDPhP5OptN8EyPGoLc6IwzHb9FsDa5qpwLpRiRcjDADb
+ oBfXDt8vmH6Dg0oUYpqYyiXx7PmS/1z2WNLV+/+onAWV28tmFXd1YzYXlt1+koX57k7kMQbR
+ rggc0C5erweKl/frKgCbBcLw+XjMuYk3KbMqb/wgwy74+V4Fd59k0ig7TrAfKnUFu1w40LHh
+ RoSFKeNso114zi/oia8W3Rtr3H2u177A8PC/A5N34PHjGzQz11dUiJfFvQAi0tXO+WZkNj3V
+ DSSSVYZdffGMGC+pu4YOypz6a+GjfFff3ruV5XGzF3ws2CiPPXWN7CDQK54ZEh2dDsAeskRu
+ kE/olD2g5vVLtS8fpsM2rYkuDjiLHA6nBYtNECWwDB0ChH+Q6cIJNfp9puDxhWpUEpcLxKc+
+ pD4meP1EPd6qNvIdbMLTlPZ190uhXYwWtO8JTCw5pLkpvRjYODCyCgk0ZQyTgrTUKOi/qaBn
+ ChV2x7Wk5Uv5Kf9DRf1v5YzonO8GHbFfVInJmA7vxCN3a4D9pXPCSFjNEb6fjVhqqNxN8XZE
+ GfpKPBMMAIKNhcutwFR7VMqtB0YnhwWBij0Nrmv22+yXzPGsGoQ0QzJ/FfXBZmgorA3V0liL
+ 9MGbGMwOovMAc56Zh9WfqRM8gvsItEZK8e0voSiG3P/9OitaSe8bCZ3ZjDSWm5zEC2ZOc1Pw
+ VO1pOVgrTGY0bZ+xaI9Dx1WdiSCm1eL4BPcJbaXSNjRza2KFokKj+zpSmG5E36Kdn13VJxhV
+ lWySzJ0x6s4eGVu8hDT4pkNpQUJXjzjSSGBy5SIwX+fNkDiXEuLLj2wlV23oUfCrMdTIyXu9
+ Adn9ECc+vciNsCuSrYH4ut7gX0Rfh89OJj7bKLmSeJq2UdlU3IYmaBHqTmeXg84tYB2gLXaI
+ MrEpMzvGxuxPpATNLhgBKf70QeJr8Wo8E0lMufX7ShKbBZyeMdFY5L3HBt0I7e4ev+FoLMzc
+ FA9RuY9q5miLe9GJb7dyb/R89JNWNSG4tUCYcwxSkijaprBOsoMKK4Yfsz9RuNfYCn1HNykW
+ 1aC2Luct4lcLPtg44LQ1VG9yYWxmIEbDtnJzdGVyIChteSAybmQga2V5KSA8dG9yYWxmLmZv
+ ZXJzdGVyQGdteC5kZT6IgQQTEQgAKQUCUqF+WAIbIwUJEswDAAcLCQgHAwIBBhUIAgkKCwQW
+ AgMBAh4BAheAAAoJEMTqzd4AdulO06EBAIBfWzAIRkMwpCEhY4ZHexa4Ge8C/ql/sBiW8+na
+ FxbZAP9z0OgF2zcorcfdttWw0aolhmUBlOf14FWXYDEkHKrmlbkEDQRSoX5YEBAA2tKn0qf0
+ kVKRPxCs8AledIwNuVcTplm9MQ+KOZBomOQz8PKru8WXXstQ6RA43zg2Q2WU//ly1sG9WwJN
+ Mzbo5d+8+KqgBD0zKKM+sfTLi1zIH3QmeplEHzyv2gN6fe8CuIhCsVhTNTFgaBTXm/aEUvTI
+ zn7DIhatKmtGYjSmIwRKP8KuUDF/vQ1UQUvKVJX3/Z0bBXFY8VF/2qYXZRdj+Hm8mhRtmopQ
+ oTHTWd+vaT7WqTnvHqKzTPIm++GxjoWjchhtFTfYZDkkF1ETc18YXXT1aipZCI3BvZRCP4HT
+ hiAC5Y0aITZKfHtrjKt13sg7KTw4rpCcNgo67IQmyPBOsu2+ddEUqWDrem/zcFYQ360dzBfY
+ tJx2oSspVZ4g8pFrvCccdShx3DyVshZWkwHAsxMUES+Bs2LLgFTcGUlD4Z5O9AyjRR8FTndU
+ 7Xo9M+sz3jsiccDYYlieSDD0Yx8dJZzAadFRTjBFHBDA7af1IWnGA6JY07ohnH8XzmRNbVFB
+ /8E6AmFA6VpYG/SY02LAD9YGFdFRlEnN7xIDsLFbbiyvMY4LbjB91yBdPtaNQokYqA+uVFwO
+ inHaLQVOfDo1JDwkXtqaSSUuWJyLkwTzqABNpBszw9jcpdXwwxXJMY6xLT0jiP8TxNU8EbjM
+ TeC+CYMHaJoMmArKJ8VmTerMZFsAAwUQAJ3vhEE+6s+wreHpqh/NQPWL6Ua5losTCVxY1snB
+ 3WXF6y9Qo6lWducVhDGNHjRRRJZihVHdqsXt8ZHz8zPjnusB+Fp6xxO7JUy3SvBWHbbBuheS
+ fxxEPaRnWXEygI2JchSOKSJ8Dfeeu4H1bySt15uo4ryAJnZ+jPntwhncClxUJUYVMCOdk1PG
+ j0FvWeCZFcQ+bapiZYNtju6BEs9OI73g9tiiioV1VTyuupnE+C/KTCpeI5wAN9s6PJ9LfYcl
+ jOiTn+037ybQZROv8hVJ53jZafyvYJ/qTUnfDhkClv3SqskDtJGJ84BPKK5h3/U3y06lWFoi
+ wrE22plnEUQDIjKWBHutns0qTF+HtdGpGo79xAlIqMXPafJhLS4zukeCvFDPW2PV3A3RKU7C
+ /CbgGj/KsF6iPQXYkfF/0oexgP9W9BDSMdAFhbc92YbwNIctBp2Trh2ZEkioeU0ZMJqmqD3Z
+ De/N0S87CA34PYmVuTRt/HFSx9KA4bAWJjTuq2jwJNcQVXTrbUhy2Et9rhzBylFrA3nuZHWf
+ 4Li6vBHn0bLP/8hos1GANVRMHudJ1x3hN68TXU8gxpjBkZkAUJwt0XThgIA3O8CiwEGs6aam
+ oxxAJrASyu6cKI8VznuhPOQ9XdeAAXBg5F0hH/pQ532qH7zL9Z4lZ+DKHIp4AREawXNxiGYE
+ GBEIAA8FAlKhflgCGwwFCRLMAwAACgkQxOrN3gB26U7PNwEAg6z1II04TFWGV6m8lR/0ZsDO
+ 15C9fRjklQTFemdCJugA+PvUpIsYgyqSb3OVodAWn4rnnVxPCHgDsANrWVgTO3w=
+Message-ID: <4012acc4-2620-e7f9-ac3c-aa4f00ea8e40@gmx.de>
+Date:   Sat, 15 Feb 2020 17:20:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:J+mHjPE/LCC8GHuH2T7Xa7z5qbvpdn9sPfgj7aeGKdXAxHFRfdl
+ OJeqI0umscpgdOtM1tSOiyPw0KSoy7WjU2MpTfFBqqnaatYUX6uyeUQK33JlJRIpqbBvV3j
+ WZpzBzbCRgNRp0amJLrT43MA4LlMy80gQ5dpkUMZCCm4YBHrK4JI6ZQT3vKCZAJjqj0/dlD
+ 7a49/8qQw7jQMzg+I7PNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NB9T6OF902A=:f1OFadbmG4Ncu3ZqKTyiKc
+ IAye11Ioo1nYgAWl9XXWFdC/LiKiTSsJa6haUFUPMJiskmeLgofRjONf3S6BQH9SnIg4wB5mI
+ s1RFOH3IthhQghA3uE2xBpO9UnR7ujQgxi6rXzqmARhUPL8TGaySL0jw/k3e/ww8/02i0hTq2
+ xhvgUHGDbsYUGxef4hzZ3uPhA8InN7oxK2unmbPke2REgKD5JbL4k0IIYLn1Kr0fnG9SxdsZK
+ qrZx2MT9mGQAHBldCV2IsqYAoH6H98G2kdp+EKKG7nWNGCzf2djM4x8w8St1fXPId21SyYHkN
+ kMFILX6teGvalTFO7qSdsNm3mKoWFOHFBzM7TVL9zsGVWXyPg50viercv2fSBkz/12IYoZM4V
+ yk5LqAcMvX0FoqM4uMhUp3FgN/HSGJroYJR24DgDm1CwSoBdJhdI1JnR3hh8BHHecW1C8PpTx
+ njLl2RymmBpdm6iJ8LZHhEP9KfwmfwCvVK41oEXjJiIAkBeANnZRWL/vt5qzgTdj2x9RmGdQ6
+ 8kacyYAm2P3QVcF3T5/m9NhB9xURZq2xuAmIcoStfUMHoYjMzJvs86fmE2N3S/OWQbd34NGhy
+ Waxx9ixpRTw/8/qTl8UpPDNGYlf1k8/a1JTQNjfwDEuQfh45WEPU3W1Cdwx43rNXuBsMazfEx
+ O4OqouF5yI3ccuciF95uWiGVm/SvroXjm2+NuP/Pkd+8J7zlkgjXE/+pvRCnMkEsHIrrxPizv
+ nKnjX8v0lowiVVB7HDp92U6G0oxKMlPdIX/aOUzUTt81O1stllqGvspWj8rwJQa/xZ67B4wbD
+ 3JoGjx2CFP1IeFwhNSqDSIuEwkfK0OwpbsJUVfpWR4yo1Ru3GXPiFr/bHYo8+mAP6XPyinGtE
+ NDcZmJUoK8cmb689VkyEzb52+uURMVBvu9pEsg3VEvJ+jVLzZwhlyBbEqAVqjU7MsmqwOMlAs
+ t35YLMddxzuXis8os1K65P25FaT7FDLhISizpqyfXOOLZA25WvytyN5fQgM9MfQmDu/Bc5frv
+ mQdUAqgT7FR3anSZ24rGnC28XprwLo4EZGum4Z9gbzxopxPodgYxQA+ajMdAPbeRJFghXcO+w
+ h3I7objn/VWyv6L8DARersstDZlNArWyGiabncJAzkyIsIMBrr0w8zRiqUQb3PKqmSAdMhtRQ
+ xZ2DZLNsLze3Uj5biDmmFsYZr/4kI4CkPbEJlCnJsSUgjFZDGqGvvqjpKyi6skP6uluDU/I06
+ mDdD4G+kQlEKNegz4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 13:39:16 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
-
-> Adding dt-bindings documentation for AD5770R DAC.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-One comment inline.  I'd also like to leave this to give time for
-DT maintainer to review.
-
-Thanks,
-
-Jonathan
-
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 188 ++++++++++++++++++
->  1 file changed, 188 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> new file mode 100644
-> index 000000000000..37b674caebfb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> @@ -0,0 +1,188 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5770r.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD5770R DAC device driver
-> +
-> +maintainers:
-> +  - Mircea Caprioru <mircea.caprioru@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD5770R current DAC device. Datasheet can be
-> +  found here:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5770R.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad5770r
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  avdd-supply:
-> +    description:
-> +      AVdd voltage supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      DVdd voltage supply. Must have same voltage as avdd-supply.
-Hmm. That is an oddity.  In the chips case this reflects physical pins
-from a binding point of view, the only option will be to connect them
-to the same regulator.   Hence I'd just have a single supply to
-cover both of these.  Add a note in the connect on which ever one
-you keep to say that it represents 2 different supplies listed on the
-datasheet that are in fact the same. 
-
-> +
-> +  iovdd-supply:
-> +    description:
-> +      Voltage supply for the chip interface.
-> +
-> +  vref-supply:
-> +    description: Specify the voltage of the external reference used.
-> +      Available reference options are 1.25 V or 2.5 V. If no
-> +      external reference declared then the device will use the
-> +      internal reference of 1.25 V.
-> +
-> +  adi,external-resistor:
-> +    description: Specify if an external 2.5k ohm resistor is used. If not
-> +      specified the device will use an internal 2.5k ohm resistor.
-> +      The precision resistor is used for reference current generation.
-> +    type: boolean
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for the RESET pin. If specified, it will be
-> +      asserted during driver probe.
-> +    maxItems: 1
-> +
-> +  channel0:
-> +    description: Represents an external channel which are
-> +      connected to the DAC. Channel 0 can act both as a current
-> +      source and sink.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 0
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/int32-array
-> +            - items:
-> +                - enum: [0 300000]
-> +                - enum: [-60000 0]
-> +                - enum: [-60000 300000]
-> +
-> +  channel1:
-> +    description: Represents an external channel which are
-> +      connected to the DAC.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 1
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 140000]
-> +                - enum: [0 250000]
-> +
-> +  channel2:
-> +    description: Represents an external channel which are
-> +      connected to the DAC.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 2
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 140000]
-> +                - enum: [0 250000]
-> +
-> +patternProperties:
-> +  "^channel@([3-5])$":
-> +    type: object
-> +    description: Represents the external channels which are connected to the DAC.
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          minimum: 3
-> +          maximum: 5
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 45000]
-> +                - enum: [0 100000]
-> +
-> +required:
-> +- reg
-> +- diff-channels
-> +- channel0
-> +- channel1
-> +- channel2
-> +- channel3
-> +- channel4
-> +- channel5
-> +
-> +examples:
-> +  - |
-> +        spi {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                ad5770r@0 {
-> +                        compatible = "ad5770r";
-> +                        reg = <0>;
-> +                        spi-max-frequency = <1000000>;
-> +                        vref-supply = <&vref>;
-> +                        adi,external-resistor;
-> +                        reset-gpios = <&gpio 22 0>;
-> +
-> +                        channel@0 {
-> +                                num = <0>;
-> +                                adi,range-microamp = <(-60000) 300000>;
-> +                        };
-> +
-> +                        channel@1 {
-> +                                num = <1>;
-> +                                adi,range-microamp = <0 140000>;
-> +                        };
-> +
-> +                        channel@2 {
-> +                                num = <2>;
-> +                                adi,range-microamp = <0 55000>;
-> +                        };
-> +
-> +                        channel@3 {
-> +                                num = <3>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +
-> +                        channel@4 {
-> +                                num = <4>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +
-> +                        channel@5 {
-> +                                num = <5>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +                };
-> +        };
-> +...
-
+U2luY2UgNS41LjEgSSBkbyBleHBlcmllbmNlIGhhbmdzIHVuZGVyIGEgaGFyZGVuZCBHZXJu
+dG9vIExpbnV4ICsgS0RFLCBuZWl0aGVyIG1vdXNlIG5vciBrZXlib2FyZCBhcmUgdGhlbiB3
+b3JraW5nIGFueW1vcmUsIHBvd2VyIG9mZiBpcyB0aGUgb25seSBvbmUuDQpUaGUgc3lzbG9n
+IHRlbGxzOg0KDQoNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBCVUc6IGtlcm5lbCBO
+VUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6IDAwMDAwMDAwMDAwMDAwMDANCkZl
+YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiAjUEY6IHN1cGVydmlzb3IgaW5zdHJ1Y3Rpb24g
+ZmV0Y2ggaW4ga2VybmVsIG1vZGUNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiAjUEY6
+IGVycm9yX2NvZGUoMHgwMDEwKSAtIG5vdC1wcmVzZW50IHBhZ2UNCkZlYiAxNSAxMjo1Njoz
+MSB0NDQga2VybmVsOiBQR0QgMCBQNEQgMCANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVs
+OiBPb3BzOiAwMDEwIFsjMV0gU01QIFBUSQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6
+IENQVTogMCBQSUQ6IDM0MDEgQ29tbTogWCBUYWludGVkOiBHICAgICAgICAgICAgICAgIFQg
+NS41LjQgIzINCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBIYXJkd2FyZSBuYW1lOiBM
+RU5PVk8gMjBBUUNUTzFXVy8yMEFRQ1RPMVdXLCBCSU9TIEdKRVQ5MldXICgyLjQyICkgMDMv
+MDMvMjAxNw0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJJUDogMDAxMDoweDANCkZl
+YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBDb2RlOiBCYWQgUklQIHZhbHVlLg0KRmViIDE1
+IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJTUDogMDAxODpmZmZmOWQ4NzgwOTE3YTQwIEVGTEFH
+UzogMDAwMTAwODcNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQVg6IDAwMDAwMDAw
+MDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDAwIFJDWDogMDAwMDAwMDAwMDA5MTlkZA0K
+RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6
+IGZmZmY4YjEzZDQwMjRiMDggUkRJOiBmZmZmOGIxNDlkODhhNDAwDQpGZWIgMTUgMTI6NTY6
+MzEgdDQ0IGtlcm5lbDogUkJQOiBmZmZmOGIxNDlkODhhNDAwIFIwODogMDAwMDAwMDAwMDAw
+MDAwMCBSMDk6IGZmZmY4YjEzZDQwMjQxMDANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVs
+OiBSMTA6IDAwMDAwMDAwMDAwMDAwMDIgUjExOiAwMDAwMDAwMDAwMDAwMDA1IFIxMjogZmZm
+ZjlkODc4MDkxN2E0OA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMzogMDAwMDAw
+MDAwMDAwMDAwMCBSMTQ6IGZmZmY4YjE0YWExN2FlMDAgUjE1OiBmZmZmOGIxNGEzOWEwMmMw
+DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogRlM6ICAwMDAwN2Y4YzE2MjE0OGMwKDAw
+MDApIEdTOmZmZmY4YjE0YjI2MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0K
+RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAw
+MCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBD
+UjI6IGZmZmZmZmZmZmZmZmZmZDYgQ1IzOiAwMDAwMDAwMzIzOTk4MDA1IENSNDogMDAwMDAw
+MDAwMDE2MDZmMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENhbGwgVHJhY2U6DQpG
+ZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGRtYV9mZW5jZV9zaWduYWxfbG9ja2VkKzB4
+ODUvMHhjMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICBpOTE1X3JlcXVlc3RfcmV0
+aXJlKzB4MjU5LzB4MmEwIFtpOTE1XQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICBp
+OTE1X3JlcXVlc3RfY3JlYXRlKzB4M2YvMHhjMCBbaTkxNV0NCkZlYiAxNSAxMjo1NjozMSB0
+NDQga2VybmVsOiAgaTkxNV9nZW1fZG9fZXhlY2J1ZmZlcisweDk3My8weDE3ZDAgW2k5MTVd
+DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGk5MTVfZ2VtX2V4ZWNidWZmZXIyX2lv
+Y3RsKzB4ZTkvMHgzYTAgW2k5MTVdDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogID8g
+aTkxNV9nZW1fZXhlY2J1ZmZlcl9pb2N0bCsweDJjMC8weDJjMCBbaTkxNV0NCkZlYiAxNSAx
+Mjo1NjozMSB0NDQga2VybmVsOiAgZHJtX2lvY3RsX2tlcm5lbCsweGFlLzB4MTAwIFtkcm1d
+DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGRybV9pb2N0bCsweDIyMy8weDQwMCBb
+ZHJtXQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICA/IGk5MTVfZ2VtX2V4ZWNidWZm
+ZXJfaW9jdGwrMHgyYzAvMHgyYzAgW2k5MTVdDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
+bDogIGRvX3Zmc19pb2N0bCsweDRkNC8weDc2MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
+ZWw6ICBrc3lzX2lvY3RsKzB4NWIvMHg5MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6
+ICBfX3g2NF9zeXNfaW9jdGwrMHgxNS8weDIwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
+bDogIGRvX3N5c2NhbGxfNjQrMHg0Ni8weDEwMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
+ZWw6ICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0NC8weGE5DQpGZWIgMTUg
+MTI6NTY6MzEgdDQ0IGtlcm5lbDogUklQOiAwMDMzOjB4N2Y4YzE2NDRkMTM3DQpGZWIgMTUg
+MTI6NTY6MzEgdDQ0IGtlcm5lbDogQ29kZTogMDAgMDAgMDAgNzUgMGMgNDggYzcgYzAgZmYg
+ZmYgZmYgZmYgNDggODMgYzQgMTggYzMgZTggMmQgZDQgMDEgMDAgNjYgMmUgMGYgMWYgODQg
+MDAgMDAgMDAgMDAgMDAgMGYgMWYgMDAgYjggMTAgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAw
+MSBmMCBmZiBmZiA3MyAwMSBjMyA0OCA4YiAwZCAxOSBlZCAwYyAwMCBmNyBkOCA2NCA4OSAw
+MSA0OA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJTUDogMDAyYjowMDAwN2ZmYzJl
+OGZhYmM4IEVGTEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMTANCkZl
+YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAw
+MDAwN2ZmYzJlOGZhYzEwIFJDWDogMDAwMDdmOGMxNjQ0ZDEzNw0KRmViIDE1IDEyOjU2OjMx
+IHQ0NCBrZXJuZWw6IFJEWDogMDAwMDdmZmMyZThmYWMxMCBSU0k6IDAwMDAwMDAwNDA0MDY0
+NjkgUkRJOiAwMDAwMDAwMDAwMDAwMDBkDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDog
+UkJQOiAwMDAwMDAwMDQwNDA2NDY5IFIwODogMDAwMDU2MTEzNmQwNzY4MCBSMDk6IDAwMDAw
+MDAwMDAwMDAyMDINCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSMTA6IDAwMDAwMDAw
+MDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjogMDAwMDU2MTEzNmNjYTEzMA0K
+RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMzogMDAwMDAwMDAwMDAwMDAwZCBSMTQ6
+IDAwMDA3ZjhjMTVjMmNjNDggUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6
+MzEgdDQ0IGtlcm5lbDogTW9kdWxlcyBsaW5rZWQgaW46IGFmX3BhY2tldCBicmlkZ2Ugc3Rw
+IGxsYyBpcDZ0YWJsZV9maWx0ZXIgaXA2X3RhYmxlcyB4dF9NQVNRVUVSQURFIGlwdGFibGVf
+bmF0IG5mX25hdCBuZl9sb2dfaXB2NCBuZl9sb2dfY29tbW9uIHh0X0xPRyB4dF9saW1pdCB4
+dF9yZWNlbnQgeHRfY29ubnRyYWNrIG5mX2Nvbm50cmFjayBuZl9kZWZyYWdfaXB2NiBuZl9k
+ZWZyYWdfaXB2NCBpcHRhYmxlX2ZpbHRlciBpcF90YWJsZXMgdXZjdmlkZW8gdmlkZW9idWYy
+X3ZtYWxsb2MgdmlkZW9idWYyX21lbW9wcyB2aWRlb2J1ZjJfdjRsMiB2aWRlb2RldiB2aWRl
+b2J1ZjJfY29tbW9uIGJ0dXNiIGJ0cnRsIGJ0YmNtIGJ0aW50ZWwgYmx1ZXRvb3RoIGVjZGhf
+Z2VuZXJpYyBlY2Mgcm1pX3NtYnVzIHJtaV9jb3JlIG1vdXNlZGV2IHg4Nl9wa2dfdGVtcF90
+aGVybWFsIGNvcmV0ZW1wIGk5MTUga3ZtX2ludGVsIGt2bSBpcnFieXBhc3MgaW50ZWxfZ3R0
+IHNuZF9oZGFfY29kZWNfcmVhbHRlayBzbmRfaGRhX2NvZGVjX2dlbmVyaWMgaTJjX2FsZ29f
+Yml0IGlucHV0X2xlZHMgZHJtX2ttc19oZWxwZXIgc25kX2hkYV9pbnRlbCB3bWlfYm1vZiBz
+bmRfaW50ZWxfZHNwY2ZnIGNmYmZpbGxyZWN0IGl3bG12bSBwc21vdXNlIHN5c2NvcHlhcmVh
+IGNmYmltZ2JsdCBhZXNuaV9pbnRlbCBnbHVlX2hlbHBlciBjcnlwdG9fc2ltZCBwY3Nwa3Ig
+c25kX2hkYV9jb2RlYyBhdGtiZCBzeXNmaWxscmVjdCBjcnlwdGQgZWhjaV9wY2kgaXdsd2lm
+aSBlaGNpX2hjZCBzeXNpbWdibHQgZmJfc3lzX2ZvcHMgZTEwMDBlIGNmYmNvcHlhcmVhIHRo
+aW5rcGFkX2FjcGkgc25kX2hkYV9jb3JlIGkyY19pODAxIGRybSBzbmRfcGNtIGFjIGJhdHRl
+cnkgbGVkdHJpZ19hdWRpbyB0cG1fdGlzIHRwbV90aXNfY29yZSBkcm1fcGFuZWxfb3JpZW50
+YXRpb25fcXVpcmtzIHNuZF90aW1lciB0cG0gcm5nX2NvcmUgYWdwZ2FydCBzbmQgaTJjX2Nv
+cmUgd21pIHNvdW5kY29yZSB0aGVybWFsIGV2ZGV2DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
+cm5lbDogQ1IyOiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
+bDogLS0tWyBlbmQgdHJhY2UgMGVmY2I4MzU1MjE2YmI2MiBdLS0tDQpGZWIgMTUgMTI6NTY6
+MzEgdDQ0IGtlcm5lbDogUklQOiAwMDEwOjB4MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
+ZWw6IENvZGU6IEJhZCBSSVAgdmFsdWUuDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDog
+UlNQOiAwMDE4OmZmZmY5ZDg3ODA5MTdhNDAgRUZMQUdTOiAwMDAxMDA4Nw0KRmViIDE1IDEy
+OjU2OjMxIHQ0NCBrZXJuZWw6IFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAw
+MDAwMDAwMDAgUkNYOiAwMDAwMDAwMDAwMDkxOWRkDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
+cm5lbDogUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZjhiMTNkNDAyNGIwOCBSREk6
+IGZmZmY4YjE0OWQ4OGE0MDANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQlA6IGZm
+ZmY4YjE0OWQ4OGE0MDAgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogZmZmZjhiMTNkNDAy
+NDEwMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAw
+MiBSMTE6IDAwMDAwMDAwMDAwMDAwMDUgUjEyOiBmZmZmOWQ4NzgwOTE3YTQ4DQpGZWIgMTUg
+MTI6NTY6MzEgdDQ0IGtlcm5lbDogUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogZmZmZjhi
+MTRhYTE3YWUwMCBSMTU6IGZmZmY4YjE0YTM5YTAyYzANCkZlYiAxNSAxMjo1NjozMSB0NDQg
+a2VybmVsOiBGUzogIDAwMDA3ZjhjMTYyMTQ4YzAoMDAwMCkgR1M6ZmZmZjhiMTRiMjYwMDAw
+MCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
+cm5lbDogQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAz
+Mw0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENSMjogZmZmZmZmZmZmZmZmZmZkNiBD
+UjM6IDAwMDAwMDAzMjM5OTgwMDUgQ1I0OiAwMDAwMDAwMDAwMTYwNmYwDQpGZWIgMTUgMTI6
+NTc6MDEgdDQ0IENST05EWzY3MTVdOiAocm9vdCkgQ01EICgvdXNyL2xpYi9zYS9zYTEgMzAg
+MiAtUyBYQUxMKQ0KRmViIDE1IDEyOjU3OjA2IHQ0NCBrZXJuZWw6IGVsb2dpbmQtZGFlbW9u
+WzE0MjJdOiBQb3dlciBrZXkgcHJlc3NlZC4NCkZlYiAxNSAxMjo1NzowNiB0NDQga2VybmVs
+OiBlbG9naW5kLWRhZW1vblsxNDIyXTogTmV3IHNlc3Npb24gYzEzNCBvZiB1c2VyIHRmb2Vy
+c3RlLg0KRmViIDE1IDEyOjU3OjA2IHQ0NCBrZXJuZWw6IGVsb2dpbmQtZGFlbW9uWzE0MjJd
+OiBSZW1vdmVkIHNlc3Npb24gYzEzNC4NCkZlYiAxNSAxNzoxMjo0MCB0NDQgc3lzbG9nLW5n
+WzE4OTddOiBzeXNsb2ctbmcgc3RhcnRpbmcgdXA7IHZlcnNpb249JzMuMjIuMScNCg0KDQo1
+LjQueCBhcmUgZmluZQ0KDQotLSANClRvcmFsZg0K
