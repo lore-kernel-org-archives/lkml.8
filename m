@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AAAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B8C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139C5207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6504207FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727040;
-	bh=px8g1b89fnvKMi7OBxKtuIcO0tXx2IGDGf7XzgIf18c=;
+	s=default; t=1581727044;
+	bh=KRyEqHcSoQivOOigLQPaMIaV3ohS5HPQMg4IQsAzVUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldziO27rCJM9/JDflAfm9wpCGyPcmhx6JgoVmHF3Gc6qtBrQVjb9HQnc08ZU8qthj
-	 28JzMuSqUDZ9YPZcbYvCMemQQapkoWdZPcnMxpd4IUTDBuWeBYAoE9dLMvjv0OvEWM
-	 /nBmnRqCnCjf65aYzy2KmmRFEqHsQhNmPP9KHuG0=
+	b=mLeIiG+GW3qC/D5AOjIHLfFdi1aAz/IORxtp0zlC22faNwS4F5HEcY8nipviW8g2U
+	 n3cfEX/dzrYS4g+8mhyIRDw4W7eyVEc7k2tQcwZGnVgW7tF6Aeut3vc7D0F5BX6UXC
+	 OowPBv/wMZHh1crq9R0kJiLwGSwl1L1Az/C5eZyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgBOAhT (ORCPT
+        id S1727918AbgBOAhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:37:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47370 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbgBOAhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:37:18 -0500
+        id S1727572AbgBOAhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:37:22 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDE8206CC;
-        Sat, 15 Feb 2020 00:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F89C2082F;
+        Sat, 15 Feb 2020 00:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727038;
-        bh=px8g1b89fnvKMi7OBxKtuIcO0tXx2IGDGf7XzgIf18c=;
+        s=default; t=1581727041;
+        bh=KRyEqHcSoQivOOigLQPaMIaV3ohS5HPQMg4IQsAzVUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHWTcB+oZLu0B8i7a2ddBA16Vgr2/HDR5AQqQKkcwBkmpPIrTy+7vHuCerl8BJY6V
-         tS4J8dlmVTgDAt4YtdD06dmswnAq4EXa/HgS+5jmEYO460IlUiDj933NHgdF76k/cC
-         4ay36q6iUgsMFVK+Bk9K0odGcY6E0uJNjAnGgEY4=
+        b=ZeILJ/IsXtT7xkwPWVa66soNQdw3Q5IoGu+/EBRr1MSzWGPP8e/EDuWHHkoZjRcOi
+         BIvIjEjhzgZu+oJMekekqLCWK1OiA7Z1BD7vLdas2AelHbV9aKshJDmgeojm6/UWW0
+         URMKAD/DPJDsfcyDtc2ZHj6x1XOBDcnk4OHHY9Tg=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/18] rcutorture: Suppress forward-progress complaints during early boot
-Date:   Fri, 14 Feb 2020 16:36:54 -0800
-Message-Id: <20200215003711.16463-1-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 02/18] torture: Make results-directory date format completion-friendly
+Date:   Fri, 14 Feb 2020 16:36:55 -0800
+Message-Id: <20200215003711.16463-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
 References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
@@ -61,130 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Some larger systems can take in excess of 50 seconds to complete their
-early boot initcalls prior to spawing init.  This does not in any way
-help the forward-progress judgments of built-in rcutorture (when
-rcutorture is built as a module, the insmod or modprobe command normally
-cannot happen until some time after boot completes).  This commit
-therefore suppresses such complaints until about the time that init
-is spawned.
+The names of the per-test results directories are of the form
+2019.11.29-20:42:19.  This works, but the ":" characters make
+tab-based shell name completion a bit onerous because the user must
+remember to include a quote character somewhere before the first ":".
+This commit therefore changes the ":" characters to periods, as in
+2019.12.01-20.48.01", which allows tab-based completion to work more
+naturally.
 
-This also includes a fix to a stupid error located by kbuild test robot.
-
-[ paulmck: Apply kbuild test robot feedback. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-[ paulmck: Fix to nohz_full slow-expediting recovery logic, per bpetkov. ]
-[ paulmck: Restrict splat to CONFIG_PREEMPT_RT=y kernels and simplify. ]
-Tested-by: Borislav Petkov <bp@alien8.de>
 ---
- include/linux/rcutiny.h |  1 +
- include/linux/rcutree.h |  1 +
- kernel/rcu/rcutorture.c |  3 ++-
- kernel/rcu/tree_exp.h   |  7 ++++++-
- kernel/rcu/update.c     | 12 ++++++++++++
- 5 files changed, 22 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index b2b2dc9..045c28b 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -83,6 +83,7 @@ void rcu_scheduler_starting(void);
- static inline void rcu_scheduler_starting(void) { }
- #endif /* #else #ifndef CONFIG_SRCU */
- static inline void rcu_end_inkernel_boot(void) { }
-+static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
- static inline bool rcu_is_watching(void) { return true; }
- static inline void rcu_momentary_dyntick_idle(void) { }
- static inline void kfree_rcu_scheduler_running(void) { }
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 2f787b9..45f3f66 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -54,6 +54,7 @@ void exit_rcu(void);
- void rcu_scheduler_starting(void);
- extern int rcu_scheduler_active __read_mostly;
- void rcu_end_inkernel_boot(void);
-+bool rcu_inkernel_boot_has_ended(void);
- bool rcu_is_watching(void);
- #ifndef CONFIG_PREEMPTION
- void rcu_all_qs(void);
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 1aeecc1..9ba4978 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1067,7 +1067,8 @@ rcu_torture_writer(void *arg)
- 		if (stutter_wait("rcu_torture_writer") &&
- 		    !READ_ONCE(rcu_fwd_cb_nodelay) &&
- 		    !cur_ops->slow_gps &&
--		    !torture_must_stop())
-+		    !torture_must_stop() &&
-+		    rcu_inkernel_boot_has_ended())
- 			for (i = 0; i < ARRAY_SIZE(rcu_tortures); i++)
- 				if (list_empty(&rcu_tortures[i].rtort_free) &&
- 				    rcu_access_pointer(rcu_torture_current) !=
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index dcbd757..a72d16e 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -485,6 +485,7 @@ static bool synchronize_rcu_expedited_wait_once(long tlimit)
- static void synchronize_rcu_expedited_wait(void)
- {
- 	int cpu;
-+	unsigned long j;
- 	unsigned long jiffies_stall;
- 	unsigned long jiffies_start;
- 	unsigned long mask;
-@@ -496,7 +497,7 @@ static void synchronize_rcu_expedited_wait(void)
- 	trace_rcu_exp_grace_period(rcu_state.name, rcu_exp_gp_seq_endval(), TPS("startwait"));
- 	jiffies_stall = rcu_jiffies_till_stall_check();
- 	jiffies_start = jiffies;
--	if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
-+	if (tick_nohz_full_enabled() && rcu_inkernel_boot_has_ended()) {
- 		if (synchronize_rcu_expedited_wait_once(1))
- 			return;
- 		rcu_for_each_leaf_node(rnp) {
-@@ -508,6 +509,10 @@ static void synchronize_rcu_expedited_wait(void)
- 				tick_dep_set_cpu(cpu, TICK_DEP_BIT_RCU_EXP);
- 			}
- 		}
-+		j = READ_ONCE(jiffies_till_first_fqs);
-+		if (synchronize_rcu_expedited_wait_once(j + HZ))
-+			return;
-+		WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_RT));
- 	}
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index 78d18ab..2315e2e 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -39,7 +39,7 @@ TORTURE_TRUST_MAKE=""
+ resdir=""
+ configs=""
+ cpus=0
+-ds=`date +%Y.%m.%d-%H:%M:%S`
++ds=`date +%Y.%m.%d-%H.%M.%S`
+ jitter="-1"
  
- 	for (;;) {
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 6c4b862..feaaec5 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -183,6 +183,8 @@ void rcu_unexpedite_gp(void)
- }
- EXPORT_SYMBOL_GPL(rcu_unexpedite_gp);
- 
-+static bool rcu_boot_ended __read_mostly;
-+
- /*
-  * Inform RCU of the end of the in-kernel boot sequence.
-  */
-@@ -191,7 +193,17 @@ void rcu_end_inkernel_boot(void)
- 	rcu_unexpedite_gp();
- 	if (rcu_normal_after_boot)
- 		WRITE_ONCE(rcu_normal, 1);
-+	rcu_boot_ended = 1;
-+}
-+
-+/*
-+ * Let rcutorture know when it is OK to turn it up to eleven.
-+ */
-+bool rcu_inkernel_boot_has_ended(void)
-+{
-+	return rcu_boot_ended;
- }
-+EXPORT_SYMBOL_GPL(rcu_inkernel_boot_has_ended);
- 
- #endif /* #ifndef CONFIG_TINY_RCU */
- 
+ usage () {
 -- 
 2.9.5
 
