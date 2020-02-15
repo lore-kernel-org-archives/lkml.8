@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32938C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE42C47409
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0979A24670
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474222468E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgBOIlx (ORCPT
+        id S1726211AbgBOIlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 03:41:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56705 "EHLO
+        Sat, 15 Feb 2020 03:41:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56726 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgBOIlw (ORCPT
+        with ESMTP id S1725914AbgBOIlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 03:41:52 -0500
+        Sat, 15 Feb 2020 03:41:55 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j2t1F-0005C6-LH; Sat, 15 Feb 2020 09:41:45 +0100
+        id 1j2t1H-0005E8-Pa; Sat, 15 Feb 2020 09:41:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4C7461C2019;
-        Sat, 15 Feb 2020 09:41:45 +0100 (CET)
-Date:   Sat, 15 Feb 2020 08:41:45 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 66A701C2019;
+        Sat, 15 Feb 2020 09:41:47 +0100 (CET)
+Date:   Sat, 15 Feb 2020 08:41:47 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers kvm: Sync kvm headers with the
- kernel sources
+Subject: [tip: perf/urgent] tools headers UAPI: Sync asm-generic/mman-common.h
+ with the kernel
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158175610507.13786.11402532654877704407.tip-bot2@tip-bot2>
+Message-ID: <158175610709.13786.17138902669240833210.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,55 +59,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     391df72fbd144878e2f905d86f1e9a85a059216a
-Gitweb:        https://git.kernel.org/tip/391df72fbd144878e2f905d86f1e9a85a059216a
+Commit-ID:     47f8d94ac5241e30a5ab0b6b91b963b54765ec7c
+Gitweb:        https://git.kernel.org/tip/47f8d94ac5241e30a5ab0b6b91b963b54765ec7c
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 12 Feb 2020 12:41:20 -03:00
+AuthorDate:    Wed, 12 Feb 2020 10:53:06 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 12 Feb 2020 12:41:20 -03:00
+CommitterDate: Wed, 12 Feb 2020 10:53:06 -03:00
 
-tools headers kvm: Sync kvm headers with the kernel sources
+tools headers UAPI: Sync asm-generic/mman-common.h with the kernel
 
-To pick up the changes from:
+To pick the changes from:
 
-  290a6bb06de9 ("arm64: KVM: Add UAPI notes for swapped registers")
+  d41938d2cbee ("mm: Reserve asm-generic prot flags 0x10 and 0x20 for arch use")
 
-No tools changes are caused by this.
+No changes in tooling, just a rebuild as files needed got touched.
 
-This addresses these tools/perf build warnings:
+This addresses the following perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h' differs from latest version at 'include/uapi/asm-generic/mman-common.h'
+  diff -u tools/include/uapi/asm-generic/mman-common.h include/uapi/asm-generic/mman-common.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrew Jones <drjones@redhat.com>
+Cc: Dave Martin <Dave.Martin@arm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm64/include/uapi/asm/kvm.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/include/uapi/asm-generic/mman-common.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index 820e575..ba85bb2 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -220,10 +220,18 @@ struct kvm_vcpu_events {
- #define KVM_REG_ARM_PTIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 2, 2)
- #define KVM_REG_ARM_PTIMER_CNT		ARM64_SYS_REG(3, 3, 14, 0, 1)
- 
--/* EL0 Virtual Timer Registers */
-+/*
-+ * EL0 Virtual Timer Registers
-+ *
-+ * WARNING:
-+ *      KVM_REG_ARM_TIMER_CVAL and KVM_REG_ARM_TIMER_CNT are not defined
-+ *      with the appropriate register encodings.  Their values have been
-+ *      accidentally swapped.  As this is set API, the definitions here
-+ *      must be used, rather than ones derived from the encodings.
-+ */
- #define KVM_REG_ARM_TIMER_CTL		ARM64_SYS_REG(3, 3, 14, 3, 1)
--#define KVM_REG_ARM_TIMER_CNT		ARM64_SYS_REG(3, 3, 14, 3, 2)
- #define KVM_REG_ARM_TIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 0, 2)
-+#define KVM_REG_ARM_TIMER_CNT		ARM64_SYS_REG(3, 3, 14, 3, 2)
- 
- /* KVM-as-firmware specific pseudo-registers */
- #define KVM_REG_ARM_FW			(0x0014 << KVM_REG_ARM_COPROC_SHIFT)
+diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
+index c160a53..f94f65d 100644
+--- a/tools/include/uapi/asm-generic/mman-common.h
++++ b/tools/include/uapi/asm-generic/mman-common.h
+@@ -11,6 +11,8 @@
+ #define PROT_WRITE	0x2		/* page can be written */
+ #define PROT_EXEC	0x4		/* page can be executed */
+ #define PROT_SEM	0x8		/* page may be used for atomic ops */
++/*			0x10		   reserved for arch-specific use */
++/*			0x20		   reserved for arch-specific use */
+ #define PROT_NONE	0x0		/* page can not be accessed */
+ #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+ #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
