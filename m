@@ -2,149 +2,339 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBB9C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB18C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020BA206D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071192084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 18:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581791737;
+	bh=zmbBSlGL12WwCliK8pDKydPvO9rp7EAjBk6zkCOQsog=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2H+b5X/dgSf3Fd4tE7hUweKM9Vqxjg+QDRhcFIfKpSfJP78G/wkZ4GVM+qVIEt3oO
+	 wAZ6vphZy7c4mTjo7jxwZCca66ckM+jI/azwCUai/GPjmu4ZL4Nj2414MtBgs0nQj5
+	 1ADVBfd7wVdIwGCH1fBu+8OmMjK9IPsdE5dxnxA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBOSed (ORCPT
+        id S1727640AbgBOSfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 13:34:33 -0500
-Received: from wind.enjellic.com ([76.10.64.91]:57132 "EHLO wind.enjellic.com"
+        Sat, 15 Feb 2020 13:35:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgBOSed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 13:34:33 -0500
-X-Greylist: delayed 1678 seconds by postgrey-1.27 at vger.kernel.org; Sat, 15 Feb 2020 13:34:32 EST
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 01FI5tpD026045;
-        Sat, 15 Feb 2020 12:05:55 -0600
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 01FI5sx3026044;
-        Sat, 15 Feb 2020 12:05:54 -0600
-Date:   Sat, 15 Feb 2020 12:05:54 -0600
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200215180554.GA25482@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com> <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com> <d17c50a7-6900-731b-43a2-d6e49b8eb44d@fortanix.com> <20200213180737.GC18610@linux.intel.com> <a4d9a58d-6984-5894-f6c8-73f2b2b466aa@fortanix.com> <20200214171146.GD20690@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214171146.GD20690@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sat, 15 Feb 2020 12:05:55 -0600 (CST)
+        id S1726299AbgBOSff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 13:35:35 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7237206D6;
+        Sat, 15 Feb 2020 18:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581791734;
+        bh=zmbBSlGL12WwCliK8pDKydPvO9rp7EAjBk6zkCOQsog=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=frBXbW5sJuaRiGxP5gWWww/3Da9I7nCnmtr1HFSxnJNR574UwDY9nCV+OLuc5APAz
+         3MZLbg26uqKNoM6y9tMh5TxJYjdbc0sOoyPq01Bo6y/745iuqLLOop/YH8SMCnnvS7
+         kqjGETqZfVN799oGAlsKMKUpKXX6d/be1CQ4pjfw=
+Date:   Sat, 15 Feb 2020 18:35:29 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH v3] iio: trigger: stm32-timer: enable clock when in
+ master mode
+Message-ID: <20200215183529.7413d1c0@archlinux>
+In-Reply-To: <1581697437-25707-1-git-send-email-fabrice.gasnier@st.com>
+References: <1581697437-25707-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:11:46AM -0800, Sean Christopherson wrote:
+On Fri, 14 Feb 2020 17:23:57 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Good morning to everyone, I hope the weekend is going well.
+> Clock should be enabled as soon as using master modes, even before
+> enabling timer. Or, this may provoke bad behavior on the other end
+> (slave timer). Then, introduce 'clk_enabled' flag, instead of relying
+> on CR1 EN bit, to keep track of clock being enabled (balanced refcount).
+> Propagate this anywhere else in the driver.
+> 
+> Also add 'remove' routine to stop timer and disable clock in case it
+> has been left enabled. Enforce the user interface has been unregistered
+> in the remove routine, before disabling the hardware to avoid possible
+> race. So, remove use of devm_ variant to register triggers and unregister
+> them before the hardware gets disabled [1].
+> [1] https://patchwork.kernel.org/patch/9956247/
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-> On Fri, Feb 14, 2020 at 10:24:10AM +0100, Jethro Beekman wrote:
-> > On 2020-02-13 19:07, Sean Christopherson wrote:
-> > > On Thu, Feb 13, 2020 at 02:59:52PM +0100, Jethro Beekman wrote:
-> > >> On 2020-02-09 22:25, Jarkko Sakkinen wrote:
-> > >>> +/**
-> > >>> + * struct sgx_enclave_add_pages - parameter structure for the
-> > >>> + *                                %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-> > >>> + * @src:	start address for the page data
-> > >>> + * @offset:	starting page offset
-> > >>> + * @length:	length of the data (multiple of the page size)
-> > >>> + * @secinfo:	address for the SECINFO data
-> > >>> + * @flags:	page control flags
-> > >>> + * @count:	number of bytes added (multiple of the page size)
-> > >>> + */
-> > >>> +struct sgx_enclave_add_pages {
-> > >>> +	__u64	src;
-> > >>> +	__u64	offset;
-> > >>> +	__u64	length;
-> > >>> +	__u64	secinfo;
-> > >>> +	__u64	flags;
-> > >>> +	__u64	count;
-> > >>> +};
-> > >>
-> > >> Compared to the last time I looked at the patch set, this API
-> > >> removes the ability to measure individual pages chunks. That is
-> > >> not acceptable.
-> > >
-> > > Why is it not acceptable?  E.g. what specific use case do you
-> > > have that _requires_ on measuring partial 4k pages of an
-> > > enclave?
-> >
-> > The use case is someone gives me an enclave and I want to load
-> > it. If I don't load it exactly as the enclave author specified,
-> > the enclave hash will be different, and it won't work.
+Thanks,
+Jonathan
 
-> And if our ABI says "thou shall measure in 4k chunks", then it's an
-> invalid enclave if its author generated MRENCLAVE using a different
-> granularity.
+> ---
+> Changes in v3:
+> - rebase on top of latest iio tree
+> 
+> Changes in v2:
+> - enforce the user interface has been unregistered in the remove routine,
+>   before disabling the hardware to avoid possible race.
+> ---
+>  drivers/iio/trigger/stm32-timer-trigger.c | 98 ++++++++++++++++++++++++-------
+>  1 file changed, 76 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+> index 2e0d32a..16a3b6b 100644
+> --- a/drivers/iio/trigger/stm32-timer-trigger.c
+> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
+> @@ -79,10 +79,13 @@ struct stm32_timer_trigger {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	struct clk *clk;
+> +	bool clk_enabled;
+>  	u32 max_arr;
+>  	const void *triggers;
+>  	const void *valids;
+>  	bool has_trgo2;
+> +	struct mutex lock; /* concurrent sysfs configuration */
+> +	struct list_head tr_list;
+>  };
+>  
+>  struct stm32_timer_trigger_cfg {
+> @@ -106,7 +109,7 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  {
+>  	unsigned long long prd, div;
+>  	int prescaler = 0;
+> -	u32 ccer, cr1;
+> +	u32 ccer;
+>  
+>  	/* Period and prescaler values depends of clock rate */
+>  	div = (unsigned long long)clk_get_rate(priv->clk);
+> @@ -136,9 +139,11 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  	if (ccer & TIM_CCER_CCXE)
+>  		return -EBUSY;
+>  
+> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
+> -	if (!(cr1 & TIM_CR1_CEN))
+> +	mutex_lock(&priv->lock);
+> +	if (!priv->clk_enabled) {
+> +		priv->clk_enabled = true;
+>  		clk_enable(priv->clk);
+> +	}
+>  
+>  	regmap_write(priv->regmap, TIM_PSC, prescaler);
+>  	regmap_write(priv->regmap, TIM_ARR, prd - 1);
+> @@ -157,22 +162,20 @@ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+>  
+>  	/* Enable controller */
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
+> +	mutex_unlock(&priv->lock);
+>  
+>  	return 0;
+>  }
+>  
+>  static void stm32_timer_stop(struct stm32_timer_trigger *priv)
+>  {
+> -	u32 ccer, cr1;
+> +	u32 ccer;
+>  
+>  	regmap_read(priv->regmap, TIM_CCER, &ccer);
+>  	if (ccer & TIM_CCER_CCXE)
+>  		return;
+>  
+> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
+> -	if (cr1 & TIM_CR1_CEN)
+> -		clk_disable(priv->clk);
+> -
+> +	mutex_lock(&priv->lock);
+>  	/* Stop timer */
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, 0);
+>  	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> @@ -181,6 +184,12 @@ static void stm32_timer_stop(struct stm32_timer_trigger *priv)
+>  
+>  	/* Make sure that registers are updated */
+>  	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+> +
+> +	if (priv->clk_enabled) {
+> +		priv->clk_enabled = false;
+> +		clk_disable(priv->clk);
+> +	}
+> +	mutex_unlock(&priv->lock);
+>  }
+>  
+>  static ssize_t stm32_tt_store_frequency(struct device *dev,
+> @@ -295,8 +304,15 @@ static ssize_t stm32_tt_store_master_mode(struct device *dev,
+>  	for (i = 0; i <= master_mode_max; i++) {
+>  		if (!strncmp(master_mode_table[i], buf,
+>  			     strlen(master_mode_table[i]))) {
+> +			mutex_lock(&priv->lock);
+> +			if (!priv->clk_enabled) {
+> +				/* Clock should be enabled first */
+> +				priv->clk_enabled = true;
+> +				clk_enable(priv->clk);
+> +			}
+>  			regmap_update_bits(priv->regmap, TIM_CR2, mask,
+>  					   i << shift);
+> +			mutex_unlock(&priv->lock);
+>  			return len;
+>  		}
+>  	}
+> @@ -354,11 +370,21 @@ static const struct attribute_group *stm32_trigger_attr_groups[] = {
+>  static const struct iio_trigger_ops timer_trigger_ops = {
+>  };
+>  
+> -static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+> +static void stm32_unregister_iio_triggers(struct stm32_timer_trigger *priv)
+> +{
+> +	struct iio_trigger *tr;
+> +
+> +	list_for_each_entry(tr, &priv->tr_list, alloc_list)
+> +		iio_trigger_unregister(tr);
+> +}
+> +
+> +static int stm32_register_iio_triggers(struct stm32_timer_trigger *priv)
+>  {
+>  	int ret;
+>  	const char * const *cur = priv->triggers;
+>  
+> +	INIT_LIST_HEAD(&priv->tr_list);
+> +
+>  	while (cur && *cur) {
+>  		struct iio_trigger *trig;
+>  		bool cur_is_trgo = stm32_timer_is_trgo_name(*cur);
+> @@ -385,9 +411,13 @@ static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+>  
+>  		iio_trigger_set_drvdata(trig, priv);
+>  
+> -		ret = devm_iio_trigger_register(priv->dev, trig);
+> -		if (ret)
+> +		ret = iio_trigger_register(trig);
+> +		if (ret) {
+> +			stm32_unregister_iio_triggers(priv);
+>  			return ret;
+> +		}
+> +
+> +		list_add_tail(&trig->alloc_list, &priv->tr_list);
+>  		cur++;
+>  	}
+>  
+> @@ -434,7 +464,6 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
+>  				   int val, int val2, long mask)
+>  {
+>  	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+> -	u32 dat;
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> @@ -445,19 +474,23 @@ static int stm32_counter_write_raw(struct iio_dev *indio_dev,
+>  		return -EINVAL;
+>  
+>  	case IIO_CHAN_INFO_ENABLE:
+> +		mutex_lock(&priv->lock);
+>  		if (val) {
+> -			regmap_read(priv->regmap, TIM_CR1, &dat);
+> -			if (!(dat & TIM_CR1_CEN))
+> +			if (!priv->clk_enabled) {
+> +				priv->clk_enabled = true;
+>  				clk_enable(priv->clk);
+> +			}
+>  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>  					   TIM_CR1_CEN);
+>  		} else {
+> -			regmap_read(priv->regmap, TIM_CR1, &dat);
+>  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
+>  					   0);
+> -			if (dat & TIM_CR1_CEN)
+> +			if (priv->clk_enabled) {
+> +				priv->clk_enabled = false;
+>  				clk_disable(priv->clk);
+> +			}
+>  		}
+> +		mutex_unlock(&priv->lock);
+>  		return 0;
+>  	}
+>  
+> @@ -553,7 +586,6 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
+>  {
+>  	struct stm32_timer_trigger *priv = iio_priv(indio_dev);
+>  	int sms = stm32_enable_mode2sms(mode);
+> -	u32 val;
+>  
+>  	if (sms < 0)
+>  		return sms;
+> @@ -561,11 +593,12 @@ static int stm32_set_enable_mode(struct iio_dev *indio_dev,
+>  	 * Triggered mode sets CEN bit automatically by hardware. So, first
+>  	 * enable counter clock, so it can use it. Keeps it in sync with CEN.
+>  	 */
+> -	if (sms == 6) {
+> -		regmap_read(priv->regmap, TIM_CR1, &val);
+> -		if (!(val & TIM_CR1_CEN))
+> -			clk_enable(priv->clk);
+> +	mutex_lock(&priv->lock);
+> +	if (sms == 6 && !priv->clk_enabled) {
+> +		clk_enable(priv->clk);
+> +		priv->clk_enabled = true;
+>  	}
+> +	mutex_unlock(&priv->lock);
+>  
+>  	regmap_update_bits(priv->regmap, TIM_SMCR, TIM_SMCR_SMS, sms);
+>  
+> @@ -749,8 +782,9 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+>  	priv->triggers = triggers_table[index];
+>  	priv->valids = cfg->valids_table[index];
+>  	stm32_timer_detect_trgo2(priv);
+> +	mutex_init(&priv->lock);
+>  
+> -	ret = stm32_setup_iio_triggers(priv);
+> +	ret = stm32_register_iio_triggers(priv);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -759,6 +793,25 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int stm32_timer_trigger_remove(struct platform_device *pdev)
+> +{
+> +	struct stm32_timer_trigger *priv = platform_get_drvdata(pdev);
+> +	u32 val;
+> +
+> +	/* Unregister triggers before everything can be safely turned off */
+> +	stm32_unregister_iio_triggers(priv);
+> +
+> +	/* Check if nobody else use the timer, then disable it */
+> +	regmap_read(priv->regmap, TIM_CCER, &val);
+> +	if (!(val & TIM_CCER_CCXE))
+> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> +
+> +	if (priv->clk_enabled)
+> +		clk_disable(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
+>  	.valids_table = valids_table,
+>  	.num_valids_table = ARRAY_SIZE(valids_table),
+> @@ -783,6 +836,7 @@ MODULE_DEVICE_TABLE(of, stm32_trig_of_match);
+>  
+>  static struct platform_driver stm32_timer_trigger_driver = {
+>  	.probe = stm32_timer_trigger_probe,
+> +	.remove = stm32_timer_trigger_remove,
+>  	.driver = {
+>  		.name = "stm32-timer-trigger",
+>  		.of_match_table = stm32_trig_of_match,
 
-The enclave isn't invalid with respect to the hardware ISA or a
-potential application or business case need.  It is only invalid with
-respect to how a small group of kernel developers have decided that
-runtime/application developers, and ultimately their users, should use
-hardware that they have purchased and own.
-
-Interestingly, the very antithesis of what started the open source
-movement.
-
-If Jethro/Fortanix have a business case for measuring partial pages,
-which incidentally he may not be able to divulge at this time, it
-seems the driver should support it if the hardware does.
-
-An interesting phenomenon is evolving with respect to Linux.  With
-secure boot, kernel module signing, and now the lockdown patches; the
-major Linux vendors are in a position to use cryptographic constraints
-to limit what the general Linux user community has available to it,
-and particularly in the case of SGX, how the Linux application
-eco-system can evolve.
-
-I find this situation particularly fascinating.
-
-Intel has choreographed 30+ million dollars of capital investment in
-Fortanix in order to advance the development of an SGX software
-eco-system.  Given who is authoring the driver, one would think that
-the Fortanix engineering desires/needs would be given careful
-consideration before the hardware capabilities are limited by the
-driver ABI, an ABI that will be subsequently cryptographically
-constrained from innovation.
-
-My apologies in advance for any intended or perceived indelicacies on
-these issues.
-
-Have a good weekend.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker
-IDfusion, LLC               SGX secured infrastructure and
-4206 N. 19th Ave.           autonomously self-defensive platforms.
-Fargo, ND  58102
-PH: 701-281-1686            EMAIL: greg@idfusion.net
-------------------------------------------------------------------------------
-"Snow removal teaches all the important elements of succesful corporate
- politics:  1.) Be the first one to work.  2.) Always signal your
- intentions before moving.  3.) Be damn sure you're driving something
- big enough to deal with anything that decides not to get out of your way."
-                                -- Dr. G.W. Wettstein
-                                   Guerrilla Tactics for Corporate Survival
