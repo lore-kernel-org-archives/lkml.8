@@ -2,144 +2,167 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B5C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC461C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D111F2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905332067D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgBOLLf (ORCPT
+        id S1726212AbgBOLZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:11:35 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:36402 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgBOLLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:11:34 -0500
-Received: from p508fda41.dip0.t-ipconnect.de ([80.143.218.65] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j2vM0-0006YX-5X; Sat, 15 Feb 2020 12:11:20 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linus.walleij@linaro.org, david.wu@rock-chips.com,
-        kever.yang@rock-chips.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] pinctrl: rockchip: split rockchip pinctrl driver by SoC type
-Date:   Sat, 15 Feb 2020 12:11:19 +0100
-Message-ID: <6201612.znBgJCgWHB@phil>
-In-Reply-To: <20200117081358.5772-3-jay.xu@rock-chips.com>
-References: <c4ec95a7-aaf1-2331-352f-2def319a1c7d@rock-chips.com> <20200117081358.5772-1-jay.xu@rock-chips.com> <20200117081358.5772-3-jay.xu@rock-chips.com>
+        Sat, 15 Feb 2020 06:25:46 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38998 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgBOLZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:25:46 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z2so12204351oih.6;
+        Sat, 15 Feb 2020 03:25:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CKm2jdZv4bkhryatSR3sc3YwYWDYL0cZxrSHpiKACgs=;
+        b=NLcrr5QVsMEVPqJg6FgpymJfHkdV0lZW6U1GaDtdFQNaRJfBqmpcFqp7kbR143gh/5
+         8+I3Z8ivwr++u1Jcn6Kn1fsyt6fyXt/e9a71KB7CMeF3bnS3HpiygFTaisvCh8fE1sOK
+         867bVWXmFp05ad2hzMTuQFTQ6bRXbw0GgawXPiIuafh8mXtJSC+RtDZYWwTjbtKoByNt
+         zMf1OxxCQBwIMpm7te2kuv9wY9qpzv9vrrAB7G+8NKitRXqF2aTMomy+5B/SgMWMbrRC
+         y68H+MMhcDG+81Tl0aE9/U2hYMy861HUjNFDiqjAMeAfNv/kcj13Ml9sOhnr1fC74VEW
+         EOEA==
+X-Gm-Message-State: APjAAAWLI/NDnMr0iolXo3/towK6trG0Q1X/q7NCFyjhIb2icu1sa2KF
+        MfTsPRjelu/8q0cWcoml3l8QDY81ns+w5R2r6ew=
+X-Google-Smtp-Source: APXvYqy3gnViweSJe92lN+8veoys3VonFUwyBJ4mtKyOR9rGe/2O0TS+YkWKNVujqCTFiuI2W++F7LZyFkYUCfJWVbU=
+X-Received: by 2002:a54:4707:: with SMTP id k7mr4492798oik.153.1581765944894;
+ Sat, 15 Feb 2020 03:25:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200211175507.178100-1-hannes@cmpxchg.org> <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+In-Reply-To: <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 15 Feb 2020 12:25:32 +0100
+Message-ID: <CAMuHMdV8-=dj5n-FM1nHjXq1DhkJVOh4rLFxERt33jAQmU4h_A@mail.gmail.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        cip-dev@lists.cip-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jay,
+Hi Arnd,
 
-Am Freitag, 17. Januar 2020, 09:13:58 CET schrieb Jianqun Xu:
-> The pinctrl-rockchip driver grows larger by adding support for
-> each new SoC, that make the kernel Image size too large since
-> it only under one config named PINCTRL_ROCKCHIP.
-> 
-> This patch split driver in the form of core driver + soc driver,
-> - pinctrl-rockchip.c defined an platform probe register function
-> - pinctrl-rkxxxx.c init module by matching compatible name
-> 
-> For rockchip_defconfig, it needs to select all PINCTRL_RKxxxx to
-> keep same with old driver.
-> 
-> For some special defconfig, it can only select one PINCTRL_RKxxxx.
-> 
-> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v3:
-> - add base patch with directory change only, suggested by Robin
-> - rebase patch
-> 
-> changes since v2:
-> - remove rockchip_pinctrl_remove
-> - rename rockchip_pinctrl_* to rockchip_pctrl_*
-> - redule arguments for get_soc_data
-> - add module author for each new driver files
-> - add copyright for new driver files
-> 
-> changes since v1:
-> - add rockchip_pinctrl_remove
-> - remove unused head files in pinctrl-rockchip.h
-> 
->  drivers/pinctrl/rockchip/Kconfig            |  114 +
->  drivers/pinctrl/rockchip/Makefile           |   14 +
->  drivers/pinctrl/rockchip/pinctrl-px30.c     |  224 ++
->  drivers/pinctrl/rockchip/pinctrl-rk2928.c   |   70 +
->  drivers/pinctrl/rockchip/pinctrl-rk3036.c   |   69 +
->  drivers/pinctrl/rockchip/pinctrl-rk3066a.c  |   72 +
->  drivers/pinctrl/rockchip/pinctrl-rk3066b.c  |   51 +
->  drivers/pinctrl/rockchip/pinctrl-rk3128.c   |  161 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3188.c   |  147 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3228.c   |  225 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3288.c   |  210 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3308.c   |  420 +++
->  drivers/pinctrl/rockchip/pinctrl-rk3328.c   |  272 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3368.c   |  125 +
->  drivers/pinctrl/rockchip/pinctrl-rk3399.c   |  195 ++
->  drivers/pinctrl/rockchip/pinctrl-rockchip.c | 2547 ++-----------------
->  drivers/pinctrl/rockchip/pinctrl-rockchip.h |  388 +++
->  drivers/pinctrl/rockchip/pinctrl-rv1108.c   |  214 ++
->  18 files changed, 3149 insertions(+), 2369 deletions(-)
+On Thu, Feb 13, 2020 at 5:54 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
+> > > So at least my gut feel is that the arm people don't have any big
+> > > reason to push for maintaining HIGHMEM support either.
+> > >
+> > > But I'm adding a couple of arm people and the arm list just in case
+> > > they have some input.
+> > >
+> > > [ Obvious background for newly added people: we're talking about
+> > > making CONFIG_HIGHMEM a deprecated feature and saying that if you want
+> > > to run with lots of memory on a 32-bit kernel, you're doing legacy
+> > > stuff and can use a legacy kernel ]
+> >
+> > Well, the recent 32-bit ARM systems generally have more than 1G
+> > of memory, so make use of highmem as a rule.  You're probably
+> > talking about crippling support for any 32-bit ARM system produced
+> > in the last 8 to 10 years.
+>
+> What I'm observing in the newly added board support is that memory
+> configurations are actually going down, driven by component cost.
+> 512MB is really cheap (~$4) these days with a single 256Mx16 DDR3
+> chip or two 128Mx16. Going beyond 1GB is where things get expensive
+> with either 4+ chips or LPDDR3/LPDDR4 memory.
+>
+> For designs with 1GB, we're probably better off just using
+> CONFIG_VMSPLIT_3G_OPT (without LPAE) anyway, completely
+> avoiding highmem. That is particularly true on systems with a custom
+> kernel configuration.
+>
+> 2GB machines are less common, but are definitely important, e.g.
+> MT6580 based Android phones and some industrial embedded machines
+> that will live a long time. I've recently seen reports of odd behavior
+> with CONFIG_VMSPLIT_2G and plus CONFIG_HIGHMEM and a 7:1
+> ratio of lowmem to highmem that apparently causes OOM despite lots
+> of lowmem being free. I suspect a lot of those workloads would still be
+> better off with a CONFIG_VMSPLIT_2G_OPT (1.75 GB user, 2GB
+> linear map). That config unfortunately has a few problems, too:
+> - nobody has implemented it
+> - it won't work with LPAE and therefore cannot support hardware
+>   that relies on high physical addresses for RAM or MMIO
+>   (those could run CONFIG_VMSPLIT_2G at the cost of wasting
+>   12.5% of RAM).
+> - any workload that requires the full 3GB of virtual address space won't
+>   work at all. This might be e.g. MAP_FIXED users, or build servers
+>   linking large binaries.
+> It will take a while to find out what kinds of workloads suffer the most
+> from a different vmsplit and what can be done to address that, but we
+> could start by changing the kernel defconfig and distro builds to see
+> who complains ;-)
+>
+> I think 32-bit ARM machines with 3GB or more are getting very rare,
+> but some still exist:
+> - The Armada XP development board had a DIMM slot that could take
+>   large memory (possibly up to 8GB with LPAE). This never shipped as
+>   a commercial product, but distro build servers sometimes still run on
+>   this, or on the old Calxeda or Keystone server systems.
+> - a few early i.MX6 boards  (e.g. HummingBoard) came had 4GB of
+>   RAM, though none of these seem to be available any more.
+> - High-end phones from 2013/2014 had 3GB LPDDR3 before getting
+>   obsoleted by 64-bit phones. Presumably none of these ever ran
+>   Linux-4.x or newer.
+> - My main laptop is a RK3288 based Chromebook with 4GB that just
+>   got updated to linux-4.19 by Google. Official updates apparently
+>   stop this summer, but it could easily run Debian later on.
+> - Some people run 32-bit kernels on a 64-bit Raspberry Pi 4 or on
+>   arm64 KVM with lots of RAM. These should probably all
+>   migrate to 64-bit kernels with compat user space anyway.
+> In theory these could also run on a VMSPLIT_4G_4G-like setup,
+> but I don't think anyone wants to go there. Deprecating highmem
+> definitely impacts any such users significantly, though staying on
+> an LTS kernel may be an option if there are only few of them.
 
-What Robin suggested, was doing this incrementally. So keep your patch1
-but then do
-- patch2: split out px30-pinctrl
-- patch3: split out rk3288 pinctrl
-- etc
+The CIP-supported RZ/G1 SoCs can have up to 4 GiB, typically split (even
+for 1 GiB or 2 GiB configurations) in two parts, one below and one above
+the 32-bit physical limit.
 
-Because even my mail client chokes on this massive 6000 line patch, so a
-real review is actually very difficult.
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> diff --git a/drivers/pinctrl/rockchip/Kconfig b/drivers/pinctrl/rockchip/Kconfig
-> index 7a0077ca32dd..4873a05108f8 100644
-> --- a/drivers/pinctrl/rockchip/Kconfig
-> +++ b/drivers/pinctrl/rockchip/Kconfig
-> @@ -5,8 +5,122 @@ if (ARCH_ROCKCHIP || COMPILE_TEST)
->  config PINCTRL_ROCKCHIP
->  	bool
->  	select PINMUX
-> +	select PINCONF
->  	select GENERIC_PINCONF
-> +	select GPIOLIB_IRQCHIP
->  	select GENERIC_IRQ_CHIP
->  	select MFD_SYSCON
->  
-> +config PINCTRL_PX30
-> +	tristate "PX30 pin controller driver"
-> +	depends on GPIOLIB && OF
-> +	select PINCTRL_ROCKCHIP
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-you might want to add a
-	default y if ARM64
-here
-(similar default y if ARM for arm32 pinctrl drivers)
-
-Because otherwise you're breaking peoples kernel configs and also
-the default is to build a somewhat unified kernel in the default defconfigs,
-so we want all matching pinctrl drivers by default and people then can
-disable drivers if they really want to build a slimmed down kernel.
-
-With the "if ARM" / "if ARM64" parts you even save some space by
-default as well, as you build only the relevant drivers.
-
-
-Heiko
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
