@@ -2,220 +2,145 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCF7C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4670DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3592C2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1964022314
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qASr64GW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvFoDcYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBOEZP (ORCPT
+        id S1727840AbgBOErk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 23:25:15 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37414 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbgBOEZO (ORCPT
+        Fri, 14 Feb 2020 23:47:40 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38800 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbgBOErk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 23:25:14 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so4811790pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 20:25:14 -0800 (PST)
+        Fri, 14 Feb 2020 23:47:40 -0500
+Received: by mail-io1-f65.google.com with SMTP id s24so12852793iog.5;
+        Fri, 14 Feb 2020 20:47:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4t7Xbaz1xoUTGAENQItzTjfc+1K4Tm8fLSipz2FNxHU=;
-        b=qASr64GWv136MX7+vVotcycBPXMCpd18/mBO7Eq8wVaR5rpvWMVQ6MEHg5vjJuuAuy
-         mA6BSb9oNtkc/h3V0GO2FxKqWbxcQe5AauX5PG/ixP9FJUR6NR/Y2LaCoMDwK2WD6PK/
-         1/sJN3xzQxD+0bNO1w43IuSG1RvovsStyfCgSp65JqT05Ulsl8g/dhFwNfcwIYanuy8x
-         0A9AJaHUXjHPUZjjFH9raF9KUSpJ3MyMBW819LQtFqAffYjLFrfYMG0XSw6IoawUJuek
-         /MJ175Pk87yWZ5pWZLVZCmOOnCPaXrhVnbYz6t9QTUgr3YAZ4Pfebxf+kjOEmBkBIuhf
-         CuRw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qq1JsAqiCjHcNPcsxXhmdc0nETQ0QzWBRojx90PLlJU=;
+        b=VvFoDcYynIy2stzEw4tKB18BCJsauZ+AfV0YOmIiF9nKGXLTfkLhww+/JkXKopTgkn
+         iK4/7NeLk6x4hF6W0aW1opGzM9p+s1IQCJwh8Dcjdm4IVSpiDvZ6akg+m6StChFeAcWF
+         Hh2q7Wl33hq52TsWxh7PGARsgmPfqN8RYw+dctlEK/bfJxwafmwbyhfSDgbX4zIlMDqI
+         8FVS0kwjUMpV6tJDEAGPT9a0rcMfY1i2E1gLH6feO81+wg9ZKmRCwkI/RSUhq/4WS15U
+         g4owFwK23i6eVSdleazq+yPmeHBQtCUe9AcJ4NA67mCMHxrwP9O7nVDREpv0dt4bdLi/
+         lZEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4t7Xbaz1xoUTGAENQItzTjfc+1K4Tm8fLSipz2FNxHU=;
-        b=KxCQvcwksstqYHN58OKse/6zPJ1P6cBb9WxxHoOn+bRecCKjlwol9uPBai9o+eQx4J
-         PBCC5PE0zSLbCncNQc4agBB3I9X6OI9b5+uWirMTr7Di/l0ax56o2zGoyoCZW2gnSICL
-         E03/a6MNXtQmhXCIp1Ay9F/VNLH9nMSQh2I6SSHgurMDjcjiPPbdFyhrFtI0PhO182UB
-         rT5dUoSKsaW81KuSqijI98TslX9oA/VgsHt94LnBn+J3AtoPQZChUUTDXuQjXxvUpCmM
-         h+zFDKX21bAMPXhwGTJ4THnGarzBc+6VW4G2ybYo2NTX085D3OKFpdlkvVV5pQZbMENz
-         pjHw==
-X-Gm-Message-State: APjAAAVbtDCcBg9PULnYnsimjw4diyFpeYMt7oK6jaU1ek0j2SQAAe73
-        b0ClSklFk3UyXLb3D59oKZM=
-X-Google-Smtp-Source: APXvYqzqkSQHelx74Kk0mKgd0Ay4VEBD/Ex/3A4k7B5C2JE2hAx12PMVUcmtKI3+2yzYI7U3+OBqlA==
-X-Received: by 2002:a17:902:103:: with SMTP id 3mr6518099plb.34.1581740714062;
-        Fri, 14 Feb 2020 20:25:14 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id 23sm8549509pfh.28.2020.02.14.20.25.12
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 14 Feb 2020 20:25:13 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org
-Cc:     linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] locking/osq: use osq_wait_node_unqueue() for coding optimization
-Date:   Sat, 15 Feb 2020 12:25:09 +0800
-Message-Id: <1581740709-9013-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qq1JsAqiCjHcNPcsxXhmdc0nETQ0QzWBRojx90PLlJU=;
+        b=diOd23NX5wH6/KnhTqMC3Byg48NpQIBLKcH50aYZa9JGDU2GhfmFN+uth1awxwZl6i
+         2iwkPpPm3uaEcmyN+SN1+lSq/xDwccqau2kdwJZ6lgtjdOO0u66smTTkjEbHzH32STY5
+         ufZtWugqVD2PKuUgs0+JJUBzNudnO364V0ngfegNmeeOJCqaCTi1/mehftCmAVVSAJgT
+         SBHCx+bSaFQti5GYC+4GrP96BtEjX9drqqFwv5sF6qh1uCgCH6dyjFBwDSvDPf5pVb7L
+         DuFCO1iuFDRNpcY4ZKS5QpliOKfGEnGqhvueCfRUrXZMY1/luEMH6IQWB8dW+aTXk6d/
+         qSWQ==
+X-Gm-Message-State: APjAAAUL9tfCwA5fNPJPPDlhmNgaRm3vqJema4SNwJ2oVf1mjtgpkDoi
+        2y5jDkwt2rqcSW1Xgs8sGtb+vFcAAa4Qs7vKQ3M=
+X-Google-Smtp-Source: APXvYqzf4RcDZyunuxJs2Ub2RQ8Gq79dlZl5MpqCbLh8XGUvgtMOKI57M3Ctdi0XYVfLmyYogCjU3fCB2/BeMTFx2Nc=
+X-Received: by 2002:a05:6602:214f:: with SMTP id y15mr4934405ioy.69.1581742059344;
+ Fri, 14 Feb 2020 20:47:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20200113051852.15996-1-samuel@sholland.org> <20200113051852.15996-3-samuel@sholland.org>
+ <CABb+yY2MJ-1i0K7XVkPT3+6ac1XR9-3zf-GDNeswOMp6Zn_Ufw@mail.gmail.com>
+ <72dc2074-c06d-4bdf-ca5f-b4007f492407@sholland.org> <89168ba0-a8ac-b433-3f93-412b22a9bc1a@sholland.org>
+In-Reply-To: <89168ba0-a8ac-b433-3f93-412b22a9bc1a@sholland.org>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 14 Feb 2020 22:47:28 -0600
+Message-ID: <CABb+yY3T1cL+E6Y1tGb5cuKLSY5m_zi=VOx4AJzuX40TMOSQTw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] mailbox: sun6i-msgbox: Add a new mailbox driver
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On Fri, Feb 14, 2020 at 9:48 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> On 2/12/20 8:18 PM, Samuel Holland wrote:
+> > Jassi,
+> >
+> > On 2/12/20 8:02 PM, Jassi Brar wrote:
+> >> On Sun, Jan 12, 2020 at 11:18 PM Samuel Holland <samuel@sholland.org> wrote:
+> >>>
+> >>> +static int sun6i_msgbox_send_data(struct mbox_chan *chan, void *data)
+> >>> +{
+> >>> +       struct sun6i_msgbox *mbox = to_sun6i_msgbox(chan);
+> >>> +       int n = channel_number(chan);
+> >>> +       uint32_t msg = *(uint32_t *)data;
+> >>> +
+> >>> +       /* Using a channel backwards gets the hardware into a bad state. */
+> >>> +       if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
+> >>> +               return 0;
+> >>> +
+> >>> +       /* We cannot post a new message if the FIFO is full. */
+> >>> +       if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
+> >>> +               mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
+> >>> +               return -EBUSY;
+> >>> +       }
+> >>> +
+> >> This check should go into sun6i_msgbox_last_tx_done().
+> >> send_data() assumes all is clear to send next packet.
+> >
+> > sun6i_msgbox_last_tx_done() already checks that the FIFO is completely empty (as
+> > the big comment explains). So this error could only be hit in the knows_txdone
+> > == true case, if the client pipelines multiple messages by calling
+> > mbox_client_txdone() before the message is actually removed from the FIFO.
+> >
+> > From the comments in mailbox_controller.h, this kind of usage looks to be
+> > unsupported. In that case, I could remove the check entirely. Does that sound right?
+>
+> After more thought, I would prefer to keep the check. It is fast/simple, and it
+> keeps the hardware from getting into an inconsistent state. Silently dropping
+> messages sounds like a poor quality of implementation.
+>
+If the FIFO becomes full after calling send_data(),  then
+last_tx_done() should not only check remote's irq status but also
+check that the data has been consumed from the FIFO locally (hence the
+check becomes redundant in send_data). Otherwise the last_tx_done is
+incomplete.  And you actually end up writing more code (error handling
+and resubmission instead of the api managing it all transparently)
 
-Define a separate function called osq_wait_node_unqueue() to
-integrate the whole code of leaving a node apart from its queue.
+> send_data() is documented in mailbox_controller.h as returning EBUSY,
+>
+error is usually returned for s/w check (like mssg too big for fifo),
+not h/w events.
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- kernel/locking/osq_lock.c | 118 +++++++++++++++++++++++++---------------------
- 1 file changed, 64 insertions(+), 54 deletions(-)
+> and I see multiple other mailbox controllers implementing the same or a similar check.
+>
+That it encourages next developer to repeat, is another reason to do
+it right this time. Otherwise, I can live with that check in
+send_data.
 
-diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-index 1f77349..6b1c6d2 100644
---- a/kernel/locking/osq_lock.c
-+++ b/kernel/locking/osq_lock.c
-@@ -87,10 +87,72 @@ static inline struct optimistic_spin_node *decode_cpu(int encoded_cpu_val)
- 	return next;
- }
- 
-+
-+/*
-+ * Tree steps to make sure the stability of leaving @node apart from its queue.
-+ */
-+static inline bool osq_wait_node_unqueue(struct optimistic_spin_queue *lock,
-+		struct optimistic_spin_node *node,
-+		struct optimistic_spin_node *prev)
-+{
-+	struct optimistic_spin_node *next;
-+
-+	/*
-+	 * Step - A  -- stabilize @prev
-+	 *
-+	 * Undo our @prev->next assignment; this will make @prev's
-+	 * unlock()/unqueue() wait for a next pointer since @lock points to us
-+	 * (or later).
-+	 */
-+	for (;;) {
-+		if (prev->next == node &&
-+		    cmpxchg(&prev->next, node, NULL) == node)
-+		    break;
-+
-+		/*
-+		 * We can only fail the cmpxchg() racing against an unlock(),
-+		 * in which case we should observe @node->locked to become
-+		 * true.
-+		 */
-+		if (smp_load_acquire(&node->locked))
-+			return true;
-+
-+		cpu_relax();
-+
-+		/*
-+		 * Or we race against a concurrent unqueue()'s step-B, in which
-+		 * case its step-C will write us a new @node->prev pointer.
-+		 */
-+		prev = READ_ONCE(node->prev);
-+	}
-+
-+	/*
-+	 * Step - B -- stabilize @next
-+	 *
-+	 * Similar to unlock(), wait for @node->next or move @lock from @node
-+	 * back to @prev.
-+	 */
-+	next = osq_wait_next(lock, node, prev);
-+	if (!next)
-+		return false;
-+
-+	/*
-+	 * Step - C -- unlink
-+	 *
-+	 * @prev is stable because its still waiting for a new @prev->next
-+	 * pointer, @next is stable because our @node->next pointer is NULL and
-+	 * it will wait in Step-A.
-+	 */
-+	WRITE_ONCE(next->prev, prev);
-+	WRITE_ONCE(prev->next, next);
-+
-+	return false;
-+}
-+
- bool osq_lock(struct optimistic_spin_queue *lock)
- {
- 	struct optimistic_spin_node *node = this_cpu_ptr(&osq_node);
--	struct optimistic_spin_node *prev, *next;
-+	struct optimistic_spin_node *prev;
- 	int curr = encode_cpu(smp_processor_id());
- 	int old;
- 
-@@ -145,59 +207,7 @@ bool osq_lock(struct optimistic_spin_queue *lock)
- 		return true;
- 
- 	/* unqueue */
--	/*
--	 * Step - A  -- stabilize @prev
--	 *
--	 * Undo our @prev->next assignment; this will make @prev's
--	 * unlock()/unqueue() wait for a next pointer since @lock points to us
--	 * (or later).
--	 */
--
--	for (;;) {
--		if (prev->next == node &&
--		    cmpxchg(&prev->next, node, NULL) == node)
--			break;
--
--		/*
--		 * We can only fail the cmpxchg() racing against an unlock(),
--		 * in which case we should observe @node->locked becomming
--		 * true.
--		 */
--		if (smp_load_acquire(&node->locked))
--			return true;
--
--		cpu_relax();
--
--		/*
--		 * Or we race against a concurrent unqueue()'s step-B, in which
--		 * case its step-C will write us a new @node->prev pointer.
--		 */
--		prev = READ_ONCE(node->prev);
--	}
--
--	/*
--	 * Step - B -- stabilize @next
--	 *
--	 * Similar to unlock(), wait for @node->next or move @lock from @node
--	 * back to @prev.
--	 */
--
--	next = osq_wait_next(lock, node, prev);
--	if (!next)
--		return false;
--
--	/*
--	 * Step - C -- unlink
--	 *
--	 * @prev is stable because its still waiting for a new @prev->next
--	 * pointer, @next is stable because our @node->next pointer is NULL and
--	 * it will wait in Step-A.
--	 */
--
--	WRITE_ONCE(next->prev, prev);
--	WRITE_ONCE(prev->next, next);
--
--	return false;
-+	return osq_wait_node_unqueue(lock, node, prev);
- }
- 
- void osq_unlock(struct optimistic_spin_queue *lock)
--- 
-1.9.1
+> If
+> that is not the way you intend for the API to work, then please update the
+> comments in mailbox_controller.h.
+>
+Mailbox implementations follow no spec. There may be prudent need to
+return from send_data, but practically I haven't come across any(?)
+platform that can't do without the check in send_data.
 
+Cheers!
