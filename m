@@ -2,106 +2,95 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A943C7114F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED01C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127802081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FD42083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mJKgCbiZ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PDz5Oa4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgBOLuc (ORCPT
+        id S1726234AbgBOLua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:50:32 -0500
-Received: from mout.web.de ([217.72.192.78]:56481 "EHLO mout.web.de"
+        Sat, 15 Feb 2020 06:50:30 -0500
+Received: from mout.web.de ([217.72.192.78]:38289 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgBOLub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:50:31 -0500
+        id S1725965AbgBOLua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:50:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1581767418;
-        bh=AKoI1ErJ1F/3SpqbaXivBShhVSF+4DVb1UPwPn9K9xA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References:
-         In-Reply-To:References;
-        b=mJKgCbiZ6DsG9pBjmp7Q/rVR1rt+ZjyUt4bwBodh29xfJDK95Hf8fOWZ8V8r1/D/D
-         946137HXeT5QJiUdRyX0Y6wU6z4SJ7eloxGf9Z4hlu2mnrBH29k/ZCsurRKceJ3R3d
-         LASFjszsZAHIzYwQdfkUVh82xOKaMRoU4Nrs4jLE=
+        s=dbaedf251592; t=1581767417;
+        bh=HU/2N3E0qmqDHC4/1OMZ5qn9O2Ez51tN26IGhSevr3M=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=PDz5Oa4PiERxkVzv96xh+knfppMi1Cf3D9GGAnaZdW2ITeYcxcGdmL0TszUC9w/Vg
+         qNp2BIXF1oBCzOn88VEiozXLEvva8VgJ/SYGGsX8cUBjbPgeak9Mic9wnaYYcvgWKt
+         C3PBkr2GhuWtlo0aqVO1aA2aNk1kb29rEh7BhHIY=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from md1f2u6c.ww002.siemens.net ([95.157.55.156]) by smtp.web.de
  (mrweb102 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0MgO8g-1io06e15Py-00NgBR; Sat, 15 Feb 2020 12:50:18 +0100
+ 0Lx7Mz-1jZSWu15vV-016f2Q; Sat, 15 Feb 2020 12:50:17 +0100
 From:   Jan Kiszka <jan.kiszka@web.de>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         linux-riscv@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] riscv: Fix crash when flushing executable ioremap regions
-Date:   Sat, 15 Feb 2020 12:49:44 +0100
-Message-Id: <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
+Subject: [PATCH v2 0/3] riscv: mem= support, ioremap exec fix
+Date:   Sat, 15 Feb 2020 12:49:41 +0100
+Message-Id: <cover.1581767384.git.jan.kiszka@web.de>
 X-Mailer: git-send-email 2.16.4
-In-Reply-To: <cover.1581767384.git.jan.kiszka@web.de>
-References: <cover.1581767384.git.jan.kiszka@web.de>
-In-Reply-To: <cover.1581767384.git.jan.kiszka@web.de>
-References: <cover.1581767384.git.jan.kiszka@web.de>
-X-Provags-ID: V03:K1:3afGuyjXHZCaYg9y6mqcxZGBFQUaKdU7SqI4fBIhgjLUotUcjdu
- VuaSdTlCtsF3UnKqxPCCuX3NSTqYet+hsYgyVjRvAtcglfc77wGgfKg+q7l0b+vgEzSXcNM
- CiUzO8c4RrB3QFdyLZ+qc7PDN/+V1/qFsrrpPM56toO4IU9MQKuZcZYGhSJu63JCbKnsU7S
- ZlR79w+tspHae7bOSXjzA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+JySpZD7Yok=:62+NnABRoebGkDXmyK+Xd0
- eIJzRv8R5y2HGLiph7dktdAh0js3t0mQv4c2wcwhvcmveAgBoNukvjArwWPZ1xJizFVJSnpMA
- T3RUtWXubYB/CYg5SHFgKRGYO8kTC75cQJaYw+oBcwlpmV2yQiDH6PdhAQTv2bPn6AkLWfYjK
- GU26KrfV5KMVSaVaufxWdY3bi99mEUq8hXTHCXUh8OfKs/NBUOUW3KFjUzncjXh7Ma6mNvSiy
- lv6sWnRtg4Qi8LnQcsI3NpGtbZGsOC60A11lgT5qj71vAlzawDn+u69zhg0WLvEfCdT/2yGHU
- aHnGP9/660kNYKEk9c4Pkwph32RGBzxYJjJOP3Bx238unJ2wV4f0K+WZwz8lCjdO7PTA28Qol
- vgFFah1+fg+aCriLfS7xuW7C6PgBAD/I7APg7Gb4N4ZOAysN/JI/Yfz8j3QlR6ljh1jBkkwjC
- QY1hyt0n/Qs+VluYFX08NJ3PNxcXiT6xLZ+dK/NRyRBGio0DrsWe41Uqghs7sVF+w2l5lck2F
- 8DsI1A7BRs2MsRgSWgVHIB/UjhePROJOHNx2Wb08qblh9aODzTVOGiuj0E/NXWHZm6vlrOsOm
- e/ylsWEdqfuFKzLEuweXpenDl2TS1ZePSQY8dMvxg/kbD4FEZo0pAcNnJ44re6chXxgmUMw7j
- pyg3ubd9Lc1lMdFVzsp/bJe8LdMvAFDecJbuti4Q7zUOaOd+IYXBjYSLAzpMbaY3TZuU6pmrB
- n+52WvX0fvou7EHsREhNu3GyLkDjCTfXzEm/Mlw69mD0SXd14nyhKG/uzHTrcPqMBZDP7J0Q+
- 4iVMRbrN3FV6h+nfYMSz3uRXd0zETqklRNxTKx17xU4nXt5NWCijmijRpf4f/AyaWfFNBp3bL
- LtncCTLT/I7qQiZnMPX2L+GRblBVV76VcrRmalGL4LI1tOm3gEJZNCxsDwKLSwt/oaxDMfcMS
- GUoeUQfkBWDgzNNocWAgBXSuoD73Z/Iev5BHmUT1vmhlnDjrOSdAwfJcMo6sj5U0ppwO5lPjf
- MALXxYkWxyEbSflZGkm4CyRibJAi04OzvUx3hWG3Y20yo/FYzktlMa6rItC0XGD2VdDwnewcw
- I0GqOgNfqJ9eM04gNnTxnw52AkI+NWe/HTdAjDHheGoKPX+oIlVB5OY7eYiI324KrPPOQ8byj
- PE4SKupY9fqqQYl4CwUV7f02ljqg01s5bW86QGrwBrd09KzWfqJ6BJ2gz/CIEAKGLY+oNlxPq
- gqLhcti884KhbRp+y
+X-Provags-ID: V03:K1:7utcmur/a9lyoiDKqs9p1IE04ltxLb90ysWQyFgCriS97NlAzPA
+ Yk6v8Ulh60rxlwB9pv0HgnieWdheINYRY2hSInFjZGXe16xoWO4bRMYyiFHhOzXKJkBusYM
+ 1jcuD+XKDqH0WGwbYcYAPjC+69r5RC+RgMURZ13FyFU3v+3ayZBrm6GEeBEAf9GZiVjqgxE
+ pRm7/SyTavYd2QIi5H47Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:50/pyn/MMEs=:ZuphJuz5BEBSGWUrIOgDFn
+ 6rIjomYXqEvNwi8rTGEbHs15C/j4o7WD9z0Otu+aOhJLk7A1BPAwYDRLZ81hcEDmySTR14roO
+ M1AuQmnSpnc3pE8/mNWksQ4MTXQ6TpUvipISPAoiFahqG2me3qdvEeSjI7rgOZDvCuixFa6Y0
+ /dgUR6CdbyzlL7K37bbUY80b54fDn9blYtQMQLgSFklEHXzttBUENh3Eyc/jPW0uHjBX4tgPl
+ EBVGZR6isYyLgvgdjr+GJ8oqWin1hbsiQfqYy8drt/wu3RyC4vX1zSKAC3/Ep2hWYjNCT0BcQ
+ vKZvRhxvkK7EdlSlpdcneKsQllHi+4OVeAO2v7sMlmjgTMKyGFqbQyuaVmB9MR9jxW1E/vtie
+ pUEyrRGjr1ssUzVgXpM0GJHyufLkfKU0LWeqff6WuqU+XST+QhKsRQ4cKseglRrf85iloZzly
+ tvY+EsZ09pdFKE7e08dZQgFq/y1iROqd7PwORUkjxmQM/BUcSap4Xzn6vraRVYR7f3QVCBoXK
+ cB6JtZ4B3M3oVE2I2Fv1e9yH1almw9k+mZol0wnqaHk7GNpAcVmNDNk3rtFOZivk8nI2XF1IK
+ Yy/fseeFscysayZq++7tp4eT3NtQhS0r7hQaHMYDxW/BMQhVppf0QqBblc3F8GvHTOvICj3IT
+ QeB75/JKQ3d0fgcZY8udbHhTD3O+Y2NUhK2Kq2ZngT1y3A4x63J6AGgwHWjFF4dRsWn6W3J6w
+ uiOYQrLBv3LBLnFjlZcwddUgb7mzsdLl/4Nyglz21SJoueK4j4DruhL/nefl0eGQHKeWh1jqG
+ S37t4m8KtNjGQXNn6/Gh8QkOli0Y8LX6fPCr6qcU5MIvw3FrsIbjnsOXCyMFu8tJBUpL0Qlws
+ GEYdHvsqgAOOY4EDF74HvKV+5SwTKQSo5kHr9RG6WB6bVp4W3GSaxr2qS0nIsi+6kfRvdafqo
+ xaE4HzjT7UlPaGKYTQskgZr8GTTB+Oh6q85PzU6+o8T2NgWdTv40nCoYTpDb2DZjQStcD3fgB
+ wtsSpD+oC6jhWGTxDe9l2oVmsCpSRs6palS5yghLRiWbnF/r8UaAnX8H/fODmZrFlH8dVhZoP
+ 3vZEOQxmjh/M2MrdT3D82JFUhzCSmEEqCxYiKjo1FgYl/1h6g34hkj1XZ3rL6FhM4LXyptkTw
+ +MObyQWUIemIQ4MyivNbuNFmoqLMxkda1z+BdKmQTU3ENfnvO/8EY7jylcJEdOKPod+qpkoq+
+ R58kJwlkFCCE6+6GD
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+Patch 1 was already sent separately. This improves it by calling
+memblock_enforce_memory_limit in order to call set_max_mapnr with the
+correct memory size.
 
-Those are not backed by page structs, and pte_page is returning an
-invalid pointer.
+There are two more patches in this series. One is a micro-optimization,
+the other enables ioremap of executable memory. The latter will be
+needed to enable the Jailhouse hypervisor on RISC-V.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-=2D--
- arch/riscv/mm/cacheflush.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jan
 
-diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-index 8930ab7278e6..9ee2c1a387cc 100644
-=2D-- a/arch/riscv/mm/cacheflush.c
-+++ b/arch/riscv/mm/cacheflush.c
-@@ -84,7 +84,8 @@ void flush_icache_pte(pte_t pte)
- {
- 	struct page *page =3D pte_page(pte);
+Jan Kiszka (3):
+  riscv: Add support for mem=3D
+  riscv: End kernel region search in setup_bootmem earlier
+  riscv: Fix crash when flushing executable ioremap regions
 
--	if (!test_and_set_bit(PG_dcache_clean, &page->flags))
-+	if (!pfn_valid(pte_pfn(pte)) ||
-+	    !test_and_set_bit(PG_dcache_clean, &page->flags))
- 		flush_icache_all();
- }
- #endif /* CONFIG_MMU */
+ arch/riscv/mm/cacheflush.c |  3 ++-
+ arch/riscv/mm/init.c       | 21 +++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
 =2D-
 2.16.4
 
