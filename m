@@ -2,258 +2,150 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60723C7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C344EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DD62082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:19:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pgw6Sdyh"
+	by mail.kernel.org (Postfix) with ESMTP id 9EF362073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgBOMTh (ORCPT
+        id S1726209AbgBOM1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 07:19:37 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:22501 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725937AbgBOMTh (ORCPT
+        Sat, 15 Feb 2020 07:27:39 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725937AbgBOM1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 07:19:37 -0500
-X-UUID: b06fcf3fa51249bdbe33d73f1c592d72-20200215
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MNRofKIpoGImG59ba2vZh/NTSIIDeAQldVGBT/Mnq/k=;
-        b=pgw6Sdyh/3/FMlEIGrX3aDNi0KY0GGc6uWCjRpGg/v1ERltg29p4bf0uHvmYndMG//DK5m1rcU/CeeOo/Hp70F4cpuaNG8OuVd7Vcb2vmGSFX+WCfzNi/plQi+d2PQ3XjuOXWYfTh398OTG3JSDuNnnm/4x8tIyXlsBQRnkLGJo=;
-X-UUID: b06fcf3fa51249bdbe33d73f1c592d72-20200215
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2057293117; Sat, 15 Feb 2020 20:17:48 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 15 Feb
- 2020 20:16:37 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 15 Feb 2020 20:16:17 +0800
-Message-ID: <1581769046.32039.27.camel@mhfsdcap03>
-Subject: Re: [RESEND,PATCH 03/13] iommu/mediatek: Add mtk_iommu_pgtable
- structure
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     chao hao <Chao.Hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Jun Yan =?UTF-8?Q?=28=E9=A2=9C=E5=86=9B=29?= 
-        <Jun.Yan@mediatek.com>,
-        Cui Zhang =?UTF-8?Q?=28=E5=BC=A0=E7=BF=A0=29?= 
-        <Cui.Zhang@mediatek.com>,
-        "Guangming Cao =?UTF-8?Q?=28=E6=9B=B9=E5=85=89=E6=98=8E=29?=" 
-        <Guangming.Cao@mediatek.com>,
-        Anan Sun =?UTF-8?Q?=28=E5=AD=99=E5=AE=89=E5=AE=89=29?= 
-        <Anan.Sun@mediatek.com>,
-        Miles Chen =?UTF-8?Q?=28=E9=99=B3=E6=B0=91=E6=A8=BA=29?= 
-        <Miles.Chen@mediatek.com>, <youlin.pei@mediatek.com>
-Date:   Sat, 15 Feb 2020 20:17:26 +0800
-In-Reply-To: <1577785148.30177.5.camel@mbjsdccf07>
-References: <20191104115238.2394-1-chao.hao@mediatek.com>
-         <20191104115238.2394-4-chao.hao@mediatek.com>
-         <1576498396.28043.78.camel@mhfsdcap03>
-         <1577785148.30177.5.camel@mbjsdccf07>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 15 Feb 2020 07:27:38 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01FCNZ3V090181
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 07:27:37 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6dp6c8ej-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 07:27:37 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Sat, 15 Feb 2020 12:27:33 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 15 Feb 2020 12:27:30 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01FCRSNA49676364
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 15 Feb 2020 12:27:28 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4B1BA4040;
+        Sat, 15 Feb 2020 12:27:28 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AC7DA404D;
+        Sat, 15 Feb 2020 12:27:28 +0000 (GMT)
+Received: from localhost (unknown [9.145.76.102])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 15 Feb 2020 12:27:28 +0000 (GMT)
+Date:   Sat, 15 Feb 2020 13:27:27 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.6-rc2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F01740F75E4279F94E0689496A7B7EDFD6594E4C13593E963DD4A6DC0F5495C22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 20021512-0028-0000-0000-000003DB3701
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021512-0029-0000-0000-000024A0389D
+Message-Id: <your-ad-here.call-01581769647-ext-0154@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-15_03:2020-02-14,2020-02-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ clxscore=1015 spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002150110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEyLTMxIGF0IDE3OjM5ICswODAwLCBjaGFvIGhhbyB3cm90ZToNCj4gT24g
-TW9uLCAyMDE5LTEyLTE2IGF0IDIwOjEzICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiA+IE9uIE1v
-biwgMjAxOS0xMS0wNCBhdCAxOTo1MiArMDgwMCwgQ2hhbyBIYW8gd3JvdGU6DQo+ID4gPiBTdGFy
-dCB3aXRoIHRoaXMgcGF0Y2gsIHdlIHdpbGwgY2hhbmdlIHRoZSBTVyBhcmNoaXRlY3R1cmUNCj4g
-PiA+IHRvIHN1cHBvcnQgbXVsdGlwbGUgZG9tYWlucy4gU1cgYXJjaGl0ZWN0dXJlIHdpbGwgaGFz
-IGEgYmlnIGNoYW5nZSwNCj4gPiA+IHNvIHdlIG5lZWQgdG8gbW9kaWZ5IGEgbGl0dGxlIGJpdCBi
-eSBtb3JlIHRoYW4gb25lIHBhdGNoLg0KPiA+ID4gVGhlIG5ldyBTVyBvdmVyYWxsIGFyY2hpdGVj
-dHVyZSBpcyBhcyBiZWxvdzoNCj4gPiA+IA0KPiA+ID4gCQkJCWlvbW11MCAgIGlvbW11MQ0KPiA+
-ID4gCQkJCSAgfAkgICAgfA0KPiA+ID4gCQkJCSAgLS0tLS0tLS0tLS0NCj4gPiA+IAkJCQkJfA0K
-PiA+ID4gCQkJCW10a19pb21tdV9wZ3RhYmxlDQo+ID4gPiAJCQkJCXwNCj4gPiA+IAkJCS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gCQkJfAkJICAgICB8
-CQkJIHwNCj4gPiA+IAkJbXRrX2lvbW11X2RvbWFpbjEgICBtdGtfaW9tbXVfZG9tYWluMiAgbXRr
-X2lvbW11X2RvbWFpbjMNCj4gPiA+IAkJCXwgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
-ICAgICAgICAgfA0KPiA+ID4gCQlpb21tdV9ncm91cDEgICAgICAgICBpb21tdV9ncm91cDIgICAg
-ICAgICAgIGlvbW11X2dyb3VwMw0KPiA+ID4gCQkJfCAgICAgICAgICAgICAgICAgICAgfCAgICAg
-ICAgICAgICAgICAgICB8DQo+ID4gPiAJCWlvbW11X2RvbWFpbjEgICAgICAgaW9tbXVfZG9tYWlu
-MgkgICAgaW9tbXVfZG9tYWluMw0KPiA+ID4gCQkJfCAgICAgICAgICAgICAgICAgICAgfCAgICAg
-ICAgICAgICAgICAgICB8DQo+ID4gPiAJCWlvdmEgcmVnaW9uMShub3JtYWwpICBpb3ZhIHJlZ2lv
-bjIoQ0NVKSAgICBpb3ZhIHJlZ2lvbjMoVlBVKQ0KPiA+ID4gDQo+ID4gPiBGb3IgY3VycmVudCBz
-dHJ1Y3R1cmUsIG5vIG1hdHRlciBob3cgbWFueSBpb21tdXMgdGhlcmUgYXJlLA0KPiA+ID4gdGhl
-eSB1c2UgdGhlIHNhbWUgcGFnZSB0YWJsZSB0byBzaW1wbGlmeSB0aGUgdXNhZ2Ugb2YgbW9kdWxl
-Lg0KPiA+ID4gSW4gb3JkZXIgdG8gbWFrZSB0aGUgc29mdHdhcmUgYXJjaGl0ZWN0dXJlIG1vcmUg
-ZXhwbGljaXQsIHRoaXMNCj4gPiA+IHBhdGNoIHdpbGwgY3JlYXRlIGEgZ2xvYmFsIG10a19pb21t
-dV9wZ3RhYmxlIHN0cnVjdHVyZSB0byBkZXNjcmliZQ0KPiA+ID4gcGFnZSB0YWJsZSBhbmQgYWxs
-IHRoZSBpb21tdXMgdXNlIGl0Lg0KPiA+IA0KPiA+IFRoYW5rcyBmb3IgdGhlIGhhcmQgd29yayBv
-ZiB0aGlzIGZpbGUuIEFjdHVhbGx5IHRoaXMgcGF0Y2ggYW5kIHRoZSBsYXRlcg0KPiA+IG9uZXMg
-Y29uZnVzZSBtZS4gV2h5IGRvIHlvdSBtYWtlIHRoaXMgZmxvdyBjaGFuZ2U/IA0KPiA+IGZvciBt
-YWtpbmcgdGhlIGNvZGUgIm1vcmUgZXhwbGljaXQiIG9yIGZvciBhZGRpbmcgbXVsdGktZG9tYWlu
-IHN1cHBvcnQNCj4gPiBpbiAxMy8xMy4NCj4gPiANCj4gPiBJTUhPLCB0aGUgY2hhbmdlIGlzIHVu
-bmVjZXNzYXJ5Lg0KPiA+IGEpIEZvciBtZSwgdGhpcyBjaGFuZ2UgaGFzIG5vIGltcHJvdmVtZW50
-LiBjdXJyZW50bHkgd2UgdXNlIGEgZ2xvYmFsDQo+ID4gbXRrX2lvbW11X2dldF9tNHVfZGF0YSB0
-byBnZXQgdGhlIE00VSBkYXRhLiBJIHdpbGwgYmUgdmVyeSBnbGFkIGlmIHlvdQ0KPiA+IGNvdWxk
-IGdldCByaWQgb2YgaXQuIEJ1dCBpbiB0aGlzIHBhdGNoc2V0LCBZb3UgdXNlIGEgYW5vdGhlciBn
-bG9iYWwNCj4gPiBtdGtfaW9tbXVfcGd0YWJsZSB0byBpbnN0ZWFkLiBGb3IgbWUuIEl0IGhhcyBu
-byBpbXByb3ZlbWVudC4NCj4gDQo+IFRoYW5rcyBmb3IgeW91IGFkdmljZSENCj4gDQo+IEZvciBj
-dXJyZW50IFNXIGFyY2gsIGFsbCB0aGUgSU9NTVUgSFcgdXNlIHRoZSBzYW1lIHBhZ2UgdGFibGUs
-IHdlIGNhbg0KPiB1c2UgYSBnbG9iYWwgbXRrX2lvbW11X3BndGFibGUgdG8gZGlzY3JpYmUgdGhl
-IGluZm9ybWF0aW9uIG9mIHBhZ2UgdGFibGUNCg0KV2hhdCdzIHlvdXIgcGxhbiBpZiB0aGUgNEdC
-IGlvdmEgcmFuZ2UgaXMgbm90IGVub3VnaCBmb3IgdXMgaW4gZnV0dXJlPw0KRG8geW91IHBsYW4g
-dG8gYWRkIGEgbmV3IGdsb2JhbCBtdGtfaW9tbXVfcGd0YWJsZSBhZ2Fpbj8NCg0KPiBhbmQgYWxs
-IHRoZSBJT01NVSBhdHRhY2ggaXQsIEkgdGhpbmsgdGhhdCBpdCBpcyBtb3JlIGNsZWFyIGFuZA0K
-PiB1bmFtYmlndW91cy4gRm9yIGJlZ2lubmVycywgaXQgbWF5YmUgbW9yZSBlYXNpbHkgZXhwbGlj
-YWJsZT8gDQoNCkkgc3RpbGwgZG9uJ3QgZ2V0IHRoZSBuZWNlc3NpdHkgb2YgdGhpcyBjaGFuZ2Uu
-IGl0IGlzIG9ubHkgZm9yIG1ha2luZw0KY29kZSBjbGVhciBmcm9tIHlvdXIgcG9pbnQgZm9yIHZp
-ZXcsIHJpZ2h0Pw0KDQpUaGlzIGNvZGUgaGFzIGJlZW4gcmV2aWV3ZWQgZm9yIG1hbnkgeWVhcnMs
-IEkgZG9uJ3Qga25vdyB3aHkgeW91IHRoaW5rDQppdCBpcyBhbWJpZ3VvdXMuIGl0IGlzIGNsZWFy
-IGZvciBtZSBhdCBsZWFzZS4gYW5kIEkgd2lsbCBjb21wbGFpbiB0aGF0DQp5b3UgYWRkIGEgbmV3
-IGdsb2JhbCB2YXJpYWJsZSBpbiB0aGlzIGNoYW5nZS4NCg0KPiA+IA0KPiA+IGIpIFRoaXMgcGF0
-Y2hzZXQgYnJlYWsgdGhlIG9yaWdpbmFsIGZsb3cuIGRldmljZV9ncm91cCBnaXZlIHlvdSBhDQo+
-ID4gc29mdHdhcmUgY2hhbmNlIGZvciBpbml0aWFsaXppbmcsIHRoZW4geW91IG1vdmUgcGFnZXRh
-YmxlIGFsbG9jYXRpbmcNCj4gPiBjb2RlIGludG8gaXQuIEJ1dCBpdCBpc24ndCBkZXZpY2VfZ3Jv
-dXAgam9iLg0KPiA+IA0KPiANCj4gQXMgaXMgc2hvd24gYWJvdmUgZGlhZ3JhbSwgbXRrX2lvbW11
-X3BndGFibGUgaW5jbHVkZXMgaW9tbXVfZ3JvdXAgYW5kDQo+IGlvbW11X2RvbWFpbixzbyB3ZSBu
-ZWVkIHRvIGFsbG9jYXRlIG10a19pb21tdV9wZ3RhYmxlIGFuZCBpbml0aWFsaXplIGl0DQo+IGlu
-IGRldmljZV9ncm91cCBmaXJzdGx5LGFuZCB0aGVuIGV4ZWN1dGUgdGhlIG9yaWdpbmFsIGZsb3cs
-IGl0IG9ubHkNCj4gY2hhbmdlcyBwbGFjZSBmb3IgY3JlYXRpbmcgbXRrX2lvbW11X3BndGFibGUg
-YW5kIGRvbid0IGJyZWFrIG9yaWdpbmFsDQo+IGRldmljZV9ncm91cCBmbG93Lg0KDQpJIHVuZGVy
-c3RhbmQgeW91IGhhdmUgdG8gZG8gdGhpcyBjaGFuZ2UgYWZ0ZXIgeW91IGFkanVzdCB0aGUgc3Ry
-dWN0dXJlLg0KSSBtZWFuIHRoYXQgaXQgbWF5IGJlIG5vdCBwcm9wZXIgc2luY2UgYWxsb2NhdGlu
-ZyBwYWdldGFibGUgc2hvdWxkIG5vdA0KYmUgZG9uZSBpbiBkZXZpY2VfZ3JvdXAgbG9naWNhbGx5
-LiBGcm9tIGhlcmUsIENvdWxkIHdlIGdldCB0aGlzIGNoYW5nZQ0KbG9va3Mgbm90IGdvb2Q/Lg0K
-DQo+ID4gSSBjYW4gbm90IGRlY2lkZSBpZiB5b3VyIGZsb3cgaXMgcmlnaHQuIEJ1dCBpZiB5b3Ug
-b25seSB3YW50IHRvIGFkZA0KPiA+IHN1cHBvcnQgbXVsdGktZG9tYWluLCBJIGd1ZXNzIHlvdSBj
-b3VsZCBleHRlbmQgdGhlIGN1cnJlbnQgIm00dV9ncm91cCINCj4gPiB0byBhIGFycmF5ICJtNHVf
-Z3JvdXBbTl0iLiBJdCBtYXkgYmUgbW9yZSBzaW1wbGUuIFRvIG1ha2UgbXQ2Nzc5DQo+ID4gcHJv
-Z3Jlc3MgZWFzaWx5LCBJIHN1Z2dlc3QgeW91IGNhbiB1c2UgdGhpcyB3YXkgdG8gc3VwcG9ydCBt
-dWx0aS1kb21haW4NCj4gPiBmaXJzdGx5LiBUaGVuIHlvdSBjb3VsZCBzZW5kIHRoaXMgbmV3IG10
-a19pb21tdV9wZ3RhYmxlIHBhdGNoc2V0IGZvciB0aGUNCj4gPiBjb2RlICJtb3JlIGV4cGxpY2l0
-IiBpZiB5b3UgaW5zaXN0Lg0KDQpDb3VsZCB5b3UgaGVscCB0cnkgdGhpcyB3YXkgaWYgaXQgY291
-bGQgbWVldCB5b3VyIHJlcXVpcmVtZW50PyBUaGVuDQpsZXQncyBjb21wYXJlIHdoaWNoIG9uZSBp
-cyBiZXR0ZXIuDQoNCg0KQlRXLCB5b3VyIHBhdGNoZXMoaW5jbHVkaW5nIHYyKSBjYXVzZSBoYW5n
-dXAgYXMgYmVsb3cgc2luY2UNCiJkYXRhLT5tNHVfZG9tIiB3YXMgdW5pbml0aWFsaXplZC4NCg0K
-DQpVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgdmly
-dHVhbCBhZGRyZXNzDQowMDAwMDAwMDAwMDAwMDEwDQouLi4NCnBjIDogbXRrX2lvbW11X3RsYl9m
-bHVzaF9wYWdlX25vc3luYysweDM4LzB4YjgNCmxyIDogX19hcm1fdjdzX3VubWFwKzB4MTc0LzB4
-NTk4DQouLi4NCkNhbGwgdHJhY2U6DQogbXRrX2lvbW11X3RsYl9mbHVzaF9wYWdlX25vc3luYysw
-eDM4LzB4YjgNCiBfX2FybV92N3NfdW5tYXArMHgxNzQvMHg1OTgNCiBhcm1fdjdzX3VubWFwKzB4
-MzAvMHg0OA0KIG10a19pb21tdV91bm1hcCsweDIwLzB4MjgNCiBfX2lvbW11X3VubWFwKzB4YTQv
-MHhmOA0KIGlvbW11X3VubWFwKzB4NDQvMHg5MA0KDQo+ID4gDQo+ID4gPiBUaGUgZGlhZ3JhbSBp
-cyBhcyBiZWxvdzoNCj4gPiA+IA0KPiA+ID4gCW10a19pb21tdV9kYXRhMShNTSkgICAgICAgbXRr
-X2lvbW11X2RhdGEyKEFQVSkNCj4gPiA+IAkJfAkJCSAgIHwNCj4gPiA+IAkJfAkJCSAgIHwNCj4g
-PiA+IAkJLS0tLS0tbXRrX2lvbW11X3BndGFibGUtLS0tLQ0KPiA+ID4gDQo+ID4gPiBXZSBuZWVk
-IHRvIGNyZWF0ZSBnbG9iYWwgbXRrX2lvbW11X3BndGFibGUgdG8gaW5jbHVkZSBhbGwgdGhlIGlv
-dmENCj4gPiA+IHJlZ2lvbnMgZmlyc3RseSBhbmQgc3BlY2lhbCBpb3ZhIHJlZ2lvbnMgYnkgZGl2
-aWRlZCBiYXNlZCBvbiBpdCwNCj4gPiA+IHNvIHRoZSBpbmZvcm1hdGlvbiBvZiBwZ3RhYmxlIG5l
-ZWRzIHRvIGJlIGNyZWF0ZWQgaW4gZGV2aWNlX2dyb3VwLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQt
-b2ZmLWJ5OiBDaGFvIEhhbyA8Y2hhby5oYW9AbWVkaWF0ZWsuY29tPg0KPiA+ID4gLS0tDQo+ID4g
-PiAgZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYyB8IDg0ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ID4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmggfCAgMSAr
-DQo+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4NSBpbnNlcnRpb25zKCspDQo+ID4gPiANCj4gPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5jIGIvZHJpdmVycy9pb21tdS9t
-dGtfaW9tbXUuYw0KPiA+ID4gaW5kZXggZjI4NDdlNjYxMTM3Li5mY2JkZTZiMGY1OGQgMTAwNjQ0
-DQo+ID4gPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+ID4gPiArKysgYi9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5jDQo+ID4gPiBAQCAtMTIzLDYgKzEyMywxMiBAQCBzdHJ1Y3Qg
-bXRrX2lvbW11X2RvbWFpbiB7DQo+ID4gPiAgCXN0cnVjdCBpb21tdV9kb21haW4JCWRvbWFpbjsN
-Cj4gPiA+ICB9Ow0KPiA+ID4gIA0KPiA+ID4gK3N0cnVjdCBtdGtfaW9tbXVfcGd0YWJsZSB7DQo+
-ID4gPiArCXN0cnVjdCBpb19wZ3RhYmxlX2NmZwljZmc7DQo+ID4gPiArCXN0cnVjdCBpb19wZ3Rh
-YmxlX29wcwkqaW9wOw0KPiA+ID4gK307DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIHN0cnVjdCBt
-dGtfaW9tbXVfcGd0YWJsZSAqc2hhcmVfcGd0YWJsZTsNCj4gPiA+ICBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGlvbW11X29wcyBtdGtfaW9tbXVfb3BzOw0KPiA+ID4gIA0KPiA+ID4gIC8qDQo+ID4gPiBA
-QCAtMTcwLDYgKzE3NiwxMSBAQCBzdGF0aWMgc3RydWN0IG10a19pb21tdV9kYXRhICptdGtfaW9t
-bXVfZ2V0X200dV9kYXRhKHZvaWQpDQo+ID4gPiAgCXJldHVybiBOVUxMOw0KPiA+ID4gIH0NCj4g
-PiA+ICANCj4gPiA+ICtzdGF0aWMgc3RydWN0IG10a19pb21tdV9wZ3RhYmxlICptdGtfaW9tbXVf
-Z2V0X3BndGFibGUodm9pZCkNCj4gPiA+ICt7DQo+ID4gPiArCXJldHVybiBzaGFyZV9wZ3RhYmxl
-Ow0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+ICBzdGF0aWMgc3RydWN0IG10a19pb21tdV9kb21h
-aW4gKnRvX210a19kb21haW4oc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tKQ0KPiA+ID4gIHsNCj4g
-PiA+ICAJcmV0dXJuIGNvbnRhaW5lcl9vZihkb20sIHN0cnVjdCBtdGtfaW9tbXVfZG9tYWluLCBk
-b21haW4pOw0KPiA+ID4gQEAgLTMyMiw2ICszMzMsMTMgQEAgc3RhdGljIGludCBtdGtfaW9tbXVf
-ZG9tYWluX2ZpbmFsaXNlKHN0cnVjdCBtdGtfaW9tbXVfZG9tYWluICpkb20pDQo+ID4gPiAgew0K
-PiA+ID4gIAlzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEgPSBtdGtfaW9tbXVfZ2V0X200dV9k
-YXRhKCk7DQo+ID4gPiAgDQo+ID4gPiArCWlmIChkYXRhLT5wZ3RhYmxlKSB7DQo+ID4gPiArCQlk
-b20tPmNmZyA9IGRhdGEtPnBndGFibGUtPmNmZzsNCj4gPiA+ICsJCWRvbS0+aW9wID0gZGF0YS0+
-cGd0YWJsZS0+aW9wOw0KPiA+ID4gKwkJZG9tLT5kb21haW4ucGdzaXplX2JpdG1hcCA9IGRhdGEt
-PnBndGFibGUtPmNmZy5wZ3NpemVfYml0bWFwOw0KPiA+ID4gKwkJcmV0dXJuIDA7DQo+ID4gPiAr
-CX0NCj4gPiA+ICsNCj4gPiA+ICAJZG9tLT5jZmcgPSAoc3RydWN0IGlvX3BndGFibGVfY2ZnKSB7
-DQo+ID4gPiAgCQkucXVpcmtzID0gSU9fUEdUQUJMRV9RVUlSS19BUk1fTlMgfA0KPiA+ID4gIAkJ
-CUlPX1BHVEFCTEVfUVVJUktfTk9fUEVSTVMgfA0KPiA+ID4gQEAgLTM0NSw2ICszNjMsNjEgQEAg
-c3RhdGljIGludCBtdGtfaW9tbXVfZG9tYWluX2ZpbmFsaXNlKHN0cnVjdCBtdGtfaW9tbXVfZG9t
-YWluICpkb20pDQo+ID4gPiAgCXJldHVybiAwOw0KPiA+ID4gIH0NCj4gPiA+ICANCj4gPiA+ICtz
-dGF0aWMgc3RydWN0IG10a19pb21tdV9wZ3RhYmxlICpjcmVhdGVfcGd0YWJsZShzdHJ1Y3QgbXRr
-X2lvbW11X2RhdGEgKmRhdGEpDQo+ID4gPiArew0KPiA+ID4gKwlzdHJ1Y3QgbXRrX2lvbW11X3Bn
-dGFibGUgKnBndGFibGU7DQo+ID4gPiArDQo+ID4gPiArCXBndGFibGUgPSBremFsbG9jKHNpemVv
-ZigqcGd0YWJsZSksIEdGUF9LRVJORUwpOw0KPiA+ID4gKwlpZiAoIXBndGFibGUpDQo+ID4gPiAr
-CQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsNCj4gPiA+ICsNCj4gPiA+ICsJcGd0YWJsZS0+Y2Zn
-ID0gKHN0cnVjdCBpb19wZ3RhYmxlX2NmZykgew0KPiA+ID4gKwkJLnF1aXJrcyA9IElPX1BHVEFC
-TEVfUVVJUktfQVJNX05TIHwNCj4gPiA+ICsJCQlJT19QR1RBQkxFX1FVSVJLX05PX1BFUk1TIHwN
-Cj4gPiA+ICsJCQlJT19QR1RBQkxFX1FVSVJLX1RMQklfT05fTUFQIHwNCj4gPiA+ICsJCQlJT19Q
-R1RBQkxFX1FVSVJLX0FSTV9NVEtfRVhULA0KPiA+ID4gKwkJLnBnc2l6ZV9iaXRtYXAgPSBtdGtf
-aW9tbXVfb3BzLnBnc2l6ZV9iaXRtYXAsDQo+ID4gPiArCQkuaWFzID0gMzIsDQo+ID4gPiArCQku
-b2FzID0gMzQsDQo+ID4gPiArCQkudGxiID0gJm10a19pb21tdV9mbHVzaF9vcHMsDQo+ID4gPiAr
-CQkuaW9tbXVfZGV2ID0gZGF0YS0+ZGV2LA0KPiA+ID4gKwl9Ow0KPiA+ID4gKw0KPiA+ID4gKwlw
-Z3RhYmxlLT5pb3AgPSBhbGxvY19pb19wZ3RhYmxlX29wcyhBUk1fVjdTLCAmcGd0YWJsZS0+Y2Zn
-LCBkYXRhKTsNCj4gPiA+ICsJaWYgKCFwZ3RhYmxlLT5pb3ApIHsNCj4gPiA+ICsJCWRldl9lcnIo
-ZGF0YS0+ZGV2LCAiRmFpbGVkIHRvIGFsbG9jIGlvIHBndGFibGVcbiIpOw0KPiA+ID4gKwkJcmV0
-dXJuIEVSUl9QVFIoLUVJTlZBTCk7DQo+ID4gPiArCX0NCj4gPiA+ICsNCj4gPiA+ICsJZGV2X2lu
-Zm8oZGF0YS0+ZGV2LCAiJXMgY3JlYXRlIHBndGFibGUgZG9uZVxuIiwgX19mdW5jX18pOw0KPiA+
-ID4gKw0KPiA+ID4gKwlyZXR1cm4gcGd0YWJsZTsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiAr
-c3RhdGljIGludCBtdGtfaW9tbXVfYXR0YWNoX3BndGFibGUoc3RydWN0IG10a19pb21tdV9kYXRh
-ICpkYXRhLA0KPiA+ID4gKwkJCQkgICAgc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ID4gK3sNCj4g
-PiA+ICsJc3RydWN0IG10a19pb21tdV9wZ3RhYmxlICpwZ3RhYmxlID0gbXRrX2lvbW11X2dldF9w
-Z3RhYmxlKCk7DQo+ID4gPiArDQo+ID4gPiArCS8qIGNyZWF0ZSBzaGFyZSBwZ3RhYmxlICovDQo+
-ID4gPiArCWlmICghcGd0YWJsZSkgew0KPiA+ID4gKwkJcGd0YWJsZSA9IGNyZWF0ZV9wZ3RhYmxl
-KGRhdGEpOw0KPiA+ID4gKwkJaWYgKElTX0VSUihwZ3RhYmxlKSkgew0KPiA+ID4gKwkJCWRldl9l
-cnIoZGF0YS0+ZGV2LCAiRmFpbGVkIHRvIGNyZWF0ZSBwZ3RhYmxlXG4iKTsNCj4gPiA+ICsJCQly
-ZXR1cm4gLUVOT01FTTsNCj4gPiA+ICsJCX0NCj4gPiA+ICsNCj4gPiA+ICsJCXNoYXJlX3BndGFi
-bGUgPSBwZ3RhYmxlOw0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiArCS8qIGJpbmRpbmcgdG8g
-cGd0YWJsZSAqLw0KPiA+ID4gKwlkYXRhLT5wZ3RhYmxlID0gcGd0YWJsZTsNCj4gPiA+ICsNCj4g
-PiA+ICsJZGV2X2luZm8oZGF0YS0+ZGV2LCAibTR1JWQgYXR0YWNoX3BndGFibGUgZG9uZSFcbiIs
-IGRhdGEtPm00dV9pZCk7DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gK30NCj4g
-PiA+ICsNCj4gPiA+ICBzdGF0aWMgc3RydWN0IGlvbW11X2RvbWFpbiAqbXRrX2lvbW11X2RvbWFp
-bl9hbGxvYyh1bnNpZ25lZCB0eXBlKQ0KPiA+ID4gIHsNCj4gPiA+ICAJc3RydWN0IG10a19pb21t
-dV9kb21haW4gKmRvbTsNCj4gPiA+IEBAIC01MDgsMTAgKzU4MSwyMSBAQCBzdGF0aWMgdm9pZCBt
-dGtfaW9tbXVfcmVtb3ZlX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gPiAgc3RhdGlj
-IHN0cnVjdCBpb21tdV9ncm91cCAqbXRrX2lvbW11X2RldmljZV9ncm91cChzdHJ1Y3QgZGV2aWNl
-ICpkZXYpDQo+ID4gPiAgew0KPiA+ID4gIAlzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEgPSBt
-dGtfaW9tbXVfZ2V0X200dV9kYXRhKCk7DQo+ID4gPiArCXN0cnVjdCBtdGtfaW9tbXVfcGd0YWJs
-ZSAqcGd0YWJsZTsNCj4gPiA+ICsJaW50IHJldCA9IDA7DQo+ID4gPiAgDQo+ID4gPiAgCWlmICgh
-ZGF0YSkNCj4gPiA+ICAJCXJldHVybiBFUlJfUFRSKC1FTk9ERVYpOw0KPiA+ID4gIA0KPiA+ID4g
-KwlwZ3RhYmxlID0gZGF0YS0+cGd0YWJsZTsNCj4gPiA+ICsJaWYgKCFwZ3RhYmxlKSB7DQo+ID4g
-PiArCQlyZXQgPSBtdGtfaW9tbXVfYXR0YWNoX3BndGFibGUoZGF0YSwgZGV2KTsNCj4gPiA+ICsJ
-CWlmIChyZXQpIHsNCj4gPiA+ICsJCQlkZXZfZXJyKGRhdGEtPmRldiwgIkZhaWxlZCB0byBkZXZp
-Y2VfZ3JvdXBcbiIpOw0KPiA+ID4gKwkJCXJldHVybiBOVUxMOw0KPiA+ID4gKwkJfQ0KPiA+ID4g
-Kwl9DQo+ID4gPiArDQo+ID4gPiAgCS8qIEFsbCB0aGUgY2xpZW50IGRldmljZXMgYXJlIGluIHRo
-ZSBzYW1lIG00dSBpb21tdS1ncm91cCAqLw0KPiA+ID4gIAlpZiAoIWRhdGEtPm00dV9ncm91cCkg
-ew0KPiA+ID4gIAkJZGF0YS0+bTR1X2dyb3VwID0gaW9tbXVfZ3JvdXBfYWxsb2MoKTsNCj4gPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oIGIvZHJpdmVycy9pb21tdS9t
-dGtfaW9tbXUuaA0KPiA+ID4gaW5kZXggMTMyZGM3NjVhNDBiLi5kZDVmMTlmNzhiNjIgMTAwNjQ0
-DQo+ID4gPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gPiArKysgYi9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gPiBAQCAtNjEsNiArNjEsNyBAQCBzdHJ1Y3QgbXRr
-X2lvbW11X2RhdGEgew0KPiA+ID4gIAlzdHJ1Y3QgY2xrCQkJKmJjbGs7DQo+ID4gPiAgCXBoeXNf
-YWRkcl90CQkJcHJvdGVjdF9iYXNlOyAvKiBwcm90ZWN0IG1lbW9yeSBiYXNlICovDQo+ID4gPiAg
-CXN0cnVjdCBtdGtfaW9tbXVfc3VzcGVuZF9yZWcJcmVnOw0KPiA+ID4gKwlzdHJ1Y3QgbXRrX2lv
-bW11X3BndGFibGUJKnBndGFibGU7DQo+ID4gPiAgCXN0cnVjdCBtdGtfaW9tbXVfZG9tYWluCQkq
-bTR1X2RvbTsNCj4gPiA+ICAJc3RydWN0IGlvbW11X2dyb3VwCQkqbTR1X2dyb3VwOw0KPiA+ID4g
-IAlib29sICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuYWJsZV80R0I7DQo+ID4gDQo+ID4g
-DQo+IA0KPiANCg0K
+Hello Linus,
+
+please pull s390 changes for 5.6-rc2. One of the changes touches
+crypto/testmgr.c which has been acked-by Herbert Xu.
+
+Thank you,
+Vasily
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.6-3
+
+for you to fetch changes up to c7ff8573ad21dcdcbcffd66fbfca3b53cd67d2b1:
+
+  crypto/testmgr: enable selftests for paes-s390 ciphers (2020-02-13 17:53:24 +0100)
+
+----------------------------------------------------------------
+s390 updates for 5.6-rc2
+
+- Enable paes-s390 cipher selftests in testmgr (acked-by Herbert Xu).
+
+- Fix protected key length update in PKEY_SEC2PROTK ioctl and increase
+  card/queue requests counter to 64-bit in crypto code.
+
+- Fix clang warning in get_tod_clock.
+
+- Fix ultravisor info length extensions handling.
+
+- Fix style of SPDX License Identifier in vfio-ccw.
+
+- Avoid unnecessary GFP_ATOMIC and simplify ACK tracking in qdio.
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      s390/uv: Fix handling of length extensions
+
+Harald Freudenberger (3):
+      s390/pkey: fix missing length of protected key on return
+      s390/zcrypt: fix card and queue total counter wrap
+      crypto/testmgr: enable selftests for paes-s390 ciphers
+
+Julian Wiedmann (2):
+      s390/qdio: simplify ACK tracking
+      s390/qdio: don't allocate *aob array with GFP_ATOMIC
+
+Nathan Chancellor (1):
+      s390/time: Fix clk type in get_tod_clock
+
+Nishad Kamdar (1):
+      vfio-ccw: Use the correct style for SPDX License Identifier
+
+Vasily Gorbik (1):
+      Merge tag 'vfio-ccw-20200206' of https://git.kernel.org/.../kvms390/vfio-ccw into HEAD
+
+ arch/s390/boot/uv.c               |  3 ++-
+ arch/s390/include/asm/timex.h     |  2 +-
+ crypto/testmgr.c                  | 36 ++++++++++++++++++++++++++++++++++++
+ drivers/s390/cio/qdio.h           |  4 +---
+ drivers/s390/cio/qdio_debug.c     |  5 ++---
+ drivers/s390/cio/qdio_main.c      | 29 +++++++++++------------------
+ drivers/s390/cio/qdio_setup.c     |  2 +-
+ drivers/s390/cio/vfio_ccw_trace.h |  4 ++--
+ drivers/s390/crypto/ap_bus.h      |  4 ++--
+ drivers/s390/crypto/ap_card.c     |  8 ++++----
+ drivers/s390/crypto/ap_queue.c    |  6 +++---
+ drivers/s390/crypto/pkey_api.c    |  2 +-
+ drivers/s390/crypto/zcrypt_api.c  | 16 +++++++++-------
+ 13 files changed, 75 insertions(+), 46 deletions(-)
 
