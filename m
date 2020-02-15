@@ -7,98 +7,91 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33593C71150
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAA6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096E2217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8DB20718
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzMvwhY3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ob1M+dVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgBOPEB (ORCPT
+        id S1726318AbgBOPPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 10:04:01 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54369 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgBOPEB (ORCPT
+        Sat, 15 Feb 2020 10:15:15 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38622 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgBOPPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 10:04:01 -0500
-Received: by mail-pj1-f68.google.com with SMTP id dw13so5277883pjb.4;
-        Sat, 15 Feb 2020 07:03:59 -0800 (PST)
+        Sat, 15 Feb 2020 10:15:15 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z19so12145154qkj.5;
+        Sat, 15 Feb 2020 07:15:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=K/TyPbMI9Yl4dIcznykOMiS7aHA5za81j3tfLcMIBAY=;
-        b=XzMvwhY33dSzdfC2+679adDzdo100jqmK1wlSp1bz7qv2Bu7ozcJn3OZpT06RhABQk
-         A8aRemsbBu52oNYnZN27Aqp45xXmMVdVL+jYWnIM+JNCPW4sddVOqn3M18VtU5vDs8Pd
-         +LN/F+RFxl3HAO10ZURG7EQFitIk7Iri4QYh7cnjb0mtD3uKFjcrfJkYS2fHyEm7ZQkO
-         7rYavsLMEGyjpv3vbGOejMhdm2LNRdLZm+c0i7EppdF2ANk4sRrkoyW+4d+btS2Ux/28
-         aTEdPreVlex7PB5CTjwY9MjEeawyzhj52J5didBAKZaF+AcNiDcnzcKkGyTDSNpBYTZX
-         vFMQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=uWzLjbBp8aRsVSLKA91aPxd7wXiz/npdTaFsiixqRhM=;
+        b=ob1M+dVQyL97DzvdG6/rS1nbpt+LYfpjmAUF7JHhdbEl9u6fZrcYi8ZKLRxYs10wm+
+         hbURUmByVSIB8x+5qdjbXtXCOgb+lKBqJwd+iyfL/Z+NhKrCm7ZD4H/5pTsS+R34P4Df
+         CcMLOB0B0Tg7vQFawFdDQk1GlYgSWAF8lsGvMdJpQ7E+M1P3gFvJyvm6aMkpTHV5y1v2
+         0hW9uDFk6pOIKTy5AN7tDMjhNwJpVcaU3dc5E/mefQCz+s89pVzmyt0LY/4WFnjstOYy
+         a6aubSK0jx/Oj7sKE0Qbog7f84HUDCiCKKcS3HhaBnUeb1KmcMzMRJLBt+y6LoInnpil
+         oVjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=K/TyPbMI9Yl4dIcznykOMiS7aHA5za81j3tfLcMIBAY=;
-        b=hHWiCXp6vDTYpLkMlyu5BV6QYKnVLa0+M7MUo3425GF/APsMbEVk4m2MV8zxXbnBZD
-         +wnYh9/Hw8fDI18H2Py0m2L1lwIichbiiSKVBh7J8Rf4fIYPEhaGEK/RGm/gf76ILnph
-         gVBtsZFlxUcSVp2h5XWfKkGOfLJPgtPScj+zXYSbStObP6Lo37D2C9gZtKM2gVL+8Xpa
-         PshOaARUbk8kko40pt77lK4MshUXL0Y278MxM3UGSf+SRHEM/rTqt87zLzZQOXn6jTu/
-         c4dM+KvZhZWLSqjKjmGIiW/nOf9il7QqwYc+4Z1iUIj8CQHyPXYJcYLHLIXEmSY6SRiC
-         PKLQ==
-X-Gm-Message-State: APjAAAUpTsYDTrraENCVWfUZycGZnYUj+qyzCmVEqbF4bdr/icgG2jW2
-        mEQI4s9xJs/Cars+Z7hW5LI=
-X-Google-Smtp-Source: APXvYqxmsDB7vB75PiqLtu0d/oaeG2J+Hb46soNx19YmvpxLUdnrCc7x46Ns2W8dBvRBuys/zLl0qQ==
-X-Received: by 2002:a17:90a:cf11:: with SMTP id h17mr10209227pju.103.1581779039369;
-        Sat, 15 Feb 2020 07:03:59 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id u11sm10399093pjn.2.2020.02.15.07.03.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 15 Feb 2020 07:03:58 -0800 (PST)
-Date:   Sat, 15 Feb 2020 20:33:56 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        paul@crapouillou.net, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        allison@lohutok.net, tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, mips-creator-ci20-dev@googlegroups.com,
-        1326991897@qq.com
-Subject: Re: [PATCH v4 1/6] MIPS: JZ4780: Introduce SMP support.
-Message-ID: <20200215150355.GA6253@afzalpc>
-References: <1581703360-112557-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1581703360-112557-3-git-send-email-zhouyanjie@wanyeetech.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=uWzLjbBp8aRsVSLKA91aPxd7wXiz/npdTaFsiixqRhM=;
+        b=Tdnm/t0Hel2XJHTuxM0s2lXCfu0y60pLtAORMGTRDlI2LElE1dWcMeCZJSjSUlL+FG
+         TO67enMRzgrlexUdb7+WrgsJv8ZGTKwKTzgYcVQ1o5J2vKltP3qETrQpfsk+tNKvrLyV
+         LT63qrcBVGVJcR5JATA2/qAPYzFKiIREDGDLuiJJ7KAbhZ8FH/XyMhxRoMkfcR6wbzMf
+         dtN9PFZkef9g3gXF4CdM/N8Yf6E7juQFq1zoqodaSEzAKYsNsAG+jdr7fIuS6HilVHy+
+         j+MZG8pfGH6HSaCgP/Trq/LnTrX4wypzzL0kUG3kAJ/kwmwRyD104ch8VWx30uRv03vw
+         Wn8Q==
+X-Gm-Message-State: APjAAAUQRK0LCtJ4YEqCKMdSTS1on6RtyYl6nU8aJDmiyasYM18AK9AS
+        mfws4Z3MwFYFak/gieUCAPE=
+X-Google-Smtp-Source: APXvYqxpvAHSD/naM2yaCHrG1MA+Xkos4kcUo2nI3mT+HBKkPxDMv80TmBa+NMdsC9D3tFlp12ooAQ==
+X-Received: by 2002:a37:47c4:: with SMTP id u187mr7502718qka.165.1581779712998;
+        Sat, 15 Feb 2020 07:15:12 -0800 (PST)
+Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id d16sm1487549qkc.132.2020.02.15.07.15.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Feb 2020 07:15:12 -0800 (PST)
+Subject: Re: [PATCH v5] media: dvb_dummy_tuner: implement driver skeleton
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200210154102.118166-1-dwlsalmeida@gmail.com>
+ <20200214050813.GA37036@ubuntu-m2-xlarge-x86>
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Message-ID: <886c816b-65a4-9cd9-4c94-f8025b63de4c@gmail.com>
+Date:   Sat, 15 Feb 2020 12:15:07 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581703360-112557-3-git-send-email-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200214050813.GA37036@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Nathan,
 
-On Sat, Feb 15, 2020 at 02:02:35AM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> This patch and another one that you have [1] cause a ton of build
+> warnings with clang, as reported by the 0day bot, because of the
+> implicit conversions from floating points to integer. Is this
+> intentional? Would you mind taking a look at them and addressing them if
+> you do another revision?
 
-> +	/* setup the mailbox IRQ */
-> +	setup_irq(MIPS_CPU_IRQ_BASE + 3, &mbox_action);
+Sorry I did not catch that back then. I'll fix it in a future revision.
 
-s/setup_irq/request_irq, see,
+Thank you for letting me know.
 
-https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
 
-Regards
-afzal
+- Daniel.
+
