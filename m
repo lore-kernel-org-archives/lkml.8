@@ -2,169 +2,87 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BE6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C73BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2744E2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 15:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581781981;
-	bh=TAXvayYY4AFI9mCqCYeVyufEpRoG+dC0pVYBSFHCvfQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NBVOXOpgaCJd49Ohx98/eZtTFcMSM9t/D9YozBgilQbnr3W6cVOXa02eiW59qnByp
-	 7diyn3HE1HdyyJF+zerOWb2O5FYOT2kvTeCBI3AwwjWvVndxEKU5Rjf1MDhPrF9hVS
-	 DH6B0Xx1rj+H6sK0iL2dPRhct/mWOFmqCIgrXXbk=
+	by mail.kernel.org (Postfix) with ESMTP id 13F1D2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="m2YCxJbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgBOPxA (ORCPT
+        id S1726478AbgBOQIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 10:53:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46164 "EHLO mail.kernel.org"
+        Sat, 15 Feb 2020 11:08:17 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:47816 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgBOPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 10:53:00 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CC22083B;
-        Sat, 15 Feb 2020 15:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581781979;
-        bh=TAXvayYY4AFI9mCqCYeVyufEpRoG+dC0pVYBSFHCvfQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BEK/Lft1pdCLuujKHdRzrnDS38AlteL1Fz34eq2jRcY7oNrIfdGnJ97n+NnV5jGiv
-         sjktTEUCh43c7ngm7Jhu/RBUexAHH5vuueG8EgtCiY7pBxTfwKg86qaBlPRjyrVqvF
-         QRW6+TjNJDOz2iHYHue7cJFnzwTpo/3F2o0eDqjo=
-Date:   Sat, 15 Feb 2020 15:52:55 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] iio: accel: adxl372: Add support for FIFO peak mode
-Message-ID: <20200215155255.5902fe3c@archlinux>
-In-Reply-To: <20200214092919.24351-2-alexandru.tachici@analog.com>
-References: <20200214092919.24351-1-alexandru.tachici@analog.com>
-        <20200214092919.24351-2-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726273AbgBOQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 11:08:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/MAL/dS9+xaImPqMBu7AglUJ2inc+yODBpvhLTi/OhU=; b=m2YCxJblWgvBUHgjEiI109YDcF
+        dhnr9hZ2ojkZyF0wmbpsAD3oW1RP2dSDKreR5bioSR+sDiWn/zoQ52SclqLQE07hx6MX/jyRm46b4
+        AbVTeiCNcjC7LxUcU7btf4A9e2RbC8BxfGJcOOFEpEjzE77YAq3ieKd+yUmvvj0+5BAo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j2zzE-0004ju-B4; Sat, 15 Feb 2020 17:08:08 +0100
+Date:   Sat, 15 Feb 2020 17:08:08 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/3] net: phy: broadcom: Have
+ bcm54xx_adjust_rxrefclk() check for flags
+Message-ID: <20200215160808.GA8924@lunn.ch>
+References: <20200214233853.27217-1-f.fainelli@gmail.com>
+ <20200214233853.27217-3-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214233853.27217-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 11:29:15 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
-
-> From: Stefan Popa <stefan.popa@analog.com>
+On Fri, Feb 14, 2020 at 03:38:52PM -0800, Florian Fainelli wrote:
+> bcm54xx_adjust_rxrefclk() already checks for the flags and will
+> correctly reacting to the 3 different flags it check, allow it to be
+> unconditionally called.
 > 
-> By default, if all three channels (x, y, z) are enabled, sample sets of
-> concurrent 3-axis data is stored in the FIFO. This patch adds the option
-> to configure the FIFO to store peak acceleration (x, y and z) of every
-> over-threshold event. Since we cannot store 1 or 2 axis peak acceleration
-> data in the FIFO, then all three axis need to be enabled in order for this
-> mode to work.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-I've left comments on the interface until the documentation patch.
-A few other bits in here.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/iio/accel/adxl372.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
+>  drivers/net/phy/broadcom.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-> index 67b8817995c0..bb6c2bf1a457 100644
-> --- a/drivers/iio/accel/adxl372.c
-> +++ b/drivers/iio/accel/adxl372.c
-> @@ -264,6 +264,7 @@ struct adxl372_state {
->  	u8				int2_bitmask;
->  	u16				watermark;
->  	__be16				fifo_buf[ADXL372_FIFO_SIZE];
-> +	bool				peak_fifo_mode_en;
->  };
+> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+> index 4ad2128cc454..b4eae84a9195 100644
+> --- a/drivers/net/phy/broadcom.c
+> +++ b/drivers/net/phy/broadcom.c
+> @@ -273,10 +273,7 @@ static int bcm54xx_config_init(struct phy_device *phydev)
+>  	    (phydev->dev_flags & PHY_BRCM_CLEAR_RGMII_MODE))
+>  		bcm_phy_write_shadow(phydev, BCM54XX_SHD_RGMII_MODE, 0);
 >  
->  static const unsigned long adxl372_channel_masks[] = {
-> @@ -722,6 +723,36 @@ static int adxl372_write_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> +static ssize_t adxl372_peak_fifo_en_get(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-> +
-> +	return sprintf(buf, "%d\n", st->peak_fifo_mode_en);
-> +}
-> +
-> +static ssize_t adxl372_peak_fifo_en_set(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t len)
-> +{
-> +	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
-> +	bool val;
-> +	int ret;
-> +
-> +	ret = kstrtobool(buf, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->peak_fifo_mode_en = val;
+> -	if ((phydev->dev_flags & PHY_BRCM_RX_REFCLK_UNUSED) ||
+> -	    (phydev->dev_flags & PHY_BRCM_DIS_TXCRXC_NOENRGY) ||
+> -	    (phydev->dev_flags & PHY_BRCM_AUTO_PWRDWN_ENABLE))
+> -		bcm54xx_adjust_rxrefclk(phydev);
+> +	bcm54xx_adjust_rxrefclk(phydev);
 
-Should reject the attempt if the buffer is already enabled.  Otherwise
-the userspace interface will be rather confusing as you'll read back that
-it is enabled, but not see it working.
+Hi Florian
 
-> +
-> +	return len;
-> +}
-> +
-> +static IIO_DEVICE_ATTR(peak_fifo_mode_enable, 0644,
-> +		       adxl372_peak_fifo_en_get,
-> +		       adxl372_peak_fifo_en_set, 0);
-> +
->  static ssize_t adxl372_show_filter_freq_avail(struct device *dev,
->  					      struct device_attribute *attr,
->  					      char *buf)
-> @@ -817,11 +848,16 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
->  	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
->  	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
->  					  indio_dev->masklength);
-> +
-> +	/* Configure the FIFO to store sets of impact event peak. */
-> +	if (st->fifo_set_size == 3 && st->peak_fifo_mode_en)
-> +		st->fifo_format = ADXL372_XYZ_PEAK_FIFO;
+PHY_BRCM_RX_REFCLK_UNUSED is not unconditionally checked in
+bcm54xx_adjust_rxrefclk(), where as here it is. I assume this is O.K?
+The same is tree for PHY_BRCM_AUTO_PWRDWN_ENABLE.  Maybe worth a
+comment in the commit message if you need to respin.
 
-We could perhaps make this more intuitive by always enabling the 3 axis
-if peak mode is on and filtering the data on it's way to the
-push_to_buffer to reflect only channels enabled.
-
-If not, perhaps a warning message?
-
->  	/*
->  	 * The 512 FIFO samples can be allotted in several ways, such as:
->  	 * 170 sample sets of concurrent 3-axis data
->  	 * 256 sample sets of concurrent 2-axis data (user selectable)
->  	 * 512 sample sets of single-axis data
-> +	 * 170 sets of impact event peak (x, y, z)
->  	 */
->  	if ((st->watermark * st->fifo_set_size) > ADXL372_FIFO_SIZE)
->  		st->watermark = (ADXL372_FIFO_SIZE  / st->fifo_set_size);
-> @@ -894,6 +930,7 @@ static IIO_DEVICE_ATTR(in_accel_filter_low_pass_3db_frequency_available,
->  static struct attribute *adxl372_attributes[] = {
->  	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
->  	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.dev_attr.attr,
-> +	&iio_dev_attr_peak_fifo_mode_enable.dev_attr.attr,
->  	NULL,
->  };
->  
-
+      Andrew
