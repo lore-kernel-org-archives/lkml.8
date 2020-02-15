@@ -2,85 +2,139 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494B4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A5FC7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216B72082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B01F2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 12:37:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yh5pGwWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgBOMcw (ORCPT
+        id S1726234AbgBOMhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 07:32:52 -0500
-Received: from 8bytes.org ([81.169.241.247]:54312 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgBOMcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 07:32:52 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7A23E2C2; Sat, 15 Feb 2020 13:32:50 +0100 (CET)
-Date:   Sat, 15 Feb 2020 13:32:48 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 08/62] x86/boot/compressed/64: Add IDT Infrastructure
-Message-ID: <20200215123248.GF22063@8bytes.org>
-References: <20200211135256.24617-1-joro@8bytes.org>
- <20200211135256.24617-9-joro@8bytes.org>
- <87k14p5557.fsf@linux.intel.com>
+        Sat, 15 Feb 2020 07:37:46 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35320 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgBOMhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 07:37:45 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01FCbde6090028;
+        Sat, 15 Feb 2020 06:37:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581770259;
+        bh=97kZJ1UjjgCaml1kp4DusKVaxtjMSaE55gWgFzl2plA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Yh5pGwWTogms3kZHEmliVaEjnWhjt9N4Z65dOWUUj2/S0iwRpKyvSab5/AjxvuFcj
+         pcT907kPwtnDQOOlqPY/C4L1hBLU9kH12q5K/+VmOyXUmvPTQn4+LfaHPvqf2i99GA
+         KI5inI3J3t4tz3prQx5Dks2BW7K/1tDnMOKLFLAA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01FCbdRq079201;
+        Sat, 15 Feb 2020 06:37:39 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 15
+ Feb 2020 06:37:39 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sat, 15 Feb 2020 06:37:39 -0600
+Received: from [10.250.133.210] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01FCbZvJ044715;
+        Sat, 15 Feb 2020 06:37:35 -0600
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add binding documentation for
+ TI syscon gate clock
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
+References: <20200207044425.32398-1-vigneshr@ti.com>
+ <20200207044425.32398-2-vigneshr@ti.com>
+ <158136034652.94449.4389789192412792346@swboyd.mtv.corp.google.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <f42d90ca-0078-7ae4-c9b1-a9d23dd251e3@ti.com>
+Date:   Sat, 15 Feb 2020 18:07:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k14p5557.fsf@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158136034652.94449.4389789192412792346@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:40:36AM -0800, Andi Kleen wrote:
-> Joerg Roedel <joro@8bytes.org> writes:
-> > +	addq    $8, %rsp
-> > +
-> > +	/*
-> > +	 * Make sure we return to __KERNEL_CS - the CS selector on
-> > +	 * the IRET frame might still be from an old BIOS GDT
-> > +	 */
-> > +	movq	$__KERNEL_CS, 8(%rsp)
+Hi,
+
+On 2/11/2020 12:15 AM, Stephen Boyd wrote:
+> Quoting Vignesh Raghavendra (2020-02-06 20:44:24)
+[...]
+>> +  - Vignesh Raghavendra <vigneshr@ti.com>
+>> +
+>> +description: |
+>> +
+>> +  This binding uses common clock bindings
+>> +  Documentation/devicetree/bindings/clock/clock-bindings.txt
 > 
-> This doesn't make sense. Either it's running on the correct CS
-> before the exception or not. Likely there's some other problem
-> here that you patched over with this hack.
+> Maybe have a real description instead of this line which is mostly
+> useless.
+> 
 
-It is actually a well-known situation and not some other problem. The
-boot-code loaded a new GDT and IDT, but did not reload CS with a far
-jump/ret/call. The CS value loaded is undefined and comes from the UEFI
-BIOS. When an exception is raised, this old CS value is stored in the
-IRET frame, and when IRET is executed the processor loads an undefined
-CS value, which causes a triple fault with the current IDT setup.
+Will drop this line..
 
-The hack in this patch just fixes the IRET frame up so that it will
-return to the correct CS. The reason for this hack was actually to safe
-some instructions in the boot-path, because the space is limited there
-between the defined offsets of the various entry points.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+> 
+> I think you can drop items.
+> 
+>> +      - const: ti,am654-ehrpwm-tbclk
+>> +
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  ti,tbclk-syscon:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      Phandle to the system controller node that has bits to
+>> +      control eHRPWM's TBCLK
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#clock-cells"
+>> +  - ti,tbclk-syscon
+>> +
+>> +examples:
+>> +  - |
+>> +    tbclk_ctrl: tbclk_ctrl@4140 {
+>> +        compatible = "syscon";
+>> +        reg = <0x4140 0x18>;
+>> +    };
+>> +
+>> +    ehrpwm_tbclk: clk0 {
+>> +        compatible = "ti,am654-ehrpwm-tbclk";
+>> +        #clock-cells = <1>;
+>> +        ti,tbclk-syscon = <&tbclk_ctrl>;
+>> +    };
+> 
+> I don't understand the binding. Why can't the syscon node register clks
+> and have #clock-cells?
+> 
 
-I removed this hack meanwhile and added a separate function which
-reloads CS, DS, SS and ES and which is called from the boot-path, so
-that there is no problem with the offsets.
+I did not know that would work. Will make syscon code to register clks..
+Thanks!
 
-Regards,
-
-	Joerg
+Regards
+Vignesh
