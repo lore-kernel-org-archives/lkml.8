@@ -2,118 +2,186 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19570C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD048C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17AB2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56742083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 02:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="iBnVhq6g"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="aDncgyPL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SB/gcvyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBOChW (ORCPT
+        id S1727905AbgBOCiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 21:37:22 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:41108 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbgBOChV (ORCPT
+        Fri, 14 Feb 2020 21:38:00 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:42073 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727416AbgBOCiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 21:37:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581734239; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p/ZgtT/EWlP8S07DoLu7mgPjnXJL5osG0o5D3ejyABU=;
-        b=iBnVhq6gFJF8sUysJqkAJION1gVPdQ5OzAGA5DCV0p7Z1f9lCftPfVMxqbojBwKthWRJhQ
-        NpnUx+YgKfRstx0V4B93oWoUxHRIQsd2ZSaCUlSmTcyhLnKrvSsVbDO93EMQ/dmEpoAdUI
-        daa4bk730Fs4eKlY0kp9gN7DKsi7TaA=
-Date:   Fri, 14 Feb 2020 23:37:04 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Message-Id: <1581734224.3.14@crapouillou.net>
-In-Reply-To: <20200214203738.af3y4gskukctvvum@treble>
-References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
-        <1581706938.3.5@crapouillou.net> <20200214203738.af3y4gskukctvvum@treble>
+        Fri, 14 Feb 2020 21:38:00 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 1F02C50C;
+        Fri, 14 Feb 2020 21:37:59 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Fri, 14 Feb 2020 21:37:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:from:to:cc:references:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=U
+        5XWK2loldXj1dAeBzE4apXVfe2BNOW6MilrKnw8LsQ=; b=aDncgyPLmGZwqJbhd
+        t6uTD4uHvMYc2D9ITAXmy9F5I9tXXJq5J1qAGBi0ySTQ2HdYSncg/b2SbhmYKn54
+        gJkqdMBZOqzfH6ZuLf1yYlu2ZWDllVJsNxoxhkVJswwbIRZBFKzyaCZCFIn4//C6
+        Jva42viJhVLg772tJ0+1nTijHTY3/4khycNfE7WWhfUQSdfIvpT0p4Xig7DmV8NX
+        CqfECQWgY2akADkg+d2XnAnPD0WQqpq/5h5q3JvomHf0id8dF7J0PRcajsuGcSKE
+        I8Qro2rv7R3jOqQK8G8KlkouthleEt2hnvIn4aT/2h6KgR7qoxydQx+5xOnF/CCt
+        ylR7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=U5XWK2loldXj1dAeBzE4apXVfe2BNOW6MilrKnw8L
+        sQ=; b=SB/gcvyjG+9RV/4TDGuytTqS3iL34NCiLwCmsTDfFik8YOfBLcOTqtb2k
+        xrZGLKAmGNK+KC3TeR8i9joQZ5ZeaCStFBq5gnR3FLEUa2KVlB53LqgnrDSGdrYq
+        3zwD5ngZsjZ0xg++2vROFu3rDZs0MrpZ0M0b8/HqE5RD6fKmVxYijRlbfavle+fl
+        GkoUea/tmfbcuRk8MAazagQoPnhACmc/TkmCak5/Tu9OIAGSnS1RQV1ui7HQVsjQ
+        ItrSNQk82SnHI5zplMnUCGU4osAT8s2zMINq2MrqOa3I4NG59Uyf16+nrm34NW88
+        PlxQVBfja6ZZfWJSvs+d+52olRTJA==
+X-ME-Sender: <xms:gFlHXtcagPedSothVq9mF6RBUjV8Jnmy40PBk9nCQlyXTk6GHsLcxw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedugdegkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefuhffvfhfkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:gFlHXniEh2sSx7Aa5BMfX2WMJWCCUCHvGa14Sp-nb0NOEL_706JOkw>
+    <xmx:gFlHXpRAVsemeBXYAZ9cdGmQvT9YiDZozWinZM76TW3IlJws-o8hDg>
+    <xmx:gFlHXowWwhbiWaCP6l9-kXrilHeLzDFAerggR-ajZVs_XnGmtikhdg>
+    <xmx:hllHXnXLOxcUteGTWC6dah6PPD4OU-lnMBeTbASqmCj7vLcC9n2fQQ>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7D12E3060C21;
+        Fri, 14 Feb 2020 21:37:52 -0500 (EST)
+Subject: Re: [PATCH 4/4] drm/sun4i: dsi: Remove incorrect use of runtime PM
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200211072858.30784-1-samuel@sholland.org>
+ <20200211072858.30784-4-samuel@sholland.org>
+ <20200211082627.nolf6npspw2a2rxs@gilmour.lan>
+ <dd5869d5-abbc-32e5-4f5c-cfad1fa35e0d@sholland.org>
+Message-ID: <e8492bbb-6f77-a1e3-25d7-c9869f20dec1@sholland.org>
+Date:   Fri, 14 Feb 2020 20:37:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <dd5869d5-abbc-32e5-4f5c-cfad1fa35e0d@sholland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Maxime,
 
+First, sorry for the tone in my previous message. I wrote it too hastily.
 
-Le ven., f=E9vr. 14, 2020 at 14:37, Josh Poimboeuf <jpoimboe@redhat.com>=20
-a =E9crit :
-> On Fri, Feb 14, 2020 at 04:02:18PM -0300, Paul Cercueil wrote:
->>  Hi Josh,
->>=20
->>=20
->>  Le ven., f=E9vr. 14, 2020 at 10:37, Josh Poimboeuf=20
->> <jpoimboe@redhat.com> a
->>  =E9crit :
->>  > In the second loop of ingenic_pinconf_set(), it annotates the=20
->> switch
->>  > default case as unreachable().  The annotation is technically=20
->> correct,
->>  > because that same case would have resulted in an early return in=20
->> the
->>  > previous loop.
->>  >
->>  > However, if a bug were to get introduced later, for example if an
->>  > additional case were added to the first loop without adjusting the
->>  > second loop, it would result in nasty undefined behavior: most=20
->> likely
->>  > the function's generated code would fall through to the next=20
->> function.
->>  >
->>  > Another issue is that, while objtool normally understands=20
->> unreachable()
->>  > annotations, there's one special case where it doesn't: when the
->>  > annotation occurs immediately after a 'ret' instruction.  That=20
->> happens
->>  > to be the case here because unreachable() is immediately before=20
->> the
->>  > return.
->>  >
->>  > So change the unreachable() to BUG() so that the unreachable=20
->> code, if
->>  > ever executed, would panic instead of introducing undefined=20
->> behavior.
->>  > This also makes objtool happy.
->>=20
->>  I don't like the idea that you change this driver's code just to=20
->> work around
->>  a bug in objtool, and I don't like the idea of working around a=20
->> future bug
->>  that shouldn't be introduced in the first place.
->=20
-> It's not an objtool bug.  It's a byproduct of the fact that GCC's
-> undefined behavior is inscrutable, and there's no way to determine=20
-> that
-> it actually *wants* to jump to a random function.
->=20
-> And anyway, regardless of objtool, the patch is meant to make the code
-> more robust.
->=20
-> Do you not agree that BUG (defined behavior) is more robust than
-> unreachable (undefined behavior)?
+> On 2/11/20 2:26 AM, Maxime Ripard wrote:
+>> On Tue, Feb 11, 2020 at 01:28:58AM -0600, Samuel Holland wrote:
+>>> 3) The driver relies on being suspended when sun6i_dsi_encoder_enable()
+>>>    is called. The resume callback has a comment that says:
+>>>
+>>>       Some part of it can only be done once we get a number of
+>>>       lanes, see sun6i_dsi_inst_init
+>>>
+>>>    And then part of the resume callback only runs if dsi->device is not
+>>>    NULL (that is, if sun6i_dsi_attach() has been called). However, as
+>>>    the above call graph shows, the resume callback is guaranteed to be
+>>>    called before sun6i_dsi_attach(); it is called before child devices
+>>>    get their drivers attached.
+>>
+>> Isn't it something that has been changed by your previous patch though?
+> 
+> No. Before the previous patch, sun6i_dsi_bind() requires sun6i_dsi_attach() to
+> have been called first. So either the panel driver is not loaded, and issue #2
+> happens, or the panel driver is loaded, and you get the following modification
+> to the above call graph:
+> 
+>    mipi_dsi_host_register()
+>       ...
+>          __device_attach()
+>             pm_runtime_get_sync(dev->parent) -> Causes resume
+>             bus_for_each_drv()
+>                __device_attach_driver()
+>                   [panel probe function]
+>                      mipi_dsi_attach()
+>                         sun6i_dsi_attach()
+>             pm_runtime_put(dev->parent) -> Async idle request
+>    component_add()
+>       ...
+>          sun6i_dsi_bind()
+>       ...
+>          sun6i_dsi_encoder_enable()
+>             pm_runtime_get_sync() -> Cancels idle request
+> 
+> And because `dev->power.runtime_status == RPM_ACTIVE` still, the callback is
+> *not* run. Either way you have the same problem.
 
-It's a dead code path. That would be an undefined behaviour, if it was=20
-taken, but it's not.
+While the scenario I described is possible (since an unbounded amount of other
+work could be queued to pm_wq), I did more testing without these patches, and I
+could never trigger it. No matter what combination of module/built-in drivers I
+used, there was always enough time between mipi_dsi_host_register() and
+sun6i_dsi_encoder_enable() for the device to be suspended. So in practice
+sun6i_dsi_inst_init() was always called during boot.
 
--Paul
+>>>    Therefore, part of the controller initialization will only run if the
+>>>    device is suspended between the calls to mipi_dsi_host_register() and
+>>>    component_add() (which ends up calling sun6i_dsi_encoder_enable()).
+>>>    Again, as shown by the above call graph, this is not the case. It
+>>>    appears that the controller happens to work because it is still
+>>>    initialized by the bootloader.
+>>
+>> We don't have any bootloader support for MIPI-DSI, so no, that's not it.
 
-=
+You are correct here. sun6i_dsi_inst_init() was indeed being called at boot. So
+my commit log is wrong.
 
+>>>    Because the connector is hardcoded to always be connected, the
+>>>    device's runtime PM reference is not dropped until system suspend,
+>>>    when sun4i_drv_drm_sys_suspend() ends up calling
+>>>    sun6i_dsi_encoder_disable(). However, that is done as a system sleep
+>>>    PM hook, and at that point the system PM core has already taken
+>>>    another runtime PM reference, so sun6i_dsi_runtime_suspend() is
+>>>    not called. Likewise, by the time the PM core releases its reference,
+>>>    sun4i_drv_drm_sys_resume() has already re-enabled the encoder.
+>>>
+>>>    So after system suspend and resume, we have *still never called*
+>>>    sun6i_dsi_inst_init(), and now that the rest of the display pipeline
+>>>    has been reset, the DSI host is unable to communicate with the panel,
+>>>    causing VBLANK timeouts.
+>>
+>> Either way, I guess just moving the pm_runtime_enable call to
+>> sun6i_dsi_attach will fix this, right? We don't really need to have
+>> the DSI controller powered up before that time anyway.
+> 
+> No. It would solve issue #2 (only if the previous patch is
+> applied), but not issue #3.
+> 
+> Regardless of when runtime PM is enabled, sun6i_dsi_runtime_suspend() will not
+> be called until the device's usage count drops to 0. And as long as a panel is
+> bound, the controller's usage count will be >0, *even during system suspend*
+> while the encoder is turned off.
+> 
+> Before the previous patch, the usage count would never drop to 0 under *any*
+> circumstance.
+
+FWIW,
+Samuel
