@@ -2,191 +2,61 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5388C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 10:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB2CC4741C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 10:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB962083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 10:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BnhPxxwg"
+	by mail.kernel.org (Postfix) with ESMTP id 0ED052083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 10:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgBOK2x (ORCPT
+        id S1726190AbgBOKkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 05:28:53 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35480 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbgBOK2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 05:28:53 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48KRLB1c3fz9tyyZ;
-        Sat, 15 Feb 2020 11:28:50 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=BnhPxxwg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ARysyOedZXtY; Sat, 15 Feb 2020 11:28:50 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48KRLB05Yjz9tyyJ;
-        Sat, 15 Feb 2020 11:28:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581762530; bh=NxZ/EEN3UIzFbam5JKvmthJ2wdWdBJ+t727AFltk1wY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BnhPxxwg/BWxyZ79iWEyl6Z2P7nxaIVk52OsjJO17tBDMh0vWNXK3Xsfim3rEZ1Jh
-         AG88JBCVo509kzOYJP70ymFk1NJKdxe8DcDNYuQCdUXMDT9L5Oug1hb8unvVxs9sSc
-         /oI5enUOInNNW317ByNdARatUQNxt6btfE30h1SY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 176B38B781;
-        Sat, 15 Feb 2020 11:28:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id wRXuiH5gmATb; Sat, 15 Feb 2020 11:28:50 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 18D698B755;
-        Sat, 15 Feb 2020 11:28:50 +0100 (CET)
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
- <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-Date:   Sat, 15 Feb 2020 11:28:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Sat, 15 Feb 2020 05:40:10 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:58915 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725914AbgBOKkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 05:40:10 -0500
+Received: from [192.168.0.5] (ip5f5af787.dynamic.kabel-deutschland.de [95.90.247.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E668520643C59;
+        Sat, 15 Feb 2020 11:40:06 +0100 (CET)
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>
+Cc:     linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Non-working Web site URL in MAINTAINERS
+Message-ID: <b5cfc13d-8d26-65e3-0377-8d53979c0096@molgen.mpg.de>
+Date:   Sat, 15 Feb 2020 11:40:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dear Linux folks,
 
-Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
-> Hi,
-> 
-> On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> 
->> When a program check exception happens while MMU translation is
->> disabled, following Oops happens in kprobe_handler() in the following
->> test:
->>
->> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
-> 
-> Thanks for the report and patch. I'm not so sure about powerpc implementation
-> but at where the MMU translation is disabled, can the handler work correctly?
-> (And where did you put the probe on?)
-> 
-> Your fix may fix this Oops, but if the handler needs special care, it is an
-> option to blacklist such place (if possible).
 
-I guess that's another story. Here we are not talking about a place 
-where kprobe has been illegitimately activated, but a place where there 
-is a valid trap, which generated a valid 'program check exception'. And 
-kprobe was off at that time.
+http://intellinuxwireless.org redirects to [1], and that page is not 
+found (404 error).
 
-As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON, 
-a debugger breakpoint, a perf breakpoint, etc...) calls 
-kprobe_handler(), kprobe_handler() must be prepared to handle the case 
-where the MMU translation is disabled, even if probes are not supposed 
-to be set for functions running with MMU translation disabled.
+If you fix this, maybe you can also set up HTTPS.
 
-Christophe
 
-> 
-> Anyway, Naveen, can you review it?
-> 
-> Thank you,
-> 
->>
->> [   33.098554] BUG: Unable to handle kernel data access on read at 0x0000e268
->> [   33.105091] Faulting instruction address: 0xc000ec34
->> [   33.110010] Oops: Kernel access of bad area, sig: 11 [#1]
->> [   33.115348] BE PAGE_SIZE=16K PREEMPT CMPC885
->> [   33.119540] Modules linked in:
->> [   33.122591] CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
->> [   33.131005] NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
->> [   33.136002] REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
->> [   33.144324] MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
->> [   33.150699] DAR: 0000e268 DSISR: c0000000
->> [   33.150699] GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
->> [   33.150699] GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
->> [   33.150699] GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
->> [   33.150699] GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
->> [   33.188015] NIP [c000ec34] kprobe_handler+0x128/0x290
->> [   33.192989] LR [c000ecd8] kprobe_handler+0x1cc/0x290
->> [   33.197854] Call Trace:
->> [   33.200340] [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
->> [   33.206590] [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
->> [   33.212392] --- interrupt: 700 at 0xe268
->> [   33.270401] Instruction dump:
->> [   33.273335] 913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
->> [   33.280992] 38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
->> [   33.288841] ---[ end trace 5b9152d4cdadd06d ]---
->>
->> Check MSR and convert regs->nip to virtual address if the trap
->> happened with MSR_IR cleared.
->>
->> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
->> Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
->> Cc: stable@kernel.vger.org
->> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>
->> ---
->> The bug might have existed even before that commit from Naveen.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/kprobes.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
->> index 2d27ec4feee4..f8b848aa65bd 100644
->> --- a/arch/powerpc/kernel/kprobes.c
->> +++ b/arch/powerpc/kernel/kprobes.c
->> @@ -23,6 +23,7 @@
->>   #include <asm/cacheflush.h>
->>   #include <asm/sstep.h>
->>   #include <asm/sections.h>
->> +#include <asm/io.h>
->>   #include <linux/uaccess.h>
->>   
->>   DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
->> @@ -264,6 +265,9 @@ int kprobe_handler(struct pt_regs *regs)
->>   	if (user_mode(regs))
->>   		return 0;
->>   
->> +	if (!(regs->msr & MSR_IR))
->> +		addr = phys_to_virt(regs->nip);
->> +
->>   	/*
->>   	 * We don't want to be preempted for the entire
->>   	 * duration of kprobe processing
->> -- 
->> 2.25.0
->>
-> 
-> 
+Kind regards,
+
+Paul
+
+
+[1]: http://wireless.kernel.org/en/users/Drivers/iwlwifi
