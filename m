@@ -2,159 +2,124 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5422C7114E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D41C7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9492084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1A4217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUqybxD3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fu3hFeU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgBOXab (ORCPT
+        id S1726652AbgBOXsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 18:30:31 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33414 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgBOXaa (ORCPT
+        Sat, 15 Feb 2020 18:48:45 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35044 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgBOXso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 18:30:30 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n7so6916931pfn.0;
-        Sat, 15 Feb 2020 15:30:30 -0800 (PST)
+        Sat, 15 Feb 2020 18:48:44 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so5269417plt.2;
+        Sat, 15 Feb 2020 15:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ZBXxDyA8XNQFw91nYiC9lsyYtTrUdOUOLfCOiOqTfp4=;
-        b=hUqybxD3QEuGBjSZFahOu65wT1lOZXpP45FJ16K98GRvDXxqu7kjpN/JT2F4IZB48P
-         G3VDVGvR59A/ynAxJpDfbXZ4x+EkJu9/TC1pYqGyT+XRXYbXR3Z6Q7XH9PIHQ7mt3XF8
-         v6TgCzlzo1ypRaiIjOWtBE6hPEYSxNp5ar6UM2FwngrB9i791lzQWqpdsrZDFX8XaqwQ
-         Y+HRHedLYZJiGhgf3GGh542xja+0bvkNjeA0D67o+JGw3Ypr3EJCxQlU2BtDOP1ZSqQP
-         cphBK0Z53WDJRNZ+UbLpKVD77HMIG3O5Rt4dGfH3VZviXh52leewNuCPMHpTRbuwVqK6
-         0R3Q==
+        bh=KSNr+yHW4ycn1sxEse/mYo6PN+i2/AGLioB236lCzWo=;
+        b=Fu3hFeU3H9cIrAGixOQOIa3DrO9tMNQUqJ5DnbRAIIp/FVsgL187aSBB0LbLxc6FrD
+         ldjuRzW4KHHR5W+tuq8vR6ry+PiMZqEIqS6dBQILVlP63X130G+XKZnFohX9ghPCeHIC
+         ceSeCP7m2ceZAlBD6jzsmyesGZOWHysCdqb8Zy4/nVyD0MlkfrpWqXiAYGBthL0oAyHY
+         ueFaeO5RSfIXcqIs347aSXUlo/zyfLyJn3RbZTGcDCKChcbgGL16/5i+WZ1PdY11Rg+u
+         Su8RGYqnUJWiSCJwan2NJ/TdcCaSLltfk/KryFMgebOODc3uK9FV954qWiHkFZD5u+DO
+         kneA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZBXxDyA8XNQFw91nYiC9lsyYtTrUdOUOLfCOiOqTfp4=;
-        b=sRwmo+1o7CEUP4PSrZu658tvjtKYdvS+9sBZvdXFy/fPwEbcZfcKmjLGJBE/7hww78
-         /xHCo89+PE98w+voyR8ZfT8OecyqgNOzY4xDiwgrJU0D7I7ucRfMaTwBGpyXKQkSxf7+
-         oEF1oBtRi/2lJyIwmEDWYDbwuRNJGyy9wMhub8ujSrufYmpDpaoKFMjm+ouGo4Ot8XXs
-         WJaY7TaZ9NumwQXv2HZiRjmG8oTqN/bSaPaNf2J6rc+Pl27vRAxiCwAlaaRPS8gsXfPR
-         wX5kJ8E/GU1KKJaBArBlXde6qAnUyjokv1XkHOKMxLxUpN9yFAdKCsPX4TYCmjWi7+1w
-         mYGg==
-X-Gm-Message-State: APjAAAWhUlXvww4ViL0g644wdjd9u/pP2EUyB6gk8mqPWeKJL05EKmf8
-        T/pMUgSvl1EJpznZs26gNJA=
-X-Google-Smtp-Source: APXvYqz9/uLmGzxPysVxAfK8UipyDhC1Eajm9z4pTgbVQdyOTSJ77IBh5NDC7hBbEcMSiAQHTHXXnw==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr10180113pfc.113.1581809429633;
-        Sat, 15 Feb 2020 15:30:29 -0800 (PST)
+        bh=KSNr+yHW4ycn1sxEse/mYo6PN+i2/AGLioB236lCzWo=;
+        b=m2EWaXrtpz5jBOlHUYsdW2oWg3/t3soItu9x9tA1v2FzbKQ0NplVzlHMj66dVmkG/y
+         uXGx698QYQ7Yj8h16PlDJx0qczMwN5znv4HyRZFqoB8p3mlqMLJ+q++XRZeY2+EXTd4A
+         B0eZL2jRcQ8xE+vWMMH/2pdGtCdKXwYLxcgPsMEhguH4lqiKx1duezWdO5Yjo8BtO2bn
+         Uz0aQ85aoSQKyyHJh8SgGflSinHGMVOZLOvQJhvvq6eaMiul4RX65TxOp3UxsvVwdGdC
+         a3AXsrMHWx2iqt6MWDQgs/WoYAWAkwXMqjbxxV9jnn5Hb+pKaibyC7X49MyaGCmsYS0x
+         IW7Q==
+X-Gm-Message-State: APjAAAW4E3ncM4h0POgnLEkU53QWnDFZ3akvOVXlFVunaBH8Ms0wwMO4
+        h9fdfLHnWldNbu7ZL3ptoBY=
+X-Google-Smtp-Source: APXvYqxlOJLVG7eC47baAse1iAF1gIb+QDc1RCaMWHEuJMoZzV9i2WIIriIlCt4cip6JWtyyq1qZdQ==
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr9586794pls.92.1581810523942;
+        Sat, 15 Feb 2020 15:48:43 -0800 (PST)
 Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id cx18sm11233212pjb.26.2020.02.15.15.30.28
+        by smtp.gmail.com with ESMTPSA id q21sm11493734pff.105.2020.02.15.15.48.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 15:30:29 -0800 (PST)
-Date:   Sat, 15 Feb 2020 15:30:27 -0800
+        Sat, 15 Feb 2020 15:48:43 -0800 (PST)
+Date:   Sat, 15 Feb 2020 15:48:41 -0800
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: cyapa - replace zero-length array with
- flexible-array member
-Message-ID: <20200215233027.GH183709@dtor-ws>
-References: <20200214172132.GA28389@embeddedor>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Luca Weiss <luca@z3ntu.xyz>, linux-input@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Input: ili210x - fix return value of is_visible function
+Message-ID: <20200215234841.GL183709@dtor-ws>
+References: <20200209145628.649409-1-luca@z3ntu.xyz>
+ <CAGngYiUCC10epFwLO7wXMT-ko2g-zXRDecMwaK5=Y4nCCHHVEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214172132.GA28389@embeddedor>
+In-Reply-To: <CAGngYiUCC10epFwLO7wXMT-ko2g-zXRDecMwaK5=Y4nCCHHVEw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:21:32AM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Mon, Feb 10, 2020 at 10:07:34AM -0500, Sven Van Asbroeck wrote:
+> Luca,
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> Good catch. That's what happens when I post a patch I can't test :)
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
 
 Applied, thank you.
 
-> ---
->  drivers/input/mouse/cyapa_gen5.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
-> index 14239fbd72cf..7f012bfa2658 100644
-> --- a/drivers/input/mouse/cyapa_gen5.c
-> +++ b/drivers/input/mouse/cyapa_gen5.c
-> @@ -250,7 +250,7 @@ struct cyapa_tsg_bin_image_data_record {
->  
->  struct cyapa_tsg_bin_image {
->  	struct cyapa_tsg_bin_image_head image_head;
-> -	struct cyapa_tsg_bin_image_data_record records[0];
-> +	struct cyapa_tsg_bin_image_data_record records[];
->  } __packed;
->  
->  struct pip_bl_packet_start {
-> @@ -271,7 +271,7 @@ struct pip_bl_cmd_head {
->  	u8 report_id;  /* Bootloader output report id, must be 40h */
->  	u8 rsvd;  /* Reserved, must be 0 */
->  	struct pip_bl_packet_start packet_start;
-> -	u8 data[0];  /* Command data variable based on commands */
-> +	u8 data[];  /* Command data variable based on commands */
->  } __packed;
->  
->  /* Initiate bootload command data structure. */
-> @@ -300,7 +300,7 @@ struct tsg_bl_metadata_row_params {
->  struct tsg_bl_flash_row_head {
->  	u8 flash_array_id;
->  	__le16 flash_row_id;
-> -	u8 flash_data[0];
-> +	u8 flash_data[];
->  } __packed;
->  
->  struct pip_app_cmd_head {
-> @@ -314,7 +314,7 @@ struct pip_app_cmd_head {
->  	 * Bit 6-0: command code.
->  	 */
->  	u8 cmd_code;
-> -	u8 parameter_data[0];  /* Parameter data variable based on cmd_code */
-> +	u8 parameter_data[];  /* Parameter data variable based on cmd_code */
->  } __packed;
->  
->  /* Application get/set parameter command data structure */
-> -- 
-> 2.25.0
-> 
+> On Sun, Feb 9, 2020 at 9:58 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+> >
+> > The is_visible function expects the permissions associated with an
+> > attribute of the sysfs group or 0 if an attribute is not visible.
+> >
+> > Change the code to return the attribute permissions when the attribute
+> > should be visible which resolves the warning:
+> >
+> >   Attribute calibrate: Invalid permissions 01
+> >
+> > Fixes: cc12ba1872c6 ("Input: ili210x - optionally show calibrate sysfs attribute")
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >  drivers/input/touchscreen/ili210x.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+> > index 37526baff8a6..199cf3daec10 100644
+> > --- a/drivers/input/touchscreen/ili210x.c
+> > +++ b/drivers/input/touchscreen/ili210x.c
+> > @@ -351,7 +351,7 @@ static umode_t ili210x_calibrate_visible(struct kobject *kobj,
+> >         struct i2c_client *client = to_i2c_client(dev);
+> >         struct ili210x *priv = i2c_get_clientdata(client);
+> >
+> > -       return priv->chip->has_calibrate_reg;
+> > +       return priv->chip->has_calibrate_reg ? attr->mode : 0;
+> >  }
+> >
+> >  static const struct attribute_group ili210x_attr_group = {
+> > --
+> > 2.25.0
+> >
 
 -- 
 Dmitry
