@@ -2,93 +2,126 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF3C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC752206CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4D52084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 04:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYwZi40D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSlZqTwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgBOEHx (ORCPT
+        id S1727804AbgBOEPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 23:07:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42852 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbgBOEHx (ORCPT
+        Fri, 14 Feb 2020 23:15:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55295 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727705AbgBOEPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 23:07:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=jcBbZKTosyTPuLYpojPXU9rDaBi/eq4trzl7xWpOvWE=; b=uYwZi40DwgG4qj/vKHSSQGo6AG
-        zQAWSw9Vom9ffDSDwRQF53rFgN/G3LVKMqwXNDDPB5lfZRkZ/9HwEq/ZM1AvFFD517XDTxFeG9/9q
-        59TX92QzTjqmeCj8xAjSqaQCWJb4xecy2BJrde/xC2+0yj01NEQrD0uzJZ8uDIwU2AjV2OmvRYT0g
-        Bq9a5IwDP2rLxGKOdI6BY3d3QJ+vqPOqO4QGO/wr9jhgiQ5eDjUSr1iCeAnqsOqFqvsBnrbMnhkVv
-        BgfekVsQaru+IHPyKExJXm0WZTJm/0B31LiBKz3zSSQ07Pv3hNTfDeNrFzIX0WVzlNNC4sNyLvMNR
-        y8tiKtyQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j2ok8-0007Uk-TB; Sat, 15 Feb 2020 04:07:48 +0000
-Subject: Re: [PATCH v4 10/11] mm/damon: Add kunit tests
-To:     sjpark@amazon.com, akpm@linux-foundation.org
-Cc:     SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        brendan.d.gregg@gmail.com, brendanhiggins@google.com, cai@lca.pw,
-        colin.king@canonical.com, corbet@lwn.net, dwmw@amazon.com,
-        jolsa@redhat.com, kirill@shutemov.name, mark.rutland@arm.com,
-        mgorman@suse.de, minchan@kernel.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        sj38.park@gmail.com, vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200210144812.26845-1-sjpark@amazon.com>
- <20200210145350.28289-1-sjpark@amazon.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4a541951-fd36-2a19-75a0-ccfcf60e6f14@infradead.org>
-Date:   Fri, 14 Feb 2020 20:07:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 14 Feb 2020 23:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581740149;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4v4KhDOUgaH2uZWdr53oizMCM+xuhnQJDym0U6qJWwY=;
+        b=NSlZqTwG3Jx/v4ruDqU6h2zN0B/dfuE6keye3v5KTeuPL0xQ9qzzFct1TiBLE09JKKpEK5
+        M9DwSb1+3CQ7bWyvuXg1Ol5O6MhC0/61jxtufF+Lsw6fgi4AfjHjVwAhUXSXfwncvwd9Cr
+        PQRRLk7F1VHKoSNrc1Z0xKi1HkH/Iik=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-Yt1oiaODPbya0oZ7OY3DAQ-1; Fri, 14 Feb 2020 23:15:46 -0500
+X-MC-Unique: Yt1oiaODPbya0oZ7OY3DAQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B64A86124F;
+        Sat, 15 Feb 2020 04:15:43 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-202.pek2.redhat.com [10.72.12.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4097E5C1D8;
+        Sat, 15 Feb 2020 04:15:36 +0000 (UTC)
+Subject: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-3-john.ogness@linutronix.de>
+ <ccbe1383-a4a4-41f8-3330-972f03c97429@redhat.com>
+ <87zhdle0s5.fsf@linutronix.de>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <fade55ad-cefd-898b-6062-6fe45f17b94a@redhat.com>
+Date:   Sat, 15 Feb 2020 12:15:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200210145350.28289-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <87zhdle0s5.fsf@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 6:53 AM, sjpark@amazon.com wrote:
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 387d469f40ec..b279ab9c78d0 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -751,4 +751,15 @@ config DAMON
->  	  be 1) accurate enough to be useful for performance-centric domains,
->  	  and 2) sufficiently light-weight so that it can be applied online.
->  
-> +config DAMON_KUNIT_TEST
-> +	bool "Test for damon"
+=E5=9C=A8 2020=E5=B9=B402=E6=9C=8814=E6=97=A5 21:50, John Ogness =E5=86=99=
+=E9=81=93:
+> Hi Lianbo,
+>=20
+> On 2020-02-14, lijiang <lijiang@redhat.com> wrote:
+>>> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+>>> index 1ef6f75d92f1..d0d24ee1d1f4 100644
+>>> --- a/kernel/printk/printk.c
+>>> +++ b/kernel/printk/printk.c
+>>> @@ -1062,21 +928,16 @@ void log_buf_vmcoreinfo_setup(void)
+>>>  {
+>>>  	VMCOREINFO_SYMBOL(log_buf);
+>>>  	VMCOREINFO_SYMBOL(log_buf_len);
+>>
+>> I notice that the "prb"(printk tb static) symbol is not exported into
+>> vmcoreinfo as follows:
+>>
+>> +	VMCOREINFO_SYMBOL(prb);
+>>
+>> Should the "prb"(printk tb static) symbol be exported into vmcoreinfo?
+>> Otherwise, do you happen to know how to walk through the log_buf and
+>> get all kernel logs from vmcore?
+>=20
+> You are correct. This will need to be exported as well so that the
+> descriptors can be accessed. (log_buf is only the pure human-readable
 
-s/bool/tristate/ ?
+Really agree, and I guess that there may be more structures and their off=
+sets
+to be exported, for example: struct prb_desc_ring, struct prb_data_ring, =
+and
+struct prb_desc, etc.
 
-> +	depends on DAMON && KUNIT
-> +	help
-> +	  This builds the DAMON Kunit test suite.
-> +
-> +	  For more information on KUnit and unit tests in general, please refer
-> +	  to the KUnit documentation.
-> +
-> +	  If unsure, say N.
-> +
->  endmenu
+This makes sure that tools(such as makedumpfile and crash) can appropriat=
+ely
+access them.=20
+
+> text.) I am currently hacking the crash tool to see exactly what needs
+> to be made available in order to access all the data of the ringbuffer.
+>=20
+It makes sense and avoids exporting unnecessary symbols and offsets.
+
+Thanks.
+Lianbo
 
 
--- 
-~Randy
+> John Ogness
+>=20
 
