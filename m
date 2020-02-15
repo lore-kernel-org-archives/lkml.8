@@ -2,145 +2,98 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85F1C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E03C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914EE207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4BC2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727395;
-	bh=0UAAK02GitBI6FTXefoYEPz9/ZW54ed8x6IUi26cUHI=;
+	s=default; t=1581727408;
+	bh=n6C+XIf/lyMg45xZwpa1Z0/jdjqPoKgJmPJKvllOVUA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yed2WXu5wOu3lOC+GOmZ6UkbkdeLIs/JscE9EZjzV3IBKMZaLoQh/s1cuJTbWmBWy
-	 +GN3C7dhsgFAj4wjQSkdcFDsJcrftyYX61nB1Cs0MWX92EgaYklkMZ0WcKkJmnCCSi
-	 IuzdEtGMLj6HAkw6iKbQ1wK1a9Ap6n3VnmJN5w4M=
+	b=UrtKQ6hlIX8M2tGMR3pogVoSQVETef4rbZ9rc8sJN+KOx7Ys1pg2Rtu2NrXsXVqeM
+	 kl9JrzlitU2Ky0Wgwlq9vb78fxmk8jqQmjHdMw2IDzALCScscsW95kIR2+TFuB0Hbv
+	 TbIcPQNR1HzYjcdN6lXle0K6AfiXcw6MyAIF9K68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgBOAnP (ORCPT
+        id S1727924AbgBOAn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:43:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49606 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgBOAnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:43:14 -0500
+        id S1727567AbgBOAn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:43:27 -0500
 Received: from localhost (unknown [38.98.37.142])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02278206CC;
-        Sat, 15 Feb 2020 00:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBE2206CC;
+        Sat, 15 Feb 2020 00:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727393;
-        bh=0UAAK02GitBI6FTXefoYEPz9/ZW54ed8x6IUi26cUHI=;
+        s=default; t=1581727406;
+        bh=n6C+XIf/lyMg45xZwpa1Z0/jdjqPoKgJmPJKvllOVUA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gv0P4a/rT4LBRqfYd4yV+05ufIKtFjrjAINPkiGxdf1xzuM0TsfXuZmUI6XabSC29
-         BKZqBILAA/HmRQe/QKN4jsdAv5xbPE+bNIa5guSOtRZQylAhdlBWeT44QctUWJcRwV
-         3pi9Lf8sUqTIuyRDXpyyBBlSM/pASyyGzRQrEgXo=
-Date:   Fri, 14 Feb 2020 19:03:55 -0500
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH AUTOSEL 4.4 080/100] char: hpet: Use flexible-array member
-Message-ID: <20200215000355.GA5524@kroah.com>
-References: <20200214162425.21071-1-sashal@kernel.org>
- <20200214162425.21071-80-sashal@kernel.org>
- <20200214174314.GA250980@gmail.com>
- <20200214233650.GF1734@sasha-vm>
+        b=bbec4k4QJ+/R5/1/51+pxAbRNaT7gXuJc2Z6YvAWwm9f/+Z8khItpYP1e09K0+7WG
+         tOQ7oLR+uWzZY3zIqswcVkQU29KAvHTlAKk6ywep8desuYFROSRafpujca5Y4IfnPb
+         5TNF5zZIMkU9txujwR7X+f2yRlc9+gdEBVRQzPYQ=
+Date:   Fri, 14 Feb 2020 19:05:00 -0500
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 0/2] soundwire: add master_device/driver
+ support
+Message-ID: <20200215000500.GB5524@kroah.com>
+References: <20200201042011.5781-1-pierre-louis.bossart@linux.intel.com>
+ <20200214164919.GB4016987@kroah.com>
+ <0ec41a5b-6132-6940-f1b3-bac1724b70a4@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214233650.GF1734@sasha-vm>
+In-Reply-To: <0ec41a5b-6132-6940-f1b3-bac1724b70a4@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 06:36:50PM -0500, Sasha Levin wrote:
-> On Fri, Feb 14, 2020 at 09:43:14AM -0800, Eric Biggers wrote:
-> > On Fri, Feb 14, 2020 at 11:24:04AM -0500, Sasha Levin wrote:
-> > > From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> > > 
-> > > [ Upstream commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f ]
-> > > 
-> > > Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-> > > presence of a "variable length array":
-> > > 
-> > > struct something {
-> > >     int length;
-> > >     u8 data[1];
-> > > };
-> > > 
-> > > struct something *instance;
-> > > 
-> > > instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> > > instance->length = size;
-> > > memcpy(instance->data, source, size);
-> > > 
-> > > There is also 0-byte arrays. Both cases pose confusion for things like
-> > > sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-> > > to declare variable-length types such as the one above is a flexible array
-> > > member[2] which need to be the last member of a structure and empty-sized:
-> > > 
-> > > struct something {
-> > >         int stuff;
-> > >         u8 data[];
-> > > };
-> > > 
-> > > Also, by making use of the mechanism above, we will get a compiler warning
-> > > in case the flexible array does not occur last in the structure, which
-> > > will help us prevent some kind of undefined behavior bugs from being
-> > > unadvertenly introduced[3] to the codebase from now on.
-> > > 
-> > > [1] https://github.com/KSPP/linux/issues/21
-> > > [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> > > 
-> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > > Link: https://lore.kernel.org/r/20200120235326.GA29231@embeddedor.com
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >  drivers/char/hpet.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-> > > index 5b38d7a8202a1..38c2ae93ce492 100644
-> > > --- a/drivers/char/hpet.c
-> > > +++ b/drivers/char/hpet.c
-> > > @@ -112,7 +112,7 @@ struct hpets {
-> > >  	unsigned long hp_delta;
-> > >  	unsigned int hp_ntimer;
-> > >  	unsigned int hp_which;
-> > > -	struct hpet_dev hp_dev[1];
-> > > +	struct hpet_dev hp_dev[];
-> > >  };
-> > > 
-> > 
-> > Umm, why are you backporting this without the commit that fixes it?  Does your
+On Fri, Feb 14, 2020 at 05:34:40PM -0600, Pierre-Louis Bossart wrote:
 > 
-> mhm, for some reason it failed to apply to 4.19 and older. I can look at
-> that.
+> My preference in terms of integration in drivers/soundwire would be
 > 
-> > AUTOSEL process really still not pay attention to Fixes tags?  They are there
-> > for a reason.
+> 1. Intel DAI cleanup (only one kfree missing, will resubmit v3 today)
 > 
-> Yes, it looks at the Fixes tag, thank you for the explanation.
+> 2. [PATCH 00/10] soundwire: bus: fix race conditions, add suspend-resume
+> this series solves a lot of issues and should go first.
 > 
-> > And for that matter, why are you backporting it all, given that this is a
-> > cleanup and not a fix?
+> 3. ASoC/SOF integration (still with platform devices)
+> I narrowed this down to 6 patches, that would help me submit the rest of the
+> ASoC/SOF patches in Mark Brown's tree. That would be Intel specific. This
+> step would be the first where everything SoundWire-related can be enabled in
+> a build, and while we've caught a lot of cross-compilation issues it's
+> likely some bots will find corner cases to keep us busy.
 > 
-> If I recall correctly CONFIG_FORTIFY_SOURCE=y results in user visible
-> warnings, which we try to fix in the stable kernel.
+> 4. master_device/driver transition: these updated patches removing platform
+> devices + sysfs support + Qualcomm support (the last point would depend on
+> the workload/support of Qualcomm/Linaro folks, I don't want to commit on
+> their behalf).
+> 
+> 5. New SoundWire functionality for Intel platforms (clock-stop/restart and
+> synchronized links). The code would be only located in drivers/soundwire and
+> be easier to handle. For the synchronized links we still have a bit of
+> validation work to do so it should really come last.
+> 
+> Would this work for everyone?
 
-I don't think that's the case here, that build option does not turn on
-this build warning from what I recall based on the original thread that
-started this type of conversion.  I know I sure do not see those
-warnings :)
+Sounds reasonable to me, but patches would show it best to see if there
+are any issues :)
 
 thanks,
 
