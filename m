@@ -2,121 +2,112 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B650C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655EFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5052083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEE02086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 06:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7GOzfkx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDH1bF64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgBOGxJ (ORCPT
+        id S1725948AbgBOG7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 01:53:09 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43025 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgBOGxJ (ORCPT
+        Sat, 15 Feb 2020 01:59:37 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39733 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgBOG7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 01:53:09 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r11so13410805wrq.10;
-        Fri, 14 Feb 2020 22:53:07 -0800 (PST)
+        Sat, 15 Feb 2020 01:59:37 -0500
+Received: by mail-pj1-f67.google.com with SMTP id e9so4936966pjr.4;
+        Fri, 14 Feb 2020 22:59:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=uEzSeZ4ou8cFL6O+xmrt70X+FzXbL0vSbBjS4bDp0bU=;
-        b=s7GOzfkxN9UfJZjPzOshkQtyUO9FqgrcRgK/zvdAiazYZxKB7lVldi5tSfvV26Jr+6
-         7YdtGkQJYHjGFTNL6i+xwBIWXCOVGNowYUOgnig97+DUMhhLx3rpY6kXDzwHxEP3ZS0m
-         mqy43vByg1HfgNOCAN1+0djgx31f4nlgPXbja+Qb0m/0G8d0K1uYlDGvQnfXUVIuCCjX
-         z6R9NnsHulh21tDy7m3smSqAh96nSmgwj/SNTa143OJ5kHGN/uU3CKamttEYVaxtg1pM
-         zB6hUQvo4rrHSDnIcOKPz7ajc0b5/DO0pnGetd81HaQou3glcvOlAvv+qYdcF1gBZgQp
-         g0/g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLLoa1HE206JYtCQvu5wW2ZAWORsgXQDP7itOiiFk7I=;
+        b=SDH1bF64VdhdHfMBJeZZF2KeRu67V3un9Y24oomrsY7BCJ66wjhBTvayBI5io5knT1
+         dIU+e3CrfiMkkjEFag0kSyghEEuV0Mtg9nfskdBEIuO4tdY3Qc5MiLlwkwI/EInzRpXK
+         OqzldDxuTvQ7eqt092ZzD87fE5fQKr7usgd+E75erNDpZ8a8YCbgX5a7nwmy2ooLyc95
+         GpssJGEWFuFqAwLIiohG1pDuovCwIGth3j2eBNpo+zKxzPbRt0q0+kK1oZR/sVeEYLkH
+         b9Nsge6yiyAGrzZMNHrzL1d8nYib8SFl+EBPHgDFR7GWWa60J4PVidKXeve1jvPoBLHx
+         q7Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=uEzSeZ4ou8cFL6O+xmrt70X+FzXbL0vSbBjS4bDp0bU=;
-        b=Fh/GzG7o8EJNgYPmoke7U27xBfr5UQp6Qa1CI8R416VvNjD4SgR1Tpy+UM4n0+/Q6P
-         PmAQy5qvr4HtKLRA1AY8C6rm9LRh6E+/M6V9jHvIeBbDp5cVRTK9bY7h6SchTfgSiNFl
-         kJPjkbUGIYtGHWd+O1BRenn8kKWA4PVUSr3/fbsg+9EKiSTtbgRv6AKFXREwzWG/oad8
-         3JPPDQOuIryggHGDIehYk4L8d6Gwx0byJTUMmWVVhxasTablMtS2ESktSZzyfqp9HflF
-         Sj2v3w8ObjbePn1vA7oNQGHERk3G42Tk9YSUsHWc/+5GY3+wniKfZCtxNKLBKmOzdSUK
-         a5+w==
-X-Gm-Message-State: APjAAAUCl9P2olAAhmvdMkA3c6SvAQu3HCUbBExzcB5i0R+mUTnJ3Tqh
-        ra++YnYAYrnGvt/KnRaqy0I=
-X-Google-Smtp-Source: APXvYqxUjQtmJngMyKavkHRSckvCMrerITBbx52c79ipxPRiBRcqrI4doHxH9LL/hfu+IJyCVKSYqA==
-X-Received: by 2002:a5d:68c5:: with SMTP id p5mr8355656wrw.193.1581749586459;
-        Fri, 14 Feb 2020 22:53:06 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:38ff:a358:bd66:4274])
-        by smtp.gmail.com with ESMTPSA id c9sm10398370wmc.47.2020.02.14.22.53.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bLLoa1HE206JYtCQvu5wW2ZAWORsgXQDP7itOiiFk7I=;
+        b=kAKSVFr3a0aPK+9bw+iDLgYCHW3dU74fm6aPhoUcrlWYsyvGb7AvxyoR5aL5PS8qP8
+         +tyQiNvTRarOd+3M8b7c8h3A2xo1oE99LGaHciKOseWx8y4O5I17rPkYF7MBdvfbrHkP
+         4UR7lciKGzOXn9+7x/YaFFugtLfRlimGhuiHnHzPwudAUcwiheGnFj1VvS3kXkkBneTQ
+         OFrBJXkrBNtyNmFRTdxmJlT7fjTCSTy9ttqVsu/ZK0D5pZV/SZRXHcWYLLvdK2cJgdW4
+         k2zB50kq5KGRYgYg08UQgy64XiwnpiwhLjyJi5ak0jonPZphmbcbDYmmEREiLgf2X9r0
+         xpFQ==
+X-Gm-Message-State: APjAAAWyAWwQ19T8pfTRSDEUa1dvG5Exw2pvW54Rf+EC6xfxtXs5J8zu
+        SNP9Ze02xeDQuzvO4DLyGwY=
+X-Google-Smtp-Source: APXvYqyOQOi37sMJScGrWpAIv/XpidYqqZcMorxgbOrmVjYGMGTvBNoQrHg6tbqiIiYO/ZeaH4iSjg==
+X-Received: by 2002:a17:90a:3a86:: with SMTP id b6mr8063542pjc.96.1581749976239;
+        Fri, 14 Feb 2020 22:59:36 -0800 (PST)
+Received: from localhost.localdomain ([240e:379:95a:e780::fa3])
+        by smtp.gmail.com with ESMTPSA id c15sm8918140pfo.137.2020.02.14.22.59.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 22:53:05 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     sjpark@amazon.com, akpm@linux-foundation.org,
-        SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        brendan.d.gregg@gmail.com, brendanhiggins@google.com, cai@lca.pw,
-        colin.king@canonical.com, corbet@lwn.net, dwmw@amazon.com,
-        jolsa@redhat.com, kirill@shutemov.name, mark.rutland@arm.com,
-        mgorman@suse.de, minchan@kernel.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        sj38.park@gmail.com, vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v4 10/11] mm/damon: Add kunit tests
-Date:   Sat, 15 Feb 2020 07:52:51 +0100
-Message-Id: <20200215065251.13754-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <4a541951-fd36-2a19-75a0-ccfcf60e6f14@infradead.org> (raw)
+        Fri, 14 Feb 2020 22:59:35 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
+Date:   Sat, 15 Feb 2020 14:58:24 +0800
+Message-Id: <20200215065826.739102-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 20:07:47 -0800 Randy Dunlap <rdunlap@infradead.org> wrote:
+This patchset adds a spi-mem driver for Mediatek SPI-NOR controller,
+which already has limited support by mtk-quadspi. For benefits of
+this replacement, please check commit message of the 1st patch.
 
-> On 2/10/20 6:53 AM, sjpark@amazon.com wrote:
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index 387d469f40ec..b279ab9c78d0 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -751,4 +751,15 @@ config DAMON
-> >  	  be 1) accurate enough to be useful for performance-centric domains,
-> >  	  and 2) sufficiently light-weight so that it can be applied online.
-> >  
-> > +config DAMON_KUNIT_TEST
-> > +	bool "Test for damon"
-> 
-> s/bool/tristate/ ?
+To keep patchset small for easier reviewing, there will be 3 patchsets
+including this one.
+1. add the new driver, which is this patchset.
+2. update existing dts for the new driver:
+   spi-max-frequency is missing in current mtk-quadspi binding. Old
+   driver parses child node manually so it doesn't need this, but
+   new spi-mem driver is probed via spi subsystem which requires the
+   presence of spi-max-frequency. Since this doesn't break old driver
+   support, I'll send this separately as a standalone patch.
+3. removing the old driver. I'll create this commit after 1 and 2 are
+   applied to avoid possible rebasing due to any changes in the old
+   driver.
 
-Thank you for this comment!
+Chuanhong Guo (2):
+  spi: add support for mediatek spi-nor controller
+  dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
 
-It seems Kunit does not support module build, as its core functions are not
-exported to modules.  That said, as this might be confusing and even could
-cause a build failure with some configuration combinations[1], I will change
-this dependency to `DAMON=y && KUNIT` in next spin.
+ .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   |  34 +-
+ drivers/spi/Kconfig                           |  10 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-mtk-nor.c                     | 689 ++++++++++++++++++
+ 4 files changed, 715 insertions(+), 19 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
+ create mode 100644 drivers/spi/spi-mtk-nor.c
 
-[1] https://lore.kernel.org/linux-mm/20200214111907.7017-1-sjpark@amazon.com/
+-- 
+2.24.1
 
-Thanks,
-SeongJae Park
-
-> 
-> > +	depends on DAMON && KUNIT
-> > +	help
-> > +	  This builds the DAMON Kunit test suite.
-> > +
-> > +	  For more information on KUnit and unit tests in general, please refer
-> > +	  to the KUnit documentation.
-> > +
-> > +	  If unsure, say N.
-> > +
-> >  endmenu
-> 
-> 
-> -- 
-> ~Randy
-> 
