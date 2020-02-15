@@ -2,98 +2,131 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FD9C7114E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49134C7114E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CF4207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 22:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581807364;
-	bh=reNtncn1a6VZfljhrh56vJopGos6PUQEBseiteLSZZM=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=C4dFtTta8v56b8GavOFDz+VaCDevcfG1hF5Ryk4qYOy+2+n68dUd7qyCdyqTYhKcv
-	 Zoohe668QjneShz+wBXzJRjo/zx4zvvxHkTew7ohUliKyb1+opVkFBvFsqQUlf/JKL
-	 e676OIPdICRnW6iuiY/UHbFe3CFiziHk01y6wZBg=
+	by mail.kernel.org (Postfix) with ESMTP id 1D109217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKTKKo6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgBOW4B (ORCPT
+        id S1726634AbgBOXaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 17:56:01 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36748 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgBOW4A (ORCPT
+        Sat, 15 Feb 2020 18:30:01 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35926 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgBOXaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 17:56:00 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 185so6892379pfv.3;
-        Sat, 15 Feb 2020 14:56:00 -0800 (PST)
+        Sat, 15 Feb 2020 18:30:00 -0500
+Received: by mail-pj1-f68.google.com with SMTP id gv17so5613725pjb.1;
+        Sat, 15 Feb 2020 15:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1OFKdKYOuEdt3GbD33I0905t17EPvxaa1y/xmesPAeA=;
+        b=LKTKKo6IQMZadGO/lWGugOcSOQsBCVwuWaSL00B+WzZGXa6RVORH7E6H2P3P/pWKSj
+         Yajivy3Gs8xpZimJQMOgDq9PPJBbGFQzNG6AecSC2hSOJzCSVfDjGKqkuX9fZ0mJzSsO
+         vOauOqaREm/Gau13kqDxhdzxIU3uISOxylGrGnNGOEecJbA75dDeT7ISSL4xHFc3VafK
+         JIOQWtPRmKa9to9GWVw3td//eMXLVbZ70jqdxvE3XdYMFaoNgibh9z09NwUbMeolGJQc
+         rVwUJXrNHCjaLppPM9EujdrSNBqIa47NIJEe+tytVhGjkPfCEYTZce0pP5kb5ASEkvut
+         3cyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=ZnrpFRwuHcMrcf2f334c6cLcNZOAyH4smyDfWLzsbYI=;
-        b=EDqICnpPB/CQU8EGUIsb0gMToUW8D9hu+953il6WTMZjj7YvRjjJr6uTi+cc59gfoT
-         IeKnp+i/PskESjNQ7PJH2QFcUQm7AVI/yYijbH2hE+452KqKr8ZFNHM7uoQMvH7k8sqS
-         u1j4clPxU9I6gSN0SCHfx1F5Yot+6DaeZNO8BVtSUzBvwEBJtsvH5GTVN2a8laJ3vwST
-         SmvqXLTRTxQ33nf1mjpjUIEG/TvnQFPus7TObcvGyLgXhep35yd99pJL21uziwd0OGo6
-         CyHc2SHDG5c0n/EY7aLzIwUwYA/DekTD4DTw1U2v3SnsMvMOKx6aEXs+6RSWu0YsIROm
-         bCCQ==
-X-Gm-Message-State: APjAAAWPm51kiZv66FmSSOgVTz+JZ4SxXP7j4kHNvvuEZ0+qhqeyLbzL
-        T+JOdJVbJjnpgiNgA+jUZFc=
-X-Google-Smtp-Source: APXvYqzpY/0nVKqmRYrgFbI6+fe3+rzxjiHsPtOCbGrfoV/fEL5KF4SeerjqO3dqvB8ayRcibiP02w==
-X-Received: by 2002:a63:6d0b:: with SMTP id i11mr10217031pgc.266.1581807359743;
-        Sat, 15 Feb 2020 14:55:59 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id w189sm11733073pfw.157.2020.02.15.14.55.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1OFKdKYOuEdt3GbD33I0905t17EPvxaa1y/xmesPAeA=;
+        b=RrqSch/I/4knqmnx2Bf6fBPtirNxolFYqnElvoknoIkGZS7//JjMYEgfmopR4lPXtE
+         MVnO2Fy8z9dMZ2yS5QHo5ENldk+sAre5kARymij+/3WJomgKyd6GYyPLdpskhBwV+10F
+         OWttFYKnm7DQIqwBl7S7gXEim0dbubXBYKf+IxbWKLV06E+Sxk0UHdacBB3pj13UjfLK
+         6751Y+8+1RD6k32Hb+jT1Y7sllSNUxIxV1dcFnBCuyGyWTS/rYI9tqFthiSGjVjDNv5G
+         ZVdcdYaG52hNhM/OrxjaS55dSsVWegwk6//0vYc2DuCUQZWSPWVMQLU2T09OOqdzUf4l
+         WhDA==
+X-Gm-Message-State: APjAAAVUVeLyLAORQHWTMHS5OSQoo0E/HluUGIJM15E9lOmT8vaMykan
+        oOzawmiAjkZdUUheq3hJlvI=
+X-Google-Smtp-Source: APXvYqy3Sorh9JO1ouujKisYYibaAI/Ueun1snCnmwz6mM/5l6P6pd+RxZInKrz/2BiNeliOOd3BOQ==
+X-Received: by 2002:a17:90a:3188:: with SMTP id j8mr11494117pjb.82.1581809398294;
+        Sat, 15 Feb 2020 15:29:58 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id a17sm11114657pfo.146.2020.02.15.15.29.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 14:55:59 -0800 (PST)
-Message-ID: <5e4876ff.1c69fb81.7b887.cb6e@mx.google.com>
-Date:   Sat, 15 Feb 2020 14:55:58 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-CC:     paulburton@kernel.org, linux-mips@vger.kernel.org
-CC:     chris.packham@alliedtelesis.co.nz, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
-References:  <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-In-Reply-To:  <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
+        Sat, 15 Feb 2020 15:29:57 -0800 (PST)
+Date:   Sat, 15 Feb 2020 15:29:55 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.6-rc1
+Message-ID: <20200215232955.GA107886@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Linus,
 
-Mark Tomlinson wrote:
-> The Cavium Octeon CPU uses a special sync instruction for implementing
-> wmb, and due to a CPU bug, the instruction must appear twice. A macro
-> had been defined to hide this:
-> 
->  #define __SYNC_rpt(type)     (1 + (type == __SYNC_wmb))
-> 
-> which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any other
-> type of sync. However, this expression is evaluated by the assembler,
-> and not the compiler, and the result of '==' in the assembler is 0 or
-> -1, not 0 or 1 as it is in C. The net result was wmb() producing no code
-> at all. The simple fix in this patch is to change the '+' to '-'.
+Please pull from:
 
-Applied to mips-fixes.
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-> commit 97e914b7de3c
-> https://git.kernel.org/mips/c/97e914b7de3c
-> 
-> Fixes: bf92927251b3 ("MIPS: barrier: Add __SYNC() infrastructure")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+to receive updates for the input subsystem:
 
-Thanks,
-    Paul
+- a few drivers have been updated to use flexible-array syntax instead
+  of GCC extension
+- ili210x touchscreen driver now supports the 2120 protocol flavor
+- a couple more of Synaptics devices have been switched over to RMI4
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Changelog:
+---------
+
+Benjamin Tissoires (1):
+      Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+
+Gaurav Agrawal (1):
+      Input: synaptics - enable SMBus on ThinkPad L470
+
+Gustavo A. R. Silva (5):
+      Input: goldfish_events - replace zero-length array with flexible-array member
+      Input: gpio_keys - replace zero-length array with flexible-array member
+      Input: gpio_keys_polled - replace zero-length array with flexible-array member
+      Input: tca6416-keypad - replace zero-length array with flexible-array member
+      Input: cyapa - replace zero-length array with flexible-array member
+
+Luca Weiss (2):
+      Input: ili210x - fix return value of is_visible function
+      Input: ili210x - add ili2120 support
+
+Lyude Paul (1):
+      Input: synaptics - switch T470s to RMI4 by default
+
+Wolfram Sang (1):
+      Input: psmouse - switch to using i2c_new_scanned_device()
+
+Diffstat:
+--------
+
+ .../devicetree/bindings/input/ilitek,ili2xxx.txt   |  3 +-
+ drivers/input/keyboard/goldfish_events.c           |  2 +-
+ drivers/input/keyboard/gpio_keys.c                 |  2 +-
+ drivers/input/keyboard/gpio_keys_polled.c          |  2 +-
+ drivers/input/keyboard/tca6416-keypad.c            |  4 +--
+ drivers/input/mouse/cyapa_gen5.c                   |  8 ++---
+ drivers/input/mouse/psmouse-smbus.c                |  8 +++--
+ drivers/input/mouse/synaptics.c                    |  4 ++-
+ drivers/input/touchscreen/ili210x.c                | 34 +++++++++++++++++++++-
+ 9 files changed, 52 insertions(+), 15 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
