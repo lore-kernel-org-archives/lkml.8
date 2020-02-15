@@ -2,233 +2,862 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3624C4741C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C36C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0772083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MsW84Y1e"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF4C2083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581784366;
+	bh=rx6G/ruUUcxFmwv8FPAFZJViziAIwKNrTuCTocGgcBs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rAsucY6exxZp4tw4gq3UB+8WArWVZCETMDYej4Oj6fFz1J+XRpugA/uPT7ALev6wy
+	 nA9wtji2Ki38IVqyKEFN3Xj5iTvuxQlBFvHkVOroSQ8hr6Fv7asG9/d4esF4chcyAp
+	 Nr2tHTF1mWGqOgthSBm23bfRIWv7eQ4UTtuHkFKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgBOQUI (ORCPT
+        id S1726312AbgBOQcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 11:20:08 -0500
-Received: from mout.gmx.net ([212.227.17.22]:36187 "EHLO mout.gmx.net"
+        Sat, 15 Feb 2020 11:32:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbgBOQUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 11:20:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581783602;
-        bh=GV2bO+K3BBjG8099+gXOw00KLzwouWCa0j3JtlJMHIA=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=MsW84Y1emIJqWo9ObILRkTprra2DBmyD14Q7+MKnY1QkaV64rZ7Y26WCRDsGdvohF
-         03KtN/A6pPy9LS+h59xCvgAx+omWhyTVANHqb/ioTZHl8FGl0XMdg0z+Eb1LoANlB4
-         eo+sNW87YN7YBuWSARKMUUKUXx54j/uIlndW8MGk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.24] ([77.10.148.10]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNsw4-1ine700i6q-00ODdo; Sat, 15
- Feb 2020 17:20:02 +0100
-To:     intel-gfx <intel-gfx@lists.freedesktop.org>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-Subject: kernel 5.5.4: BUG: kernel NULL pointer dereference, address:
- 000000000000000
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4012acc4-2620-e7f9-ac3c-aa4f00ea8e40@gmx.de>
-Date:   Sat, 15 Feb 2020 17:20:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726137AbgBOQcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 11:32:45 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4EE42082F;
+        Sat, 15 Feb 2020 16:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581784363;
+        bh=rx6G/ruUUcxFmwv8FPAFZJViziAIwKNrTuCTocGgcBs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GhsZtQVLg4uwYoiZ6KiML6VYcHp/B+uHVvIU062UQyXXHWG0airOLfR97rTPdKPh7
+         3pahxyEokA+D0Aj/lz5jzms2B7iTdG0IT/IqrniNbbyyAFBdg3YVc4+UbRb8w/6FnM
+         p+FMlqawpHR0h4Fj3HFmQy0lOb6RadVrPZtckJoE=
+Date:   Sat, 15 Feb 2020 16:32:39 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: Re: [PATCH v3 1/2] iio: dac: ad5770r: Add AD5770R support
+Message-ID: <20200215163239.1b55e999@archlinux>
+In-Reply-To: <20200213113916.28070-2-alexandru.tachici@analog.com>
+References: <20200213113916.28070-1-alexandru.tachici@analog.com>
+        <20200213113916.28070-2-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:J+mHjPE/LCC8GHuH2T7Xa7z5qbvpdn9sPfgj7aeGKdXAxHFRfdl
- OJeqI0umscpgdOtM1tSOiyPw0KSoy7WjU2MpTfFBqqnaatYUX6uyeUQK33JlJRIpqbBvV3j
- WZpzBzbCRgNRp0amJLrT43MA4LlMy80gQ5dpkUMZCCm4YBHrK4JI6ZQT3vKCZAJjqj0/dlD
- 7a49/8qQw7jQMzg+I7PNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NB9T6OF902A=:f1OFadbmG4Ncu3ZqKTyiKc
- IAye11Ioo1nYgAWl9XXWFdC/LiKiTSsJa6haUFUPMJiskmeLgofRjONf3S6BQH9SnIg4wB5mI
- s1RFOH3IthhQghA3uE2xBpO9UnR7ujQgxi6rXzqmARhUPL8TGaySL0jw/k3e/ww8/02i0hTq2
- xhvgUHGDbsYUGxef4hzZ3uPhA8InN7oxK2unmbPke2REgKD5JbL4k0IIYLn1Kr0fnG9SxdsZK
- qrZx2MT9mGQAHBldCV2IsqYAoH6H98G2kdp+EKKG7nWNGCzf2djM4x8w8St1fXPId21SyYHkN
- kMFILX6teGvalTFO7qSdsNm3mKoWFOHFBzM7TVL9zsGVWXyPg50viercv2fSBkz/12IYoZM4V
- yk5LqAcMvX0FoqM4uMhUp3FgN/HSGJroYJR24DgDm1CwSoBdJhdI1JnR3hh8BHHecW1C8PpTx
- njLl2RymmBpdm6iJ8LZHhEP9KfwmfwCvVK41oEXjJiIAkBeANnZRWL/vt5qzgTdj2x9RmGdQ6
- 8kacyYAm2P3QVcF3T5/m9NhB9xURZq2xuAmIcoStfUMHoYjMzJvs86fmE2N3S/OWQbd34NGhy
- Waxx9ixpRTw/8/qTl8UpPDNGYlf1k8/a1JTQNjfwDEuQfh45WEPU3W1Cdwx43rNXuBsMazfEx
- O4OqouF5yI3ccuciF95uWiGVm/SvroXjm2+NuP/Pkd+8J7zlkgjXE/+pvRCnMkEsHIrrxPizv
- nKnjX8v0lowiVVB7HDp92U6G0oxKMlPdIX/aOUzUTt81O1stllqGvspWj8rwJQa/xZ67B4wbD
- 3JoGjx2CFP1IeFwhNSqDSIuEwkfK0OwpbsJUVfpWR4yo1Ru3GXPiFr/bHYo8+mAP6XPyinGtE
- NDcZmJUoK8cmb689VkyEzb52+uURMVBvu9pEsg3VEvJ+jVLzZwhlyBbEqAVqjU7MsmqwOMlAs
- t35YLMddxzuXis8os1K65P25FaT7FDLhISizpqyfXOOLZA25WvytyN5fQgM9MfQmDu/Bc5frv
- mQdUAqgT7FR3anSZ24rGnC28XprwLo4EZGum4Z9gbzxopxPodgYxQA+ajMdAPbeRJFghXcO+w
- h3I7objn/VWyv6L8DARersstDZlNArWyGiabncJAzkyIsIMBrr0w8zRiqUQb3PKqmSAdMhtRQ
- xZ2DZLNsLze3Uj5biDmmFsYZr/4kI4CkPbEJlCnJsSUgjFZDGqGvvqjpKyi6skP6uluDU/I06
- mDdD4G+kQlEKNegz4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2luY2UgNS41LjEgSSBkbyBleHBlcmllbmNlIGhhbmdzIHVuZGVyIGEgaGFyZGVuZCBHZXJu
-dG9vIExpbnV4ICsgS0RFLCBuZWl0aGVyIG1vdXNlIG5vciBrZXlib2FyZCBhcmUgdGhlbiB3
-b3JraW5nIGFueW1vcmUsIHBvd2VyIG9mZiBpcyB0aGUgb25seSBvbmUuDQpUaGUgc3lzbG9n
-IHRlbGxzOg0KDQoNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBCVUc6IGtlcm5lbCBO
-VUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6IDAwMDAwMDAwMDAwMDAwMDANCkZl
-YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiAjUEY6IHN1cGVydmlzb3IgaW5zdHJ1Y3Rpb24g
-ZmV0Y2ggaW4ga2VybmVsIG1vZGUNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiAjUEY6
-IGVycm9yX2NvZGUoMHgwMDEwKSAtIG5vdC1wcmVzZW50IHBhZ2UNCkZlYiAxNSAxMjo1Njoz
-MSB0NDQga2VybmVsOiBQR0QgMCBQNEQgMCANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVs
-OiBPb3BzOiAwMDEwIFsjMV0gU01QIFBUSQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6
-IENQVTogMCBQSUQ6IDM0MDEgQ29tbTogWCBUYWludGVkOiBHICAgICAgICAgICAgICAgIFQg
-NS41LjQgIzINCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBIYXJkd2FyZSBuYW1lOiBM
-RU5PVk8gMjBBUUNUTzFXVy8yMEFRQ1RPMVdXLCBCSU9TIEdKRVQ5MldXICgyLjQyICkgMDMv
-MDMvMjAxNw0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJJUDogMDAxMDoweDANCkZl
-YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBDb2RlOiBCYWQgUklQIHZhbHVlLg0KRmViIDE1
-IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJTUDogMDAxODpmZmZmOWQ4NzgwOTE3YTQwIEVGTEFH
-UzogMDAwMTAwODcNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQVg6IDAwMDAwMDAw
-MDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDAwIFJDWDogMDAwMDAwMDAwMDA5MTlkZA0K
-RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6
-IGZmZmY4YjEzZDQwMjRiMDggUkRJOiBmZmZmOGIxNDlkODhhNDAwDQpGZWIgMTUgMTI6NTY6
-MzEgdDQ0IGtlcm5lbDogUkJQOiBmZmZmOGIxNDlkODhhNDAwIFIwODogMDAwMDAwMDAwMDAw
-MDAwMCBSMDk6IGZmZmY4YjEzZDQwMjQxMDANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVs
-OiBSMTA6IDAwMDAwMDAwMDAwMDAwMDIgUjExOiAwMDAwMDAwMDAwMDAwMDA1IFIxMjogZmZm
-ZjlkODc4MDkxN2E0OA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMzogMDAwMDAw
-MDAwMDAwMDAwMCBSMTQ6IGZmZmY4YjE0YWExN2FlMDAgUjE1OiBmZmZmOGIxNGEzOWEwMmMw
-DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogRlM6ICAwMDAwN2Y4YzE2MjE0OGMwKDAw
-MDApIEdTOmZmZmY4YjE0YjI2MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0K
-RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAw
-MCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBD
-UjI6IGZmZmZmZmZmZmZmZmZmZDYgQ1IzOiAwMDAwMDAwMzIzOTk4MDA1IENSNDogMDAwMDAw
-MDAwMDE2MDZmMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENhbGwgVHJhY2U6DQpG
-ZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGRtYV9mZW5jZV9zaWduYWxfbG9ja2VkKzB4
-ODUvMHhjMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICBpOTE1X3JlcXVlc3RfcmV0
-aXJlKzB4MjU5LzB4MmEwIFtpOTE1XQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICBp
-OTE1X3JlcXVlc3RfY3JlYXRlKzB4M2YvMHhjMCBbaTkxNV0NCkZlYiAxNSAxMjo1NjozMSB0
-NDQga2VybmVsOiAgaTkxNV9nZW1fZG9fZXhlY2J1ZmZlcisweDk3My8weDE3ZDAgW2k5MTVd
-DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGk5MTVfZ2VtX2V4ZWNidWZmZXIyX2lv
-Y3RsKzB4ZTkvMHgzYTAgW2k5MTVdDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogID8g
-aTkxNV9nZW1fZXhlY2J1ZmZlcl9pb2N0bCsweDJjMC8weDJjMCBbaTkxNV0NCkZlYiAxNSAx
-Mjo1NjozMSB0NDQga2VybmVsOiAgZHJtX2lvY3RsX2tlcm5lbCsweGFlLzB4MTAwIFtkcm1d
-DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDogIGRybV9pb2N0bCsweDIyMy8weDQwMCBb
-ZHJtXQ0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6ICA/IGk5MTVfZ2VtX2V4ZWNidWZm
-ZXJfaW9jdGwrMHgyYzAvMHgyYzAgW2k5MTVdDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
-bDogIGRvX3Zmc19pb2N0bCsweDRkNC8weDc2MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
-ZWw6ICBrc3lzX2lvY3RsKzB4NWIvMHg5MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6
-ICBfX3g2NF9zeXNfaW9jdGwrMHgxNS8weDIwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
-bDogIGRvX3N5c2NhbGxfNjQrMHg0Ni8weDEwMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
-ZWw6ICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0NC8weGE5DQpGZWIgMTUg
-MTI6NTY6MzEgdDQ0IGtlcm5lbDogUklQOiAwMDMzOjB4N2Y4YzE2NDRkMTM3DQpGZWIgMTUg
-MTI6NTY6MzEgdDQ0IGtlcm5lbDogQ29kZTogMDAgMDAgMDAgNzUgMGMgNDggYzcgYzAgZmYg
-ZmYgZmYgZmYgNDggODMgYzQgMTggYzMgZTggMmQgZDQgMDEgMDAgNjYgMmUgMGYgMWYgODQg
-MDAgMDAgMDAgMDAgMDAgMGYgMWYgMDAgYjggMTAgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAw
-MSBmMCBmZiBmZiA3MyAwMSBjMyA0OCA4YiAwZCAxOSBlZCAwYyAwMCBmNyBkOCA2NCA4OSAw
-MSA0OA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFJTUDogMDAyYjowMDAwN2ZmYzJl
-OGZhYmM4IEVGTEFHUzogMDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMTANCkZl
-YiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAw
-MDAwN2ZmYzJlOGZhYzEwIFJDWDogMDAwMDdmOGMxNjQ0ZDEzNw0KRmViIDE1IDEyOjU2OjMx
-IHQ0NCBrZXJuZWw6IFJEWDogMDAwMDdmZmMyZThmYWMxMCBSU0k6IDAwMDAwMDAwNDA0MDY0
-NjkgUkRJOiAwMDAwMDAwMDAwMDAwMDBkDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDog
-UkJQOiAwMDAwMDAwMDQwNDA2NDY5IFIwODogMDAwMDU2MTEzNmQwNzY4MCBSMDk6IDAwMDAw
-MDAwMDAwMDAyMDINCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSMTA6IDAwMDAwMDAw
-MDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjogMDAwMDU2MTEzNmNjYTEzMA0K
-RmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMzogMDAwMDAwMDAwMDAwMDAwZCBSMTQ6
-IDAwMDA3ZjhjMTVjMmNjNDggUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6
-MzEgdDQ0IGtlcm5lbDogTW9kdWxlcyBsaW5rZWQgaW46IGFmX3BhY2tldCBicmlkZ2Ugc3Rw
-IGxsYyBpcDZ0YWJsZV9maWx0ZXIgaXA2X3RhYmxlcyB4dF9NQVNRVUVSQURFIGlwdGFibGVf
-bmF0IG5mX25hdCBuZl9sb2dfaXB2NCBuZl9sb2dfY29tbW9uIHh0X0xPRyB4dF9saW1pdCB4
-dF9yZWNlbnQgeHRfY29ubnRyYWNrIG5mX2Nvbm50cmFjayBuZl9kZWZyYWdfaXB2NiBuZl9k
-ZWZyYWdfaXB2NCBpcHRhYmxlX2ZpbHRlciBpcF90YWJsZXMgdXZjdmlkZW8gdmlkZW9idWYy
-X3ZtYWxsb2MgdmlkZW9idWYyX21lbW9wcyB2aWRlb2J1ZjJfdjRsMiB2aWRlb2RldiB2aWRl
-b2J1ZjJfY29tbW9uIGJ0dXNiIGJ0cnRsIGJ0YmNtIGJ0aW50ZWwgYmx1ZXRvb3RoIGVjZGhf
-Z2VuZXJpYyBlY2Mgcm1pX3NtYnVzIHJtaV9jb3JlIG1vdXNlZGV2IHg4Nl9wa2dfdGVtcF90
-aGVybWFsIGNvcmV0ZW1wIGk5MTUga3ZtX2ludGVsIGt2bSBpcnFieXBhc3MgaW50ZWxfZ3R0
-IHNuZF9oZGFfY29kZWNfcmVhbHRlayBzbmRfaGRhX2NvZGVjX2dlbmVyaWMgaTJjX2FsZ29f
-Yml0IGlucHV0X2xlZHMgZHJtX2ttc19oZWxwZXIgc25kX2hkYV9pbnRlbCB3bWlfYm1vZiBz
-bmRfaW50ZWxfZHNwY2ZnIGNmYmZpbGxyZWN0IGl3bG12bSBwc21vdXNlIHN5c2NvcHlhcmVh
-IGNmYmltZ2JsdCBhZXNuaV9pbnRlbCBnbHVlX2hlbHBlciBjcnlwdG9fc2ltZCBwY3Nwa3Ig
-c25kX2hkYV9jb2RlYyBhdGtiZCBzeXNmaWxscmVjdCBjcnlwdGQgZWhjaV9wY2kgaXdsd2lm
-aSBlaGNpX2hjZCBzeXNpbWdibHQgZmJfc3lzX2ZvcHMgZTEwMDBlIGNmYmNvcHlhcmVhIHRo
-aW5rcGFkX2FjcGkgc25kX2hkYV9jb3JlIGkyY19pODAxIGRybSBzbmRfcGNtIGFjIGJhdHRl
-cnkgbGVkdHJpZ19hdWRpbyB0cG1fdGlzIHRwbV90aXNfY29yZSBkcm1fcGFuZWxfb3JpZW50
-YXRpb25fcXVpcmtzIHNuZF90aW1lciB0cG0gcm5nX2NvcmUgYWdwZ2FydCBzbmQgaTJjX2Nv
-cmUgd21pIHNvdW5kY29yZSB0aGVybWFsIGV2ZGV2DQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
-cm5lbDogQ1IyOiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5l
-bDogLS0tWyBlbmQgdHJhY2UgMGVmY2I4MzU1MjE2YmI2MiBdLS0tDQpGZWIgMTUgMTI6NTY6
-MzEgdDQ0IGtlcm5lbDogUklQOiAwMDEwOjB4MA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJu
-ZWw6IENvZGU6IEJhZCBSSVAgdmFsdWUuDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtlcm5lbDog
-UlNQOiAwMDE4OmZmZmY5ZDg3ODA5MTdhNDAgRUZMQUdTOiAwMDAxMDA4Nw0KRmViIDE1IDEy
-OjU2OjMxIHQ0NCBrZXJuZWw6IFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAw
-MDAwMDAwMDAgUkNYOiAwMDAwMDAwMDAwMDkxOWRkDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
-cm5lbDogUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZjhiMTNkNDAyNGIwOCBSREk6
-IGZmZmY4YjE0OWQ4OGE0MDANCkZlYiAxNSAxMjo1NjozMSB0NDQga2VybmVsOiBSQlA6IGZm
-ZmY4YjE0OWQ4OGE0MDAgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogZmZmZjhiMTNkNDAy
-NDEwMA0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAw
-MiBSMTE6IDAwMDAwMDAwMDAwMDAwMDUgUjEyOiBmZmZmOWQ4NzgwOTE3YTQ4DQpGZWIgMTUg
-MTI6NTY6MzEgdDQ0IGtlcm5lbDogUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogZmZmZjhi
-MTRhYTE3YWUwMCBSMTU6IGZmZmY4YjE0YTM5YTAyYzANCkZlYiAxNSAxMjo1NjozMSB0NDQg
-a2VybmVsOiBGUzogIDAwMDA3ZjhjMTYyMTQ4YzAoMDAwMCkgR1M6ZmZmZjhiMTRiMjYwMDAw
-MCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTUgMTI6NTY6MzEgdDQ0IGtl
-cm5lbDogQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAz
-Mw0KRmViIDE1IDEyOjU2OjMxIHQ0NCBrZXJuZWw6IENSMjogZmZmZmZmZmZmZmZmZmZkNiBD
-UjM6IDAwMDAwMDAzMjM5OTgwMDUgQ1I0OiAwMDAwMDAwMDAwMTYwNmYwDQpGZWIgMTUgMTI6
-NTc6MDEgdDQ0IENST05EWzY3MTVdOiAocm9vdCkgQ01EICgvdXNyL2xpYi9zYS9zYTEgMzAg
-MiAtUyBYQUxMKQ0KRmViIDE1IDEyOjU3OjA2IHQ0NCBrZXJuZWw6IGVsb2dpbmQtZGFlbW9u
-WzE0MjJdOiBQb3dlciBrZXkgcHJlc3NlZC4NCkZlYiAxNSAxMjo1NzowNiB0NDQga2VybmVs
-OiBlbG9naW5kLWRhZW1vblsxNDIyXTogTmV3IHNlc3Npb24gYzEzNCBvZiB1c2VyIHRmb2Vy
-c3RlLg0KRmViIDE1IDEyOjU3OjA2IHQ0NCBrZXJuZWw6IGVsb2dpbmQtZGFlbW9uWzE0MjJd
-OiBSZW1vdmVkIHNlc3Npb24gYzEzNC4NCkZlYiAxNSAxNzoxMjo0MCB0NDQgc3lzbG9nLW5n
-WzE4OTddOiBzeXNsb2ctbmcgc3RhcnRpbmcgdXA7IHZlcnNpb249JzMuMjIuMScNCg0KDQo1
-LjQueCBhcmUgZmluZQ0KDQotLSANClRvcmFsZg0K
+On Thu, 13 Feb 2020 13:39:15 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+
+> The AD5770R is a 6-channel, 14-bit resolution, low noise, programmable
+> current output digital-to-analog converter (DAC) for photonics control
+> applications.
+> 
+> It contains five 14-bit resolution current sourcing DAC channels and one
+> 14-bit resolution current sourcing/sinking DAC channel.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+A few last minute bits inline.  I wonder if we should perhaps allow the binding
+to not specify all the channels and leave any unspecified ones powered down.
+
+For a multiple output DAC like this I expect there are some designs where
+not all the outputs are wired to anything.
+
+Jonathan
+
+> ---
+>  drivers/iio/dac/Kconfig   |  10 +
+>  drivers/iio/dac/Makefile  |   1 +
+>  drivers/iio/dac/ad5770r.c | 695 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 706 insertions(+)
+>  create mode 100644 drivers/iio/dac/ad5770r.c
+> 
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index 979070196da9..c74f2151ee42 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -208,6 +208,16 @@ config AD5764
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad5764.
+>  
+> +config AD5770R
+> +	tristate "Analog Devices AD5770R IDAC driver"
+> +	depends on SPI_MASTER
+> +	help
+> +	  Say yes here to build support for Analog Devices AD5770R Digital to
+> +	  Analog Converter.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad5770r.
+> +
+>  config AD5791
+>  	tristate "Analog Devices AD5760/AD5780/AD5781/AD5790/AD5791 DAC SPI driver"
+>  	depends on SPI
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 1369fa1d2f0e..2fc481167724 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_AD5755) += ad5755.o
+>  obj-$(CONFIG_AD5755) += ad5758.o
+>  obj-$(CONFIG_AD5761) += ad5761.o
+>  obj-$(CONFIG_AD5764) += ad5764.o
+> +obj-$(CONFIG_AD5770R) += ad5770r.o
+>  obj-$(CONFIG_AD5791) += ad5791.o
+>  obj-$(CONFIG_AD5686) += ad5686.o
+>  obj-$(CONFIG_AD5686_SPI) += ad5686-spi.o
+> diff --git a/drivers/iio/dac/ad5770r.c b/drivers/iio/dac/ad5770r.c
+> new file mode 100644
+> index 000000000000..7765310b074a
+> --- /dev/null
+> +++ b/drivers/iio/dac/ad5770r.c
+> @@ -0,0 +1,695 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * AD5770R Digital to analog converters driver
+> + *
+> + * Copyright 2018 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/common/adi_spi_regs.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#define ADI_SPI_IF_CONFIG_A		0x00
+> +#define ADI_SPI_IF_CONFIG_B		0x01
+> +#define ADI_SPI_IF_DEVICE_CONFIG	0x02
+> +#define ADI_SPI_IF_CHIP_TYPE		0x03
+> +#define ADI_SPI_IF_PRODUCT_ID_L		0x04
+> +#define ADI_SPI_IF_PRODUCT_ID_H		0x05
+> +#define ADI_SPI_IF_CHIP_GRADE		0x06
+> +#define ADI_SPI_IF_SCRACTH_PAD		0x0A
+> +#define ADI_SPI_IF_SPI_REVISION		0x0B
+> +#define ADI_SPI_IF_SPI_VENDOR_L		0x0C
+> +#define ADI_SPI_IF_SPI_VENDOR_H		0x0D
+> +#define ADI_SPI_IF_SPI_STREAM_MODE	0x0E
+> +#define ADI_SPI_IF_CONFIG_C		0x10
+> +#define ADI_SPI_IF_STATUS_A		0x11
+> +
+> +/* ADI_SPI_IF_CONFIG_A */
+> +#define ADI_SPI_IF_SW_RESET_MSK		(BIT(0) | BIT(7))
+> +#define ADI_SPI_IF_SW_RESET_SEL(x)	((x) & ADI_SPI_IF_SW_RESET_MSK)
+> +#define ADI_SPI_IF_ADDR_ASC_MSK		(BIT(2) | BIT(5))
+> +#define ADI_SPI_IF_ADDR_ASC_SEL(x)	(((x) << 2) & ADI_SPI_IF_ADDR_ASC_MSK)
+> +
+> +/* ADI_SPI_IF_CONFIG_B */
+> +#define ADI_SPI_IF_SINGLE_INS_MSK	BIT(7)
+> +#define ADI_SPI_IF_SINGLE_INS_SEL(x)	FIELD_PREP(ADI_SPI_IF_SINGLE_INS_MSK, x)
+> +#define ADI_SPI_IF_SHORT_INS_MSK	BIT(7)
+> +#define ADI_SPI_IF_SHORT_INS_SEL(x)	FIELD_PREP(ADI_SPI_IF_SINGLE_INS_MSK, x)
+> +
+> +/* ADI_SPI_IF_CONFIG_C */
+> +#define ADI_SPI_IF_STRICT_REG_MSK	BIT(5)
+> +#define ADI_SPI_IF_STRICT_REG_GET(x)	FIELD_GET(ADI_SPI_IF_STRICT_REG_MSK, x)
+> +
+> +/* AD5770R configuration registers */
+> +#define AD5770R_CHANNEL_CONFIG		0x14
+> +#define AD5770R_OUTPUT_RANGE(ch)	(0x15 + (ch))
+> +#define AD5770R_FILTER_RESISTOR(ch)	(0x1D + (ch))
+> +#define AD5770R_REFERENCE		0x1B
+> +#define AD5770R_DAC_LSB(ch)		(0x26 + 2 * (ch))
+> +#define AD5770R_DAC_MSB(ch)		(0x27 + 2 * (ch))
+> +#define AD5770R_CH_SELECT		0x34
+> +#define AD5770R_CH_ENABLE		0x44
+> +
+> +/* AD5770R_CHANNEL_CONFIG */
+> +#define AD5770R_CFG_CH0_SINK_EN(x)		(((x) & 0x1) << 7)
+> +#define AD5770R_CFG_SHUTDOWN_B(x, ch)		(((x) & 0x1) << (ch))
+> +
+> +/* AD5770R_OUTPUT_RANGE */
+> +#define AD5770R_RANGE_OUTPUT_SCALING(x)		(((x) & 0x3F) << 2)
+
+GENMASK preferred when defining the various contiguous masks.
+
+> +#define AD5770R_RANGE_MODE(x)			((x) & 0x03)
+> +
+> +/* AD5770R_REFERENCE */
+> +#define AD5770R_REF_RESISTOR_SEL(x)		(((x) & 0x1) << 2)
+> +#define AD5770R_REF_SEL(x)			(((x) & 0x3) << 0)
+> +
+> +/* AD5770R_CH_ENABLE */
+> +#define AD5770R_CH_SET(x, channel)		(((x) & 0x1) << (channel))
+
+ch used elsehwere.  Maybe change for consistency?
+
+> +
+> +#define AD5770R_MAX_CHANNELS	6
+> +#define AD5770R_MAX_CH_MODES	14
+> +#define AD5770R_LOW_VREF_mV	1250
+> +#define AD5770R_HIGH_VREF_mV	2500
+> +
+> +enum ad5770r_ch0_modes {
+> +	AD5770R_CH0_0_300 = 0,
+> +	AD5770R_CH0_NEG_60_0,
+> +	AD5770R_CH0_NEG_60_300
+> +};
+> +
+> +enum ad5770r_ch1_modes {
+> +	AD5770R_CH1_0_140_LOW_HEAD = 1,
+> +	AD5770R_CH1_0_140_LOW_NOISE,
+> +	AD5770R_CH1_0_250
+> +};
+> +
+> +enum ad5770r_ch2_5_modes {
+> +	AD5770R_CH_LOW_RANGE = 0,
+> +	AD5770R_CH_HIGH_RANGE
+> +};
+> +
+> +enum ad5770r_ref_v {
+> +	AD5770R_EXT_2_5_V = 0,
+> +	AD5770R_INT_1_25_V_OUT_ON,
+> +	AD5770R_EXT_1_25_V,
+> +	AD5770R_INT_1_25_V_OUT_OFF
+> +};
+> +
+> +enum ad5770r_output_filter_resistor {
+> +	AD5770R_FILTER_60_OHM = 0x0,
+> +	AD5770R_FILTER_5_6_KOHM = 0x5,
+> +	AD5770R_FILTER_11_2_KOHM,
+> +	AD5770R_FILTER_22_2_KOHM,
+> +	AD5770R_FILTER_44_4_KOHM,
+> +	AD5770R_FILTER_104_KOHM,
+> +};
+> +
+> +struct ad5770r_out_range {
+> +	u8	out_scale;
+> +	u8	out_range_mode;
+> +};
+> +
+> +/**
+> + * struct ad5770R_state - driver instance specific data
+> + * @spi:		spi_device
+> + * @regmap:		regmap
+> + * @vref_reg:		fixed regulator for reference configuration
+> + * @gpio_reset:		gpio descriptor
+> + * @output_mode:		array contains channels output ranges
+> + * @vref:		reference value
+> + * @ch_pwr_down:		powerdown flags
+> + * @internal_ref:	internal reference flag
+> + * @external_res:	external 2.5k resistor flag
+> + */
+> +struct ad5770r_state {
+> +	struct spi_device		*spi;
+> +	struct regmap			*regmap;
+> +	struct regulator		*vref_reg;
+> +	struct gpio_desc		*gpio_reset;
+> +	struct ad5770r_out_range	output_mode[AD5770R_MAX_CHANNELS];
+> +	int				vref;
+> +	bool				ch_pwr_down[AD5770R_MAX_CHANNELS];
+> +	bool				internal_ref;
+> +	bool				external_res;
+> +};
+> +
+> +static const struct regmap_config ad5770r_spi_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.read_flag_mask = BIT(7),
+> +};
+> +
+> +struct ad5770r_output_modes {
+> +	unsigned int ch;
+> +	u8 mode;
+> +	int min;
+> +	int max;
+> +};
+> +
+> +static struct ad5770r_output_modes ad5770r_rng_tbl[] = {
+> +	{ 0, AD5770R_CH0_0_300, 0, 300 },
+> +	{ 0, AD5770R_CH0_NEG_60_0, -60, 0 },
+> +	{ 0, AD5770R_CH0_NEG_60_300, -60, 300 },
+> +	{ 1, AD5770R_CH1_0_140_LOW_HEAD, 0, 140 },
+> +	{ 1, AD5770R_CH1_0_140_LOW_NOISE, 0, 140 },
+> +	{ 1, AD5770R_CH1_0_250, 0, 250 },
+> +	{ 2, AD5770R_CH_LOW_RANGE, 0, 55 },
+> +	{ 2, AD5770R_CH_HIGH_RANGE, 0, 150 },
+> +	{ 3, AD5770R_CH_LOW_RANGE, 0, 45 },
+> +	{ 3, AD5770R_CH_HIGH_RANGE, 0, 100 },
+> +	{ 4, AD5770R_CH_LOW_RANGE, 0, 45 },
+> +	{ 4, AD5770R_CH_HIGH_RANGE, 0, 100 },
+> +	{ 5, AD5770R_CH_LOW_RANGE, 0, 45 },
+> +	{ 5, AD5770R_CH_HIGH_RANGE, 0, 100 },
+> +};
+> +
+> +static const unsigned int ad5770r_filter_freqs[] = {
+> +	153, 357, 715, 1400, 2800, 262000,
+> +};
+> +
+> +static const unsigned int ad5770r_filter_reg_vals[] = {
+> +	AD5770R_FILTER_104_KOHM,
+> +	AD5770R_FILTER_44_4_KOHM,
+> +	AD5770R_FILTER_22_2_KOHM,
+> +	AD5770R_FILTER_11_2_KOHM,
+> +	AD5770R_FILTER_5_6_KOHM,
+> +	AD5770R_FILTER_60_OHM
+> +};
+> +
+> +static int ad5770r_set_output_mode(struct ad5770r_state *st,
+> +				   const struct ad5770r_out_range *out_mode,
+> +				   int channel)
+> +{
+> +	unsigned int regval;
+> +
+> +	regval = AD5770R_RANGE_OUTPUT_SCALING(out_mode->out_scale) |
+> +		 AD5770R_RANGE_MODE(out_mode->out_range_mode);
+> +
+> +	return regmap_write(st->regmap,
+> +			    AD5770R_OUTPUT_RANGE(channel), regval);
+> +}
+> +
+> +static int ad5770r_set_reference(struct ad5770r_state *st)
+> +{
+> +	unsigned int regval;
+> +
+> +	regval = AD5770R_REF_RESISTOR_SEL(st->external_res);
+> +
+> +	if (st->internal_ref) {
+> +		regval |= AD5770R_REF_SEL(AD5770R_INT_1_25_V_OUT_OFF);
+> +	} else {
+> +		switch (st->vref) {
+> +		case AD5770R_LOW_VREF_mV:
+> +			regval |= AD5770R_REF_SEL(AD5770R_EXT_1_25_V);
+> +			break;
+> +		case AD5770R_HIGH_VREF_mV:
+> +			regval |= AD5770R_REF_SEL(AD5770R_EXT_2_5_V);
+> +			break;
+> +		default:
+> +			regval = AD5770R_REF_SEL(AD5770R_INT_1_25_V_OUT_OFF);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return regmap_write(st->regmap, AD5770R_REFERENCE, regval);
+> +}
+> +
+> +static int ad5770r_soft_reset(struct ad5770r_state *st)
+> +{
+> +	return regmap_write(st->regmap, ADI_SPI_IF_CONFIG_A,
+> +			    ADI_SPI_IF_SW_RESET_SEL(1));
+> +}
+> +
+> +static int ad5770r_reset(struct ad5770r_state *st)
+> +{
+> +	/* Perform software reset if no GPIO provided */
+> +	if (!st->gpio_reset)
+> +		return ad5770r_soft_reset(st);
+> +
+> +	gpiod_set_value_cansleep(st->gpio_reset, 0);
+> +	usleep_range(10, 20);
+> +	gpiod_set_value_cansleep(st->gpio_reset, 1);
+> +
+> +	/* data must not be written during reset timeframe */
+> +	usleep_range(100, 200);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad5770r_get_range(struct ad5770r_state *st,
+> +			     int ch, int *min, int *max)
+> +{
+> +	int i;
+> +	u8 tbl_ch, tbl_mode, out_range;
+> +
+> +	out_range = st->output_mode[ch].out_range_mode;
+> +
+> +	for (i = 0; i < AD5770R_MAX_CH_MODES; i++) {
+> +		tbl_ch = ad5770r_rng_tbl[i].ch;
+> +		tbl_mode = ad5770r_rng_tbl[i].mode;
+> +		if (tbl_ch == ch && tbl_mode == out_range) {
+> +			*min = ad5770r_rng_tbl[i].min;
+> +			*max = ad5770r_rng_tbl[i].max;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ad5770r_get_filter_freq(struct iio_dev *indio_dev,
+> +				   const struct iio_chan_spec *chan, int *freq)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +	unsigned int regval, i;
+> +
+> +	ret = regmap_read(st->regmap,
+> +			  AD5770R_FILTER_RESISTOR(chan->channel), &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad5770r_filter_reg_vals); i++)
+> +		if (regval == ad5770r_filter_reg_vals[i])
+> +			break;
+> +	if (i == ARRAY_SIZE(ad5770r_filter_reg_vals))
+> +		return -EINVAL;
+> +
+> +	*freq = ad5770r_filter_freqs[i];
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ad5770r_set_filter_freq(struct iio_dev *indio_dev,
+> +				   const struct iio_chan_spec *chan,
+> +				   unsigned int freq)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +	unsigned int regval, i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad5770r_filter_freqs); i++)
+> +		if (ad5770r_filter_freqs[i] >= freq)
+> +			break;
+> +	if (i == ARRAY_SIZE(ad5770r_filter_freqs))
+> +		return -EINVAL;
+> +
+> +	regval = ad5770r_filter_reg_vals[i];
+> +
+> +	return regmap_write(st->regmap, AD5770R_FILTER_RESISTOR(chan->channel),
+> +			    regval);
+> +}
+> +
+> +static int ad5770r_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long info)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +	int max, min, ret;
+> +	__le16 buf16;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = regmap_bulk_read(st->regmap,
+> +				       chan->address,
+> +				       &buf16, 2);
+
+I'm fairly sure regmap spi needs DMA safe buffers for bulk read / write.
+As such you can't use a variable on the stack safely.
+
+> +		if (ret)
+> +			return 0;
+> +		*val = le16_to_cpu(buf16) >> 2;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = ad5770r_get_range(st, chan->channel, &min, &max);
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = max - min;
+> +		/* There is no sign bit. (negative current is mapped from 0)
+> +		 * (sourced/sinked) current = raw * scale + offset
+> +		 * where offset in case of CH0 can be negative.
+> +		 */
+> +		*val2 = 14;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		return ad5770r_get_filter_freq(indio_dev, chan, val);
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		ret = ad5770r_get_range(st, chan->channel, &min, &max);
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = min;
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad5770r_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long info)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +	u8 buf[2];
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		buf[0] = ((u16)val >> 6);
+> +		buf[1] = (val & 0x3F) << 2;
+> +		return regmap_bulk_write(st->regmap, chan->address,
+> +					 buf, ARRAY_SIZE(buf));
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		return ad5770r_set_filter_freq(indio_dev, chan, val);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad5770r_read_freq_avail(struct iio_dev *indio_dev,
+> +				   struct iio_chan_spec const *chan,
+> +				   const int **vals, int *type, int *length,
+> +				   long mask)
+> +{
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		*type = IIO_VAL_INT;
+> +		*vals = ad5770r_filter_freqs;
+> +		*length = ARRAY_SIZE(ad5770r_filter_freqs);
+> +		return IIO_AVAIL_LIST;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ad5770r_reg_access(struct iio_dev *indio_dev,
+> +			      unsigned int reg,
+> +			      unsigned int writeval,
+> +			      unsigned int *readval)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +
+> +	if (readval)
+> +		return regmap_read(st->regmap, reg, readval);
+> +	else
+> +		return regmap_write(st->regmap, reg, writeval);
+> +}
+> +
+> +static const struct iio_info ad5770r_info = {
+> +	.read_raw = ad5770r_read_raw,
+> +	.write_raw = ad5770r_write_raw,
+> +	.read_avail = ad5770r_read_freq_avail,
+> +	.debugfs_reg_access = &ad5770r_reg_access,
+> +};
+> +
+> +static int ad5770r_store_output_range(struct ad5770r_state *st,
+> +				      int min, int max, int index)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < AD5770R_MAX_CH_MODES; i++) {
+> +		if (ad5770r_rng_tbl[i].ch != index)
+> +			continue;
+> +		if (ad5770r_rng_tbl[i].min != min ||
+> +		    ad5770r_rng_tbl[i].max != max)
+> +			continue;
+> +		st->output_mode[index].out_range_mode = ad5770r_rng_tbl[i].mode;
+> +
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static ssize_t ad5770r_read_dac_powerdown(struct iio_dev *indio_dev,
+> +					  uintptr_t private,
+> +					  const struct iio_chan_spec *chan,
+> +					  char *buf)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%d\n", st->ch_pwr_down[chan->channel]);
+> +}
+> +
+> +static ssize_t ad5770r_write_dac_powerdown(struct iio_dev *indio_dev,
+> +					   uintptr_t private,
+> +					   const struct iio_chan_spec *chan,
+> +					   const char *buf, size_t len)
+> +{
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +	unsigned int regval;
+> +	unsigned int mask;
+> +	bool readin;
+> +	int ret;
+> +
+> +	ret = kstrtobool(buf, &readin);
+> +	if (ret)
+> +		return ret;
+> +
+> +	readin = !readin;
+> +
+> +	regval = AD5770R_CFG_SHUTDOWN_B(readin, chan->channel);
+> +	if (chan->channel == 0 &&
+> +	    st->output_mode[0].out_range_mode > AD5770R_CH0_0_300) {
+> +		regval |= AD5770R_CFG_CH0_SINK_EN(readin);
+> +		mask = BIT(chan->channel) + BIT(7);
+> +	} else {
+> +		mask = BIT(chan->channel);
+> +	}
+> +	ret = regmap_update_bits(st->regmap, AD5770R_CHANNEL_CONFIG, mask,
+> +				 regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	regval = AD5770R_CH_SET(readin, chan->channel);
+> +	ret = regmap_update_bits(st->regmap, AD5770R_CH_ENABLE,
+> +				 BIT(chan->channel), regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->ch_pwr_down[chan->channel] = !readin;
+> +
+> +	return len;
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info ad5770r_ext_info[] = {
+> +	{
+> +		.name = "powerdown",
+> +		.read = ad5770r_read_dac_powerdown,
+> +		.write = ad5770r_write_dac_powerdown,
+> +		.shared = IIO_SEPARATE,
+> +	},
+> +	{ }
+> +};
+> +
+> +#define AD5770R_IDAC_CHANNEL(index, reg) {				\
+> +	.type = IIO_CURRENT,						\
+> +	.address = reg,							\
+> +	.indexed = 1,							\
+> +	.channel = index,						\
+> +	.output = 1,							\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+> +		BIT(IIO_CHAN_INFO_SCALE) |				\
+> +		BIT(IIO_CHAN_INFO_OFFSET) |				\
+> +		BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),	\
+> +	.info_mask_shared_by_type_available =				\
+> +		BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),	\
+> +	.ext_info = ad5770r_ext_info,					\
+> +}
+> +
+> +static const struct iio_chan_spec ad5770r_channels[] = {
+> +	AD5770R_IDAC_CHANNEL(0, AD5770R_DAC_MSB(0)),
+> +	AD5770R_IDAC_CHANNEL(1, AD5770R_DAC_MSB(1)),
+> +	AD5770R_IDAC_CHANNEL(2, AD5770R_DAC_MSB(2)),
+> +	AD5770R_IDAC_CHANNEL(3, AD5770R_DAC_MSB(3)),
+> +	AD5770R_IDAC_CHANNEL(4, AD5770R_DAC_MSB(4)),
+> +	AD5770R_IDAC_CHANNEL(5, AD5770R_DAC_MSB(5)),
+> +};
+> +
+> +static int ad5770r_channel_config(struct ad5770r_state *st)
+> +{
+> +	int ret, tmp[2], min, max;
+> +	unsigned int num;
+> +	struct fwnode_handle *child;
+> +
+> +	num = device_get_child_node_count(&st->spi->dev);
+> +	if (num != AD5770R_MAX_CHANNELS)
+> +		return -EINVAL;
+> +
+> +	device_for_each_child_node(&st->spi->dev, child) {
+> +		ret = fwnode_property_read_u32(child, "num", &num);
+> +		if (ret)
+> +			return ret;
+> +		if (num > AD5770R_MAX_CHANNELS)
+> +			return -EINVAL;
+> +
+> +		ret = fwnode_property_read_u32_array(child,
+> +						     "adi,range-microamp",
+> +						     tmp, 2);
+> +		if (ret)
+> +			return ret;
+> +
+> +		min = tmp[0] / 1000;
+> +		max = tmp[1] / 1000;
+> +		ret = ad5770r_store_output_range(st, min, max, num);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad5770r_init(struct ad5770r_state *st)
+> +{
+> +	int ret, i;
+> +
+> +	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->gpio_reset))
+> +		return PTR_ERR(st->gpio_reset);
+> +
+> +	/* Perform a reset */
+> +	ret = ad5770r_reset(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set output range */
+> +	ret = ad5770r_channel_config(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < AD5770R_MAX_CHANNELS; i++) {
+> +		ret = ad5770r_set_output_mode(st,  &st->output_mode[i], i);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	st->external_res = fwnode_property_read_bool(st->spi->dev.fwnode,
+> +						     "adi,external-resistor");
+> +
+> +	ret = ad5770r_set_reference(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set outputs off */
+> +	ret = regmap_write(st->regmap, AD5770R_CHANNEL_CONFIG, 0x00);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD5770R_CH_ENABLE, 0x00);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < AD5770R_MAX_CHANNELS; i++)
+> +		st->ch_pwr_down[i] = true;
+> +
+> +	return ret;
+> +}
+> +
+> +static void ad5770r_disable_regulator(void *data)
+> +{
+> +	struct spi_device *spi = (struct spi_device *)data;
+
+No need to explicitly cast a void * to anything.
+	struct spi_device *spi = data;
+is always fine under the c specification.
+I'd skip it though and do..
+
+struct iio_dev *indio_dev = spi_get_drvdata(data);
+directly.
+
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct ad5770r_state *st = iio_priv(indio_dev);
+> +
+> +	if (st->vref_reg)
+
+With change suggested below, this will only be called
+if st->vref_reg != NULL so no need for the check.
+
+> +		regulator_disable(st->vref_reg);
+> +}
+> +
+> +static int ad5770r_probe(struct spi_device *spi)
+> +{
+> +	struct ad5770r_state *st;
+> +	struct iio_dev *indio_dev;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	st->spi = spi;
+> +
+> +	regmap = devm_regmap_init_spi(spi, &ad5770r_spi_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&spi->dev, "Error initializing spi regmap: %ld\n",
+> +			PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +	st->regmap = regmap;
+> +
+> +	ret = devm_add_action_or_reset(&spi->dev, ad5770r_disable_regulator,
+> +				       st);
+
+This should only be called 'after' we know there is something to do so...
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	st->vref_reg = devm_regulator_get_optional(&spi->dev, "vref");
+> +	if (!IS_ERR(st->vref_reg)) {
+> +		ret = regulator_enable(st->vref_reg);
+> +		if (ret) {
+> +			dev_err(&spi->dev,
+> +				"Failed to enable vref regulators: %d\n", ret);
+> +			return ret;
+> +		}
+
+call devm_add_action_or_reset(&spi->dev, ...disable_regulator here.
+
+> +
+> +		ret = regulator_get_voltage(st->vref_reg);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		st->vref = ret / 1000;
+> +	} else {
+> +		if (PTR_ERR(st->vref_reg) == -ENODEV) {
+> +			st->vref = AD5770R_LOW_VREF_mV;
+> +			st->internal_ref = true;
+> +		} else {
+> +			return PTR_ERR(st->vref_reg);
+> +		}
+> +	}
+> +
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->info = &ad5770r_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = ad5770r_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(ad5770r_channels);
+> +
+> +	ret = ad5770r_init(st);
+> +	if (ret < 0) {
+> +		dev_err(&spi->dev, "AD5770R init failed\n");
+> +		return ret;
+> +	}
+> +
+> +	return devm_iio_device_register(&st->spi->dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id ad5770r_of_id[] = {
+> +	{ .compatible = "adi,ad5770r", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ad5770r_of_id);
+> +
+> +static const struct spi_device_id ad5770r_id[] = {
+> +	{ "ad5770r", 0 },
+> +	{},
+
+Given the driver needs a whole load of stuff that is in DT and
+we have no other way of providing it, I think there is limited
+point in provide the spi_device_id table (which is used for
+probing via other ways such as the sysfs device add interface for
+i2c).
+
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad5770r_id);
+> +
+> +static struct spi_driver ad5770r_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = of_match_ptr(ad5770r_of_id),
+
+We could drop the of_match_ptr and make the driver probe-able
+using ACPI and PRP001. This magic id is used to allow you to
+probe using DT bindings via ACPI.
+
+> +	},
+> +	.probe = ad5770r_probe,
+> +	.id_table = ad5770r_id,
+> +};
+> +
+> +module_spi_driver(ad5770r_driver);
+> +
+> +MODULE_AUTHOR("Mircea Caprioru <mircea.caprioru@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD5770R IDAC");
+> +MODULE_LICENSE("GPL v2");
+
