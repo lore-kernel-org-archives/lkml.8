@@ -2,110 +2,137 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D63EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA0CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBF82081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:11:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQXv020x"
+	by mail.kernel.org (Postfix) with ESMTP id EB817217F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581725848;
+	bh=0TKEdWN6SIgbxXSKWc4lndzp4gWiftZNNLwKKtQQyF4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ba0dLoIQa6k3KTkwDxOm6swcUJf2Gm4uD5iBC5CA2uUC9pv5Lwa9igd1XYxVN9cNl
+	 06IbrP8+SO3TZ1oVJ8NQQ86o70QnKSgZlWxu7X71xaxPzTWc8P19QI9F0Ug0+QFMm8
+	 1sZlv6uXXTybHg4UmTsxJYWSsK0MBVM9Migc1Kr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBOALi (ORCPT
+        id S1727723AbgBOAR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:11:38 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:44709 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727684AbgBOALh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:11:37 -0500
-Received: by mail-yb1-f194.google.com with SMTP id f21so5656038ybg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 16:11:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qj2zBbkIxBGfCERuHV86VP5E7OnuA4mxy13S+8Juj1A=;
-        b=mQXv020xrGiFQVRcG+t3iVDyjz5L4TGdw0U6fbXeCwxrDC4hDSpg0HBUuUifRpC35r
-         IAr+R+LZdTurVkQIlblgBmObc9b8hX5L2QMJXSgw+ykNNQcG5LVdhpwoKmSquITh5FDc
-         me1wYFI8+0AcXmPj9ameun83h8tbAFaCzlBQVnK9wL0CfDhdWHFsRLu+6RaIUliQg3mx
-         FEvcu8Ar1zcLaMHBuLvh3rsYsOfl0C2RlyfjNt65BG+ROrPNebXJjL0UYf9LxR0gYO5q
-         4Entvu6OAzKq+H8KYWL1LRp/fdJbWViG6JTmq3xbcl9LNkt596K8wSd8/aHFGmc4lO1e
-         VG0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qj2zBbkIxBGfCERuHV86VP5E7OnuA4mxy13S+8Juj1A=;
-        b=n1GVeyTBRadKXh2/8rRgp1Y3uWzWiBC96WyBAJMa5mZZNmhC8VpIwrPiRIJFtZwWBb
-         uEOp1YJHsahGHFu7afllTGobnTCvg6Ifz+P9Xip7bCQ8B8raWfKx3VR+tB8d+YLoHEsv
-         jLhofQmxjGmCKSA5SBbhMaCqAB0ODq1S5GtRJZ5ZsCH7UQd15DuiYzlOy+6gOSKXrwX8
-         EOIE8LOdjG/GPDf39FPCe1sDhmdzMDGMV+kVjwTxwGeHt5fgb23gynONF8UgLnrTQvf7
-         toanAkw7SXwFPYNYfIIFGfBpxbvUNDauG1/gI5jv+GP44iC8h5DtYNin1bV8O2Ljw0Zb
-         gqQg==
-X-Gm-Message-State: APjAAAUrS0TNvALHDNOj0C4Oq5hPWaFCXJbAifFYj49QaaMpCkySW6/I
-        fdPIcj2RDZrjIBGL6Y/4tSo2Tm2jx3VFDPngw2cCBA==
-X-Google-Smtp-Source: APXvYqwRusIwUk6lCNfxmnhsTV8VjQlzho9wFmoZfuZX08t6lIpHqT7y+O10DM3NmqSYkj2omYk5blRS2XoRospyutQ=
-X-Received: by 2002:a25:b949:: with SMTP id s9mr5305834ybm.274.1581725496112;
- Fri, 14 Feb 2020 16:11:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20200214222415.181467-1-shakeelb@google.com> <CANn89iLe7KVjaechEhtV4=QRy4s8qBQDiX9e8LX_xq8tunrQNA@mail.gmail.com>
- <CALvZod5RoE3V7HteKqqDEfCgY8pDok6PWHrpu8trB1vyuK2UHA@mail.gmail.com>
- <CANn89i+-GJgD4-YnF9yKhDvG48OK8XtM7oB9gw6njeb_ZbdpDw@mail.gmail.com> <CALvZod4kU=tWcWbu4pWBrHUcxgTnKj_2fEEdnBeU+F0kox0Hig@mail.gmail.com>
-In-Reply-To: <CALvZod4kU=tWcWbu4pWBrHUcxgTnKj_2fEEdnBeU+F0kox0Hig@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 14 Feb 2020 16:11:24 -0800
-Message-ID: <CANn89iKq5r7aCDdpTXzfvDbhHYgnTGhgyTG5_rLbcSeeF8uJJQ@mail.gmail.com>
-Subject: Re: [PATCH v2] cgroup: memcg: net: do not associate sock with
- unrelated cgroup
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Fri, 14 Feb 2020 19:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbgBOAR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:17:27 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9D93207FF;
+        Sat, 15 Feb 2020 00:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581725846;
+        bh=0TKEdWN6SIgbxXSKWc4lndzp4gWiftZNNLwKKtQQyF4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GQAwE8iBhkKbW2wIezXRYLdvtYyBnfKcGq5xfMtirqsljp5zJjd4urdXNOvxfGGEk
+         mnET3Wm7ehwMqXNv49e/b+0M59o6q8mtdASEHsfuOLbno/BsvX+fwfXljZmWZCjyxe
+         Q7udDoqFD9xNFG3s+hEZ51hz3LV5oic0zuYXcX7g=
+Date:   Sat, 15 Feb 2020 09:17:18 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Salyzyn <salyzyn@android.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH 0/3] random: add random.rng_seed to bootconfig entry
+Message-Id: <20200215091718.129eecc9b65a9c41c91027b0@kernel.org>
+In-Reply-To: <CAL_JsqKb=qBH6QXphEZi7vMS+2K5kNj1riXQiUWma=bidAjN5A@mail.gmail.com>
+References: <158166060044.9887.549561499483343724.stgit@devnote2>
+        <CAL_JsqJ_VwHdpQ_WnQHu5J-bfs1vRPd5HQwVekR+5kKdVi4sXw@mail.gmail.com>
+        <1694f42c-bfc9-570a-64d2-3984965c8940@android.com>
+        <CAL_JsqKb=qBH6QXphEZi7vMS+2K5kNj1riXQiUWma=bidAjN5A@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 4:04 PM Shakeel Butt <shakeelb@google.com> wrote:
->
-> On Fri, Feb 14, 2020 at 3:12 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Fri, Feb 14, 2020 at 2:48 PM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > >
-> > > I think in the current code if the association is skipped at
-> > > allocation time then the sock will remain unassociated for its
-> > > lifetime.
-> > >
-> > > Maybe we can add the association in the later stages but it seems like
-> > > it is not a simple task i.e. edbe69ef2c90f ("Revert "defer call to
-> > > mem_cgroup_sk_alloc()"").
-> >
-> > Half TCP sockets are passive, so this means that 50% of TCP sockets
-> > won't be charged.
-> > (the socket cloning always happens from BH context)
-> >
-> > I think this deserves a comment in the changelog or documentation,
-> > otherwise some people might think
-> > using memcg will make them safe.
->
-> Thanks I will update the changelog. Also is inet_csk_accept() the
-> right place for delayed cgroup/memcg binding (if we decide to do
-> that). I am wondering if we can force charge the memcg during late
-> binding to cater the issue fixed in edbe69ef2c90f.
->
+Hi Rob,
 
-Yes, this is exactly why accept() would be the natural choice.
+On Fri, 14 Feb 2020 12:14:53 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-You  do not want to test/change the binding at sendmsg()/recvmsg() time, right ?
+> To clarify my question: Why do we need random seed in bootconfig
+> rather than just the kernel command line? I'm not understanding why
+> things changed from your original patch.
+
+I recommended to use it in the previous thread, because of simplicity.
+Since it has to hide from userspace and modules, it needs to modify
+kernel command line. But the bootconfig can make it simple, and it
+also architecture independent.
+
+> > In addition, 2B Android devices on the planet, especially in light of
+> > the Android GKI distribution were everything that is vendor created is
+> > in a module, needs a way to collect early entropy prior to module load
+> > and pass it to the kernel. Yes, they do have access to the recently
+> > added Device Tree approach, and we expect them to use it, as I have an
+> > active backport for the mechanism into the Android 4.19 and 5.4 kernels.
+
+FYI, I backported bootconfig with boot-time tracer for 4.19 stable kernel
+recently.
+
+https://github.com/mhiramat/linux/commits/ftrace-boottrace-4.19
+
+You can check what commits are related.
+
+> > There may also be some benefit to allowing the 13000 different
+> > bootloaders an option to use bootconfig as a way of propagating the much
+> > needed entropy to their kernels. I could make a case to also allow them
+> > command line as another option to relieve their development stress to
+> > deliver product, but we can stop there. Regardless, this early entropy
+> > has the benefit of greatly improving security and precious boot time.
+> 
+> We're going to update 13000 bootloaders to understand bootconfig
+> rather than use the infrastructure already in place (DT and/or command
+> line)?
+> 
+> bootconfig is an ftrace feature only IMO. If it's more than that, I
+> imagine there will be some opinions about that. Adding new
+> bootloader-kernel interfaces is painful and not something to just add
+> without much review.
+
+The bootconfig itself is designed as a generic feature. I had tried to use
+devicetree, but that was rejected. Thus I made it as a "software
+configuration tree" (but far simpler.)
+ 
+If you have any review comment on the bootconfig, always welcome!
+Seriously, I would like to have more comments. I want to make it better.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
