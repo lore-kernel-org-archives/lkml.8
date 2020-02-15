@@ -2,94 +2,70 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99063C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD629C352A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF0C2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF272086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 21:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgBOVSE (ORCPT
+        id S1727794AbgBOVSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 16:18:04 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34954 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgBOVSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Feb 2020 16:18:03 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34898 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgBOVSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 16:18:02 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 0808929B32; Sat, 15 Feb 2020 16:18:02 -0500 (EST)
+        id 965D129AE1; Sat, 15 Feb 2020 16:18:01 -0500 (EST)
+Message-Id: <cover.1581800613.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH net-next 0/7] Improvements for SONIC ethernet drivers
+Date:   Sun, 16 Feb 2020 08:03:32 +1100
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <dfc072d93a97b794235bc43a6c2c8c81f0b9de50.1581800613.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1581800613.git.fthain@telegraphics.com.au>
-References: <cover.1581800613.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net-next 7/7] net/macsonic: Remove interrupt handler wrapper
-Date:   Sun, 16 Feb 2020 08:03:32 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On m68k, local irqs remain enabled while interrupt handlers execute.
-Therefore the macsonic driver has had to disable interrupts to avoid
-re-entering sonic_interrupt().
+Hi David,
 
-As of commit 865ad2f2201d ("net/sonic: Add mutual exclusion for accessing
-shared state"), sonic_interrupt() became re-entrant, and its wrapper
-became redundant.
+Now that the necessary sonic driver fixes have been merged, and the merge
+window has closed again, I'm sending the remainder of my sonic driver
+patch queue.
 
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/net/ethernet/natsemi/macsonic.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+A couple of these patches will have to be applied in sequence to avoid
+'git am' rejects. The others are independent and could have been submitted
+individually. Please let me know if I should do that.
 
-diff --git a/drivers/net/ethernet/natsemi/macsonic.c b/drivers/net/ethernet/natsemi/macsonic.c
-index 0f4d0c25d626..1b5559aacb38 100644
---- a/drivers/net/ethernet/natsemi/macsonic.c
-+++ b/drivers/net/ethernet/natsemi/macsonic.c
-@@ -114,17 +114,6 @@ static inline void bit_reverse_addr(unsigned char addr[6])
- 		addr[i] = bitrev8(addr[i]);
- }
- 
--static irqreturn_t macsonic_interrupt(int irq, void *dev_id)
--{
--	irqreturn_t result;
--	unsigned long flags;
--
--	local_irq_save(flags);
--	result = sonic_interrupt(irq, dev_id);
--	local_irq_restore(flags);
--	return result;
--}
--
- static int macsonic_open(struct net_device* dev)
- {
- 	int retval;
-@@ -135,12 +124,12 @@ static int macsonic_open(struct net_device* dev)
- 				dev->name, dev->irq);
- 		goto err;
- 	}
--	/* Under the A/UX interrupt scheme, the onboard SONIC interrupt comes
--	 * in at priority level 3. However, we sometimes get the level 2 inter-
--	 * rupt as well, which must prevent re-entrance of the sonic handler.
-+	/* Under the A/UX interrupt scheme, the onboard SONIC interrupt gets
-+	 * moved from level 2 to level 3. Unfortunately we still get some
-+	 * level 2 interrupts so register the handler for both.
- 	 */
- 	if (dev->irq == IRQ_AUTO_3) {
--		retval = request_irq(IRQ_NUBUS_9, macsonic_interrupt, 0,
-+		retval = request_irq(IRQ_NUBUS_9, sonic_interrupt, 0,
- 				     "sonic", dev);
- 		if (retval) {
- 			printk(KERN_ERR "%s: unable to get IRQ %d.\n",
+The complete sonic driver patch queue was tested on National Semiconductor
+hardware (macsonic), qemu-system-m68k (macsonic) and qemu-system-mips64el
+(jazzsonic).
+
+
+Finn Thain (7):
+  net/sonic: Remove obsolete comment
+  net/sonic: Refactor duplicated code
+  net/sonic: Remove redundant next_tx variable
+  net/sonic: Remove redundant netif_start_queue() call
+  net/sonic: Remove explicit memory barriers
+  net/sonic: Start packet transmission immediately
+  net/macsonic: Remove interrupt handler wrapper
+
+ drivers/net/ethernet/natsemi/jazzsonic.c | 31 +----------
+ drivers/net/ethernet/natsemi/macsonic.c  | 48 +++--------------
+ drivers/net/ethernet/natsemi/sonic.c     | 66 +++++++++++++++++-------
+ drivers/net/ethernet/natsemi/sonic.h     |  2 +-
+ drivers/net/ethernet/natsemi/xtsonic.c   | 40 +-------------
+ 5 files changed, 60 insertions(+), 127 deletions(-)
+
 -- 
 2.24.1
 
