@@ -2,98 +2,116 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E73C4741C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0BC7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15642083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="TvJ04IHT"
+	by mail.kernel.org (Postfix) with ESMTP id 929BA24677
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581786812;
+	bh=5l8Vi8hleqqzVtD4lt7Lj3hIV69+fYnulxZp4qYnC7Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Gb92Igxpi1hSOrH4G2i19SRIXoF6CczbJXEvohj+sMoyRSwU+7L5X5m8uWXvZFUS3
+	 6qlWOhDJxA4SG0pE7IUtL05bkuzVKYo3uoiHGCpAim70JE1Vl04E0KXN1Y+eKm2HD4
+	 ZupVbF4dptbE1B80l36vbiluUVnyBNpqY1lKXdfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgBORAh (ORCPT
+        id S1726533AbgBORNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 12:00:37 -0500
-Received: from a80-127-99-228.adsl.xs4all.nl ([80.127.99.228]:45182 "EHLO
-        hetgrotebos.org" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726211AbgBORAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 12:00:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=/bYhlTgZjq7g++rSKDUPsBEdeWE9dMvdESyFshU2+TM=; b=TvJ04IHTnQv9XjQOpFH0kBkboF
-        UK6G36vzXOufs78oN4e2AUFWWvy3+DX6O+1aqxvlgl/J4+Ycs8FDPvpScOy31PUeeAXfmrDrHrLey
-        jKR+Sa9EGaL933GOTkmzdj2T6RL+BsLFjY/FB/J/Fhfz9cJA54bqUy98nRNWcwne+5IQ52BcsGF73
-        x4VT31q1uYMebxjQyzDmxWLApF9ABxS41rUIeX3unU7KrbNRuBbylThqT79yM0QJFMWqeI+uNO4Ot
-        8l5qYFlueJfy4Tx0PjBNHM14WlJFN3HKLyjSTsVRcO6B5R//O5OBWc6OZTVOkWXps+ohDkDuu8JA2
-        3rKPY4GA==;
-Received: from kgpe-d16.fritz.box ([192.168.178.22])
-        by hetgrotebos.org with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1j30nh-00037p-DQ; Sat, 15 Feb 2020 17:00:17 +0000
-From:   Merlijn Wajer <merlijn@wizzup.org>
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH 0/2] Add SW_MACHINE_COVER key
-Date:   Sat, 15 Feb 2020 18:02:13 +0100
-Message-Id: <20200215170216.14397-1-merlijn@wizzup.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 15 Feb 2020 12:13:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgBORNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 12:13:31 -0500
+Received: from paulmck-ThinkPad-P72.home (smb-adpcdg2-04.hotspot.hub-one.net [213.174.99.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF00D24676;
+        Sat, 15 Feb 2020 17:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581786811;
+        bh=5l8Vi8hleqqzVtD4lt7Lj3hIV69+fYnulxZp4qYnC7Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=OD6SuASqhLkiSk3WfOyp1pmpybaGcqpvStW+3m4XqP2l9Lb3Xu7kZVMTXPOL8162t
+         MKy04wUvMR2KxNoCJtdGNkCGGMQsY5xZQ3+DqZnb9X38qnicVnNwv3rsXlrH3M2eo7
+         69MW/dngshLWwqZ3/ULZG9SY1qsKhIa0e3SvNja8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E84FE35219C1; Sat, 15 Feb 2020 07:25:50 -0800 (PST)
+Date:   Sat, 15 Feb 2020 07:25:50 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [RFC 0/3] tools/memory-model: Add litmus tests for atomic APIs
+Message-ID: <20200215152550.GA13636@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200214040132.91934-1-boqun.feng@gmail.com>
+ <Pine.LNX.4.44L0.2002141024141.1579-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2002141024141.1579-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this series adds the sw_machine_cover key, and changes the nokia n900 dts to
-expose the key via gpio-keys.
+On Fri, Feb 14, 2020 at 10:27:44AM -0500, Alan Stern wrote:
+> On Fri, 14 Feb 2020, Boqun Feng wrote:
+> 
+> > A recent discussion raises up the requirement for having test cases for
+> > atomic APIs:
+> > 
+> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > 
+> > , and since we already have a way to generate a test module from a
+> > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > tests for atomic APIs into memory-model.
+> 
+> It might be worth discussing this point a little more fully.  The 
+> set of tests in tools/memory-model/litmus-tests/ is deliberately rather 
+> limited.  Paul has a vastly more expansive set of litmus tests in a 
+> GitHub repository, and I am doubtful about how many new tests we want 
+> to keep in the kernel source.
 
-before, this gpio was used as card detect gpio, causing the card not to show up
-if the phone was booted without cover, see this thread on linux-omap:
+Indeed, the current view is that the litmus tests in the kernel source
+tree are intended to provide examples of C-litmus-test-language features
+and functions, as opposed to exercising the full cross-product of
+Linux-kernel synchronization primitives.
 
-    n900: remove mmc1 "safety feature"? (was: re: mmc0 on nokia n900 on linux 5.4.18)
+For a semi-reasonable subset of that cross-product, as Alan says, please
+see https://github.com/paulmckrcu/litmus.
 
-since there is no realistic use for using this gpio as card detect, instead
-expose it to userspace via gpio-keys. there are no event type for machine covers
-yet, so add that first.
+For a list of the Linux-kernel synchronization primitives currently
+supported by LKMM, please see tools/memory-model/linux-kernel.def.
 
-the key should be 1 when the cover is closed, and 0 when the cover is open.
+> Perhaps it makes sense to have tests corresponding to all the examples
+> in Documentation/, perhaps not.  How do people feel about this?
 
-starting the nokia n900 with the cover removed, putting the cover in place:
+Agreed, we don't want to say that the set of litmus tests in the kernel
+source tree is limited for all time to the set currently present, but
+rather that the justification for adding more would involve useful and
+educational examples of litmus-test features and techniques rather than
+being a full-up LKMM test suite.
 
-    event: time 1581684523.415296, type 5 (ev_sw), code 16 (?), value 1
+I would guess that there are litmus-test tricks that could usefully
+be added to tools/memory-model/litmus-tests.  Any nomination?  Perhaps
+handling CAS loops while maintaining finite state space?  Something else?
 
-removing the cover again, exposing mmc1 and the battery:
-
-    event: time 1581684529.413706, type 5 (ev_sw), code 16 (?), value 0
-
-Merlijn Wajer (2):
-  Input: add `SW_MACHINE_COVER`
-  ARM: dts: n900: remove mmc1 card detect gpio
-
- arch/arm/boot/dts/omap3-n900.dts       | 12 ++++++++----
- include/linux/mod_devicetable.h        |  2 +-
- include/uapi/linux/input-event-codes.h |  3 ++-
- 3 files changed, 11 insertions(+), 6 deletions(-)
-
--- 
-2.23.0
-
+							Thanx, Paul
