@@ -2,80 +2,155 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD7C35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F11C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE772083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72D72081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hvL1YLAh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dMAR4DoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBOBsQ (ORCPT
+        id S1727858AbgBOB5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 20:48:16 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:57484 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgBOBrt (ORCPT
+        Fri, 14 Feb 2020 20:57:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59166 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727641AbgBOB5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 20:47:49 -0500
-Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 46079200889D;
-        Fri, 14 Feb 2020 17:47:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46079200889D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1581731269;
-        bh=gheApcamLsI0c+q9A7msGcmf+VN3q+eHMy9K2vxEMxQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hvL1YLAhKmpNI7mEI19hcJDdmGUUbDOr1E0nINyUnuTAelZg7MI4mw9ONe+DseXpJ
-         2j8geTps/l9pkUN8H2guZcjxJs/zOUoBJAAST1hhtqkQ98ssNKLVxrL3epXttrtH1O
-         fXtOsyTIF57B3D1KdNfH49IfOEQRN2SbQQ/qMLbk=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, joe@perches.com, skhan@linuxfoundation.org,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3]  IMA: Add log statements for failure conditions
-Date:   Fri, 14 Feb 2020 17:47:08 -0800
-Message-Id: <20200215014709.3006-3-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
-References: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
+        Fri, 14 Feb 2020 20:57:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=aPLaqzQiC2oJA5/Vp51UZ2aCFqPxWRiK5NqiMLTMznc=; b=dMAR4DoA0Gv7jeXKJeNuYkD3YD
+        45d0Dh809kj2THRXdsWLabVKvR2DD8YszgGorTQWrG72vcQdBw8yZd/m8RECx4q/A0RxOBd/8pwVR
+        i52tknsKXcF5fB/M9dOtFn96w0BDHzStEPbp8TuI3ufYyrEWPbJClW+LAmHWPK0vIpiM/DfrwWHuD
+        8jjd5orYMNrdQNs4ANogJmlpR7kisXksF647BebNYCzmrJK9MABjwfnavX9eQB3f2WY0uJrmAkLXh
+        yEXX09xDmSTG+V+kwBDpKqYBEplhhyfQo1X4CuPLs0AQQ3KcIpItLRIGa+ucK5CBRSe5k2yiPiDGx
+        UmVJCs3g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j2mhV-0005yR-Ta; Sat, 15 Feb 2020 01:56:57 +0000
+Subject: Re: [PATCH] hugetlb: fix CONFIG_CGROUP_HUGETLB ifdefs
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Mina Almasry <almasrymina@google.com>, linux-mm@kvack.org,
+        linux-next@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <7ff9e944-1c6c-f7c1-d812-e12817c7a317@oracle.com>
+ <20200214204544.231482-1-almasrymina@google.com>
+ <CAHS8izMjyLzCsSga59dE+zDC3sLBuA=_u4EtsShN+EZQ1EQitw@mail.gmail.com>
+ <5237b9bc-2614-0a3a-afa5-5015f30d28bc@infradead.org>
+Message-ID: <f0fd4a6b-1d4a-8e7d-65c0-a454fbf550a2@infradead.org>
+Date:   Fri, 14 Feb 2020 17:56:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <5237b9bc-2614-0a3a-afa5-5015f30d28bc@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_buffer_measurement() does not have log messages for failure
-conditions.
+On 2/14/20 5:17 PM, Randy Dunlap wrote:
+> On 2/14/20 1:00 PM, Mina Almasry wrote:
+>> On Fri, Feb 14, 2020 at 12:46 PM Mina Almasry <almasrymina@google.com> wrote:
+>>>
+>>> Fixes an #ifdef bug in the patch referred to below that was
+>>> causing a build error when CONFIG_DEBUG_VM &&
+>>> !CONFIG_CCGROUP_HUGETLB.
+> 
+> Hi Mina,
+> 
+> I don't know if this was supposed to fix the 2 build reports that I made,
+> but this does not apply cleanly to mmotm (and it's a reply email so it's
+> more difficult to apply anyway):
+> 
+> Applying patch mm-hugetlb-fix-CONFIG_CGROUP_HUGETLB.patch
+> patching file mm/hugetlb.c
+> Hunk #1 succeeded at 289 with fuzz 1.
+> Hunk #2 succeeded at 325 with fuzz 2.
+> Hunk #3 FAILED at 435.
+> 1 out of 3 hunks FAILED -- rejects in file mm/hugetlb.c
+> 
 
-This change adds a log statement in the above function. 
+OK, I applied this patch manually and it does fix most of the reported build problems.
+The only one remaining is this:
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: Joe Perches <joe@perches.com>
----
- security/integrity/ima/ima_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+  CC      mm/migrate.o
+In file included from ../mm/migrate.c:39:0:
+../include/linux/hugetlb_cgroup.h:146:21: warning: ‘struct file_region’ declared inside parameter list will not be visible outside of this definition or declaration
+              struct file_region *rg,
+                     ^~~~~~~~~~~
+../include/linux/hugetlb_cgroup.h:145:63: warning: ‘struct resv_map’ declared inside parameter list will not be visible outside of this definition or declaration
+ static inline void hugetlb_cgroup_uncharge_file_region(struct resv_map *resv,
+                                                               ^~~~~~~~
+../include/linux/hugetlb_cgroup.h:233:59: warning: ‘struct resv_map’ declared inside parameter list will not be visible outside of this definition or declaration
+ static inline void hugetlb_cgroup_uncharge_counter(struct resv_map *resv,
+                                                           ^~~~~~~~
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 9fe949c6a530..aac1c44fb11b 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -757,6 +757,9 @@ void process_buffer_measurement(const void *buf, int size,
- 		ima_free_template_entry(entry);
- 
- out:
-+	if (ret < 0)
-+		pr_devel("%s: failed, result: %d\n", __func__, ret);
-+
- 	return;
- }
- 
+> 
+>>> Fixes: b5f16a533ce8a ("hugetlb: support file_region coalescing again")
+>>> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>>> Cc: David Rientjes <rientjes@google.com>
+>>> Cc: Greg Thelen <gthelen@google.com>
+>>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> ---
+>>>  mm/hugetlb.c | 8 +++++---
+>>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index ee6d262fe6ac0..95d34c58981d2 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -289,7 +289,7 @@ static bool has_same_uncharge_info(struct file_region *rg,
+>>>  #endif
+>>>  }
+>>>
+>>> -#ifdef CONFIG_DEBUG_VM
+>>> +#if defined(CONFIG_DEBUG_VM) && defined(CONFIG_CGROUP_HUGETLB)
+>>>  static void dump_resv_map(struct resv_map *resv)
+>>>  {
+>>>         struct list_head *head = &resv->regions;
+>>> @@ -325,6 +325,10 @@ static void check_coalesce_bug(struct resv_map *resv)
+>>>                 }
+>>>         }
+>>>  }
+>>> +#else
+>>> +static void check_coalesce_bug(struct resv_map *resv)
+>>> +{
+>>> +}
+>>>  #endif
+>>>
+>>>  static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
+>>> @@ -431,9 +435,7 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+>>>         }
+>>>
+>>>         VM_BUG_ON(add < 0);
+>>> -#ifdef CONFIG_DEBUG_VM
+>>>         check_coalesce_bug(resv);
+>>> -#endif
+>>>         return add;
+>>>  }
+>>>
+>>> --
+>>> 2.25.0.265.gbab2e86ba0-goog
+
+
 -- 
-2.17.1
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
