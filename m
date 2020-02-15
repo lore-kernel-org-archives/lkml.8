@@ -2,87 +2,166 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C73BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F441C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F1D2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:08:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="m2YCxJbl"
+	by mail.kernel.org (Postfix) with ESMTP id 681592086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 16:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581782984;
+	bh=eR4o3mzWLrdtrA2+xZWK//TTGWU7qeeuM5nQKq6KokE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AvyuuDCGXGFlssQcchS0ZraztRf9fKf/sXgBcdR6gfmUbu6UPlleJqSLz/SU0DFK9
+	 GBVN7V85LuDyJ7fAQcKrETDqPyPW9otgsO6gdxGmFLmBApmEIHQuVN8qJxf1rvkunn
+	 XTLoZkliduMbYlahp+8MXQg9yJlHSrx+r2d4K7f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgBOQIR (ORCPT
+        id S1726462AbgBOQJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 11:08:17 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:47816 "EHLO vps0.lunn.ch"
+        Sat, 15 Feb 2020 11:09:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgBOQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 11:08:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=/MAL/dS9+xaImPqMBu7AglUJ2inc+yODBpvhLTi/OhU=; b=m2YCxJblWgvBUHgjEiI109YDcF
-        dhnr9hZ2ojkZyF0wmbpsAD3oW1RP2dSDKreR5bioSR+sDiWn/zoQ52SclqLQE07hx6MX/jyRm46b4
-        AbVTeiCNcjC7LxUcU7btf4A9e2RbC8BxfGJcOOFEpEjzE77YAq3ieKd+yUmvvj0+5BAo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j2zzE-0004ju-B4; Sat, 15 Feb 2020 17:08:08 +0100
-Date:   Sat, 15 Feb 2020 17:08:08 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/3] net: phy: broadcom: Have
- bcm54xx_adjust_rxrefclk() check for flags
-Message-ID: <20200215160808.GA8924@lunn.ch>
-References: <20200214233853.27217-1-f.fainelli@gmail.com>
- <20200214233853.27217-3-f.fainelli@gmail.com>
+        id S1726143AbgBOQJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 11:09:43 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E5C2083B;
+        Sat, 15 Feb 2020 16:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581782982;
+        bh=eR4o3mzWLrdtrA2+xZWK//TTGWU7qeeuM5nQKq6KokE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UaPTvrmq8IF4hShtZLUp4Sk6KXgPMSPMYK2NAvbKNgqLqcZyR+fjBdG9061nzAD0r
+         dpwJYluD+bs6Z9gzvx1fvdYLx81PwfuzbXFkvnjqSJ9aTpumiwCqzyZKNfPNu6RCvv
+         ix59UZ6aVxOD38Tcd5GRxODPKG/T/gDyFQsxe0ik=
+Date:   Sat, 15 Feb 2020 16:09:39 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] iio: accel: adxl372: Update sysfs docs
+Message-ID: <20200215160939.2eaa3c27@archlinux>
+In-Reply-To: <20200214093223.24664-1-alexandru.tachici@analog.com>
+References: <20200214092919.24351-1-alexandru.tachici@analog.com>
+        <20200214093223.24664-1-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214233853.27217-3-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 03:38:52PM -0800, Florian Fainelli wrote:
-> bcm54xx_adjust_rxrefclk() already checks for the flags and will
-> correctly reacting to the 3 different flags it check, allow it to be
-> unconditionally called.
+On Fri, 14 Feb 2020 11:32:23 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+
+> This patch adds entries in the syfs docs of ADXL372.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
->  drivers/net/phy/broadcom.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  .../ABI/testing/sysfs-bus-iio-accel-adxl372   | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
 > 
-> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-> index 4ad2128cc454..b4eae84a9195 100644
-> --- a/drivers/net/phy/broadcom.c
-> +++ b/drivers/net/phy/broadcom.c
-> @@ -273,10 +273,7 @@ static int bcm54xx_config_init(struct phy_device *phydev)
->  	    (phydev->dev_flags & PHY_BRCM_CLEAR_RGMII_MODE))
->  		bcm_phy_write_shadow(phydev, BCM54XX_SHD_RGMII_MODE, 0);
->  
-> -	if ((phydev->dev_flags & PHY_BRCM_RX_REFCLK_UNUSED) ||
-> -	    (phydev->dev_flags & PHY_BRCM_DIS_TXCRXC_NOENRGY) ||
-> -	    (phydev->dev_flags & PHY_BRCM_AUTO_PWRDWN_ENABLE))
-> -		bcm54xx_adjust_rxrefclk(phydev);
-> +	bcm54xx_adjust_rxrefclk(phydev);
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372 b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
+> new file mode 100644
+> index 000000000000..1d74fc2ea0ac
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
+> @@ -0,0 +1,40 @@
+> +What:		/sys/bus/iio/devices/iio:deviceX/peak_fifo_mode_enable
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute allows to configure the FIFO to store sample
+> +		sets of impact event peak (x, y, z). As a precondition, all
+> +		three channels (x, y, z) need to be enabled.
+> +		Writing 1, peak fifo mode will be enabled, if cleared and
+> +		all three channels are enabled, sample sets of concurrent
+> +		3-axis data will be stored in the FIFO.
+> +
+Hmm. I wonder if we can make this more 'standard'.  I can't remember which
+device it was, but we once had a similar one for which we discussed whether
+this could be represented as a separate trigger.  The basis for that would
+be that we only capture data when above the threshold which is effectively
+the same as only triggering capture when above the threshold.
 
-Hi Florian
+However, I'm not sure it really helps us compared to what you have here.
+Conceptually we could add the ability to do similar filtering to this
+in software and in that case it would definitely wouldn't make sense to have
+it as a trigger.  So after arguing with myself I think the rough approach
+you have here is the best we can do.
 
-PHY_BRCM_RX_REFCLK_UNUSED is not unconditionally checked in
-bcm54xx_adjust_rxrefclk(), where as here it is. I assume this is O.K?
-The same is tree for PHY_BRCM_AUTO_PWRDWN_ENABLE.  Maybe worth a
-comment in the commit message if you need to respin.
+However, naming wise...   It's not actually a fifo attribute, it's an
+attribute on 'input' to the fifo (I think).   It's not specific to a
+a particular buffer (would also apply to any buffer_cb in use) so you
+are correct to have it as a general parameter.
+We can't use the term filter, as that's assumed to refer to the actual
+data and it would be confusing.
 
-      Andrew
+So we could call it something like
+
+buffer_peak_mode_enable
+
+> +What:		/sys/bus/iio/devices/iio:deviceX/time_activity
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute allows to set the activity timer in ms,
+> +		the minimum time measured acceleration needs to overcome
+> +		the set threshold in order to detect activity.
+
+I've been thinking about how this aligns with the existing ABI.  When we have
+something that needs to be true for a while before an event happens we use the
+term period and it's in seconds.    If it were simply an event this would
+be
+in_accel_thresh_x_rising_period
+
+The only difference here is that the event is not just signalled but also
+controls the state of the device.
+
+So... How do we indicate this?  I think we should treat these as events
+in general and use the standard interface, but have some additional ABI
+to indicate that they are connected to the mode the device is running in...
+
+Perhaps have 
+events/in_accel_thresh_x_rising_period
+events/in_accel_thresh_x_rising_value
+events/in_accel_thresh_x_falling_period
+events/in_accel_thresh_x_falling_value
+activity_detect_event (which reads in_accel_thresh_x_rising always in this case)
+inactivity_detect_event (which reads in_accel_thresh_x_falling always in this case).
+
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/time_inactivity
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute allows to set the inactivity timer in ms,
+> +		the minimum time measured acceleration needs to be lower
+> +		than set threshold in order to detect inactivity.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_threshold_activity
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute allows to set the activity threshold in 100 mg
+> +		(0.1 m/s^2 SI).
+
+Just mention the SI units.  That conversion is rather inaccurate anyway.  + should
+match with base units which aren't 0.1 for acceleration.
+
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_threshold_inactivity
+> +KernelVersion:
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		This attribute allows to set the inactivity threshold in 100 mg
+> +		(0.1 m/s^2 SI).
+
