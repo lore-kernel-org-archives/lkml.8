@@ -2,84 +2,80 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEEC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD7C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441892073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE772083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 01:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="o8d6BzII"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hvL1YLAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgBOBsO (ORCPT
+        id S1728228AbgBOBsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 20:48:14 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:57470 "EHLO
+        Fri, 14 Feb 2020 20:48:16 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:57484 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgBOBrt (ORCPT
+        with ESMTP id S1727944AbgBOBrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Feb 2020 20:47:49 -0500
 Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id F287820B9C02;
-        Fri, 14 Feb 2020 17:47:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F287820B9C02
+        by linux.microsoft.com (Postfix) with ESMTPSA id 46079200889D;
+        Fri, 14 Feb 2020 17:47:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46079200889D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1581731269;
-        bh=Hde/bKh9d001mm0uPgjU5M8y2bAWp3+eaOklA6nBSbE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o8d6BzII36wuqVnhoJJVRNtK3RvovHbWuvJ/9UEsdlrzABOCASxnvXJdm0+GjkyuP
-         nKg9FMuqOIYt539U99ropVPaiJSkGFwsozvWcYpe/zZnhMarTP7nsaTrdQgymH+Grx
-         L0ToBmo/hm+nD1At8UPaa7NcHis+fGR1/0T6rwlk=
+        bh=gheApcamLsI0c+q9A7msGcmf+VN3q+eHMy9K2vxEMxQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hvL1YLAhKmpNI7mEI19hcJDdmGUUbDOr1E0nINyUnuTAelZg7MI4mw9ONe+DseXpJ
+         2j8geTps/l9pkUN8H2guZcjxJs/zOUoBJAAST1hhtqkQ98ssNKLVxrL3epXttrtH1O
+         fXtOsyTIF57B3D1KdNfH49IfOEQRN2SbQQ/qMLbk=
 From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
 To:     zohar@linux.ibm.com, joe@perches.com, skhan@linuxfoundation.org,
         linux-integrity@vger.kernel.org
 Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/3] IMA: improve log messages
-Date:   Fri, 14 Feb 2020 17:47:06 -0800
-Message-Id: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
+Subject: [PATCH v4 2/3]  IMA: Add log statements for failure conditions
+Date:   Fri, 14 Feb 2020 17:47:08 -0800
+Message-Id: <20200215014709.3006-3-tusharsu@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
+References: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The log messages from IMA subsystem should be consistent for better
-diagnosability and discoverability.
+process_buffer_measurement() does not have log messages for failure
+conditions.
 
-This patch set improves the logging by removing duplicate log formatting
-macros, adding a consistent prefix to the log messages, and adding new 
-log messages where necessary.
+This change adds a log statement in the above function. 
 
-Tushar Sugandhi (3):
-  add log prefix
-  add log message to process_buffer_measurement failure conditions
-  add module name prefix to log statements
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Joe Perches <joe@perches.com>
+---
+ security/integrity/ima/ima_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- security/integrity/digsig.c                  | 2 --
- security/integrity/digsig_asymmetric.c       | 2 --
- security/integrity/evm/evm_crypto.c          | 2 --
- security/integrity/evm/evm_main.c            | 2 --
- security/integrity/evm/evm_secfs.c           | 2 --
- security/integrity/ima/Makefile              | 6 +++---
- security/integrity/ima/ima_asymmetric_keys.c | 2 --
- security/integrity/ima/ima_crypto.c          | 2 --
- security/integrity/ima/ima_fs.c              | 2 --
- security/integrity/ima/ima_init.c            | 2 --
- security/integrity/ima/ima_kexec.c           | 1 -
- security/integrity/ima/ima_main.c            | 5 +++--
- security/integrity/ima/ima_policy.c          | 2 --
- security/integrity/ima/ima_queue.c           | 2 --
- security/integrity/ima/ima_queue_keys.c      | 2 --
- security/integrity/ima/ima_template.c        | 2 --
- security/integrity/ima/ima_template_lib.c    | 2 --
- security/integrity/integrity.h               | 6 ++++++
- 18 files changed, 12 insertions(+), 34 deletions(-)
-
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 9fe949c6a530..aac1c44fb11b 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -757,6 +757,9 @@ void process_buffer_measurement(const void *buf, int size,
+ 		ima_free_template_entry(entry);
+ 
+ out:
++	if (ret < 0)
++		pr_devel("%s: failed, result: %d\n", __func__, ret);
++
+ 	return;
+ }
+ 
 -- 
 2.17.1
 
