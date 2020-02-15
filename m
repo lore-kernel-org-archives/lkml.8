@@ -2,114 +2,90 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C26C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2F8C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3982067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VXZRxTZQ"
+	by mail.kernel.org (Postfix) with ESMTP id 813B7206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgBOAug (ORCPT
+        id S1727790AbgBOAzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:50:36 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:58738 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgBOAug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:50:36 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F0mN80095832;
-        Sat, 15 Feb 2020 00:50:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=O1PJ+4+ziITIIDCQTVcIjvVNxViqJQWUnTHw+Th26V8=;
- b=VXZRxTZQ2qgIBBqwFKH5ijK5H99sawjGv5ald0By6jX1Lyxvfz1CSEpnTKO9TShUc4rp
- Fdi7ymZp/8MLDbLW2oOwyfGP0SahHyWAz92R/QHuRAr0c0YnEYA3eTzqLGH/dj4oP1oZ
- JohC9KPdlZ5EO5xstF2wwWW2Q3oFRhj4wXenabQyba1lf2h+TCbBJ9XIlPv2NT36HyG/
- Q8Rw9N49X+QgjyPPJl2vjWzBeD/8tSnw9fGmxB0+bj7nZ4iOQTeoLJ0f5cI3MQ0pv1Qy
- FSX/vBG8atTSoS3+yvp1A7W6hpcnNYiJyNtSU6StqUmoVPZtOr67iRIMMR/qJjFOOj7q 0A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y2p3t486q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 00:50:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01F0lI9Q047814;
-        Sat, 15 Feb 2020 00:50:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2y4k9nnn1t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 15 Feb 2020 00:50:28 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01F0oRcg025724;
-        Sat, 15 Feb 2020 00:50:27 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 14 Feb 2020 16:50:27 -0800
-Subject: Re: [PATCH v12 2/9] hugetlb_cgroup: add interface for charge/uncharge
- hugetlb reservations
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211213128.73302-2-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <791880db-bdb0-8d34-ea9a-be6e4996fc0d@oracle.com>
-Date:   Fri, 14 Feb 2020 16:50:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200211213128.73302-2-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0 spamscore=0
- adultscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002150002
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002150002
+        Fri, 14 Feb 2020 19:55:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54098 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbgBOAzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:55:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1B636AC7C;
+        Sat, 15 Feb 2020 00:55:53 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 4D202E03D6; Sat, 15 Feb 2020 01:55:53 +0100 (CET)
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net] ethtool: fix application of verbose no_mask bitset
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Message-Id: <20200215005553.4D202E03D6@unicorn.suse.cz>
+Date:   Sat, 15 Feb 2020 01:55:53 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 1:31 PM, Mina Almasry wrote:
-> Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
-> usage or hugetlb reservation counter.
-> 
-> Adds a new interface to uncharge a hugetlb_cgroup counter via
-> hugetlb_cgroup_uncharge_counter.
-> 
-> Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
-> hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
+A bitset without mask in a _SET request means we want exactly the bits in
+the bitset to be set. This works correctly for compact format but when
+verbose format is parsed, ethnl_update_bitset32_verbose() only sets the
+bits present in the request bitset but does not clear the rest. This can
+cause incorrect results like
 
-Thanks for the suggested changes.  It will make the code easier to
-read and understand.
+  lion:~ # ethtool eth0 | grep Wake
+          Supports Wake-on: pumbg
+          Wake-on: g
+  lion:~ # ethtool -s eth0 wol u
+  lion:~ # ethtool eth0 | grep Wake
+          Supports Wake-on: pumbg
+          Wake-on: ug
 
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com
+when the second ethtool command issues request
 
-> ---
-> 
-> Changes in v12:
-> - Instead of true/false param for rsvd or non-rsvd calls, now there is:
-> hugetlb_cgroup_*() call for non-rsvd
-> hugetlb_cgroup_*_rsvd() call for rsvd
-> __hugetlb_cgroup_*(, bool) for both.
-> - Removed review tags as this patch changed quite a bit.
+ETHTOOL_MSG_WOL_SET
+    ETHTOOL_A_WOL_HEADER
+        ETHTOOL_A_HEADER_DEV_NAME = "eth0"
+    ETHTOOL_A_WOL_MODES
+        ETHTOOL_A_BITSET_NOMASK
+        ETHTOOL_A_BITSET_BITS
+            ETHTOOL_A_BITSET_BITS_BIT
+                ETHTOOL_BITSET_BIT_INDEX = 1
+
+Fix the logic by clearing the whole target bitmap before we start iterating
+through the request bits.
+
+Fixes: 10b518d4e6dd ("ethtool: netlink bitset handling")
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ net/ethtool/bitset.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/ethtool/bitset.c b/net/ethtool/bitset.c
+index fce45dac4205..8977fe1f3946 100644
+--- a/net/ethtool/bitset.c
++++ b/net/ethtool/bitset.c
+@@ -447,7 +447,10 @@ ethnl_update_bitset32_verbose(u32 *bitmap, unsigned int nbits,
+ 				    "mask only allowed in compact bitset");
+ 		return -EINVAL;
+ 	}
++
+ 	no_mask = tb[ETHTOOL_A_BITSET_NOMASK];
++	if (no_mask)
++		ethnl_bitmap32_clear(bitmap, 0, nbits, mod);
+ 
+ 	nla_for_each_nested(bit_attr, tb[ETHTOOL_A_BITSET_BITS], rem) {
+ 		bool old_val, new_val;
+-- 
+2.25.0
+
