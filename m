@@ -2,350 +2,144 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68092C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F722067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:21:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGpA/Kwk"
+	by mail.kernel.org (Postfix) with ESMTP id 5A2592086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 13:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgBONVL (ORCPT
+        id S1726303AbgBONfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 08:21:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25885 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725937AbgBONVK (ORCPT
+        Sat, 15 Feb 2020 08:35:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57224 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgBONfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 08:21:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581772868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dmdl+Jf+XF9n8NbDMbq/F5wJ352ehFo+xr1VXrcpmGQ=;
-        b=NGpA/Kwk/imsas4qXyLteTdbTYZZtTaiKDtU9vgj6afdB7GK0DCtSryqdUUmAjP7hsU+CE
-        ccyWUFR+WkHs6VMIJynU3HaP4wVG6jLClkILXVWd1iQifSr4mHyCzwttyfx0S7r6Fe9PVA
-        kqjccSraRbGQWxs1yAAehPKaxyCnY+E=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-EUdSPQG7NfiSKojNdk7BIQ-1; Sat, 15 Feb 2020 08:21:06 -0500
-X-MC-Unique: EUdSPQG7NfiSKojNdk7BIQ-1
-Received: by mail-wr1-f71.google.com with SMTP id t3so5674808wrm.23
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 05:21:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dmdl+Jf+XF9n8NbDMbq/F5wJ352ehFo+xr1VXrcpmGQ=;
-        b=XXC9lyqHaFDP0uaIk2kJO3xvd5YjwZO9/X+xRfqBc4h4MhLZ+QFEitqjfvbMjrsN6E
-         Od9f6rs63Ot+hNKno91G7jNXufsBxQvUOctjL6ToypUvshpHa+E5E0YX2AVGtygkPNKz
-         Rql3QpfAcfENIfTNPZY/hiBp8pFSZGOXKTd4VsrB8ioZVbHf4cJjG93z6BnFuC3zidDI
-         hUD7OAW5XHyrZrx1nueOHQFRrowN/jGDA/T1p6XXWrtBc5reqdn5orBzQXFYdPLGUXi/
-         CKQpCdvspGoV62lFc4/j+FCWvhYhxhoqIhv39ghxtU8xmj013ljwa2IVTiswvQmpsM9o
-         cPjQ==
-X-Gm-Message-State: APjAAAVJV4E/MPwvpYQYT5ANBAKC8zpLmLdiANcwf8E6hFU57w0YsFLW
-        CTnSY8u3Qi2Yswe1nhqXMA2OJxbtahwcE7TnB8exULGQJhbO8FeObzjJSCeGrya9RcGgeGIhavW
-        vH5lk80y8z9ELfUpsHANLVLtP
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr10503301wmj.7.1581772865726;
-        Sat, 15 Feb 2020 05:21:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqykGJFDkUEsGIsj07CDNDfIkJ7jZy7DdN68+1qul/vIJhpLkU93Q132rONXyGDOmExQHyhKTg==
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr10503273wmj.7.1581772865428;
-        Sat, 15 Feb 2020 05:21:05 -0800 (PST)
-Received: from raver.teknoraver.net (net-2-36-248-201.cust.vodafonedsl.it. [2.36.248.201])
-        by smtp.gmail.com with ESMTPSA id t10sm11158108wmi.40.2020.02.15.05.21.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 05:21:04 -0800 (PST)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org, dev@openvswitch.org
-Cc:     linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bindiya Kurle <bindiyakurle@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ben Pfaff <blp@ovn.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Jeremy Harris <jgh@redhat.com>
-Subject: [PATCH net-next v5] openvswitch: add TTL decrement action
-Date:   Sat, 15 Feb 2020 14:20:56 +0100
-Message-Id: <20200215132056.42124-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Sat, 15 Feb 2020 08:35:06 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j2xb2-00084w-MP; Sat, 15 Feb 2020 14:35:00 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 091391C205F;
+        Sat, 15 Feb 2020 14:35:00 +0100 (CET)
+Date:   Sat, 15 Feb 2020 13:34:59 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/urgent] x86/mce/amd: Fix kobject lifetime
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200214082801.13836-1-bp@alien8.de>
+References: <20200214082801.13836-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <158177369962.13786.16098407006257585201.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New action to decrement TTL instead of setting it to a fixed value.
-This action will decrement the TTL and, in case of expired TTL, drop it
-or execute an action passed via a nested attribute.
-The default TTL expired action is to drop the packet.
+The following commit has been merged into the ras/urgent branch of tip:
 
-Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
+Commit-ID:     51dede9c05df2b78acd6dcf6a17d21f0877d2d7b
+Gitweb:        https://git.kernel.org/tip/51dede9c05df2b78acd6dcf6a17d21f0877d2d7b
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 13 Feb 2020 19:01:34 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 14 Feb 2020 09:28:31 +01:00
 
-Tested with a corresponding change in the userspace:
+x86/mce/amd: Fix kobject lifetime
 
-    # ovs-dpctl dump-flows
-    in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1
-    in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},2
-    in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
-    in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
+Accessing the MCA thresholding controls in sysfs concurrently with CPU
+hotplug can lead to a couple of KASAN-reported issues:
 
-    # ping -c1 192.168.0.2 -t 42
-    IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
-        192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
-    # ping -c1 192.168.0.2 -t 120
-    IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
-        192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
-    # ping -c1 192.168.0.2 -t 1
-    #
+  BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
+  Read of size 8 at addr ffff888367578940 by task grep/4019
 
-Co-developed-by: Bindiya Kurle <bindiyakurle@gmail.com>
-Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+and
+
+  BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
+  Read of size 2 at addr ffff888368a05514 by task grep/4454
+
+for example. Both result from the fact that the threshold block
+creation/teardown code frees the descriptor memory itself instead of
+defining proper ->release function and leaving it to the driver core to
+take care of that, after all sysfs accesses have completed.
+
+Do that and get rid of the custom freeing code, fixing the above UAFs in
+the process.
+
+  [ bp: write commit message. ]
+
+Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200214082801.13836-1-bp@alien8.de
 ---
- include/uapi/linux/openvswitch.h |  7 ++++
- net/openvswitch/actions.c        | 67 ++++++++++++++++++++++++++++++
- net/openvswitch/flow_netlink.c   | 70 ++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
+ arch/x86/kernel/cpu/mce/amd.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
-index ae2bff14e7e1..9b14519e74d9 100644
---- a/include/uapi/linux/openvswitch.h
-+++ b/include/uapi/linux/openvswitch.h
-@@ -958,6 +958,7 @@ enum ovs_action_attr {
- 	OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
- 	OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
- 	OVS_ACTION_ATTR_ADD_MPLS,     /* struct ovs_action_add_mpls. */
-+	OVS_ACTION_ATTR_DEC_TTL,      /* Nested OVS_DEC_TTL_ATTR_*. */
- 
- 	__OVS_ACTION_ATTR_MAX,	      /* Nothing past this will be accepted
- 				       * from userspace. */
-@@ -1050,4 +1051,10 @@ struct ovs_zone_limit {
- 	__u32 count;
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index e7313e5..52de616 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -1163,9 +1163,12 @@ static const struct sysfs_ops threshold_ops = {
+ 	.store			= store,
  };
  
-+enum ovs_dec_ttl_attr {
-+	OVS_DEC_TTL_ATTR_UNSPEC,
-+	OVS_DEC_TTL_ATTR_ACTION,	/* Nested struct nlattr */
-+	__OVS_DEC_TTL_ATTR_MAX
-+};
++static void threshold_block_release(struct kobject *kobj);
 +
- #endif /* _LINUX_OPENVSWITCH_H */
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 7fbfe2adfffa..fc0efd8833c8 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -964,6 +964,25 @@ static int output_userspace(struct datapath *dp, struct sk_buff *skb,
- 	return ovs_dp_upcall(dp, skb, key, &upcall, cutlen);
- }
+ static struct kobj_type threshold_ktype = {
+ 	.sysfs_ops		= &threshold_ops,
+ 	.default_attrs		= default_attrs,
++	.release		= threshold_block_release,
+ };
  
-+static int dec_ttl_exception_handler(struct datapath *dp, struct sk_buff *skb,
-+				     struct sw_flow_key *key,
-+				     const struct nlattr *attr, bool last)
-+{
-+	/* The first action is always 'OVS_DEC_TTL_ATTR_ARG'. */
-+	struct nlattr *dec_ttl_arg = nla_data(attr);
-+	int rem = nla_len(attr);
-+
-+	if (nla_len(dec_ttl_arg)) {
-+		struct nlattr *actions = nla_next(dec_ttl_arg, &rem);
-+
-+		if (actions)
-+			return clone_execute(dp, skb, key, 0, actions, rem,
-+					     last, false);
-+	}
-+	consume_skb(skb);
-+	return 0;
-+}
-+
- /* When 'last' is true, sample() should always consume the 'skb'.
-  * Otherwise, sample() should keep 'skb' intact regardless what
-  * actions are executed within sample().
-@@ -1180,6 +1199,45 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
- 			     nla_len(actions), last, clone_flow_key);
- }
- 
-+static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-+{
-+	int err;
-+
-+	if (skb->protocol == htons(ETH_P_IPV6)) {
-+		struct ipv6hdr *nh;
-+
-+		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-+					  sizeof(*nh));
-+		if (unlikely(err))
-+			return err;
-+
-+		nh = ipv6_hdr(skb);
-+
-+		if (nh->hop_limit <= 1)
-+			return -EHOSTUNREACH;
-+
-+		key->ip.ttl = --nh->hop_limit;
-+	} else {
-+		struct iphdr *nh;
-+		u8 old_ttl;
-+
-+		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-+					  sizeof(*nh));
-+		if (unlikely(err))
-+			return err;
-+
-+		nh = ip_hdr(skb);
-+		if (nh->ttl <= 1)
-+			return -EHOSTUNREACH;
-+
-+		old_ttl = nh->ttl--;
-+		csum_replace2(&nh->check, htons(old_ttl << 8),
-+			      htons(nh->ttl << 8));
-+		key->ip.ttl = nh->ttl;
-+	}
-+	return 0;
-+}
-+
- /* Execute a list of actions against 'skb'. */
- static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 			      struct sw_flow_key *key,
-@@ -1365,6 +1423,15 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 
- 			break;
- 		}
-+
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = execute_dec_ttl(skb, key);
-+			if (err == -EHOSTUNREACH) {
-+				err = dec_ttl_exception_handler(dp, skb, key,
-+								a, true);
-+				return err;
-+			}
-+			break;
- 		}
- 
- 		if (unlikely(err)) {
-diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-index 7da4230627f5..1ccd5e092bca 100644
---- a/net/openvswitch/flow_netlink.c
-+++ b/net/openvswitch/flow_netlink.c
-@@ -80,6 +80,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
- 		case OVS_ACTION_ATTR_METER:
- 		case OVS_ACTION_ATTR_CHECK_PKT_LEN:
- 		case OVS_ACTION_ATTR_ADD_MPLS:
-+		case OVS_ACTION_ATTR_DEC_TTL:
- 		default:
- 			return true;
- 		}
-@@ -2495,6 +2496,39 @@ static int validate_and_copy_sample(struct net *net, const struct nlattr *attr,
- 	return 0;
- }
- 
-+static int validate_and_copy_dec_ttl(struct net *net,
-+				     const struct nlattr *attr,
-+				     const struct sw_flow_key *key,
-+				     struct sw_flow_actions **sfa,
-+				     __be16 eth_type, __be16 vlan_tci,
-+				     u32 mpls_label_count, bool log)
-+{
-+	int start, err;
-+	u32 nested = true;
-+
-+	if (!nla_len(attr))
-+		return ovs_nla_add_action(sfa, OVS_ACTION_ATTR_DEC_TTL,
-+					  NULL, 0, log);
-+
-+	start = add_nested_action_start(sfa, OVS_ACTION_ATTR_DEC_TTL, log);
-+	if (start < 0)
-+		return start;
-+
-+	err = ovs_nla_add_action(sfa, OVS_DEC_TTL_ATTR_ACTION, &nested,
-+				 sizeof(nested), log);
-+
-+	if (err)
-+		return err;
-+
-+	err = __ovs_nla_copy_actions(net, attr, key, sfa, eth_type,
-+				     vlan_tci, mpls_label_count, log);
-+	if (err)
-+		return err;
-+
-+	add_nested_action_end(*sfa, start);
-+	return 0;
-+}
-+
- static int validate_and_copy_clone(struct net *net,
- 				   const struct nlattr *attr,
- 				   const struct sw_flow_key *key,
-@@ -3007,6 +3041,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
- 			[OVS_ACTION_ATTR_CLONE] = (u32)-1,
- 			[OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
- 			[OVS_ACTION_ATTR_ADD_MPLS] = sizeof(struct ovs_action_add_mpls),
-+			[OVS_ACTION_ATTR_DEC_TTL] = (u32)-1,
- 		};
- 		const struct ovs_action_push_vlan *vlan;
- 		int type = nla_type(a);
-@@ -3267,6 +3302,15 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
- 			break;
- 		}
- 
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = validate_and_copy_dec_ttl(net, a, key, sfa,
-+							eth_type, vlan_tci,
-+							mpls_label_count, log);
-+			if (err)
-+				return err;
-+			skip_copy = true;
-+			break;
-+
- 		default:
- 			OVS_NLERR(log, "Unknown Action type %d", type);
- 			return -EINVAL;
-@@ -3438,6 +3482,26 @@ static int check_pkt_len_action_to_attr(const struct nlattr *attr,
+ static const char *get_name(unsigned int bank, struct threshold_block *b)
+@@ -1367,8 +1370,12 @@ static int threshold_create_bank(unsigned int cpu, unsigned int bank)
  	return err;
  }
  
-+static int dec_ttl_action_to_attr(const struct nlattr *attr,
-+				  struct sk_buff *skb)
+-static void deallocate_threshold_block(unsigned int cpu,
+-						 unsigned int bank)
++static void threshold_block_release(struct kobject *kobj)
 +{
-+	int err = 0, rem = nla_len(attr);
-+	struct nlattr *start;
-+
-+	start = nla_nest_start_noflag(skb, OVS_ACTION_ATTR_DEC_TTL);
-+
-+	if (!start)
-+		return -EMSGSIZE;
-+
-+	err = ovs_nla_put_actions(nla_data(attr), rem, skb);
-+	if (err)
-+		nla_nest_cancel(skb, start);
-+	else
-+		nla_nest_end(skb, start);
-+
-+	return err;
++	kfree(to_block(kobj));
 +}
 +
- static int set_action_to_attr(const struct nlattr *a, struct sk_buff *skb)
++static void deallocate_threshold_block(unsigned int cpu, unsigned int bank)
  {
- 	const struct nlattr *ovs_key = nla_data(a);
-@@ -3538,6 +3602,12 @@ int ovs_nla_put_actions(const struct nlattr *attr, int len, struct sk_buff *skb)
- 				return err;
- 			break;
+ 	struct threshold_block *pos = NULL;
+ 	struct threshold_block *tmp = NULL;
+@@ -1378,13 +1385,11 @@ static void deallocate_threshold_block(unsigned int cpu,
+ 		return;
  
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = dec_ttl_action_to_attr(a, skb);
-+			if (err)
-+				return err;
-+			break;
-+
- 		default:
- 			if (nla_put(skb, type, nla_len(a), nla_data(a)))
- 				return -EMSGSIZE;
--- 
-2.24.1
-
+ 	list_for_each_entry_safe(pos, tmp, &head->blocks->miscj, miscj) {
+-		kobject_put(&pos->kobj);
+ 		list_del(&pos->miscj);
+-		kfree(pos);
++		kobject_put(&pos->kobj);
+ 	}
+ 
+-	kfree(per_cpu(threshold_banks, cpu)[bank]->blocks);
+-	per_cpu(threshold_banks, cpu)[bank]->blocks = NULL;
++	kobject_put(&head->blocks->kobj);
+ }
+ 
+ static void __threshold_remove_blocks(struct threshold_bank *b)
