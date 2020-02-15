@@ -2,203 +2,105 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5B4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED83C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C40822314
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581786826;
-	bh=kodGrCGjlFWuLkw7GoIA14CifYJpEnz728Z85M+JoxQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=GXnuw6gvunU7AOmY7V9wdENOKZ6ts1vYptyAmPTgT7dVXP4PN85FZN2RLqFZnbcOz
-	 kyYL/RU9bzS0hecEhwyTZ1aBtTmWXAEP+8tLrU3NRUtzo0/GARRKIFKxSZYq+mL0kI
-	 2xYjAfSyLCxYS9GUEhezTzl9hWPMQhTf+6xu6Py8=
+	by mail.kernel.org (Postfix) with ESMTP id 6BEF92083B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 17:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx8IMrHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgBORNc (ORCPT
+        id S1726512AbgBORsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 12:13:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbgBORNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 12:13:32 -0500
-Received: from paulmck-ThinkPad-P72.home (smb-adpcdg2-04.hotspot.hub-one.net [213.174.99.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCD0424654;
-        Sat, 15 Feb 2020 17:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581786810;
-        bh=kodGrCGjlFWuLkw7GoIA14CifYJpEnz728Z85M+JoxQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Z278AcabRlX1Nkss6vLRPTz7zZ3W+p6fSo45LbvyYf/LHePTaYP38TbYun/OYuk16
-         UpJcfThYJvYs+ADJKl++wS3TCxRvoVN9puKS18PLgcV3VwdNmGe0iwk66PGt+keXKy
-         4aNGhzgax5xxngc4SF4ZWFe5Oihwz/4r80/X4+Rw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A51A3352168A; Sat, 15 Feb 2020 06:59:34 -0800 (PST)
-Date:   Sat, 15 Feb 2020 06:59:34 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200215145934.GD2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200213164031.GH14914@hirez.programming.kicks-ass.net>
- <20200213185612.GG2935@paulmck-ThinkPad-P72>
- <20200213204444.GA94647@google.com>
- <20200213205442.GK2935@paulmck-ThinkPad-P72>
- <20200213211930.GG170680@google.com>
- <20200213163800.5c51a5f1@gandalf.local.home>
- <20200213215004.GM2935@paulmck-ThinkPad-P72>
- <20200213170451.690c4e5c@gandalf.local.home>
- <20200213223918.GN2935@paulmck-ThinkPad-P72>
- <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 15 Feb 2020 12:48:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45234 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgBORse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 12:48:34 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so5072529pls.12;
+        Sat, 15 Feb 2020 09:48:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=i2NDDgAdUuAw5YVXyPfzY9L+iTThjwMB3K1n+T+kYKU=;
+        b=bx8IMrHVWahtQZo6X9CEw/bd3uwyxztC3+SPHdWOI8UoeeoRJDTRKfu2Cx8F4KB7nH
+         xyIXXXR3UxHzAzKc4AwpM8rt4z5JyBd9dNeQUIBbap1QbvyZXl9bSg+5SFCcMBgfup+P
+         pNYMd2E0hzuzREBE3ZB8QZxBp83SiE0x07ZceOUYPRnfRljMRFOQPBGGQgo1yOJjc8ky
+         R//oUIVhmp1/csVnqi1BZcu7LXcDzwlHdEiou8M8r7nH1PoirHLmFVs42H6D2ExKICCw
+         PAMB/W2JeDrcUED0um1SPtZR3NBC7UcBgnwQseYTdbTwPyakIKgebfLJfjNbXATzWLb5
+         rn4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=i2NDDgAdUuAw5YVXyPfzY9L+iTThjwMB3K1n+T+kYKU=;
+        b=MM6uLb6MBhXU9VmoxB11+svxBp2oHI/HCzFrPEbZu5sERXWU4jmKDKM3vXt9srPyng
+         NzYtgLWKfVRjMRygzQfuyD6rlbB6laCBq2FkSsPRpA0p+YryQtBUlvwqSgVadI3XYyEn
+         jU4hHpUP90GS9fyKYpQ5pthoW3S1iDkvnTlzJlAJfOhr2i9YyyTT/w89K5d63JZKtaKV
+         lmYlJzaxjJOAVN7y32rwK0ai8/2Ji3B9+Uar4XzIG66k+l33bZXJKfxpF4fwBGEqvlbZ
+         Ytg/hRHOpMZ+ra7LHRTwbZD5DiQbNT4+9PCV79Z9BWTaC46mrqOYa3kqY9mlrbt1C2sd
+         +JXQ==
+X-Gm-Message-State: APjAAAXglGUusNoRdxlMIs7CQJ6Az/ecljb7AZ16eQx+QDROYd03+Dae
+        aN8zTlRx0kJqFTPc9CfyOMZSBNJP
+X-Google-Smtp-Source: APXvYqzUCAXv6kO7oY6Fctgd/EXfsNHidTC213Rvj0zuOViXTFfPLgbk6Z6zKHtAxV7VP1Ma17Y9xQ==
+X-Received: by 2002:a17:902:528:: with SMTP id 37mr9160092plf.322.1581788913908;
+        Sat, 15 Feb 2020 09:48:33 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g9sm11201338pfm.150.2020.02.15.09.48.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 15 Feb 2020 09:48:33 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v5.6-rc2
+Date:   Sat, 15 Feb 2020 09:48:32 -0800
+Message-Id: <20200215174832.26950-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 03:19:06PM +0900, Masami Hiramatsu wrote:
-> On Thu, 13 Feb 2020 14:39:18 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Thu, Feb 13, 2020 at 05:04:51PM -0500, Steven Rostedt wrote:
-> > > On Thu, 13 Feb 2020 13:50:04 -0800
-> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > 
-> > > > On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
-> > > > > [ Added Masami ]
-> > > > > 
-> > > > > On Thu, 13 Feb 2020 16:19:30 -0500
-> > > > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > >   
-> > > > > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
-> > > > > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
-> > > > > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
-> > > > > > > > [...]     
-> > > > > > > > > > > It might well be that I could make these functions be NMI-safe, but
-> > > > > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
-> > > > > > > > > > > So, before looking into that, I have a question.  Given these proposed
-> > > > > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
-> > > > > > > > > > > to just use in_nmi()?    
-> > > > > > > > > > 
-> > > > > > > > > > That _should_ already be the case today. That is, if we end up in a
-> > > > > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
-> > > > > > > > > 
-> > > > > > > > > So something like this, then?  This is untested, probably doesn't even
-> > > > > > > > > build, and could use some careful review from both Peter and Steve,
-> > > > > > > > > at least.  As in the below is the second version of the patch, the first
-> > > > > > > > > having been missing a couple of important "!" characters.    
-> > > > > > > > 
-> > > > > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
-> > > > > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
-> > > > > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
-> > > > > > > > asymmetric.    
-> > > > > > > 
-> > > > > > > My compiler complained about the static and the __always_inline, so I
-> > > > > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
-> > > > > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
-> > > > > > > rcu_nmi_enter()?    
-> > > > > > 
-> > > > > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
-> > > > > > allowing it on exit (from a code reading standpoint) so my reaction was to
-> > > > > > add it to both, but we could probably keep that as a separate
-> > > > > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
-> > > > > > confuse the topic.
-> > > > > >  
-> > > > > 
-> > > > > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
-> > > > > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> > > > > kprobe_int3_handler()")
-> > > > > 
-> > > > > The issue was that we must not allow anything in do_int3() call kprobe
-> > > > > code before kprobe_int3_handler() is called. Because ist_enter() (in
-> > > > > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
-> > > > > nothing to do with it being RCU nor NMI, but because it was simply
-> > > > > called in do_int3().
-> > > > > 
-> > > > > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
-> > > > > to why rcu_nmi_enter() would probably be useful, like below:  
-> > > > 
-> > > > Thank you, Steve!  Could I please have your Signed-off-by for this?
-> > > 
-> > > Sure, but it was untested ;-)
-> > 
-> > No problem!  I will fire up rcutorture on it.  ;-)
-> > 
-> > But experience indicates that you cannot even make a joke around here.
-> > There is probably already someone out there somewhere building a
-> > comment-checker based on deep semantic analysis and machine learning.  :-/
-> > 
-> > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > > 
-> > > I'd like a Reviewed-by from Masami though.
-> > 
-> > Sounds good!  Masami, would you be willing to review?
-> 
-> Yes, the functions before calling kprobe_int3_handler() must not
-> be kprobed. It can cause an infinite recursive int3 trapping.
-> 
-> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Hi Linus,
 
-Thank you both!
+Please pull hwmon fixes for Linux v5.6-rc2 from signed tag:
 
-Like this?
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.6-rc2
 
-							Thanx, Paul
+Thanks,
+Guenter
+------
 
-------------------------------------------------------------------------
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-commit 1817fdc8f4e4bd18c76305c9b937fb0dccbb1583
-Author: Steven Rostedt <rostedt@goodmis.org>
-Date:   Sat Feb 15 06:54:50 2020 -0800
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-    rcu: Provide comment for NOKPROBE() on rcu_nmi_enter()
-    
-    The rcu_nmi_enter() function was marked NOKPROBE() by commit
-    c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-    kprobe_int3_handler()") because the do_int3() call kprobe code must
-    not be invoked before kprobe_int3_handler() is called.  It turns out
-    that ist_enter() (in do_int3()) calls rcu_nmi_enter(), hence the
-    marking NOKPROBE() being added to rcu_nmi_enter().
-    
-    This commit therefore adds a comment documenting this line of reasoning.
-    
-    Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-    Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+are available in the Git repository at:
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 132b53e..4a885af 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -835,6 +835,12 @@ void rcu_nmi_enter(void)
- 		   rdp->dynticks_nmi_nesting + incby);
- 	barrier();
- }
-+/*
-+ * On x86, All functions in do_int3() must be marked NOKPROBE before
-+ * kprobe_int3_handler() is called. ist_enter() which is called in do_int3()
-+ * before kprobe_int3_handle() happens to call rcu_nmi_enter() which means
-+ * that rcu_nmi_enter() must be marked NOKRPOBE.
-+ */
- NOKPROBE_SYMBOL(rcu_nmi_enter);
- 
- /**
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.6-rc2
+
+for you to fetch changes up to 205447fa9e0a44cc42a74788eb2f6c96f91d5cd6:
+
+  hwmon: (pmbus/xdpe12284) fix typo in compatible strings (2020-02-12 12:43:01 -0800)
+
+----------------------------------------------------------------
+hwmon fixes for v5.6-rc2
+
+Fix compatible string typos in the xdpe12284 driver, and a wrong
+bit value in the ltc2978 driver.
+
+----------------------------------------------------------------
+Johan Hovold (1):
+      hwmon: (pmbus/xdpe12284) fix typo in compatible strings
+
+Mike Jones (1):
+      hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+
+ drivers/hwmon/pmbus/ltc2978.c   | 4 ++--
+ drivers/hwmon/pmbus/xdpe12284.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
