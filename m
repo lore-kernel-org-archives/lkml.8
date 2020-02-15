@@ -2,110 +2,113 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF1EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13BCC4741C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89972073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581767789;
-	bh=NaAHvFuU+ylYPII07/Q0dVeLaamkxwl2owLhdZmF30s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wLQYcVxSFcy+lxCkrBYdr4jkbsx2SPAV1CkJcTc2aTzYBaTx2E7hCr6XzILFjiBQ6
-	 rQYvIq1JtxT6OFVUbiyXw+o4UvHPCAeWzhQalllDaDqUfdR9FR29un9mH0OXH4E96K
-	 RJUQ7wWWorlxMT15qjM6vU1IbPGwZ5BoX502ETpU=
+	by mail.kernel.org (Postfix) with ESMTP id BD26B2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgBOL43 (ORCPT
+        id S1726307AbgBOL6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:56:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgBOL42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:56:28 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F105E2072D;
-        Sat, 15 Feb 2020 11:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581767788;
-        bh=NaAHvFuU+ylYPII07/Q0dVeLaamkxwl2owLhdZmF30s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c/I4lBS0EkFioir+ydtfPPjtntwsQIPJ7gsuAA3lo46+qwOcC4aMnOKMd0Z3INdXb
-         +XXx9hsOBFemgKcDam3c13z6zdZPka+UYQI4oclDwsHzdHpDY/hsKWrKryaYlalWJW
-         y8S7mdF0AnUzkD5yhE5BODnxSJSI/dNdTVzG8774=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j2w3e-005RK7-1L; Sat, 15 Feb 2020 11:56:26 +0000
-Date:   Sat, 15 Feb 2020 11:56:24 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?UTF-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v6 10/11] KVM: arm64: BTI: Reset BTYPE when skipping
- emulated instructions
-Message-ID: <20200215115624.2afbf55c@why>
-In-Reply-To: <20200212192906.53366-11-broonie@kernel.org>
-References: <20200212192906.53366-1-broonie@kernel.org>
-        <20200212192906.53366-11-broonie@kernel.org>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 15 Feb 2020 06:58:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57140 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgBOL6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:58:34 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j2w5T-0007Jk-Vv; Sat, 15 Feb 2020 12:58:20 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 61C33101161; Sat, 15 Feb 2020 12:58:19 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexander Koskovich <zvnexus@gmail.com>, arjan@linux.intel.com,
+        jacob.jun.pan@linux.intel.com
+Cc:     zvnexus@gmail.com, Alexander Koskovich <zvnexus@outlook.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal/intel_powerclamp: Don't report an error for AMD CPUs
+In-Reply-To: <20200215160938.1025-1-zvnexus@outlook.com>
+References: <20200215160938.1025-1-zvnexus@outlook.com>
+Date:   Sat, 15 Feb 2020 12:58:19 +0100
+Message-ID: <87wo8orrj8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, viro@zeniv.linux.org.uk, paul.elliott@arm.com, peterz@infradead.org, yu-cheng.yu@intel.com, amit.kachhap@arm.com, vincenzo.frascino@arm.com, esyr@redhat.com, szabolcs.nagy@arm.com, hjl.tools@gmail.com, drjones@redhat.com, keescook@chromium.org, arnd@arndb.de, jannh@google.com, richard.henderson@linaro.org, kristina.martsenko@arm.com, tglx@linutronix.de, fweimer@redhat.com, sudi.das@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, Dave.Martin@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 19:29:05 +0000
-Mark Brown <broonie@kernel.org> wrote:
+Alexander Koskovich <zvnexus@gmail.com> writes:
 
-> From: Dave Martin <Dave.Martin@arm.com>
-> 
-> Since normal execution of any non-branch instruction resets the
-> PSTATE BTYPE field to 0, so do the same thing when emulating a
-> trapped instruction.
-> 
-> Branches don't trap directly, so we should never need to assign a
-> non-zero value to BTYPE here.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Resolves dmesg error "intel_powerclamp: CPU does not support MWAIT".
+>
+> The error that is outputted in dmesg prior to this patch
+> is innacurate, AMD Ryzen CPUs do support MWAIT. We could
+> also add the AMD vendor to the MWAIT check, but even though
+> AMD CPUs do support MWAIT, they fail the C-state package
+> check so it's better just to bail out in the beginning.
+>
+> Signed-off-by: Alexander Koskovich <zvnexus@outlook.com>
+> ---
+>  drivers/thermal/intel/intel_powerclamp.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
+> index 53216dcbe173..3c5b25bfa596 100644
+> --- a/drivers/thermal/intel/intel_powerclamp.c
+> +++ b/drivers/thermal/intel/intel_powerclamp.c
+> @@ -650,6 +650,11 @@ static struct thermal_cooling_device_ops powerclamp_cooling_ops = {
+>  	.set_cur_state = powerclamp_set_cur_state,
+>  };
+>  
+> +static const struct x86_cpu_id amd_cpu[] = {
+> +	{ X86_VENDOR_AMD },
+> +	{},
+> +};
+> +
+>  static const struct x86_cpu_id __initconst intel_powerclamp_ids[] = {
+>  	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_MWAIT },
+>  	{}
+> @@ -659,6 +664,11 @@ MODULE_DEVICE_TABLE(x86cpu, intel_powerclamp_ids);
+>  static int __init powerclamp_probe(void)
+>  {
+>  
+> +	if (x86_match_cpu(amd_cpu)) {
+> +		pr_info("Intel PowerClamp does not support AMD CPUs\n");
+> +		return -ENODEV;
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+This is still running into the same problem on all other non Intel
+vendors, e.g. HYGON, VIA ....
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +	}
+> +
+>  	if (!x86_match_cpu(intel_powerclamp_ids)) {
+>  		pr_err("CPU does not support MWAIT\n");
+>  		return -ENODEV;
+
+The right thing to do is to remove this silly pr_err(). It's not an
+error when a CPU does not support MWAIT. It's a fact and even older
+Intel CPUs do not have MWAIT.
+
+We do not print "Machine does not have $FEATURE" in device drivers and
+whatever code which depends on runtime detection either. dmesg would be
+full of this.
+
+Thanks,
+
+        tglx
