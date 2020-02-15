@@ -2,169 +2,102 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72411C352A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 07:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655EFC352A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 07:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5142083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 07:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A5920718
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 07:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eME8l+Mz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eO1+UJHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgBOHAs (ORCPT
+        id S1725965AbgBOHGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 02:00:48 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44743 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgBOHAs (ORCPT
+        Sat, 15 Feb 2020 02:06:17 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45193 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgBOHGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 02:00:48 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so4644598plo.11;
-        Fri, 14 Feb 2020 23:00:48 -0800 (PST)
+        Sat, 15 Feb 2020 02:06:16 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so11771035oic.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Feb 2020 23:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XE5CJKc1a7rUfnazp7u4JItKmlkGauSYL++r+MJXVmk=;
-        b=eME8l+Mz1VmjGK/Dqrt0VHQY0F5h1jH976J9MEfHNjh/ccDMhF5qTx4G9+X6pveDZj
-         OrPRJOhFt2qU/q4ghkaoEpK5rKN4blEs8DHOam/D1s0IzmKeVGNmGjLVRAdM9bbEP731
-         84PeYQlsjXqiCXpKUqS6haWVcVTi78oZ/2XKO7dnR1p93wWCGB4Hq2MJ2LfNX3cFjIyv
-         Omp7coDij8BcqHXw5kbdlPtKXExub2YkDL9K1plTEI/6gM+TsRyHsHeMtVuCSCle/WdE
-         G+JqkPvAIGkzD/zt5tW0qBx0Egvnkg6tIjnpxzCVwRzdi15EoEy+Ql3K/DFQISC3WS2+
-         /E3w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N39DpKb1zbYGk+aZJAg5ol/qxHEEKsb4pngbw2grk9s=;
+        b=eO1+UJHmEcsV312SYhyJA6ak1KgsL1IbKBC7k9lGGUS0lBeBXhmo3YzawaHWqAWyZ8
+         lo8ZMI9LO1z5FQyujtSwxlkfO6OhBVAupZvzFT8DkFENJZSpAH3NQqSGkd0vNsxLJ0si
+         fR6kzV4L18SUTUbIeA9ftt2ou9EIFAQQhpX3CR3HY1kp0iOHGYH2ZoZeCvmS2BRDAv9/
+         fJrD/Twt6Odo36Y1Vq08UPJGR1yXvwX5MJsS5PupJ+7aCl/TwrT7ndyuPtrqNjADNJBS
+         +yWBrd23XHbuOYXxdzD23HQBmSagx3bIq1jvzbO7lOmD4YkQ/TcJs5RYE7SkqJxUVdug
+         kQcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XE5CJKc1a7rUfnazp7u4JItKmlkGauSYL++r+MJXVmk=;
-        b=KfSEjbH9rLtWulzF+Gkm5dW42vWqPQ/x+2C39AVNkThi4TzRinwtpLmcgzl3IZJmxZ
-         QjJcYObJq/VuyStjCFdyB0HH6/YW78VA8RQkaZvbd7QUFZQtAg1FSBhbxiUHc/SpZyr8
-         SooSIOyNXC7Hz+FPR9wLk0hHp2iJ8FuBM0VGEAeZ5O/I2QkEFVP4W8l7ApZOsyFxEUB2
-         1UHZlOVGGveuJ2/T4EThmfVA206aLdtKNIO7snsQDmWWzj1LgcU4UgMJqZ9IcCttk++Q
-         RTmc445QYbtS7K103mG8A/KnUtgis6ADJuR9/wIepZA2O/ZB5RwQOKEczWuXpqXkbjEB
-         wOWQ==
-X-Gm-Message-State: APjAAAX1sIRuNSzyyyA4ewajqfuz+Bv0BWCqH6r1k7WLAuG+RTuvp6Xs
-        RxnbZKlzgU7ol9STawgDe14=
-X-Google-Smtp-Source: APXvYqyXRMtaMTp5YdXfgVA8qeIZoLUUB+MIfZxktdbjVBwb3h8kbRh7Ndkxqtzl8O5vUZ5Kjp91jQ==
-X-Received: by 2002:a17:902:d684:: with SMTP id v4mr7221978ply.14.1581750047679;
-        Fri, 14 Feb 2020 23:00:47 -0800 (PST)
-Received: from localhost.localdomain ([240e:379:95a:e780::fa3])
-        by smtp.gmail.com with ESMTPSA id c15sm8918140pfo.137.2020.02.14.23.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2020 23:00:47 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N39DpKb1zbYGk+aZJAg5ol/qxHEEKsb4pngbw2grk9s=;
+        b=h3HeVQy4VgbcXB1wAhrP4EDcQGe8/hy8KuYMZH13vYolZQyFMAQB3agqWV0bVpM5zF
+         IYeIQz75cE+ntr3Av8LOzoQyD40lP4lIENEnEwoUytOldqcr3cXvqLXukkFa+FPiCMcc
+         Q8KlhMh7vgVeY+nMZTAfZ5RI/O7mEHuqSGbOKIfkEMu445RihaYqxxcXmXkX653PcfQR
+         UOhGdKZiPcBP1jYeRjJGutpt3z3PT4TEEjmH6P0LnFCnVuq+LbXsXgTx0+zrQ7o5PHFc
+         WdVxhdiqLxFU6I1yRsIuYE4Tbzct+s6T1FwbIfHVh7QW5GTcVxORO12lpPD/P/Zv9t3O
+         VuxQ==
+X-Gm-Message-State: APjAAAV+d8NUZ06e7AAnbEWiInt7rcgdOtKfHHPDXBgHrIjfO1qWv5Rv
+        1Lxdx1ov0sqR6WDIEf/T6/ElWUhr0fBPis/l/XU=
+X-Google-Smtp-Source: APXvYqwhjU5dgKNQUhaU81ajtzZqAULg8B7LoPW3kj8BrNcj9xvKsmTDYAJmCamWkh8NnkFhEtNK/Sac+2BzYkL9izs=
+X-Received: by 2002:aca:bc0a:: with SMTP id m10mr4335479oif.77.1581750376487;
+ Fri, 14 Feb 2020 23:06:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20200208084022.193231-1-gch981213@gmail.com>
+In-Reply-To: <20200208084022.193231-1-gch981213@gmail.com>
 From:   Chuanhong Guo <gch981213@gmail.com>
-To:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+Date:   Sat, 15 Feb 2020 15:06:05 +0800
+Message-ID: <CAJsYDVJ9JGGpDm-FWvqDsS_ffwQ4FzY_cbVFpnEKt6B_Ab=TMQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: mtk-quadspi: add support for DMA reading
+To:     linux-mtd@lists.infradead.org
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
-Date:   Sat, 15 Feb 2020 14:58:26 +0800
-Message-Id: <20200215065826.739102-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200215065826.739102-1-gch981213@gmail.com>
-References: <20200215065826.739102-1-gch981213@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-spi-mtk-nor is a driver to replace mtk-quadspi and they have almost
-the same device-tree bindings. Reuse this binding documentation and
-convert it for new driver:
+Hi all!
 
-1. "Mediatek SoCs" -> "Mediatek ARM SoCs" because MTK MIPS SoCs
-   use different controllers.
-2. document "interrupts" as a required property because it's
-   available on all SoCs with this controller and new driver takes
-   advantages of it. It's implemented as optional only to maintain
-   backward compatibility.
-3. replace binding example with a mt7629 one because this is the
-   only one I know the interrupt assignment.
+On Sat, Feb 8, 2020 at 4:41 PM Chuanhong Guo <gch981213@gmail.com> wrote:
+>
+> PIO reading mode on this controller is pretty inefficient
+> (one cmd+addr+dummy sequence reads only one byte)
+> This patch adds support for reading using DMA mode which increases
+> reading speed from 1MB/s to 4MB/s
+>
+> DMA busy checking is implemented with readl_poll_timeout because
+> I don't have access to IRQ-related docs. The speed increment comes
+> from those saved cmd+addr+dummy clocks.
+>
+> This controller requires that DMA source/destination address and
+> reading length should be 16-byte aligned. We use a bounce buffer if
+> one of them is not aligned, read more than what we need, and copy
+> data from corresponding buffer offset.
+>
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
- .../mtk-quadspi.txt => spi/spi-mtk-nor.txt}   | 34 ++++++++-----------
- 1 file changed, 15 insertions(+), 19 deletions(-)
- rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (62%)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-similarity index 62%
-rename from Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-rename to Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-index a12e3b5c495d..829da480b9a9 100644
---- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-@@ -1,4 +1,4 @@
--* Serial NOR flash controller for MediaTek SoCs
-+* SPI NOR flash controller for MediaTek ARM SoCs
- 
- Required properties:
- - compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-@@ -13,6 +13,7 @@ Required properties:
- 		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt8173-nor"
- - reg: 		  physical base address and length of the controller's register
-+- interrupts:	  Interrupt number used by the controller.
- - clocks: 	  the phandle of the clocks needed by the nor controller
- - clock-names: 	  the names of the clocks
- 		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
-@@ -22,29 +23,24 @@ Required properties:
- - #address-cells: should be <1>
- - #size-cells:	  should be <0>
- 
--The SPI flash must be a child of the nor_flash node and must have a
--compatible property. Also see jedec,spi-nor.txt.
--
--Required properties:
--- compatible:	  May include a device-specific string consisting of the manufacturer
--		  and name of the chip. Must also include "jedec,spi-nor" for any
--		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
--- reg :		  Chip-Select number
-+There should be only one spi slave device following generic spi bindings.
-+It's not recommended to use this controller for devices other than SPI NOR
-+flash due to limited transfer capability of this controller.
- 
- Example:
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/mt7629-clk.h>
- 
--nor_flash: spi@1100d000 {
--	compatible = "mediatek,mt8173-nor";
--	reg = <0 0x1100d000 0 0xe0>;
--	clocks = <&pericfg CLK_PERI_SPI>,
--		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+spi_nor: spi@11014000 {
-+	compatible = "mediatek,mt7629-nor",
-+		     "mediatek,mt8173-nor";
-+	reg = <0x11014000 0xe0>;
-+	interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
-+	clocks = <&pericfg CLK_PERI_FLASH_PD>,
-+		 <&topckgen CLK_TOP_FLASH_SEL>;
- 	clock-names = "spi", "sf";
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--	};
- };
- 
+This patch is deprecated. I wrote a new spi-mem driver for this
+controller:
+https://patchwork.ozlabs.org/project/linux-mtd/list/?series=158701
+and will be focus on getting that one merged instead.
 -- 
-2.24.1
-
+Regards,
+Chuanhong Guo
