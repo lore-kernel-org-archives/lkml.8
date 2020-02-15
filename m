@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D31C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6D8C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DD72081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8260E2081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581727328;
-	bh=oxhlemADUmmo5kgPPEvVmlOBEd90mb83mFmMiSaZH0U=;
+	s=default; t=1581727333;
+	bh=3I1QvKFofAfB+tFcEzBsREVF7ffuxDVlm5uIPAXPc60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJ+4iFJKFCm+YbmQRtwQJG72uiu9CXEQxrHDxBNNXYHmLVCOPRtYURH1ucpYX3wpP
-	 uJKvGIabiK9eClN6tL+PrI4TWy8/lAiUCvgicKJmvvDgwwQvenRFITcpdR+7cr6k0o
-	 sB713g6y8HqshpSvlJnQFi27sqm+AsCt7RDrrnfw=
+	b=pIoJ72kihSkDZ7na5HWBRxkW1NA8+BhvTxUnUAmH8yWDCRs+HZL5mOpQPVcPNtLtK
+	 x4yWncUDJTy+Ua1msuM1C5pyEE+QT0ieaJY3jJoe/wUlTY8yn14TjPDGo9URz9WNYl
+	 7Bpvgu5AViKOMi1MJTGZRyBHgAEVqU/jxyCMAT3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgBOAmI (ORCPT
+        id S1728115AbgBOAmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:42:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
+        Fri, 14 Feb 2020 19:42:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgBOAmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:42:04 -0500
+        id S1727602AbgBOAmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:42:07 -0500
 Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CFF24670;
-        Sat, 15 Feb 2020 00:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E8924676;
+        Sat, 15 Feb 2020 00:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581727323;
-        bh=oxhlemADUmmo5kgPPEvVmlOBEd90mb83mFmMiSaZH0U=;
+        s=default; t=1581727327;
+        bh=3I1QvKFofAfB+tFcEzBsREVF7ffuxDVlm5uIPAXPc60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPfePmB7C6YI8DCfdfJuEx/OlYhM24aH0U02uLlfkOJfQ4cYObKKH9DEuvk9DzUXs
-         r3xNxrJiBw6SkXsNZgQzVbU3d3vZzauzTfSnHvj9NDmy7RLE8a1MgqLDUe9BGPqD8g
-         yzKmNAGsbhcHyo9GmOUV1hP+xOauudxjlJv8UVKg=
+        b=MgKGW7NPTQVWPthdhRGGQJUpafnmIW7J3dWpjVBkVPBgjwR3l1CiYQ9UwTC19fhZm
+         tEgj+J4Obxeza72XVFv8Gi/cXO1VN3Zwn2P8UROrq9QZSkXXOQ+ottwE85Owu2fglv
+         4zdVWlMEVElFZoeD8ktAzYs1mc8391HkLLvzYG+8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 16/18] rcutorture: Make rcu_torture_barrier_cbs() post from corresponding CPU
-Date:   Fri, 14 Feb 2020 16:41:23 -0800
-Message-Id: <20200215004125.16953-10-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 17/18] rcutorture: Manually clean up after rcu_barrier() failure
+Date:   Fri, 14 Feb 2020 16:41:24 -0800
+Message-Id: <20200215004125.16953-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200215003634.GA16227@paulmck-ThinkPad-P72>
 References: <20200215003634.GA16227@paulmck-ThinkPad-P72>
@@ -61,55 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, rcu_torture_barrier_cbs() posts callbacks from whatever CPU
-it is running on, which means that all these kthreads might well be
-posting from the same CPU, which would drastically reduce the effectiveness
-of this test.  This commit therefore uses IPIs to make the callbacks be
-posted from the corresponding CPU (given by local variable myid).
+Currently, if rcu_barrier() returns too soon, the test waits 100ms and
+then does another instance of the test.  However, if rcu_barrier() were
+to have waited for more than 100ms too short a time, this could cause
+the test's rcu_head structures to be reused while they were still on
+RCU's callback lists.  This can result in knock-on errors that obscure
+the original rcu_barrier() test failure.
 
-If the IPI fails (which can happen if the target CPU is offline or does
-not exist at all), the callback is posted on whatever CPU is currently
-running.
+This commit therefore adds code that attempts to wait until all of
+the test's callbacks have been invoked.  Of course, if RCU completely
+lost track of the corresponding rcu_head structures, this wait could be
+forever.  This commit therefore also complains if this attempted recovery
+takes more than one second, and it also gives up when the test ends.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ kernel/rcu/rcutorture.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7e01e9a..f82515c 100644
+index f82515c..5453bd5 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -2053,6 +2053,14 @@ static void rcu_torture_barrier_cbf(struct rcu_head *rcu)
- 	atomic_inc(&barrier_cbs_invoked);
- }
- 
-+/* IPI handler to get callback posted on desired CPU, if online. */
-+static void rcu_torture_barrier1cb(void *rcu_void)
-+{
-+	struct rcu_head *rhp = rcu_void;
-+
-+	cur_ops->call(rhp, rcu_torture_barrier_cbf);
-+}
-+
- /* kthread function to register callbacks used to test RCU barriers. */
- static int rcu_torture_barrier_cbs(void *arg)
- {
-@@ -2076,9 +2084,11 @@ static int rcu_torture_barrier_cbs(void *arg)
- 		 * The above smp_load_acquire() ensures barrier_phase load
- 		 * is ordered before the following ->call().
- 		 */
--		local_irq_disable(); /* Just to test no-irq call_rcu(). */
--		cur_ops->call(&rcu, rcu_torture_barrier_cbf);
--		local_irq_enable();
-+		if (smp_call_function_single(myid, rcu_torture_barrier1cb,
-+					     &rcu, 1)) {
-+			// IPI failed, so use direct call from current CPU.
-+			cur_ops->call(&rcu, rcu_torture_barrier_cbf);
-+		}
- 		if (atomic_dec_and_test(&barrier_cbs_count))
- 			wake_up(&barrier_wq);
- 	} while (!torture_must_stop());
+@@ -2124,7 +2124,21 @@ static int rcu_torture_barrier(void *arg)
+ 			pr_err("barrier_cbs_invoked = %d, n_barrier_cbs = %d\n",
+ 			       atomic_read(&barrier_cbs_invoked),
+ 			       n_barrier_cbs);
+-			WARN_ON_ONCE(1);
++			WARN_ON(1);
++			// Wait manually for the remaining callbacks
++			i = 0;
++			do {
++				if (WARN_ON(i++ > HZ))
++					i = INT_MIN;
++				schedule_timeout_interruptible(1);
++				cur_ops->cb_barrier();
++			} while (atomic_read(&barrier_cbs_invoked) !=
++				 n_barrier_cbs &&
++				 !torture_must_stop());
++			smp_mb(); // Can't trust ordering if broken.
++			if (!torture_must_stop())
++				pr_err("Recovered: barrier_cbs_invoked = %d\n",
++				       atomic_read(&barrier_cbs_invoked));
+ 		} else {
+ 			n_barrier_successes++;
+ 		}
 -- 
 2.9.5
 
