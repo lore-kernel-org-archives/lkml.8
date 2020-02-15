@@ -2,152 +2,49 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B735CC76199
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1226C3B1BF
 	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9144522522
+	by mail.kernel.org (Postfix) with ESMTP id 7335020718
 	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581827958;
-	bh=J+4tYP+jfFATFYd8TtHuLg1Z3AdaHUm3BJA31ZZ07Po=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cdkhC51Tbu+941jmKglpLpehLAW1KizS59ijn7tDSa5WVWx1c34Le7ZgvWrGfEDeW
-	 729793+KKrzTV3XT8RPlmMqKjM6yNYTeQuXU7zLqrpk8X90l3j7PTr0ZDZTpcyylko
-	 i4bpA2LH6Wma6iojYB3I4oofZ6cRFGVU0alX6G5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgBPE2I (ORCPT
+        id S1727705AbgBPE2G convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 23:28:08 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:30329 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBPE2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 23:28:07 -0500
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 01G4RuqS019081;
-        Sun, 16 Feb 2020 13:27:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01G4RuqS019081
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581827277;
-        bh=W2C/jmuxMmam57+9aJUIVpRDw8p3eH2qNzl48a8ilKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fulvgh9XRLhWMSKUekKh+FrHtD0r6bQftEikx9aHvCgYrVC8ZzAhS9992eDjrLkT2
-         2iyzIsMIkU92G0v6WMymP4fFGc/Gql34m/XeIC8s45afXGDOMWKZdToZUowXcstajO
-         Saq31bpejwxoumUyACseGCYCHGY7mgqHiuTR2X7DJuqrk5mAHqUIWPN7VGFfuStzLy
-         4w14yur6QnneOpyyPdf23kaf3tc/3ZSHi+S98y7GYvYDGDlJsjgU7T7MjOHX1ljK7g
-         ngimSlcqwhvpJ5s6+P0eh+SPI4t58zmm9XJaKw4HDZkWhd7hObCpXz7NpRqEhtXrT7
-         D1iHOFMxrT9VA==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id y23so5012139ual.2;
-        Sat, 15 Feb 2020 20:27:57 -0800 (PST)
-X-Gm-Message-State: APjAAAU4pb9KrozsefVsplUGoqWQpwV+HZQ4sqA2LSByUGXosebqvwsP
-        zS27qKQAZsoW3HEGZ+um9QjHGKTZxRK5jnm93xY=
-X-Google-Smtp-Source: APXvYqxigRJ5eLrgiz9xEj+lkD8K4QDoRqbdKRp/dv91nqDiBN03PCGMBXWIwCKeCSI9wfkPGFVGWPfNqwSr+c0ldvk=
-X-Received: by 2002:ab0:45c7:: with SMTP id u65mr4868962uau.109.1581827276241;
- Sat, 15 Feb 2020 20:27:56 -0800 (PST)
+        Sat, 15 Feb 2020 23:28:06 -0500
+Received: from l37-192-35-170.novotelecom.ru ([37.192.35.170]:61055 "EHLO
+        glpak.ru" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726634AbgBPE2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 23:28:05 -0500
+Received: from alex.glpak.ru (localhost [127.0.0.1])
+        by glpak.ru (Postfix) with ESMTP id 81C63AD9403
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 11:06:08 +0700 (NOVT)
+X-Virus-Scanned: amavisd-new at glpak.ru
+Received: from glpak.ru ([127.0.0.1])
+        by alex.glpak.ru (glpak.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9HoWkSFmiwkd for <linux-kernel@vger.kernel.org>;
+        Sun, 16 Feb 2020 11:06:08 +0700 (NOVT)
+Received: from [192.168.88.250] (unknown [185.248.13.181])
+        by glpak.ru (Postfix) with ESMTPA id 7531EA7DE0D
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 01:56:58 +0700 (NOVT)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-References: <20200210131925.145463-1-samitolvanen@google.com>
- <CAK7LNAS7UchtP_+2m4AB-hJ=nMwsM-qpkJ+VHU1JGJrn8K1KPg@mail.gmail.com> <CABCJKuemBAeySJQY6yxhzbxK=XGBtVSt+6J6WXpO=RoiVXH7GQ@mail.gmail.com>
-In-Reply-To: <CABCJKuemBAeySJQY6yxhzbxK=XGBtVSt+6J6WXpO=RoiVXH7GQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 16 Feb 2020 13:27:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARyYqmSByD3jQr+TPe1RHEj9CxqRE880AqxA5SU3yUk5A@mail.gmail.com>
-Message-ID: <CAK7LNARyYqmSByD3jQr+TPe1RHEj9CxqRE880AqxA5SU3yUk5A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: remove duplicate dependencies from .mod files
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: zionitld3@gmail.com
+To:     linux-kernel@vger.kernel.org
+From:   anna@glpak.ru
+Date:   Sat, 15 Feb 2020 10:58:41 -0800
+Reply-To: zionitld3@gmail.com
+X-Antivirus: Avast (VPS 200214-0, 02/14/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-Id: <20200216040608.81C63AD9403@glpak.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
-
-On Thu, Feb 13, 2020 at 2:13 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Wed, Feb 12, 2020 at 5:23 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > In which case are undefined symbols duplicated?
->
-> When a module consists of multiple compilation units, which depend on
-> the same external symbols. In Android, we ran into this when adding
-> hardening features that all depend on an external error handler
-> function with a rather long name. When CONFIG_TRIM_UNUSED_SYMS was
-> later enabled, we ran into this:
->
-> $ llvm-nm drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' |
-> xargs echo | wc
->       2    9136  168660
->
-> xargs defaults to 128kiB limit for command line size, so the output
-> was split into two lines, which means some of the dependencies were
-> dropped and we ran into modpost errors. One method of fixing this is
-> to increase the limit:
->
-> $ llvm-nm drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' |
-> xargs -s 262144 echo | wc
->       1    9136  168660
->
-> But it seems removing duplicates is a better solution as the length of
-> the dependency list is reduced significantly:
->
-> $ llvm-nm drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' |
-> sort -u | xargs echo | wc
->       1    2716   50461
-
-
-At least, I am unable to reproduce this in upstream.
-
-This is my result for x86 allmodconfig builds.
-
-masahiro@grover:~/workspace/linux-kbuild$ nm
-drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' | wc
-    572     572   11478
-masahiro@grover:~/workspace/linux-kbuild$ nm
-drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' | sort -u |
-wc
-    572     572   11478
-
-
-I see no difference with/without 'sort -u'.
-
-
-I also tried llvm-nm instead of GNU nm,
-but the result is the same.
-
-
-masahiro@grover:~/workspace/linux-kbuild$ llvm-nm
-drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' | wc
-    572     572   11478
-masahiro@grover:~/workspace/linux-kbuild$ llvm-nm
-drivers/gpu/drm/nouveau/nouveau.o | sed -n 's/^  *U //p' | sort -u |
-wc
-    572     572   11478
-
-
-
-
-> > Do you have a .config to reproduce it?
->
-> I can currently reproduce this on an Android kernel that has
-> Control-Flow Integrity (CFI) enabled. While this feature is not
-> upstreamed yet, there's nothing that would prevent us from hitting the
-> command line limit with sufficiently large modules otherwise as well.
-
-
-Does ACK do this differently?
-
-I think it would be strange
-if $(NM) duplicated undefined symbols.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Hello, We from Zion Finance Group currently offers loans to customers at a low interest rate of 3%. This is an opportunity that you cannot miss. We have a few questions to ask; Do you have debts? Do you want to pay off your debts? Do you want to be financially equipped? If so, request a loan today from Zion Finance Group. Interested, customers are expected to contact zionitld3@gmail.com for more information. We wish to assist you with a loan. Greetings, Mr. Bernard.
