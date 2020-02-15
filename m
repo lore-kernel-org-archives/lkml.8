@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9920CC352A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDE62467D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D622469E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBOImy (ORCPT
+        id S1727928AbgBOImz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 03:42:54 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56752 "EHLO
+        Sat, 15 Feb 2020 03:42:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56751 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgBOIl5 (ORCPT
+        with ESMTP id S1726233AbgBOIl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Feb 2020 03:41:57 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j2t1I-0005F4-QF; Sat, 15 Feb 2020 09:41:48 +0100
+        id 1j2t1M-0005HY-1u; Sat, 15 Feb 2020 09:41:52 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6EB691C2019;
-        Sat, 15 Feb 2020 09:41:48 +0100 (CET)
-Date:   Sat, 15 Feb 2020 08:41:48 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A45B31C2019;
+        Sat, 15 Feb 2020 09:41:51 +0100 (CET)
+Date:   Sat, 15 Feb 2020 08:41:51 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Sync drm/i915_drm.h with the
- kernel sources
-Cc:     Abdiel Janulgue <abdiel.janulgue@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
+Subject: [tip: perf/urgent] tools headers UAPI: Sync copy of arm64's
+ asm/unistd.h with the kernel sources
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "Amanieu d'Antras" <amanieu@gmail.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158175610817.13786.8173776672639389180.tip-bot2@tip-bot2>
+Message-ID: <158175611136.13786.2812535110611017412.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,82 +59,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     365f9cc195a7fae8ac541129cd2a31ad87e46221
-Gitweb:        https://git.kernel.org/tip/365f9cc195a7fae8ac541129cd2a31ad87e46221
+Commit-ID:     c75bec79fc080039e4575a0f239ea7b111aabe88
+Gitweb:        https://git.kernel.org/tip/c75bec79fc080039e4575a0f239ea7b111aabe88
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 12 Feb 2020 10:25:27 -03:00
+AuthorDate:    Tue, 11 Feb 2020 15:19:42 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 12 Feb 2020 10:25:27 -03:00
+CommitterDate: Tue, 11 Feb 2020 16:41:50 -03:00
 
-tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+tools headers UAPI: Sync copy of arm64's asm/unistd.h with the kernel sources
 
-To pick the change in:
+To get the changes in:
 
-  cc662126b413 ("drm/i915: Introduce DRM_I915_GEM_MMAP_OFFSET")
+  3e3c8ca5a351 ("arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers")
 
-That don't result in any changes in tooling, just silences this perf
-build warning:
+Silencing this tools/perf/ build warning:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
-  diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/unistd.h' differs from latest version at 'arch/arm64/include/uapi/asm/unistd.h'
+  diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
 
-Cc: Abdiel Janulgue <abdiel.janulgue@linux.intel.com>
+Which will probably end up enabling the use of "clone3" in 'perf trace -e',
+haven't checked the build with this change on an arm64 system.
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Amanieu d'Antras <amanieu@gmail.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/i915_drm.h | 32 ++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+)
+ tools/arch/arm64/include/uapi/asm/unistd.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-index 5400d7e..829c0a4 100644
---- a/tools/include/uapi/drm/i915_drm.h
-+++ b/tools/include/uapi/drm/i915_drm.h
-@@ -395,6 +395,7 @@ typedef struct _drm_i915_sarea {
- #define DRM_IOCTL_I915_GEM_PWRITE	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
- #define DRM_IOCTL_I915_GEM_MMAP		DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP, struct drm_i915_gem_mmap)
- #define DRM_IOCTL_I915_GEM_MMAP_GTT	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_gtt)
-+#define DRM_IOCTL_I915_GEM_MMAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_offset)
- #define DRM_IOCTL_I915_GEM_SET_DOMAIN	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
- #define DRM_IOCTL_I915_GEM_SW_FINISH	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
- #define DRM_IOCTL_I915_GEM_SET_TILING	DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
-@@ -793,6 +794,37 @@ struct drm_i915_gem_mmap_gtt {
- 	__u64 offset;
- };
+diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
+index 4703d21..f83a70e 100644
+--- a/tools/arch/arm64/include/uapi/asm/unistd.h
++++ b/tools/arch/arm64/include/uapi/asm/unistd.h
+@@ -19,5 +19,6 @@
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SET_GET_RLIMIT
+ #define __ARCH_WANT_TIME32_SYSCALLS
++#define __ARCH_WANT_SYS_CLONE3
  
-+struct drm_i915_gem_mmap_offset {
-+	/** Handle for the object being mapped. */
-+	__u32 handle;
-+	__u32 pad;
-+	/**
-+	 * Fake offset to use for subsequent mmap call
-+	 *
-+	 * This is a fixed-size type for 32/64 compatibility.
-+	 */
-+	__u64 offset;
-+
-+	/**
-+	 * Flags for extended behaviour.
-+	 *
-+	 * It is mandatory that one of the MMAP_OFFSET types
-+	 * (GTT, WC, WB, UC, etc) should be included.
-+	 */
-+	__u64 flags;
-+#define I915_MMAP_OFFSET_GTT 0
-+#define I915_MMAP_OFFSET_WC  1
-+#define I915_MMAP_OFFSET_WB  2
-+#define I915_MMAP_OFFSET_UC  3
-+
-+	/*
-+	 * Zero-terminated chain of extensions.
-+	 *
-+	 * No current extensions defined; mbz.
-+	 */
-+	__u64 extensions;
-+};
-+
- struct drm_i915_gem_set_domain {
- 	/** Handle for the object */
- 	__u32 handle;
+ #include <asm-generic/unistd.h>
