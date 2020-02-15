@@ -2,104 +2,125 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8508FC7114D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3B6C4741C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C872072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581764474;
-	bh=CYHUYC9znSkDx9AkdYAavRlIybR7HFtSAc8E03/YggI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=pFcl/6955w1S0ZrUheU26xOLjv3KPOmbcq0MOYSJXZ7Ch7tb98tWKz6VAHT1Z1Tja
-	 Pk2qTk6cUuPwi/Nj8oAaQ21by/gsud/m0Seku3RrUFVsixxAuNvEmIMmwgh2dhMewW
-	 DLdmKyygkDXG2sp6KLPrg6xMIVPqLw3DkzBm4KC8=
+	by mail.kernel.org (Postfix) with ESMTP id A5E002072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAnsRZrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgBOLBN (ORCPT
+        id S1726143AbgBOLKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgBOLBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:01:13 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E4F20726;
-        Sat, 15 Feb 2020 11:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581764472;
-        bh=CYHUYC9znSkDx9AkdYAavRlIybR7HFtSAc8E03/YggI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=efF9z0IfIssJiuUVvKlrkQzEwy4dAyiMXX1G28JjgXimyXKX72f6fexxhIQjfoTeY
-         N1BPd//PD+FxMPX1kA6fdfEJ54JvCKMx10KcYdCMCMiCmyejFN3Mt23wEkjkUA2CHG
-         FHeS6BXCPu4Px88vmCs97pfGZxQm3WojXqd3Cdco=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 112943520CAA; Sat, 15 Feb 2020 03:01:11 -0800 (PST)
-Date:   Sat, 15 Feb 2020 03:01:11 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH tip/core/rcu 22/30] rcu: Don't flag non-starting GPs
- before GP kthread is running
-Message-ID: <20200215110111.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-22-paulmck@kernel.org>
- <20200214225305.48550d6a@oasis.local.home>
+        Sat, 15 Feb 2020 06:10:00 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34757 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgBOLKA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:10:00 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l16so4131408qtq.1;
+        Sat, 15 Feb 2020 03:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4tgIqByN7XK24vWrC6nkP1j06yZWkabnWcaD6QHevAA=;
+        b=OAnsRZrxLzsePOUoefhvykzJyy66wrA75NeIrIfjFZTRg3RKuu5aOgNnPeqlCUP1Bv
+         qFASsLHEhn4nJLU+sK68+mJ2j07Te5eKuxE77kA80A75zRIPJaoJf+qBZ/EeLMpTjZVI
+         rfOHqBGUqKX9doHA0ZkY2LuwSfJMoN4+vRR5CHRAOLQj8PSaGjatNLTaij/zU4hwz8wS
+         N3SXAm5BUGYzwK9Y8Ef4dGlCSOQOE4koHK7ej8k2sE/OzcduCVmrX5miIlAy2F/BDx89
+         kSLX+N62WhmqGRzQMYJCKaxp8hcjH8evy5SGtwGydSGRetb0fgHH/WuO9wTXaOB3f6IC
+         2dUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4tgIqByN7XK24vWrC6nkP1j06yZWkabnWcaD6QHevAA=;
+        b=dbMSFnonE3WYN4F6bjXh/MJ/0uvPD50BIanmzEhV95x6VMF7ClZ4VoRqrNW/+4Y4bb
+         8DG9jAKVlOhpSFSor9n9viVgYMha3MPm8uXLkFHTHoELR4izx1KhtDPTJuptTeV342FE
+         K5oUkhUa8a1rl5NQjVHtFRPPoTkP/Zyup/pV0/1ciXvnmJs9zSDLc+q9ek4XAV8LuN7Q
+         WiWmMZbtufoSE3PKF3l5tDpxCRR/gbRtXHicm3JVul2g4WdaAXf+okDSBfLRO67mnM6y
+         F2kmngw8oVqAIjcxDXPTZDeskeQHH2vgdHBxXRa4G1uW0q5yI/aINt6riYUW4PZz18LR
+         juBg==
+X-Gm-Message-State: APjAAAVS6JJZmALOBs7Rz1mbzNHG3NknUcBF9DZeeMP2ui4KFGd7zWnC
+        gsOhvSnFZGbUFYvGeWwHPEM=
+X-Google-Smtp-Source: APXvYqzz16+gBcXj4y+ZQg7aGlsiLozUDN4iATmw4hS0hkhb6CjY9rVl3mR9MVzy1KZvZoURGFE3qg==
+X-Received: by 2002:ac8:6697:: with SMTP id d23mr6000567qtp.235.1581764999481;
+        Sat, 15 Feb 2020 03:09:59 -0800 (PST)
+Received: from prism.localdomain (ip72-195-144-14.ri.ri.cox.net. [72.195.144.14])
+        by smtp.gmail.com with ESMTPSA id m54sm5279735qtf.67.2020.02.15.03.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2020 03:09:58 -0800 (PST)
+From:   Alexander Koskovich <zvnexus@gmail.com>
+X-Google-Original-From: Alexander Koskovich <zvnexus@outlook.com>
+To:     arjan@linux.intel.com, jacob.jun.pan@linux.intel.com
+Cc:     zvnexus@gmail.com, Alexander Koskovich <zvnexus@outlook.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal/intel_powerclamp: Don't report an error for AMD CPUs
+Date:   Sat, 15 Feb 2020 11:09:37 -0500
+Message-Id: <20200215160938.1025-1-zvnexus@outlook.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214225305.48550d6a@oasis.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:53:05PM -0500, Steven Rostedt wrote:
-> On Fri, 14 Feb 2020 15:55:59 -0800
-> paulmck@kernel.org wrote:
-> 
-> > @@ -1252,10 +1252,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-> >   */
-> >  static void rcu_gp_kthread_wake(void)
-> >  {
-> > -	if ((current == rcu_state.gp_kthread &&
-> > +	if ((current == READ_ONCE(rcu_state.gp_kthread) &&
-> >  	     !in_irq() && !in_serving_softirq()) ||
-> >  	    !READ_ONCE(rcu_state.gp_flags) ||
-> > -	    !rcu_state.gp_kthread)
-> > +	    !READ_ONCE(rcu_state.gp_kthread))
-> >  		return;
-> 
-> This looks buggy. You have two instances of
-> READ_ONCE(rcu_state.gp_thread), which means they can be different. Is
-> that intentional?
+Resolves dmesg error "intel_powerclamp: CPU does not support MWAIT".
 
-It might well be a bug, but let's see...
+The error that is outputted in dmesg prior to this patch
+is innacurate, AMD Ryzen CPUs do support MWAIT. We could
+also add the AMD vendor to the MWAIT check, but even though
+AMD CPUs do support MWAIT, they fail the C-state package
+check so it's better just to bail out in the beginning.
 
-The rcu_state.gp_kthread field is initially NULL and transitions only once
-to the non-NULL pointer to the RCU grace-period kthread's task_struct
-structure.  So yes, this does work, courtesy of the compiler not being
-allowed to change the order of READ_ONCE() instances and conherence-order
-rules for READ_ONCE() and WRITE_ONCE().
+Signed-off-by: Alexander Koskovich <zvnexus@outlook.com>
+---
+ drivers/thermal/intel/intel_powerclamp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-But it would clearly be way better to do just one READ_ONCE() into a
-local variable and test that local variable twice.
+diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
+index 53216dcbe173..3c5b25bfa596 100644
+--- a/drivers/thermal/intel/intel_powerclamp.c
++++ b/drivers/thermal/intel/intel_powerclamp.c
+@@ -650,6 +650,11 @@ static struct thermal_cooling_device_ops powerclamp_cooling_ops = {
+ 	.set_cur_state = powerclamp_set_cur_state,
+ };
+ 
++static const struct x86_cpu_id amd_cpu[] = {
++	{ X86_VENDOR_AMD },
++	{},
++};
++
+ static const struct x86_cpu_id __initconst intel_powerclamp_ids[] = {
+ 	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_MWAIT },
+ 	{}
+@@ -659,6 +664,11 @@ MODULE_DEVICE_TABLE(x86cpu, intel_powerclamp_ids);
+ static int __init powerclamp_probe(void)
+ {
+ 
++	if (x86_match_cpu(amd_cpu)) {
++		pr_info("Intel PowerClamp does not support AMD CPUs\n");
++		return -ENODEV;
++	}
++
+ 	if (!x86_match_cpu(intel_powerclamp_ids)) {
+ 		pr_err("CPU does not support MWAIT\n");
+ 		return -ENODEV;
+-- 
+2.25.0
 
-I will make this change, and thank you for calling my attention to it!
-
-						Thanx, Paul
