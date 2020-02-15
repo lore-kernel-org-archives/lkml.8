@@ -2,167 +2,120 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC461C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBB7C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905332067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D525F2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:32:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Qf0utu9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgBOLZq (ORCPT
+        id S1726266AbgBOLco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:25:46 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38998 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgBOLZq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:25:46 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z2so12204351oih.6;
-        Sat, 15 Feb 2020 03:25:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CKm2jdZv4bkhryatSR3sc3YwYWDYL0cZxrSHpiKACgs=;
-        b=NLcrr5QVsMEVPqJg6FgpymJfHkdV0lZW6U1GaDtdFQNaRJfBqmpcFqp7kbR143gh/5
-         8+I3Z8ivwr++u1Jcn6Kn1fsyt6fyXt/e9a71KB7CMeF3bnS3HpiygFTaisvCh8fE1sOK
-         867bVWXmFp05ad2hzMTuQFTQ6bRXbw0GgawXPiIuafh8mXtJSC+RtDZYWwTjbtKoByNt
-         zMf1OxxCQBwIMpm7te2kuv9wY9qpzv9vrrAB7G+8NKitRXqF2aTMomy+5B/SgMWMbrRC
-         y68H+MMhcDG+81Tl0aE9/U2hYMy861HUjNFDiqjAMeAfNv/kcj13Ml9sOhnr1fC74VEW
-         EOEA==
-X-Gm-Message-State: APjAAAWLI/NDnMr0iolXo3/towK6trG0Q1X/q7NCFyjhIb2icu1sa2KF
-        MfTsPRjelu/8q0cWcoml3l8QDY81ns+w5R2r6ew=
-X-Google-Smtp-Source: APXvYqy3gnViweSJe92lN+8veoys3VonFUwyBJ4mtKyOR9rGe/2O0TS+YkWKNVujqCTFiuI2W++F7LZyFkYUCfJWVbU=
-X-Received: by 2002:a54:4707:: with SMTP id k7mr4492798oik.153.1581765944894;
- Sat, 15 Feb 2020 03:25:44 -0800 (PST)
+        Sat, 15 Feb 2020 06:32:44 -0500
+Received: from mout.gmx.net ([212.227.15.19]:39455 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgBOLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:32:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1581766354;
+        bh=pOPA4vdkKum60vU2Sw008KD8mzmXUtj1ve/fnDeNt4o=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Qf0utu9Er9uCdJjAwIzlzWlVbbgyK77QXdz28zP1NE6MmoSGyV4BTiZDEAUycMdKC
+         ChVzDBXeqTF3HN0gASznRlZucFRzgNYRHRFa/nHVwUQU1UUixmYr11MGwpE5pFWC4n
+         5sKGsOezwDtIFumElWLBjjs4JNIjnGKo7MAag2eM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([146.60.76.54]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFsUv-1jGQM11c2p-00HKFQ; Sat, 15
+ Feb 2020 12:32:34 +0100
+Date:   Sat, 15 Feb 2020 12:32:31 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     David Gow <davidgow@google.com>
+Cc:     brendanhiggins@google.com, skhan@linuxfoundation.org,
+        corbet@lwn.net, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frowand.list@gmail.com,
+        Tim.Bird@sony.com
+Subject: Re: [PATCH v3] Documentation: kunit: Make the KUnit documentation
+ less UML-specific
+Message-ID: <20200215113231.GB2031@latitude>
+References: <20200214235723.254228-1-davidgow@google.com>
 MIME-Version: 1.0
-References: <20200211175507.178100-1-hannes@cmpxchg.org> <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
-In-Reply-To: <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 15 Feb 2020 12:25:32 +0100
-Message-ID: <CAMuHMdV8-=dj5n-FM1nHjXq1DhkJVOh4rLFxERt33jAQmU4h_A@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        cip-dev@lists.cip-project.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
+Content-Disposition: inline
+In-Reply-To: <20200214235723.254228-1-davidgow@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:rGamt5ZN+2JamTtxWa+949Bwc4ai74Nlldylw7ATa7hNww9D7BE
+ /bziJu0IK7eIOEiblDQYdQvIiKXW/z+dRk/GH/2ESakG545IBuzDzYU1R9YY3ttXbj9r2P7
+ IYOjeUjc2quFYT6rlom6QWid4LXtrAm8OSawzbeqiKK46W2hYLkL3Lu/UzlqENMmcY/rN7S
+ DPjN9jGvI6ZMj+Hdd62OA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l56jit/555c=:OJcEhGVVIC44B/SxTchbcX
+ Fr8/OnlUjSULPzJDoaXWtq33lqaLjHW3/2u8N7nVjjkVNOZoyw4ryZtXv7ezG8lbiDk1F5e2b
+ mNExcqwEkFKiGjtnTyHU1icDXMbf/D2OSsTi20uBf0zNGBW3/p/gX+vwzeZZ/+rBbd+XG3XbN
+ btjhXaZPCqQQSKSpz4+kAR52llMT7pw3jkYlBaKSo391QF+qDQdX6qLFJip+Ss1OtuF2bHzAz
+ 7Uylg6+/4Y+mDNl6HpwHnQyYtbqvAe4BJD9Dfof2CQNL3pGrhMZxw9A0CdY6i0VQ/vigo4w5j
+ 2qZIIQCeSZBvvmFmTwHeSCZHErUSGFWFKoRAFEebxz1sW6aYS9Q9boOakVKf3OP2Y/o7wSJrA
+ gvjPQW/4Ptz3LmkfnzqNDyuVzPBw1XoJrmKcBbE3ZAFgndf0IGPU46SykodQ9nSNuL0X9BMlh
+ PeRDhtWBRu1VKOyh3E4wmMjoExvS8nsykk07VmioJpZIJBVou+IW0KEfhf+fZWBh+vd/ajGuR
+ N8tyx7flL1sSZKhc6YBzUnyY1FZzpEzo1O3x9ws6zI/dxLL3JpesUZ6tMyyhUMaUuI3ghPBgc
+ /qiBS5Zaj392Vot3z0oyKGLFQTAogoxKGVz2d0SakOSIy8tS8VV+2wV89sjFmkl2VrLHERI14
+ 3123MROhEXUYAlnl794FwZWXMmRJD5uRI3TqaCtghfhjtC8ByYR5pRBTseUdD0EGP1AJxRk1P
+ mmvrF/ldCS1zzWQ97X7t8hjeBV3cCHzg7ODv/U3YWCtfxKmMi0YfFXuOCFm8pahxg9wy121Eq
+ wXL1iG3dlT/im9vzNj3zLMjA3AbhkPM3xrXjD9WllZBd2WxG//uNI3FdX4MgEDzYkI/Dg0rP2
+ jxeM800TA1zyISpGmKTtUo30Sup1bzhYAnYTRDcp/j/Hqdqx6cAcya4mD/7EPhXAg4Bkr3m60
+ sHx4MeYL3LRg+nNNWfJRuCNKVqOJjTEbcB3zDvMYWcsbDfr9xLsCKrJZVIrn5lMM59zGOGVDY
+ FJmbACqTT3wdV7mDfuSGCDnRZJOGQMv6dQMZF1NnEmRMghHEWKOnDAzulZhIbMbIv5M6EN/9s
+ mocio8OP8kgpsfFziQOu35hb3rLIJy60Bwr9yLJqCykRsgCPjEKyswx/2PwVDiMolJ146pf/T
+ bFxILHzLeHppk5AVvPys5F1rs21pULO/v0ZQCuseO9SehJf/MxXRW2npjTp8d67Yigt589/ry
+ 2XUOug4X8C71RUIpp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On Thu, Feb 13, 2020 at 5:54 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
-> > > So at least my gut feel is that the arm people don't have any big
-> > > reason to push for maintaining HIGHMEM support either.
-> > >
-> > > But I'm adding a couple of arm people and the arm list just in case
-> > > they have some input.
-> > >
-> > > [ Obvious background for newly added people: we're talking about
-> > > making CONFIG_HIGHMEM a deprecated feature and saying that if you want
-> > > to run with lots of memory on a 32-bit kernel, you're doing legacy
-> > > stuff and can use a legacy kernel ]
-> >
-> > Well, the recent 32-bit ARM systems generally have more than 1G
-> > of memory, so make use of highmem as a rule.  You're probably
-> > talking about crippling support for any 32-bit ARM system produced
-> > in the last 8 to 10 years.
->
-> What I'm observing in the newly added board support is that memory
-> configurations are actually going down, driven by component cost.
-> 512MB is really cheap (~$4) these days with a single 256Mx16 DDR3
-> chip or two 128Mx16. Going beyond 1GB is where things get expensive
-> with either 4+ chips or LPDDR3/LPDDR4 memory.
->
-> For designs with 1GB, we're probably better off just using
-> CONFIG_VMSPLIT_3G_OPT (without LPAE) anyway, completely
-> avoiding highmem. That is particularly true on systems with a custom
-> kernel configuration.
->
-> 2GB machines are less common, but are definitely important, e.g.
-> MT6580 based Android phones and some industrial embedded machines
-> that will live a long time. I've recently seen reports of odd behavior
-> with CONFIG_VMSPLIT_2G and plus CONFIG_HIGHMEM and a 7:1
-> ratio of lowmem to highmem that apparently causes OOM despite lots
-> of lowmem being free. I suspect a lot of those workloads would still be
-> better off with a CONFIG_VMSPLIT_2G_OPT (1.75 GB user, 2GB
-> linear map). That config unfortunately has a few problems, too:
-> - nobody has implemented it
-> - it won't work with LPAE and therefore cannot support hardware
->   that relies on high physical addresses for RAM or MMIO
->   (those could run CONFIG_VMSPLIT_2G at the cost of wasting
->   12.5% of RAM).
-> - any workload that requires the full 3GB of virtual address space won't
->   work at all. This might be e.g. MAP_FIXED users, or build servers
->   linking large binaries.
-> It will take a while to find out what kinds of workloads suffer the most
-> from a different vmsplit and what can be done to address that, but we
-> could start by changing the kernel defconfig and distro builds to see
-> who complains ;-)
->
-> I think 32-bit ARM machines with 3GB or more are getting very rare,
-> but some still exist:
-> - The Armada XP development board had a DIMM slot that could take
->   large memory (possibly up to 8GB with LPAE). This never shipped as
->   a commercial product, but distro build servers sometimes still run on
->   this, or on the old Calxeda or Keystone server systems.
-> - a few early i.MX6 boards  (e.g. HummingBoard) came had 4GB of
->   RAM, though none of these seem to be available any more.
-> - High-end phones from 2013/2014 had 3GB LPDDR3 before getting
->   obsoleted by 64-bit phones. Presumably none of these ever ran
->   Linux-4.x or newer.
-> - My main laptop is a RK3288 based Chromebook with 4GB that just
->   got updated to linux-4.19 by Google. Official updates apparently
->   stop this summer, but it could easily run Debian later on.
-> - Some people run 32-bit kernels on a 64-bit Raspberry Pi 4 or on
->   arm64 KVM with lots of RAM. These should probably all
->   migrate to 64-bit kernels with compat user space anyway.
-> In theory these could also run on a VMSPLIT_4G_4G-like setup,
-> but I don't think anyone wants to go there. Deprecating highmem
-> definitely impacts any such users significantly, though staying on
-> an LTS kernel may be an option if there are only few of them.
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The CIP-supported RZ/G1 SoCs can have up to 4 GiB, typically split (even
-for 1 GiB or 2 GiB configurations) in two parts, one below and one above
-the 32-bit physical limit.
+Hi,
 
-Gr{oetje,eeting}s,
+On Fri, Feb 14, 2020 at 03:57:23PM -0800, David Gow wrote:
+[...]
+> +To make running these tests (and reading the results) easier, KUnit offs=
+ers
 
-                        Geert
+There's a typo here: s/offsers/offers/
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5H1sgACgkQCDBEmo7z
+X9vbGA//YSsL2+AzYJ+tyrjnjNWwnhgSigy7m6uufz/KqC0eU8Sfs6UXO+GwwnvD
+SoqCqelP5QF7zyeGZT3mCFfl7XbfcIzK1xTfyxEEr9MBvCQRKDvXjxQbNS0rahAm
+2V0YppxFHu05UNrc/FNpEsCvHoYQwd/91N8iJkIIknAPn/lcMdrJQIjqXuuuyCQd
+QmawN8LZOh7dZwAxjIGCXFlP5ip7gHcLKzi+my0gtCs2z7yYrUm9jBNZfyut2Lfd
+VUVOP7sYqXzMc0P0WpAd/5f5ivwKortWo6J2wK++trbpEIXjMvqx2dR1DA9n6SKb
+eGYhCDzEdxhlw7bU9DPdT75yo36zk8HlWmFxvC7Cg5TSoqbJEHHSQDRUd2VSoNVb
+ACRLtvGtpOhd4s0aaR9uPt1Q6Fs2c6vqAh3hPSEM8684rB+71A8R3U+KcSj3Zjus
+b8KnOsIGIV8Vwt1/q99AXXMrGrQ2ggya9i692yD8VvCBWygA96CZ42bdUwMKSbjn
+dcWIe3bL16ZXDRrf3CeNDNOQ3znkixw1J4aaRJ31PxuvKZGX+q9RerhwVf2ICtut
+5Aop/DS1pULN6D5Mcm3FPDk3Ank6c4h/pTtgsVXj3PjB74WNr5Iyt45VqBd0UqqG
+FqmVBpkZb6MKSepIXWBc7kz9RwPmW4hVngIwt9a/KRXBZCmwshQ=
+=awkR
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--
