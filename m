@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4C2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C48D2469E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDE62467D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 08:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgBOIl5 (ORCPT
+        id S1727912AbgBOImy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 03:41:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56736 "EHLO
+        Sat, 15 Feb 2020 03:42:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56752 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgBOIl5 (ORCPT
+        with ESMTP id S1726234AbgBOIl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Feb 2020 03:41:57 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j2t1K-0005Fu-0a; Sat, 15 Feb 2020 09:41:50 +0100
+        id 1j2t1I-0005F4-QF; Sat, 15 Feb 2020 09:41:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A4C9B1C2019;
-        Sat, 15 Feb 2020 09:41:49 +0100 (CET)
-Date:   Sat, 15 Feb 2020 08:41:49 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6EB691C2019;
+        Sat, 15 Feb 2020 09:41:48 +0100 (CET)
+Date:   Sat, 15 Feb 2020 08:41:48 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Sync sched.h with the kernel
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andrei Vagin <avagin@openvz.org>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/urgent] tools headers UAPI: Sync drm/i915_drm.h with the
+ kernel sources
+Cc:     Abdiel Janulgue <abdiel.janulgue@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158175610929.13786.5915095172087744827.tip-bot2@tip-bot2>
+Message-ID: <158175610817.13786.8173776672639389180.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,62 +59,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d6d829d92c6e82b2627d3bb0058403ff15ee0592
-Gitweb:        https://git.kernel.org/tip/d6d829d92c6e82b2627d3bb0058403ff15ee0592
+Commit-ID:     365f9cc195a7fae8ac541129cd2a31ad87e46221
+Gitweb:        https://git.kernel.org/tip/365f9cc195a7fae8ac541129cd2a31ad87e46221
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 11 Feb 2020 16:03:47 -03:00
+AuthorDate:    Wed, 12 Feb 2020 10:25:27 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 11 Feb 2020 16:41:50 -03:00
+CommitterDate: Wed, 12 Feb 2020 10:25:27 -03:00
 
-tools headers UAPI: Sync sched.h with the kernel
+tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
 
-To get the changes in:
+To pick the change in:
 
-  769071ac9f20 ("ns: Introduce Time Namespace")
+  cc662126b413 ("drm/i915: Introduce DRM_I915_GEM_MMAP_OFFSET")
 
-Silencing this tools/perf build warning:
+That don't result in any changes in tooling, just silences this perf
+build warning:
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
+  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
+  diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
 
-Which enables 'perf trace' to decode the CLONE_NEWTIME bit in the
-'flags' argument to the clone syscalls.
-
-Example of clone flags being decoded:
-
-  [root@quaco ~]# perf trace -e clone*
-       0.000 qemu-system-x8/23923 clone(clone_flags: VM|FS|FILES|SIGHAND|THREAD|SYSVSEM|SETTLS|PARENT_SETTID|CHILD_CLEARTID, newsp: 0x7f0dad7f9870, parent_tidptr: 0x7f0dad7fa9d0, child_tidptr: 0x7f0dad7fa9d0, tls: 0x7f0dad7fa700) = 6806 (qemu-system-x86)
-           ? qemu-system-x8/6806  ... [continued]: clone())              = 0
-  ^C[root@quaco ~]#
-
-At some point this should enable things like:
-
-  # perf trace -e 'clone*/clone_flags&NEWTIME/'
-
+Cc: Abdiel Janulgue <abdiel.janulgue@linux.intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrei Vagin <avagin@openvz.org>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/include/uapi/drm/i915_drm.h | 32 ++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 4a02178..2e3bc22 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -36,6 +36,12 @@
- /* Flags for the clone3() syscall. */
- #define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
+diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
+index 5400d7e..829c0a4 100644
+--- a/tools/include/uapi/drm/i915_drm.h
++++ b/tools/include/uapi/drm/i915_drm.h
+@@ -395,6 +395,7 @@ typedef struct _drm_i915_sarea {
+ #define DRM_IOCTL_I915_GEM_PWRITE	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
+ #define DRM_IOCTL_I915_GEM_MMAP		DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP, struct drm_i915_gem_mmap)
+ #define DRM_IOCTL_I915_GEM_MMAP_GTT	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_gtt)
++#define DRM_IOCTL_I915_GEM_MMAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_offset)
+ #define DRM_IOCTL_I915_GEM_SET_DOMAIN	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
+ #define DRM_IOCTL_I915_GEM_SW_FINISH	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
+ #define DRM_IOCTL_I915_GEM_SET_TILING	DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
+@@ -793,6 +794,37 @@ struct drm_i915_gem_mmap_gtt {
+ 	__u64 offset;
+ };
  
-+/*
-+ * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
-+ * syscalls only:
-+ */
-+#define CLONE_NEWTIME	0x00000080	/* New time namespace */
++struct drm_i915_gem_mmap_offset {
++	/** Handle for the object being mapped. */
++	__u32 handle;
++	__u32 pad;
++	/**
++	 * Fake offset to use for subsequent mmap call
++	 *
++	 * This is a fixed-size type for 32/64 compatibility.
++	 */
++	__u64 offset;
 +
- #ifndef __ASSEMBLY__
- /**
-  * struct clone_args - arguments for the clone3 syscall
++	/**
++	 * Flags for extended behaviour.
++	 *
++	 * It is mandatory that one of the MMAP_OFFSET types
++	 * (GTT, WC, WB, UC, etc) should be included.
++	 */
++	__u64 flags;
++#define I915_MMAP_OFFSET_GTT 0
++#define I915_MMAP_OFFSET_WC  1
++#define I915_MMAP_OFFSET_WB  2
++#define I915_MMAP_OFFSET_UC  3
++
++	/*
++	 * Zero-terminated chain of extensions.
++	 *
++	 * No current extensions defined; mbz.
++	 */
++	__u64 extensions;
++};
++
+ struct drm_i915_gem_set_domain {
+ 	/** Handle for the object */
+ 	__u32 handle;
