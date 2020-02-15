@@ -2,125 +2,144 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3B6C4741C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B5C7114D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E002072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAnsRZrx"
+	by mail.kernel.org (Postfix) with ESMTP id D111F2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 11:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgBOLKA (ORCPT
+        id S1726233AbgBOLLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 06:10:00 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34757 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgBOLKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:10:00 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l16so4131408qtq.1;
-        Sat, 15 Feb 2020 03:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4tgIqByN7XK24vWrC6nkP1j06yZWkabnWcaD6QHevAA=;
-        b=OAnsRZrxLzsePOUoefhvykzJyy66wrA75NeIrIfjFZTRg3RKuu5aOgNnPeqlCUP1Bv
-         qFASsLHEhn4nJLU+sK68+mJ2j07Te5eKuxE77kA80A75zRIPJaoJf+qBZ/EeLMpTjZVI
-         rfOHqBGUqKX9doHA0ZkY2LuwSfJMoN4+vRR5CHRAOLQj8PSaGjatNLTaij/zU4hwz8wS
-         N3SXAm5BUGYzwK9Y8Ef4dGlCSOQOE4koHK7ej8k2sE/OzcduCVmrX5miIlAy2F/BDx89
-         kSLX+N62WhmqGRzQMYJCKaxp8hcjH8evy5SGtwGydSGRetb0fgHH/WuO9wTXaOB3f6IC
-         2dUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4tgIqByN7XK24vWrC6nkP1j06yZWkabnWcaD6QHevAA=;
-        b=dbMSFnonE3WYN4F6bjXh/MJ/0uvPD50BIanmzEhV95x6VMF7ClZ4VoRqrNW/+4Y4bb
-         8DG9jAKVlOhpSFSor9n9viVgYMha3MPm8uXLkFHTHoELR4izx1KhtDPTJuptTeV342FE
-         K5oUkhUa8a1rl5NQjVHtFRPPoTkP/Zyup/pV0/1ciXvnmJs9zSDLc+q9ek4XAV8LuN7Q
-         WiWmMZbtufoSE3PKF3l5tDpxCRR/gbRtXHicm3JVul2g4WdaAXf+okDSBfLRO67mnM6y
-         F2kmngw8oVqAIjcxDXPTZDeskeQHH2vgdHBxXRa4G1uW0q5yI/aINt6riYUW4PZz18LR
-         juBg==
-X-Gm-Message-State: APjAAAVS6JJZmALOBs7Rz1mbzNHG3NknUcBF9DZeeMP2ui4KFGd7zWnC
-        gsOhvSnFZGbUFYvGeWwHPEM=
-X-Google-Smtp-Source: APXvYqzz16+gBcXj4y+ZQg7aGlsiLozUDN4iATmw4hS0hkhb6CjY9rVl3mR9MVzy1KZvZoURGFE3qg==
-X-Received: by 2002:ac8:6697:: with SMTP id d23mr6000567qtp.235.1581764999481;
-        Sat, 15 Feb 2020 03:09:59 -0800 (PST)
-Received: from prism.localdomain (ip72-195-144-14.ri.ri.cox.net. [72.195.144.14])
-        by smtp.gmail.com with ESMTPSA id m54sm5279735qtf.67.2020.02.15.03.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 03:09:58 -0800 (PST)
-From:   Alexander Koskovich <zvnexus@gmail.com>
-X-Google-Original-From: Alexander Koskovich <zvnexus@outlook.com>
-To:     arjan@linux.intel.com, jacob.jun.pan@linux.intel.com
-Cc:     zvnexus@gmail.com, Alexander Koskovich <zvnexus@outlook.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal/intel_powerclamp: Don't report an error for AMD CPUs
-Date:   Sat, 15 Feb 2020 11:09:37 -0500
-Message-Id: <20200215160938.1025-1-zvnexus@outlook.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 15 Feb 2020 06:11:35 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:36402 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbgBOLLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Feb 2020 06:11:34 -0500
+Received: from p508fda41.dip0.t-ipconnect.de ([80.143.218.65] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j2vM0-0006YX-5X; Sat, 15 Feb 2020 12:11:20 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linus.walleij@linaro.org, david.wu@rock-chips.com,
+        kever.yang@rock-chips.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 2/2] pinctrl: rockchip: split rockchip pinctrl driver by SoC type
+Date:   Sat, 15 Feb 2020 12:11:19 +0100
+Message-ID: <6201612.znBgJCgWHB@phil>
+In-Reply-To: <20200117081358.5772-3-jay.xu@rock-chips.com>
+References: <c4ec95a7-aaf1-2331-352f-2def319a1c7d@rock-chips.com> <20200117081358.5772-1-jay.xu@rock-chips.com> <20200117081358.5772-3-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolves dmesg error "intel_powerclamp: CPU does not support MWAIT".
+Hi Jay,
 
-The error that is outputted in dmesg prior to this patch
-is innacurate, AMD Ryzen CPUs do support MWAIT. We could
-also add the AMD vendor to the MWAIT check, but even though
-AMD CPUs do support MWAIT, they fail the C-state package
-check so it's better just to bail out in the beginning.
+Am Freitag, 17. Januar 2020, 09:13:58 CET schrieb Jianqun Xu:
+> The pinctrl-rockchip driver grows larger by adding support for
+> each new SoC, that make the kernel Image size too large since
+> it only under one config named PINCTRL_ROCKCHIP.
+> 
+> This patch split driver in the form of core driver + soc driver,
+> - pinctrl-rockchip.c defined an platform probe register function
+> - pinctrl-rkxxxx.c init module by matching compatible name
+> 
+> For rockchip_defconfig, it needs to select all PINCTRL_RKxxxx to
+> keep same with old driver.
+> 
+> For some special defconfig, it can only select one PINCTRL_RKxxxx.
+> 
+> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> changes since v3:
+> - add base patch with directory change only, suggested by Robin
+> - rebase patch
+> 
+> changes since v2:
+> - remove rockchip_pinctrl_remove
+> - rename rockchip_pinctrl_* to rockchip_pctrl_*
+> - redule arguments for get_soc_data
+> - add module author for each new driver files
+> - add copyright for new driver files
+> 
+> changes since v1:
+> - add rockchip_pinctrl_remove
+> - remove unused head files in pinctrl-rockchip.h
+> 
+>  drivers/pinctrl/rockchip/Kconfig            |  114 +
+>  drivers/pinctrl/rockchip/Makefile           |   14 +
+>  drivers/pinctrl/rockchip/pinctrl-px30.c     |  224 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk2928.c   |   70 +
+>  drivers/pinctrl/rockchip/pinctrl-rk3036.c   |   69 +
+>  drivers/pinctrl/rockchip/pinctrl-rk3066a.c  |   72 +
+>  drivers/pinctrl/rockchip/pinctrl-rk3066b.c  |   51 +
+>  drivers/pinctrl/rockchip/pinctrl-rk3128.c   |  161 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk3188.c   |  147 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk3228.c   |  225 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk3288.c   |  210 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk3308.c   |  420 +++
+>  drivers/pinctrl/rockchip/pinctrl-rk3328.c   |  272 ++
+>  drivers/pinctrl/rockchip/pinctrl-rk3368.c   |  125 +
+>  drivers/pinctrl/rockchip/pinctrl-rk3399.c   |  195 ++
+>  drivers/pinctrl/rockchip/pinctrl-rockchip.c | 2547 ++-----------------
+>  drivers/pinctrl/rockchip/pinctrl-rockchip.h |  388 +++
+>  drivers/pinctrl/rockchip/pinctrl-rv1108.c   |  214 ++
+>  18 files changed, 3149 insertions(+), 2369 deletions(-)
 
-Signed-off-by: Alexander Koskovich <zvnexus@outlook.com>
----
- drivers/thermal/intel/intel_powerclamp.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+What Robin suggested, was doing this incrementally. So keep your patch1
+but then do
+- patch2: split out px30-pinctrl
+- patch3: split out rk3288 pinctrl
+- etc
 
-diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
-index 53216dcbe173..3c5b25bfa596 100644
---- a/drivers/thermal/intel/intel_powerclamp.c
-+++ b/drivers/thermal/intel/intel_powerclamp.c
-@@ -650,6 +650,11 @@ static struct thermal_cooling_device_ops powerclamp_cooling_ops = {
- 	.set_cur_state = powerclamp_set_cur_state,
- };
- 
-+static const struct x86_cpu_id amd_cpu[] = {
-+	{ X86_VENDOR_AMD },
-+	{},
-+};
-+
- static const struct x86_cpu_id __initconst intel_powerclamp_ids[] = {
- 	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_MWAIT },
- 	{}
-@@ -659,6 +664,11 @@ MODULE_DEVICE_TABLE(x86cpu, intel_powerclamp_ids);
- static int __init powerclamp_probe(void)
- {
- 
-+	if (x86_match_cpu(amd_cpu)) {
-+		pr_info("Intel PowerClamp does not support AMD CPUs\n");
-+		return -ENODEV;
-+	}
-+
- 	if (!x86_match_cpu(intel_powerclamp_ids)) {
- 		pr_err("CPU does not support MWAIT\n");
- 		return -ENODEV;
--- 
-2.25.0
+Because even my mail client chokes on this massive 6000 line patch, so a
+real review is actually very difficult.
+
+
+> diff --git a/drivers/pinctrl/rockchip/Kconfig b/drivers/pinctrl/rockchip/Kconfig
+> index 7a0077ca32dd..4873a05108f8 100644
+> --- a/drivers/pinctrl/rockchip/Kconfig
+> +++ b/drivers/pinctrl/rockchip/Kconfig
+> @@ -5,8 +5,122 @@ if (ARCH_ROCKCHIP || COMPILE_TEST)
+>  config PINCTRL_ROCKCHIP
+>  	bool
+>  	select PINMUX
+> +	select PINCONF
+>  	select GENERIC_PINCONF
+> +	select GPIOLIB_IRQCHIP
+>  	select GENERIC_IRQ_CHIP
+>  	select MFD_SYSCON
+>  
+> +config PINCTRL_PX30
+> +	tristate "PX30 pin controller driver"
+> +	depends on GPIOLIB && OF
+> +	select PINCTRL_ROCKCHIP
+
+you might want to add a
+	default y if ARM64
+here
+(similar default y if ARM for arm32 pinctrl drivers)
+
+Because otherwise you're breaking peoples kernel configs and also
+the default is to build a somewhat unified kernel in the default defconfigs,
+so we want all matching pinctrl drivers by default and people then can
+disable drivers if they really want to build a slimmed down kernel.
+
+With the "if ARM" / "if ARM64" parts you even save some space by
+default as well, as you build only the relevant drivers.
+
+
+Heiko
+
+
 
