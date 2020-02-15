@@ -2,89 +2,110 @@ Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C390AC35242
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27D3C35242
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931EF2083B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581726592;
-	bh=XdMJOms8RbFN2DS7z+iHuxwTOky+fnSYiXiwhbUyJSI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOqMKHFDp1cVr8piLuD+5k/dLtpSWwrsGadAVMS0mId3LdIU8vqNZxbfOWBYKFFoC
-	 MX9DZlirlqfoZ7y9vAjccNz8mAFNzh+Wn2crMrgckyfG1umaWx3FkjqJrLaU0u1MRR
-	 rdFao8vnhErrLihG9oUaxGAo13meDoGCkYQ6jeJ8=
+	by mail.kernel.org (Postfix) with ESMTP id 91C22206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 00:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyrC+940"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBOA3w (ORCPT
+        id S1727778AbgBOAce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Feb 2020 19:29:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgBOA3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Feb 2020 19:29:51 -0500
-Received: from paulmck-ThinkPad-P72.c.hoisthospitality.com (unknown [62.84.152.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65FBD207FF;
-        Sat, 15 Feb 2020 00:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581726590;
-        bh=XdMJOms8RbFN2DS7z+iHuxwTOky+fnSYiXiwhbUyJSI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cBc9XNaWmAo84NIbK+z57M9ndzCt02Wr0Tq8K5wUjl1p0dCbCSvp5PPa/7vja6j5b
-         LA5gIhZnfuijWpaXS1RfjkBZ2DAmfJ5lSZE51/3orm15eh++gR4Vbo8KHhk4ltgjn0
-         YhfbGVG5X+T28xIjTXMOaZet9iq5nquRbvrMI8JU=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct ->srcu_gp_seq load
-Date:   Fri, 14 Feb 2020 16:29:32 -0800
-Message-Id: <20200215002932.15976-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200215002907.GA15895@paulmck-ThinkPad-P72>
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
+        Fri, 14 Feb 2020 19:32:34 -0500
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:46846 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbgBOAce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Feb 2020 19:32:34 -0500
+Received: by mail-pl1-f176.google.com with SMTP id y8so4308241pll.13;
+        Fri, 14 Feb 2020 16:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gjic0RXEfrgy7QbCi6Q0Q7dhAgvAaIHlh+rIMSyFpZE=;
+        b=qyrC+9400c0WVFWtbhDvFVpEmlOkA7XXHFMMqFG93m2if7P86f5TAD/evJQBjAuFx1
+         GcrqI0pgw3OXgsmF2a+nKBJaxwFATBI5BAXuGkn32LMkcd2PcwlxTv6EaEIM4SiSKQ9i
+         HcqbFbdbULumwTR4iCdbZucSJ8GAqdwgN3JgyBA7OhKb4hwayPoM/m8KGd53loKGk/an
+         J2ul6FzSatcJECfNTvi2BOqvYf/8ZHpDKROIE4q/p4Jj++qSz57oZ+A2bebB9cvRTV43
+         5YRDRm/iZEafus96x5oliNv20UDK2KbJ36k401o0R1WImwbsWYWykmTAuz9vmnhxBiXt
+         s4fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gjic0RXEfrgy7QbCi6Q0Q7dhAgvAaIHlh+rIMSyFpZE=;
+        b=dotSXTAzL/z845HhJlw/dMjT5DZfHwCJKGo4WEZBuMAn85vLPi83N0XENu7ks53ehU
+         YAlv6IFXpvzIpwKnAgQpgxrKvbUo+eiY4qGg9vEZmWxloxezNbzlxIpT33/ihXDt/uJj
+         mcPLFwJM5vOuV+wO2YXK+Hasv35OdDGUCRZ3S6/stjv+DA9Q9sFFRh+Bd2Uab01FRlOH
+         dnT4Z9MYKcIq49ZcFbE4nmN7R0m2CDg44M1kDcOPBlRSj582WjGgqAjw0+7xeonwin34
+         sWMK4MNZ9War8WNXKNdSAa9WBy7mx8y5vG9pGAH7snVjxf52Nz+j3hAH5Y6PMM8kkFJ8
+         bbLQ==
+X-Gm-Message-State: APjAAAUnFJ3LnZQAqtYvS3aYDfPm8CXgE3h+YnFYcy/HiWDSp7o6VK/J
+        ILnhTOdl0SVLLPFe8Fr4uSRkMMNn
+X-Google-Smtp-Source: APXvYqx/tNo0wVmaj9SiEm72H8hoxYD+DFdYzKicSjwNCWV/yThe4AOzJFCu2qM29jDMpUebt0b7nQ==
+X-Received: by 2002:a17:90a:d103:: with SMTP id l3mr6943730pju.116.1581726752408;
+        Fri, 14 Feb 2020 16:32:32 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b21sm8622622pfp.0.2020.02.14.16.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 16:32:31 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
+Date:   Fri, 14 Feb 2020 16:32:29 -0800
+Message-Id: <20200215003230.27181-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Either port 5 or port 8 can be used on a 7278 device, make sure that
+port 5 also gets configured properly for 2Gb/sec in that case.
 
-The load of the srcu_struct structure's ->srcu_gp_seq field in
-srcu_funnel_gp_start() is lockless, so this commit adds the requisite
-READ_ONCE().
-
-This data race was reported by KCSAN.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- kernel/rcu/srcutree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c      | 3 +++
+ drivers/net/dsa/bcm_sf2_regs.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 119a373..90ab475 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -678,7 +678,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index d1955543acd1..6feaf8cb0809 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -616,6 +616,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
+ 	if (state->duplex == DUPLEX_FULL)
+ 		reg |= DUPLX_MODE;
  
- 	/* If grace period not already done and none in progress, start it. */
- 	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
--	    rcu_seq_state(ssp->srcu_gp_seq) == SRCU_STATE_IDLE) {
-+	    rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_IDLE) {
- 		WARN_ON_ONCE(ULONG_CMP_GE(ssp->srcu_gp_seq, ssp->srcu_gp_seq_needed));
- 		srcu_gp_start(ssp);
- 		if (likely(srcu_init_done))
++	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
++		reg |= GMIIP_SPEED_UP_2G;
++
+ 	core_writel(priv, reg, offset);
+ }
+ 
+diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
+index d8a5e6269c0e..784478176335 100644
+--- a/drivers/net/dsa/bcm_sf2_regs.h
++++ b/drivers/net/dsa/bcm_sf2_regs.h
+@@ -178,6 +178,7 @@ enum bcm_sf2_reg_offs {
+ #define  RXFLOW_CNTL			(1 << 4)
+ #define  TXFLOW_CNTL			(1 << 5)
+ #define  SW_OVERRIDE			(1 << 6)
++#define  GMIIP_SPEED_UP_2G		(1 << 7)
+ 
+ #define CORE_WATCHDOG_CTRL		0x001e4
+ #define  SOFTWARE_RESET			(1 << 7)
 -- 
-2.9.5
+2.17.1
 
