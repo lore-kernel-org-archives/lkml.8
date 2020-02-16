@@ -2,169 +2,119 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC865C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B50FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5FE20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nmcy0E9U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GZhEBWLo"
+	by mail.kernel.org (Postfix) with ESMTP id 65BB020857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581871101;
+	bh=VWG8pxZ0l2Q+50IdYiHS//nBhQMz4rD87ECHqgUJ+9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T1w0s5AnjfCgzBOo78FDVMXkWBnGbQlpDsSQtIKg1JlHGsuVBHo1z9a7hz1AFu25J
+	 HsuZjrvTykeZ/eFZwDtrt8n/GxJL0lQxplW29AY2amKQRt2+HUqnYHUQA/Sk76mEQQ
+	 wENY8o3DPk5IdqJDNacIbiGiSUE5nFevIyfJVU2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgBPQf6 (ORCPT
+        id S1728481AbgBPQiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:35:58 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:43367 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728239AbgBPQf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:35:58 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C45ED5966;
-        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sun, 16 Feb 2020 11:35:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=SQA1PLeoVk+BW+GTPAF4AsP3llw
-        ambjLeI+Hxm8q8jY=; b=nmcy0E9UGTIhkYGrQYahCZthdxt5odOdVHcvXfHU+XE
-        NdCbXPiKGVLHk2RRmmiHwQMEklhsyOkc/47HVt/+/E2topOCBJERfsiny2lXLnvp
-        UDzmHt1g6J1Z4iilSqw69Q7e2Ku/UVbQQN/LtsbvNsFwW2Uiv/VoYuchgasnzsUn
-        z/0VXXoVIxtkI3CwMP15OPveLRplrhdO4ut43gD9H27xwAApjywQbabuhPb1QNnW
-        P+jRXfi83jrarJAHIjZiWk/zkdMCVnbhyBZhcJ3oP3BEEhB0z+CFuMUUXTUVo404
-        ihTIDZjS3Ib/0ng2aWvBg80i+TTvjq1jtjPiicVKoVg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SQA1PL
-        eoVk+BW+GTPAF4AsP3llwambjLeI+Hxm8q8jY=; b=GZhEBWLo/hc1Yy9zGMY7RI
-        3qIhXoV7Ggjjr6b/JovvJpd9a5rltQ7iwzSpwNsOzQIUdJpEnyeqVpcMpaBD0pvF
-        IyoP/unIXL6PcBglNdE0bZu+L7zptqzYaNibkKMImwE7KC1NZWGqZ+rXH4yW5n0l
-        /PLc8YaUYAGg/2FsEelBXp3uVoLK2evW/GJXhzQ4ffNTMzjayHzdXrvpleFklJyp
-        unySdOsE5b0MQYxyRq3MsZQ9cu3IVSFQIGFIBUXT0kh8ETqE5PP4cv81tTsMV7by
-        W5uG1rpIgEiiltxLrSyVxIbxl3K/IOMQcoW+8NKHQk0pWCyyUr4vq2OJ3v3Im7og
-        ==
-X-ME-Sender: <xms:bG9JXpqk52gGd1F_j4h6-vVKhPYSpg4pQP1HjUQiInJGnf_XpQTYrA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeggdeludcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
-    gheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:bG9JXuSwcKY1qeLkTwBf8f3sdU9lOxSXwsGqCAwFT637D82o8df1Iw>
-    <xmx:bG9JXlvXMUGUkhSjXli6qZKkaNjJX-4o65eSHea4SbiOf5IvanjJWg>
-    <xmx:bG9JXmNnHqugDnOijxA1h5xBRJluRUnKRLWhjyjk3cTjFt29SsPrug>
-    <xmx:bG9JXq_vmNs6tYMHPHDaGEbCsvnTTO8kuzf64adAWBQ0P5NpUtrudQ>
+        Sun, 16 Feb 2020 11:38:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728239AbgBPQiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:38:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1ADBB3060C28;
-        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
-Date:   Sun, 16 Feb 2020 17:35:54 +0100
-From:   Greg KH <greg@kroah.com>
-To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-Message-ID: <20200216163554.GA48157@kroah.com>
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
- <20200207100438.GA627905@kroah.com>
- <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7860120857;
+        Sun, 16 Feb 2020 16:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581871094;
+        bh=VWG8pxZ0l2Q+50IdYiHS//nBhQMz4rD87ECHqgUJ+9s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fmiVP36zahpvKZBCZ5Yn+Q+1QtNy3qviQIH7XfHpFL5LfVWfFRM2LI+BXCBifPImH
+         c4fGCCqdprgjrGVBtqcpYNx3x3tO78XuibTE2Ns7j3xYLfuctQQI+2onMoljgeb1rB
+         Ly7Gztv4Y3689DMsL2bbFIm8eJuar5H+Y34Qp+0s=
+Date:   Sun, 16 Feb 2020 17:38:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     sunnypranay <mpranay2017@gmail.com>
+Cc:     hsweeten@visionengravers.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: DMA-API-HOWTO.txt: fixed grammer issues
+ Fixed some of the grammer issues in DMA-API-HOWTO.txt using the software
+ grammerly.
+Message-ID: <20200216163809.GB48157@kroah.com>
+References: <20200216141658.734-1-mpranay2017@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
+In-Reply-To: <20200216141658.734-1-mpranay2017@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 09:52:19PM +0530, Dwivedi, Avaneesh Kumar (avani) wrote:
+On Sun, Feb 16, 2020 at 07:46:58PM +0530, sunnypranay wrote:
+> From: mpranay <mpranay2017@gmail.com>
 > 
-> On 2/7/2020 3:34 PM, Greg KH wrote:
-> > On Fri, Jan 31, 2020 at 10:13:31AM +0530, Avaneesh Kumar Dwivedi wrote:
-> > > Add support for control peripheral of EUD (Embedded USB Debugger) to
-> > > listen to events such as USB attach/detach, charger enable/disable, pet
-> > > EUD to indicate software is functional. Reusing the platform device kobj,
-> > > sysfs entry 'enable' is created to enable or disable EUD.
-> > > 
-> > > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-> > > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-> > > Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-> > > ---
-> > >   Documentation/ABI/stable/sysfs-driver-msm-eud |   5 +
-> > >   drivers/soc/qcom/Kconfig                      |  12 +
-> > >   drivers/soc/qcom/Makefile                     |   1 +
-> > >   drivers/soc/qcom/eud.c                        | 329 ++++++++++++++++++++++++++
-> > >   4 files changed, 347 insertions(+)
-> > >   create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
-> > >   create mode 100644 drivers/soc/qcom/eud.c
-> > > 
-> > > diff --git a/Documentation/ABI/stable/sysfs-driver-msm-eud b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> > > new file mode 100644
-> > > index 0000000..d96ae05
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/stable/sysfs-driver-msm-eud
-> > > @@ -0,0 +1,5 @@
-> > > +What:           /sys/bus/platform/drivers/msm-eud/enable
-> > > +Date:           Jan 2020
-> > > +Contact:        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-> > > +Description:    Enable/Disable use of eud device.
-> > What are valid values to be used here?
-> it should be bool variable relying on 0 or 1.
+> ---
+>  Documentation/DMA-API-HOWTO.txt  | 628 +++++++++++++++----------------
+>  drivers/staging/comedi/drivers.c |   2 +-
+>  2 files changed, 311 insertions(+), 319 deletions(-)
 
-Then document it.
 
-> > 
-> > > +Users:          User space debug application which intend to use EUD h/w block.
-> > > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > > index d0a73e7..6b7c9d0 100644
-> > > --- a/drivers/soc/qcom/Kconfig
-> > > +++ b/drivers/soc/qcom/Kconfig
-> > > @@ -202,4 +202,16 @@ config QCOM_APR
-> > >   	  application processor and QDSP6. APR is
-> > >   	  used by audio driver to configure QDSP6
-> > >   	  ASM, ADM and AFE modules.
-> > > +
-> > > +config QCOM_EUD
-> > > +       tristate "QTI Embedded USB Debugger (EUD)"
-> > > +       depends on ARCH_QCOM
-> > Why not let everyone test build this?
-> EUD is Qualcomm IP, shall not it be associated with ARCH_QCOM?
+Hi,
 
-No, why can't everyone buid it for testing?  What about when I want to
-build a generic arm64 kernel to run on multiple SoCs?
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Do not put dependancies in here that you really do not have.  There's no
-reason for this to be limited to that one chip, right?  And if you allow
-others to build the code, you will get proper bug reports when things
-break, and others will fix them, which is what you want.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-I think the ARCH_RANDOM_SOC_NAME is totally broken and needs to be, at
-most, just an arch-specific thing, if even that.
+- Your patch does not have a Signed-off-by: line.  Please read the
+  kernel file, Documentation/SubmittingPatches and resend it after
+  adding that line.  Note, the line needs to be in the body of the
+  email, before the patch, not at the bottom of the patch or in the
+  email signature.
 
-Look at almost all other kernel drivers, they do not have those types of
-dependancies.
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
-> > > +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> > > +	if (!chip)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	chip->dev = &pdev->dev;
-> > No reference counting???
-> you mean get/put_device?
+- You did not specify a description of why the patch is needed, or
+  possibly, any description at all, in the email body.  Please read the
+  section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what is needed in order to
+  properly describe the change.
 
-yes.
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what a proper Subject: line should
+  look like.
+
+- It looks like you did not use your "real" name for the patch on either
+  the Signed-off-by: line, or the From: line (both of which have to
+  match).  Please read the kernel file, Documentation/SubmittingPatches
+  for how to do this correctly.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
 thanks,
 
-greg k-h
+greg k-h's patch email bot
