@@ -2,252 +2,102 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6BDC7619E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48638C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105BA2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1181622B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="eS2G6TKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgBPURV (ORCPT
+        id S1727006AbgBPUVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:17:21 -0500
-Received: from mga04.intel.com ([192.55.52.120]:62295 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgBPURV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 15:17:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:17:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,450,1574150400"; 
-   d="scan'208";a="433597837"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:17:20 -0800
-Subject: [PATCH v5 6/6] libnvdimm/e820: Retrieve and populate correct
- 'target_node' info
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Date:   Sun, 16 Feb 2020 12:01:16 -0800
-Message-ID: <158188327614.894464.13122730362187722603.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Sun, 16 Feb 2020 15:21:09 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:8509 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgBPUVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 15:21:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884466;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=0lwRY9T/vQcOBJYlZ2p0ZLpMFPC/FqS0O8Fyu7RLxI4=;
+        b=eS2G6TKU296YQNZhwodX8gnsgXk5a0GH76x1PXHcptDc94cTINB8fw6mSru6FXYWYL
+        hIuZFAv3Qw6vc4KArCj2ATSTmZPVlpd/dWXMWsvmi9Dzrs2LfPuGl4X/NvSazUf9vIsG
+        JRg65PoM6rhYxkm1XJhrhwK7my0cwSL4YtBTMb/6tD/OeDGLcYQYXcMQIifizZTbBy+6
+        QCDUuWABxMLGmDW9dvfhxfeU+ufeiQ40EJ9NMEx2lFFz5pugokv+tv5vA9k8nJfege1Q
+        8Y88GLgUoUQx1ZEjlGbaRQ2GbSgzP2imVyYgGxlyPnO+aGEfVR3Wgf5jFbwhzAdhIw/2
+        qyfQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1GKL2Jr2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 16 Feb 2020 21:21:02 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Alex Smith <alex.smith@imgtec.com>
+Subject: [PATCH v3 2/6] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Sun, 16 Feb 2020 21:20:56 +0100
+Message-Id: <c18873d6502f2d69f4d02e7d615bd8012c0b0f3d.1581884459.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
+References: <cover.1581884459.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new phys_to_target_node() and numa_map_to_online_node() helpers
-to retrieve the correct id for the 'numa_node' ("local" / online
-initiator node) and 'target_node' (offline target memory node) sysfs
-attributes.
+From: Alex Smith <alex.smith@imgtec.com>
 
-Below is an example from a 4 NUMA node system where all the memory on
-node2 is pmem / reserved. It should be noted that with the arrival of
-the ACPI HMAT table and EFI Specific Purpose Memory the kernel will
-start to see more platforms with reserved / performance differentiated
-memory in its own NUMA node. Hence all the stakeholders on the Cc for
-what is ostensibly a libnvdimm local patch.
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
-=== Before ===
-
-/* Notice no online memory on node2 at start */
-
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3708 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
-
-/*
- * Put the pmem namespace into devdax mode so it can be assigned to the
- * kmem driver
- */
-
-# ndctl create-namespace -e namespace0.0 -m devdax -f
-{
-  "dev":"namespace0.0",
-  "mode":"devdax",
-  "map":"dev",
-  "size":"3.94 GiB (4.23 GB)",
-  "uuid":"1650af9b-9ba3-4704-acd6-10178399d9a3",
-  [..]
-}
-
-/* Online Persistent Memory as System RAM */
-
-# daxctl reconfigure-device --mode=system-ram dax0.0
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":0,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
-
-/* Note that the memory is onlined by default to the wrong node, node0 */
-
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 7926 MB
-node 0 free: 7655 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
-
-
-=== After ===
-
-/* Notice that the "phys_index" error messages are gone */
-
-# daxctl reconfigure-device --mode=system-ram dax0.0
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":2,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
-
-/* Notice that node2 is now correctly populated */
-
-# numactl --hardware
-available: 4 nodes (0-3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3793 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3851 MB
-node 2 cpus:
-node 2 size: 3968 MB
-node 2 free: 3968 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3908 MB
-node distances:
-node   0   1   2   3
-  0:  10  21  21  21
-  1:  21  10  21  21
-  2:  21  21  10  21
-  3:  21  21  21  10
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/x86/Kconfig      |    1 +
- drivers/nvdimm/e820.c |   18 ++++--------------
- 2 files changed, 5 insertions(+), 14 deletions(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..d4e446daf457 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1664,6 +1664,7 @@ config X86_PMEM_LEGACY
- 	depends on PHYS_ADDR_T_64BIT
- 	depends on BLK_DEV
- 	select X86_PMEM_LEGACY_DEVICE
-+	select NUMA_KEEP_MEMINFO if NUMA
- 	select LIBNVDIMM
- 	help
- 	  Treat memory marked using the non-standard e820 type of 12 as used
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index e02f60ad6c99..4cd18be9d0e9 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -7,6 +7,7 @@
- #include <linux/memory_hotplug.h>
- #include <linux/libnvdimm.h>
- #include <linux/module.h>
-+#include <linux/numa.h>
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..59c104289ece 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -60,6 +60,11 @@
+ 		enable-active-high;
+ 	};
  
- static int e820_pmem_remove(struct platform_device *pdev)
- {
-@@ -16,27 +17,16 @@ static int e820_pmem_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return memory_add_physaddr_to_nid(addr);
--}
--#else
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return NUMA_NO_NODE;
--}
--#endif
--
- static int e820_register_one(struct resource *res, void *data)
- {
- 	struct nd_region_desc ndr_desc;
- 	struct nvdimm_bus *nvdimm_bus = data;
-+	int nid = phys_to_target_node(res->start);
- 
- 	memset(&ndr_desc, 0, sizeof(ndr_desc));
- 	ndr_desc.res = res;
--	ndr_desc.numa_node = e820_range_to_nid(res->start);
--	ndr_desc.target_node = ndr_desc.numa_node;
-+	ndr_desc.numa_node = numa_map_to_online_node(nid);
-+	ndr_desc.target_node = nid;
- 	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
- 	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
- 		return -ENXIO;
++	ir: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
+-- 
+2.23.0
 
