@@ -2,107 +2,92 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B16C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDFC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E403A2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5096E2084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgBPVtn (ORCPT
+        id S1728023AbgBPWWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 16:49:43 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40391 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726020AbgBPVtm (ORCPT
+        Sun, 16 Feb 2020 17:22:17 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52125 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgBPWWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 16:49:42 -0500
-Received: from [78.134.119.80] (port=47944 helo=[192.168.77.51])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j3RnH-00HafO-Va; Sun, 16 Feb 2020 22:49:40 +0100
-Subject: Re: [PATCH AUTOSEL 5.5 495/542] docs: i2c: writing-clients: properly
- name the stop condition
-To:     Jean Delvare <jdelvare@suse.de>, Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-495-sashal@kernel.org>
- <20200215071402.027c9120@endymion>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <dfb3d313-ad9e-8f53-a7f6-d3bfe655d493@lucaceresoli.net>
-Date:   Sun, 16 Feb 2020 22:49:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 17:22:17 -0500
+X-Originating-IP: 209.85.222.43
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+        (Authenticated sender: pshelar@ovn.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 8CB781C0004;
+        Sun, 16 Feb 2020 22:22:14 +0000 (UTC)
+Received: by mail-ua1-f43.google.com with SMTP id f7so5471468uaa.8;
+        Sun, 16 Feb 2020 14:22:14 -0800 (PST)
+X-Gm-Message-State: APjAAAXOuO0FtgIz44XaZ5s7sSxC0Gag4k/bRYp9ZDN8KXc6i7bm1drZ
+        yfKiiRnuPx9eCOwQkgrowMIJu/k8F4Ynorpg4yk=
+X-Google-Smtp-Source: APXvYqx2go22AofIyIP98/l6l45UOkLo/JVU6KDf6hZMx9X9FgplBl+/pgthlodHMYDcGG1odYWa6E/YfMjVrHqpEXI=
+X-Received: by 2002:ab0:4753:: with SMTP id i19mr6353393uac.70.1581891733184;
+ Sun, 16 Feb 2020 14:22:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200215071402.027c9120@endymion>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200215132056.42124-1-mcroce@redhat.com>
+In-Reply-To: <20200215132056.42124-1-mcroce@redhat.com>
+From:   Pravin Shelar <pshelar@ovn.org>
+Date:   Sun, 16 Feb 2020 14:22:02 -0800
+X-Gmail-Original-Message-ID: <CAOrHB_AgZJAc4oD+9pxuUEvepVK1RstD8veC5gfj1m4rhKPROg@mail.gmail.com>
+Message-ID: <CAOrHB_AgZJAc4oD+9pxuUEvepVK1RstD8veC5gfj1m4rhKPROg@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] openvswitch: add TTL decrement action
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        ovs dev <dev@openvswitch.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bindiya Kurle <bindiyakurle@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Ben Pfaff <blp@ovn.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Jeremy Harris <jgh@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Feb 15, 2020 at 5:21 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> New action to decrement TTL instead of setting it to a fixed value.
+> This action will decrement the TTL and, in case of expired TTL, drop it
+> or execute an action passed via a nested attribute.
+> The default TTL expired action is to drop the packet.
+>
+> Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
+>
+> Tested with a corresponding change in the userspace:
+>
+>     # ovs-dpctl dump-flows
+>     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1
+>     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},2
+>     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
+>     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
+>
+>     # ping -c1 192.168.0.2 -t 42
+>     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
+>         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
+>     # ping -c1 192.168.0.2 -t 120
+>     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
+>         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
+>     # ping -c1 192.168.0.2 -t 1
+>     #
+>
+> Co-developed-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
 
-On 15/02/20 07:14, Jean Delvare wrote:
-> On Fri, 14 Feb 2020 10:48:07 -0500, Sasha Levin wrote:
->> From: Luca Ceresoli <luca@lucaceresoli.net>
->>
->> [ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
->>
->> In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
->> condition".
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> Reported-by: Jean Delvare <jdelvare@suse.de>
->> Reviewed-by: Jean Delvare <jdelvare@suse.de>
->> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  Documentation/i2c/writing-clients.rst | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
->> index ced309b5e0cc8..3869efdf84cae 100644
->> --- a/Documentation/i2c/writing-clients.rst
->> +++ b/Documentation/i2c/writing-clients.rst
->> @@ -357,9 +357,9 @@ read/written.
->>  
->>  This sends a series of messages. Each message can be a read or write,
->>  and they can be mixed in any way. The transactions are combined: no
->> -stop bit is sent between transaction. The i2c_msg structure contains
->> -for each message the client address, the number of bytes of the message
->> -and the message data itself.
->> +stop condition is issued between transaction. The i2c_msg structure
->> +contains for each message the client address, the number of bytes of the
->> +message and the message data itself.
->>  
->>  You can read the file ``i2c-protocol`` for more information about the
->>  actual I2C protocol.
-> 
-> I wouldn't bother backporting this documentation patch to stable and
-> longterm trees. That's a minor vocabulary thing really, it does not
-> qualify.
+Thanks!
 
-I also feel no need to have it in stable branches. Hovever it would not
-hurt, so whatever is fine for who's maintaining that branch will be fine
-for me as well.
-
--- 
-Luca
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
