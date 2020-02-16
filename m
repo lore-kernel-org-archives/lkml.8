@@ -2,238 +2,201 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A861CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097FDC76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CA9206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22C12072C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:18:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaun3hLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgBPTQg (ORCPT
+        id S1726551AbgBPTSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 14:16:36 -0500
-Received: from mga09.intel.com ([134.134.136.24]:15820 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgBPTQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 14:16:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 11:16:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,449,1574150400"; 
-   d="scan'208";a="258062185"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Feb 2020 11:16:33 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j3PP7-000BlN-65; Mon, 17 Feb 2020 03:16:33 +0800
-Date:   Mon, 17 Feb 2020 03:16:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.02.13c] BUILD SUCCESS
- 9cdfd17ed206aea32dcaecf62daa5250ebff1255
-Message-ID: <5e499510.Azyp+serqJ95l2cQ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sun, 16 Feb 2020 14:18:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39921 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725989AbgBPTSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 14:18:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581880692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tuGE6PQn1KB7+DuvWdmcQTP1e0rV79mM3JVVfbfKivs=;
+        b=gaun3hLiY+VTGl0Gu9KOt9ds777Ndo0F5Qz39M94O9nipszvXbLalDSHFHgUfITxHaK+TK
+        +lp4MrWBYNDjNuVP6e+aXFgzrPJAq3C2yJa9LNU3A6+8ufVdyBhFJbhDbsC4rynP47VDdQ
+        jh2YyiUQ/jCOUEULtR7mnrMNiLf+bMo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-WXW4iEjeON-G447_iBq-nw-1; Sun, 16 Feb 2020 14:18:06 -0500
+X-MC-Unique: WXW4iEjeON-G447_iBq-nw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56D21107ACC7;
+        Sun, 16 Feb 2020 19:18:04 +0000 (UTC)
+Received: from t490s.redhat.com (ovpn-116-86.phx2.redhat.com [10.3.116.86])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0295319756;
+        Sun, 16 Feb 2020 19:18:02 +0000 (UTC)
+From:   Rafael Aquini <aquini@redhat.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        akpm@linux-foundation.org, mhocko@suse.com, vbabka@suse.cz
+Subject: [PATCH] mm, numa: fix bad pmd by atomically check for pmd_trans_huge when marking page tables prot_numa
+Date:   Sun, 16 Feb 2020 14:18:00 -0500
+Message-Id: <20200216191800.22423-1-aquini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.02.13c
-branch HEAD: 9cdfd17ed206aea32dcaecf62daa5250ebff1255  rcu: Make RCU IRQ enter/exit functions rely on in_nmi()
+From: Mel Gorman <mgorman@techsingularity.net>
+  A user reported a bug against a distribution kernel while running
+  a proprietary workload described as "memory intensive that is not
+  swapping" that is expected to apply to mainline kernels. The workload
+  is read/write/modifying ranges of memory and checking the contents. The=
+y
+  reported that within a few hours that a bad PMD would be reported follo=
+wed
+  by a memory corruption where expected data was all zeros.  A partial re=
+port
+  of the bad PMD looked like
 
-elapsed time: 2886m
+  [ 5195.338482] ../mm/pgtable-generic.c:33: bad pmd ffff8888157ba008(000=
+002e0396009e2)
+  [ 5195.341184] ------------[ cut here ]------------
+  [ 5195.356880] kernel BUG at ../mm/pgtable-generic.c:35!
+  ....
+  [ 5195.410033] Call Trace:
+  [ 5195.410471]  [<ffffffff811bc75d>] change_protection_range+0x7dd/0x93=
+0
+  [ 5195.410716]  [<ffffffff811d4be8>] change_prot_numa+0x18/0x30
+  [ 5195.410918]  [<ffffffff810adefe>] task_numa_work+0x1fe/0x310
+  [ 5195.411200]  [<ffffffff81098322>] task_work_run+0x72/0x90
+  [ 5195.411246]  [<ffffffff81077139>] exit_to_usermode_loop+0x91/0xc2
+  [ 5195.411494]  [<ffffffff81003a51>] prepare_exit_to_usermode+0x31/0x40
+  [ 5195.411739]  [<ffffffff815e56af>] retint_user+0x8/0x10
 
-configs tested: 175
-configs skipped: 0
+  Decoding revealed that the PMD was a valid prot_numa PMD and the bad PM=
+D
+  was a false detection. The bug does not trigger if automatic NUMA balan=
+cing
+  or transparent huge pages is disabled.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  The bug is due a race in change_pmd_range between a pmd_trans_huge and
+  pmd_nond_or_clear_bad check without any locks held. During the pmd_tran=
+s_huge
+  check, a parallel protection update under lock can have cleared the PMD
+  and filled it with a prot_numa entry between the transhuge check and th=
+e
+  pmd_none_or_clear_bad check.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-m68k                           sun3_defconfig
-riscv                             allnoconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-riscv                               defconfig
-s390                             allmodconfig
-s390                              allnoconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200215
-x86_64               randconfig-a002-20200215
-x86_64               randconfig-a003-20200215
-i386                 randconfig-a001-20200215
-i386                 randconfig-a002-20200215
-i386                 randconfig-a003-20200215
-parisc               randconfig-a001-20200214
-riscv                randconfig-a001-20200214
-m68k                 randconfig-a001-20200214
-mips                 randconfig-a001-20200214
-nds32                randconfig-a001-20200214
-alpha                randconfig-a001-20200214
-c6x                  randconfig-a001-20200215
-microblaze           randconfig-a001-20200215
-sparc64              randconfig-a001-20200215
-h8300                randconfig-a001-20200215
-nios2                randconfig-a001-20200215
-c6x                  randconfig-a001-20200214
-h8300                randconfig-a001-20200214
-microblaze           randconfig-a001-20200214
-nios2                randconfig-a001-20200214
-sparc64              randconfig-a001-20200214
-csky                 randconfig-a001-20200214
-openrisc             randconfig-a001-20200214
-s390                 randconfig-a001-20200214
-sh                   randconfig-a001-20200214
-xtensa               randconfig-a001-20200214
-x86_64               randconfig-b002-20200214
-i386                 randconfig-b002-20200214
-x86_64               randconfig-b001-20200214
-i386                 randconfig-b001-20200214
-i386                 randconfig-b003-20200214
-x86_64               randconfig-b003-20200214
-x86_64               randconfig-c001-20200214
-x86_64               randconfig-c002-20200214
-x86_64               randconfig-c003-20200214
-i386                 randconfig-c001-20200214
-i386                 randconfig-c002-20200214
-i386                 randconfig-c003-20200214
-x86_64               randconfig-d001-20200213
-x86_64               randconfig-d002-20200213
-x86_64               randconfig-d003-20200213
-i386                 randconfig-d001-20200213
-i386                 randconfig-d002-20200213
-i386                 randconfig-d003-20200213
-x86_64               randconfig-d001-20200214
-x86_64               randconfig-d002-20200214
-x86_64               randconfig-d003-20200214
-i386                 randconfig-d001-20200214
-i386                 randconfig-d002-20200214
-i386                 randconfig-d003-20200214
-x86_64               randconfig-e001-20200214
-x86_64               randconfig-e002-20200214
-x86_64               randconfig-e003-20200214
-i386                 randconfig-e001-20200214
-i386                 randconfig-e002-20200214
-i386                 randconfig-e003-20200214
-x86_64               randconfig-f001-20200214
-x86_64               randconfig-f002-20200214
-x86_64               randconfig-f003-20200214
-i386                 randconfig-f001-20200214
-i386                 randconfig-f002-20200214
-i386                 randconfig-f003-20200214
-x86_64               randconfig-g001-20200214
-x86_64               randconfig-g002-20200214
-x86_64               randconfig-g003-20200214
-i386                 randconfig-g001-20200214
-i386                 randconfig-g002-20200214
-i386                 randconfig-g003-20200214
-x86_64               randconfig-h001-20200214
-x86_64               randconfig-h002-20200214
-x86_64               randconfig-h003-20200214
-i386                 randconfig-h001-20200214
-i386                 randconfig-h002-20200214
-i386                 randconfig-h003-20200214
-arc                  randconfig-a001-20200214
-sparc                randconfig-a001-20200214
-ia64                 randconfig-a001-20200214
-arm                  randconfig-a001-20200214
-arm64                randconfig-a001-20200214
-powerpc              randconfig-a001-20200214
-riscv                            allmodconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+  While this could be fixed with heavy locking, it's only necessary to
+  make a copy of the PMD on the stack during change_pmd_range and avoid
+  races. A new helper is created for this as the check if quite subtle an=
+d the
+  existing similar helpful is not suitable. This passed 154 hours of test=
+ing
+  (usually triggers between 20 minutes and 24 hours) without detecting ba=
+d
+  PMDs or corruption. A basic test of an autonuma-intensive workload show=
+ed
+  no significant change in behaviour.
 
+Although Mel withdrew the patch on the face of LKML comment https://lkml.=
+org/lkml/2017/4/10/922
+the race window aforementioned is still open, and we have reports of Linp=
+ack test reporting bad
+residuals after the bad PMD warning is observed. In addition to that, bad=
+ rss-counter and
+non-zero pgtables assertions are triggered on mm teardown for the task hi=
+tting the bad PMD.
+
+ host kernel: mm/pgtable-generic.c:40: bad pmd 00000000b3152f68(8000000d2=
+d2008e7)
+ ....
+ host kernel: BUG: Bad rss-counter state mm:00000000b583043d idx:1 val:51=
+2
+ host kernel: BUG: non-zero pgtables_bytes on freeing mm: 4096
+
+The issue is observed on a v4.18-based distribution kernel, but the race =
+window is
+expected to be applicable to mainline kernels, as well.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ mm/mprotect.c | 38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
+
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 7a8e84f86831..9ea8cc0ab2fd 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -161,6 +161,31 @@ static unsigned long change_pte_range(struct vm_area=
+_struct *vma, pmd_t *pmd,
+ 	return pages;
+ }
+=20
++/*
++ * Used when setting automatic NUMA hinting protection where it is
++ * critical that a numa hinting PMD is not confused with a bad PMD.
++ */
++static inline int pmd_none_or_clear_bad_unless_trans_huge(pmd_t *pmd)
++{
++	pmd_t pmdval =3D pmd_read_atomic(pmd);
++
++	/* See pmd_none_or_trans_huge_or_clear_bad for info on barrier */
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++	barrier();
++#endif
++
++	if (pmd_none(pmdval))
++		return 1;
++	if (pmd_trans_huge(pmdval))
++		return 0;
++	if (unlikely(pmd_bad(pmdval))) {
++		pmd_clear_bad(pmd);
++		return 1;
++	}
++
++	return 0;
++}
++
+ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 		pud_t *pud, unsigned long addr, unsigned long end,
+ 		pgprot_t newprot, int dirty_accountable, int prot_numa)
+@@ -178,8 +203,17 @@ static inline unsigned long change_pmd_range(struct =
+vm_area_struct *vma,
+ 		unsigned long this_pages;
+=20
+ 		next =3D pmd_addr_end(addr, end);
+-		if (!is_swap_pmd(*pmd) && !pmd_trans_huge(*pmd) && !pmd_devmap(*pmd)
+-				&& pmd_none_or_clear_bad(pmd))
++
++		/*
++		 * Automatic NUMA balancing walks the tables with mmap_sem
++		 * held for read. It's possible a parallel update to occur
++		 * between pmd_trans_huge() and a pmd_none_or_clear_bad()
++		 * check leading to a false positive and clearing.
++		 * Hence, it's ecessary to atomically read the PMD value
++		 * for all the checks.
++		 */
++		if (!is_swap_pmd(*pmd) && !pmd_devmap(*pmd) &&
++		     pmd_none_or_clear_bad_unless_trans_huge(pmd))
+ 			goto next;
+=20
+ 		/* invoke the mmu notifier if the pmd is populated */
+--=20
+2.24.1
+
