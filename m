@@ -2,192 +2,104 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6F1C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCCAC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B139C208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B592086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="jDhLpDOD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J5Et/ArF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cY4mbkYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgBPXVY (ORCPT
+        id S1727986AbgBPXZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 18:21:24 -0500
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:41129 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726245AbgBPXVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 18:21:19 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id A1C5A40F;
-        Sun, 16 Feb 2020 18:21:17 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 16 Feb 2020 18:21:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=SWLqZb9zqp7Iz
-        Oga1M+7E+qtPf8iOyJLDa/iZoQvwzM=; b=jDhLpDODm5DE2N7TRqIVNyhBmBTQ+
-        g6umIiyXj0Wm/loWObigMfBbnkrcRpO7+0nGhDR9jNVDJcbymb5HabQMkvJ1fZiu
-        zLV7hZkTBrbmuG6vvJr1lSbOT9+m0Z8PWbN40ObLBxVY59W8HlHnVYlALgQkN7C3
-        4Umh+UQ5dKx0AttRVnrlSCTRK/KtI/7KF84LfnoFwuJGMOObUmZtSHb6by1hr1jp
-        xm7+kM3ukbLTX39Zy/y5D3Rxk79tV+kJ9XtxxCEJaW5IIRYaGZNmlCP8lN62eMQF
-        s0fxHaTcLxbqzbYGfKU2yC3jrcrm9v1Mk2ips2j1foDGOGjoej2UfAPsw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=SWLqZb9zqp7IzOga1M+7E+qtPf8iOyJLDa/iZoQvwzM=; b=J5Et/ArF
-        Crf/Lx3rKah/A2yL9H5TfEJZ/CtDCHCphGhOtRFpwdfdc1pMquHaU8IkzW8WCTi8
-        1WTFw/J6eCKorx2iN1+qzYaKrO1MwJa8e/oCcbuIsp89tY7If96p4rEvco8+FGKK
-        SWesogOT0oHZuLP/XdZRAV/8g0hHVTpvysNvpL+jsl526zZZHljFuJVAnu91QeRk
-        CHlzowVEUlcA4een2rRUvottNzSgeCQtFrRGttBkTsBcOKI7YOdGM+hpbK2ViRSV
-        j1NOBKSdgncXodJTYhbx0jqJTy1Yn6MekqkKvPqD87RJWECDsHVuIjlqPgdNDgbu
-        tjnbbXoEPdr8pA==
-X-ME-Sender: <xms:bc5JXhu8Q8H8oMXZbHvn4D81jfkwsyqabzzzY_0vJIbO9GNsl0WWrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:bc5JXlGJO3lTGvl44Ffb_JR2Cyi83BXC58P7umQ2k5P5GhbphMsIsA>
-    <xmx:bc5JXqzzBQJHTib8LFbWmjMlLMpRLHu7d6xNcpP6FB6VRtmR3Ibr5g>
-    <xmx:bc5JXn1EDMk5ONC1TKXBVUmxssrGmwa3xid-3ziOlL0pdY85Bd7_hA>
-    <xmx:bc5JXnjMe0DoqDIGDRWPlm7kg92ZknfGWO6elgO7Hz4vcSHkN3lmsw>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BAB223060F9B;
-        Sun, 16 Feb 2020 18:21:16 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 3/3] ASoC: simple-card: Add support for codec to codec DAI links
-Date:   Sun, 16 Feb 2020 17:21:14 -0600
-Message-Id: <20200216232114.15742-4-samuel@sholland.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200216232114.15742-1-samuel@sholland.org>
-References: <20200216232114.15742-1-samuel@sholland.org>
+        Sun, 16 Feb 2020 18:25:22 -0500
+Received: from ozlabs.org ([203.11.71.1]:45119 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbgBPXZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 18:25:22 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LNWg4Zttz9sP7;
+        Mon, 17 Feb 2020 10:25:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581895519;
+        bh=6iPV44G5eZYzV2SJDig7NPknoWdW2BskygcTyt0PuDw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cY4mbkYZ70iAVxMmfS5ul1fZQp5Um4ugLEVc5cdZvywg9N2PKK3FsrcELXMrPUM2u
+         xjblANLau25Q7GcaHXwOny51z1ZNQL0QCLf40S0LcEqaG5rERqpKDpSbUzGV/pkmjm
+         Dt0gOgRBhlaPDnO8Ep0JPShe4bvHHLbPUC6dEu5JUZyiWv/kdchtYqC+h0Ada2zzjB
+         8vTFnx+CHBAPmZM/VfLl4GuMntIr/ma28uKBYTzsEuUsoKtZlGPNwTSp646UD8SOVO
+         8nHhQuIpFGpOjG6y6lbs/jqVe6ZOvP+WnO0UF2AQfmgV4jM/57JycGOZqVXOEijzQ2
+         4ddsUP6k8hCGg==
+Date:   Mon, 17 Feb 2020 10:25:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Changbin Du <changbin.du@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Make perf able to build with latest libbfd
+Message-ID: <20200217102513.2fb2c691@canb.auug.org.au>
+In-Reply-To: <20200130105548.GC3841@kernel.org>
+References: <20200128152938.31413-1-changbin.du@gmail.com>
+        <20200129075829.GB1256499@krava>
+        <20200130105548.GC3841@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/0d+.dJHvJr2Y1QPjR1vadWw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the example in cb2cf0de1174 ("ASoC: soc-core: care Codec <->
-Codec case by non_legacy_dai_naming"), determine if a DAI link contains
-only codec DAIs by examining the non_legacy_dai_naming flag in each
-DAI's component.
+--Sig_/0d+.dJHvJr2Y1QPjR1vadWw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For now, we assume there is only one or a small set of valid PCM stream
-parameters, so num_params == 1 is good enough. We also assume that the
-same params are valid for all supported streams. We calculate the subset
-of parameters common among all DAIs, and then the existing code
-automatically chooses the highest quality of the remaining values.
+Hi Arnaldo,
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- Documentation/sound/soc/codec-to-codec.rst |  9 +++-
- sound/soc/generic/simple-card-utils.c      | 50 ++++++++++++++++++++++
- 2 files changed, 57 insertions(+), 2 deletions(-)
+On Thu, 30 Jan 2020 11:55:48 +0100 Arnaldo Carvalho de Melo <arnaldo.melo@g=
+mail.com> wrote:
+>
+> Em Wed, Jan 29, 2020 at 08:58:29AM +0100, Jiri Olsa escreveu:
+> > On Tue, Jan 28, 2020 at 11:29:38PM +0800, Changbin Du wrote: =20
+> > > libbfd has changed the bfd_section_* macros to inline functions
+> > > bfd_section_<field> since 2019-09-18. See below two commits:
+> > >   o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
+> > >   o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
+> > >=20
+> > > This fix make perf able to build with both old and new libbfd.
+> > >=20
+> > > Signed-off-by: Changbin Du <changbin.du@gmail.com> =20
+> >=20
+> > Acked-by: Jiri Olsa <jolsa@redhat.com> =20
+>=20
+> Thanks, applied.
 
-diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
-index 810109d7500d..4eaa9a0c41fc 100644
---- a/Documentation/sound/soc/codec-to-codec.rst
-+++ b/Documentation/sound/soc/codec-to-codec.rst
-@@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
- dai names ending with "Playback" and "Capture" respectively as dapm core
- will link and power those dais based on the name.
- 
--Note that in current device tree there is no way to mark a dai_link
--as codec to codec. However, it may change in future.
-+A dai_link in a "simple-audio-card" will automatically be detected as
-+codec to codec when all DAIs on the link belong to codec components.
-+The dai_link will be initialized with the subset of stream parameters
-+(channels, format, sample rate) supported by all DAIs on the link. Since
-+there is no way to provide these parameters in the device tree, this is
-+mostly useful for communication with simple fixed-function codecs, such
-+as a Bluetooth controller or cellular modem.
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 9b794775df53..e380ffb2d480 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -331,6 +331,52 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
- 	return 0;
- }
- 
-+static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
-+					    struct simple_dai_props *dai_props)
-+{
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_component *component;
-+	struct snd_soc_rtdcom_list *rtdcom;
-+	struct snd_soc_pcm_stream *params;
-+	struct snd_pcm_hardware hw;
-+	int stream;
-+	int ret;
-+
-+	/* Only codecs should have non_legacy_dai_naming set. */
-+	for_each_rtd_components(rtd, rtdcom, component) {
-+		if (!component->driver->non_legacy_dai_naming)
-+			return 0;
-+	}
-+
-+	/* Assumes the capabilities are the same for all supported streams */
-+	for (stream = 0; stream < 2; stream++) {
-+		ret = snd_soc_runtime_calc_hw(rtd, &hw, stream);
-+		if (ret == 0)
-+			break;
-+	}
-+
-+	if (ret < 0) {
-+		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
-+		return ret;
-+	}
-+
-+	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
-+	if (!params)
-+		return -ENOMEM;
-+
-+	params->formats = hw.formats;
-+	params->rates = hw.rates;
-+	params->rate_min = hw.rate_min;
-+	params->rate_max = hw.rate_max;
-+	params->channels_min = hw.channels_min;
-+	params->channels_max = hw.channels_max;
-+
-+	dai_link->params = params;
-+	dai_link->num_params = 1;
-+
-+	return 0;
-+}
-+
- int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
- {
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-@@ -347,6 +393,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
--- 
-2.24.1
+Just wondering if this should have been cc'd to stable?
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/0d+.dJHvJr2Y1QPjR1vadWw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Jz1kACgkQAVBC80lX
+0Gxjwwf/UqUMntkbN9GJcF9N5WQRoywnprnZHDA91mETTX+NCdpDvEF6HxL+wjWA
+mhvGnvH0remKhel2BLCxJsvvW695MF2PaTP2cuYneWHNqNgnUtyjuMx7yVgY/NSB
+L7qwjnBajKDqZ0NrLjU1FZwkuOzvDN6fq/BNAVbGB+3PaD3FbIoux/jXgTjaNH/t
+IyRcmQ9ITYGOLjyh/470NlYlZqPmnfW6o79wuVOgrZb/+BrynarXJm6QqZmHs18Z
+ufXG4Ab2pB2cHgL7SlFBzxTC05oM1Zskd461F090Asjm3duAythz0byaiRkinzc5
+/4rAtvLuODE7n6LPUP+pnABdNRqedQ==
+=2OUh
+-----END PGP SIGNATURE-----
+
+--Sig_/0d+.dJHvJr2Y1QPjR1vadWw--
