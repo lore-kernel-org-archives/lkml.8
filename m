@@ -2,205 +2,174 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F91C7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB58C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F44E20857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5B520857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:03:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tG0FT+xf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgBPK5O (ORCPT
+        id S1727991AbgBPLDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 05:57:14 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:43322 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgBPK5N (ORCPT
+        Sun, 16 Feb 2020 06:03:50 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:36309 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727943AbgBPLDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 05:57:13 -0500
-Received: by mail-il1-f199.google.com with SMTP id o13so11838054ilf.10
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 02:57:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=khkdmIgyKVi3BQRKte6m+fUbFSqCcRxt9OmDYtfZNBY=;
-        b=d3JwHFRWbNcAJISNgIRa/cSNOyWwkQly/t16SVl0ezQAQGWLR58WKrruFZiSug0w3E
-         fQBPr7qddmBvEaikJNcm3CibUHHWgPxhLZfhzmiA/4gl3Sw1gW1597e/KINSjUEv7lMN
-         tpzESF5cYSNdgQXMhPmwhAHZ0HMZKXh/psiVPER4uixC6vbClOxai/X+mMRRvhFqMh2X
-         YvsrBCoCdFuIPs1ro9zsx9+MddtK5IZ+ICNyvAgRh++6lKXiqG9u+k2Rmar/ebqqKc5i
-         wSbvKgLXSf+goFa70iiyXYvC+1Tdaot8dRo3mDok2+eKXM90u/hgr7HpkAYVILNP2bLj
-         ZtRg==
-X-Gm-Message-State: APjAAAVAqYS4sqsw7E81aH8tus6Cq64TO3+7bcI0W3RGwDURvT5lE9o+
-        5cHvO59K0bm31tId/lOl78Df9QI2lg+jjB075sk5DX5so/44
-X-Google-Smtp-Source: APXvYqz/uhApDy8BHsTOMV0Ax4nS1NjL5q1etw2OxJWRdFvNTWSg41CD5+DRw3LUFazwsjxHOVI2b8Yuzph7xFvJnFvRpaMDOXt+
+        Sun, 16 Feb 2020 06:03:49 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3HiAjTYo48i433HiEjTw5k; Sun, 16 Feb 2020 12:03:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1581851027; bh=+aNvZy8aD/dcufEoPL+QDCX1KUO9B+3y0UVN4XJ/BNQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=tG0FT+xfYdW0/2XYT7hVpBBOwF/S9gdqIqgXu6cT52AYwsza6QFT51iH/4rNT2grj
+         st7dy2JhlO0230j85OYjIYSkA0KVaxZwkiasrq2ekaDgeRZGMTBa3tFqSVLSkXqIoC
+         gT1l4SuGRrJPPM5j+obCTz0NJcpOsfYIfcWc3dsI+H/fmfeOjFg/4CGUVAlZT5yGiF
+         juIEPI4l+ah5KbdKk2ZT4RJEQzv2OkNR4YKWddUaV4d5WPCkmkBVMgKZNgg1SxMGC9
+         GyIPc1mUjpKIUzx+CATaPTjvZfXpWGv9N/vPaLAF+qOxnTfe/2Ny6Mi2G3sohYGARp
+         ToXlJFItC93eA==
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, sboyd@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
+Date:   Sun, 16 Feb 2020 12:03:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:5c8a:: with SMTP id d10mr10921125ilg.137.1581850632480;
- Sun, 16 Feb 2020 02:57:12 -0800 (PST)
-Date:   Sun, 16 Feb 2020 02:57:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000973ee059eaf4de6@google.com>
-Subject: possible deadlock in bpf_lru_push_free
-From:   syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEHJX4QNbEtlvlNbNh8D9iO53jn6o9B1tz9SAXEUfYWVqgJik08fvS124TIyTWQBoLaKpXZ0bVjkYd3BRCoYngir51sZDOisiV6vHpCxBuwe2+L8gB2p
+ Rrj4kheVXgwW827H19M6HXaKoYc1oPrQTmNocNbL+LZgzAiWqYPg2eUh1aZ1FOu4C9XODs010r7nD+ORs7A4wMmF4mn3GrHMVdXelHGLyNVEg/G0aVT7laGv
+ dcOyIIYkKccKcHVjcqu/PQocZYWFIoq8pIXnDOd9pfvce8fO8ohgsBo6hW5UBhKY+Re5NO4YWo+CtFdXNHb/Bt6ta8FJ5H9nS1FCh+7Sl1uRqQPnvjqUctdV
+ e0CuselYWW5y2mK98CFVvvwE9bbV5mIvdVBLL+vKS9CHf8zrcKBUIZGk6zRHFKCXQKvZrQVJqNXzhjePMZ+PSjTc8C3NRALovcYGxuLXqfpfzqbNvmLjPDsK
+ mYOHLcPs2HzlS2ErtSTGeEj/hC/u0gzlCVCvENfz85CSFHBVoiY9piFIdpAH7b207JXd7eKpUW+S9wei
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
+> Tegra210 contains a powerful Video Input (VI) hardware controller
+> which can support up to 6 MIPI CSI camera sensors.
+> 
+> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> capture from an external camera sensor connected to CSI or from
+> built-in test pattern generator.
+> 
+> Tegra210 supports built-in test pattern generator from CSI to VI.
+> 
+> This patch adds a V4L2 media controller and capture driver support
+> for Tegra210 built-in CSI to VI test pattern generator.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/staging/media/Kconfig              |    2 +
+>  drivers/staging/media/Makefile             |    1 +
+>  drivers/staging/media/tegra/Kconfig        |   10 +
+>  drivers/staging/media/tegra/Makefile       |    8 +
+>  drivers/staging/media/tegra/TODO           |   10 +
+>  drivers/staging/media/tegra/tegra-common.h |  239 +++++++
+>  drivers/staging/media/tegra/tegra-csi.c    |  374 ++++++++++
+>  drivers/staging/media/tegra/tegra-csi.h    |  115 ++++
+>  drivers/staging/media/tegra/tegra-vi.c     | 1019 ++++++++++++++++++++++++++++
+>  drivers/staging/media/tegra/tegra-vi.h     |   79 +++
+>  drivers/staging/media/tegra/tegra-video.c  |  118 ++++
+>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+>  drivers/staging/media/tegra/tegra210.c     |  767 +++++++++++++++++++++
+>  drivers/staging/media/tegra/tegra210.h     |  190 ++++++
+>  14 files changed, 2964 insertions(+)
+>  create mode 100644 drivers/staging/media/tegra/Kconfig
+>  create mode 100644 drivers/staging/media/tegra/Makefile
+>  create mode 100644 drivers/staging/media/tegra/TODO
+>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
+>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
+>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
+>  create mode 100644 drivers/staging/media/tegra/tegra210.c
+>  create mode 100644 drivers/staging/media/tegra/tegra210.h
+> 
 
-syzbot found the following crash on:
+<snip>
 
-HEAD commit:    2019fc96 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=13aa0229e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
-dashboard link: https://syzkaller.appspot.com/bug?extid=122b5421d14e68f29cd1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> +/*
+> + * videobuf2 queue operations
+> + */
+> +static int tegra_channel_queue_setup(struct vb2_queue *vq,
+> +				     unsigned int *nbuffers,
+> +				     unsigned int *nplanes,
+> +				     unsigned int sizes[],
+> +				     struct device *alloc_devs[])
+> +{
+> +	struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
+> +
+> +	if (*nplanes)
+> +		return sizes[0] < chan->format.sizeimage ? -EINVAL : 0;
+> +
+> +	*nplanes = 1;
+> +	sizes[0] = chan->format.sizeimage;
+> +	alloc_devs[0] = chan->vi->dev;
+> +
+> +	/*
+> +	 * allocate min 3 buffers in queue to avoid race between DMA
+> +	 * writes and userspace reads.
+> +	 */
+> +	if (*nbuffers < 3)
+> +		*nbuffers = 3;
 
-Unfortunately, I don't have any reproducer for this crash yet.
+First of all, don't check this here, instead set the struct vb2_queue field
+'min_buffers_needed' to 3 instead.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com
+But the reason given for this check is peculiar: there should not be any
+race at all. Usually the reason for requiring a specific minimum number of
+buffers is that the DMA engine needs at least 2 buffers before it can start
+streaming: it can't give back a buffer to userspace (vb2_buffer_done())
+unless there is a second buffer it can start to capture to next. So for many
+DMA implementations you need a minimum of 2 buffers: two buffers for the
+DMA engine, one buffer being processed by userspace.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-rc1-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.3/16820 is trying to acquire lock:
-ffffe8ffffccc040 (&loc_l->lock){....}, at: bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:516 [inline]
-ffffe8ffffccc040 (&loc_l->lock){....}, at: bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
+If the driver is starved of buffers it will typically keep capturing to
+the last buffer until a new buffer is queued.
 
-but task is already holding lock:
-ffff88808ceda560 (&htab->buckets[i].lock#2){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
+In any case, once the driver releases a buffer via vb2_buffer_done() the
+buffer memory is no longer owned by the driver.
 
-which lock already depends on the new lock.
+To be precise, buffer ownership is as follows:
 
+userspace -> VIDIOC_QBUF -> vb2 -> buf_queue -> driver -> vb2_buffer_done() -> vb2 -> VIDIOC_DQBUF -> userspace
 
-the existing dependency chain (in reverse order) is:
+(vb2 == videobuf2 framework)
 
--> #2 (&htab->buckets[i].lock#2){....}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-       htab_lru_map_delete_node+0xce/0x2f0 kernel/bpf/hashtab.c:593
-       __bpf_lru_list_shrink_inactive kernel/bpf/bpf_lru_list.c:220 [inline]
-       __bpf_lru_list_shrink+0xf9/0x470 kernel/bpf/bpf_lru_list.c:266
-       bpf_lru_list_pop_free_to_local kernel/bpf/bpf_lru_list.c:340 [inline]
-       bpf_common_lru_pop_free kernel/bpf/bpf_lru_list.c:447 [inline]
-       bpf_lru_pop_free+0x87c/0x1670 kernel/bpf/bpf_lru_list.c:499
-       prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
-       __htab_lru_percpu_map_update_elem+0x67e/0xa90 kernel/bpf/hashtab.c:1069
-       bpf_percpu_hash_update+0x16e/0x210 kernel/bpf/hashtab.c:1585
-       bpf_map_update_value.isra.0+0x2d7/0x8e0 kernel/bpf/syscall.c:181
-       generic_map_update_batch+0x41f/0x610 kernel/bpf/syscall.c:1319
-       bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-       __do_sys_bpf+0x9b7/0x41e0 kernel/bpf/syscall.c:3460
-       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Note that vb2 never touches the buffer memory.
 
--> #1 (&l->lock){....}:
-       __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-       _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-       bpf_lru_list_pop_free_to_local kernel/bpf/bpf_lru_list.c:325 [inline]
-       bpf_common_lru_pop_free kernel/bpf/bpf_lru_list.c:447 [inline]
-       bpf_lru_pop_free+0x67f/0x1670 kernel/bpf/bpf_lru_list.c:499
-       prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
-       htab_lru_map_update_elem+0x65b/0xba0 kernel/bpf/hashtab.c:950
-       bpf_map_update_value.isra.0+0x61b/0x8e0 kernel/bpf/syscall.c:206
-       map_update_elem kernel/bpf/syscall.c:1089 [inline]
-       __do_sys_bpf+0x3163/0x41e0 kernel/bpf/syscall.c:3384
-       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+So if you get a race condition in this driver, then there is something
+strange going on. It looks like vb2_buffer_done() is called while DMA is
+still ongoing, or because the driver really needs to keep one buffer
+available at all times.
 
--> #0 (&loc_l->lock){....}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain kernel/locking/lockdep.c:2970 [inline]
-       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
-       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-       bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:516 [inline]
-       bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
-       __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
-       htab_lru_map_lookup_and_delete_batch+0x34/0x40 kernel/bpf/hashtab.c:1491
-       bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-       __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
-       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Regards,
 
-other info that might help us debug this:
+	Hans
 
-Chain exists of:
-  &loc_l->lock --> &l->lock --> &htab->buckets[i].lock#2
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&htab->buckets[i].lock#2);
-                               lock(&l->lock);
-                               lock(&htab->buckets[i].lock#2);
-  lock(&loc_l->lock);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.3/16820:
- #0: ffffffff89bac240 (rcu_read_lock){....}, at: __htab_map_lookup_and_delete_batch+0x54b/0x1540 kernel/bpf/hashtab.c:1308
- #1: ffff88808ceda560 (&htab->buckets[i].lock#2){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
-
-stack backtrace:
-CPU: 0 PID: 16820 Comm: syz-executor.3 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
- bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:516 [inline]
- bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
- __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
- htab_lru_map_lookup_and_delete_batch+0x34/0x40 kernel/bpf/hashtab.c:1491
- bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
- __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
- __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
- __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c6c9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007efeedbcdc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007efeedbce6d4 RCX: 000000000045c6c9
-RDX: 0000000000000038 RSI: 00000000200001c0 RDI: 0000000000000019
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000060 R14: 00000000004c2e9b R15: 000000000076bf2c
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +
+> +	return 0;
+> +}
