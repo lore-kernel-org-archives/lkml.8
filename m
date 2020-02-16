@@ -1,177 +1,113 @@
-Return-Path: <SRS0=OX35=4D=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B32C7114E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB68C7114E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA03217F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Feb 2020 23:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC442073A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGcDcxt0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWX56Dh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgBOXs6 (ORCPT
+        id S1726697AbgBPAkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 18:48:58 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37521 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgBOXs5 (ORCPT
+        Sat, 15 Feb 2020 19:40:55 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43301 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgBPAky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 18:48:57 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z12so7098198pgl.4;
-        Sat, 15 Feb 2020 15:48:55 -0800 (PST)
+        Sat, 15 Feb 2020 19:40:54 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so12742048oth.10
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 16:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=px4w9p6FHG6OgnsadU3BymipOoWoC+t5cmMfFNjEzMs=;
-        b=GGcDcxt0jetlXZjeqHjHUPjOipiV/I5i0zQbmQ4fNT9QdAmrpithYUB37II/T6NRiw
-         Bs6MN1LKz45JYSDND+0WwWYWBd9ICdsqYkH2UT6dzArfPTxEDRKSTwPbHbaIzhnKMyQm
-         NRnGmuaor/NRad30Dc7yTIKMuqeR5uwQlpNMAgMfU4griHNGaHb6RWB9kW+CSuBGXnF/
-         frUhEyDokVTeO4YXhritkQKIn/AF6/PrhRubS8O1ekB5U+QBB1JkjhlePuO+On7WfOyS
-         oZ8SZOtsz8Dyha5dzRUTYnKyjArttcpVqkP6JKsEwmUglx9qBxixA9nyg8aOZf6G+uA6
-         7sfA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xP2d5mrDDYuWOGt0j6R7sVfg2HV+cZtGZwXSSh2x4yQ=;
+        b=hWX56Dh/Gge2xHbvgZPqq0cqkBYPxvOKTABmU+RD7KKAyBpKUPo00A8YOVhzTBbar6
+         NM3rb9fIi7WDXsxO8va38FgCFIYd7QFHD6vbdMs/5eJmbEkUyIJniod6cxXUtBwLp78D
+         feaU16l4g3W4RcIU7oyAk1YFOWXDSAQEZsOLkBLgG/d1BwLEg2B5+q/i6FankzykAS2B
+         GaWRLjXh3cOOcyENzTCHlCAQnlYYz3IEAc4yUA5Vtmm/MG9+VlDSlRqkQzjLhrAtqB8m
+         99mL8SjnryBPlnJSPca+ileJ1Eon14cG02YQrgVviMngbASQ0dWWIZkcbj2jxSZ5gJxb
+         bPvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=px4w9p6FHG6OgnsadU3BymipOoWoC+t5cmMfFNjEzMs=;
-        b=Gjsfx3FXQ9x4NVlQbDhuOmAT6xiULtgjmWI+B+eq0+a7u0up6jtm3ipJ+mKrw1GvoT
-         8WMg7YeVVgoXd0RuRTOv9M3CVGrnOwFXmLTL+w4IXdQ/BgdovtRmmU/2sLEIUkYgjrY7
-         /FMyhsWm977TkOO6DJyEW65WHM+kZydR4OePOOoBxJU67VerHo3+6jTivQoHW0RB1FxH
-         w7C/zh2SyqV/cQGV0+15f/NULb4qG1mtlTtTVbvqAogJmanf4YuONe6m61iBfPtoaEfE
-         vUOeDmHpLCoMkPK0in5QuVfQ0XkUqmQr2RIOtNX5tX6xEFi2vAh+Ns3bGHuAbynjhOBP
-         wSQg==
-X-Gm-Message-State: APjAAAUjy99x4butFVYERFW44cASSkh7v2nPBsmv9MVk3CZ9rnBoy1oo
-        W9Efa/ZJDY5W+it+sZJy/ILoWksq
-X-Google-Smtp-Source: APXvYqzn3qfAjWScMTVKjJnCtrwPDer4X8DKQliNxgBrPo9sv7X+Bu+2GRDiXp6VVuodEZy1395kpA==
-X-Received: by 2002:a62:547:: with SMTP id 68mr10152237pff.217.1581810535351;
-        Sat, 15 Feb 2020 15:48:55 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t11sm11607289pgi.15.2020.02.15.15.48.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xP2d5mrDDYuWOGt0j6R7sVfg2HV+cZtGZwXSSh2x4yQ=;
+        b=OdtgSfgcPcj5Nr6MMpsYa0GBXeu7RKCLHr0rny3Ga5cY3pzylU5/QIUHVq8YLd1Nbc
+         ie5eSjNQ5nazpNvsvRHCuYiTeAVsDUEddDe2zWFrU0G8Uzsu95T/X+FaFXX7CmsodPup
+         LCm2GwV4gm0qNORxhbIHj1FeEkXg70bVTkb/4sIXNSbFTCDdPq5r67rNtbQQoa7TGzsE
+         brnuvcV+cgAIgHLUP0uwd5GNP8JPA++52yqiYqQEq3tbjOlNhMognc7OESoY2RMrphXE
+         GG+/Q/YiA2/iaIXhDGA+YMhZ7dpf4lXcWOOYFAJbTGoWudvv4UqTb3nxX+dYdBb+9LQ+
+         Je8A==
+X-Gm-Message-State: APjAAAV5UDNMMolT5+X1Q8ZYDT3GcYiE7OL/2asVMgSXdGAIx1rCV2Fm
+        jBME5qDjtGsbmrICy646IVk=
+X-Google-Smtp-Source: APXvYqyuZpug/NB6vcKcnwbQ/XBPbV0NsCAjTD7xPqll2VAa6KJDhxw+78bpH2GMCYmcCX21JjY0XQ==
+X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr7101714otr.169.1581813652532;
+        Sat, 15 Feb 2020 16:40:52 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c12sm3438979oic.27.2020.02.15.16.40.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 15:48:54 -0800 (PST)
-Date:   Sat, 15 Feb 2020 15:48:52 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-input@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Input: ili210x - add ili2120 support
-Message-ID: <20200215234852.GM183709@dtor-ws>
-References: <20200209151904.661210-1-luca@z3ntu.xyz>
+        Sat, 15 Feb 2020 16:40:51 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] virtio_balloon: Adjust label in virtballoon_probe
+Date:   Sat, 15 Feb 2020 17:40:39 -0700
+Message-Id: <20200216004039.23464-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209151904.661210-1-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 04:19:03PM +0100, Luca Weiss wrote:
-> This adds support for the Ilitek ili2120 touchscreen found in the
-> Fairphone 2 smartphone.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Clang warns when CONFIG_BALLOON_COMPACTION is unset:
 
-Applied, thank you.
+../drivers/virtio/virtio_balloon.c:963:1: warning: unused label
+'out_del_vqs' [-Wunused-label]
+out_del_vqs:
+^~~~~~~~~~~~
+1 warning generated.
 
-> ---
-> Changes from v1:
-> - Rebase on master, adjust for upstream changes
-> 
->  .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
->  drivers/input/touchscreen/ili210x.c           | 32 +++++++++++++++++++
->  2 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-> index dc194b2c151a..cdcaa3f52d25 100644
-> --- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-> +++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-> @@ -1,9 +1,10 @@
-> -Ilitek ILI210x/ILI2117/ILI251x touchscreen controller
-> +Ilitek ILI210x/ILI2117/ILI2120/ILI251x touchscreen controller
->  
->  Required properties:
->  - compatible:
->      ilitek,ili210x for ILI210x
->      ilitek,ili2117 for ILI2117
-> +    ilitek,ili2120 for ILI2120
->      ilitek,ili251x for ILI251x
->  
->  - reg: The I2C address of the device
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index 84bf51d79888..199cf3daec10 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -167,6 +167,36 @@ static const struct ili2xxx_chip ili211x_chip = {
->  	.resolution		= 2048,
->  };
->  
-> +static bool ili212x_touchdata_to_coords(const u8 *touchdata,
-> +					unsigned int finger,
-> +					unsigned int *x, unsigned int *y)
-> +{
-> +	u16 val;
-> +
-> +	val = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
-> +	if (!(val & BIT(15)))	/* Touch indication */
-> +		return false;
-> +
-> +	*x = val & 0x3fff;
-> +	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
-> +
-> +	return true;
-> +}
-> +
-> +static bool ili212x_check_continue_polling(const u8 *data, bool touch)
-> +{
-> +	return touch;
-> +}
-> +
-> +static const struct ili2xxx_chip ili212x_chip = {
-> +	.read_reg		= ili210x_read_reg,
-> +	.get_touch_data		= ili210x_read_touch_data,
-> +	.parse_touch_data	= ili212x_touchdata_to_coords,
-> +	.continue_polling	= ili212x_check_continue_polling,
-> +	.max_touches		= 10,
-> +	.has_calibrate_reg	= true,
-> +};
-> +
->  static int ili251x_read_reg(struct i2c_client *client,
->  			    u8 reg, void *buf, size_t len)
->  {
-> @@ -447,6 +477,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
->  static const struct i2c_device_id ili210x_i2c_id[] = {
->  	{ "ili210x", (long)&ili210x_chip },
->  	{ "ili2117", (long)&ili211x_chip },
-> +	{ "ili2120", (long)&ili212x_chip },
->  	{ "ili251x", (long)&ili251x_chip },
->  	{ }
->  };
-> @@ -455,6 +486,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
->  static const struct of_device_id ili210x_dt_ids[] = {
->  	{ .compatible = "ilitek,ili210x", .data = &ili210x_chip },
->  	{ .compatible = "ilitek,ili2117", .data = &ili211x_chip },
-> +	{ .compatible = "ilitek,ili2120", .data = &ili212x_chip },
->  	{ .compatible = "ilitek,ili251x", .data = &ili251x_chip },
->  	{ }
->  };
-> -- 
-> 2.25.0
-> 
+Move the label within the preprocessor block since it is only used when
+CONFIG_BALLOON_COMPACTION is set.
 
+Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/886
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/virtio/virtio_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 7bfe365d9372..341458fd95ca 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -959,8 +959,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 	iput(vb->vb_dev_info.inode);
+ out_kern_unmount:
+ 	kern_unmount(balloon_mnt);
+-#endif
+ out_del_vqs:
++#endif
+ 	vdev->config->del_vqs(vdev);
+ out_free_vb:
+ 	kfree(vb);
 -- 
-Dmitry
+2.25.0
+
