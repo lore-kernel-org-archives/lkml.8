@@ -2,174 +2,93 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB58C7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B09C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5B520857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tG0FT+xf"
+	by mail.kernel.org (Postfix) with ESMTP id CC418206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgBPLDu (ORCPT
+        id S1728063AbgBPLGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 06:03:50 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:36309 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727943AbgBPLDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 06:03:49 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 3HiAjTYo48i433HiEjTw5k; Sun, 16 Feb 2020 12:03:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1581851027; bh=+aNvZy8aD/dcufEoPL+QDCX1KUO9B+3y0UVN4XJ/BNQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=tG0FT+xfYdW0/2XYT7hVpBBOwF/S9gdqIqgXu6cT52AYwsza6QFT51iH/4rNT2grj
-         st7dy2JhlO0230j85OYjIYSkA0KVaxZwkiasrq2ekaDgeRZGMTBa3tFqSVLSkXqIoC
-         gT1l4SuGRrJPPM5j+obCTz0NJcpOsfYIfcWc3dsI+H/fmfeOjFg/4CGUVAlZT5yGiF
-         juIEPI4l+ah5KbdKk2ZT4RJEQzv2OkNR4YKWddUaV4d5WPCkmkBVMgKZNgg1SxMGC9
-         GyIPc1mUjpKIUzx+CATaPTjvZfXpWGv9N/vPaLAF+qOxnTfe/2Ny6Mi2G3sohYGARp
-         ToXlJFItC93eA==
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, sboyd@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
-Date:   Sun, 16 Feb 2020 12:03:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 16 Feb 2020 06:06:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:5921 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727943AbgBPLGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 06:06:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 03:06:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,448,1574150400"; 
+   d="scan'208";a="238811844"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.60])
+  by orsmga006.jf.intel.com with ESMTP; 16 Feb 2020 03:06:06 -0800
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Add VMX_FEATURE_USR_WAIT_PAUSE
+Date:   Sun, 16 Feb 2020 18:48:57 +0800
+Message-Id: <20200216104858.109955-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEHJX4QNbEtlvlNbNh8D9iO53jn6o9B1tz9SAXEUfYWVqgJik08fvS124TIyTWQBoLaKpXZ0bVjkYd3BRCoYngir51sZDOisiV6vHpCxBuwe2+L8gB2p
- Rrj4kheVXgwW827H19M6HXaKoYc1oPrQTmNocNbL+LZgzAiWqYPg2eUh1aZ1FOu4C9XODs010r7nD+ORs7A4wMmF4mn3GrHMVdXelHGLyNVEg/G0aVT7laGv
- dcOyIIYkKccKcHVjcqu/PQocZYWFIoq8pIXnDOd9pfvce8fO8ohgsBo6hW5UBhKY+Re5NO4YWo+CtFdXNHb/Bt6ta8FJ5H9nS1FCh+7Sl1uRqQPnvjqUctdV
- e0CuselYWW5y2mK98CFVvvwE9bbV5mIvdVBLL+vKS9CHf8zrcKBUIZGk6zRHFKCXQKvZrQVJqNXzhjePMZ+PSjTc8C3NRALovcYGxuLXqfpfzqbNvmLjPDsK
- mYOHLcPs2HzlS2ErtSTGeEj/hC/u0gzlCVCvENfz85CSFHBVoiY9piFIdpAH7b207JXd7eKpUW+S9wei
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
-> Tegra210 contains a powerful Video Input (VI) hardware controller
-> which can support up to 6 MIPI CSI camera sensors.
-> 
-> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> capture from an external camera sensor connected to CSI or from
-> built-in test pattern generator.
-> 
-> Tegra210 supports built-in test pattern generator from CSI to VI.
-> 
-> This patch adds a V4L2 media controller and capture driver support
-> for Tegra210 built-in CSI to VI test pattern generator.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/Kconfig              |    2 +
->  drivers/staging/media/Makefile             |    1 +
->  drivers/staging/media/tegra/Kconfig        |   10 +
->  drivers/staging/media/tegra/Makefile       |    8 +
->  drivers/staging/media/tegra/TODO           |   10 +
->  drivers/staging/media/tegra/tegra-common.h |  239 +++++++
->  drivers/staging/media/tegra/tegra-csi.c    |  374 ++++++++++
->  drivers/staging/media/tegra/tegra-csi.h    |  115 ++++
->  drivers/staging/media/tegra/tegra-vi.c     | 1019 ++++++++++++++++++++++++++++
->  drivers/staging/media/tegra/tegra-vi.h     |   79 +++
->  drivers/staging/media/tegra/tegra-video.c  |  118 ++++
->  drivers/staging/media/tegra/tegra-video.h  |   32 +
->  drivers/staging/media/tegra/tegra210.c     |  767 +++++++++++++++++++++
->  drivers/staging/media/tegra/tegra210.h     |  190 ++++++
->  14 files changed, 2964 insertions(+)
->  create mode 100644 drivers/staging/media/tegra/Kconfig
->  create mode 100644 drivers/staging/media/tegra/Makefile
->  create mode 100644 drivers/staging/media/tegra/TODO
->  create mode 100644 drivers/staging/media/tegra/tegra-common.h
->  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
->  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
->  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
->  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
->  create mode 100644 drivers/staging/media/tegra/tegra-video.c
->  create mode 100644 drivers/staging/media/tegra/tegra-video.h
->  create mode 100644 drivers/staging/media/tegra/tegra210.c
->  create mode 100644 drivers/staging/media/tegra/tegra210.h
-> 
+Commit 159348784ff0 ("x86/vmx: Introduce VMX_FEATURES_*") missed
+bit 26 (enable user wait and pause) of Secondary Processor-based
+VM-Execution Controls.
 
-<snip>
+Add VMX_FEATURE_USR_WAIT_PAUSE flag and use it to define
+SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE to make them uniformly.
 
-> +/*
-> + * videobuf2 queue operations
-> + */
-> +static int tegra_channel_queue_setup(struct vb2_queue *vq,
-> +				     unsigned int *nbuffers,
-> +				     unsigned int *nplanes,
-> +				     unsigned int sizes[],
-> +				     struct device *alloc_devs[])
-> +{
-> +	struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
-> +
-> +	if (*nplanes)
-> +		return sizes[0] < chan->format.sizeimage ? -EINVAL : 0;
-> +
-> +	*nplanes = 1;
-> +	sizes[0] = chan->format.sizeimage;
-> +	alloc_devs[0] = chan->vi->dev;
-> +
-> +	/*
-> +	 * allocate min 3 buffers in queue to avoid race between DMA
-> +	 * writes and userspace reads.
-> +	 */
-> +	if (*nbuffers < 3)
-> +		*nbuffers = 3;
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/include/asm/vmx.h         | 2 +-
+ arch/x86/include/asm/vmxfeatures.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-First of all, don't check this here, instead set the struct vb2_queue field
-'min_buffers_needed' to 3 instead.
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 2a85287b3685..8521af3fef27 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -72,7 +72,7 @@
+ #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
+ #define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
+ #define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
+-#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
++#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	VMCS_CONTROL_BIT(USR_WAIT_PAUSE)
+ 
+ #define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
+ #define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
+diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
+index a50e4a0de315..1408f526bd90 100644
+--- a/arch/x86/include/asm/vmxfeatures.h
++++ b/arch/x86/include/asm/vmxfeatures.h
+@@ -81,6 +81,7 @@
+ #define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* "ept_mode_based_exec" Enable separate EPT EXEC bits for supervisor vs. user */
+ #define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
+ #define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
++#define VMX_FEATURE_USR_WAIT_PAUSE	( 2*32+ 26) /* "" Enable TPAUSE, UMONITOR, UMWATI in guest */
+ #define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
+ 
+ #endif /* _ASM_X86_VMXFEATURES_H */
+-- 
+2.19.1
 
-But the reason given for this check is peculiar: there should not be any
-race at all. Usually the reason for requiring a specific minimum number of
-buffers is that the DMA engine needs at least 2 buffers before it can start
-streaming: it can't give back a buffer to userspace (vb2_buffer_done())
-unless there is a second buffer it can start to capture to next. So for many
-DMA implementations you need a minimum of 2 buffers: two buffers for the
-DMA engine, one buffer being processed by userspace.
-
-If the driver is starved of buffers it will typically keep capturing to
-the last buffer until a new buffer is queued.
-
-In any case, once the driver releases a buffer via vb2_buffer_done() the
-buffer memory is no longer owned by the driver.
-
-To be precise, buffer ownership is as follows:
-
-userspace -> VIDIOC_QBUF -> vb2 -> buf_queue -> driver -> vb2_buffer_done() -> vb2 -> VIDIOC_DQBUF -> userspace
-
-(vb2 == videobuf2 framework)
-
-Note that vb2 never touches the buffer memory.
-
-So if you get a race condition in this driver, then there is something
-strange going on. It looks like vb2_buffer_done() is called while DMA is
-still ongoing, or because the driver really needs to keep one buffer
-available at all times.
-
-Regards,
-
-	Hans
-
-> +
-> +	return 0;
-> +}
