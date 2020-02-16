@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC031C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD38AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC6E2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7422086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHPFy/hl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uwiTw/Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgBPNME (ORCPT
+        id S1728211AbgBPNPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 08:12:04 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21690 "EHLO
+        Sun, 16 Feb 2020 08:15:06 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19628 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbgBPNMD (ORCPT
+        by vger.kernel.org with ESMTP id S1728103AbgBPNPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 08:12:03 -0500
+        Sun, 16 Feb 2020 08:15:06 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581858722; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1581858906; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=A5ZI/g7WWcSZehWepKEyAPPOsuiaR/FmCfcQVi4vYPQ=; b=iHPFy/hlBBgewZ/ol6Z3sKwvIy+od3ZVIYlotcVpRKR8NXBsFt3LcnNSacdBQSBTQk356A43
- nIkBkFBk/fvPZG3KgwrFnfIgIWmEFr7OiXiRe5M3NzCUrNMLyxiHBim9LduGor6LC0AaQWaP
- nPqj56OkzH2qI5tzRrhtwW+PLls=
+ Subject: Sender; bh=5WgNLkoZaizjR2CQ36beTIXiSMguicFOfe2WiUmsxlk=; b=uwiTw/VcysWh25ryA1wcAo+jml7ozhTUKXmUsfjLffsdlsoIZLYOsjWcAHrZtwJxM0SZ9PPP
+ Mqb2ARYwJcLkPNINmHu0wvMXjCaELvGaXA4Iy4jWrJ5qMQ5K/BSQAi3lftm/e1JFhCA7s1+h
+ wLX8oZteE3I6nWeZlh0D/dLYbhA=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e493f9e.7f63ed18d5e0-smtp-out-n01;
- Sun, 16 Feb 2020 13:11:58 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e494057.7fa3a96a8c38-smtp-out-n02;
+ Sun, 16 Feb 2020 13:15:03 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 370FDC4479C; Sun, 16 Feb 2020 13:11:58 +0000 (UTC)
+        id 31F97C4479C; Sun, 16 Feb 2020 13:15:03 +0000 (UTC)
 Received: from [192.168.0.100] (unknown [103.140.231.108])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: akdwived)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2E0AC43383;
-        Sun, 16 Feb 2020 13:11:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2E0AC43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0114AC43383;
+        Sun, 16 Feb 2020 13:14:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0114AC43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
 Subject: Re: [PATCH v4 1/2] dt-bindings: Documentation for qcom,eud
-To:     Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
@@ -55,14 +54,14 @@ Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
         satyap@codeaurora.org, pheragu@codeaurora.org
 References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
  <1580445811-15948-2-git-send-email-akdwived@codeaurora.org>
- <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+ <f06e6af6-5045-ce75-fcc6-e07890b3a29c@linaro.org>
 From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Message-ID: <4f19fe93-3af2-1050-4d80-ed568865d825@codeaurora.org>
-Date:   Sun, 16 Feb 2020 18:41:30 +0530
+Message-ID: <cbd9adaf-7333-ede3-d407-0ccbe91a2f4c@codeaurora.org>
+Date:   Sun, 16 Feb 2020 18:44:56 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+In-Reply-To: <f06e6af6-5045-ce75-fcc6-e07890b3a29c@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -71,11 +70,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you very much Bryan for your review comments, will be working on 
-your and other maintainers comment on this patchset and will be posting 
-new patchset soon.
 
-On 2/4/2020 8:21 AM, Bryan O'Donoghue wrote:
+On 2/4/2020 8:47 AM, Bryan O'Donoghue wrote:
 > On 31/01/2020 04:43, Avaneesh Kumar Dwivedi wrote:
 >> Documentation for Embedded USB Debugger (EUD) device tree bindings.
 >>
@@ -88,76 +84,16 @@ On 2/4/2020 8:21 AM, Bryan O'Donoghue wrote:
 >>   1 file changed, 43 insertions(+)
 >>   create mode 100644 
 >> Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt 
->> b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->> new file mode 100644
->> index 0000000..57476ce
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->> @@ -0,0 +1,43 @@
->> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
->> +
->> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
->> +on chip to support the USB-based debug and trace capabilities.
 >
-> on chip to support USB-based debug and trace capabilities.
-OK
->
->> +
->> +Required properties:
->> +
->> + - compatible:  Should be "qcom,msm-eud"
->> + - interrupts:  Interrupt number
->> + - reg: Should be address and size of EUD register space
->> +
->> +EUD notifies clients for VBUS attach/detach and charger enable/disable
->> +events. The link between event consumer(i.e.USB controller for vbus
-> missing space
-> consumer (i.e.
+> Forgot to mention, this file should be described in YAML.
 Ok
 >
->> +attach/detach event) and EUD is established via a directed graph. EUD
->> +act 
-> The EUD acts
-OK
+> ./Documentation/devicetree/writing-schema.rst
+> ./Documentation/devicetree/bindings/example-schema.yaml
 >
->> as an output link and clients of EUD as input link of this directed
->> +graph. Events flows through the directed graph only during debug mode.
->
-> Probably this is a very obvious question but, you mean debug and trace 
-> events or do you mean VBUS/charger events?
-Directed graph is to show VBUS and charger events flow.
->
->> +
->> +An example for EUD device node:
->> +
->> +    eud: qcom,msm-eud@88e0000 {
->> +        compatible = "qcom,msm-eud";
->> +        interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
->> +        reg = <0x88e0000 0x4000>;
->> +        usb_con: connector {
->> +            compatible = "usb-c-connector";
->> +            label = "USB-C";
->> +            port {
->> +                eud_usb_output: endpoint {
->> +                    remote-endpoint = <&eud_usb3_input>;
->> +                };
->> +            };
->> +        };
->> +    };
->> +
->> +An example for EUD client:
->> +
->> +    usb3 {
->> +        port {
->> +            eud_usb3_input: endpoint {
->> +                remote-endpoint = <&eud_usb_output>;
->> +            };
->> +        };
->> +    };
->>
+> ---
+> bod
+
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project.
