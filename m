@@ -8,188 +8,129 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71559C7114E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9BAC7114E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6782084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA66E207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0WMVYVI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEPP1R8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgBPAuO (ORCPT
+        id S1726802AbgBPA6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 19:50:14 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37067 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbgBPAuN (ORCPT
+        Sat, 15 Feb 2020 19:58:12 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45571 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgBPA6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 19:50:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id l2so6598927otp.4;
-        Sat, 15 Feb 2020 16:50:13 -0800 (PST)
+        Sat, 15 Feb 2020 19:58:12 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g3so15373983wrs.12;
+        Sat, 15 Feb 2020 16:58:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uyRNNBKtZ/pBAy6wlcISFvmc40pdoR2VRPKkepKzyLM=;
-        b=Q0WMVYVIM+b2pr/Pn3tUSRAGxAZgv4nYkNxBhG9toP/WvAIaLdYxyP/EisHgN+9XtK
-         cO+219jw4OkNMwxE1dme0AOosSoMn1fSVZZezJDyfLaLCP5mmKJ+B1up/4dGma5d7fcD
-         R35KuDmUMpPqQVeLbfnR2tQqq0819mnmLSfQWwSaE2ZD+kOEk8SvqG0v7mZ1ShkHU/0b
-         ef7TfSzPlXhbF9ibeJZ+jLq434eAPDRc7Tt93/ZyRczazQP6fIrJ7x4LJy6xnAgZXr5v
-         DVfR/DdYNvvpVowKpq+XUhfgOFeD1fDdfo9bv29ZlPLmc7Ez6QBHK9xBsk/lAcmUFOEk
-         ebCg==
+        bh=RCDLALl/MTIpSe4w1aS0l0xdIrytoZNo1Wy/s//seUE=;
+        b=DEPP1R8JW+LustojQY7QA403o9izrtf3TSwoB003aHPvx4RISqP81Jdm4NBIVbInBD
+         DT5aBu1vdEMnk9UmiALfRRd/qAm8v6FIefInok6aPOyfGyzuRqAZ0zVqLFU0pfSMzy3h
+         1zH/jns3P8Hi0zqfN1tlj72Ovi1l/lpHmeelSYyF2WiOU87Vr5bXR8L1zFGqn8lZsfI1
+         pbe+Ukx9aFTXI7tc32hvNgdQBpwpblJ1eoCvZ+l9hUzZlFbBdIe1LiNKptbfY08KthhG
+         RG1kW0d111skz5DcU3TaUXQbnEwDsAougxy6IOZ0+6GaETwUJ5/nn6Ig3eVMswm8RM6L
+         PWyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uyRNNBKtZ/pBAy6wlcISFvmc40pdoR2VRPKkepKzyLM=;
-        b=b+OF5cWF1xEtNNlVKUh6+EI79Jd3sirBzooN/6LZDWMMjI/3qAr9iq0kVBvgUo7xUa
-         AjhcObNZo0dxpXVNbQs6L5gucvT0tGBfMcfX2pDRwIylmI5He5iZzjOW+zOqw5sdeM39
-         vyOt7mE8vd2bOCT29NV/gAjGK3tg8wxYTAPssIZc/2LdOuAgW5PDe/moUyW9ZzHnIfRA
-         zJzKDZ+sm4BIfVCWqV2fe3oCLS5UTVs249trhI81pBqjWf8pErp14m6ih3mEn8zx4G2O
-         YKzHP3ZL8/ROhDLWwJ6Qg0XhDxDutuPXNHN440ghn98kNkBqhYrWByBIFNr5mz4guSXt
-         yyYg==
-X-Gm-Message-State: APjAAAVI9nypy+HvWwLk+wovsqI+9bKhsSwuI0fbY0puO2+wswRzuj5X
-        MK37TY5MJ0Oymf1P7AHLbV9pmIm5
-X-Google-Smtp-Source: APXvYqw24cLn9pSDb30se6fd1ilKzuFGImR7J+NkDrn/Y/GrxMH5sclpTk/kehtaW2O3M77GOCbRMA==
-X-Received: by 2002:a05:6830:138b:: with SMTP id d11mr7101057otq.38.1581814212513;
-        Sat, 15 Feb 2020 16:50:12 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g25sm3678506otr.8.2020.02.15.16.50.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 15 Feb 2020 16:50:11 -0800 (PST)
-Date:   Sat, 15 Feb 2020 17:50:10 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Howard Chung <howardchung@google.com>
-Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [Bluez PATCH v5] bluetooth: secure bluetooth stack from bluedump
- attack
-Message-ID: <20200216005010.GA24335@ubuntu-m2-xlarge-x86>
-References: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+        bh=RCDLALl/MTIpSe4w1aS0l0xdIrytoZNo1Wy/s//seUE=;
+        b=Zy1B1fFC2Oz4eEe8XZaGccmvtp9h8m1BO5zVTsxtS5QD46fMujdFpjzGVr9vL03ePT
+         Z346e9cADdLirLNTEVjIrzNMo8wPg/SyZPHnRq1rgAUqLtzNgwQpniP9AzmUPppqV1jR
+         N6p69CEvXDcKjZJKXl2DFHBVZLj7ILWMgLPQQpy5Fguhi0FEB300oM9MJKsYpXieS8SL
+         MAbQCllOHACI8kRyTBgtvLX3/Q9pGz9H5r88TbEWWy1VO4BOUndEj5Wdxt6d0KOdgKMn
+         O9cg/2GdgKg6PtV5qCLwWLnWuQ7cjWVyu2xbOljPrHEsF/P9V+KWQOU6EtsxOMKAVuY3
+         Zaqw==
+X-Gm-Message-State: APjAAAVPP3yfirVRs28Gs4KCXWk9KA0e2oWKgEd668mCNlHPsWUyW6Rd
+        jN5suKzT1VN/g7OSKH3YBXg=
+X-Google-Smtp-Source: APXvYqwSRX2xQqiK2IXILS90AZ/QGc0+LrRJsYx8r5sD4t0L7/ukx8iHvVvA4hQi7ts0HbNyVq1aTA==
+X-Received: by 2002:a5d:6789:: with SMTP id v9mr13079863wru.55.1581814688042;
+        Sat, 15 Feb 2020 16:58:08 -0800 (PST)
+Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
+        by smtp.gmail.com with ESMTPSA id y1sm13769417wrq.16.2020.02.15.16.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2020 16:58:07 -0800 (PST)
+Date:   Sun, 16 Feb 2020 01:58:01 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
+        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH memory-model] Add recent references
+Message-ID: <20200216005801.GA3581@andrea>
+References: <20200214233139.GA12521@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200214233139.GA12521@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
+On Fri, Feb 14, 2020 at 03:31:39PM -0800, Paul E. McKenney wrote:
+> This commit updates the list of LKMM-related publications in
+> Documentation/references.txt.
+> 
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-On Fri, Feb 14, 2020 at 07:16:41PM +0800, Howard Chung wrote:
-> Attack scenario:
-> 1. A Chromebook (let's call this device A) is paired to a legitimate
->    Bluetooth classic device (e.g. a speaker) (let's call this device
->    B).
-> 2. A malicious device (let's call this device C) pretends to be the
->    Bluetooth speaker by using the same BT address.
-> 3. If device A is not currently connected to device B, device A will
->    be ready to accept connection from device B in the background
->    (technically, doing Page Scan).
-> 4. Therefore, device C can initiate connection to device A
->    (because device A is doing Page Scan) and device A will accept the
->    connection because device A trusts device C's address which is the
->    same as device B's address.
-> 5. Device C won't be able to communicate at any high level Bluetooth
->    profile with device A because device A enforces that device C is
->    encrypted with their common Link Key, which device C doesn't have.
->    But device C can initiate pairing with device A with just-works
->    model without requiring user interaction (there is only pairing
->    notification). After pairing, device A now trusts device C with a
->    new different link key, common between device A and C.
-> 6. From now on, device A trusts device C, so device C can at anytime
->    connect to device A to do any kind of high-level hijacking, e.g.
->    speaker hijack or mouse/keyboard hijack.
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+
+Thanks,
+  Andrea
+
+
 > 
-> Since we don't know whether the repairing is legitimate or not,
-> leave the decision to user space if all the conditions below are met.
-> - the pairing is initialized by peer
-> - the authorization method is just-work
-> - host already had the link key to the peer
-> 
-> Signed-off-by: Howard Chung <howardchung@google.com>
-> ---
-> 
-> Changes in v5:
-> - Rephrase the comment
-> 
-> Changes in v4:
-> - optimise the check in smp.c.
-> 
-> Changes in v3:
-> - Change confirm_hint from 2 to 1
-> - Fix coding style (declaration order)
-> 
-> Changes in v2:
-> - Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
-> - Fix the added code in classic
-> - Add a similar fix for LE
-> 
->  net/bluetooth/hci_event.c | 10 ++++++++++
->  net/bluetooth/smp.c       | 19 +++++++++++++++++++
->  2 files changed, 29 insertions(+)
-> 
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 2c833dae9366..e6982f4f51ea 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
->  			goto confirm;
->  		}
+> diff --git a/tools/memory-model/Documentation/references.txt b/tools/memory-model/Documentation/references.txt
+> index b177f3e..ecbbaa5 100644
+> --- a/tools/memory-model/Documentation/references.txt
+> +++ b/tools/memory-model/Documentation/references.txt
+> @@ -73,6 +73,18 @@ o	Christopher Pulte, Shaked Flur, Will Deacon, Jon French,
+>  Linux-kernel memory model
+>  =========================
 >  
-> +		/* If there already exists link key in local host, leave the
-> +		 * decision to user space since the remote device could be
-> +		 * legitimate or malicious.
-> +		 */
-> +		if (hci_find_link_key(hdev, &ev->bdaddr)) {
-> +			bt_dev_warn(hdev, "Local host already has link key");
-> +			confirm_hint = 1;
-> +			goto confirm;
-> +		}
+> +o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
+> +	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
+> +	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
+> +	2019. "Calibrating your fear of big bad optimizing compilers"
+> +	Linux Weekly News.  https://lwn.net/Articles/799218/
 > +
->  		BT_DBG("Auto-accept of user confirmation with %ums delay",
->  		       hdev->auto_accept_delay);
+> +o	Jade Alglave, Will Deacon, Boqun Feng, David Howells, Daniel
+> +	Lustig, Luc Maranget, Paul E. McKenney, Andrea Parri, Nicholas
+> +	Piggin, Alan Stern, Akira Yokosawa, and Peter Zijlstra.
+> +	2019. "Who's afraid of a big bad optimizing compiler?"
+> +	Linux Weekly News.  https://lwn.net/Articles/793253/
+> +
+>  o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
+>  	Alan Stern.  2018. "Frightening small children and disconcerting
+>  	grown-ups: Concurrency in the Linux kernel". In Proceedings of
+> @@ -88,6 +100,11 @@ o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
+>  	Alan Stern.  2017.  "A formal kernel memory-ordering model (part 2)"
+>  	Linux Weekly News.  https://lwn.net/Articles/720550/
 >  
-> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-> index 2cba6e07c02b..25dbf77d216b 100644
-> --- a/net/bluetooth/smp.c
-> +++ b/net/bluetooth/smp.c
-> @@ -2192,6 +2192,25 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
->  		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
->  			     smp->prnd);
->  		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
+> +o	Jade Alglave, Luc Maranget, Paul E. McKenney, Andrea Parri, and
+> +	Alan Stern.  2017-2019.  "A Formal Model of Linux-Kernel Memory
+> +	Ordering" (backup material for the LWN articles)
+> +	https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/LWNLinuxMM/
 > +
-> +		/* Only Just-Works pairing requires extra checks */
-> +		if (smp->method != JUST_WORKS)
-> +			goto mackey_and_ltk;
-> +
-> +		/* If there already exists link key in local host, leave the
-> +		 * decision to user space since the remote device could be
-> +		 * legitimate or malicious.
-> +		 */
-> +		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-> +				 hcon->role)) {
-> +			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-> +							hcon->type,
-> +							hcon->dst_type, passkey,
-
-We received a report from the 0day bot when building with clang that
-passkey is uninitialized when used here:
-
-https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
-
-It appears to be legitimate as if we get to this point, we have not
-touched the value of passkey but I do not know if there is any
-contextual code flow going on where this can never happen but I do not
-see how.
-
-Would you mind looking into it?
-
-Cheers,
-Nathan
+>  
+>  Memory-model tooling
+>  ====================
+> @@ -110,5 +127,5 @@ Memory-model comparisons
+>  ========================
+>  
+>  o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
+> -	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
+> -	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
+> +	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
+> +	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
