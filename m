@@ -2,113 +2,105 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC64C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E106C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6802A20729
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581866416;
-	bh=exgHgyopno5dsg4ksAGCVM0yezXU6THnnU4VzAJiuz8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jsO6O5oPW87bFOHzb/BGUl/JIAmwX5oK/NnrycwUpxYQzhvZMsghLdh6h1UpMoypa
-	 aUs+cm4OwDM7Zm8A+Idm//Euy0Fp4ehETO93EMuPONITFYNTGXujMEz6VtP2jj49Fv
-	 zJhizz9rplp4Qq49M88fztLO2MJuKHXevBG649Lo=
+	by mail.kernel.org (Postfix) with ESMTP id DA38020857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="HW6kDIwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgBPPUP (ORCPT
+        id S1728363AbgBPPW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 10:20:15 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:30575 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgBPPUO (ORCPT
+        Sun, 16 Feb 2020 10:22:59 -0500
+Received: from dvalin.narfation.org ([213.160.73.56]:58292 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgBPPW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 10:20:14 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 01GFJfJi012792;
-        Mon, 17 Feb 2020 00:19:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 01GFJfJi012792
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581866382;
-        bh=KnP9tgxSHUQAMQklRwAiuVTY8xsRWN3iDCIditBPlOM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VSSaRQQnCyhooGy+l+0rFBVdYPtZmpJIVhDfCGS8K+CPuBE4zPviJ2iJplC/K1/nj
-         TEEQ7Tu0LcnQq3gb7E6rtGDLHWtHlpEluwsChPynxuK8fInLqnapNX3ZQf/l77rpZb
-         RmPzicA/+bOqAKDycAMj8v5E1YW97Qkmlrv0xi7cipMklS7k7441kgjtV4VBf3CUn1
-         Bcy8Os4cJwoRDr3Fo4mQTrJyYqhYsZjAaNWHk06tXIfNpdLXLZ4fn1pDaE7tYTta+a
-         1WQLpzpajkmYdho4B2AXUNlSRRLqqeRngfLWkNe41kHtCpTT3Lt1RYGSY3qYamvsL4
-         /XH3UhazFSn0A==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] kbuild: remove cc-option switch from -Wframe-larger-than=
-Date:   Mon, 17 Feb 2020 00:19:36 +0900
-Message-Id: <20200216151936.23778-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 16 Feb 2020 10:22:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1581866575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cpdOcA58injpURGtSPsNzFe0grHOYuzlAQi9FRcp3jo=;
+        b=HW6kDIwYOmPotOs48kEhWYO6IC8mZ4g7oYDcPbeZ5p5A78FImbNhEKtyOqVoKz4Fz+zSaj
+        F4i1vN0uJyypV2ECTLzN7RO4t2SSlFVaib0Ksp6iNROmpNDeGMOlRjbRKWfuSVck4cU0xg
+        aTlFELlnV5CmO2IQlr1kvQ83MYofsQ8=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
+        davem@davemloft.net, b.a.t.m.a.n@lists.open-mesh.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] net: batman-adv: Use built-in RCU list checking
+Date:   Sun, 16 Feb 2020 16:22:51 +0100
+Message-ID: <3655191.udZcvKk8tv@sven-edge>
+In-Reply-To: <20200216144718.2841-1-madhuparnabhowmik10@gmail.com>
+References: <20200216144718.2841-1-madhuparnabhowmik10@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart4752270.j9do8LSKhE"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This CONFIG option was added by commit 35bb5b1e0e84 ("Add option to
-enable -Wframe-larger-than= on gcc 4.4"). At that time, the cc-option
-check was needed.
+--nextPart4752270.j9do8LSKhE
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-According to Documentation/process/changes.rst, the current minimal
-supported version of GCC is 4.6, so you can assume GCC supports it.
-Clang supports it as well.
+On Sunday, 16 February 2020 15:47:18 CET madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> hlist_for_each_entry_rcu() has built-in RCU and lock checking.
+> 
+> Pass cond argument to hlist_for_each_entry_rcu() to silence
+> false lockdep warnings when CONFIG_PROVE_RCU_LIST is enabled
+> by default.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  net/batman-adv/translation-table.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 
-Remove the cc-option switch and redundant comments.
+Added with alignment and line length codingstyle fixes [1].
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Can you tell us how you've identified these four hlist_for_each_entry_rcu?
 
- Makefile          | 2 +-
- lib/Kconfig.debug | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+Thanks,
+	Sven
 
-diff --git a/Makefile b/Makefile
-index 84b71845c43f..8f15926b83bb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -728,7 +728,7 @@ KBUILD_CFLAGS += $(call cc-option,-fno-reorder-blocks,) \
- endif
- 
- ifneq ($(CONFIG_FRAME_WARN),0)
--KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
-+KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
- endif
- 
- stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 69def4a9df00..fb6b93ffdf77 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -266,7 +266,7 @@ config ENABLE_MUST_CHECK
- 	  attribute warn_unused_result" messages.
- 
- config FRAME_WARN
--	int "Warn for stack frames larger than (needs gcc 4.4)"
-+	int "Warn for stack frames larger than"
- 	range 0 8192
- 	default 2048 if GCC_PLUGIN_LATENT_ENTROPY
- 	default 1280 if (!64BIT && PARISC)
-@@ -276,7 +276,6 @@ config FRAME_WARN
- 	  Tell gcc to warn at build time for stack frames larger than this.
- 	  Setting this too low will cause a lot of warnings.
- 	  Setting it to 0 disables the warning.
--	  Requires gcc 4.4
- 
- config STRIP_ASM_SYMS
- 	bool "Strip assembler-generated symbols during link"
--- 
-2.17.1
+[1] https://git.open-mesh.org/linux-merge.git/commit/967709ec53a07d1bccbc3716f7e979d3103bd7c5
+
+--nextPart4752270.j9do8LSKhE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl5JXksACgkQXYcKB8Em
+e0ZGNBAAxAZydcMX765z0LHHxzM2VVRThEsnS17DaDQDU7oTIinL6xe83lBPbQuh
+zQDyZUlFlz5UDRbHnq2w/UMmq/haEXfp47se+S4GOsg7M4R38P8XC97XC1BlTOGu
+oXyJjOp2d3G3awn6GD4G1P8AVCkVc8gVp6pDFNFy7OVfJwXvYbMaCtH8xXhS2pcK
+c3oO+roFvXtBMCb44e8lc0xHRrBUiTBBIKoLcJSbPUmDRSOg70Rojk5AmiMIZ7Ts
+UbNC1faFYh2HJlc+b/b7jDx69eopdxRMQOxZeypmDtu3HnJTQEK/5b/gB00Ajs4e
+RDJyOimN1ri/2DI5hMWpJyYts/uutSDHDwRwXytVsoUS3vMVE17LWTn/mTBu5m2n
+qodGmZbrbLKM2aMYU9b5aCtJlAoZ5osEd3UbL0zDE0TZG+x8orzffsQagMaihcez
+Ybny70xUDlZgGBzTCuCGNhBN7CkREdHiBUNg+Ff02xx5uQTvpN9Pxgo4g+bXXlPs
+rDspCwY+EC+KWURxdnVPO4x5tSRmzq4gKvL0dMBeiz06m+u1zK+DCQ0lodV76bY1
+ILPm/EwMGiMdO8h5IlwJh5w7T+Kgl+PnT8vwRLXFjfgpYf24D3ihw/1uDLGk7t4Q
+W1mipeOUSdpfDYNF8mTqJ48vhSlJf0zICr9iY0p+hmwAnPcCEfA=
+=2x+h
+-----END PGP SIGNATURE-----
+
+--nextPart4752270.j9do8LSKhE--
+
+
 
