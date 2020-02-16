@@ -2,113 +2,96 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81FDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA918C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EFC2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581856463;
-	bh=CK9AGexnenOmXyQKve9YVghVQRdcBjvKQyQ8y5gDoSM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K6hEZUq8jpEvquAKariHOr9muAjVhQdYtZ1RbSxaH3AM/RGxYKRbMJdVUjmUa2fOx
-	 Gw+ucv7QDgX5NckRzU8A3A/EUQ4ONc5vJ9repfbDxlvCdOsg8T6LdvOPIGG9YuMPG5
-	 WdjRu+4i1hERWLCoJsRFX9FF7wdaUiDC4NDf5mA8=
+	by mail.kernel.org (Postfix) with ESMTP id 81BA220857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgBPMeR (ORCPT
+        id S1728176AbgBPMkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 07:34:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBPMeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 07:34:16 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E02E5206D7;
-        Sun, 16 Feb 2020 12:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581856456;
-        bh=CK9AGexnenOmXyQKve9YVghVQRdcBjvKQyQ8y5gDoSM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lHvJhsvIL0eGKudTZzeOYp4p2dz5PjS6mB71vznX2KqIJass3jnGJFwrzZf5GxR7i
-         M7hqLXVApLt9JLwbOJk6kWnneMXdQQb1gJmhn1M0xPa4+pdAxme8i2G5/73pnWmZhK
-         UFmja6IjRgj9NmU+KzXu6B6cKE8Zd+4FxwXwBjW4=
-Date:   Sun, 16 Feb 2020 21:34:11 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-Message-Id: <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-In-Reply-To: <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
-        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
-        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 16 Feb 2020 07:40:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728009AbgBPMkt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 07:40:49 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01GCY0fv162664
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 07:40:48 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dq4vhut-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 07:40:48 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 16 Feb 2020 12:40:46 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 16 Feb 2020 12:40:43 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01GCeg5n50987206
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Feb 2020 12:40:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2959BAE053;
+        Sun, 16 Feb 2020 12:40:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB468AE051;
+        Sun, 16 Feb 2020 12:40:40 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.138.53])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 16 Feb 2020 12:40:40 +0000 (GMT)
+Subject: Re: [PATCH v4 0/3] IMA: improve log messages
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 16 Feb 2020 07:40:40 -0500
+In-Reply-To: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
+References: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021612-0012-0000-0000-000003874F80
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021612-0013-0000-0000-000021C3D9E3
+Message-Id: <1581856840.8515.168.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-16_02:2020-02-14,2020-02-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 mlxlogscore=921 bulkscore=0 phishscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002160115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 15 Feb 2020 11:28:49 +0100
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+On Fri, 2020-02-14 at 17:47 -0800, Tushar Sugandhi wrote:
+> The log messages from IMA subsystem should be consistent for better
+> diagnosability and discoverability.
 
-> Hi,
-> 
-> Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
-> > Hi,
-> > 
-> > On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
-> > Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> > 
-> >> When a program check exception happens while MMU translation is
-> >> disabled, following Oops happens in kprobe_handler() in the following
-> >> test:
-> >>
-> >> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
-> > 
-> > Thanks for the report and patch. I'm not so sure about powerpc implementation
-> > but at where the MMU translation is disabled, can the handler work correctly?
-> > (And where did you put the probe on?)
-> > 
-> > Your fix may fix this Oops, but if the handler needs special care, it is an
-> > option to blacklist such place (if possible).
-> 
-> I guess that's another story. Here we are not talking about a place 
-> where kprobe has been illegitimately activated, but a place where there 
-> is a valid trap, which generated a valid 'program check exception'. And 
-> kprobe was off at that time.
+The change isn't limited to IMA.  I would change "IMA" to "integrity"
+in the Subject line and in this patch description.
 
-Ah, I got it. It is not a kprobe breakpoint, but to check that correctly,
-it has to know the address where the breakpoint happens. OK.
+> This patch set improves the logging by removing duplicate log formatting
+> macros, adding a consistent prefix to the log messages, and adding new 
+> log messages where necessary.
 
-> 
-> As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON, 
-> a debugger breakpoint, a perf breakpoint, etc...) calls 
-> kprobe_handler(), kprobe_handler() must be prepared to handle the case 
-> where the MMU translation is disabled, even if probes are not supposed 
-> to be set for functions running with MMU translation disabled.
+Much better!
 
-Can't we check the MMU is disabled there (as same as checking the exception
-happened in user space or not)?
+thanks,
 
-Thank you,
+Mimi
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
