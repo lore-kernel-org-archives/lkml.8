@@ -2,227 +2,170 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DB3C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 05:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D4DC76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 05:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F85206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 05:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581829810;
-	bh=4fSMurr3rROU/eaeA5MLfPkBhzC5NBF3v8HVtpZ8DoU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XXx6eOwXb1y2PVyQZCmemzp2Pv7oFVIiwXLHv4ZrhHwe189BLRbchqKOAaesjhRAv
-	 xG8zNV4rFU80lISdGYEEIMiEJQOTxp4H6tzfSztPAei7uvDSKyweCl5nKVd26Tgkj8
-	 P0hmfc3QKv9kIF5ekfNXmsSywgabf1q+c3uK1jL4=
+	by mail.kernel.org (Postfix) with ESMTP id A0E4120857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 05:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pvRjD1vV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgBPFJv (ORCPT
+        id S1726116AbgBPFnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 00:09:51 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:40890 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725208AbgBPFJu (ORCPT
+        Sun, 16 Feb 2020 00:43:51 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42329 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgBPFnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 00:09:50 -0500
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01G59UFa010966;
-        Sun, 16 Feb 2020 14:09:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01G59UFa010966
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581829771;
-        bh=rbqePs9IMaIcm8x3+kZKs+EYOftnr7m5qjep5xY5fxg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iHwjX/+WCWjcDYod62PLrTAzcNoFWuxwh19HzVxrmayKtiJqNXexO6eakZPuuuusa
-         Hwb+sjrCHDPw7OFwmqaU/vTSglOS1gm/+I1DwLS+88mjkV6PrF5LZtwtPMdZqKxh1o
-         jDL+iXgvYJYNE5gXxSifLyRjXMzMbqwe0AX+xtQAFSpLfl7gPwj8tNbbonx8f3drdt
-         wOf46QJ9kdjZhSYl/iLIAhCDo/vzMq9covm8pM9RgloCwXt0yC+/4i1R4l5OyuBQVd
-         +w4iW2FBsLIwvSyessEQuE98HFAgF4iCF8YP17nXZ2/F3YD/TsmI/AASF30DKzznSi
-         FuoflP37LkpPA==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id a2so8719747vso.3;
-        Sat, 15 Feb 2020 21:09:30 -0800 (PST)
-X-Gm-Message-State: APjAAAWnfe57S+e+eO43BfrUbOfWINl7NodOgxyXY3F69txGm8mn12Iz
-        fERCumsv9WXyXXNM2DEoOWq2AKq10ZS81puHvIg=
-X-Google-Smtp-Source: APXvYqxBxTQIoI2VevLx1VLO3Y65QF4At1ZpLqEtvYMB0XvZ6WuTKop6V1O+rjOZsFgyrDYUrhIkJ3+PeQaqZ0Dysc4=
-X-Received: by 2002:a67:6485:: with SMTP id y127mr5539788vsb.54.1581829769328;
- Sat, 15 Feb 2020 21:09:29 -0800 (PST)
+        Sun, 16 Feb 2020 00:43:51 -0500
+Received: by mail-qv1-f66.google.com with SMTP id dc14so6217047qvb.9;
+        Sat, 15 Feb 2020 21:43:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PAEIL2OSy7fVYAw+2opLQp645UQcZziDpgahnhOwtXQ=;
+        b=pvRjD1vVR/ISbqNCAblwPNkm+pD0nOqcKQa/wR5MXir/iIcfu2ns/TctiW6ZudEmPW
+         ADg37+6zsBqirBfsJXO9TA0ePCZ9uCZbT6zEBsYb7qsIjro3BM6EPu/gTxcqQ7e5n6xf
+         giIj7t7wJaJvyDpUeRdClXrvEmII3L0M+TjNq94llNATIYUaa+vGnYVfgGO79ccCoqiv
+         0lXd76RkNvzTJYOFKbqykxGYl6tlU4Uje7HvW3DUKfDabTMc8tDe+NiTfR6XAyARwurT
+         sjWh+kOWeYr2D319Kms8AG4TEnxf13+F6gjWeQ157bGvYnXGR6zUNuTW0aLtHlMF5HkY
+         L2Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PAEIL2OSy7fVYAw+2opLQp645UQcZziDpgahnhOwtXQ=;
+        b=cyoS77LvVMv5NTjbHAFnTSSP/khj44CAOb23psYU3qbcl7ws7xGc+L3Qq9ZppKjSci
+         fzH5qOIqzqPIzU0BBKK2FxKzRw84G7Lavd8Mdov6sfU3EOILLGhY559xO7ctl56bp5i8
+         KNDqTIVCOeNugvpjUR2xrHVjkHpdo7THEL5L1pIg5BqcGADojN6vog8ch6/XD0HcT9Q5
+         72H4npS6LHgnu0yd8ndYCbOVO0gxuP7uNm6fUO1jvGHxMdi8oYezdohAABA6xJgHlf0+
+         xUff0BIB1CNjDklGtUrMxHgsWnp/OnTEiBwMc0r+2ZEQ2a1QUb6eC1b6lLk18jGdJeaU
+         5z9w==
+X-Gm-Message-State: APjAAAVH8GCi0HO3RrvqBanh/ePNJm2r8kqhS6jwbuWTFoylYClrSXLr
+        dhFHS80rEQgcNYp28iwN6vA=
+X-Google-Smtp-Source: APXvYqz8xvP8XXFvXqq43AZ4+ENh4hmQ4W+38NwcHKK8ef5peZ6uwVkQVIX6Y5KWQ+KctdaXH9Eszg==
+X-Received: by 2002:ad4:42aa:: with SMTP id e10mr8261865qvr.92.1581831829747;
+        Sat, 15 Feb 2020 21:43:49 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id x126sm6838714qkc.42.2020.02.15.21.43.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Feb 2020 21:43:49 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 20D6C20FBE;
+        Sun, 16 Feb 2020 00:43:48 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sun, 16 Feb 2020 00:43:48 -0500
+X-ME-Sender: <xms:ktZIXuX9D4QnXWKOQROUChDwslj1o68uwYnerou-XV6_H8k_EJIAwA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeefgdeklecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpuggvfhdrshhonecukfhppeeh
+    vddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihht
+    hidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrg
+    hilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:k9ZIXt3ghHKGf1mmzeCe6cgLdRMfYUnjddm1AKD947pe1iOW8fzo0A>
+    <xmx:k9ZIXr3PIP82z987qSa5ASWasGWiTN_qxxnTuBcJ88Zf0y-q_rEm-Q>
+    <xmx:k9ZIXg-9Oe742Zx_0lGk9nyLNDaF1Zb6HWoLGDKEmMEwWmsHSGqbcQ>
+    <xmx:lNZIXiWJKAOl1BI37pevq8gxRHdljNO_E68eJBv8LL9kA1QuSx1BgtUr0Ow>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8D3E5328005D;
+        Sun, 16 Feb 2020 00:43:46 -0500 (EST)
+Date:   Sun, 16 Feb 2020 13:43:45 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [RFC 0/3] tools/memory-model: Add litmus tests for atomic APIs
+Message-ID: <20200216054345.GA69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200214040132.91934-1-boqun.feng@gmail.com>
+ <Pine.LNX.4.44L0.2002141024141.1579-100000@iolanthe.rowland.org>
+ <20200215152550.GA13636@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200130162314.31449-1-e5ten.arch@gmail.com>
-In-Reply-To: <20200130162314.31449-1-e5ten.arch@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 16 Feb 2020 14:08:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASxZ9_doDB_t6vFfgVUvh4hpi9RK7_QFU65az+j+JU84A@mail.gmail.com>
-Message-ID: <CAK7LNASxZ9_doDB_t6vFfgVUvh4hpi9RK7_QFU65az+j+JU84A@mail.gmail.com>
-Subject: Re: [PATCH] make yacc usage POSIX-compliant
-To:     Ethan Sommer <e5ten.arch@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200215152550.GA13636@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ethan,
+On Sat, Feb 15, 2020 at 07:25:50AM -0800, Paul E. McKenney wrote:
+> On Fri, Feb 14, 2020 at 10:27:44AM -0500, Alan Stern wrote:
+> > On Fri, 14 Feb 2020, Boqun Feng wrote:
+> > 
+> > > A recent discussion raises up the requirement for having test cases for
+> > > atomic APIs:
+> > > 
+> > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > > 
+> > > , and since we already have a way to generate a test module from a
+> > > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > > tests for atomic APIs into memory-model.
+> > 
+> > It might be worth discussing this point a little more fully.  The 
+> > set of tests in tools/memory-model/litmus-tests/ is deliberately rather 
+> > limited.  Paul has a vastly more expansive set of litmus tests in a 
+> > GitHub repository, and I am doubtful about how many new tests we want 
+> > to keep in the kernel source.
+> 
+> Indeed, the current view is that the litmus tests in the kernel source
+> tree are intended to provide examples of C-litmus-test-language features
+> and functions, as opposed to exercising the full cross-product of
+> Linux-kernel synchronization primitives.
+> 
+> For a semi-reasonable subset of that cross-product, as Alan says, please
+> see https://github.com/paulmckrcu/litmus.
+> 
+> For a list of the Linux-kernel synchronization primitives currently
+> supported by LKMM, please see tools/memory-model/linux-kernel.def.
+> 
 
-On Fri, Jan 31, 2020 at 1:23 AM Ethan Sommer <e5ten.arch@gmail.com> wrote:
->
-> use -b and -d to generate correctly named source and header files,
-> instead of bison-specific --defines and non-POSIX -o
-> check that YACC command is found in path or is an executable file,
-> instead of using bison-specific --version flag to display an error when
-> it is missing
-> explicitly define yyltype in scripts/genksyms/lex.l, instead of relying
-> on bison automatically defining it
-> replace bison-specific %destructor use in scripts/kconfig/parser.y
-> dtc's yacc usage is not covered here, as its use of bison-specific
-> features is much greater, and it is only built on certain architectures,
-> unlike kconfig and genksyms
+So how about I put those atomic API tests into a separate directory, say
+Documentation/atomic/ ?
 
-Please start each sentence with a capital letter,
-and end with a period.
+The problem I want to solve here is that people (usually who implements
+the atomic APIs for new archs) may want some examples, which can help
+them understand the API requirements and test the implementation. And
+litmus tests are the perfect tool here (given that them can be
+translated to test modules with klitmus). And I personally really think
+this is something the LKMM group should maintain, that's why I put them
+in the tools/memory-model/litmus-tests/. But I'm OK if we end up
+deciding those should be put outside that directory.
 
->
-> Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
-> ---
->  scripts/Makefile.host     |  2 +-
->  scripts/genksyms/Makefile |  6 ++++--
->  scripts/genksyms/lex.l    |  2 ++
->  scripts/kconfig/parser.y  | 14 +++++++-------
->  4 files changed, 14 insertions(+), 10 deletions(-)
->
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index 4c51c95d40f4..64e98e1d4825 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
->  # YACC
->  # ---------------------------------------------------------------------------
->  quiet_cmd_bison = YACC    $(basename $@).[ch]
-> -      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
-> +      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
->
->  $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
->         $(call if_changed,bison)
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index 78629f515e78..1e120328fa88 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -14,9 +14,11 @@ genksyms-objs        := genksyms.o parse.tab.o lex.lex.o
->  # so that 'bison: not found' will be displayed if it is missing.
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->
-> +ifeq ($(shell command -v $(YACC) || [ -x $(YACC) ] && echo y),)
-> +  $(error command not found: $(YACC))
-> +endif
+Regards,
+Boqun
 
-
-Please do not check the presence of $(YACC)
-in the parse stage of Makefile.
-
-You would not be able to run 'make mrproper' or 'make distclean'
-without $(YACC), which is odd.
-
-
->  quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
-> -      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
-> -                         $(cmd_bison) 2>/dev/null
-> +      cmd_bison_no_warn = $(cmd_bison) 2>/dev/null
->
->  $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
->         $(call if_changed,bison_no_warn)
-> diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
-> index e265c5d96861..0580c088527f 100644
-> --- a/scripts/genksyms/lex.l
-> +++ b/scripts/genksyms/lex.l
-> @@ -19,6 +19,8 @@
->  #include "genksyms.h"
->  #include "parse.tab.h"
->
-> +extern YYSTYPE yylval;
-> +
->  /* We've got a two-level lexer here.  We let flex do basic tokenization
->     and then we categorize those basic tokens in the second stage.  */
->  #define YY_DECL                static int yylex1(void)
-> diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-> index b3eff9613cf8..9eb9a94a68e0 100644
-> --- a/scripts/kconfig/parser.y
-> +++ b/scripts/kconfig/parser.y
-> @@ -20,6 +20,8 @@
->
->  int cdebug = PRINTD;
->
-> +int yynerrs = 0;
-> +
-
-Isn't yynerrs POSIX-compiliant?
-
-Both bison and byacc worked for me without this change.
-
-
-This patch is stricter than
-your previous 'make it work for byacc as well'.
-
-If this is a desired change,
-how can I test if the code is POSIX-compliant?
-
-
-
-But, I am still not convinced with this part:
-
-"dtc's yacc usage is not covered here, as its use of bison-specific
-features is much greater, and it is only built on certain architectures,
-unlike kconfig and genksyms"
-
-
-If DTC remains as an exceptional case that is bison-specific code,
-I do not get the point of merging this change.
-
-
-
-
-
->  static void yyerror(const char *err);
->  static void zconfprint(const char *err, ...);
->  static void zconf_error(const char *err, ...);
-> @@ -101,13 +103,6 @@ static struct menu *current_menu, *current_entry;
->  %type <string> word_opt assign_val
->  %type <flavor> assign_op
->
-> -%destructor {
-> -       fprintf(stderr, "%s:%d: missing end statement for this entry\n",
-> -               $$->file->name, $$->lineno);
-> -       if (current_menu == $$)
-> -               menu_end_menu();
-> -} if_entry menu_entry choice_entry
-> -
->  %%
->  input: mainmenu_stmt stmt_list | stmt_list;
->
-> @@ -529,6 +524,11 @@ static bool zconf_endtoken(const char *tokenname,
->         if (strcmp(tokenname, expected_tokenname)) {
->                 zconf_error("unexpected '%s' within %s block",
->                             tokenname, expected_tokenname);
-> +               if (!strcmp(tokenname, "if") || !strcmp(tokenname, "menu") ||
-> +                       !strcmp(tokenname, "choice"))
-> +                       fprintf(stderr, "%s:%d: missing end statement for this entry\n",
-> +                               current_menu->file->name, current_menu->lineno);
-> +               menu_end_menu();
->                 yynerrs++;
->                 return false;
->         }
-> --
-> 2.25.0
->
-
-
---
-Best Regards
-Masahiro Yamada
+> > Perhaps it makes sense to have tests corresponding to all the examples
+> > in Documentation/, perhaps not.  How do people feel about this?
+> 
+> Agreed, we don't want to say that the set of litmus tests in the kernel
+> source tree is limited for all time to the set currently present, but
+> rather that the justification for adding more would involve useful and
+> educational examples of litmus-test features and techniques rather than
+> being a full-up LKMM test suite.
+> 
+> I would guess that there are litmus-test tricks that could usefully
+> be added to tools/memory-model/litmus-tests.  Any nomination?  Perhaps
+> handling CAS loops while maintaining finite state space?  Something else?
+> 
+> 							Thanx, Paul
