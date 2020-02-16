@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996ACC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C6420857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7570520857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgBPOlQ (ORCPT
+        id S1728284AbgBPOmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 09:41:16 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38011 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbgBPOlQ (ORCPT
+        Sun, 16 Feb 2020 09:42:21 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56909 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbgBPOmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 09:41:16 -0500
+        Sun, 16 Feb 2020 09:42:21 -0500
 X-Originating-IP: 79.86.19.127
 Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
         (Authenticated sender: alex@ghiti.fr)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A84D120003;
-        Sun, 16 Feb 2020 14:41:11 +0000 (UTC)
-Subject: Re: [PATCH v2 3/3] riscv: Fix crash when flushing executable ioremap
- regions
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DFF67C0007;
+        Sun, 16 Feb 2020 14:42:17 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] riscv: End kernel region search in setup_bootmem
+ earlier
 To:     Jan Kiszka <jan.kiszka@web.de>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -34,14 +34,14 @@ To:     Jan Kiszka <jan.kiszka@web.de>,
         linux-riscv@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org
 References: <cover.1581767384.git.jan.kiszka@web.de>
- <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
+ <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
 From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <e721c440-2baf-d962-62ef-41a4f3b1333b@ghiti.fr>
-Date:   Sun, 16 Feb 2020 09:41:11 -0500
+Message-ID: <8f0ddf1f-1ea9-8bde-76a0-ba60788c2a2d@ghiti.fr>
+Date:   Sun, 16 Feb 2020 09:42:17 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
+In-Reply-To: <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,40 +55,46 @@ Hi Jan,
 On 2/15/20 6:49 AM, Jan Kiszka wrote:
 > From: Jan Kiszka <jan.kiszka@siemens.com>
 > 
-> Those are not backed by page structs, and pte_page is returning an
-> invalid pointer.
+> No need to look further when that single region is found.
 > 
 > Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 > =2D--
->   arch/riscv/mm/cacheflush.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   arch/riscv/mm/init.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-> index 8930ab7278e6..9ee2c1a387cc 100644
-> =2D-- a/arch/riscv/mm/cacheflush.c
-> +++ b/arch/riscv/mm/cacheflush.c
-> @@ -84,7 +84,8 @@ void flush_icache_pte(pte_t pte)
->   {
->   	struct page *page =3D pte_page(pte);
-> 
-> -	if (!test_and_set_bit(PG_dcache_clean, &page->flags))
-> +	if (!pfn_valid(pte_pfn(pte)) ||
-> +	    !test_and_set_bit(PG_dcache_clean, &page->flags))
->   		flush_icache_all();
->   }
->   #endif /* CONFIG_MMU */
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index aec39a56d6cf..a774547e9021 100644
+> =2D-- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -160,6 +160,8 @@ void __init setup_bootmem(void)
+>   			if (reg->base + mem_size < end)
+>   				memblock_remove(reg->base + mem_size,
+>   						end - reg->base - mem_size);
+> +
+> +			break;
+>   		}
+>   	}
+>   	BUG_ON(mem_size =3D=3D 0);
 > =2D-
 > 2.16.4
 > 
 > 
 
-When did you encounter such a situation ? i.e. executable code that is 
-not backed by struct page ?
+I was looking at the test above that determines if the current memblock 
+contains the kernel:
 
-Riscv uses the generic implementation of ioremap and the way 
-_PAGE_IOREMAP is defined does not allow to map executable memory region 
-using ioremap, so I'm interested to understand how we end up in 
-flush_icache_pte for an executable region not backed by any struct page.
+if (reg->base <= vmlinux_end && vmlinux_end <= end)
+
+Shouldn't it be:
+
+if (reg->base <= vmlinux_start && vmlinux_end <= end)
+
+?
+
+Otherwise, we can indeed stop as soon as we found the region containing 
+the kernel, so feel free to add:
+
+Reviewed-by: Alexandre Ghiti <alex@ghiti.fr>
 
 Thanks,
 
