@@ -2,94 +2,144 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDA8C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74AFC76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B67B2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F76E206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581862315;
+	bh=DKirdU0ufWfvPWErLTUkOEyE4AL9d2cSF3zd29hUQRk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nv/1WyE6pjBcm5OsLmZDxN4bKrXF0nw+M5Yqk5Dk3Sj6sOlrpj4Rqroe542VXiwZg
+	 Fex295UHY+wnZYBUTne2bCFf/cOuFClYoRBwWgpbMF3EBzOXLncxs6aWpsF1vlxZ55
+	 4GpmWt0Ag9jAIfo46r5Ms7MomhZlOssrxFl/jujQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBPNwG (ORCPT
+        id S1728215AbgBPOLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 08:52:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45176 "EHLO mx2.suse.de"
+        Sun, 16 Feb 2020 09:11:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbgBPNwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 08:52:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5AE57AC67;
-        Sun, 16 Feb 2020 13:52:04 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 0702CDA7A0; Sun, 16 Feb 2020 14:51:48 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.6-rc2
-Date:   Sun, 16 Feb 2020 14:51:45 +0100
-Message-Id: <cover.1581859345.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727889AbgBPOLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 09:11:51 -0500
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E9E2086A;
+        Sun, 16 Feb 2020 14:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581862310;
+        bh=DKirdU0ufWfvPWErLTUkOEyE4AL9d2cSF3zd29hUQRk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o4u0xzwJR2Do3USyGEZc8LJsFAfEKOLRrx++LbJ8mP4ZEXJzX51+M1UnPvuSGA1aK
+         uYa5jrKWmtACntcNXsdgpGCAeyDzVJwEoyW47K6nZJ2/Vs62A9ER9DxZfVR/6s6Nko
+         vP5jXf09H/ah9rN8/KCU6zMiORJOkG0lEx7S+8hs=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        lersek@redhat.com, leif@nuviainc.com, pjones@redhat.com,
+        mjg59@google.com, agraf@csgraf.de, ilias.apalodimas@linaro.org,
+        xypron.glpk@gmx.de, daniel.kiper@oracle.com, nivedita@alum.mit.edu,
+        James.Bottomley@hansenpartnership.com, lukas@wunner.de
+Subject: [PATCH v2 0/3] arch-agnostic initrd loading method for EFI systems
+Date:   Sun, 16 Feb 2020 15:11:01 +0100
+Message-Id: <20200216141104.21477-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series introduces an arch agnostic way of loading the initrd into
+memory from the EFI stub. This addresses a number of shortcomings that
+affect the current implementations that exist across architectures:
 
-please pull the following mix of fixes. There are two races fixed,
-memory leak fix, sysfs directory fixup and two new log messages.
+- The initrd=<file> command line option can only load files that reside
+  on the same file system that the kernel itself was loaded from, which
+  requires the bootloader or firmware to expose that file system via the
+  appropriate EFI protocol, which is not always feasible. From the kernel
+  side, this protocol is problematic since it is incompatible with mixed
+  mode on x86 (this is due to the fact that some of its methods have
+  prototypes that are difficult to marshall)
 
-* two fixed race conditions: extent map merging and truncate vs fiemap
+- The approach that is ordinarily taken by GRUB is to load the initrd into
+  memory, and pass it to the kernel proper via the bootparams structure or
+  via the device tree. This requires the boot loader to have an understanding
+  of those structures, which are not always set in stone, and of the policies
+  around where the initrd may be loaded into memory. In the ARM case, it
+  requires GRUB to modify the hardware description provided by the firmware,
+  given that the initrd base and offset in memory are passed via the same
+  data structure. It also creates a time window where the initrd data sits
+  in memory, and can potentially be corrupted before the kernel is booted.
 
-* create the right sysfs directory with device information and move the
-  individual device dirs under it
+Considering that we will soon have new users of these interfaces (EFI for
+kvmtool on ARM, RISC-V in u-boot, etc), it makes sense to add a generic
+interface now, before having another wave of bespoke arch specific code
+coming in.
 
-* print messages when the tree-log is replayed at mount time or cannot
-  be replayed on remount
+Another aspect to take into account is that support for UEFI secure boot
+and measured boot is being taken into the upstream, and being able to
+rely on the PE entry point for booting any architecture makes the GRUB
+vs shim story much cleaner, as we should be able to rely on LoadImage
+and StartImage on all architectures, while retaining the ability to
+load initrds from anywhere.
 
-Thanks.
+Note that these patches depend on a fair amount of cleanup work that I
+am targetting for v5.7. Branch can be found at:
+https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
 
-----------------------------------------------------------------
-The following changes since commit d55966c4279bfc6a0cf0b32bf13f5df228a1eeb6:
+A PoC implementation for OVMF and ArmVirtQemu (OVMF for ARM aka AAVMF) can
+be found at https://github.com/ardbiesheuvel/edk2/commits/linux-efi-generic.
 
-  btrfs: do not zero f_bavail if we have available space (2020-02-02 18:49:32 +0100)
+A U-Boot implementation is under development as well, and can be found at
+https://github.com/apalos/u-boot/commits/efi_load_file_8
 
-are available in the Git repository at:
+Changes since v1:
+- merge vendor media device path type definition with the existing device path
+  definitions we already have, and rework the latter slightly to be more easily
+  reusable
+- use 'dev_path' not 'devpath' consistently
+- pass correct FilePath value to LoadFile2 (i.e., the device path pointer that
+  was advanced to point to the 'end' node by locate_device_path())
+- add kerneldoc comment to efi_load_initrd_dev_path()
+- take care to only return EFI_NOT_FOUND from efi_load_initrd_dev_path() if the
+  LoadFile2 protocol does not exist on the LINUX_EFI_INITRD_MEDIA_GUID device
+  path - this makes the logic whether to fallback to the command line method
+  more robust
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc1-tag
+Cc: lersek@redhat.com
+Cc: leif@nuviainc.com
+Cc: pjones@redhat.com
+Cc: mjg59@google.com
+Cc: agraf@csgraf.de
+Cc: ilias.apalodimas@linaro.org
+Cc: xypron.glpk@gmx.de
+Cc: daniel.kiper@oracle.com
+Cc: nivedita@alum.mit.edu
+Cc: James.Bottomley@hansenpartnership.com
+Cc: lukas@wunner.de
 
-for you to fetch changes up to 1b9867eb6120db85f8dca8ff42789d9ec9ee16a5:
+Ard Biesheuvel (3):
+  efi/dev-path-parser: Add struct definition for vendor type device path
+    nodes
+  efi/libstub: Add support for loading the initrd from a device path
+  efi/libstub: Take noinitrd cmdline argument into account for devpath
+    initrd
 
-  btrfs: sysfs, move device id directories to UUID/devinfo (2020-02-12 18:28:22 +0100)
+ drivers/firmware/efi/apple-properties.c       |  8 +-
+ drivers/firmware/efi/dev-path-parser.c        | 38 ++++----
+ drivers/firmware/efi/libstub/arm-stub.c       | 20 ++++-
+ .../firmware/efi/libstub/efi-stub-helper.c    | 89 +++++++++++++++++++
+ drivers/firmware/efi/libstub/efistub.h        |  5 ++
+ drivers/firmware/efi/libstub/x86-stub.c       | 47 ++++++++--
+ include/linux/efi.h                           | 49 ++++++----
+ 7 files changed, 201 insertions(+), 55 deletions(-)
 
-----------------------------------------------------------------
-Anand Jain (2):
-      btrfs: sysfs, add UUID/devinfo kobject
-      btrfs: sysfs, move device id directories to UUID/devinfo
+-- 
+2.17.1
 
-David Sterba (2):
-      btrfs: print message when tree-log replay starts
-      btrfs: log message when rw remount is attempted with unclean tree-log
-
-Filipe Manana (2):
-      Btrfs: fix race between using extent maps and merging them
-      Btrfs: fix race between shrinking truncate and fiemap
-
-Wenwen Wang (1):
-      btrfs: ref-verify: fix memory leaks
-
- fs/btrfs/disk-io.c    |  1 +
- fs/btrfs/extent_map.c | 11 +++++++++++
- fs/btrfs/inode.c      |  8 ++++++++
- fs/btrfs/ref-verify.c |  5 +++++
- fs/btrfs/super.c      |  2 ++
- fs/btrfs/sysfs.c      | 17 ++++++++++++++++-
- fs/btrfs/volumes.h    |  1 +
- 7 files changed, 44 insertions(+), 1 deletion(-)
