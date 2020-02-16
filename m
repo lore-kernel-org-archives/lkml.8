@@ -2,100 +2,101 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996ACC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C22C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7570520857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A95520857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 14:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581864183;
+	bh=iPZhd7ckc4kcy12LkFo7EKSAHhAE5Yri2bBWhEyN4k8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1s1gRnJHWVZlUYJ1WaavXUUaSjqZYqBdPQ1PlDaigWybX14oqxcj6QbxCOOdCVmCD
+	 n7FiojhdhZei8o7NaMr4/y0ljJNmtLOWGqMQs3tiiE6SjFvqMns5vFfvIIQdCmdHgH
+	 GnM4EHylNX3x40waOzoYCyU4JNyomkLMAcIHHIhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgBPOmV (ORCPT
+        id S1728310AbgBPOmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 09:42:21 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56909 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgBPOmV (ORCPT
+        Sun, 16 Feb 2020 09:42:53 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:30875 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbgBPOmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 09:42:21 -0500
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DFF67C0007;
-        Sun, 16 Feb 2020 14:42:17 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] riscv: End kernel region search in setup_bootmem
- earlier
-To:     Jan Kiszka <jan.kiszka@web.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1581767384.git.jan.kiszka@web.de>
- <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <8f0ddf1f-1ea9-8bde-76a0-ba60788c2a2d@ghiti.fr>
-Date:   Sun, 16 Feb 2020 09:42:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sun, 16 Feb 2020 09:42:52 -0500
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 01GEgP9S010513;
+        Sun, 16 Feb 2020 23:42:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01GEgP9S010513
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581864146;
+        bh=UoXPiVZxlWkvCqFNMcjAUwJQCoq8GSwZbx8UAZFUf+g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nQTrfunf3CEK7lzn82MaJMNvJWBlL3QKKGT7DWcph3+bEq24Zk2LPGStO1ShFxlBH
+         JY9bGiSr7SbvjnA+cdNoymfbVtTVqTrCRo/hU25CSwn+PzFGjn4M/CQoK5JrHHmq6t
+         I7JqXPc6ZkHqEIMD2vcn7ip94m6nVAkCJdIy0tQJ8hTgsD2fa6gScFcgmgi88jMii+
+         qgyxWnxrBZBdaJd/ijFAxlE20PfANCXoukWg3e9dVP0FZhbk4cX/VLiueK73qDpHXl
+         1uABnQZ16STKEouuynUnhP60/UoP9HH/a62wF7Cu6Dx41tF8itrEBM7ioEsg0TW1mX
+         cUAZlQ3GRVJoA==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id x18so9108396vsq.4;
+        Sun, 16 Feb 2020 06:42:26 -0800 (PST)
+X-Gm-Message-State: APjAAAVGtXW7wfL6jc1dWWJOzatAZCqKuOtADvwF0mJI+tHV0+elWCnD
+        MxMqHrx4x0/ABBUzjeAyE2G5g0DD8UI+DIrFp+8=
+X-Google-Smtp-Source: APXvYqwW5HVWUuzDn0HmhcW/DFcMylTWOtCMGEgW2Ijo9vm/IhTP/HsMT4VTAuXnu2z7SG0GRxtxwnZsRfNlStQW5AY=
+X-Received: by 2002:a67:6485:: with SMTP id y127mr6263902vsb.54.1581864145392;
+ Sun, 16 Feb 2020 06:42:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <a06194f0-3713-cc04-1673-c05b35c03242@infradead.org>
+In-Reply-To: <a06194f0-3713-cc04-1673-c05b35c03242@infradead.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 16 Feb 2020 23:41:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATQowM6w5TmHiqCeY7yae8j-qV==e9yw3HYD9=fABxjtg@mail.gmail.com>
+Message-ID: <CAK7LNATQowM6w5TmHiqCeY7yae8j-qV==e9yw3HYD9=fABxjtg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add comment for V=2 mode
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+On Thu, Feb 13, 2020 at 1:41 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Complete the comments for valid values of KBUILD_VERBOSE,
+> specifically for KBUILD_VERBOSE=2.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-On 2/15/20 6:49 AM, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> No need to look further when that single region is found.
-> 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> =2D--
->   arch/riscv/mm/init.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index aec39a56d6cf..a774547e9021 100644
-> =2D-- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -160,6 +160,8 @@ void __init setup_bootmem(void)
->   			if (reg->base + mem_size < end)
->   				memblock_remove(reg->base + mem_size,
->   						end - reg->base - mem_size);
-> +
-> +			break;
->   		}
->   	}
->   	BUG_ON(mem_size =3D=3D 0);
-> =2D-
-> 2.16.4
-> 
-> 
 
-I was looking at the test above that determines if the current memblock 
-contains the kernel:
+Applied to linux-kbuild. Thanks.
 
-if (reg->base <= vmlinux_end && vmlinux_end <= end)
 
-Shouldn't it be:
 
-if (reg->base <= vmlinux_start && vmlinux_end <= end)
+> ---
+>  Makefile |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- linux-next-20200206.orig/Makefile
+> +++ linux-next-20200206/Makefile
+> @@ -68,6 +68,7 @@ unexport GREP_OPTIONS
+>  #
+>  # If KBUILD_VERBOSE equals 0 then the above command will be hidden.
+>  # If KBUILD_VERBOSE equals 1 then the above command is displayed.
+> +# If KBUILD_VERBOSE equals 2 then give the reason why each target is rebuilt.
+>  #
+>  # To put more focus on warnings, be less verbose as default
+>  # Use 'make V=1' to see the full commands
+>
 
-?
 
-Otherwise, we can indeed stop as soon as we found the region containing 
-the kernel, so feel free to add:
-
-Reviewed-by: Alexandre Ghiti <alex@ghiti.fr>
-
-Thanks,
-
-Alex
+-- 
+Best Regards
+Masahiro Yamada
