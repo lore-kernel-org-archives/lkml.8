@@ -2,256 +2,105 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67316C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1CAC7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8F42072C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C228722B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="doJFJ4nw"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ecCtJFNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgBPVSO (ORCPT
+        id S1727742AbgBPV0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 16:18:14 -0500
-Received: from mout.gmx.net ([212.227.15.19]:33277 "EHLO mout.gmx.net"
+        Sun, 16 Feb 2020 16:26:10 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47797 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgBPVSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 16:18:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581887880;
-        bh=jG5GEa6PfIvtkDnb5V+9CztfoccbMkgxpvm2oo8AnJM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=doJFJ4nwGV/5rfQh5VFDrkIwg3AO0xUjQ2xQwY7ryxlZToI3RiyhOU3MkrOuFa+sP
-         NdDDb2J+adWNg3HXvICoVmLDPymW4As+QbDgTL7R8SwxPoPDLeW9MxBvIJjvb73TZp
-         Xy1fpndFNXRDzXWlQWfypnrBdD8ct/SSt08++tQk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.24] ([77.0.113.245]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTABZ-1itrbr0pqB-00UZYN; Sun, 16
- Feb 2020 22:18:00 +0100
-Subject: Re: kernel 5.5.4: BUG: kernel NULL pointer dereference, address:
- 000000000000000
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20200216032625.11452-1-hdanton@sina.com>
- <20200216145518.9728-1-hdanton@sina.com>
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <9543d83b-055c-cd84-6a68-f3d72e3dbecb@gmx.de>
-Date:   Sun, 16 Feb 2020 22:17:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726036AbgBPV0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 16:26:09 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LKt64b7pz9sRG;
+        Mon, 17 Feb 2020 08:26:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581888367;
+        bh=lExeTftvs7DIRZyWte6FEXzUw6Bw12Pkh0soWbIZrVY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ecCtJFNQjrkV5YhebWSTuY8bmNuNUZTwYmU+fw2lo87h+QGUGmBn2YdJIDM+8Dsxc
+         IVhmcfQCk2L+Zadj4uklhyzzrmytPJZcU0s7Uuh5/w5tQStkNkufq7vaDWUWq4nXhj
+         OFI42NAcfpTVO1HHWE6laWsOazUQwSNMgJ5HboikFYdGHRLdyBufQmT+0d4L5BmItD
+         Qh4b8yOcsfM7uv0g+15UaPlKEo/1wwA9Oo25fSeb4qB1EUTMCHl6kkYeKWUnF8e7Ae
+         MK3jBwasyP+jWocbxr/fO2of3YR2a+li81JkcCupOsuz5TfuzzgmLL7TLnaxhn83ql
+         19LmDz4lE9siA==
+Date:   Mon, 17 Feb 2020 08:25:59 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Carlo Caione <carlo@caione.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: linux-next: build failure after merge of the amlogic tree
+Message-ID: <20200217082559.73e736d2@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200216145518.9728-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:djBNs4p3UIZOUyxDsmlN1uWT3X4RoNnSqLAxlYXW7iUpfi0HJjL
- 418pQdDkeMVgfuKMjyQnPfc7YOi03biIHJKS6qyHQh0u4V90llIjQCMkU0QMZlmHlStjYPI
- ApKSU1L8PkjVtfHvXOHCngj/2tZMECymty2MsiJ8ZMdpe1fMmo1QCzgj+dRgm0PvnRfjkas
- MFmymnnOTJ6VFjw0BE3Kw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HdmYk1iyc6U=:qBEMFxTaIEX21U9wywbYIs
- xMYl1jpOjVhvysV0Bnh0LMUISWz59fZx4MLB/yFvjGVrLOEwk2TTQM44kkTv2vJhpSN816klx
- z5rYLSn8cuE1xOE1Y1GDCW8/9eiU49vylsVF/BPHSTWgmBvf6i/RTDM+1GTBu6PprawMSKGUl
- gTqKP+MHq50aIWfMHwKJLMRb/wPj/ifCZvysOaKzNWVCokW+etOayVN6xuCQdxXjU9npScn0B
- GHAtJnjMo0xBZ3WQbq8CqII3eKkNiNZi6GXe+MF/QK5Ye1/Zc/1e7YDDLVHqegRVbCS7WyMbi
- SE/8uNxQ3FZIqH2QJibem5ZXSmJlGraax+UeaWUKxhzeFfr/5zbdbs0aSEdgYxPZy9l3Aeb83
- Mw7MS/Avd/nLUoMRvn9NHUtMeEV63A+1/Bhjk61dvo7rEG0v9JEK0roIKm2XQPG7485obVNLh
- ZYhN+HGuJblSWW513m3F6YS5nkQd19FaI0GZ/Mo9+dinLV/Z3IMw9qNZFOmVRNqTW6h02CCzj
- 9u4e2fSj1QRDUipD0KUvr+RfwGC4rvS7ZgVKdUVRnKAoFt6EGF9GvyT10ravG/Vmw74zBkKZ7
- jF2i8OGestHmBcvu+sIo6DTlRSEowqud+C+msEHl342vyaNrSYBfJMLDnxIilo+YRps/cx47y
- /YUuxQlbCvZbRH2S0L2emacfK4koPhq7XoJ1eiIT0JoGilfkQjHVCDGbVoj9QTohXFFvcyXh+
- erXoqycOF+qAU3VBu5wsJNClcJtqd4FrXNqYpxmdcue08hPr9Rv8QKWujoOISosNrs+P0gWLy
- muX45AbJZkgJY8xMdlL5ZMWhrZVTYeJKzYg/LAR68WctKDd7FWz7YfoowLvCKOP3OOQDH5JPS
- VJCnP01dGIXOR29FGDpso1GWP426EP+YV2C/yON8VB/Xd8k+D8a6iI34dZCgD8jbl0szl6A0P
- 0HpmElLvFbjPyVBQHnPdkOtOUjzw+HDgcVEt8lnyiLi13whRKr/DqTshp9pZe+qzputX/ezSp
- j+V1haFJq2VFIo5l9F85I0IYvWAlYPc8lIDn22ycX4BJGdQxx4ASjD1ZROysYGtAIAXj1Ug0V
- jn4KKEv8hL2kHIsfglVlqmvPXlijEWOb0VuguCxaEy2EEpULA1sTyvXeDyTiaJphD00f8H+Dn
- ZjA8zQtkTP3wN6w0Op79SNZzZp/PUFwBHY3jSwNH0Kopw5fOEfGewadljKx3NAoGwgJsEqWUL
- J493/ZQOPkY5Uo9J+
+Content-Type: multipart/signed; boundary="Sig_/CC+J/jj=GiH0KthB5lCYi0W";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMi8xNi8yMCAzOjU1IFBNLCBIaWxsZiBEYW50b24gd3JvdGU6DQo+IA0KPiBPbiBTdW4s
-IDE2IEZlYiAyMDIwIDExOjMzOjAyICswMTAwIFRvcmFsZiBGb2Vyc3RlciB3cm90ZToNCj4+
-IE9uIDIvMTYvMjAgNDoyNiBBTSwgSGlsbGYgRGFudG9uIHdyb3RlOg0KPj4+IExvb2tzIGxp
-a2UgYSBzdHJheSBsb2NrIGNvdW50cyBmb3IgdGhlIGFib3ZlIE5VTEwgZGVyZWZlcmVuY2Uu
-DQo+Pj4NCj4+IEhpLCB0aGUgcGF0Y2ggYXBwbGllZCBvbiB0b3Agb2YgNS41LjQgYnJlYWtz
-IHRoZSBpbnRlcm5hbCBkaXNwbGF5IG5vdyBldmVuDQo+PiAgaW4gdGhlIGJvb3QgcGhhc2Uu
-DQo+IA0KPiBNeSBiYWQuDQo+IA0KPiBUaGVuIHRyeSB0byBkbyBmZW5jZSBzaWduYWxpbmcg
-YmVmb3JlIHRha2luZyByZXF1ZXN0J3MgbG9jayBhcyB3ZSdsbA0KPiB0YWtlIHRoZSBmZW5j
-ZSBzcGVjaWZpYyBsb2NrIGlmIHdlJ3JlIGluIHRoZSByaWdodCBkaXJlY3Rpb24uDQo+IA0K
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X3JlcXVlc3QuYw0KPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X3JlcXVlc3QuYw0KPiBAQCAtMjUyLDEwICsyNTIs
-MTAgQEAgYm9vbCBpOTE1X3JlcXVlc3RfcmV0aXJlKHN0cnVjdCBpOTE1X3JlcQ0KPiAgCSAq
-Lw0KPiAgCXJlbW92ZV9mcm9tX2VuZ2luZShycSk7DQo+ICANCj4gKwlkbWFfZmVuY2Vfc2ln
-bmFsKCZycS0+ZmVuY2UpOw0KPiArDQo+ICAJc3Bpbl9sb2NrX2lycSgmcnEtPmxvY2spOw0K
-PiAgCWk5MTVfcmVxdWVzdF9tYXJrX2NvbXBsZXRlKHJxKTsNCj4gLQlpZiAoIWk5MTVfcmVx
-dWVzdF9zaWduYWxlZChycSkpDQo+IC0JCWRtYV9mZW5jZV9zaWduYWxfbG9ja2VkKCZycS0+
-ZmVuY2UpOw0KPiAgCWlmICh0ZXN0X2JpdChETUFfRkVOQ0VfRkxBR19FTkFCTEVfU0lHTkFM
-X0JJVCwgJnJxLT5mZW5jZS5mbGFncykpDQo+ICAJCWk5MTVfcmVxdWVzdF9jYW5jZWxfYnJl
-YWRjcnVtYihycSk7DQo+ICAJaWYgKGk5MTVfcmVxdWVzdF9oYXNfd2FpdGJvb3N0KHJxKSkg
-ew0KPiANCg0KVGhpcyBpcyBzaW1pbGFyIHRvIHRoZSBiZWhhdmlvdXIgYmVmb3JlLCB0aGUg
-QlVHIG9jY3VycmVzIGFmdGVyIGZldyBtaW51dGVzL2hvdXJzLg0KSXQgYnJvdWdodCBub3c6
-DQoNCg0KRmViIDE2IDIyOjA5OjAxIHQ0NCBDUk9ORFs4OTE4XTogKHJvb3QpIENNRCAoL3Vz
-ci9saWIvc2Evc2ExIDMwIDIgLVMgWEFMTCkNCkZlYiAxNiAyMjoxMDowMSB0NDQgQ1JPTkRb
-ODk4MF06IChyb290KSBDTUQgKC91c3IvbGliL3NhL3NhMSAzMCAyIC1TIFhBTEwpDQpGZWIg
-MTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogQlVHOiBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVm
-ZXJlbmNlLCBhZGRyZXNzOiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0
-IGtlcm5lbDogI1BGOiBzdXBlcnZpc29yIGluc3RydWN0aW9uIGZldGNoIGluIGtlcm5lbCBt
-b2RlDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogI1BGOiBlcnJvcl9jb2RlKDB4MDAx
-MCkgLSBub3QtcHJlc2VudCBwYWdlDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUEdE
-IDAgUDREIDAgDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogT29wczogMDAxMCBbIzFd
-IFNNUCBQVEkNCkZlYiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiBDUFU6IDEgUElEOiAzNDAz
-IENvbW06IFggVGFpbnRlZDogRyAgICAgICAgICAgICAgICBUIDUuNS40ICMzDQpGZWIgMTYg
-MjI6MTA6MzcgdDQ0IGtlcm5lbDogSGFyZHdhcmUgbmFtZTogTEVOT1ZPIDIwQVFDVE8xV1cv
-MjBBUUNUTzFXVywgQklPUyBHSkVUOTJXVyAoMi40MiApIDAzLzAzLzIwMTcNCkZlYiAxNiAy
-MjoxMDozNyB0NDQga2VybmVsOiBSSVA6IDAwMTA6MHgwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0
-IGtlcm5lbDogQ29kZTogQmFkIFJJUCB2YWx1ZS4NCkZlYiAxNiAyMjoxMDozNyB0NDQga2Vy
-bmVsOiBSU1A6IDAwMTg6ZmZmZmFkMzcwMDllYmEyMCBFRkxBR1M6IDAwMDEwMDg3DQpGZWIg
-MTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJCWDogMDAw
-MDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMDAwZTY4YjANCkZlYiAxNiAyMjoxMDozNyB0
-NDQga2VybmVsOiBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmOGIzNTU5OGNiYTg4
-IFJESTogZmZmZjhiMzYyZDkxNDZjMA0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6IFJC
-UDogZmZmZjhiMzYyZDkxNDZjMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiBmZmZmOGIz
-NTU5OGNiZTAwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUjEwOiAwMDAwMDAwMDAw
-MDAwMDAyIFIxMTogMDAwMDAwMDAwMDAwMDAwNSBSMTI6IGZmZmZhZDM3MDA5ZWJhMjgNCkZl
-YiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiBm
-ZmZmOGIzNmE0MGZhMjAwIFIxNTogZmZmZjhiMzY5YmY5OTYwMA0KRmViIDE2IDIyOjEwOjM3
-IHQ0NCBrZXJuZWw6IEZTOiAgMDAwMDdmMmI3NTEzOThjMCgwMDAwKSBHUzpmZmZmOGIzNmIy
-NjgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCkZlYiAxNiAyMjoxMDozNyB0
-NDQga2VybmVsOiBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgw
-MDUwMDMzDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogQ1IyOiBmZmZmZmZmZmZmZmZm
-ZmQ2IENSMzogMDAwMDAwMDMyMzI5MjAwMSBDUjQ6IDAwMDAwMDAwMDAxNjA2ZTANCkZlYiAx
-NiAyMjoxMDozNyB0NDQga2VybmVsOiBDYWxsIFRyYWNlOg0KRmViIDE2IDIyOjEwOjM3IHQ0
-NCBrZXJuZWw6ICBkbWFfZmVuY2Vfc2lnbmFsX2xvY2tlZCsweDg1LzB4YzANCkZlYiAxNiAy
-MjoxMDozNyB0NDQga2VybmVsOiAgZG1hX2ZlbmNlX3NpZ25hbCsweDFmLzB4NDANCkZlYiAx
-NiAyMjoxMDozNyB0NDQga2VybmVsOiAgaTkxNV9yZXF1ZXN0X3JldGlyZSsweDlhLzB4Mjkw
-IFtpOTE1XQ0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6ICBpOTE1X3JlcXVlc3RfY3Jl
-YXRlKzB4M2YvMHhjMCBbaTkxNV0NCkZlYiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiAgaTkx
-NV9nZW1fZG9fZXhlY2J1ZmZlcisweDk3My8weDE3ZDAgW2k5MTVdDQpGZWIgMTYgMjI6MTA6
-MzcgdDQ0IGtlcm5lbDogIGk5MTVfZ2VtX2V4ZWNidWZmZXIyX2lvY3RsKzB4ZTkvMHgzYTAg
-W2k5MTVdDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogID8gaTkxNV9nZW1fZXhlY2J1
-ZmZlcl9pb2N0bCsweDJjMC8weDJjMCBbaTkxNV0NCkZlYiAxNiAyMjoxMDozNyB0NDQga2Vy
-bmVsOiAgZHJtX2lvY3RsX2tlcm5lbCsweGFlLzB4MTAwIFtkcm1dDQpGZWIgMTYgMjI6MTA6
-MzcgdDQ0IGtlcm5lbDogIGRybV9pb2N0bCsweDIyMy8weDQwMCBbZHJtXQ0KRmViIDE2IDIy
-OjEwOjM3IHQ0NCBrZXJuZWw6ICA/IGk5MTVfZ2VtX2V4ZWNidWZmZXJfaW9jdGwrMHgyYzAv
-MHgyYzAgW2k5MTVdDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogIGRvX3Zmc19pb2N0
-bCsweDRkNC8weDc2MA0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6ICBrc3lzX2lvY3Rs
-KzB4NWIvMHg5MA0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6ICBfX3g2NF9zeXNfaW9j
-dGwrMHgxNS8weDIwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogIGRvX3N5c2NhbGxf
-NjQrMHg0Ni8weDEwMA0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6ICBlbnRyeV9TWVND
-QUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0NC8weGE5DQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtl
-cm5lbDogUklQOiAwMDMzOjB4N2YyYjc1MzcyMTM3DQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtl
-cm5lbDogQ29kZTogMDAgMDAgMDAgNzUgMGMgNDggYzcgYzAgZmYgZmYgZmYgZmYgNDggODMg
-YzQgMTggYzMgZTggMmQgZDQgMDEgMDAgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAg
-MGYgMWYgMDAgYjggMTAgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiBmZiA3MyAw
-MSBjMyA0OCA4YiAwZCAxOSBlZCAwYyAwMCBmNyBkOCA2NCA4OSAwMSA0OA0KRmViIDE2IDIy
-OjEwOjM3IHQ0NCBrZXJuZWw6IFJTUDogMDAyYjowMDAwN2ZmZWJlMmI0YzM4IEVGTEFHUzog
-MDAwMDAyNDYgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwMTANCkZlYiAxNiAyMjoxMDozNyB0
-NDQga2VybmVsOiBSQVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwN2ZmZWJlMmI0Yzgw
-IFJDWDogMDAwMDdmMmI3NTM3MjEzNw0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6IFJE
-WDogMDAwMDdmZmViZTJiNGM4MCBSU0k6IDAwMDAwMDAwNDA0MDY0NjkgUkRJOiAwMDAwMDAw
-MDAwMDAwMDBkDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUkJQOiAwMDAwMDAwMDQw
-NDA2NDY5IFIwODogMDAwMDU2MTQ3N2ViODY3MCBSMDk6IDAwMDAwMDAwMDAwMDAyMDINCkZl
-YiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAw
-MDAwMDAwMDAwMDAwMjQ2IFIxMjogMDAwMDU2MTQ3N2U3YjBiMA0KRmViIDE2IDIyOjEwOjM3
-IHQ0NCBrZXJuZWw6IFIxMzogMDAwMDAwMDAwMDAwMDAwZCBSMTQ6IDAwMDA3ZjJiNzRiNTFj
-NDggUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDog
-TW9kdWxlcyBsaW5rZWQgaW46IGFmX3BhY2tldCBicmlkZ2Ugc3RwIGxsYyBpcDZ0YWJsZV9m
-aWx0ZXIgaXA2X3RhYmxlcyB4dF9NQVNRVUVSQURFIGlwdGFibGVfbmF0IG5mX25hdCBuZl9s
-b2dfaXB2NCBuZl9sb2dfY29tbW9uIHh0X0xPRyB4dF9saW1pdCB4dF9yZWNlbnQgeHRfY29u
-bnRyYWNrIG5mX2Nvbm50cmFjayBuZl9kZWZyYWdfaXB2NiBuZl9kZWZyYWdfaXB2NCBpcHRh
-YmxlX2ZpbHRlciBpcF90YWJsZXMgdXZjdmlkZW8gdmlkZW9idWYyX3ZtYWxsb2MgdmlkZW9i
-dWYyX21lbW9wcyB2aWRlb2J1ZjJfdjRsMiB2aWRlb2RldiB2aWRlb2J1ZjJfY29tbW9uIGJ0
-dXNiIGJ0cnRsIGJ0YmNtIGJ0aW50ZWwgYmx1ZXRvb3RoIGVjZGhfZ2VuZXJpYyBlY2Mgcm1p
-X3NtYnVzIHJtaV9jb3JlIG1vdXNlZGV2IHg4Nl9wa2dfdGVtcF90aGVybWFsIGNvcmV0ZW1w
-IGt2bV9pbnRlbCBrdm0gaTkxNSBpcnFieXBhc3MgaW50ZWxfZ3R0IGkyY19hbGdvX2JpdCBk
-cm1fa21zX2hlbHBlciBjZmJmaWxscmVjdCBzeXNjb3B5YXJlYSBpbnB1dF9sZWRzIHNuZF9o
-ZGFfY29kZWNfcmVhbHRlayBzbmRfaGRhX2NvZGVjX2dlbmVyaWMgY2ZiaW1nYmx0IHN5c2Zp
-bGxyZWN0IHN5c2ltZ2JsdCBmYl9zeXNfZm9wcyBjZmJjb3B5YXJlYSB3bWlfYm1vZiBzbmRf
-aGRhX2ludGVsIHNuZF9pbnRlbF9kc3BjZmcgZHJtIHNuZF9oZGFfY29kZWMgdHBtX3RpcyBw
-c21vdXNlIGFlc25pX2ludGVsIHNuZF9oZGFfY29yZSBnbHVlX2hlbHBlciBjcnlwdG9fc2lt
-ZCBpd2xtdm0gY3J5cHRkIHNuZF9wY20gdGhpbmtwYWRfYWNwaSBsZWR0cmlnX2F1ZGlvIHRw
-bV90aXNfY29yZSBpd2x3aWZpIHBjc3BrciBkcm1fcGFuZWxfb3JpZW50YXRpb25fcXVpcmtz
-IGVoY2lfcGNpIGF0a2JkIGUxMDAwZSBpMmNfaTgwMSBlaGNpX2hjZCB0cG0gdGhlcm1hbCBz
-bmRfdGltZXIgYWMgc25kIHNvdW5kY29yZSBiYXR0ZXJ5IHJuZ19jb3JlIGFncGdhcnQgaTJj
-X2NvcmUgd21pIGV2ZGV2DQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogQ1IyOiAwMDAw
-MDAwMDAwMDAwMDAwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogLS0tWyBlbmQgdHJh
-Y2UgN2RmMWQ0MjQ2Y2I3NGQzNiBdLS0tDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDog
-UklQOiAwMDEwOjB4MA0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJuZWw6IENvZGU6IEJhZCBS
-SVAgdmFsdWUuDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUlNQOiAwMDE4OmZmZmZh
-ZDM3MDA5ZWJhMjAgRUZMQUdTOiAwMDAxMDA4Nw0KRmViIDE2IDIyOjEwOjM3IHQ0NCBrZXJu
-ZWw6IFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAwMDAwMDAgUkNYOiAw
-MDAwMDAwMDAwMGU2OGIwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogUkRYOiAwMDAw
-MDAwMDAwMDAwMDAwIFJTSTogZmZmZjhiMzU1OThjYmE4OCBSREk6IGZmZmY4YjM2MmQ5MTQ2
-YzANCkZlYiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiBSQlA6IGZmZmY4YjM2MmQ5MTQ2YzAg
-UjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogZmZmZjhiMzU1OThjYmUwMA0KRmViIDE2IDIy
-OjEwOjM3IHQ0NCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAwMiBSMTE6IDAwMDAwMDAw
-MDAwMDAwMDUgUjEyOiBmZmZmYWQzNzAwOWViYTI4DQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtl
-cm5lbDogUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogZmZmZjhiMzZhNDBmYTIwMCBSMTU6
-IGZmZmY4YjM2OWJmOTk2MDANCkZlYiAxNiAyMjoxMDozNyB0NDQga2VybmVsOiBGUzogIDAw
-MDA3ZjJiNzUxMzk4YzAoMDAwMCkgR1M6ZmZmZjhiMzZiMjY4MDAwMCgwMDAwKSBrbmxHUzow
-MDAwMDAwMDAwMDAwMDAwDQpGZWIgMTYgMjI6MTA6MzcgdDQ0IGtlcm5lbDogQ1M6ICAwMDEw
-IERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KRmViIDE2IDIyOjEw
-OjM3IHQ0NCBrZXJuZWw6IENSMjogZmZmZmZmZmZmZmZmZmZkNiBDUjM6IDAwMDAwMDAzMjMy
-OTIwMDEgQ1I0OiAwMDAwMDAwMDAwMTYwNmUwDQpGZWIgMTYgMjI6MTE6MDEgdDQ0IENST05E
-Wzg5OTZdOiAocm9vdCkgQ01EICgvdXNyL2xpYi9zYS9zYTEgMzAgMiAtUyBYQUxMKQ0KRmVi
-IDE2IDIyOjEyOjQ5IHQ0NCBzeXNsb2ctbmdbMTkxMl06IHN5c2xvZy1uZyBzdGFydGluZyB1
-cDsgdmVyc2lvbj0nMy4yMi4xJw0KRmViIDE2IDIyOjEyOjQ5IHQ0NCBhY3BpZFsxOTQzXTog
-c3RhcnRpbmcgdXAgd2l0aCBuZXRsaW5rIGFuZCB0aGUgaW5wdXQgbGF5ZXINCg0KDQoNCg0K
-LS0gDQpUb3JhbGYNCg==
+--Sig_/CC+J/jj=GiH0KthB5lCYi0W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the amlogic tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+arm-linux-gnueabi-ld: drivers/soc/amlogic/meson-secure-pwrc.o: in function =
+`pwrc_secure_is_off':
+meson-secure-pwrc.c:(.text+0x4c): undefined reference to `meson_sm_call'
+arm-linux-gnueabi-ld: drivers/soc/amlogic/meson-secure-pwrc.o: in function =
+`meson_secure_pwrc_off':
+meson-secure-pwrc.c:(.text+0xc8): undefined reference to `meson_sm_call'
+arm-linux-gnueabi-ld: drivers/soc/amlogic/meson-secure-pwrc.o: in function =
+`meson_secure_pwrc_on':
+meson-secure-pwrc.c:(.text+0x128): undefined reference to `meson_sm_call'
+arm-linux-gnueabi-ld: drivers/soc/amlogic/meson-secure-pwrc.o: in function =
+`meson_secure_pwrc_probe':
+meson-secure-pwrc.c:(.text+0x1ac): undefined reference to `meson_sm_get'
+
+Caused by commit
+
+  b3dde5013e13 ("soc: amlogic: Add support for Secure power domains control=
+ler")
+
+I have used the amloginc tree from next-20200214 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CC+J/jj=GiH0KthB5lCYi0W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Js2cACgkQAVBC80lX
+0Gwrewf+NdHnAFT4xMtbNFHh60tBLEuF/0plXNQebci7ShuyUK9raxLYikcdKqkq
+pSqGXWeiK1ymwx15+rMt4otssaDlzV9dV0mbstvmDlqnfkxy9xdhxl9gfUxdKcP4
+N05CrwcU1JfJnooZ1+SSf4JcS1hutzT4kldeLU76sc7lrCQ6NHukCRiEbyHwp0DQ
+ae5CIAdOYfHw6dh8jR0cFP0n/v9qCaEbgTP2pWzBKmHxkcrozTR+K2sVx/seBYgQ
+eXlQd7NMv8tbUaErBFJYGj75BldCkWxuJU0V3J7Agx01cEtnxM0gzYwlMMlm3SSS
+KMzmWPPffjPbd6UUT0/Vj52iobKsDA==
+=O42W
+-----END PGP SIGNATURE-----
+
+--Sig_/CC+J/jj=GiH0KthB5lCYi0W--
