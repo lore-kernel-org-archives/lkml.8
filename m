@@ -2,113 +2,90 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D1C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96825C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C5420659
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700E320659
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FUePMwea"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FRpZhnw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgBPRNu (ORCPT
+        id S1728528AbgBPRPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 12:13:50 -0500
-Received: from mout.gmx.net ([212.227.15.19]:60355 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbgBPRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 12:13:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581873225;
-        bh=eh78Xacl3/Rct4ovfBjtDAjQYNUH2DdDabj1l78Ud2E=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=FUePMweafQ1HybDIiHUSBXg1p3x2XqT3yJRRV7Y9dQnE/fHJCqhU9cuOhGnv+u6wP
-         a0u5p5+F4vi63Zfa035HqKRNC1u2mL6UP7IKiy3JTC6pKtKXCYElAmcuiEPDLGRn4T
-         jg1IoT4DJDtt2q6NR7CO18OXNTDqdfHgDw5WqB9s=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MjjCL-1jjY4Q0ze7-00lFCc; Sun, 16
- Feb 2020 18:13:45 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/libstub: function description efi_allocate_pages()
-Date:   Sun, 16 Feb 2020 18:13:40 +0100
-Message-Id: <20200216171340.6070-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
+        Sun, 16 Feb 2020 12:15:10 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35074 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgBPRPK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 12:15:10 -0500
+Received: by mail-pj1-f65.google.com with SMTP id q39so6158218pjc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 09:15:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=j6In1ZMqVqL+EXVTCAEgQ5YhGd4Op+E9zTb7k2XCzGk=;
+        b=FRpZhnw8jNA6iPn+w5/D3iYi1ElYXNSDUkzmilx+bQ8810Wz0XsMUPWIpRglmBTSft
+         p1J0B7NTmshC0/phHwFPgJQONaaLwID7rNe63j4jleW1q4ISIGAVWFdQwOaewQFJ3h05
+         RIo0+dYlRtuFjVhme8xF9mRJH4fct1MRY2U8fKI4h1wuOJhbw5hULpeltMvv/cymeJos
+         iozthv+J/tGd7RVI0fas8xHdn7wEuHzzY1H6aMB4szGs9E0Oz77YTeYCc0uA1VR0/BxW
+         OKuS471grWaedWlOQ6RyjmEM7oCNYR1uj9bf63NEfm7Rcj2JH0abacbGSo86JIRGX7N1
+         Q6+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j6In1ZMqVqL+EXVTCAEgQ5YhGd4Op+E9zTb7k2XCzGk=;
+        b=eJNdSvVMmbOJpaTldEte24qv5JFw6MVqUh3dI3ryP9AM0FUT74tV085Q4Cq27RUsTv
+         XTF0GnodyVBQMT9eYcFLe4/ZgIY7+TCRUVEue4Zk+wRvIlduJ4TPKtFdTKejlIdhG/To
+         /jvcEtzYILkIaOw1Nc9k9bs2zumFsBaZ7evUFybHEaYsfSHE9mIP9aZBKI3MjcA/dOmc
+         RzFBGVUnwB5QjyRFed5TXc2hgTgvVGOuQnMbu7U0/Ta85J8ADv+gelBvlz3VRQd5oNAA
+         3zgd2TQDIhggufUrwRIVG6eFr3Aqc/eJEn+XnwkbKwyF1SOCMJLP+XpGaipBcHarK1I/
+         lD3g==
+X-Gm-Message-State: APjAAAV3Zc9BiURZKm92ww+N585gI9kte8Xq5oazWoaS64/AvF8xUlHK
+        peaaPUzEhf5W3tHKMtpGFcpeX4+TsTU=
+X-Google-Smtp-Source: APXvYqz/BVLKj4CMP1lu96h4dUcFR62S1Rbi9mYMVUoHqq+uM7szXQCvmpzYtkur9nb8ngHltEpMGQ==
+X-Received: by 2002:a17:90a:b010:: with SMTP id x16mr16053385pjq.130.1581873307958;
+        Sun, 16 Feb 2020 09:15:07 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:b1fd:20cc:c368:304b? ([2605:e000:100e:8c61:b1fd:20cc:c368:304b])
+        by smtp.gmail.com with ESMTPSA id x65sm14255050pfb.171.2020.02.16.09.15.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Feb 2020 09:15:07 -0800 (PST)
+Subject: Re: [PATCH v2 1/5] io_uring: add missing io_req_cancelled()
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1581785642.git.asml.silence@gmail.com>
+ <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
+Date:   Sun, 16 Feb 2020 09:15:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:szui1R6XNTVN5ouJvt02v4IxyTNVgJsAcjjZDwLpipqFN0BnMP5
- SKcz1tFg5MQHlg/3I0iaSGoTQrhMmmM3TOe2ZrETEQ9MUGUu0K7Py/hMHBsETJFMvzUP8HU
- 0aOeq52LdctXzTjCy2tIe4MGQqY7D2qu0JdovUvnBjyNDMAjNYrdL1YNC3Mjnr2oo8bWz8j
- 0CWgA3nopl8t27iWORx/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LK1FmsZ+IfM=:RGYLg41Z4fp76SpfhfHVxp
- 8ZXUBEIjpHZ/RzzCELnNaOCE4NjC/+Nqv7/RFYt+iYryDuwF0ww38l+TbafEv34KG2YD6LFJ+
- J9KeRkTZjUWyFbmtS0zm86Fpu1zOFCe+ijCmKYxhTbEdwAs2yAPsXoqYnKcbbrqW9ms86XL6M
- y/KMPhNCCqQJ5dMHby7FVce4+MmlvPzQ0Tns1fKTEI//n+ZVZY9o76wSUuLXtMBR4GVs6S9k6
- MKrPsVayLmX/YCyyGiK436n3ScRs2gvgLijuQAfXSlDUj9oxD0Jp/6p7SUXbDyOz1gC15YdZ9
- a7olfjVZf9JzkvdQ1J5kEJF1CvikIX42s2AMdBoT/SFWLubQw/ZaMBxwhwKgTLFYkFjtimKZ9
- 4O8m4awv87V/IpI+DDfKwgtXbwVuRFvsleZcWQtkKX3VEymkuHA+vKoAW+A25wuzfAAEfTtAR
- +FpQcu7iUtY3gEOM+a2VfEL9NVHt1Uf+VKvvg256QXFKpBqy6zmp2UtcjBSwlZ6eNxIpKjoif
- 1h8aF7B70+Tt25njSvH/rLgQiJdZPVHOidIIAMOdf9EgWyd8Jf8hYtbkZee2yug9chpt6jUif
- 8HxGnaFcw2dC/D4TQz2GMn7s0Qx3ifWALsXV9dauh3VXBLprBq6k01ZJgXaCxz3zk2YraELU/
- jP0HKcnLLDbozNYExHlK++R94UCbuHPQhtR0cmCU3ykEWMjT32FhwrfmTKC/YTPlcPWHdEqbh
- s/CWYlVQ8JDjydpXGC7T1+Obk9M9xxLS29sVVdrVfzEtYezEvR8FqfwkarvKSTkEmiuzzQFWw
- WDcI/P9R/8vLVdGGPzJRil2af0Hs8yQNKx9/x6RNeoOmmlavJ1DK2SplTABj9hh9HC2JsVSzB
- UjJQYHdwoHUKj/Tbhtf14I0G/OXcmyjg7U5qEJaxSyENdrFEvsbaQejfo5YdNOi6dX0mJcp+6
- lRphOolyYFNYVnXyZsKyoj1Ztstcn2JhVwJLtPsDmXDgc+YGxMw47UpaC5SuaMfv2KLwerqF2
- nSPoigjw2Un1BNSFax1rgiVCxIKDkbwhEsiqbrpdOtWOcTMZmJ5zsGXKuZj+ZgtReA/ag5xZe
- M9WcjoCiCL8g1SHPI57arWVBmbP1rRqnUv+RaJ3ZC6vqCTm2DoOdvUeOa3PWMYLP/NHTHKYc+
- pj6fklXOnKUSjl5I1tSNMx61JuQ9X+M1FCabFwpRsU7qVPAAblJAZulVzvKIXPu1eDWII0mc9
- 26pXWJfxamIli4i3R
+In-Reply-To: <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a Sphinx style function description for efi_allocate_pages().
+On 2/15/20 3:01 PM, Pavel Begunkov wrote:
+> fallocate_finish() is missing cancellation check. Add it.
+> It's safe to do that, as only flags setup and sqe fields copy are done
+> before it gets into __io_fallocate().
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/firmware/efi/libstub/mem.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Thanks, I added this one to the 5.6 mix.
 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
-stub/mem.c
-index 5808c8764e64..c6a784ed640f 100644
-=2D-- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -65,8 +65,20 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap =
-*map)
- 	return status;
- }
+Going to be sporadic this next week, but I hope I can get to your
+5.7 material anyway.
 
--/*
-- * Allocate at the highest possible address that is not above 'max'.
-+/**
-+ * efi_allocate_pages() - Allocate memory pages
-+ * @size:	minimum number of bytes to allocate
-+ * @addr:	On return the address of the first allocated page. The first
-+ *		allocated page has alignment EFI_ALLOC_ALIGN which is an
-+ *		architecture dependent multiple of the page size.
-+ * @max:	the address that the last allocated memory page shall not
-+ *		exceed
-+ *
-+ * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned acc=
-ording
-+ * to EFI_ALLOC_ALIGN. The last allocated page will not exceed the addres=
-s
-+ * given by 'max'.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
- 				unsigned long max)
-=2D-
-2.25.0
+-- 
+Jens Axboe
 
