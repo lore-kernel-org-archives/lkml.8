@@ -2,115 +2,163 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA5C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C52C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806232086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oo0WTi+h"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC34206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgBPIPb (ORCPT
+        id S1726623AbgBPISC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 03:15:31 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:55865 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgBPIPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 03:15:31 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d5so5820938pjz.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 00:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IPq1zpwSVUc2BwMNSiorah9vIooglTMZdPMTCQ22xoc=;
-        b=Oo0WTi+hQqvm1VHEf/nIVRrxg2LZMeWpjZ7dyqm6rbTfNnn2DMDppbQBIbkEURDkFC
-         icrBsguuCHsETDnY1uLiclZk+gmXueTdeVmwv6NMHUfJUkYeYW7CwVPt8oe7zfCKxjbf
-         dqmfhkmK/SeRP1Z64TlSzv0sYrxdaQMaXylQahVkW1bS1Ylsyr5cnH7K7lFJnlrST77u
-         cbn6Kl8PmU/RpuwODNq9v269K06gNWiMdzsMWST15eSiZUveFJgwQvgOPBs5aT49k42b
-         xO/X18v+AGw04Vz/hv2QwT9f7ND0XW6XikXnUUXqo1VUCUNYYpBpPczo81p3DvHsziXc
-         G6RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IPq1zpwSVUc2BwMNSiorah9vIooglTMZdPMTCQ22xoc=;
-        b=cTVLcbisqpz82aXp6ZMfdsO6N4ZEvSI/MqJWK994k1I8ONHv3HMFDnWpO0BJL0wEvy
-         YO3gYyio57TWbLAHjK9KfQNI4WCSfxuYQMwPRH4/9koiyKA7FZOQPk8Ma6Vs9UU+WWu+
-         MteMx0wuScWlcUsd8fAU4r2M3QOeMAckm06whlGh9rjrkLwVZiO4nI2aKEk/V6rDZMfW
-         0oKh6UH/Py2JiBAWLPaWpO1cS84QVcKeNh+sJ7wHzwdL49mw3hutkmbDYhJo2og28A29
-         3SNx6KuowyT/M0sFtolukzOSuINpHeLIqwmZ0zbExPdt/f/L7FJ1jnTdKLSQIRdOLulE
-         bF/w==
-X-Gm-Message-State: APjAAAX4zuVdVW7WSEJBYHdCFc9opBvUMVKGl6rSC4DfDPygG0yTrHON
-        nsVF66jUAvVDBpvwoUqgp9DiH5vGo4E=
-X-Google-Smtp-Source: APXvYqzvyMehH+mrAJXZmiw69LuUF8vusZsGHy4/DN1NAam4f7aZYfm5AmQqbwcX1sfmh7nAnRM/Ng==
-X-Received: by 2002:a17:90a:c697:: with SMTP id n23mr12920806pjt.37.1581840929179;
-        Sun, 16 Feb 2020 00:15:29 -0800 (PST)
-Received: from SunnyPranay.localdomain ([106.51.196.103])
-        by smtp.gmail.com with ESMTPSA id r14sm12226616pfh.10.2020.02.16.00.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 00:15:28 -0800 (PST)
-From:   sunnypranay <mpranay2017@gmail.com>
-To:     abbotti@mev.co.uk
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        sunnypranay <mpranay2017@gmail.com>
-Subject: [PATCH] Staging: comedi: drivers: fixed errors warning coding style issue
-Date:   Sun, 16 Feb 2020 13:45:18 +0530
-Message-Id: <20200216081518.3516-1-mpranay2017@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 16 Feb 2020 03:18:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49770 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgBPISB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 03:18:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 153C3AAF1;
+        Sun, 16 Feb 2020 08:17:59 +0000 (UTC)
+Date:   Sun, 16 Feb 2020 09:17:53 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent for 5.6
+Message-ID: <20200216081753.GA13765@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue.
+Hi Linus,
 
-Signed-off-by: sunnypranay <mpranay2017@gmail.com>
+please pull two EDAC fixes for 5.6. Doing only signed tags from now on, btw.
+
+Thx.
+
 ---
- drivers/staging/comedi/drivers.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-diff --git a/drivers/staging/comedi/drivers.c b/drivers/staging/comedi/drivers.c
-index 750a6ff3c03c..76395de100a6 100644
---- a/drivers/staging/comedi/drivers.c
-+++ b/drivers/staging/comedi/drivers.c
-@@ -133,7 +133,7 @@ EXPORT_SYMBOL_GPL(comedi_alloc_subdevices);
-  * On success, @s->readback points to the first element of the array, which
-  * is zero-filled.  The low-level driver is responsible for updating its
-  * contents.  @s->insn_read will be set to comedi_readback_insn_read()
-- * unless it is already non-NULL.
-+ * Unless it is already non-NULL.
-  *
-  * Returns 0 on success, -EINVAL if the subdevice has no channels, or
-  * -ENOMEM on allocation failure.
-@@ -282,8 +282,20 @@ EXPORT_SYMBOL_GPL(comedi_readback_insn_read);
-  * continue waiting or some other value to stop waiting (generally 0 if the
-  * condition occurred, or some error value).
-  *
-- * Returns -ETIMEDOUT if timed out, otherwise the return value from the
-- * callback function.
-+ * Redback_insn_read() - A generic (*insn_read) for subdevice readback.
-+ * @dev: COMEDI device.
-+ * @s: COMEDI subdevice.
-+ * @insn: COMEDI instruction.
-+ * @data: Pointer to return the readback data.
-+ * Handles the %INSN_READ instruction for subdevices that use the readback
-+ * array allocated by comedi_alloc_subdev_readback().  It may be used
-+ * directly as the subdevice's handler (@s->insn_read) or called via a
-+ * wrapper.
-+ * @insn->n is normally 1, which will read a single value.  If higher, the
-+ * same element of the readback array will be read multiple times.
-+ * Returns @insn->n on success,
-+ * or -EINVAL if @s->readback is NULL.turns -ETIMEDOUT if timed out,
-+ * otherwise the return value from the callback function.
-  */
- int comedi_timeout(struct comedi_device *dev,
- 		   struct comedi_subdevice *s,
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_5.6
+
+for you to fetch changes up to 4d59588c09f2a2daedad2a544d4d1b602ab3a8af:
+
+  EDAC/sysfs: Remove csrow objects on errors (2020-02-13 13:29:41 +0100)
+
+----------------------------------------------------------------
+Two fixes for use-after-free and memory leaking in the EDAC core, by
+Robert Richter.
+
+Debug options like DEBUG_TEST_DRIVER_REMOVE, KASAN and DEBUG_KMEMLEAK
+unearthed issues with the lifespan of memory allocated by the EDAC
+memory controller descriptor due to misdesigned memory freeing, done
+partially by the EDAC core *and* the driver core, which is problematic
+to say the least.
+
+These two are minimal fixes to take care of stable - a proper rework is
+following which cleans up that mess properly.
+
+----------------------------------------------------------------
+Robert Richter (2):
+      EDAC/mc: Fix use-after-free and memleaks during device removal
+      EDAC/sysfs: Remove csrow objects on errors
+
+ drivers/edac/edac_mc.c       | 12 +++---------
+ drivers/edac/edac_mc_sysfs.c | 18 ++++--------------
+ 2 files changed, 7 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 7243b88f81d8..69e0d90460e6 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -505,16 +505,10 @@ void edac_mc_free(struct mem_ctl_info *mci)
+ {
+ 	edac_dbg(1, "\n");
+ 
+-	/* If we're not yet registered with sysfs free only what was allocated
+-	 * in edac_mc_alloc().
+-	 */
+-	if (!device_is_registered(&mci->dev)) {
+-		_edac_mc_free(mci);
+-		return;
+-	}
++	if (device_is_registered(&mci->dev))
++		edac_unregister_sysfs(mci);
+ 
+-	/* the mci instance is freed here, when the sysfs object is dropped */
+-	edac_unregister_sysfs(mci);
++	_edac_mc_free(mci);
+ }
+ EXPORT_SYMBOL_GPL(edac_mc_free);
+ 
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 0367554e7437..c70ec0a306d8 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -276,10 +276,7 @@ static const struct attribute_group *csrow_attr_groups[] = {
+ 
+ static void csrow_attr_release(struct device *dev)
+ {
+-	struct csrow_info *csrow = container_of(dev, struct csrow_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(csrow);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type csrow_attr_type = {
+@@ -447,8 +444,7 @@ static int edac_create_csrow_objects(struct mem_ctl_info *mci)
+ 		csrow = mci->csrows[i];
+ 		if (!nr_pages_per_csrow(csrow))
+ 			continue;
+-
+-		device_del(&mci->csrows[i]->dev);
++		device_unregister(&mci->csrows[i]->dev);
+ 	}
+ 
+ 	return err;
+@@ -608,10 +604,7 @@ static const struct attribute_group *dimm_attr_groups[] = {
+ 
+ static void dimm_attr_release(struct device *dev)
+ {
+-	struct dimm_info *dimm = container_of(dev, struct dimm_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(dimm);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type dimm_attr_type = {
+@@ -893,10 +886,7 @@ static const struct attribute_group *mci_attr_groups[] = {
+ 
+ static void mci_attr_release(struct device *dev)
+ {
+-	struct mem_ctl_info *mci = container_of(dev, struct mem_ctl_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(mci);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type mci_attr_type = {
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
