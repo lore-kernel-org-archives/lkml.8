@@ -2,150 +2,58 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520ECC7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13A0C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B63022522
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581854793;
-	bh=5vJUzMFXgL+4htCa+i0lvCczJshCVNG4PgJkkf3GTn0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=lCpjDOW+l0rYIcQCQKOJ2M/o+fGh91x9FgveXVL6LeQnC5VEyODhs1eNVaSamytdX
-	 dcixUSDaKIyZjWdrRwC+RoZtFjI653XaUn/F708BXJrJC0bQM9PaRAVpTLY5leH3Zu
-	 3AefTv3fgQktA+cpgoqM+SG11YzHCUG+vRGDhVso=
+	by mail.kernel.org (Postfix) with ESMTP id B3B3822522
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgBPMGc (ORCPT
+        id S1728149AbgBPMLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 07:06:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbgBPMGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 07:06:31 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [12.246.51.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76BB320857;
-        Sun, 16 Feb 2020 12:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581854790;
-        bh=5vJUzMFXgL+4htCa+i0lvCczJshCVNG4PgJkkf3GTn0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G4v58wtDrELJRfS6Y38HFJ/9cGmG8sXllwsX+m3TSNbAJoIyXj/LPU5HbBBLnqYWl
-         aokWpFNpGiKSCEyCF5l3RhxdQFZWKrTGF6fUbhm4EvOvkxBxb4DlYKTaAegV9gTP9k
-         ut4Yll6I+C/pvicdDRM3vUtgmWZ2l4EFUhdGUWqk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E3ECB352168B; Sun, 16 Feb 2020 04:06:25 -0800 (PST)
-Date:   Sun, 16 Feb 2020 04:06:25 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 0/3] tools/memory-model: Add litmus tests for atomic APIs
-Message-ID: <20200216120625.GF2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <Pine.LNX.4.44L0.2002141024141.1579-100000@iolanthe.rowland.org>
- <20200215152550.GA13636@paulmck-ThinkPad-P72>
- <20200216054345.GA69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Sun, 16 Feb 2020 07:11:06 -0500
+Received: from out28-100.mail.aliyun.com ([115.124.28.100]:56317 "EHLO
+        out28-100.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbgBPMLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 07:11:06 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.279177|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0595239-0.00147149-0.939004;DS=CONTINUE|ham_system_inform|0.0152854-0.000874865-0.98384;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.Gof3ya4_1581855051;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gof3ya4_1581855051)
+          by smtp.aliyun-inc.com(10.147.42.22);
+          Sun, 16 Feb 2020 20:10:59 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul@crapouillou.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        ralf@linux-mips.org, paulburton@kernel.org,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+Subject: [PATCH] Fix clock of X1000 watchdog node.
+Date:   Sun, 16 Feb 2020 20:10:27 +0800
+Message-Id: <1581855028-25552-2-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581855028-25552-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1581855028-25552-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216054345.GA69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 01:43:45PM +0800, Boqun Feng wrote:
-> On Sat, Feb 15, 2020 at 07:25:50AM -0800, Paul E. McKenney wrote:
-> > On Fri, Feb 14, 2020 at 10:27:44AM -0500, Alan Stern wrote:
-> > > On Fri, 14 Feb 2020, Boqun Feng wrote:
-> > > 
-> > > > A recent discussion raises up the requirement for having test cases for
-> > > > atomic APIs:
-> > > > 
-> > > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
-> > > > 
-> > > > , and since we already have a way to generate a test module from a
-> > > > litmus test with klitmus[1]. It makes sense that we add more litmus
-> > > > tests for atomic APIs into memory-model.
-> > > 
-> > > It might be worth discussing this point a little more fully.  The 
-> > > set of tests in tools/memory-model/litmus-tests/ is deliberately rather 
-> > > limited.  Paul has a vastly more expansive set of litmus tests in a 
-> > > GitHub repository, and I am doubtful about how many new tests we want 
-> > > to keep in the kernel source.
-> > 
-> > Indeed, the current view is that the litmus tests in the kernel source
-> > tree are intended to provide examples of C-litmus-test-language features
-> > and functions, as opposed to exercising the full cross-product of
-> > Linux-kernel synchronization primitives.
-> > 
-> > For a semi-reasonable subset of that cross-product, as Alan says, please
-> > see https://github.com/paulmckrcu/litmus.
-> > 
-> > For a list of the Linux-kernel synchronization primitives currently
-> > supported by LKMM, please see tools/memory-model/linux-kernel.def.
-> > 
-> 
-> So how about I put those atomic API tests into a separate directory, say
-> Documentation/atomic/ ?
-> 
-> The problem I want to solve here is that people (usually who implements
-> the atomic APIs for new archs) may want some examples, which can help
-> them understand the API requirements and test the implementation. And
-> litmus tests are the perfect tool here (given that them can be
-> translated to test modules with klitmus). And I personally really think
-> this is something the LKMM group should maintain, that's why I put them
-> in the tools/memory-model/litmus-tests/. But I'm OK if we end up
-> deciding those should be put outside that directory.
+Fix clock of X1000's watchdog node.
 
-Good point!
+周琰杰 (Zhou Yanjie) (1):
+  MIPS: X1000: Fix clock of watchdog node.
 
-However, we should dicuss this with the proposed beneficiaries, namely
-the architecture maintainers.  Do they want it?  If so, where would
-they like it to be?  How should it be organized?
+ arch/mips/boot/dts/ingenic/x1000.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-In the meantime, I am more than happy to accept litmus tests into the
-github archive.
+-- 
+2.7.4
 
-So how would you like to proceed?
-
-							Thanx, Paul
-
-> Regards,
-> Boqun
-> 
-> > > Perhaps it makes sense to have tests corresponding to all the examples
-> > > in Documentation/, perhaps not.  How do people feel about this?
-> > 
-> > Agreed, we don't want to say that the set of litmus tests in the kernel
-> > source tree is limited for all time to the set currently present, but
-> > rather that the justification for adding more would involve useful and
-> > educational examples of litmus-test features and techniques rather than
-> > being a full-up LKMM test suite.
-> > 
-> > I would guess that there are litmus-test tricks that could usefully
-> > be added to tools/memory-model/litmus-tests.  Any nomination?  Perhaps
-> > handling CAS loops while maintaining finite state space?  Something else?
-> > 
-> > 							Thanx, Paul
