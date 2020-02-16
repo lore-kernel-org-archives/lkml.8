@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48638C7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56268C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1181622B48
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1642084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="eS2G6TKU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Mp+eYrDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgBPUVJ (ORCPT
+        id S1727922AbgBPUVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:21:09 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:8509 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgBPUVI (ORCPT
+        Sun, 16 Feb 2020 15:21:11 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:30257 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgBPUVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 15:21:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884466;
+        Sun, 16 Feb 2020 15:21:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581884468;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0lwRY9T/vQcOBJYlZ2p0ZLpMFPC/FqS0O8Fyu7RLxI4=;
-        b=eS2G6TKU296YQNZhwodX8gnsgXk5a0GH76x1PXHcptDc94cTINB8fw6mSru6FXYWYL
-        hIuZFAv3Qw6vc4KArCj2ATSTmZPVlpd/dWXMWsvmi9Dzrs2LfPuGl4X/NvSazUf9vIsG
-        JRg65PoM6rhYxkm1XJhrhwK7my0cwSL4YtBTMb/6tD/OeDGLcYQYXcMQIifizZTbBy+6
-        QCDUuWABxMLGmDW9dvfhxfeU+ufeiQ40EJ9NMEx2lFFz5pugokv+tv5vA9k8nJfege1Q
-        8Y88GLgUoUQx1ZEjlGbaRQ2GbSgzP2imVyYgGxlyPnO+aGEfVR3Wgf5jFbwhzAdhIw/2
-        qyfQ==
+        bh=dOonmpmRBGw9AJdjMOawfKlXYNxdn0SnFz/txP/bL+s=;
+        b=Mp+eYrDvLEaHHTBpkg5rNFZkAv3nwp+ADZ+6ADSbj7MrIjpH983vPPdNtphJn5QBM6
+        iMeXAlaCDW+tOlPrNqgGN1AQQ/pLpbAgcmVLp7BCa4cTvSnCCQCUgF9l/lKbpAsNPtwx
+        g89OBFfcjccU1WrAPFj/hzgRXvzY7zJ/vsvN27U6e5Cpqqlht/ACBFtFG80SXEZsmkKX
+        RDrciwSn9VHvid9ky0NDLjYIXTHKtzVcnmtjqnJjrXVcrOh1RTjomjrqpnwHeld8KvHY
+        ablKAzrMnDOHIKCAqCeg445GMQEN/htO0voPup2/txv0bUuFFqJLd+f6JQ6KkqpK4QVA
+        9QVQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1GKL2Jr2
+        with ESMTPSA id U06217w1GKL6Jr6
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 16 Feb 2020 21:21:02 +0100 (CET)
+        Sun, 16 Feb 2020 21:21:06 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Boddie <paul@boddie.org.uk>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -56,10 +56,10 @@ To:     Paul Boddie <paul@boddie.org.uk>,
         Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, Alex Smith <alex.smith@imgtec.com>
-Subject: [PATCH v3 2/6] MIPS: DTS: CI20: add DT node for IR sensor
-Date:   Sun, 16 Feb 2020 21:20:56 +0100
-Message-Id: <c18873d6502f2d69f4d02e7d615bd8012c0b0f3d.1581884459.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [PATCH v3 6/6] MIPS: CI20: defconfig: multiple improvements
+Date:   Sun, 16 Feb 2020 21:21:00 +0100
+Message-Id: <aa7259fbcf0f89ec4ab0639ee67fc03d1c492829.1581884459.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581884459.git.hns@goldelico.com>
 References: <cover.1581884459.git.hns@goldelico.com>
@@ -70,34 +70,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+a) configure for supporting modules
 
-The infrared sensor on the CI20 board is connected to a GPIO and can
-be operated by using the gpio-ir-recv driver. Add a DT node for the
-sensor to allow that driver to be used.
+Not all drivers need to be compiled into the kernel.
+Support building and loading of kernel modules.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+b) compile leds-gpio driver into the kernel and configure for LED triggers
+
+DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
+and enable the triggers.
+
+c) configure CONFIG_REGULATOR_ACT8865 for PMU
+
+The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
+Since it is not compiled, the PMU and the CI20 board is running in
+power-on reset state of the PMU.
+
+d) compile gpio-ir driver
+
+The CI20 board has a gpio based IR receiver.
+
+e) configure for CONFIG_KEYBOARD_GPIO=m
+
+The SW1 button is hooked up to send input events.
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/configs/ci20_defconfig | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 37b93166bf22..59c104289ece 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -60,6 +60,11 @@
- 		enable-active-high;
- 	};
- 
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	wlan0_power: fixedregulator@1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index be41df2a81fb..0db0088bbc1c 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -1,4 +1,5 @@
+ # CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_MODULES=y
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+@@ -88,12 +89,14 @@ CONFIG_I2C_JZ4780=y
+ CONFIG_SPI=y
+ CONFIG_SPI_GPIO=y
+ CONFIG_GPIO_SYSFS=y
++CONFIG_KEYBOARD_GPIO=m
+ # CONFIG_HWMON is not set
+ CONFIG_WATCHDOG=y
+ CONFIG_JZ4740_WDT=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_DEBUG=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_ACT8865=y
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
+@@ -166,3 +169,21 @@ CONFIG_STACKTRACE=y
+ # CONFIG_FTRACE is not set
+ CONFIG_CMDLINE_BOOL=y
+ CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_MTD=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_BACKLIGHT=m
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_LEDS_TRIGGER_TRANSIENT=y
++CONFIG_LEDS_TRIGGER_CAMERA=m
++CONFIG_LIRC=y
++CONFIG_MEDIA_SUPPORT=m
++CONFIG_RC_DEVICES=y
++CONFIG_IR_GPIO_CIR=m
++CONFIG_IR_GPIO_TX=m
 -- 
 2.23.0
 
