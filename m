@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73B0C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F1AC7619C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8F620857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866752086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581887421;
-	bh=U68SFLI72USa7BtGHEfcQZ6q/QO/ejuG19BXxmni6Ro=;
+	s=default; t=1581887423;
+	bh=IzHec9/fAz675oNPnbCIlsPSoNCDkFsKkAd9kLavRn4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2dIvk0duIyt5RGRKYQc3mTshpX4NSuXRXbC03eEAmPcbXOX/z9mTzKbFr83wH2IxX
-	 rNmc/ILCtdR1tG4/mXeTKIYBzN2n3YtBiY/T8dfDB2wYXQsBK6xfCp63Iz848+BR53
-	 OT3YdKGYwc53tDHX6L3+VWSz3Xvx057ICNbWHDxA=
+	b=X5wD6Ln0yLupzdKBVpC/vuK9oN5sDVaPVT1mddWrNsR+Estceqj22XhAuPG8f/YlD
+	 pJfR7ZzTkOHfCPSISuWkpVr7oHuhF6VGTQuW1acsDvcjVl9em0xINJoGqgwfgorAkZ
+	 9limjNhQSuSF/ciWrDp21OrfiqPXtUTsZQJBi7GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgBPVKT (ORCPT
+        id S1728284AbgBPVKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 16:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Sun, 16 Feb 2020 16:10:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbgBPVKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727994AbgBPVKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 16 Feb 2020 16:10:19 -0500
-Subject: Re: [GIT PULL v2] KVM changes for Linux 5.6-rc2
+Subject: Re: [GIT PULL] EDAC urgent for 5.6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581887418;
-        bh=U68SFLI72USa7BtGHEfcQZ6q/QO/ejuG19BXxmni6Ro=;
+        s=default; t=1581887419;
+        bh=IzHec9/fAz675oNPnbCIlsPSoNCDkFsKkAd9kLavRn4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=BEXPLgo0b421cSQu0g0zuwYqU4HN2tc1/wc0cLEDWEG5ad/V0G1LAGtECC6+ljeXa
-         /UlIWuFnJyTXd7tB8WXeKthN7D4nEiOYOpFKxKOr+eUVZD5+qPlwRIi3ua01xTYO6T
-         9/ejUqhokFpRaUNWZi+N4oxkqXwPWhr9vx5xW55k=
+        b=qe/22eUMTwd3VFTTUfffJgYFw1iNySWfo5dUAPsCeo+OFRlIzLITltZhGUhwWUe4q
+         Ce+a3pAXjxqKyO+MSEDDu9s8Lej7jRiequ/7eZ+OR0dh8O1PhbG65AcWzTvXvdow0h
+         iX2PkFi6vtz+aPf48GzuvRWnCX+AralsGBiMz1FM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
-References: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <20200216081753.GA13765@zn.tnic>
+References: <20200216081753.GA13765@zn.tnic>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: 120881b9e888689cbdb90a1dd1689684d8bc95f3
+X-PR-Tracked-Message-Id: <20200216081753.GA13765@zn.tnic>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git
+ tags/edac_urgent_for_5.6
+X-PR-Tracked-Commit-Id: 4d59588c09f2a2daedad2a544d4d1b602ab3a8af
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 44024adb4aabefd275c6f9c00cac323473447dd5
-Message-Id: <158188741880.12275.3916382760765840120.pr-tracker-bot@kernel.org>
-Date:   Sun, 16 Feb 2020 21:10:18 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
+X-PR-Merge-Commit-Id: b982df72ef8404de99597f1d956b6137533b429a
+Message-Id: <158188741948.12275.1333422723788418072.pr-tracker-bot@kernel.org>
+Date:   Sun, 16 Feb 2020 21:10:19 +0000
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 13 Feb 2020 22:48:49 +0100:
+The pull request you sent on Sun, 16 Feb 2020 09:17:53 +0100:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_5.6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/44024adb4aabefd275c6f9c00cac323473447dd5
+https://git.kernel.org/torvalds/c/b982df72ef8404de99597f1d956b6137533b429a
 
 Thank you!
 
