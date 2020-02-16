@@ -2,100 +2,250 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A6EC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5B5C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7B22086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6594208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="gii25t9W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAbwzqfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgBPXjE (ORCPT
+        id S1728049AbgBPXsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 18:39:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:55798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgBPXjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 18:39:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2008F328;
-        Sun, 16 Feb 2020 15:39:04 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93D563F6CF;
-        Sun, 16 Feb 2020 15:39:02 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: Replace zero-length array with flexible-array
- member
-To:     Joe Perches <joe@perches.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <20200213151951.GA32363@embeddedor>
- <20200213164518.GI14914@hirez.programming.kicks-ass.net>
- <9d516501-2624-f915-32be-13ba6f881019@embeddedor.com>
- <20200213170639.GK14914@hirez.programming.kicks-ass.net>
- <c7df22d3f248c784e8960841c79fe2836d7ea8ab.camel@perches.com>
- <1d420ee4-7078-26d9-83ad-eb5f12106116@arm.com>
- <cb37f342635b045639d877034c9f6d175b5d80cd.camel@perches.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <a92cb1a6-6b58-6cd5-5629-d9c3f3d28a19@arm.com>
-Date:   Sun, 16 Feb 2020 23:38:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <cb37f342635b045639d877034c9f6d175b5d80cd.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 16 Feb 2020 18:48:30 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:38127 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726482AbgBPXs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 18:48:29 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B16EC6435;
+        Sun, 16 Feb 2020 18:48:27 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 16 Feb 2020 18:48:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to
+        :subject:content-type; s=fm2; bh=uPvzPfeLssWll94cUqu6zSYEVY0EtIa
+        CosSptfdI0ok=; b=gii25t9WYnSSTkHeauV2hH2UHwbVUPPw+yLOjQKDBhMyeGS
+        EDkjDaewr+5LUpVyYixbomyYrH+LfTcBFKZ2uxYtHwvXqc227U3yheYJ9bE5JXfh
+        S5rzU+IOxZ11vcFAbvmii+Q9164J3KgdJiapTfqx8uz6DgjC7Rk9uAjQKB0PltVU
+        MfB9TEUwkvvCzFWJtNs7UtOmx2gXvwYXgmtmcImrusGw/NqOxtcZZFlgefSCl7Hg
+        zmtfkZY7LihvcvgmywAATmZhoS3hVQgUQ4oxudkdC0fZE5PYbKyO7CuFD3e8j+qn
+        dEXLymIudK/s7I0ZGVBc/huTCW2offeDLM5sGgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=uPvzPf
+        eLssWll94cUqu6zSYEVY0EtIaCosSptfdI0ok=; b=VAbwzqfqo/y9Tu8LX5Lfyx
+        6Yl8l3udSj5vMmSuDj1oMRAfayQXn9AbdS8ECqZ4k2aMpnQZ75FC0SnatX4mdkB3
+        otfPdnKXlsYRD2eE1/cAKgw4tnYJ6d8dJ+yEU+N/kE0j+oObO3DnwrRrdYQ+h0Nl
+        56PDpk/Q/3VuKQ/OV1m6Xh6GyTsZ5USwJwxp55vqVsnnp1PBpxCUd3S2scC+i66d
+        UD2lK7KA4L67F8Dk5LV9sm0t8jyP4HrSdWX7R5LLOwDhL0omzwJIq8GH3JDbLEtJ
+        rjRyOXB5qCUL6LCy0FHdKP64OCnaLed++Ne+/LLYTsonj8C60e2ajatpaIo0N8Mg
+        ==
+X-ME-Sender: <xms:w9RJXtJs6D8kIs6PKmou0A3rLpCqjWS4i7aYsxew6CSBWFnnwWJtyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:w9RJXpUdqDLjMVR3DQlScEWMyPRikq9iJvVJV1LmvtV1nSDbvcnQkg>
+    <xmx:w9RJXoXbZ2sIlBRiQvlSME-N3BbB2H-JtxzAwD0ddccHEexs_8ETYQ>
+    <xmx:w9RJXp_sjRWNEgMLbalyA2rOXjG1SQddVcU7PUiMxk9YOSr9equm_A>
+    <xmx:y9RJXidtxXeIKeauc7jrwlF62H2pHiE5KEVmrPsD7xWuRiQiDknVjA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2A140E00A2; Sun, 16 Feb 2020 18:48:19 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
+Mime-Version: 1.0
+Message-Id: <88f74fcd-537d-497d-bb39-346e56da34e2@www.fastmail.com>
+In-Reply-To: <20200212215717.9474-2-rentao.bupt@gmail.com>
+References: <20200212215717.9474-1-rentao.bupt@gmail.com>
+ <20200212215717.9474-2-rentao.bupt@gmail.com>
+Date:   Mon, 17 Feb 2020 10:18:11 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Tao Ren" <rentao.bupt@gmail.com>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Chunfeng Yun" <chunfeng.yun@mediatek.com>,
+        "Colin King" <colin.king@canonical.com>,
+        "Stephen Boyd" <swboyd@chromium.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        "Tao Ren" <taoren@fb.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_1/5]_usb:_gadget:_aspeed:_read_vhub_properties_f?=
+ =?UTF-8?Q?rom_device_tree?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/02/2020 02:05, Joe Perches wrote:
-> Nice.
-> It would miss a few forms like:
-> 
-> 	typedef struct tagfoo {
-> 		...
-> 		type t[0];
-> 	} foo;
-> 
-> and
-> 
-> 	struct {
-> 		...
-> 		type t[0];
-> 	} foo;
-> 
-> and
-> 
-> 	struct foo {
-> 		...
-> 		type t[0];
-> 	} *foo;
-> 
-> etc...
-> 
-> 
 
-Right! Digging around for some examples on handling typedefs & co I stumbled
-on this construct:
 
-T {
-   <blah>
-};
+On Thu, 13 Feb 2020, at 08:27, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> The patch introduces 2 DT properties ("aspeed,vhub-downstream-ports" and
+> "aspeed,vhub-generic-endpoints") which replaces hardcoded port/endpoint
+> number. It is to make it more convenient to add support for newer vhub
+> revisions with different number of ports and endpoints.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  Changes in v2:
+>    - removed ast_vhub_config structure and moved vhub port/endpoint
+>      number into device tree.
+> 
+>  drivers/usb/gadget/udc/aspeed-vhub/core.c | 68 ++++++++++++++---------
+>  drivers/usb/gadget/udc/aspeed-vhub/dev.c  | 30 +++++++---
+>  drivers/usb/gadget/udc/aspeed-vhub/epn.c  |  4 +-
+>  drivers/usb/gadget/udc/aspeed-vhub/hub.c  | 26 ++++++---
+>  drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 23 +++-----
+>  5 files changed, 91 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c 
+> b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> index 90b134d5dca9..d6f737fac4e2 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> @@ -99,7 +99,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  {
+>  	struct ast_vhub *vhub = data;
+>  	irqreturn_t iret = IRQ_NONE;
+> -	u32 istat;
+> +	u32 i, istat;
+>  
+>  	/* Stale interrupt while tearing down */
+>  	if (!vhub->ep0_bufs)
+> @@ -121,10 +121,10 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  
+>  	/* Handle generic EPs first */
+>  	if (istat & VHUB_IRQ_EP_POOL_ACK_STALL) {
+> -		u32 i, ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
+> +		u32 ep_acks = readl(vhub->regs + AST_VHUB_EP_ACK_ISR);
+>  		writel(ep_acks, vhub->regs + AST_VHUB_EP_ACK_ISR);
+>  
+> -		for (i = 0; ep_acks && i < AST_VHUB_NUM_GEN_EPs; i++) {
+> +		for (i = 0; ep_acks && i < vhub->max_epns; i++) {
+>  			u32 mask = VHUB_EP_IRQ(i);
+>  			if (ep_acks & mask) {
+>  				ast_vhub_epn_ack_irq(&vhub->epns[i]);
+> @@ -134,21 +134,11 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  	}
+>  
+>  	/* Handle device interrupts */
+> -	if (istat & (VHUB_IRQ_DEVICE1 |
+> -		     VHUB_IRQ_DEVICE2 |
+> -		     VHUB_IRQ_DEVICE3 |
+> -		     VHUB_IRQ_DEVICE4 |
+> -		     VHUB_IRQ_DEVICE5)) {
+> -		if (istat & VHUB_IRQ_DEVICE1)
+> -			ast_vhub_dev_irq(&vhub->ports[0].dev);
+> -		if (istat & VHUB_IRQ_DEVICE2)
+> -			ast_vhub_dev_irq(&vhub->ports[1].dev);
+> -		if (istat & VHUB_IRQ_DEVICE3)
+> -			ast_vhub_dev_irq(&vhub->ports[2].dev);
+> -		if (istat & VHUB_IRQ_DEVICE4)
+> -			ast_vhub_dev_irq(&vhub->ports[3].dev);
+> -		if (istat & VHUB_IRQ_DEVICE5)
+> -			ast_vhub_dev_irq(&vhub->ports[4].dev);
+> +	for (i = 0; i < vhub->max_ports; i++) {
+> +		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
+> +
+> +		if (istat & dev_mask)
+> +			ast_vhub_dev_irq(&vhub->ports[i].dev);
+>  	}
+>  
+>  	/* Handle top-level vHub EP0 interrupts */
+> @@ -182,7 +172,7 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+>  
+>  void ast_vhub_init_hw(struct ast_vhub *vhub)
+>  {
+> -	u32 ctrl;
+> +	u32 ctrl, port_mask, epn_mask;
+>  
+>  	UDCDBG(vhub,"(Re)Starting HW ...\n");
+>  
+> @@ -222,15 +212,20 @@ void ast_vhub_init_hw(struct ast_vhub *vhub)
+>  	}
+>  
+>  	/* Reset all devices */
+> -	writel(VHUB_SW_RESET_ALL, vhub->regs + AST_VHUB_SW_RESET);
+> +	port_mask = GENMASK(vhub->max_ports, 1);
+> +	writel(VHUB_SW_RESET_ROOT_HUB |
+> +	       VHUB_SW_RESET_DMA_CONTROLLER |
+> +	       VHUB_SW_RESET_EP_POOL |
+> +	       port_mask, vhub->regs + AST_VHUB_SW_RESET);
+>  	udelay(1);
+>  	writel(0, vhub->regs + AST_VHUB_SW_RESET);
+>  
+>  	/* Disable and cleanup EP ACK/NACK interrupts */
+> +	epn_mask = GENMASK(vhub->max_epns - 1, 0);
+>  	writel(0, vhub->regs + AST_VHUB_EP_ACK_IER);
+>  	writel(0, vhub->regs + AST_VHUB_EP_NACK_IER);
+> -	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_ACK_ISR);
+> -	writel(VHUB_EP_IRQ_ALL, vhub->regs + AST_VHUB_EP_NACK_ISR);
+> +	writel(epn_mask, vhub->regs + AST_VHUB_EP_ACK_ISR);
+> +	writel(epn_mask, vhub->regs + AST_VHUB_EP_NACK_ISR);
+>  
+>  	/* Default settings for EP0, enable HW hub EP1 */
+>  	writel(0, vhub->regs + AST_VHUB_EP0_CTRL);
+> @@ -273,7 +268,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
+>  		return 0;
+>  
+>  	/* Remove devices */
+> -	for (i = 0; i < AST_VHUB_NUM_PORTS; i++)
+> +	for (i = 0; i < vhub->max_ports; i++)
+>  		ast_vhub_del_dev(&vhub->ports[i].dev);
+>  
+>  	spin_lock_irqsave(&vhub->lock, flags);
+> @@ -295,7 +290,7 @@ static int ast_vhub_remove(struct platform_device *pdev)
+>  	if (vhub->ep0_bufs)
+>  		dma_free_coherent(&pdev->dev,
+>  				  AST_VHUB_EP0_MAX_PACKET *
+> -				  (AST_VHUB_NUM_PORTS + 1),
+> +				  (vhub->max_ports + 1),
+>  				  vhub->ep0_bufs,
+>  				  vhub->ep0_bufs_dma);
+>  	vhub->ep0_bufs = NULL;
+> @@ -309,11 +304,32 @@ static int ast_vhub_probe(struct platform_device *pdev)
+>  	struct ast_vhub *vhub;
+>  	struct resource *res;
+>  	int i, rc = 0;
+> +	const struct device_node *np = pdev->dev.of_node;
+>  
+>  	vhub = devm_kzalloc(&pdev->dev, sizeof(*vhub), GFP_KERNEL);
+>  	if (!vhub)
+>  		return -ENOMEM;
+>  
+> +	rc = of_property_read_u32(np, "aspeed,vhub-downstream-ports",
+> +				  &vhub->max_ports);
+> +	if (rc < 0)
+> +		return -ENODEV;
 
-This matches your typedef case, but none of the other two. I haven't found
-a nice way to match them without listing down some special cases, which I
-don't really like.
+This breaks the driver for old devicetrees, or at the very least,
+devicetrees without your subsequent two patches in the series.
 
-I might dig around sometime to figure out how this should be expressed; in
-the meantime a simple 'grep -r "\[0\];"' will most likely yield faster results
-(for hunting down ZLAs, that is).
+I feel we shouldn't drop the built-in values for the 2400 and 2500, that
+way we can fall back to them if the devicetree properties aren't present.
+
+For the 2600 we can have a clean break and require the properties be
+present (i.e. not hardcode the values in the driver for fallback) as there
+aren't yet any devicetrees describing the device.
+
+Andrew
