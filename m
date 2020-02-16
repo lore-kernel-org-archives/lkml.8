@@ -2,206 +2,137 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5502C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B71C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A087E2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581868122;
-	bh=jwmU8lHHnFcZe9WrbTeQglOtPgLluzOqO3gvAX4Pu2g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kP/Ck+GnuCHv11SPfdlaFe3urnHuJRrxyZoE9jIBteugf9Cbl8k94Fhk//2D2vmHJ
-	 kr6HeJBot9weuFg5cfIkicvzKG60tz48HS+hMqkYLwjFBNEOFPJaBVjM407WSifIHu
-	 lSJ+VEv0ui9BINmUpolpU/S7ALpgC6fdos12c5wg=
+	by mail.kernel.org (Postfix) with ESMTP id 2B6B920729
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HoxXQ82Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgBPPsl (ORCPT
+        id S1728409AbgBPPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 10:48:41 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:16681 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgBPPsl (ORCPT
+        Sun, 16 Feb 2020 10:52:41 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:56416 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728282AbgBPPwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 10:48:41 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 01GFj6eR026453;
-        Mon, 17 Feb 2020 00:45:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01GFj6eR026453
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581867908;
-        bh=os9TnsjNHpEscmQ/pIjImR92ghmPlhtFserBXlIXFJQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yt2PJNXS2jXuA2jslkc3CMA95DynuZt62vxxsh0mm0pLwhD+Cle/RxDx0WvakAUns
-         3L03ZOArSyhVFVY3pW5RYd1tl6wmGrzrkdGkU26yAC/9qdZrJNtrPg6mm+O9UWqC+A
-         0UBZkbRAbVRMZU5g7rHIMxDaN/i5IM5++7O+AGOfn2N90lb2r+uATEV+HSK199wIjG
-         oCaNRj3MbevSo/S5QUwfpyUV3wFEzDraNeNs8rvAs73pa57MbGm7YTRfdtfbEbNyYn
-         Mfb35c7ytnmcckc+WiZ42aa668ZHiOAniV9v/3sUPYhYjoQ90eOEnmlb+zPq+BwXwq
-         JuBx/z5uSY91g==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     x86@kernel.org, sparclinux@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greentime Hu <green.hu@gmail.com>, Guo Ren <guoren@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jeff Dike <jdike@addtoit.com>, Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rich Felker <dalias@libc.org>,
-        Richard Weinberger <richard@nod.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] kbuild: use KBUILD_DEFCONFIG as the fallback for DEFCONFIG_LIST
-Date:   Mon, 17 Feb 2020 00:45:02 +0900
-Message-Id: <20200216154502.26478-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 16 Feb 2020 10:52:40 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581868359; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=mTPpxjIgsi8/gxj4KKOu5w05+hJqvJScCCYGAArHYzI=; b=HoxXQ82YVT/h2+frm5Cf9L0hKpytv0uPNfX/b2g0Y+Hv8jq70SdPeOq6P7vfEwSPHM6C249a
+ IrnjTS5Cu6bnYHrLJKjCDUBPyh7tXCyfSWcpfBv8yiXX4qTvAYnFg8gOPjz+Rx/Zb3utLR9n
+ ySQuf2SNrzLMFeo0loXCNSjAnCE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e496546.7f59f49b2b90-smtp-out-n02;
+ Sun, 16 Feb 2020 15:52:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E65FDC4479F; Sun, 16 Feb 2020 15:52:37 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81D30C43383;
+        Sun, 16 Feb 2020 15:52:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81D30C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     David Miller <davem@davemloft.net>, dcbw@redhat.com,
+        kuba@kernel.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH 0/2] Migrate QRTR Nameservice to Kernel
+References: <20200213091427.13435-1-manivannan.sadhasivam@linaro.org>
+        <34daecbeb05d31e30ef11574f873553290c29d16.camel@redhat.com>
+        <20200213153007.GA26254@mani>
+        <20200213.074755.849728173103010425.davem@davemloft.net>
+        <20200214091156.GD6419@Mani-XPS-13-9360>
+Date:   Sun, 16 Feb 2020 17:52:33 +0200
+In-Reply-To: <20200214091156.GD6419@Mani-XPS-13-9360> (Manivannan Sadhasivam's
+        message of "Fri, 14 Feb 2020 14:41:56 +0530")
+Message-ID: <87zhdiv8am.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the Kconfig commands (except defconfig and all*config) read the
-.config file as a base set of CONFIG options.
++ linux-wireless
 
-When it does not exist, the files in DEFCONFIG_LIST are searched in this
-order and loaded if found.
+Hi Dave & Dan,
 
-I do not see much sense in the last two entries in DEFCONFIG_LIST.
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
 
-[1] ARCH_DEFCONFIG
+> On Thu, Feb 13, 2020 at 07:47:55AM -0800, David Miller wrote:
+>> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> Date: Thu, 13 Feb 2020 21:00:08 +0530
+>> 
+>> > The primary motivation is to eliminate the need for installing and starting
+>> > a userspace tool for the basic WiFi usage. This will be critical for the
+>> > Qualcomm WLAN devices deployed in x86 laptops.
+>> 
+>> I can't even remember it ever being the case that wifi would come up without
+>> the help of a userspace component of some sort to initiate the scan and choose
+>> and AP to associate with.
+>> 
+>> And from that perspective your argument doesn't seem valid at all.
+>
+> For the WiFi yes, but I should have added that this QRTR nameservice is being
+> used by modems, DSPs and some other co-processors for some offloading tasks.
+> So currently, they all depend on userspace ns tool for working. So migrating
+> it to kernel can benefit them all.
 
-The entry for DEFCONFIG_LIST is guarded by 'depends on !UML'. So, the
-ARCH_DEFCONFIG definition in arch/x86/um/Kconfig is meaningless.
+So the background of this is to get QCA6390[1] (a Qualcomm Wi-Fi 6 PCI
+device) supported in ath11k without additional dependencies to user
+space. Currently Bjorn's QRTR user space daemon[2] needs to be running
+for ath11k to even be able to boot the firmware on the device.
 
-arch/{sh,sparc,x86}/Kconfig define ARCH_DEFCONFIG depending on 32 or 64
-bit variant symbols. This is a little bit strange; ARCH_DEFCONFIG should
-be a fixed string because the base config file is loaded before the symbol
-evaluation stage.
+In my opinion a wireless driver should be "self contained", meaning that
+it should be enough just to update the kernel and install the firmware
+images to /lib/firmware and nothing else should be needed. But without
+Mani's patches a user with QCA6390 on her laptop would need to fetch and
+install the QRTR daemon (as I doubt distros have it pre-installed)
+before getting Wi-Fi working on the laptop. But without Wi-Fi trying to
+fetch anything from the internet is annoying, so not a very smooth user
+experience.
 
-Using KBUILD_DEFCONFIG is saner because it is fixed before Kconfig is
-invoked. Fortunately, arch/{sh,sparc,x86}/Makefile define it in the
-same way, and it works as expected. Hence, replace ARCH_DEFCONFIG with
-"arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)".
+I assume Dave above refers to iw, wpasupplicant and hostapd but I
+consider them very different from QRTR. iw, wpasupplicant and hostapd
+are generic wireless user space components using the generic
+nl80211/wext interfaces and they work with _all_ upstream drivers. They
+are also pre-installed by distros so it's basically plug and go for the
+user to get Wi-Fi running.
 
-[2] arch/$(ARCH)/defconfig
+Also from high level design point of view I don't like the idea that
+wireless drivers would start to having vendor specific user components,
+like Qualcomm, Marvell, Intel and other vendors having their own daemons
+running in addition of generic wireless components (iw/wpas/hostapd).
+That would be a quite mess trying to handle backwards compatibility and
+all other stable kernel/user space interface requirements.
 
-This file path is no longer valid. The defconfig files are always located
-in the arch configs/ directories.
+So to have a smooth out of box experience for ath11k users, I consider
+that we need QRTR in the kernel and that's why need Mani's patches[3].
 
-  $ find arch -name defconfig | sort
-  arch/alpha/configs/defconfig
-  arch/arm64/configs/defconfig
-  arch/csky/configs/defconfig
-  arch/nds32/configs/defconfig
-  arch/riscv/configs/defconfig
-  arch/s390/configs/defconfig
-  arch/unicore32/configs/defconfig
+[1] https://www.qualcomm.com/products/fastconnect-6800
 
-The path arch/*/configs/defconfig is already covered by
-"arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)". So, this file path is
-not necessary.
+[2] https://github.com/andersson/qrtr/
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+[3] https://patchwork.ozlabs.org/cover/1237353/
 
- arch/sh/Kconfig     | 5 -----
- arch/sparc/Kconfig  | 5 -----
- arch/x86/Kconfig    | 5 -----
- arch/x86/um/Kconfig | 5 -----
- init/Kconfig        | 3 +--
- 5 files changed, 1 insertion(+), 22 deletions(-)
+    https://patchwork.ozlabs.org/patch/1237355/
 
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 9ece111b0254..b4f0e37b83eb 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -87,11 +87,6 @@ config SUPERH64
- 	select HAVE_EXIT_THREAD
- 	select KALLSYMS
- 
--config ARCH_DEFCONFIG
--	string
--	default "arch/sh/configs/shx3_defconfig" if SUPERH32
--	default "arch/sh/configs/cayman_defconfig" if SUPERH64
--
- config GENERIC_BUG
- 	def_bool y
- 	depends on BUG && SUPERH32
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index c1dd6dd642f4..0de15380d1fc 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -95,11 +95,6 @@ config SPARC64
- 	select PCI_DOMAINS if PCI
- 	select ARCH_HAS_GIGANTIC_PAGE
- 
--config ARCH_DEFCONFIG
--	string
--	default "arch/sparc/configs/sparc32_defconfig" if SPARC32
--	default "arch/sparc/configs/sparc64_defconfig" if SPARC64
--
- config ARCH_PROC_KCORE_TEXT
- 	def_bool y
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..98935f4387f9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -240,11 +240,6 @@ config OUTPUT_FORMAT
- 	default "elf32-i386" if X86_32
- 	default "elf64-x86-64" if X86_64
- 
--config ARCH_DEFCONFIG
--	string
--	default "arch/x86/configs/i386_defconfig" if X86_32
--	default "arch/x86/configs/x86_64_defconfig" if X86_64
--
- config LOCKDEP_SUPPORT
- 	def_bool y
- 
-diff --git a/arch/x86/um/Kconfig b/arch/x86/um/Kconfig
-index a8985e1f7432..95d26a69088b 100644
---- a/arch/x86/um/Kconfig
-+++ b/arch/x86/um/Kconfig
-@@ -27,11 +27,6 @@ config X86_64
- 	def_bool 64BIT
- 	select MODULES_USE_ELF_RELA
- 
--config ARCH_DEFCONFIG
--	string
--	default "arch/um/configs/i386_defconfig" if X86_32
--	default "arch/um/configs/x86_64_defconfig" if X86_64
--
- config 3_LEVEL_PGTABLES
- 	bool "Three-level pagetables" if !64BIT
- 	default 64BIT
-diff --git a/init/Kconfig b/init/Kconfig
-index 452bc1835cd4..6ccdb168dee5 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -6,8 +6,7 @@ config DEFCONFIG_LIST
- 	default "/lib/modules/$(shell,uname -r)/.config"
- 	default "/etc/kernel-config"
- 	default "/boot/config-$(shell,uname -r)"
--	default ARCH_DEFCONFIG
--	default "arch/$(ARCH)/defconfig"
-+	default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
- 
- config CC_IS_GCC
- 	def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
+    https://patchwork.ozlabs.org/patch/1237354/
+    
 -- 
-2.17.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
