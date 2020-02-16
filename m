@@ -2,426 +2,421 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F056C7619C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A113C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA702084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bRrW9DL9"
+	by mail.kernel.org (Postfix) with ESMTP id 58CF5208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581870357;
+	bh=UsWB1vaY4vzvZv2KjrEq6WAm/quOwXBexqO+wqmbwDc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dE4LrurrVMyXjbvRAZxo8AWusmvDwwAfgTRED46hCpaIp+1KokaMa/9oDfxFUy8mc
+	 24lpi7FF4ocTabDgvcgeqvlUK8Bem7D0lPDGPUOZC1QwkItF9JXrN/HnlEgM2ydgSh
+	 9u3BEBCgJcexIPB740B34sbmyj7Tr9uJH1Z04MKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgBPQWm (ORCPT
+        id S1728455AbgBPQZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:22:42 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58490 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728386AbgBPQWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:22:41 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581870160; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=z5I5zS6zumjhWa7snoKGqo4MqOgClmCxSgr84mzSxM4=; b=bRrW9DL9XvHkDRGzrfjVztGjMKONnjBUqCw5KWlwRgUub+RsZt9iXh9fPGKjkTPnXjKwFNP9
- IuY+oBzU8PLYJK3Rj2SkZp7WPodV1aatTIzs2DLz7IXLeYAtqF47LcrdSC97+iZINglDl1vj
- rbWYmJTgF7H47PYz7YIvoBwhxnU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e496c44.7fb78347e6c0-smtp-out-n03;
- Sun, 16 Feb 2020 16:22:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17D1CC433A2; Sun, 16 Feb 2020 16:22:27 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [103.140.231.108])
+        Sun, 16 Feb 2020 11:25:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728293AbgBPQZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:25:55 -0500
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: akdwived)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53F98C43383;
-        Sun, 16 Feb 2020 16:22:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53F98C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-To:     Greg KH <greg@kroah.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
- <20200207100438.GA627905@kroah.com>
-From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Message-ID: <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
-Date:   Sun, 16 Feb 2020 21:52:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        by mail.kernel.org (Postfix) with ESMTPSA id DFC632086A
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 16:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581870354;
+        bh=UsWB1vaY4vzvZv2KjrEq6WAm/quOwXBexqO+wqmbwDc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U/ceqrB+JZIIymckl2AObJYzVWKIJZ7std9t42S6A1A80Rcs8kV2sHO9PExnEk9kc
+         3OYnxPVO8kpa/Ffw/sDF/uN3sU97dFM+7rozAmv9gkOEecLCYrmCP7RuToIhR3nKij
+         BXu4tviHNson0KBhJI5iEB91/VzC8rErcVOdfC6Y=
+Received: by mail-wr1-f53.google.com with SMTP id u6so16793917wrt.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 08:25:53 -0800 (PST)
+X-Gm-Message-State: APjAAAUbeydhipnLBq5z3WhVmBJ6SZqNsVWZTA8XiCG3wWwX8pNfjwYI
+        3dJDJRp5usFevRBNaFg0Be7Si26tuDvVYxbmIyeAPg==
+X-Google-Smtp-Source: APXvYqww+zDgPegrKxqs+gCnliOkV9FP8IJHSJW+S6eTOC0b1tzvWWqOKv0IVrvFt1gbnzXLmSTls7+x5X4XSR2SuRs=
+X-Received: by 2002:a5d:6a4b:: with SMTP id t11mr16319748wrw.262.1581870352098;
+ Sun, 16 Feb 2020 08:25:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200207100438.GA627905@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191218162402.45610-1-steven.price@arm.com> <20191218162402.45610-22-steven.price@arm.com>
+In-Reply-To: <20191218162402.45610-22-steven.price@arm.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun, 16 Feb 2020 17:25:41 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8Hed9jGiqdgaqJ93JhErJA5OfGRpiarU=YKXb6vQUyMQ@mail.gmail.com>
+Message-ID: <CAKv+Gu8Hed9jGiqdgaqJ93JhErJA5OfGRpiarU=YKXb6vQUyMQ@mail.gmail.com>
+Subject: Re: [PATCH v17 21/23] arm64: mm: Convert mm/dump.c to use walk_page_range()
+To:     Steven Price <steven.price@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 18 Dec 2019 at 17:25, Steven Price <steven.price@arm.com> wrote:
+>
+> Now walk_page_range() can walk kernel page tables, we can switch the
+> arm64 ptdump code over to using it, simplifying the code.
+>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-On 2/7/2020 3:34 PM, Greg KH wrote:
-> On Fri, Jan 31, 2020 at 10:13:31AM +0530, Avaneesh Kumar Dwivedi wrote:
->> Add support for control peripheral of EUD (Embedded USB Debugger) to
->> listen to events such as USB attach/detach, charger enable/disable, pet
->> EUD to indicate software is functional. Reusing the platform device kobj,
->> sysfs entry 'enable' is created to enable or disable EUD.
->>
->> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
->> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
->> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
->> ---
->>   Documentation/ABI/stable/sysfs-driver-msm-eud |   5 +
->>   drivers/soc/qcom/Kconfig                      |  12 +
->>   drivers/soc/qcom/Makefile                     |   1 +
->>   drivers/soc/qcom/eud.c                        | 329 ++++++++++++++++++++++++++
->>   4 files changed, 347 insertions(+)
->>   create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
->>   create mode 100644 drivers/soc/qcom/eud.c
->>
->> diff --git a/Documentation/ABI/stable/sysfs-driver-msm-eud b/Documentation/ABI/stable/sysfs-driver-msm-eud
->> new file mode 100644
->> index 0000000..d96ae05
->> --- /dev/null
->> +++ b/Documentation/ABI/stable/sysfs-driver-msm-eud
->> @@ -0,0 +1,5 @@
->> +What:           /sys/bus/platform/drivers/msm-eud/enable
->> +Date:           Jan 2020
->> +Contact:        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
->> +Description:    Enable/Disable use of eud device.
-> What are valid values to be used here?
-it should be bool variable relying on 0 or 1.
->
->> +Users:          User space debug application which intend to use EUD h/w block.
->> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
->> index d0a73e7..6b7c9d0 100644
->> --- a/drivers/soc/qcom/Kconfig
->> +++ b/drivers/soc/qcom/Kconfig
->> @@ -202,4 +202,16 @@ config QCOM_APR
->>   	  application processor and QDSP6. APR is
->>   	  used by audio driver to configure QDSP6
->>   	  ASM, ADM and AFE modules.
->> +
->> +config QCOM_EUD
->> +       tristate "QTI Embedded USB Debugger (EUD)"
->> +       depends on ARCH_QCOM
-> Why not let everyone test build this?
-EUD is Qualcomm IP, shall not it be associated with ARCH_QCOM?
->
->> +       help
->> +         The Embedded USB Debugger (EUD) driver is a driver for the
->> +         control peripheral which waits on events like USB attach/detach
->> +         and charger enable/disable. The control peripheral further helps
->> +         support the USB-based debug and trace capabilities.
->> +         This module enables support for Qualcomm Technologies, Inc.
->> +         Embedded USB Debugger (EUD).
->> +         If unsure, say N.
->>   endmenu
->> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
->> index 9fb35c8..c15be68 100644
->> --- a/drivers/soc/qcom/Makefile
->> +++ b/drivers/soc/qcom/Makefile
->> @@ -25,3 +25,4 @@ obj-$(CONFIG_QCOM_APR) += apr.o
->>   obj-$(CONFIG_QCOM_LLCC) += llcc-qcom.o
->>   obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
->>   obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
->> +obj-$(CONFIG_QCOM_EUD) += eud.o
->> diff --git a/drivers/soc/qcom/eud.c b/drivers/soc/qcom/eud.c
->> new file mode 100644
->> index 0000000..e6c3604
->> --- /dev/null
->> +++ b/drivers/soc/qcom/eud.c
->> @@ -0,0 +1,329 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/err.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/extcon.h>
->> +#include <linux/extcon-provider.h>
->> +#include <linux/delay.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/io.h>
->> +#include <linux/bitops.h>
->> +#include <linux/workqueue.h>
->> +#include <linux/power_supply.h>
->> +
->> +#define EUD_ENABLE_CMD 1
->> +#define EUD_DISABLE_CMD 0
-> Don't need these.
-OK
->
->> +
->> +#define EUD_REG_INT1_EN_MASK	0x0024
->> +#define EUD_REG_INT_STATUS_1	0x0044
->> +#define EUD_REG_CTL_OUT_1	0x0074
->> +#define EUD_REG_VBUS_INT_CLR	0x0080
->> +#define EUD_REG_CHGR_INT_CLR	0x0084
->> +#define EUD_REG_CSR_EUD_EN	0x1014
->> +#define EUD_REG_SW_ATTACH_DET	0x1018
->> +
->> +#define EUD_INT_VBUS		BIT(2)
->> +#define EUD_INT_CHGR		BIT(3)
->> +#define EUD_INT_SAFE_MODE	BIT(4)
->> +#define EUD_INT_ALL		(EUD_INT_VBUS|EUD_INT_CHGR|\
->> +				EUD_INT_SAFE_MODE)
->> +
->> +struct eud_chip {
->> +	struct device			*dev;
->> +	int				eud_irq;
->> +	unsigned int			extcon_id;
->> +	unsigned int			int_status;
->> +	bool				usb_attach;
->> +	bool				chgr_enable;
->> +	void __iomem			*eud_reg_base;
->> +	struct extcon_dev		*extcon;
->> +	int				enable;
->> +	struct work_struct		eud_work;
->> +};
->> +
->> +static const unsigned int eud_extcon_cable[] = {
->> +	EXTCON_USB,
->> +	EXTCON_CHG_USB_SDP,
->> +	EXTCON_NONE,
->> +};
->> +
->> +static int enable_eud(struct eud_chip *priv)
->> +{
->> +	int ret;
->> +
->> +	/* write into CSR to enable EUD */
->> +	writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
->> +	/* Enable vbus, chgr & safe mode warning interrupts */
->> +	writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
->> +			priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
->> +
->> +	/* Ensure Register Writes Complete */
->> +	wmb();
->> +
->> +	/*
->> +	 * Set the default cable state to usb connect and charger
->> +	 * enable
->> +	 */
->> +	ret = extcon_set_state_sync(priv->extcon, EXTCON_USB, true);
->> +	if (ret)
->> +		return ret;
->> +	ret = extcon_set_state_sync(priv->extcon,
->> +			EXTCON_CHG_USB_SDP, true);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static void disable_eud(struct eud_chip *priv)
->> +{
->> +	/* write into CSR to disable EUD */
->> +	writel_relaxed(0, priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
->> +}
->> +
->> +static ssize_t enable_show(struct device *dev,
->> +				struct device_attribute *attr, char *buf)
->> +{
->> +	struct eud_chip *chip = dev_get_drvdata(dev);
->> +
->> +	return snprintf(buf, sizeof(int), "%d", chip->enable);
->> +}
->> +
->> +static ssize_t enable_store(struct device *dev,
->> +				struct device_attribute *attr,
->> +				const char *buf, size_t count)
->> +{
->> +	struct eud_chip *chip = dev_get_drvdata(dev);
->> +	int enable = 0;
->> +	int ret = 0;
->> +
->> +	if (sscanf(buf, "%du", &enable) != 1)
->> +		return -EINVAL;
-> No, use the built-in kernel function to handle reading y/n/Y/N/0/1 from
-> sysfs files, do not try to roll your own.  As you have seen, you will
-> get it wrong :)
-ok
->
->
->
->> +
->> +	if (enable == EUD_ENABLE_CMD)
->> +		ret = enable_eud(chip);
->> +	else if (enable == EUD_DISABLE_CMD)
->> +		disable_eud(chip);
->> +	if (!ret)
->> +		chip->enable = enable;
->> +	return count;
->> +}
->> +
->> +static DEVICE_ATTR_RW(enable);
->> +
->> +static struct attribute *attrs[] = {
->> +	&dev_attr_enable.attr,
->> +	NULL
->> +};
->> +
->> +static struct attribute_group attr_group = {
->> +	.attrs = attrs,
->> +};
->> +
->> +static const struct attribute_group *attr_groups[] = {
->> +	&attr_group,
->> +	NULL
->> +};
-> ATTRIBUTE_GROUPS()?
-OK.
->
->> +
->> +static void eud_event_notifier(struct work_struct *eud_work)
->> +{
->> +	struct eud_chip *chip = container_of(eud_work, struct eud_chip,
->> +					eud_work);
->> +	int ret;
->> +
->> +	if (chip->int_status == EUD_INT_VBUS) {
->> +		ret = extcon_set_state_sync(chip->extcon, chip->extcon_id,
->> +					chip->usb_attach);
->> +		if (ret)
->> +			return;
->> +	} else if (chip->int_status == EUD_INT_CHGR) {
->> +		ret = extcon_set_state_sync(chip->extcon, chip->extcon_id,
->> +					chip->chgr_enable);
->> +		if (ret)
->> +			return;
->> +	}
->> +}
->> +
->> +static void usb_attach_detach(struct eud_chip *chip)
->> +{
->> +	u32 reg;
->> +
->> +	chip->extcon_id = EXTCON_USB;
->> +	/* read ctl_out_1[4] to find USB attach or detach event */
->> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_CTL_OUT_1);
->> +	if (reg & BIT(4))
->> +		chip->usb_attach = true;
->> +	else
->> +		chip->usb_attach = false;
->> +
->> +	schedule_work(&chip->eud_work);
->> +
->> +	/* set and clear vbus_int_clr[0] to clear interrupt */
->> +	writel_relaxed(BIT(0), chip->eud_reg_base + EUD_REG_VBUS_INT_CLR);
->> +	/* Ensure Register Writes Complete */
->> +	wmb();
->> +	writel_relaxed(0, chip->eud_reg_base + EUD_REG_VBUS_INT_CLR);
->> +}
->> +
->> +static void chgr_enable_disable(struct eud_chip *chip)
->> +{
->> +	u32 reg;
->> +
->> +	chip->extcon_id = EXTCON_CHG_USB_SDP;
->> +	/* read ctl_out_1[6] to find charger enable or disable event */
->> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_CTL_OUT_1);
->> +	if (reg & BIT(6))
->> +		chip->chgr_enable = true;
->> +	else
->> +		chip->chgr_enable = false;
->> +
->> +	schedule_work(&chip->eud_work);
->> +
->> +	/* set and clear chgr_int_clr[0] to clear interrupt */
->> +	writel_relaxed(BIT(0), chip->eud_reg_base + EUD_REG_CHGR_INT_CLR);
->> +	/* Ensure Register Writes Complete */
->> +	wmb();
->> +	writel_relaxed(0, chip->eud_reg_base + EUD_REG_CHGR_INT_CLR);
->> +}
->> +
->> +static void pet_eud(struct eud_chip *chip)
->> +{
->> +	u32 reg;
->> +
->> +	/* read sw_attach_det[0] to find attach/detach event */
->> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_SW_ATTACH_DET);
->> +	if (reg & BIT(0)) {
->> +		/* Detach & Attach pet for EUD */
->> +		writel_relaxed(0, chip->eud_reg_base + EUD_REG_SW_ATTACH_DET);
->> +		/* Ensure Register Writes Complete */
->> +		wmb();
->> +		/* Delay to make sure detach pet is done before attach pet */
->> +		udelay(100);
->> +		writel_relaxed(BIT(0), chip->eud_reg_base +
->> +					EUD_REG_SW_ATTACH_DET);
->> +		/* Ensure Register Writes Complete */
->> +		wmb();
->> +	} else {
->> +		/* Attach pet for EUD */
->> +		writel_relaxed(BIT(0), chip->eud_reg_base +
->> +					EUD_REG_SW_ATTACH_DET);
->> +		/* Ensure Register Writes Complete */
->> +		wmb();
->> +	}
->> +}
->> +
->> +static irqreturn_t handle_eud_irq(int irq, void *data)
->> +{
->> +	struct eud_chip *chip = data;
->> +	u32 reg;
->> +
->> +	/* read status register and find out which interrupt triggered */
->> +	reg = readl_relaxed(chip->eud_reg_base + EUD_REG_INT_STATUS_1);
->> +	switch (reg & EUD_INT_ALL) {
->> +	case EUD_INT_VBUS:
->> +		chip->int_status = EUD_INT_VBUS;
->> +		usb_attach_detach(chip);
->> +		break;
->> +	case EUD_INT_CHGR:
->> +		chip->int_status = EUD_INT_CHGR;
->> +		chgr_enable_disable(chip);
->> +		break;
->> +	case EUD_INT_SAFE_MODE:
->> +		pet_eud(chip);
->> +		break;
->> +	default:
->> +		return IRQ_NONE;
->> +	}
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int msm_eud_probe(struct platform_device *pdev)
->> +{
->> +	struct eud_chip *chip;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
->> +	if (!chip)
->> +		return -ENOMEM;
->> +
->> +	chip->dev = &pdev->dev;
-> No reference counting???
-you mean get/put_device?
->
-> thanks,
->
-> greg k-h
+I did not realize this at the time, but this patch removes the ability
+to dump the EFI page tables on 32-bit ARM. Was that intentional?
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+
+> ---
+>  arch/arm64/Kconfig                 |   1 +
+>  arch/arm64/Kconfig.debug           |  19 +----
+>  arch/arm64/include/asm/ptdump.h    |   8 +-
+>  arch/arm64/mm/Makefile             |   4 +-
+>  arch/arm64/mm/dump.c               | 117 ++++++++++-------------------
+>  arch/arm64/mm/mmu.c                |   4 +-
+>  arch/arm64/mm/ptdump_debugfs.c     |   2 +-
+>  drivers/firmware/efi/arm-runtime.c |   2 +-
+>  8 files changed, 50 insertions(+), 107 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index b1b4476ddb83..43aa1de727f4 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -103,6 +103,7 @@ config ARM64
+>         select GENERIC_IRQ_SHOW
+>         select GENERIC_IRQ_SHOW_LEVEL
+>         select GENERIC_PCI_IOMAP
+> +       select GENERIC_PTDUMP
+>         select GENERIC_SCHED_CLOCK
+>         select GENERIC_SMP_IDLE_THREAD
+>         select GENERIC_STRNCPY_FROM_USER
+> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+> index cf09010d825f..1c906d932d6b 100644
+> --- a/arch/arm64/Kconfig.debug
+> +++ b/arch/arm64/Kconfig.debug
+> @@ -1,22 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>
+> -config ARM64_PTDUMP_CORE
+> -       def_bool n
+> -
+> -config ARM64_PTDUMP_DEBUGFS
+> -       bool "Export kernel pagetable layout to userspace via debugfs"
+> -       depends on DEBUG_KERNEL
+> -       select ARM64_PTDUMP_CORE
+> -       select DEBUG_FS
+> -        help
+> -         Say Y here if you want to show the kernel pagetable layout in a
+> -         debugfs file. This information is only useful for kernel developers
+> -         who are working in architecture specific areas of the kernel.
+> -         It is probably not a good idea to enable this feature in a production
+> -         kernel.
+> -
+> -         If in doubt, say N.
+> -
+>  config PID_IN_CONTEXTIDR
+>         bool "Write the current PID to the CONTEXTIDR register"
+>         help
+> @@ -42,7 +25,7 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
+>
+>  config DEBUG_WX
+>         bool "Warn on W+X mappings at boot"
+> -       select ARM64_PTDUMP_CORE
+> +       select PTDUMP_CORE
+>         ---help---
+>           Generate a warning if any W+X mappings are found at boot.
+>
+> diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+> index 0b8e7269ec82..38187f74e089 100644
+> --- a/arch/arm64/include/asm/ptdump.h
+> +++ b/arch/arm64/include/asm/ptdump.h
+> @@ -5,7 +5,7 @@
+>  #ifndef __ASM_PTDUMP_H
+>  #define __ASM_PTDUMP_H
+>
+> -#ifdef CONFIG_ARM64_PTDUMP_CORE
+> +#ifdef CONFIG_PTDUMP_CORE
+>
+>  #include <linux/mm_types.h>
+>  #include <linux/seq_file.h>
+> @@ -21,15 +21,15 @@ struct ptdump_info {
+>         unsigned long                   base_addr;
+>  };
+>
+> -void ptdump_walk_pgd(struct seq_file *s, struct ptdump_info *info);
+> -#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
+> +void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
+> +#ifdef CONFIG_PTDUMP_DEBUGFS
+>  void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
+>  #else
+>  static inline void ptdump_debugfs_register(struct ptdump_info *info,
+>                                            const char *name) { }
+>  #endif
+>  void ptdump_check_wx(void);
+> -#endif /* CONFIG_ARM64_PTDUMP_CORE */
+> +#endif /* CONFIG_PTDUMP_CORE */
+>
+>  #ifdef CONFIG_DEBUG_WX
+>  #define debug_checkwx()        ptdump_check_wx()
+> diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+> index 849c1df3d214..d91030f0ffee 100644
+> --- a/arch/arm64/mm/Makefile
+> +++ b/arch/arm64/mm/Makefile
+> @@ -4,8 +4,8 @@ obj-y                           := dma-mapping.o extable.o fault.o init.o \
+>                                    ioremap.o mmap.o pgd.o mmu.o \
+>                                    context.o proc.o pageattr.o
+>  obj-$(CONFIG_HUGETLB_PAGE)     += hugetlbpage.o
+> -obj-$(CONFIG_ARM64_PTDUMP_CORE)        += dump.o
+> -obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)     += ptdump_debugfs.o
+> +obj-$(CONFIG_PTDUMP_CORE)      += dump.o
+> +obj-$(CONFIG_PTDUMP_DEBUGFS)   += ptdump_debugfs.o
+>  obj-$(CONFIG_NUMA)             += numa.o
+>  obj-$(CONFIG_DEBUG_VIRTUAL)    += physaddr.o
+>  KASAN_SANITIZE_physaddr.o      += n
+> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+> index 0a920b538a89..f8c3ef7903ed 100644
+> --- a/arch/arm64/mm/dump.c
+> +++ b/arch/arm64/mm/dump.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/io.h>
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+> +#include <linux/ptdump.h>
+>  #include <linux/sched.h>
+>  #include <linux/seq_file.h>
+>
+> @@ -75,10 +76,11 @@ static struct addr_marker address_markers[] = {
+>   * dumps out a description of the range.
+>   */
+>  struct pg_state {
+> +       struct ptdump_state ptdump;
+>         struct seq_file *seq;
+>         const struct addr_marker *marker;
+>         unsigned long start_address;
+> -       unsigned level;
+> +       int level;
+>         u64 current_prot;
+>         bool check_wx;
+>         unsigned long wx_pages;
+> @@ -179,6 +181,10 @@ static struct pg_level pg_level[] = {
+>                 .name   = "PGD",
+>                 .bits   = pte_bits,
+>                 .num    = ARRAY_SIZE(pte_bits),
+> +       }, { /* p4d */
+> +               .name   = "P4D",
+> +               .bits   = pte_bits,
+> +               .num    = ARRAY_SIZE(pte_bits),
+>         }, { /* pud */
+>                 .name   = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+>                 .bits   = pte_bits,
+> @@ -241,11 +247,15 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+>         st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
+>  }
+>
+> -static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+> -                               u64 val)
+> +static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+> +                     unsigned long val)
+>  {
+> +       struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+>         static const char units[] = "KMGTPE";
+> -       u64 prot = val & pg_level[level].mask;
+> +       u64 prot = 0;
+> +
+> +       if (level >= 0)
+> +               prot = val & pg_level[level].mask;
+>
+>         if (!st->level) {
+>                 st->level = level;
+> @@ -293,85 +303,27 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+>
+>  }
+>
+> -static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
+> -                    unsigned long end)
+> -{
+> -       unsigned long addr = start;
+> -       pte_t *ptep = pte_offset_kernel(pmdp, start);
+> -
+> -       do {
+> -               note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
+> -       } while (ptep++, addr += PAGE_SIZE, addr != end);
+> -}
+> -
+> -static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
+> -                    unsigned long end)
+> -{
+> -       unsigned long next, addr = start;
+> -       pmd_t *pmdp = pmd_offset(pudp, start);
+> -
+> -       do {
+> -               pmd_t pmd = READ_ONCE(*pmdp);
+> -               next = pmd_addr_end(addr, end);
+> -
+> -               if (pmd_none(pmd) || pmd_sect(pmd)) {
+> -                       note_page(st, addr, 3, pmd_val(pmd));
+> -               } else {
+> -                       BUG_ON(pmd_bad(pmd));
+> -                       walk_pte(st, pmdp, addr, next);
+> -               }
+> -       } while (pmdp++, addr = next, addr != end);
+> -}
+> -
+> -static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
+> -                    unsigned long end)
+> +void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+>  {
+> -       unsigned long next, addr = start;
+> -       pud_t *pudp = pud_offset(pgdp, start);
+> -
+> -       do {
+> -               pud_t pud = READ_ONCE(*pudp);
+> -               next = pud_addr_end(addr, end);
+> -
+> -               if (pud_none(pud) || pud_sect(pud)) {
+> -                       note_page(st, addr, 2, pud_val(pud));
+> -               } else {
+> -                       BUG_ON(pud_bad(pud));
+> -                       walk_pmd(st, pudp, addr, next);
+> -               }
+> -       } while (pudp++, addr = next, addr != end);
+> -}
+> +       unsigned long end = ~0UL;
+> +       struct pg_state st;
+>
+> -static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
+> -                    unsigned long start)
+> -{
+> -       unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
+> -       unsigned long next, addr = start;
+> -       pgd_t *pgdp = pgd_offset(mm, start);
+> -
+> -       do {
+> -               pgd_t pgd = READ_ONCE(*pgdp);
+> -               next = pgd_addr_end(addr, end);
+> -
+> -               if (pgd_none(pgd)) {
+> -                       note_page(st, addr, 1, pgd_val(pgd));
+> -               } else {
+> -                       BUG_ON(pgd_bad(pgd));
+> -                       walk_pud(st, pgdp, addr, next);
+> -               }
+> -       } while (pgdp++, addr = next, addr != end);
+> -}
+> +       if (info->base_addr < TASK_SIZE_64)
+> +               end = TASK_SIZE_64;
+>
+> -void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
+> -{
+> -       struct pg_state st = {
+> -               .seq = m,
+> +       st = (struct pg_state){
+> +               .seq = s,
+>                 .marker = info->markers,
+> +               .ptdump = {
+> +                       .note_page = note_page,
+> +                       .range = (struct ptdump_range[]){
+> +                               {info->base_addr, end},
+> +                               {0, 0}
+> +                       }
+> +               }
+>         };
+>
+> -       walk_pgd(&st, info->mm, info->base_addr);
+> -
+> -       note_page(&st, 0, 0, 0);
+> +       ptdump_walk_pgd(&st.ptdump, info->mm);
+>  }
+>
+>  static void ptdump_initialize(void)
+> @@ -399,10 +351,17 @@ void ptdump_check_wx(void)
+>                         { -1, NULL},
+>                 },
+>                 .check_wx = true,
+> +               .ptdump = {
+> +                       .note_page = note_page,
+> +                       .range = (struct ptdump_range[]) {
+> +                               {PAGE_OFFSET, ~0UL},
+> +                               {0, 0}
+> +                       }
+> +               }
+>         };
+>
+> -       walk_pgd(&st, &init_mm, PAGE_OFFSET);
+> -       note_page(&st, 0, 0, 0);
+> +       ptdump_walk_pgd(&st.ptdump, &init_mm);
+> +
+>         if (st.wx_pages || st.uxn_pages)
+>                 pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
+>                         st.wx_pages, st.uxn_pages);
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 5a3b15a14a7f..36e8f4f74433 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -943,13 +943,13 @@ int __init arch_ioremap_pud_supported(void)
+>          * SW table walks can't handle removal of intermediate entries.
+>          */
+>         return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
+> -              !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+> +              !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>  }
+>
+>  int __init arch_ioremap_pmd_supported(void)
+>  {
+>         /* See arch_ioremap_pud_supported() */
+> -       return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+> +       return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>  }
+>
+>  int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
+> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+> index 064163f25592..1f2eae3e988b 100644
+> --- a/arch/arm64/mm/ptdump_debugfs.c
+> +++ b/arch/arm64/mm/ptdump_debugfs.c
+> @@ -7,7 +7,7 @@
+>  static int ptdump_show(struct seq_file *m, void *v)
+>  {
+>         struct ptdump_info *info = m->private;
+> -       ptdump_walk_pgd(m, info);
+> +       ptdump_walk(m, info);
+>         return 0;
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(ptdump);
+> diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+> index 899b803842bb..9dda2602c862 100644
+> --- a/drivers/firmware/efi/arm-runtime.c
+> +++ b/drivers/firmware/efi/arm-runtime.c
+> @@ -27,7 +27,7 @@
+>
+>  extern u64 efi_system_table;
+>
+> -#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
+> +#if defined(CONFIG_PTDUMP_DEBUGFS) && defined(CONFIG_ARM64)
+>  #include <asm/ptdump.h>
+>
+>  static struct ptdump_info efi_ptdump_info = {
+> --
+> 2.20.1
+>
