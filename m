@@ -2,93 +2,57 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B09C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3191AC7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC418206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D19B20857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 11:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBPLGN (ORCPT
+        id S1728077AbgBPLRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 06:06:13 -0500
-Received: from mga11.intel.com ([192.55.52.93]:5921 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgBPLGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 06:06:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 03:06:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,448,1574150400"; 
-   d="scan'208";a="238811844"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.60])
-  by orsmga006.jf.intel.com with ESMTP; 16 Feb 2020 03:06:06 -0800
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: VMX: Add VMX_FEATURE_USR_WAIT_PAUSE
-Date:   Sun, 16 Feb 2020 18:48:57 +0800
-Message-Id: <20200216104858.109955-1-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.19.1
+        Sun, 16 Feb 2020 06:17:50 -0500
+Received: from out28-3.mail.aliyun.com ([115.124.28.3]:41184 "EHLO
+        out28-3.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbgBPLRu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 06:17:50 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1320878|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0601371-0.00308368-0.936779;DS=CONTINUE|ham_system_inform|0.0463973-0.00408474-0.949518;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.GodzYLk_1581851850;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GodzYLk_1581851850)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Sun, 16 Feb 2020 19:17:39 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paul@crapouillou.net, linus.walleij@linaro.org,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+Subject: [PATCH] pinctrl: Ingenic: Add missing parts for X1830.
+Date:   Sun, 16 Feb 2020 19:17:07 +0800
+Message-Id: <1581851828-3493-2-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581851828-3493-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1581851828-3493-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 159348784ff0 ("x86/vmx: Introduce VMX_FEATURES_*") missed
-bit 26 (enable user wait and pause) of Secondary Processor-based
-VM-Execution Controls.
+Add lcd pinctrl driver for Ingenic X1830.
 
-Add VMX_FEATURE_USR_WAIT_PAUSE flag and use it to define
-SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE to make them uniformly.
+周琰杰 (Zhou Yanjie) (1):
+  pinctrl: Ingenic: Add missing parts for X1830.
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/include/asm/vmx.h         | 2 +-
- arch/x86/include/asm/vmxfeatures.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 2a85287b3685..8521af3fef27 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -72,7 +72,7 @@
- #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
- #define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
- #define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
--#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
-+#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	VMCS_CONTROL_BIT(USR_WAIT_PAUSE)
- 
- #define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
- #define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
-diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
-index a50e4a0de315..1408f526bd90 100644
---- a/arch/x86/include/asm/vmxfeatures.h
-+++ b/arch/x86/include/asm/vmxfeatures.h
-@@ -81,6 +81,7 @@
- #define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* "ept_mode_based_exec" Enable separate EPT EXEC bits for supervisor vs. user */
- #define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
- #define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
-+#define VMX_FEATURE_USR_WAIT_PAUSE	( 2*32+ 26) /* "" Enable TPAUSE, UMONITOR, UMWATI in guest */
- #define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
- 
- #endif /* _ASM_X86_VMXFEATURES_H */
 -- 
-2.19.1
+2.7.4
 
