@@ -2,332 +2,169 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C75C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC865C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB0820659
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5FE20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6pU9gUm"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nmcy0E9U";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GZhEBWLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgBPQfL (ORCPT
+        id S1728487AbgBPQf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:35:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46838 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbgBPQfK (ORCPT
+        Sun, 16 Feb 2020 11:35:58 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:43367 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728239AbgBPQf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:35:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+D/3GYgq8C/NhSHdkxyv41JosInjZ/rJm4gcnsJDCuc=; b=t6pU9gUm2k77mQzZ1DvGkWUSaT
-        u5XLEw2Cq48TeeQF2ls+O6azM76RauhfLQcAf5AZz/a9rzLgOPv4P5Dh7pROKFD6S0lmGOJSKc+3Z
-        diBKrT5PepFMq8evwmtIPC3ORwH8uoGkhgtKcRQWXswOM4OVikpnuSFKOZC06+E17NAShel9TjiwD
-        ARIsS90kcbNy2QTNafTwlzou+dPT/PXUx4mQ4x3PohniRFjiahNIc5Oj6Q9HF9260RgnbDWTgY87E
-        Uz2qDaEcIz45LGoo/Szzvm38xoGYe4LrJ2vd4cG1UMy6tlLM0my3QBS6o7RymaGK6eA6B+QPs0y7A
-        fZhgHPKw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3Msv-0007Ol-PT; Sun, 16 Feb 2020 16:35:09 +0000
-Subject: Re: [PATCH] Documentation: DMA-API-HOWTO.txt: fixed grammer issues
- Fixed some of the grammer issues in DMA-API-HOWTO.txt using the software
- grammerly.
-To:     sunnypranay <mpranay2017@gmail.com>, hsweeten@visionengravers.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20200216141658.734-1-mpranay2017@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f249c324-a972-e0bc-2b0d-3f134bacd3d2@infradead.org>
-Date:   Sun, 16 Feb 2020 08:35:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 11:35:58 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C45ED5966;
+        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 16 Feb 2020 11:35:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=SQA1PLeoVk+BW+GTPAF4AsP3llw
+        ambjLeI+Hxm8q8jY=; b=nmcy0E9UGTIhkYGrQYahCZthdxt5odOdVHcvXfHU+XE
+        NdCbXPiKGVLHk2RRmmiHwQMEklhsyOkc/47HVt/+/E2topOCBJERfsiny2lXLnvp
+        UDzmHt1g6J1Z4iilSqw69Q7e2Ku/UVbQQN/LtsbvNsFwW2Uiv/VoYuchgasnzsUn
+        z/0VXXoVIxtkI3CwMP15OPveLRplrhdO4ut43gD9H27xwAApjywQbabuhPb1QNnW
+        P+jRXfi83jrarJAHIjZiWk/zkdMCVnbhyBZhcJ3oP3BEEhB0z+CFuMUUXTUVo404
+        ihTIDZjS3Ib/0ng2aWvBg80i+TTvjq1jtjPiicVKoVg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SQA1PL
+        eoVk+BW+GTPAF4AsP3llwambjLeI+Hxm8q8jY=; b=GZhEBWLo/hc1Yy9zGMY7RI
+        3qIhXoV7Ggjjr6b/JovvJpd9a5rltQ7iwzSpwNsOzQIUdJpEnyeqVpcMpaBD0pvF
+        IyoP/unIXL6PcBglNdE0bZu+L7zptqzYaNibkKMImwE7KC1NZWGqZ+rXH4yW5n0l
+        /PLc8YaUYAGg/2FsEelBXp3uVoLK2evW/GJXhzQ4ffNTMzjayHzdXrvpleFklJyp
+        unySdOsE5b0MQYxyRq3MsZQ9cu3IVSFQIGFIBUXT0kh8ETqE5PP4cv81tTsMV7by
+        W5uG1rpIgEiiltxLrSyVxIbxl3K/IOMQcoW+8NKHQk0pWCyyUr4vq2OJ3v3Im7og
+        ==
+X-ME-Sender: <xms:bG9JXpqk52gGd1F_j4h6-vVKhPYSpg4pQP1HjUQiInJGnf_XpQTYrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeggdeludcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
+    gheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:bG9JXuSwcKY1qeLkTwBf8f3sdU9lOxSXwsGqCAwFT637D82o8df1Iw>
+    <xmx:bG9JXlvXMUGUkhSjXli6qZKkaNjJX-4o65eSHea4SbiOf5IvanjJWg>
+    <xmx:bG9JXmNnHqugDnOijxA1h5xBRJluRUnKRLWhjyjk3cTjFt29SsPrug>
+    <xmx:bG9JXq_vmNs6tYMHPHDaGEbCsvnTTO8kuzf64adAWBQ0P5NpUtrudQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1ADBB3060C28;
+        Sun, 16 Feb 2020 11:35:56 -0500 (EST)
+Date:   Sun, 16 Feb 2020 17:35:54 +0100
+From:   Greg KH <greg@kroah.com>
+To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+Message-ID: <20200216163554.GA48157@kroah.com>
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200207100438.GA627905@kroah.com>
+ <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200216141658.734-1-mpranay2017@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06d21fa5-0115-9478-5cf1-e710446f8311@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/16/20 6:16 AM, sunnypranay wrote:
-> From: mpranay <mpranay2017@gmail.com>
+On Sun, Feb 16, 2020 at 09:52:19PM +0530, Dwivedi, Avaneesh Kumar (avani) wrote:
 > 
+> On 2/7/2020 3:34 PM, Greg KH wrote:
+> > On Fri, Jan 31, 2020 at 10:13:31AM +0530, Avaneesh Kumar Dwivedi wrote:
+> > > Add support for control peripheral of EUD (Embedded USB Debugger) to
+> > > listen to events such as USB attach/detach, charger enable/disable, pet
+> > > EUD to indicate software is functional. Reusing the platform device kobj,
+> > > sysfs entry 'enable' is created to enable or disable EUD.
+> > > 
+> > > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+> > > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> > > Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+> > > ---
+> > >   Documentation/ABI/stable/sysfs-driver-msm-eud |   5 +
+> > >   drivers/soc/qcom/Kconfig                      |  12 +
+> > >   drivers/soc/qcom/Makefile                     |   1 +
+> > >   drivers/soc/qcom/eud.c                        | 329 ++++++++++++++++++++++++++
+> > >   4 files changed, 347 insertions(+)
+> > >   create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
+> > >   create mode 100644 drivers/soc/qcom/eud.c
+> > > 
+> > > diff --git a/Documentation/ABI/stable/sysfs-driver-msm-eud b/Documentation/ABI/stable/sysfs-driver-msm-eud
+> > > new file mode 100644
+> > > index 0000000..d96ae05
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/stable/sysfs-driver-msm-eud
+> > > @@ -0,0 +1,5 @@
+> > > +What:           /sys/bus/platform/drivers/msm-eud/enable
+> > > +Date:           Jan 2020
+> > > +Contact:        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+> > > +Description:    Enable/Disable use of eud device.
+> > What are valid values to be used here?
+> it should be bool variable relying on 0 or 1.
 
+Then document it.
 
-s/grammer/grammar/ et al.
+> > 
+> > > +Users:          User space debug application which intend to use EUD h/w block.
+> > > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> > > index d0a73e7..6b7c9d0 100644
+> > > --- a/drivers/soc/qcom/Kconfig
+> > > +++ b/drivers/soc/qcom/Kconfig
+> > > @@ -202,4 +202,16 @@ config QCOM_APR
+> > >   	  application processor and QDSP6. APR is
+> > >   	  used by audio driver to configure QDSP6
+> > >   	  ASM, ADM and AFE modules.
+> > > +
+> > > +config QCOM_EUD
+> > > +       tristate "QTI Embedded USB Debugger (EUD)"
+> > > +       depends on ARCH_QCOM
+> > Why not let everyone test build this?
+> EUD is Qualcomm IP, shall not it be associated with ARCH_QCOM?
 
-Missing
-Signed-off-by: <your real name> <email address>
+No, why can't everyone buid it for testing?  What about when I want to
+build a generic arm64 kernel to run on multiple SoCs?
 
-> ---
->  Documentation/DMA-API-HOWTO.txt  | 628 +++++++++++++++----------------
->  drivers/staging/comedi/drivers.c |   2 +-
+Do not put dependancies in here that you really do not have.  There's no
+reason for this to be limited to that one chip, right?  And if you allow
+others to build the code, you will get proper bug reports when things
+break, and others will fix them, which is what you want.
 
-The /comedi/ part of this patch should not be here... and it is also wrong.
+I think the ARCH_RANDOM_SOC_NAME is totally broken and needs to be, at
+most, just an arch-specific thing, if even that.
 
->  2 files changed, 311 insertions(+), 319 deletions(-)
-> 
-> diff --git a/Documentation/DMA-API-HOWTO.txt b/Documentation/DMA-API-HOWTO.txt
-> index 358d495456d1..fa163470fde7 100644
-> --- a/Documentation/DMA-API-HOWTO.txt
-> +++ b/Documentation/DMA-API-HOWTO.txt
-> @@ -102,9 +102,9 @@ pci_map_*() interfaces.
->  
->  First of all, you should make sure::
->  
-> -	#include <linux/dma-mapping.h>
-> +	#include <linux/dma-mapping.h>
+Look at almost all other kernel drivers, they do not have those types of
+dependancies.
 
-what is the change above?
+> > > +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+> > > +	if (!chip)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	chip->dev = &pdev->dev;
+> > No reference counting???
+> you mean get/put_device?
 
-> @@ -142,7 +142,7 @@ in the same cache line, and one of them could be overwritten.)
->  Also, this means that you cannot take the return of a kmap()
->  call and DMA to/from that.  This is similar to vmalloc().
->  
-> -What about block I/O and networking buffers?  The block I/O and
-> +What about the block I/O and networking buffers?  The block I/O and
+yes.
 
-no thanks.
+thanks,
 
->  networking subsystems make sure that the buffers they use are valid
->  for you to DMA from/to.
->  
-> @@ -163,35 +163,34 @@ your devices DMA addressing capabilities.
->  
->  This is performed via a call to dma_set_mask_and_coherent()::
->  
-> -	int dma_set_mask_and_coherent(struct device *dev, u64 mask);
-> +	int dma_set_mask_and_coherent(struct device *dev, u64 mask);
-
-what is changed in the lines above?
-
->  
->  which will set the mask for both streaming and coherent APIs together.  If you
->  have some special requirements, then the following two separate calls can be
->  used instead:
->  
-> -	The setup for streaming mappings is performed via a call to
-> -	dma_set_mask()::
-> +	The setup for streaming mappings is performed via a call to
-> + 	dma_set_mask()::
->  
-> -		int dma_set_mask(struct device *dev, u64 mask);
-> +		int dma_set_mask(struct device *dev, u64 mask);
->  
-> -	The setup for consistent allocations is performed via a call
-> -	to dma_set_coherent_mask()::
-> +	The setup for consistent allocations is performed via a call
-> +	to dma_set_coherent_mask()::
->  
-> -		int dma_set_coherent_mask(struct device *dev, u64 mask);
-> +		int dma_set_coherent_mask(struct device *dev, u64 mask);
-
-Too much invisible changes.  What is this?
-
->  
-> -These calls usually return zero to indicated your device can perform DMA
-> -properly on the machine given the address mask you provided, but they might
-> +These calls usually return zero to indicate your device can perform DMA
-
-good
-
-> +properly on the machine given the address mask, you provided, but they might
-
-added comma not good.
-
->  return an error if the mask is too small to be supportable on the given
->  system.  If it returns non-zero, your device cannot perform DMA properly on
->  this platform, and attempting to do so will result in undefined behavior.
->  You must not use DMA on this device unless the dma_set_mask family of
-> -functions has returned success.
-> +functions have returned success.
-
-wrong. Subject is "family", not "functions".
-
-
-[snip]
-
-
-> @@ -278,7 +277,7 @@ Types of DMA mappings
->  
->  There are two types of DMA mappings:
->  
-> -- Consistent DMA mappings which are usually mapped at driver
-> +- Consistent DMA mappings which are usually mapped at a driver
-
-no thanks.
-
->    initialization, unmapped at the end and for which the hardware should
->    guarantee that the device and the CPU can access the data
->    in parallel and will see updates made by each other without any
-> @@ -287,40 +286,36 @@ There are two types of DMA mappings:
->    Think of "consistent" as "synchronous" or "coherent".
->  
->    The current default is to return consistent memory in the low 32
-> -  bits of the DMA space.  However, for future compatibility you should
-> -  set the consistent mask even if this default is fine for your
-> -  driver.
-> +  bits of the DMA space.  However, for future compatibility, you should set a consistent mask even if this default is fine for your driver.
-
-text line too long. We try to limit doc text lines to < 80 characters.
-
-> -	     Consistent DMA memory does not preclude the usage of
-> -	     proper memory barriers.  The CPU may reorder stores to
-> -	     consistent memory just as it may normal memory.  Example:
-> -	     if it is important for the device to see the first word
-> -	     of a descriptor updated before the second, you must do
-> -	     something like::
-> +            Consistent DMA memory does not preclude the usage of
-> +            proper memory barriers.  The CPU may reorder stores to
-> +            consistent memory just as it may normal memory.  Example:
-> +            if the device needs to see the first word
-> +            of a descriptor updated before the second, you must do
-> +            something like::
-
-why the indentation change?
-
-> -	     Also, on some platforms your driver may need to flush CPU write
-> -	     buffers in much the same way as it needs to flush write buffers
-> -	     found in PCI bridges (such as by reading a register's value
-> -	     after writing it).
-> +            Also, on some platforms, your driver may need to flush CPU write
-> +            buffers in much the same way as it needs to flush write buffers
-> +            found in PCI bridges (such as by reading a register's value
-> +            after writing it).
-
-ditto.
-
-> @@ -351,11 +344,11 @@ Using Consistent DMA mappings
->  To allocate and map large (PAGE_SIZE or so) consistent DMA regions,
->  you should do::
->  
-> -	dma_addr_t dma_handle;
-> +    	dma_addr_t dma_handle;
-
-change from tab to spaces is not good.
-
->  
-> -	cpu_addr = dma_alloc_coherent(dev, size, &dma_handle, gfp);
-> +    	cpu_addr = dma_alloc_coherent(dev, size, &dma_handle, gfp);
-
-ditto.
-
->  
-> -where device is a ``struct device *``. This may be called in interrupt
-> +where the device is a ``struct device *``. This may be called in interrupt
-
-no.
-
->  context with the GFP_ATOMIC flag.
->  
->  Size is the length of the region you want to allocate, in bytes.
-> @@ -400,9 +393,9 @@ like queue heads needing to be aligned on N byte boundaries.
->  
->  Create a dma_pool like this::
->  
-> -	struct dma_pool *pool;
-> +       struct dma_pool *pool;
->  
-> -	pool = dma_pool_create(name, dev, size, align, boundary);
-> +       pool = dma_pool_create(name, dev, size, align, boundary);
-
-noooo.
-
-> @@ -487,7 +480,7 @@ working on.
->  
->  For Networking drivers, it's a rather simple affair.  For transmit
->  packets, map/unmap them with the DMA_TO_DEVICE direction
-> -specifier.  For receive packets, just the opposite, map/unmap them
-> +specifier.  To receive packets, just the opposite, map/unmap them
-
-no.
-
->  with the DMA_FROM_DEVICE direction specifier.
->  
->  Using Streaming DMA mappings
-> @@ -496,28 +489,28 @@ Using Streaming DMA mappings
->  The streaming DMA mapping routines can be called from interrupt
->  context.  There are two versions of each map/unmap, one which will
->  map/unmap a single memory region, and one which will map/unmap a
-> -scatterlist.
-> +scatter list.
-
-no, the struct is named "scatterlist".
-
-
-> @@ -823,7 +816,7 @@ and return NETDEV_TX_OK if the DMA mapping fails on the transmit hook
->  the failure case.
->  
->  SCSI drivers must return SCSI_MLQUEUE_HOST_BUSY if the DMA mapping
-> -fails in the queuecommand hook. This means that the SCSI subsystem
-> +fails in the queue command hook. This means that the SCSI subsystem
->  passes the command to the driver again later.
-
-no, the hook is called "queuecommand".
-
-
-> @@ -890,7 +883,7 @@ If you are just writing drivers for Linux and do not maintain
->  an architecture port for the kernel, you can safely skip down
->  to "Closing".
->  
-> -1) Struct scatterlist requirements.
-> +1) Struct scatter list requirements.
-
-no, the struct is /scatterlist/
-
-> @@ -918,12 +910,12 @@ form without the feedback and suggestions from numerous individuals.
->  We would like to specifically mention, in no particular order, the
->  following people::
->  
-> -	Russell King <rmk@arm.linux.org.uk>
-> -	Leo Dagum <dagum@barrel.engr.sgi.com>
-> -	Ralf Baechle <ralf@oss.sgi.com>
-> -	Grant Grundler <grundler@cup.hp.com>
-> -	Jay Estabrook <Jay.Estabrook@compaq.com>
-> -	Thomas Sailer <sailer@ife.ee.ethz.ch>
-> -	Andrea Arcangeli <andrea@suse.de>
-> -	Jens Axboe <jens.axboe@oracle.com>
-> -	David Mosberger-Tang <davidm@hpl.hp.com>
-> +    	Russell King <rmk@arm.linux.org.uk>
-> +    	Leo Dagum <dagum@barrel.engr.sgi.com>
-> +    	Ralf Baechle <ralf@oss.sgi.com>
-> +    	Grant Grundler <grundler@cup.hp.com>
-> +    	Jay Estabrook <Jay.Estabrook@compaq.com>
-> +    	Thomas Sailer <sailer@ife.ee.ethz.ch>
-> +    	Andrea Arcangeli <andrea@suse.de>
-> +    	Jens Axboe <jens.axboe@oracle.com>
-> +    	David Mosberger-Tang <davidm@hpl.hp.com>
-
-Unwelcome change from tab to spaces.
-
-> diff --git a/drivers/staging/comedi/drivers.c b/drivers/staging/comedi/drivers.c
-> index 750a6ff3c03c..4e5c0b915841 100644
-> --- a/drivers/staging/comedi/drivers.c
-> +++ b/drivers/staging/comedi/drivers.c
-> @@ -133,7 +133,7 @@ EXPORT_SYMBOL_GPL(comedi_alloc_subdevices);
->   * On success, @s->readback points to the first element of the array, which
->   * is zero-filled.  The low-level driver is responsible for updating its
->   * contents.  @s->insn_read will be set to comedi_readback_insn_read()
-> - * unless it is already non-NULL.
-> + * Unless it is already non-NULL.
-
-huh?  why?
-
->   *
->   * Returns 0 on success, -EINVAL if the subdevice has no channels, or
->   * -ENOMEM on allocation failure.
-> 
-
-
--- 
-~Randy
-
+greg k-h
