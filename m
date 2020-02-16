@@ -2,78 +2,162 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2EFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC031C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A9F2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC6E2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 13:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHPFy/hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgBPNKi (ORCPT
+        id S1728243AbgBPNME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 08:10:38 -0500
-Received: from bin-mail-out-06.binero.net ([195.74.38.229]:55202 "EHLO
-        bin-mail-out-06.binero.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728009AbgBPNKi (ORCPT
+        Sun, 16 Feb 2020 08:12:04 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21690 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728103AbgBPNMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 08:10:38 -0500
-X-Greylist: delayed 362 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Feb 2020 08:10:38 EST
-X-Halon-ID: d9ace9aa-50bc-11ea-aa6d-005056917f90
-Authorized-sender: niklas@soderlund.pp.se
-Received: from bismarck.berto.se (p4fca2392.dip0.t-ipconnect.de [79.202.35.146])
-        by bin-vsp-out-02.atm.binero.net (Halon) with ESMTPA
-        id d9ace9aa-50bc-11ea-aa6d-005056917f90;
-        Sun, 16 Feb 2020 14:04:31 +0100 (CET)
-From:   =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Date:   Sun, 16 Feb 2020 14:02:52 +0100
-Message-Id: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.25.0
+        Sun, 16 Feb 2020 08:12:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581858722; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=A5ZI/g7WWcSZehWepKEyAPPOsuiaR/FmCfcQVi4vYPQ=; b=iHPFy/hlBBgewZ/ol6Z3sKwvIy+od3ZVIYlotcVpRKR8NXBsFt3LcnNSacdBQSBTQk356A43
+ nIkBkFBk/fvPZG3KgwrFnfIgIWmEFr7OiXiRe5M3NzCUrNMLyxiHBim9LduGor6LC0AaQWaP
+ nPqj56OkzH2qI5tzRrhtwW+PLls=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e493f9e.7f63ed18d5e0-smtp-out-n01;
+ Sun, 16 Feb 2020 13:11:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 370FDC4479C; Sun, 16 Feb 2020 13:11:58 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [103.140.231.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2E0AC43383;
+        Sun, 16 Feb 2020 13:11:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2E0AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: Documentation for qcom,eud
+To:     Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
+        tsoni@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org, rnayak@codeaurora.org,
+        satyap@codeaurora.org, pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-2-git-send-email-akdwived@codeaurora.org>
+ <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <4f19fe93-3af2-1050-4d80-ed568865d825@codeaurora.org>
+Date:   Sun, 16 Feb 2020 18:41:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <9483dfa0-15ea-e9ed-79ee-3dcf97e98136@nexus-software.ie>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry to make myself a maintainer of the Renesas R-Car thermal
-drivers.
+Thank you very much Bryan for your review comments, will be working on 
+your and other maintainers comment on this patchset and will be posting 
+new patchset soon.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 38fe2f3f7b6f290e..713e4fd8efb4f60d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14206,6 +14206,15 @@ F:	Documentation/devicetree/bindings/i2c/renesas,iic.txt
- F:	drivers/i2c/busses/i2c-rcar.c
- F:	drivers/i2c/busses/i2c-sh_mobile.c
- 
-+RENESAS R-CAR THERMAL DRIVERS
-+M:	Niklas Söderlund <niklas.soderlund@ragnatech.se>
-+L:	linux-renesas-soc@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
-+F:	Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+F:	drivers/thermal/rcar_gen3_thermal.c
-+F:	drivers/thermal/rcar_thermal.c
-+
- RENESAS RIIC DRIVER
- M:	Chris Brandt <chris.brandt@renesas.com>
- S:	Supported
+On 2/4/2020 8:21 AM, Bryan O'Donoghue wrote:
+> On 31/01/2020 04:43, Avaneesh Kumar Dwivedi wrote:
+>> Documentation for Embedded USB Debugger (EUD) device tree bindings.
+>>
+>> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+>> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+>> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 43 
+>> ++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt 
+>> b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> new file mode 100644
+>> index 0000000..57476ce
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> @@ -0,0 +1,43 @@
+>> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
+>> +
+>> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
+>> +on chip to support the USB-based debug and trace capabilities.
+>
+> on chip to support USB-based debug and trace capabilities.
+OK
+>
+>> +
+>> +Required properties:
+>> +
+>> + - compatible:  Should be "qcom,msm-eud"
+>> + - interrupts:  Interrupt number
+>> + - reg: Should be address and size of EUD register space
+>> +
+>> +EUD notifies clients for VBUS attach/detach and charger enable/disable
+>> +events. The link between event consumer(i.e.USB controller for vbus
+> missing space
+> consumer (i.e.
+Ok
+>
+>> +attach/detach event) and EUD is established via a directed graph. EUD
+>> +act 
+> The EUD acts
+OK
+>
+>> as an output link and clients of EUD as input link of this directed
+>> +graph. Events flows through the directed graph only during debug mode.
+>
+> Probably this is a very obvious question but, you mean debug and trace 
+> events or do you mean VBUS/charger events?
+Directed graph is to show VBUS and charger events flow.
+>
+>> +
+>> +An example for EUD device node:
+>> +
+>> +    eud: qcom,msm-eud@88e0000 {
+>> +        compatible = "qcom,msm-eud";
+>> +        interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
+>> +        reg = <0x88e0000 0x4000>;
+>> +        usb_con: connector {
+>> +            compatible = "usb-c-connector";
+>> +            label = "USB-C";
+>> +            port {
+>> +                eud_usb_output: endpoint {
+>> +                    remote-endpoint = <&eud_usb3_input>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +An example for EUD client:
+>> +
+>> +    usb3 {
+>> +        port {
+>> +            eud_usb3_input: endpoint {
+>> +                remote-endpoint = <&eud_usb_output>;
+>> +            };
+>> +        };
+>> +    };
+>>
 -- 
-2.25.0
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
