@@ -2,71 +2,158 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC0EC76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C6DC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DF82084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CE72084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:40:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="fLb15wCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBPVg3 (ORCPT
+        id S1727994AbgBPVkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 16:36:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34218 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgBPVg3 (ORCPT
+        Sun, 16 Feb 2020 16:40:25 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:43565 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgBPVkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 16:36:29 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sjoerd)
-        with ESMTPSA id 7268B290C1D
-Received: by beast.luon.net (Postfix, from userid 1000)
-        id F0AC13E1EED; Sun, 16 Feb 2020 22:36:24 +0100 (CET)
-From:   Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-To:     linux-um@lists.infradead.org
-Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] um: vector: Avoid NULL ptr deference if transport is unset
-Date:   Sun, 16 Feb 2020 22:36:24 +0100
-Message-Id: <20200216213624.800463-1-sjoerd.simons@collabora.co.uk>
-X-Mailer: git-send-email 2.25.0
+        Sun, 16 Feb 2020 16:40:24 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: HwJsLreoM3GJOJsKKE8ZNlAdFmJHtmBLtM/Pa5baj1Q38pHGnjttInKReV34FxSbqjNxxMZ9Fg
+ FkiBwiYqgEpOkvC9ArEopSvJpkwcvkvY36H6dB764BJX+we1C2MKC3b8/oW1+vDvAitWFAITe+
+ 62QKw/eZZK7QzoTMd0Jaz4VRRhsajBEkCFJlXXdQCPLjECrEttZDA0oXXKKuuQ3XMWUoW4fMhh
+ h29U4zfWeBmkK38kK9JXOyvK3n2Jb0c7FInWuYmEyo4jFHB8es0J58pgmMguRwagPNqXQQPkPR
+ 10Y=
+X-IronPort-AV: E=Sophos;i="5.70,450,1574146800"; 
+   d="scan'208";a="66075685"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Feb 2020 14:40:23 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 16 Feb 2020 14:40:22 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Sun, 16 Feb 2020 14:40:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DGHHZOULJRc3dS9+8pO5JNvhU5wjREzu2Ov72LHkK9WI1Uqx5ZvZQ/ZJ5RXJrd/agSfgIk5gKZZopQA1nAKA919fwleJtoA1pdyc5EF79hU7COxVY1EAJOtYPAyIUBv2WqGCcQJll5B04pQh4ta9A/xyjXiTk3XsfWDp1mKtKeActJDWFrEap0H/GtHxmzuD3r8/sRwdiC2VAUPyQIwZ8FCdVUoc95bKt6wfjxEcJsrTp4bG3OaXYKMvsvTbPR6BmF4x9eJLlbu3rT2H5K3d3Mo7UzK8CS5bMmxZbXRR6a82w1+sTnWJXYKDAyJkuCRS6ZV12qXGClpjMMHRGhBZIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yNqC3PjT7KdICI6GIvvUjpLNt7PlCCj5RuJm8lbo33o=;
+ b=VKNF1JQDY9X8wGvKcOrspfQaHzEiCFKVrTtHAtcJo2b99q2l7pftgol1vvHNBTGVqbvskydOO1ichIWlel5Uw9G+tOrCM4mQHNA0vSQklnBtXqPyZu/SMZUej2iBtBGjVvrv4NVXhxV7uKM235wBvBQV4Khdr1AjkOheUwYlC6qjoI5fRV0c9p+cwrGSxc8H3XPfTLJ7NCKk/1da//7aVCNQ2KbL2utOzBxTlsglXfWt8QIwQcbFbvrKdaxP6EsblN4XEKAnI4Q7NTlpxXg08+LESDjTxYsxJa9j8em4yuNmFgjD5cscOCNo1UY6SCyboA9uje422pdwzVw+PMFA6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yNqC3PjT7KdICI6GIvvUjpLNt7PlCCj5RuJm8lbo33o=;
+ b=fLb15wCmNUW5oprYvd/B5FJhxq0N3ThBRiQo+W9VUXU0GDmFLfLT7wZiLksG1zSxUdimll2XBa/EcWdQ+wlDO8ae8QpYZuxS9nbJi+ovqRH8fAgL77vcaIiUy1ckw+FZ6kCWT4fhPc73HsWUg6Y7x6DYhudtSETypsJD4qrOfmM=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4397.namprd11.prod.outlook.com (52.135.38.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.23; Sun, 16 Feb 2020 21:40:18 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2729.031; Sun, 16 Feb 2020
+ 21:40:18 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <broonie@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH trivial] spi: spi-mem: Fix typo, s/fallback/falls back
+Thread-Topic: [PATCH trivial] spi: spi-mem: Fix typo, s/fallback/falls back
+Thread-Index: AQHV5RGuUkBRwIGtrEiFoJhzWraU4w==
+Date:   Sun, 16 Feb 2020 21:40:17 +0000
+Message-ID: <20200216214012.1106658-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c8f4f487-16bf-4851-c27f-08d7b328d12d
+x-ms-traffictypediagnostic: MN2PR11MB4397:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB43977C76FCB012D2A5893A8BF0170@MN2PR11MB4397.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03152A99FF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(39850400004)(346002)(136003)(199004)(189003)(54906003)(2906002)(6486002)(26005)(6506007)(478600001)(1076003)(107886003)(2616005)(36756003)(316002)(81156014)(8936002)(76116006)(64756008)(5660300002)(86362001)(71200400001)(6916009)(186003)(4326008)(66556008)(91956017)(66476007)(66946007)(6512007)(81166006)(8676002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4397;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0O1zZ/11XhZC8+W6LHaSQFOBrJACQJezSqgmzHNsRi4G8B2xngH0aNPhqLhCmTK1vnqCPKRFXZU08dKdC+kMIz5nBglp4/vmUpgWOi3maUFUcsqgXHajnistOdkUjFx6N2/9W+TzTlmPvqtF5pu9ajp00eSuiUmsjfcVGUmvyyhvFSVqIvRMTwOexC4DxIV5nosPCY8R/cSSOGnsN14R/GTGdj3UOFle5Qgmoi1iwoB6GRhfO2lH89mceoOFxj3a531y6meude2vZhgF/h2b2Kt2xTAPNCOpzFUq5YFU9w7DJ9OGV6y5NEOM2J1Hjj3eFDpx2PD+EPFvymdre9Y2fDHkt3co0aXD3rD4HWtP4gICa4CZ6b+PatfFCM0oaMb1vlemFQYHyyNE0DwZtpzrjlACAq6Hcx8byKrLmmB2Un16yoP05IyhlEsF+6ug4LdY
+x-ms-exchange-antispam-messagedata: WHpoZFzf8tk4Zhx3g4lnVD7TMzeXQ0TV1UIQxGPayJ+b+rnYGXhhSVzALayq9kLgnTnHcSbD3AiS2KyJheP0nrCAAA7CtZaxet5tbEbNo7irafYiZKfDJaG78ZBg9OUXXBqig5Hb7ujUNa1Ms55lJw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8f4f487-16bf-4851-c27f-08d7b328d12d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2020 21:40:18.2587
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PshbvJICZ/5sAJfM7gyVpw5wWY4R2i2bqxF9WHdpAkbRdvGWiBcgBs/UeOB6T/VoO1Us8ZbLBBGRRyDi9U5Ujey7rv9Qt+bYJyDWQcKkorg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4397
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the transport option of a vec isn't set strncmp ends up being
-called on a NULL pointer. Better not do that.
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+"Fallback" in one word is a noun. "Fall back" is two separate words,
+a verb and an adverb. Use the latter.
 
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
+ drivers/spi/spi-mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/um/drivers/vector_kern.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-index 0ff86391f77d..ca90666c0b61 100644
---- a/arch/um/drivers/vector_kern.c
-+++ b/arch/um/drivers/vector_kern.c
-@@ -198,6 +198,9 @@ static int get_transport_options(struct arglist *def)
- 	long parsed;
- 	int result = 0;
- 
-+	if (transport == NULL)
-+		return -EINVAL;
-+
- 	if (vector != NULL) {
- 		if (kstrtoul(vector, 10, &parsed) == 0) {
- 			if (parsed == 0) {
--- 
-2.25.0
-
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index e5a46f0eb93b..3c46747bacb1 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -487,7 +487,7 @@ static ssize_t spi_mem_no_dirmap_write(struct spi_mem_d=
+irmap_desc *desc,
+  * This function is creating a direct mapping descriptor which can then be=
+ used
+  * to access the memory using spi_mem_dirmap_read() or spi_mem_dirmap_writ=
+e().
+  * If the SPI controller driver does not support direct mapping, this func=
+tion
+- * fallback to an implementation using spi_mem_exec_op(), so that the call=
+er
++ * falls back to an implementation using spi_mem_exec_op(), so that the ca=
+ller
+  * doesn't have to bother implementing a fallback on his own.
+  *
+  * Return: a valid pointer in case of success, and ERR_PTR() otherwise.
+--=20
+2.23.0
