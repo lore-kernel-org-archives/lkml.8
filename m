@@ -2,77 +2,75 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F086C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F694C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26177208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LYzJjga0"
+	by mail.kernel.org (Postfix) with ESMTP id 6113F20729
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgBPQCN (ORCPT
+        id S1728425AbgBPQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:02:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42572 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgBPQCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:02:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=cWzOpiOu7VlYjJzjka/uz4Y9eKUv0MO2UGlQ+F9pXEg=; b=LYzJjga0YcaHKF6XPZepjCtZ38
-        dhiVAEks0WShzXhYlaM/A1Iz8WQgtfujRfXxn5Oob1gZsp84rhBVs0u8Bfh30DshXhtvN9TGpeHk/
-        p1HFg9+cIjx/2d6+TTauS4/GBYKLXI+GaJwfyEkDLR4oJGdbo0YwWJ7c6ubEtJIijejvFEEw0/naP
-        6hw3SnC1YNrQclZK1qeRbDYefSX9/NPwCjiVxZLJ6I7SBOyCvPwrMG+MF8cconRoaxt1a5ORVea6g
-        kQbnTkHybVVU7Tm7qoPuJMC5O79/bgu0DQ0lZr6ITT2KQrJFgBHXZSA3YaVAo0fKxx1CUB/YpmrDL
-        oTF8ffDQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3MN3-0005FL-1O; Sun, 16 Feb 2020 16:02:13 +0000
-Subject: Re: x86: Fix a handful of typos
-To:     Martin Molnar <martin.molnar.programming@gmail.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <0819a044-c360-44a4-f0b6-3f5bafe2d35c@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d311681b-3481-b808-71e4-258bfc01c788@infradead.org>
-Date:   Sun, 16 Feb 2020 08:02:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 11:03:16 -0500
+Received: from albireo.enyo.de ([37.24.231.21]:41926 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728293AbgBPQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:03:15 -0500
+X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Feb 2020 11:03:14 EST
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1j3MID-0006zV-7T; Sun, 16 Feb 2020 15:57:13 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1j3MGr-0001RD-Ge; Sun, 16 Feb 2020 16:55:49 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v2 00/28] user_namespace: introduce fsid mappings
+References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+Date:   Sun, 16 Feb 2020 16:55:49 +0100
+In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+        (Christian Brauner's message of "Fri, 14 Feb 2020 19:35:26 +0100")
+Message-ID: <87pneesf0a.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-In-Reply-To: <0819a044-c360-44a4-f0b6-3f5bafe2d35c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/16/20 7:17 AM, Martin Molnar wrote:
-> Please find a couple of typos fixed in the patch below. Let me know if I should do anything else.
-> 
->      Martin Molnar
-> 
-> Signed-off-by: Martin Molnar <martin.molnar.programming@gmail.com>
+* Christian Brauner:
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> With fsid mappings we can solve this by writing an id mapping of 0
+> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
+> access the kernel will now lookup the mapping for 300000 in the fsid
+> mapping tables of the user namespace. And since such a mapping exists,
+> the corresponding files will have correct ownership.
 
-> ---
->  arch/x86/kernel/irqinit.c  | 2 +-
->  arch/x86/kernel/nmi.c      | 4 ++--
->  arch/x86/kernel/reboot.c   | 2 +-
->  arch/x86/kernel/smpboot.c  | 2 +-
->  arch/x86/kernel/tsc.c      | 2 +-
->  arch/x86/kernel/tsc_sync.c | 2 +-
->  6 files changed, 7 insertions(+), 7 deletions(-)
+I'm worried that this is a bit of a management nightmare because the
+data about the mapping does not live within the file system (it's
+externally determined, static, but crucial to the interpretation of
+file system content).  I expect that many organizations have
+centralized allocation of user IDs, but centralized allocation of the
+static mapping does not appear feasible.
 
-Thanks.
--- 
-~Randy
-
+Have you considered a more complex design, where untranslated nested
+user IDs are store in a file attribute (or something like that)?  This
+way, any existing user ID infrastructure can be carried over largely
+unchanged.
