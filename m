@@ -2,40 +2,59 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0534FC7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE56EC7619D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB242086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D773227BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581848885;
+	bh=tFdLIRrPeGwxnZkYfT0YOBqyS7GHpTVYWDvgSynC27M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zMhwAUk7JSNOsd6RNWXDuZmPZ+RVTXPhh4/0XGvR6YnmoZ3KXx1z0ZF6Do6AgGN1E
+	 ZgbiJljCI7MoMHTERBpxf/+Xv65CE8eKDMiVpVNqIeb8UdHy/rspojOpRDgBH7BaBz
+	 XlNlB1ohVCyAFf488V5D1lF85qxVjXwrNWEsIXrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgBPK1x (ORCPT
+        id S1727872AbgBPK2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 05:27:53 -0500
-Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:22907 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgBPK1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 05:27:53 -0500
-Received: from localhost.localdomain ([93.22.36.246])
-        by mwinf5d13 with ME
-        id 3NTo2200F5JeL2d03NTpE1; Sun, 16 Feb 2020 11:27:50 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 16 Feb 2020 11:27:50 +0100
-X-ME-IP: 93.22.36.246
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] tty: serial: Kconfig: Fix a typo
-Date:   Sun, 16 Feb 2020 11:27:42 +0100
-Message-Id: <20200216102742.19298-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Sun, 16 Feb 2020 05:28:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbgBPK2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 05:28:04 -0500
+Received: from localhost.localdomain (unknown [122.178.194.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 889F820857;
+        Sun, 16 Feb 2020 10:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581848883;
+        bh=tFdLIRrPeGwxnZkYfT0YOBqyS7GHpTVYWDvgSynC27M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2Hg5+89t9fa2SU6yNsw+x3xqSTqi1E91mWoyMdZG8M3PKQgwr0tfD+7WK+CfIDzLs
+         E1k7KDr5x85RclQv9oSo8XbGsCAVqC2rwFKSaRPhv4fWWE1t2ynN6D9XpC+bnGHzr8
+         rR7hCGZnwgSFZe8BanZKfeTGV0OJkJDPHGI3LDjU=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        vnkgutta@codeaurora.org
+Subject: [PATCH v3 0/5] Add clock drivers for SM8250 SoC
+Date:   Sun, 16 Feb 2020 15:57:20 +0530
+Message-Id: <20200216102725.2629155-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,26 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'exsisting' has an extra 's'
+This series adds clock drivers support for SM8250 SoC.  As part of the
+device tree, the sm8250 dts file has basic nodes like CPU, PSCI, intc, timer
+and clock controller.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/tty/serial/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Required clock controller driver and RPMH cloks are added to
+support peripherals like USB.
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 52eaac21ff9f..7172f1c5fa6d 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1111,7 +1111,7 @@ config SERIAL_SC16IS7XX_SPI
- 	help
- 	  Enable SC16IS7xx driver on SPI bus,
- 	  If required say y, and say n to spi if not required,
--	  This is additional support to exsisting driver.
-+	  This is additional support to existing driver.
- 	  You must select at least one bus for the driver to be built.
- 
- config SERIAL_TIMBERDALE
+All this configuration is added to support SM8250 to boot up to the
+serial console.
+
+Changes in v3:
+- Dropped accepted patches by Steve
+- Split the common rename patch to rename and refactor patches
+- Rebase on clk/clk-qcom and move yaml binding to .../bindings/clock/qcom,gcc-sm8250.yaml
+- Fix comments form Steve on gcc-sm8250 clk driver
+
+Taniya Das (5):
+  clk: qcom: clk-alpha-pll: Use common names for defines
+  clk: qcom: clk-alpha-pll: Refactor trion PLL
+  clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
+  dt-bindings: clock: Add SM8250 GCC clock bindings
+  clk: qcom: gcc: Add global clock controller driver for SM8250
+
+ .../bindings/clock/qcom,gcc-sm8250.yaml       |   72 +
+ drivers/clk/qcom/Kconfig                      |    7 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-alpha-pll.c              |  264 +-
+ drivers/clk/qcom/clk-alpha-pll.h              |   12 +
+ drivers/clk/qcom/gcc-sm8250.c                 | 3690 +++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sm8250.h   |  271 ++
+ 7 files changed, 4268 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
+ create mode 100644 drivers/clk/qcom/gcc-sm8250.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
+
 -- 
-2.20.1
+2.24.1
 
