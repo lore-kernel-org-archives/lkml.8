@@ -2,97 +2,150 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A27C2BA83
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520ECC7619B
 	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8C42084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B63022522
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 12:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581854792;
-	bh=lj7ZTxv/npbHV4KVzblAHdNDotXt560iH11Zbuy9Z6A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pj/F2LwJ9hhGbmw7rdwYZoOGnMwcn5Dmefuiem22oG7mnL44mvuGkIrrXDzj7JD3q
-	 51+whRcuNx+i30I0jArQrjoFyXUhkrHCr1mqJKhiNE+ICXm0XHf1EyOqho8F/nmLc0
-	 4FhNP5ZdRUdVC1caTtBJrxJYKqQUQ5MVp4kvxroE=
+	s=default; t=1581854793;
+	bh=5vJUzMFXgL+4htCa+i0lvCczJshCVNG4PgJkkf3GTn0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=lCpjDOW+l0rYIcQCQKOJ2M/o+fGh91x9FgveXVL6LeQnC5VEyODhs1eNVaSamytdX
+	 dcixUSDaKIyZjWdrRwC+RoZtFjI653XaUn/F708BXJrJC0bQM9PaRAVpTLY5leH3Zu
+	 3AefTv3fgQktA+cpgoqM+SG11YzHCUG+vRGDhVso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgBPMDk (ORCPT
+        id S1728138AbgBPMGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 07:03:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
+        Sun, 16 Feb 2020 07:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgBPMDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 07:03:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1728054AbgBPMGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 07:06:31 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [12.246.51.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4B5820857;
-        Sun, 16 Feb 2020 12:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BB320857;
+        Sun, 16 Feb 2020 12:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581854620;
-        bh=lj7ZTxv/npbHV4KVzblAHdNDotXt560iH11Zbuy9Z6A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LZ1FDdnM30i3Q5YKwt/DoUotiLpQaPAn2jIh/wtCEGKRsI+i4MG1glYufqsMHguLV
-         5mICwHAGUqtCowcCr6QIteAoFz6KYn/0DtTinanK9TvPYCwLcuRwo0s8+aDTkaRrmP
-         7XMeV84cBiYzggNpRDNOE5lxDgf1nUE74PnMUNRQ=
-Date:   Sun, 16 Feb 2020 21:03:33 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     akpm@linux-foundation.org, mhiramat@kernel.org,
-        rostedt@goodmis.org, keescook@chromium.org, rppt@linux.ibm.com,
-        linux@dominikbrodowski.net, nivedita@alum.mit.edu,
-        nadav.amit@gmail.com, glider@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] init/main.c: mark boot_config_checksum static
-Message-Id: <20200216210333.b5e911feafb3acfae4a1b89b@kernel.org>
-In-Reply-To: <1581852511-14163-1-git-send-email-hqjagain@gmail.com>
-References: <1581852511-14163-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1581854790;
+        bh=5vJUzMFXgL+4htCa+i0lvCczJshCVNG4PgJkkf3GTn0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G4v58wtDrELJRfS6Y38HFJ/9cGmG8sXllwsX+m3TSNbAJoIyXj/LPU5HbBBLnqYWl
+         aokWpFNpGiKSCEyCF5l3RhxdQFZWKrTGF6fUbhm4EvOvkxBxb4DlYKTaAegV9gTP9k
+         ut4Yll6I+C/pvicdDRM3vUtgmWZ2l4EFUhdGUWqk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E3ECB352168B; Sun, 16 Feb 2020 04:06:25 -0800 (PST)
+Date:   Sun, 16 Feb 2020 04:06:25 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [RFC 0/3] tools/memory-model: Add litmus tests for atomic APIs
+Message-ID: <20200216120625.GF2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200214040132.91934-1-boqun.feng@gmail.com>
+ <Pine.LNX.4.44L0.2002141024141.1579-100000@iolanthe.rowland.org>
+ <20200215152550.GA13636@paulmck-ThinkPad-P72>
+ <20200216054345.GA69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200216054345.GA69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Feb 2020 19:28:31 +0800
-Qiujun Huang <hqjagain@gmail.com> wrote:
-
-> In fact, this function is only used in this file, so mark it with 'static'.
-
-Good catch!
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you!
-
+On Sun, Feb 16, 2020 at 01:43:45PM +0800, Boqun Feng wrote:
+> On Sat, Feb 15, 2020 at 07:25:50AM -0800, Paul E. McKenney wrote:
+> > On Fri, Feb 14, 2020 at 10:27:44AM -0500, Alan Stern wrote:
+> > > On Fri, 14 Feb 2020, Boqun Feng wrote:
+> > > 
+> > > > A recent discussion raises up the requirement for having test cases for
+> > > > atomic APIs:
+> > > > 
+> > > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > > > 
+> > > > , and since we already have a way to generate a test module from a
+> > > > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > > > tests for atomic APIs into memory-model.
+> > > 
+> > > It might be worth discussing this point a little more fully.  The 
+> > > set of tests in tools/memory-model/litmus-tests/ is deliberately rather 
+> > > limited.  Paul has a vastly more expansive set of litmus tests in a 
+> > > GitHub repository, and I am doubtful about how many new tests we want 
+> > > to keep in the kernel source.
+> > 
+> > Indeed, the current view is that the litmus tests in the kernel source
+> > tree are intended to provide examples of C-litmus-test-language features
+> > and functions, as opposed to exercising the full cross-product of
+> > Linux-kernel synchronization primitives.
+> > 
+> > For a semi-reasonable subset of that cross-product, as Alan says, please
+> > see https://github.com/paulmckrcu/litmus.
+> > 
+> > For a list of the Linux-kernel synchronization primitives currently
+> > supported by LKMM, please see tools/memory-model/linux-kernel.def.
+> > 
 > 
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  init/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> So how about I put those atomic API tests into a separate directory, say
+> Documentation/atomic/ ?
 > 
-> diff --git a/init/main.c b/init/main.c
-> index f95b014..534589f 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -335,7 +335,7 @@ static char * __init xbc_make_cmdline(const char *key)
->  	return new_cmdline;
->  }
->  
-> -u32 boot_config_checksum(unsigned char *p, u32 size)
-> +static u32 boot_config_checksum(unsigned char *p, u32 size)
->  {
->  	u32 ret = 0;
->  
-> -- 
-> 1.8.3.1
+> The problem I want to solve here is that people (usually who implements
+> the atomic APIs for new archs) may want some examples, which can help
+> them understand the API requirements and test the implementation. And
+> litmus tests are the perfect tool here (given that them can be
+> translated to test modules with klitmus). And I personally really think
+> this is something the LKMM group should maintain, that's why I put them
+> in the tools/memory-model/litmus-tests/. But I'm OK if we end up
+> deciding those should be put outside that directory.
+
+Good point!
+
+However, we should dicuss this with the proposed beneficiaries, namely
+the architecture maintainers.  Do they want it?  If so, where would
+they like it to be?  How should it be organized?
+
+In the meantime, I am more than happy to accept litmus tests into the
+github archive.
+
+So how would you like to proceed?
+
+							Thanx, Paul
+
+> Regards,
+> Boqun
 > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> > > Perhaps it makes sense to have tests corresponding to all the examples
+> > > in Documentation/, perhaps not.  How do people feel about this?
+> > 
+> > Agreed, we don't want to say that the set of litmus tests in the kernel
+> > source tree is limited for all time to the set currently present, but
+> > rather that the justification for adding more would involve useful and
+> > educational examples of litmus-test features and techniques rather than
+> > being a full-up LKMM test suite.
+> > 
+> > I would guess that there are litmus-test tricks that could usefully
+> > be added to tools/memory-model/litmus-tests.  Any nomination?  Perhaps
+> > handling CAS loops while maintaining finite state space?  Something else?
+> > 
+> > 							Thanx, Paul
