@@ -2,159 +2,212 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68843C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAADC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385E5208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5D62084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ffzrYpUY"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PHMTgyO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBPTyk (ORCPT
+        id S1727781AbgBPTyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 14:54:40 -0500
-Received: from mail-eopbgr1410127.outbound.protection.outlook.com ([40.107.141.127]:28800
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726009AbgBPTyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 14:54:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ferxquqvt0UCp/B/uDEgBRQ+2hjLn/VhY838Yt4NGJi7gcE0uFA7M38ZUv1xpJFsCKr+JVDHiX/z8sEWv9gT1mb/YVbLCV3/bOZW+eJtYZ1ZjrI898zVILACB4Z2a/tVOUiy1e/CYXuXdQTJnv2p0swItPREfYecQ/azU10CISPzJ+Dbx7K3efJhD0xtlw6N6Rwt9BFOJo0z0h4wOEHUD0nye4ren5IuUcPGY1JljwI2vaLyTyHJLm31PxzvtfVkG9sSW1NQI84BRm+NOe8ZNK29ISUD8Tk8mkfs1ZIP287r4Kz2OB0/xaEN/CROe8+psKfnMbThcdHXe/tRG0j0Eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6JWHHdjximhgCT4QAkEXrYqy68MStrBcmJ2e94W3ZRs=;
- b=Ga75TUHtJFfAIBQUmInjE5ZLLn4Y5urzfPDzClSyUFyQ6jsIobYjszAim5PpoFqmI5Jc6c6PW5OMKbGHGMMCZZU+QkI+UKjWUNfhpgNy+8wSE6+X7W5qll2O5xYfc1R7DcZdehCNt+bltEvugbtReXlMI1r7z4U+0IytSxcQ0U6vg6NXgqUkaEq4+oy4bWNGo2B/xAiLz4/XqKJPgfZUin7LfaWCjEgrDj9Pr5nNZIwt/RjHgqG66eDvbAV/TWfGoUApCe8XwixNE8KBXIbgW/dEUfePzOFD7YLRm+k+1cP3h7Q96yHQLo7bXFRd1yjZfYGqOf2R0zWteGn0LwDH1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6JWHHdjximhgCT4QAkEXrYqy68MStrBcmJ2e94W3ZRs=;
- b=ffzrYpUYEplTwgwRRnMQoA84WozMSqpIJJ8onkJr9PM7H2EId/MRdIpVYcJpZGMy5uop6kk4ID39OraaUGTnLO68qGuG3W59i9bgC9AlhiRxJcbZU0IfQFjOvnO3fCIIgSyGPORrOu/S/mDEoQQLusRtq5DV8IclVzreHYCJYbM=
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
- TYAPR01MB3712.jpnprd01.prod.outlook.com (20.178.137.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.23; Sun, 16 Feb 2020 19:54:34 +0000
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70%7]) with mapi id 15.20.2729.028; Sun, 16 Feb 2020
- 19:54:34 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
-Subject: RE: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Thread-Topic: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Thread-Index: AQHV4UBCokgUzaN+lUSpKIEPQqBkX6gXQFUAgAIZNoCAAsk4AIAAXS4AgAEY+wCAAKfGYA==
-Date:   Sun, 16 Feb 2020 19:54:34 +0000
-Message-ID: <TYAPR01MB228505DD9E7C85F9FA4AA785B7170@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org>
- <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk>
- <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <CAMuHMdV8-=dj5n-FM1nHjXq1DhkJVOh4rLFxERt33jAQmU4h_A@mail.gmail.com>
- <CAK8P3a0m574dHYuKBPLf6q2prnbFxX1w7xe4-JX-drN6dqH6TQ@mail.gmail.com>
- <CAMuHMdVpTngVXUnLzpS3hZWuVg97GVTf2Y3X8md--41AtaD1Ug@mail.gmail.com>
-In-Reply-To: <CAMuHMdVpTngVXUnLzpS3hZWuVg97GVTf2Y3X8md--41AtaD1Ug@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Paterson2@renesas.com; 
-x-originating-ip: [176.27.142.199]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2a184311-dcf4-4352-d7db-08d7b31a0c02
-x-ms-traffictypediagnostic: TYAPR01MB3712:
-x-microsoft-antispam-prvs: <TYAPR01MB371261E645276A94CEBBDBE6B7170@TYAPR01MB3712.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 03152A99FF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(376002)(346002)(39850400004)(199004)(189003)(4326008)(33656002)(81156014)(8936002)(81166006)(86362001)(8676002)(7416002)(71200400001)(478600001)(55016002)(9686003)(5660300002)(7696005)(76116006)(2906002)(53546011)(66946007)(6506007)(316002)(54906003)(110136005)(186003)(26005)(66476007)(66556008)(66446008)(52536014)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3712;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3zKmvziL4Tsvl8IkfZo1A8khxZlxiW38F+8fRUxjK1lLm8BltTitRB3BET0b+CiTpzKKpDiLObNdJqZxNYmiqAs8g56JcR3Lrjj978pW1G4kIAGLmhF8n09w3aJkoqgnIgCaNaZ5S0yZECWb16wO4CsxJbFyDnulsOdxBOe1yk+9egDgA2TjpiUr/n5gIIdUBR0G0nNhTUXukb/b8Ot+PGO3cleMnrHjRHpTFxv4D2Odfs2ishbXDW3B5gikGT1OfErRHzpjJ9CWBqnsVQVGTLjKfzkzFZh1rk4rrPea0QYYVV3rf5mke/bRpq3LkLL4IMxPt3HCTOrDlY62WXomWlRfk00bFMknPOaRxiBEOEiT2Md9OU9rkCv7paYfsn4x61OMyU8AUYs5bEfDQN+3JpLgQwmN0QPSiyC2aJ8NbHe0V4PIuz3498tr1d/dHsHi
-x-ms-exchange-antispam-messagedata: Zr4Dz1d7bB/W52KB4vH2WwEm7Oi3eCITMTQXP6o1Dv79YGCsj8JboLRuAN6b0giuw73HKxlMIW1ybRx8rbJRzfIdbcjIhiq4osprr2X/8kqZYRqDSXkuoZMkKFykCNZO5KFvyXw3hSLLVJWRWfGvcw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 16 Feb 2020 14:54:55 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14149 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgBPTyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 14:54:55 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e499dc50000>; Sun, 16 Feb 2020 11:53:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 16 Feb 2020 11:54:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 16 Feb 2020 11:54:50 -0800
+Received: from [10.2.163.245] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 16 Feb
+ 2020 19:54:49 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <920b4276-b2ca-646c-a21b-ca0b9bacf471@nvidia.com>
+Date:   Sun, 16 Feb 2020 11:54:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a184311-dcf4-4352-d7db-08d7b31a0c02
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2020 19:54:34.4371
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L5IeZBppSCXHAIcaU4f0oJIU7OcbJefultakuQC9+zbn1JifeG5c/EBWiKMxgRQJ7dkcNtl2PJWezG/2RZuP+imBTZ1iIA+vrh5Hf3IKJLs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3712
+In-Reply-To: <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581882821; bh=UB6GUGHmM8MBM9Onxlyt8oKlH098Je6CysPde2qz2nw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PHMTgyO8pUL+ysZRcWinlnGiic7lxVa8DE9J//J9iZmc/vcvXruZNPQJjnwQLiZkT
+         JK1hDfXBv7lHs8RX/cCGBc3AlYgJXLZkeY/LgQwcXw85MmMQaqOg2wB9PiNS3Z9gyT
+         Z1Xo4xJKvWUW3dT2Kc4PEhnqMQLFf9J/BM40fEFOGI5uJNTUhDGPKRehXY6nrZAtu/
+         WqzCplngD3AcginoEqFRPZ89PXrM11GVdB5QsT1FuoHlOMyUxQXYIzWA1/N8jG5Y1Y
+         iwvYIRWaDhWnNgxqihgtgbsfDWe22cdMUYj9d/x+5O5MnxXUAKpA1rxqSnQqv2Li+5
+         drDT8wn2MoINQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQXJuZCwgR2VlcnQsDQoNCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBs
-aW51eC1tNjhrLm9yZz4NCj4gU2VudDogMTYgRmVicnVhcnkgMjAyMCAwOTo0NQ0KPiBUbzogQXJu
-ZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4gDQo+IEhpIEFybmQsDQo+IA0KPiBPbiBTYXQs
-IEZlYiAxNSwgMjAyMCBhdCA1OjU5IFBNIEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+IHdy
-b3RlOg0KPiA+IE9uIFNhdCwgRmViIDE1LCAyMDIwIGF0IDEyOjI1IFBNIEdlZXJ0IFV5dHRlcmhv
-ZXZlbg0KPiA+IDxnZWVydEBsaW51eC1tNjhrLm9yZz4gd3JvdGU6DQo+ID4gPiBPbiBUaHUsIEZl
-YiAxMywgMjAyMCBhdCA1OjU0IFBNIEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+IHdy
-b3RlOg0KPiA+ID4gPiBPbiBXZWQsIEZlYiAxMiwgMjAyMCBhdCA5OjUwIEFNIFJ1c3NlbGwgS2lu
-ZyAtIEFSTSBMaW51eCBhZG1pbg0KPiA+ID4gPiA8bGludXhAYXJtbGludXgub3JnLnVrPiB3cm90
-ZToNCj4gPiA+DQo+ID4gPiBUaGUgQ0lQLXN1cHBvcnRlZCBSWi9HMSBTb0NzIGNhbiBoYXZlIHVw
-IHRvIDQgR2lCLCB0eXBpY2FsbHkgc3BsaXQgKGV2ZW4NCj4gPiA+IGZvciAxIEdpQiBvciAyIEdp
-QiBjb25maWd1cmF0aW9ucykgaW4gdHdvIHBhcnRzLCBvbmUgYmVsb3cgYW5kIG9uZSBhYm92ZQ0K
-PiA+ID4gdGhlIDMyLWJpdCBwaHlzaWNhbCBsaW1pdC4NCg0KWWVwLiBPbmUgZXhhbXBsZSBpcyBy
-OGE3NzQzLWl3ZzIwbS5kdHNpLg0KDQo+ID4NCj4gPiBHb29kIHRvIGtub3cuIEkgdGhpbmsgdGhl
-cmUgYXJlIHNldmVyYWwgb3RoZXIgY2hpcHMgdGhhdCBoYXZlIGR1YWwtY2hhbm5lbA0KPiA+IERE
-UjMgYW5kIHRodXMgL2Nhbi8gc3VwcG9ydCB0aGlzIGNvbmZpZ3VyYXRpb24sIGJ1dCB0aGlzIHJh
-cmVseSBoYXBwZW5zLg0KPiA+IEFyZSB5b3UgYXdhcmUgb2YgY29tbWVyY2lhbCBwcm9kdWN0cyB0
-aGF0IHVzZSBhIDRHQiBjb25maWd1cmF0aW9uLCBhc2lkZQ0KPiBmcm9tDQo+ID4gdGhlIHJlZmVy
-ZW5jZSBib2FyZD8NCg0KaVdhdmUgU3lzdGVtcyBtYWtlIGEgcmFuZ2Ugb2YgU09NIG1vZHVsZXMg
-dXNpbmcgdGhlIFJaL0cxIFNvQ3MuDQpJIGJlbGlldmUgdGhlcmUgYXJlIG9wdGlvbnMgZm9yIHNv
-bWUgb2YgdGhlc2UgdG8gdXNlIDQgR0IsIGFsdGhvdWdoIDEgb3IgMiBHQiBpcyB1c2VkIGluIHRo
-ZSBib2FyZHMgd2UndmUgdXBzdHJlYW1lZCBzdXBwb3J0IGZvci4NCg0KVGhlcmUgYXJlIGFsc28g
-b3RoZXIgU09NIHZlbmRvcnMgKGUuZy4gRW10cmlvbikgYW5kIGVuZCB1c2VycyBvZiBSWi9HMSwg
-YnV0IEknbSBub3Qgc3VyZSBvZiB0aGUgZGV0YWlscy4NCg0KS2luZCByZWdhcmRzLCBDaHJpcw0K
-DQo+IA0KPiBVbmZvcnR1bmF0ZWx5IEkgZG9uJ3Qga25vdy4NCj4gQ2hyaXMgUGF0ZXJzb24gbWln
-aHQga25vdy4NCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdz
-IGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+
-IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
-YWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
-dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
+
+On 2/16/20 3:03 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
+>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>> which can support up to 6 MIPI CSI camera sensors.
+>>
+>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>> capture from an external camera sensor connected to CSI or from
+>> built-in test pattern generator.
+>>
+>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>> This patch adds a V4L2 media controller and capture driver support
+>> for Tegra210 built-in CSI to VI test pattern generator.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/staging/media/Kconfig              |    2 +
+>>   drivers/staging/media/Makefile             |    1 +
+>>   drivers/staging/media/tegra/Kconfig        |   10 +
+>>   drivers/staging/media/tegra/Makefile       |    8 +
+>>   drivers/staging/media/tegra/TODO           |   10 +
+>>   drivers/staging/media/tegra/tegra-common.h |  239 +++++++
+>>   drivers/staging/media/tegra/tegra-csi.c    |  374 ++++++++++
+>>   drivers/staging/media/tegra/tegra-csi.h    |  115 ++++
+>>   drivers/staging/media/tegra/tegra-vi.c     | 1019 ++++++++++++++++++++++++++++
+>>   drivers/staging/media/tegra/tegra-vi.h     |   79 +++
+>>   drivers/staging/media/tegra/tegra-video.c  |  118 ++++
+>>   drivers/staging/media/tegra/tegra-video.h  |   32 +
+>>   drivers/staging/media/tegra/tegra210.c     |  767 +++++++++++++++++++++
+>>   drivers/staging/media/tegra/tegra210.h     |  190 ++++++
+>>   14 files changed, 2964 insertions(+)
+>>   create mode 100644 drivers/staging/media/tegra/Kconfig
+>>   create mode 100644 drivers/staging/media/tegra/Makefile
+>>   create mode 100644 drivers/staging/media/tegra/TODO
+>>   create mode 100644 drivers/staging/media/tegra/tegra-common.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra-video.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra-video.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>
+> <snip>
+>
+>> +/*
+>> + * videobuf2 queue operations
+>> + */
+>> +static int tegra_channel_queue_setup(struct vb2_queue *vq,
+>> +                                  unsigned int *nbuffers,
+>> +                                  unsigned int *nplanes,
+>> +                                  unsigned int sizes[],
+>> +                                  struct device *alloc_devs[])
+>> +{
+>> +     struct tegra_vi_channel *chan = vb2_get_drv_priv(vq);
+>> +
+>> +     if (*nplanes)
+>> +             return sizes[0] < chan->format.sizeimage ? -EINVAL : 0;
+>> +
+>> +     *nplanes = 1;
+>> +     sizes[0] = chan->format.sizeimage;
+>> +     alloc_devs[0] = chan->vi->dev;
+>> +
+>> +     /*
+>> +      * allocate min 3 buffers in queue to avoid race between DMA
+>> +      * writes and userspace reads.
+>> +      */
+>> +     if (*nbuffers < 3)
+>> +             *nbuffers = 3;
+> First of all, don't check this here, instead set the struct vb2_queue field
+> 'min_buffers_needed' to 3 instead.
+>
+> But the reason given for this check is peculiar: there should not be any
+> race at all. Usually the reason for requiring a specific minimum number of
+> buffers is that the DMA engine needs at least 2 buffers before it can start
+> streaming: it can't give back a buffer to userspace (vb2_buffer_done())
+> unless there is a second buffer it can start to capture to next. So for many
+> DMA implementations you need a minimum of 2 buffers: two buffers for the
+> DMA engine, one buffer being processed by userspace.
+>
+> If the driver is starved of buffers it will typically keep capturing to
+> the last buffer until a new buffer is queued.
+>
+> In any case, once the driver releases a buffer via vb2_buffer_done() the
+> buffer memory is no longer owned by the driver.
+>
+> To be precise, buffer ownership is as follows:
+>
+> userspace -> VIDIOC_QBUF -> vb2 -> buf_queue -> driver -> vb2_buffer_done() -> vb2 -> VIDIOC_DQBUF -> userspace
+>
+> (vb2 == videobuf2 framework)
+>
+> Note that vb2 never touches the buffer memory.
+>
+> So if you get a race condition in this driver, then there is something
+> strange going on. It looks like vb2_buffer_done() is called while DMA is
+> still ongoing, or because the driver really needs to keep one buffer
+> available at all times.
+>
+> Regards,
+>
+>          Hans
+
+Thanks Hans.
+
+On running v4l2-compliance streaming tests for longer run, I noticed 
+kernel reporting unable to write to read-only memory and with debugs I 
+observed when this error was reported, I see 2 buffers queued and both 
+using same address.
+
+for first buffer capture start thread initiates capture and wakes done 
+thread to wait for memory write ack and once its done buffer is released 
+to user space but I see upon buffer released to user space immediate 
+next buffer capture single shot gets issued (as soon as single shot is 
+issued frame capture data is written to memory by DMA) and I see this 
+kernel error of unable to write to read-only memory.
+
+This error happens rare and happens on long run and all the times of 
+repro's, I see when other thread releases buffer immediate I see single 
+shot gets issued as 2 buffers are queued up at the same time with same 
+DMA address.
+
+With using minimum 3 buffers, this issue doesnt happen at all from 
+almost 72 hours of testing.
+
+
+Will try with setting vb2 queue field min_buffers_needed as 3 instead of 
+adding check in queue setup.
+
+
+>> +
+>> +     return 0;
+>> +}
