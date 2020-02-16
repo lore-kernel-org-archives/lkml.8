@@ -2,75 +2,133 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F694C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD70C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6113F20729
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C6A20729
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KMyaulIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgBPQDQ (ORCPT
+        id S1728414AbgBPQGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:03:16 -0500
-Received: from albireo.enyo.de ([37.24.231.21]:41926 "EHLO albireo.enyo.de"
+        Sun, 16 Feb 2020 11:06:09 -0500
+Received: from mout.web.de ([212.227.15.3]:60155 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbgBPQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:03:15 -0500
-X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Feb 2020 11:03:14 EST
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1j3MID-0006zV-7T; Sun, 16 Feb 2020 15:57:13 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1j3MGr-0001RD-Ge; Sun, 16 Feb 2020 16:55:49 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v2 00/28] user_namespace: introduce fsid mappings
-References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
-Date:   Sun, 16 Feb 2020 16:55:49 +0100
-In-Reply-To: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
-        (Christian Brauner's message of "Fri, 14 Feb 2020 19:35:26 +0100")
-Message-ID: <87pneesf0a.fsf@mid.deneb.enyo.de>
+        id S1728293AbgBPQGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:06:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1581869156;
+        bh=MZlY5jXxovnVpKhXenFIH3sYVC3V8sCSqoLKnbMBfrg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=KMyaulILEc0ViK1SjeBPOF9a98z71AIW87x+3leMPx3lnAgzGJ9l/h1G3DMapurvr
+         DP0fHiGoXftlHgzqMeJjBBp2nCeoHTTy5j84XSqavLH9x4nW/bmzLVuGh/I0ILEMN3
+         ZzpNoX3i3CC8Gi5AazB9hKuvNtHe78hcPBeGEQ/g=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.10] ([95.157.55.156]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M4lkz-1jO4FN2tjh-00ywOb; Sun, 16
+ Feb 2020 17:05:56 +0100
+Subject: Re: [PATCH v2 3/3] riscv: Fix crash when flushing executable ioremap
+ regions
+To:     Alex Ghiti <alex@ghiti.fr>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1581767384.git.jan.kiszka@web.de>
+ <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
+ <e721c440-2baf-d962-62ef-41a4f3b1333b@ghiti.fr>
+From:   Jan Kiszka <jan.kiszka@web.de>
+Message-ID: <b63e5945-0e31-940f-5ff7-6754ef5c034f@web.de>
+Date:   Sun, 16 Feb 2020 17:05:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <e721c440-2baf-d962-62ef-41a4f3b1333b@ghiti.fr>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4IYkYoTip6rhKbBbR3p45GwgeQBDPssEbOY75DgUV5s0zWnKyf0
+ /xbkS6vPCX50+OITwD3eb3uAo87TZJvAW3LpnZXgsALeRQfWGvJHoU6LUBLgJI7bjbzFoSv
+ qVOUmoJr7OI59ePFab4bMeymQ8p/fZFDG9pIq0dzd5fCPpVrjlxo8RQHkbaMl7cRTaApIvn
+ ggBPQKU+Rd9hUusHBcXYA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+wWHqJLZyLs=:6QTPINZQciCeoWt1mjpoif
+ U0g4M0oP+tuEm0imgfgwvi+9PJsPduQv1+os4sPFys5GYlx22fgSjghLYtewimO19gTUj++Ze
+ vFYGKdCMmh8c0CwowbhJ6vv5kxVRObsvoWdGJ2v/0dO6Wxtf8136fOtSNd6gPJbQz3vheannA
+ s31KAgPiF8M5LSKv/4vkiIgpANe08i2+JOFHS+X1XfZX9HLe3bQrnRnns2H6zVBzaH0vl1X/F
+ IegofJz+Y/WqBsDLVT95hyGVBrkuhotjHpTfOEWFU2o5DxmEMG/k0NgmlIDaub4pdBGVX8i8d
+ Kaq471l4qrlCoRdU/gBWWbM863QsnaK/IsVZRrmN18fz+SBdxZzCDiErkkMqFq7jca8vL8OXf
+ aSs/o9OcxNGsFDgRzMDFv0H/2Ke7Z0mSVSZ4thoPOMSX6JlFpfw62kbIfUJCinAXVhn4Kv4gq
+ bFdl5KVmDZuteLEsWKSYaqEQJk8yjYYsu6jW9cJ+j3yHF+Q+7OF8+Nx7ABQqZMISdpjBhS6NE
+ ZxTQQCs17ET6UnHjfwm98cG3xh1MOJC6CBuDJvKP71Z57fQ95eDvPgH8o0M5v8CChWIAm61fZ
+ vb8S3Yw6iXamhgDyafgIX9omDeih/OpJ9OWLeXi1jLQrKR01vOe7plN/S91ypR3/HCE56piJZ
+ y0UKbMnmkwqS72OmAvNKnE6uJMteWfvngp74RhMHbrMZ/+jLGRM+pyiWpeBtTs+Fe0q3oGv21
+ BIegb++mAf141DNIW5MJ7RnfSLrXSBScbFjGN/9g/9uaXy8di2NoNZ03v7mWaxzQtrh2dnwhs
+ //bFXJud+4U6AKZiouQmQzZ/PRqr8Ylj6/FgieoD3jLIILgtCc2uaUxxqertGOXccCIQkRoJH
+ mwB9RnCfTrgodaU8yaLD0ulKHtRE94MA32Zp4JBkZnCyU7oaqnjZY5fZWrzcDJ58p5X1eJmbK
+ giJsp0ramTrp08SE7Zda26mRnSaNTOsDT/yoYlUuCS+gH4JFUniGmUOHhh2gObTcldodWc9R6
+ GADiM9NJwBKXXqhaQ5ia4DgyPuti30oR5xQ9KHNFz3Waz+J6fbmgdjlh341pMkKJQk3GK52mw
+ /3odEAfk2fq+7XNl+Wn/ubLONRXgYr6zIScH+0GmKWds49hS1AJq5WMHRbk8xo2sxZertduj1
+ hvuouF+o6zXkCAXdLGopYaW4G5EiWZ9u+HJze6eeCxdaMgcVYrSYz0svCU4XUtXwgUulSIX3g
+ c/wzbauloWjIWvmENOgeFVFIDCIlfzxtT5rHtvgMmrzUWW1s0JDuVQ4OGfwgwbddQdSTdYiw3
+ Gs0R5gAf3MVoK7jf4pPxEoAB9uFtirYWuJzI5yJ7xUn9qDi2yJpPO904u0E+i7ww/ELI/pAu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+On 16.02.20 15:41, Alex Ghiti wrote:
+> Hi Jan,
+>
+> On 2/15/20 6:49 AM, Jan Kiszka wrote:
+>> From: Jan Kiszka <jan.kiszka@siemens.com>
+>>
+>> Those are not backed by page structs, and pte_page is returning an
+>> invalid pointer.
+>>
+>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+>> =3D2D--
+>> =A0 arch/riscv/mm/cacheflush.c | 3 ++-
+>> =A0 1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+>> index 8930ab7278e6..9ee2c1a387cc 100644
+>> =3D2D-- a/arch/riscv/mm/cacheflush.c
+>> +++ b/arch/riscv/mm/cacheflush.c
+>> @@ -84,7 +84,8 @@ void flush_icache_pte(pte_t pte)
+>> =A0 {
+>> =A0=A0=A0=A0=A0 struct page *page =3D3D pte_page(pte);
+>>
+>> -=A0=A0=A0 if (!test_and_set_bit(PG_dcache_clean, &page->flags))
+>> +=A0=A0=A0 if (!pfn_valid(pte_pfn(pte)) ||
+>> +=A0=A0=A0=A0=A0=A0=A0 !test_and_set_bit(PG_dcache_clean, &page->flags)=
+)
+>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 flush_icache_all();
+>> =A0 }
+>> =A0 #endif /* CONFIG_MMU */
+>> =3D2D-
+>> 2.16.4
+>>
+>>
+>
+> When did you encounter such a situation ? i.e. executable code that is
+> not backed by struct page ?
+>
+> Riscv uses the generic implementation of ioremap and the way
+> _PAGE_IOREMAP is defined does not allow to map executable memory region
+> using ioremap, so I'm interested to understand how we end up in
+> flush_icache_pte for an executable region not backed by any struct page.
 
-> With fsid mappings we can solve this by writing an id mapping of 0
-> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
-> access the kernel will now lookup the mapping for 300000 in the fsid
-> mapping tables of the user namespace. And since such a mapping exists,
-> the corresponding files will have correct ownership.
+You can create executable mappings of memory that Linux does not
+initially consider as RAM via ioremap_prot or ioremap_page_range. We are
+using that in Jailhouse to load the hypervisor code into reserved memory
+that is ioremapped for the purpose. Works fine on x86, arm and arm64.
 
-I'm worried that this is a bit of a management nightmare because the
-data about the mapping does not live within the file system (it's
-externally determined, static, but crucial to the interpretation of
-file system content).  I expect that many organizations have
-centralized allocation of user IDs, but centralized allocation of the
-static mapping does not appear feasible.
-
-Have you considered a more complex design, where untranslated nested
-user IDs are store in a file attribute (or something like that)?  This
-way, any existing user ID infrastructure can be carried over largely
-unchanged.
+Jan
