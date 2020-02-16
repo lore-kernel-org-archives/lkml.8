@@ -2,86 +2,114 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8D0C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 06:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA29C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 06:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E664F22522
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 06:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XM6MU3il"
+	by mail.kernel.org (Postfix) with ESMTP id 6A64B2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 06:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581835620;
+	bh=0Glmy2rHz9Nf2Jk6JgoRKqRnT6KMFXNB47KY1ashgzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zSOLqupfE4DXtEmVg0gO6B8uPvjeL5XZq0+5bBAFRPof1ZSdPfBM/1a80uJXzy6HQ
+	 5ZlOQ3Ak7vNPt74WPGsCSqIBv+wPYo/QOF9bzFkIlnkJLAxyVEwVEfDS796fNJDxgy
+	 OJLlGXuCKLhXz33K7KdVkmFlK1GechRp+xU+vwZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgBPGRq (ORCPT
+        id S1726067AbgBPGq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 01:17:46 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:32715 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725858AbgBPGRc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 01:17:32 -0500
-X-UUID: 170b37a9e81d49889acedff3c486d878-20200216
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PnaAJPfe8UDyZR006OQGPtqV2JRsmbV8fNWy8VRokME=;
-        b=XM6MU3illvDe5bPLhOpOVX1QoCU9Lfg7xrXnfwxPhJayfRGZSS3DpKRtp8XUyR5ZtwSSK5pZI1g1EV6097GcEneHlqfUOt2SFspEPvKH7nXXKRpcKvNmEoV4LPOv7f9SVymD4sblLZk59rjFvuhgHWZpc2uu1sRFtYDLSvLIjSM=;
-X-UUID: 170b37a9e81d49889acedff3c486d878-20200216
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <argus.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 13343661; Sun, 16 Feb 2020 14:17:28 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 16 Feb 2020 14:15:00 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 16 Feb 2020 14:17:17 +0800
-From:   Argus Lin <argus.lin@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-CC:     Chenglin Xu <chenglin.xu@mediatek.com>, <argus.lin@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <wsd_upstream@mediatek.com>, <henryc.chen@mediatek.com>,
-        <flora.fu@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>,
-        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 1/3] dt-bindings: pwrap: mediatek: add pwrap support for MT6779
-Date:   Sun, 16 Feb 2020 14:17:21 +0800
-Message-ID: <1581833843-4485-2-git-send-email-argus.lin@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1581833843-4485-1-git-send-email-argus.lin@mediatek.com>
-References: <1581833843-4485-1-git-send-email-argus.lin@mediatek.com>
+        Sun, 16 Feb 2020 01:46:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgBPGq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 01:46:59 -0500
+Received: from hump.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 400CF20659;
+        Sun, 16 Feb 2020 06:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581835618;
+        bh=0Glmy2rHz9Nf2Jk6JgoRKqRnT6KMFXNB47KY1ashgzA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FeIN6dVVEIRThZ2RgK/fA7L8n90zXVh6xftACf3uAvtFfHrlNAPq66yQ1RfEX3fJT
+         XEbXDLFzjWyFXbnapOP1OCC3WbScqsUtAPrQi5qvRmLQscnMJO1AWyavFd4VwQi5/L
+         51D+zQAcS/gs6QwAQIZBdOE9r22m+xCJtA/hvX7w=
+Date:   Sun, 16 Feb 2020 08:46:50 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret"
+ memory areas
+Message-ID: <20200216064650.GB22092@hump.haifa.ibm.com>
+References: <20200130162340.GA14232@rapoport-lnx>
+ <20200212141029.7b89acee@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: E42B2A5851BA3347534F24890D19F31A2FEBC875C3FF1CB527B8A703235A94082000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212141029.7b89acee@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGJpbmRpbmcgZG9jdW1lbnQgb2YgcHdyYXAgZm9yIE1UNjc3OSBTb0NzLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQpBY2tlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQppbmRleCA3YTMyNDA0Li5lY2FjMmJi
-IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRp
-YXRlay9wd3JhcC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b2MvbWVkaWF0ZWsvcHdyYXAudHh0DQpAQCAtMjAsNiArMjAsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0
-aWVzIGluIHB3cmFwIGRldmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJIm1lZGlhdGVrLG10
-MjcwMS1wd3JhcCIgZm9yIE1UMjcwMS83NjIzIFNvQ3MNCiAJIm1lZGlhdGVrLG10Njc2NS1wd3Jh
-cCIgZm9yIE1UNjc2NSBTb0NzDQorCSJtZWRpYXRlayxtdDY3NzktcHdyYXAiIGZvciBNVDY3Nzkg
-U29Dcw0KIAkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlh
-dGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdy
-YXAiIGZvciBNVDgxMzUgU29Dcw0KLS0NCjEuOC4xLjEuZGlydHkNCg==
+On Wed, Feb 12, 2020 at 02:10:29PM -0700, Jonathan Corbet wrote:
+> On Thu, 30 Jan 2020 18:23:41 +0200
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > Hi,
+> > 
+> > This is essentially a resend of my attempt to implement "secret" mappings
+> > using a file descriptor [1]. 
+> 
+> So one little thing I was curious about as I read through the patch...
+> 
+> > +static int secretmem_check_limits(struct vm_fault *vmf)
+> > +{
+> > +	struct secretmem_state *state = vmf->vma->vm_file->private_data;
+> > +	struct inode *inode = file_inode(vmf->vma->vm_file);
+> > +	unsigned long limit;
+> > +
+> > +	if (((loff_t)vmf->pgoff << PAGE_SHIFT) >= i_size_read(inode))
+> > +		return -EINVAL;
+> > +
+> > +	limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+> > +	if (state->nr_pages + 1 >= limit)
+> > +		return -EPERM;
+> > +
+> > +	return 0;
+> > +}
+> 
+> If I'm not mistaken, this means each memfd can be RLIMIT_MEMLOCK in length,
+> with no global limit on the number of locked pages.  What's keeping me from
+> creating 1000 of these things and locking down lots of RAM?
 
+Indeed, it's possible to lock down RLIMIT_MEMLOCK * RLIMIT_NOFILE of RAM
+with this implementation, thanks for catching this.
+
+I'll surely update the resource limiting once we've settle on the API
+selection :)
+ 
+> Thanks,
+> 
+> jon
+> 
+
+-- 
+Sincerely yours,
+Mike.
