@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDA3C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A810C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5A620857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D898227BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Zq0exAHU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="sMYcLkKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgBPTVj (ORCPT
+        id S1728076AbgBPTVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 14:21:39 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.178]:13562 "EHLO
+        Sun, 16 Feb 2020 14:21:37 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:31410 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgBPTVJ (ORCPT
+        with ESMTP id S1726656AbgBPTVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 16 Feb 2020 14:21:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581880867;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581880866;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=oqhgP+NtrwgBX56WD4djyrk4OHTirbJ1JPDtLAAIn4U=;
-        b=Zq0exAHUW7mN6WAgqTWaIq3IQcsNs7q0p4lBZJ6SBxPmw74FuqNLXMt5k18mNJLBw3
-        u2vjKRTMYRVgIO5WX+iO8qLwNkDOwzL4aoKxovy3GaaRqA9B2BBS7gaWJCw0vcOovu2p
-        1CWIFviuiPz+xB0RcxzR9wq0N5ia56TySgJ959kbW2jLiFqRHGnNDoEW+Ic7hTwjia15
-        8JbAtUYXlB8GRQqv0jnYc7rBvDrOoWNVz7eLBpP3sHpLmR/uXG0N+9N0HR7USwEupWaC
-        thBmKdbDb33YA8BbRYKAug8KyclWaU1RB/zMAymtk4u7tpR8gR3njKUxHfNjQ+uj9RU0
-        T34w==
+        bh=kPUcf/GvZL1nupNS3IZr+BX1pSqIjowqBPh5G4yQp6A=;
+        b=sMYcLkKYljzx3CW+K12/ySPKYORsogyLsfboQogkNpay+H6AwI2azhykbL0uia4qhg
+        sEQRTMOyyDLg3XsXIb4bFLdC7OR6vaOthPbYAX/xKKdCB25QnYfVVzlBbTxhpS2yTE8L
+        h59Yeocjk4SOhO001gQi1nzHTanTYLGR0FpTQ+bsjUH58HqVhfF59hjwSdp4I2P6MATD
+        A4ynOl5lBdH/nGuGsmHAFWCG5WJhpslQxTlYjVA7Woxyi5OjjZr55i81niSCGgbQtemB
+        yZC1toxlW2A8cAZUPl6aPO+42ifavIz2abIFo+Auc7HpCxY6hdDgS8/WgNQBWG7BA9AE
+        x7SA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0OoPPevMB"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1GJKwJlg
+        with ESMTPSA id U06217w1GJKwJlf
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
         Sun, 16 Feb 2020 20:20:58 +0100 (CET)
@@ -63,9 +63,9 @@ To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [RFC v3 9/9] MIPS: CI20 defconfig: DEMO HACK: make DM9000 a module
-Date:   Sun, 16 Feb 2020 20:20:51 +0100
-Message-Id: <71ea739c7be432da356b4d3f7dca8b7658f3d2fb.1581880851.git.hns@goldelico.com>
+Subject: [RFC v3 8/9] MIPS: CI20 defconfig: Probe efuse for CI20
+Date:   Sun, 16 Feb 2020 20:20:50 +0100
+Message-Id: <c8446d39be45131541a295e9ac7c9ee2553b12ec.1581880851.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581880851.git.hns@goldelico.com>
 References: <cover.1581880851.git.hns@goldelico.com>
@@ -76,50 +76,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that reading the ethernet mac address from NVMEM,
-i.e. through the jz4780-efuse driver, requires the jz4780-efuse
-driver to be up and running before the dm9000 driver is probed.
+From: Mathieu Malaterre <malat@debian.org>
 
-This is because there is a registration mechanism for nvmem
-devices and consumers scan the global table. If the provider
-has not yet been registered, the required matching entry
-is not found and the consumer assumes there is no nvram.
+MIPS Creator CI20 comes with JZ4780 SoC. Provides access to the efuse block
+using jz4780 efuse driver.
 
-In the case of the dm9000 it will not wait but assign a
-random MAC address.
-
-It appears that if the dm9000 is configured into the kernel
-binary, it will be probed first and the correct sequence is
-broken.
-
-If it is a module (or even both), the way deferred probing
-works seems to serialize properly.
-
-So this hack is for demo purposes only and makes the dm9000
-probing being delayed.
-
-A proper solution is to make sure the jz4780-efuse driver
-is probed earlier than the dm9000 driver (or mac address
-lookup).
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/mips/configs/ci20_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/configs/ci20_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index 614dc18211bc..1d3d1d9b62bc 100644
+index 6e613bbb6807..614dc18211bc 100644
 --- a/arch/mips/configs/ci20_defconfig
 +++ b/arch/mips/configs/ci20_defconfig
-@@ -59,7 +59,7 @@ CONFIG_MTD_UBI_FASTMAP=y
- CONFIG_NETDEVICES=y
- # CONFIG_NET_VENDOR_ARC is not set
- # CONFIG_NET_VENDOR_BROADCOM is not set
--CONFIG_DM9000=y
-+CONFIG_DM9000=m
- CONFIG_DM9000_FORCE_SIMPLE_PHY_POLL=y
- # CONFIG_NET_VENDOR_INTEL is not set
- # CONFIG_NET_VENDOR_MARVELL is not set
+@@ -193,3 +193,5 @@ CONFIG_RC_DEVICES=y
+ CONFIG_IR_GPIO_CIR=m
+ CONFIG_IR_GPIO_TX=m
+ CONFIG_RTC_DRV_PCF8563=m
++CONFIG_NVMEM=y
++CONFIG_JZ4780_EFUSE=y
 -- 
 2.23.0
 
