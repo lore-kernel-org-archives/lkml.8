@@ -2,64 +2,113 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D628C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D1C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A98227BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C5420659
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FUePMwea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgBPRBP (ORCPT
+        id S1728515AbgBPRNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 12:01:15 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:46015 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728370AbgBPRBP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 12:01:15 -0500
-Received: (qmail 781 invoked by uid 500); 16 Feb 2020 12:01:14 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Feb 2020 12:01:14 -0500
-Date:   Sun, 16 Feb 2020 12:01:14 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-cc:     linux-kernel@vger.kernel.org, <linux-arch@vger.kernel.org>,
-        <kernel-team@fb.com>, <mingo@kernel.org>, <parri.andrea@gmail.com>,
-        <will@kernel.org>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
-        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
-        <luc.maranget@inria.fr>, <akiyks@gmail.com>
-Subject: Re: [PATCH memory-model] Add recent references
-In-Reply-To: <20200214233139.GA12521@paulmck-ThinkPad-P72>
-Message-ID: <Pine.LNX.4.44L0.2002161158140.30459-100000@netrider.rowland.org>
+        Sun, 16 Feb 2020 12:13:50 -0500
+Received: from mout.gmx.net ([212.227.15.19]:60355 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728469AbgBPRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 12:13:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1581873225;
+        bh=eh78Xacl3/Rct4ovfBjtDAjQYNUH2DdDabj1l78Ud2E=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=FUePMweafQ1HybDIiHUSBXg1p3x2XqT3yJRRV7Y9dQnE/fHJCqhU9cuOhGnv+u6wP
+         a0u5p5+F4vi63Zfa035HqKRNC1u2mL6UP7IKiy3JTC6pKtKXCYElAmcuiEPDLGRn4T
+         jg1IoT4DJDtt2q6NR7CO18OXNTDqdfHgDw5WqB9s=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MjjCL-1jjY4Q0ze7-00lFCc; Sun, 16
+ Feb 2020 18:13:45 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi/libstub: function description efi_allocate_pages()
+Date:   Sun, 16 Feb 2020 18:13:40 +0100
+Message-Id: <20200216171340.6070-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:szui1R6XNTVN5ouJvt02v4IxyTNVgJsAcjjZDwLpipqFN0BnMP5
+ SKcz1tFg5MQHlg/3I0iaSGoTQrhMmmM3TOe2ZrETEQ9MUGUu0K7Py/hMHBsETJFMvzUP8HU
+ 0aOeq52LdctXzTjCy2tIe4MGQqY7D2qu0JdovUvnBjyNDMAjNYrdL1YNC3Mjnr2oo8bWz8j
+ 0CWgA3nopl8t27iWORx/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LK1FmsZ+IfM=:RGYLg41Z4fp76SpfhfHVxp
+ 8ZXUBEIjpHZ/RzzCELnNaOCE4NjC/+Nqv7/RFYt+iYryDuwF0ww38l+TbafEv34KG2YD6LFJ+
+ J9KeRkTZjUWyFbmtS0zm86Fpu1zOFCe+ijCmKYxhTbEdwAs2yAPsXoqYnKcbbrqW9ms86XL6M
+ y/KMPhNCCqQJ5dMHby7FVce4+MmlvPzQ0Tns1fKTEI//n+ZVZY9o76wSUuLXtMBR4GVs6S9k6
+ MKrPsVayLmX/YCyyGiK436n3ScRs2gvgLijuQAfXSlDUj9oxD0Jp/6p7SUXbDyOz1gC15YdZ9
+ a7olfjVZf9JzkvdQ1J5kEJF1CvikIX42s2AMdBoT/SFWLubQw/ZaMBxwhwKgTLFYkFjtimKZ9
+ 4O8m4awv87V/IpI+DDfKwgtXbwVuRFvsleZcWQtkKX3VEymkuHA+vKoAW+A25wuzfAAEfTtAR
+ +FpQcu7iUtY3gEOM+a2VfEL9NVHt1Uf+VKvvg256QXFKpBqy6zmp2UtcjBSwlZ6eNxIpKjoif
+ 1h8aF7B70+Tt25njSvH/rLgQiJdZPVHOidIIAMOdf9EgWyd8Jf8hYtbkZee2yug9chpt6jUif
+ 8HxGnaFcw2dC/D4TQz2GMn7s0Qx3ifWALsXV9dauh3VXBLprBq6k01ZJgXaCxz3zk2YraELU/
+ jP0HKcnLLDbozNYExHlK++R94UCbuHPQhtR0cmCU3ykEWMjT32FhwrfmTKC/YTPlcPWHdEqbh
+ s/CWYlVQ8JDjydpXGC7T1+Obk9M9xxLS29sVVdrVfzEtYezEvR8FqfwkarvKSTkEmiuzzQFWw
+ WDcI/P9R/8vLVdGGPzJRil2af0Hs8yQNKx9/x6RNeoOmmlavJ1DK2SplTABj9hh9HC2JsVSzB
+ UjJQYHdwoHUKj/Tbhtf14I0G/OXcmyjg7U5qEJaxSyENdrFEvsbaQejfo5YdNOi6dX0mJcp+6
+ lRphOolyYFNYVnXyZsKyoj1Ztstcn2JhVwJLtPsDmXDgc+YGxMw47UpaC5SuaMfv2KLwerqF2
+ nSPoigjw2Un1BNSFax1rgiVCxIKDkbwhEsiqbrpdOtWOcTMZmJ5zsGXKuZj+ZgtReA/ag5xZe
+ M9WcjoCiCL8g1SHPI57arWVBmbP1rRqnUv+RaJ3ZC6vqCTm2DoOdvUeOa3PWMYLP/NHTHKYc+
+ pj6fklXOnKUSjl5I1tSNMx61JuQ9X+M1FCabFwpRsU7qVPAAblJAZulVzvKIXPu1eDWII0mc9
+ 26pXWJfxamIli4i3R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020, Paul E. McKenney wrote:
+Provide a Sphinx style function description for efi_allocate_pages().
 
-> This commit updates the list of LKMM-related publications in
-> Documentation/references.txt.
-> 
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/firmware/efi/libstub/mem.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
->  o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
-> -	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
-> -	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
-> +	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
-> +	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
+stub/mem.c
+index 5808c8764e64..c6a784ed640f 100644
+=2D-- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -65,8 +65,20 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap =
+*map)
+ 	return status;
+ }
 
-Even though this is an update, the new version referenced here is
-already out-of-date (in particular, with regard to its discussions of 
-the ordering properties of unlock-lock sequences as viewed by threads 
-not holding the lock).  And it contains a few typos scattered 
-throughout.
-
-Alan
+-/*
+- * Allocate at the highest possible address that is not above 'max'.
++/**
++ * efi_allocate_pages() - Allocate memory pages
++ * @size:	minimum number of bytes to allocate
++ * @addr:	On return the address of the first allocated page. The first
++ *		allocated page has alignment EFI_ALLOC_ALIGN which is an
++ *		architecture dependent multiple of the page size.
++ * @max:	the address that the last allocated memory page shall not
++ *		exceed
++ *
++ * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned acc=
+ording
++ * to EFI_ALLOC_ALIGN. The last allocated page will not exceed the addres=
+s
++ * given by 'max'.
++ *
++ * Return:	status code
+  */
+ efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
+ 				unsigned long max)
+=2D-
+2.25.0
 
