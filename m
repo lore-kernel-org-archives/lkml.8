@@ -2,90 +2,114 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B359EC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813A5C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C6E2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR6pcw+9"
+	by mail.kernel.org (Postfix) with ESMTP id 609D22084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgBPTzq (ORCPT
+        id S1727772AbgBPT4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 14:55:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34538 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgBPTzq (ORCPT
+        Sun, 16 Feb 2020 14:56:16 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54405 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgBPT4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 14:55:46 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j16so14100607otl.1;
-        Sun, 16 Feb 2020 11:55:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Gjyg7C/qUM1CPw+L63jimvH6kTtUlFR3Sqxw1W+p/o=;
-        b=lR6pcw+9IkkaedVHZLlA7oVkTg+GsqWW5pB1xSMF6JSyYJ0pPVGrJz3gJkpV20osiB
-         CQFDoxGbYgRHzyCivCOuetnZyJv8IqC7iD4ma0CxEvw/SoJthsQjg7a0b1P7I+Qg1HbN
-         ZhioTfJnICTDO4pMX3vbD0ay3YbcZFBlJqrB57pYCKlubSs7h2GR7UmiLrgTKwR4Oual
-         qf1pamjGGztGtePGjhHpl7aM8j2Ci8mVoSPSaxdeRFXqBzSqyLixYJ3autlNYBdIqHqy
-         TOWYmN79CZBZpLnJpmipdNG3oGoQ9jMUIlMOAFqCR8yAIehgjIuSV075b0Q+QgUkIYrQ
-         FZfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Gjyg7C/qUM1CPw+L63jimvH6kTtUlFR3Sqxw1W+p/o=;
-        b=YCQb6+G3OEge2cS2zYBJVQFCiDgmlBa5xjCvRy5D5AwajkRNikVPDhA/0QMPzEUAwn
-         tUQsxSKVZOIh1TT+IaUsVqWiy+tEwkv3+iJtGgmqPLU7V30wPN65+GUJWRWkf+rdww0O
-         39tQCB8XG97pKxOY/AAL0pLm5j3hV8PcqSCIRov/irfpR74VAhUyx1LxYctdoQasOXoB
-         GzAxebBfcAKZ+wvwRZalrKqwrWGxi6zO20LU/hJy0v72k8O5gCUUHFH2m6Yvf5v9KUz3
-         M1KTdp3wMUcITYi4hLAPX2lckfYCA3M3X1qF6mV5ULv56EVEn9cS6x7NQpDgYCiZBhVt
-         Bvig==
-X-Gm-Message-State: APjAAAXtPxbiPb8yGTG+NZkIGcHCdTOrJdLCZRsqURDA1CfS9zMI7IxQ
-        EDyWnJ707nYr1Nuj0gvyS9uHY19H
-X-Google-Smtp-Source: APXvYqx6s6q6b1AkVg/zx6jWNgJ1f41CXRJ2F3ocrjbfEQFPemxCzbOdldPhiLlgtcRMMzxDXCVLnw==
-X-Received: by 2002:a9d:7305:: with SMTP id e5mr9359175otk.64.1581882945402;
-        Sun, 16 Feb 2020 11:55:45 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t203sm4082674oig.39.2020.02.16.11.55.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 16 Feb 2020 11:55:44 -0800 (PST)
-Date:   Sun, 16 Feb 2020 12:55:43 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] kbuild: remove cc-option switch from -Wframe-larger-than=
-Message-ID: <20200216195543.GA54314@ubuntu-m2-xlarge-x86>
-References: <20200216151936.23778-1-masahiroy@kernel.org>
+        Sun, 16 Feb 2020 14:56:15 -0500
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 40287C0005;
+        Sun, 16 Feb 2020 19:56:12 +0000 (UTC)
+Subject: Re: [PATCH v2 3/3] riscv: Fix crash when flushing executable ioremap
+ regions
+To:     Jan Kiszka <jan.kiszka@web.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+References: <cover.1581767384.git.jan.kiszka@web.de>
+ <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
+ <e721c440-2baf-d962-62ef-41a4f3b1333b@ghiti.fr>
+ <b63e5945-0e31-940f-5ff7-6754ef5c034f@web.de>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <441527ef-1fd4-ed98-8381-8902c4e05fc5@ghiti.fr>
+Date:   Sun, 16 Feb 2020 14:56:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216151936.23778-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b63e5945-0e31-940f-5ff7-6754ef5c034f@web.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 12:19:36AM +0900, Masahiro Yamada wrote:
-> This CONFIG option was added by commit 35bb5b1e0e84 ("Add option to
-> enable -Wframe-larger-than= on gcc 4.4"). At that time, the cc-option
-> check was needed.
+On 2/16/20 11:05 AM, Jan Kiszka wrote:
+> On 16.02.20 15:41, Alex Ghiti wrote:
+>> Hi Jan,
+>>
+>> On 2/15/20 6:49 AM, Jan Kiszka wrote:
+>>> From: Jan Kiszka <jan.kiszka@siemens.com>
+>>>
+>>> Those are not backed by page structs, and pte_page is returning an
+>>> invalid pointer.
+>>>
+>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> =2D--
+>>>   arch/riscv/mm/cacheflush.c | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+>>> index 8930ab7278e6..9ee2c1a387cc 100644
+>>> =2D-- a/arch/riscv/mm/cacheflush.c
+>>> +++ b/arch/riscv/mm/cacheflush.c
+>>> @@ -84,7 +84,8 @@ void flush_icache_pte(pte_t pte)
+>>>   {
+>>>       struct page *page =3D pte_page(pte);
+>>>
+>>> -    if (!test_and_set_bit(PG_dcache_clean, &page->flags))
+>>> +    if (!pfn_valid(pte_pfn(pte)) ||
+>>> +        !test_and_set_bit(PG_dcache_clean, &page->flags))
+>>>           flush_icache_all();
+>>>   }
+>>>   #endif /* CONFIG_MMU */
+>>> =2D-
+>>> 2.16.4
+>>>
+>>>
+>>
+>> When did you encounter such a situation ? i.e. executable code that is
+>> not backed by struct page ?
+>>
+>> Riscv uses the generic implementation of ioremap and the way
+>> _PAGE_IOREMAP is defined does not allow to map executable memory region
+>> using ioremap, so I'm interested to understand how we end up in
+>> flush_icache_pte for an executable region not backed by any struct page.
 > 
-> According to Documentation/process/changes.rst, the current minimal
-> supported version of GCC is 4.6, so you can assume GCC supports it.
-> Clang supports it as well.
+> You can create executable mappings of memory that Linux does not
+> initially consider as RAM via ioremap_prot or ioremap_page_range. We are
+> using that in Jailhouse to load the hypervisor code into reserved memory
+> that is ioremapped for the purpose. Works fine on x86, arm and arm64.
 > 
-> Remove the cc-option switch and redundant comments.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Jan
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Ok thanks, I had missed this API.
+
+Regarding your patch, I find it weird to do anything if the pfn is 
+invalid, we could have garbage in pte pointing to an invalid region for 
+example (I admit that the effect of flushing the icache would not be 
+catastrophic in that situation).
+
+I'm not saying I will come with a better solution but I'll take a deeper 
+look tomorrow.
+
+Alex
+
