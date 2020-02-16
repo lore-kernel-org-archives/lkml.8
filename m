@@ -6,38 +6,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A18C7619C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86917C7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA68F2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679F82084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBPUQ6 (ORCPT
+        id S1727974AbgBPURE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:16:58 -0500
-Received: from mga17.intel.com ([192.55.52.151]:60365 "EHLO mga17.intel.com"
+        Sun, 16 Feb 2020 15:17:04 -0500
+Received: from mga12.intel.com ([192.55.52.136]:18065 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgBPUQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 15:16:57 -0500
+        id S1726020AbgBPURD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 15:17:03 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:16:57 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:17:03 -0800
 X-IronPort-AV: E=Sophos;i="5.70,450,1574150400"; 
-   d="scan'208";a="253215892"
+   d="scan'208";a="229015130"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:16:57 -0800
-Subject: [PATCH v5 2/6] mm/numa: Skip NUMA_NO_NODE and online nodes in
- numa_map_to_online_node()
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 12:17:02 -0800
+Subject: [PATCH v5 3/6] powerpc/papr_scm: Switch to numa_map_to_online_node()
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-nvdimm@lists.01.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Ingo Molnar <mingo@kernel.org>, peterz@infradead.org,
         vishal.l.verma@intel.com, dave.hansen@linux.intel.com, hch@lst.de,
         linux-kernel@vger.kernel.org, x86@kernel.org
-Date:   Sun, 16 Feb 2020 12:00:53 -0800
-Message-ID: <158188325316.894464.15650888748083329531.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 16 Feb 2020 12:00:58 -0800
+Message-ID: <158188325830.894464.9454884523846454529.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -49,52 +52,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update numa_map_to_online_node() to stop falling back to numa node 0
-when the input is NUMA_NO_NODE. Also, skip the lookup if @node is
-online. This makes the routine compatible with other arch node mapping
-routines.
+Now that the core exports numa_map_to_online_node() switch to that
+instead of the locally coded duplicate.
 
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: "Oliver O'Halloran" <oohall@gmail.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Link: https://lore.kernel.org/r/157401275716.43284.13185549705765009174.stgit@dwillia2-desk3.amr.corp.intel.com
+Link: https://lore.kernel.org/r/157401276263.43284.12616818803654229788.stgit@dwillia2-desk3.amr.corp.intel.com
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- mm/mempolicy.c |   20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ arch/powerpc/platforms/pseries/papr_scm.c |   21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 756d6e5bb59f..19f7e71945a7 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -135,21 +135,17 @@ static struct mempolicy preferred_node_policy[MAX_NUMNODES];
-  */
- int numa_map_to_online_node(int node)
- {
--	int min_node;
-+	int min_dist = INT_MAX, dist, n, min_node;
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index 0b4467e378e5..3cc66224ec1f 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -285,25 +285,6 @@ int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+ 	return 0;
+ }
  
--	if (node == NUMA_NO_NODE)
--		node = 0;
-+	if (node == NUMA_NO_NODE || node_online(node))
-+		return node;
- 
- 	min_node = node;
--	if (!node_online(node)) {
--		int min_dist = INT_MAX, dist, n;
+-static inline int papr_scm_node(int node)
+-{
+-	int min_dist = INT_MAX, dist;
+-	int nid, min_node;
 -
--		for_each_online_node(n) {
--			dist = node_distance(node, n);
--			if (dist < min_dist) {
--				min_dist = dist;
--				min_node = n;
--			}
-+	for_each_online_node(n) {
-+		dist = node_distance(node, n);
-+		if (dist < min_dist) {
-+			min_dist = dist;
-+			min_node = n;
- 		}
- 	}
+-	if ((node == NUMA_NO_NODE) || node_online(node))
+-		return node;
+-
+-	min_node = first_online_node;
+-	for_each_online_node(nid) {
+-		dist = node_distance(node, nid);
+-		if (dist < min_dist) {
+-			min_dist = dist;
+-			min_node = nid;
+-		}
+-	}
+-	return min_node;
+-}
+-
+ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ {
+ 	struct device *dev = &p->pdev->dev;
+@@ -349,7 +330,7 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
  
+ 	memset(&ndr_desc, 0, sizeof(ndr_desc));
+ 	target_nid = dev_to_node(&p->pdev->dev);
+-	online_nid = papr_scm_node(target_nid);
++	online_nid = numa_map_to_online_node(target_nid);
+ 	ndr_desc.numa_node = online_nid;
+ 	ndr_desc.target_node = target_nid;
+ 	ndr_desc.res = &p->res;
 
