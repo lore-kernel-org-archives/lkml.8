@@ -2,106 +2,121 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2153C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 18:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA668C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 18:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC962227BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 18:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4042206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 18:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581877427;
-	bh=BV3v8W+iI6KTFyzijgZYgxWjFHLlykiVDGhdEVQN/bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VYh2UsC+ni2yrWgqzqJ4MKG+hbtHWYQ+VlT8pZo5ZhSpJyd81tI96fvT/7LQHkAGE
-	 0/u/Te2GONpA1ZjbigmFK+5OwH/F7ffNCYTqwa7yY3JY52Ko9cWDco86RzZO04KNas
-	 sVrCnH8s5ZjKRmH8e2/BVNEh/1fyVuhZb/yBCbHk=
+	s=default; t=1581877433;
+	bh=Y0lM0H5P6IdWgTvgZ+96YnGiA1Mtavj5RNAg7nRDo34=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xENFHtdLHNi/7+/T7y36vFe5AVDUMGxcrAf4cScB40/3RKv6U/iNnbze/QS1ATz3X
+	 sb35BAfkB/kSBMQAI/xzMGWOQW4sh8qbgUDFAcrWhap/oEaQWOEONKG6AreJc9rkqw
+	 idUk77W0Ofo8elml6DbZcgtGpIgLNQmWfULNJAWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgBPSXX (ORCPT
+        id S1726560AbgBPSXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 13:23:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32808 "EHLO mail.kernel.org"
+        Sun, 16 Feb 2020 13:23:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgBPSXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 13:23:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725989AbgBPSXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 13:23:47 -0500
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412C8206D6;
-        Sun, 16 Feb 2020 18:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2722E206D6;
+        Sun, 16 Feb 2020 18:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581877402;
-        bh=BV3v8W+iI6KTFyzijgZYgxWjFHLlykiVDGhdEVQN/bs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OHSUsh/dQwqfDoLwtvrCy35G3qdKBMZK3qZw7HvTAsdhIBFxkBtCXDEoJNFbHUzgw
-         Bx16M1CV+ZdKxUrWUsScfaFAyXgi6ALrAdkf++kJPCAQQApYmxGR/HWJAhjNXfYgYx
-         9qqCymJ7YEJ+42h3SxIJ352dJbrxJloGhJHdU+70=
-Date:   Sun, 16 Feb 2020 19:23:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     tytso@mit.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] random: always use batched entropy for
- get_random_u{32,64}
-Message-ID: <20200216182319.GA54139@kroah.com>
-References: <20200216161836.1976-1-Jason@zx2c4.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216161836.1976-1-Jason@zx2c4.com>
+        s=default; t=1581877426;
+        bh=Y0lM0H5P6IdWgTvgZ+96YnGiA1Mtavj5RNAg7nRDo34=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SBasNHQLKJwTXUEuGcsnKD+CjiS6C6L/ai8u/F8JLdpGjO+ryNfzhRgaUFpMQF3IC
+         6OIvu+Fnqx2LbZrG3/0D/1rXtJxtkDf4nlRmfUS3tinqUI7owxNeJYnhBnSigg6ztp
+         S+7RJsIEy4iBImVCHid4ggFqd4+ULRkwhXp4jnq4=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>, nivedita@alum.mit.edu,
+        x86@kernel.org
+Subject: [PATCH 00/18] efi: clean up contents of struct efi
+Date:   Sun, 16 Feb 2020 19:23:16 +0100
+Message-Id: <20200216182334.8121-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 05:18:36PM +0100, Jason A. Donenfeld wrote:
-> It turns out that RDRAND is pretty slow. Comparing these two
-> constructions:
-> 
->   for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
->     arch_get_random_long(&ret);
-> 
-> and
-> 
->   long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
->   extract_crng((u8 *)buf);
-> 
-> it amortizes out to 352 cycles per long for the top one and 107 cycles
-> per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-> 
-> And importantly, the top one has the drawback of not benefiting from the
-> real rng, whereas the bottom one has all the nice benefits of using our
-> own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-> beyond what it was originally intended for when it was introduced as
-> get_random_{int,long} back in the md5 monstrosity era), it seems like it
-> might be a good thing to strengthen its posture a tiny bit. Doing this
-> should only be stronger and not any weaker because that pool is already
-> initialized with a bunch of rdrand data (when available). This way, we
-> get the benefits of the hardware rng as well as our own rng.
-> 
-> Another benefit of this is that we no longer hit pitfalls of the recent
-> stream of AMD bugs in RDRAND. One often used code pattern for various
-> things is:
-> 
->   do {
->   	val = get_random_u32();
->   } while (hash_table_contains_key(val));
-> 
-> That recent AMD bug rendered that pattern useless, whereas we're really
-> very certain that chacha20 output will give pretty distributed numbers,
-> no matter what.
-> 
-> So, this simplification seems better both from a security perspective
-> and from a performance perspective.
-> 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/char/random.c | 12 ------------
->  1 file changed, 12 deletions(-)
+The generic r/w singleton object 'struct efi efi' is currently being used
+as a dumping ground for memory addresses of firmware tables that only have
+significance for a single architecture, or only at boot time [whereas
+struct efi is an object with indefinite lifetime, and which is exported
+to modules]
 
-Looks good to me, thank for doing this:
+Since we're expecting a new arrival that does affect all architectures,
+which will need to be added to struct efi as well, let's do a cleanup
+pass, and move out all the per-arch pieces and other stuff that does not
+need to live in a global r/w struct.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As a side effect, I ran into some other things that can be refactored
+so that more code is shared between architectures, or made x86 specific
+if it is something that should maybe not have existed in the first place,
+and x86 is the only architecture where we cannot remove it for compatibility
+reasons.
+
+Finally, we get rid of the struct efi::systab member, which we only need
+at runtime to get at the 'runtime' pointer, so let's store that instead.
+This allows us to drop some ugly handling of the remapped systab address,
+which we cannot discover as easily as the remapped 'runtime' pointer.
+
+Cc: nivedita@alum.mit.edu
+Cc: x86@kernel.org
+
+Ard Biesheuvel (18):
+  efi: drop handling of 'boot_info' configuration table
+  efi/ia64: move HCDP and MPS table handling into IA64 arch code
+  efi: move UGA and PROP table handling to x86 code
+  efi: make rng_seed table handling local to efi.c
+  efi: move mem_attr_table out of struct efi
+  efi: make memreserve table handling local to efi.c
+  efi: merge EFI system table revision and vendor checks
+  efi/ia64: use existing helpers to locate ESI table
+  efi/ia64: use local variable for EFI system table address
+  efi/ia64: switch to efi_config_parse_tables()
+  efi: make efi_config_init() x86 only
+  efi: clean up config_parse_tables()
+  efi/x86: remove runtime table address from kexec EFI setup data
+  efi/x86: make fw_vendor, config_table and runtime sysfs nodes x86
+    specific
+  efi/x86: merge assignments of efi.runtime_version
+  efi: add 'runtime' pointer to struct efi
+  efi/arm: drop unnecessary references to efi.systab
+  efi/x86: drop 'systab' member from struct efi
+
+ arch/ia64/kernel/efi.c                  |  55 ++--
+ arch/ia64/kernel/esi.c                  |  21 +-
+ arch/x86/include/asm/efi.h              |   6 +-
+ arch/x86/kernel/asm-offsets_32.c        |   5 +
+ arch/x86/kernel/kexec-bzimage64.c       |   5 +-
+ arch/x86/platform/efi/efi.c             | 262 ++++++++++----------
+ arch/x86/platform/efi/efi_32.c          |  13 +-
+ arch/x86/platform/efi/efi_64.c          |  14 +-
+ arch/x86/platform/efi/efi_stub_32.S     |  21 +-
+ arch/x86/platform/efi/quirks.c          |   2 +-
+ drivers/firmware/efi/arm-init.c         |  68 ++---
+ drivers/firmware/efi/arm-runtime.c      |  18 --
+ drivers/firmware/efi/efi.c              | 237 ++++++++----------
+ drivers/firmware/efi/memattr.c          |  13 +-
+ drivers/firmware/efi/runtime-wrappers.c |   4 +-
+ drivers/firmware/pcdp.c                 |   8 +-
+ include/linux/efi.h                     |  76 +++---
+ 17 files changed, 379 insertions(+), 449 deletions(-)
+
+-- 
+2.17.1
 
