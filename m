@@ -2,60 +2,61 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B5FC76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB31C7619C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738C320857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8786520857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:35:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOWFF8mP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMejrEl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgBPRe5 (ORCPT
+        id S1726178AbgBPRfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 12:34:57 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44587 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgBPRe5 (ORCPT
+        Sun, 16 Feb 2020 12:35:08 -0500
+Received: from mail-pj1-f47.google.com ([209.85.216.47]:36171 "EHLO
+        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbgBPRfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 12:34:57 -0500
-Received: by mail-pg1-f194.google.com with SMTP id g3so7666113pgs.11;
-        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+        Sun, 16 Feb 2020 12:35:08 -0500
+Received: by mail-pj1-f47.google.com with SMTP id gv17so6166204pjb.1;
+        Sun, 16 Feb 2020 09:35:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
-        b=pOWFF8mP+uUa5RzOE5JdYiL2dsq+GZUQ/RCtEQwsOV8POFSR//vy64zKVTnvUjDVUO
-         BoVRxVhFDuJUa2pzViEnEmFalZPLkoYjqo6eVdIzl0cXFcukrFDy1D/DXJNsIy0a1mru
-         bo5hQwu9olFbkJKMyXoClmJv7n9CM1nXtjAMb5z/+u4BuTBon6z1s+94Ifcy4V1suKhi
-         AnL5PhIGKbzl/J2YkNTVN7u/WlErmPllrFwbLzJ8Ul8l52PHg6Ya/1scFAyBu8R8quQA
-         UNuY4XiRPVFc0EIhCMnsKT0czXWwhYV3HyUjm2kUd+qr/jxta02hLW+H2wsKAFOi0V28
-         Ve7A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JPM2kqx4hlDXSNBDa3izQLbeJ7f1jy1y8czH2Ne/TYs=;
+        b=IMejrEl725fqCXBPzYt9wmJUvxnKWr0ybMDAva6F56fobzg5h1czrrqJ32BVqj3Lki
+         uF2pqycVRAub8wF470gHyC7O/uukwgYhQwuMlDiJZNwmdEFZTNc22YvxKjwqBNS2h1P5
+         TVD0CCcGtcrp63oBFDlzB9MLIt4C62A15uR7Dt5mRklg/IDE4wl9Nu6Gzhj4oZu5oee3
+         jPjt2AwjnwZoQuQR0SHvpmwrHjuocsM6cr45QvQiMUgRC0lkbKiAsO+SSdrj49CJhszq
+         nWxn1JBEAiZGC1eeeuvWRGANygkQYdVY8FWEaAO9kp16OKk5cn0Jh1WRGjca8BQKrvUK
+         0Czg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
-        b=IFjZBbMSi//4gl8mvcffHjDXpkkFobqozXVcjDZno7yromkjoru+NjpZOVTuTb2WE2
-         vJvGoBxidHhnkag2E5yU6FibodBSvaP3T3HELWMfJzv0h2UmRw90sRb+ypKW9IbEcNmM
-         ZISof2wCjEjHWAzgw1zxn1JgAex1OTK4L7eTFl+O78RIQLccT0jfqHUXOu/txnVXT3rL
-         0SEpS5x+IAPcjZuUTWK3KAl4/80pdZk68rQVEW+9gLpClxk4OZsSbMA1Wmx482wXx72b
-         Jrp1t3kHSjp3yxbw/9mViaojMRLax4hRncj1sKgNaCgOhmeZTlOAHwFkB6x0q4K17vg5
-         NM6A==
-X-Gm-Message-State: APjAAAU99r84sAQXoRbijac7Pim74N0oX8bpPAe+N2Z6pB4sUFCV2Vau
-        I7xRNXDq0hduYq+csK7Es54=
-X-Google-Smtp-Source: APXvYqzIF1eNE+9kSnylg1WQyiY6aJJsMIBumzSzxu/FK/ciU3XfRBQWJbl+oi3csP2R7aOw7licJw==
-X-Received: by 2002:aa7:874b:: with SMTP id g11mr13499452pfo.225.1581874495024;
-        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JPM2kqx4hlDXSNBDa3izQLbeJ7f1jy1y8czH2Ne/TYs=;
+        b=kWKsog17QryfrAWzOhru1qVkbgu0lCdnKiKwZ0RKBUhYkrC2+op7ryoZeEnmpGaEeB
+         NMtGl9C2iDfJyfHkQFxmZd1QepLJ1fjAlQnS6vsijE+fzvYIOzF7oi8nGtfxQkfpRopU
+         sD/S/jIzOhler8edRNkhi86c/oSC5EwfiNHjxp+KYcLaoEuHIdqX6zC2EuCmh1jez9LF
+         Klv5qJmnVjcb+wJj+WkNjjCmPznX3529mgBALhEG1br62i361ai+twZ+Vgcp82F6A6tw
+         m+TW1+8M1WyOHhL3hQQJ8ednuQzPKlTbkUT6HVk51O0+VMr8q9LkdqddH7MK9Luhcp4S
+         ommA==
+X-Gm-Message-State: APjAAAUSNYiPJqHwCizzi2kTErk25bWxmGEE/gRzDcXwtBxQBE86dj97
+        Rbj7xFwTU3BiGavGP/VdceA=
+X-Google-Smtp-Source: APXvYqwNzqmeVTiT7B3ggj00IH6FrnYaVsK+XBkavG5u0s6WRDvhKYzANPW5j9VnHOG0S/Ue30dTkA==
+X-Received: by 2002:a17:902:9a45:: with SMTP id x5mr11818858plv.296.1581874507557;
+        Sun, 16 Feb 2020 09:35:07 -0800 (PST)
 Received: from localhost.localdomain ([103.51.74.127])
-        by smtp.gmail.com with ESMTPSA id a36sm14284724pga.32.2020.02.16.09.34.51
+        by smtp.gmail.com with ESMTPSA id a36sm14284724pga.32.2020.02.16.09.35.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 09:34:54 -0800 (PST)
+        Sun, 16 Feb 2020 09:35:07 -0800 (PST)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -68,10 +69,12 @@ Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCHv1 0/3] Odroid N2 failes to boot using upstream kernel using microSD card
-Date:   Sun, 16 Feb 2020 17:34:43 +0000
-Message-Id: <20200216173446.1823-1-linux.amoon@gmail.com>
+Subject: [PATCHv1 1/3] arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator to FLASH_VDD
+Date:   Sun, 16 Feb 2020 17:34:44 +0000
+Message-Id: <20200216173446.1823-2-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200216173446.1823-1-linux.amoon@gmail.com>
+References: <20200216173446.1823-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,30 +82,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We am trying to build the upstream u-boot and upstream kernel,
-but it fails to pass the initialization of PWM_MESON driver.
-So these patches help boot the kernel on microSD card.
+As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
+regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
 
-Fix the clk driver help booting of the kernel.
-Any more suggestion or inputs are welcome.
+Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes since RFCv1
-[0] https://lore.kernel.org/linux-amlogic/20191007131649.1768-1-linux.amoon@gmail.com/
-drop some patches and fix the clk driver as suggested by Neil.
-
--Anand
-
-Anand Moon (3):
-  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
-    to FLASH_VDD
-  arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to
-    VDDIO_C/TF_IO
-  clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
-
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 6 ++++++
- drivers/clk/meson/g12a.c                             | 3 ++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 0e54c1dc2842..353db3b32cc4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -51,9 +51,12 @@ tflash_vdd: regulator-tflash_vdd {
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 
++		/* TFLASH_VDD_EN */
+ 		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 		regulator-always-on;
++		/* U18 FC8731-09VF05NRR */
++		vin-supply = <&vddao_3v3>;
+ 	};
+ 
+ 	tf_io: gpio-regulator-tf_io {
 -- 
 2.25.0
 
