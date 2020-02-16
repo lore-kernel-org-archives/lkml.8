@@ -2,163 +2,210 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C52C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015FAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC34206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AC724670
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 08:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581841138;
+	bh=uOm/w1LvbUniJRU6oBgmKsoo2r45zuKfYTZIlp+VEas=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=T9+sStLweiEsBCax8VkkTa+oqW2hI+qJi9t336n11UW64y+4QKdZW68HTmWX9tnJU
+	 lDI49aRMpUAASTP7TlM39z94QoYAlb49VjUwfHoE0MvPlsQayLVJsUhAvpf1H4Al52
+	 2ZedtSEkvxBoFw3OtvgvoEPKhIFXFK/DgtXqni88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgBPISC (ORCPT
+        id S1726672AbgBPIS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 03:18:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49770 "EHLO mx2.suse.de"
+        Sun, 16 Feb 2020 03:18:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgBPISB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 03:18:01 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 153C3AAF1;
-        Sun, 16 Feb 2020 08:17:59 +0000 (UTC)
-Date:   Sun, 16 Feb 2020 09:17:53 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent for 5.6
-Message-ID: <20200216081753.GA13765@zn.tnic>
+        id S1725926AbgBPIS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 03:18:57 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFE8206E2;
+        Sun, 16 Feb 2020 08:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581841136;
+        bh=uOm/w1LvbUniJRU6oBgmKsoo2r45zuKfYTZIlp+VEas=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ypq+hzlSBgo7vT86/XBQ4S1ZCTw/nfY/YpzHJWYAJgU4W9vpVdIiTo4WBFLNVMWaa
+         mEqd5SQZXKay8YUlKOrH1RnE0OOB9BYS2j2C7wKWxIhrDOoaqf93tmzYSMMHhaUfex
+         v4qv2x5ntxN9kHpg/8qF9RTGzwDANyHfQEpVF5aw=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v2 00/13] mm: remove __ARCH_HAS_5LEVEL_HACK
+Date:   Sun, 16 Feb 2020 10:18:30 +0200
+Message-Id: <20200216081843.28670-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-please pull two EDAC fixes for 5.6. Doing only signed tags from now on, btw.
+Hi,
 
-Thx.
+These patches convert several architectures to use page table folding and
+remove __ARCH_HAS_5LEVEL_HACK along with include/asm-generic/5level-fixup.h.
 
----
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+The changes are mostly about mechanical replacement of pgd accessors with p4d
+ones and the addition of higher levels to page table traversals.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+All the patches were sent separately to the respective arch lists and
+maintainers hence the "v2" prefix.
 
-are available in the Git repository at:
+Geert Uytterhoeven (1):
+  sh: fault: Modernize printing of kernel messages
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_5.6
+Mike Rapoport (12):
+  arm/arm64: add support for folded p4d page tables
+  h8300: remove usage of __ARCH_USE_5LEVEL_HACK
+  hexagon: remove __ARCH_USE_5LEVEL_HACK
+  ia64: add support for folded p4d page tables
+  nios2: add support for folded p4d page tables
+  openrisc: add support for folded p4d page tables
+  powerpc: add support for folded p4d page tables
+  sh: drop __pXd_offset() macros that duplicate pXd_index() ones
+  sh: add support for folded p4d page tables
+  unicore32: remove __ARCH_USE_5LEVEL_HACK
+  asm-generic: remove pgtable-nop4d-hack.h
+  mm: remove __ARCH_HAS_5LEVEL_HACK and include/asm-generic/5level-fixup.h
 
-for you to fetch changes up to 4d59588c09f2a2daedad2a544d4d1b602ab3a8af:
-
-  EDAC/sysfs: Remove csrow objects on errors (2020-02-13 13:29:41 +0100)
-
-----------------------------------------------------------------
-Two fixes for use-after-free and memory leaking in the EDAC core, by
-Robert Richter.
-
-Debug options like DEBUG_TEST_DRIVER_REMOVE, KASAN and DEBUG_KMEMLEAK
-unearthed issues with the lifespan of memory allocated by the EDAC
-memory controller descriptor due to misdesigned memory freeing, done
-partially by the EDAC core *and* the driver core, which is problematic
-to say the least.
-
-These two are minimal fixes to take care of stable - a proper rework is
-following which cleans up that mess properly.
-
-----------------------------------------------------------------
-Robert Richter (2):
-      EDAC/mc: Fix use-after-free and memleaks during device removal
-      EDAC/sysfs: Remove csrow objects on errors
-
- drivers/edac/edac_mc.c       | 12 +++---------
- drivers/edac/edac_mc_sysfs.c | 18 ++++--------------
- 2 files changed, 7 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 7243b88f81d8..69e0d90460e6 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -505,16 +505,10 @@ void edac_mc_free(struct mem_ctl_info *mci)
- {
- 	edac_dbg(1, "\n");
- 
--	/* If we're not yet registered with sysfs free only what was allocated
--	 * in edac_mc_alloc().
--	 */
--	if (!device_is_registered(&mci->dev)) {
--		_edac_mc_free(mci);
--		return;
--	}
-+	if (device_is_registered(&mci->dev))
-+		edac_unregister_sysfs(mci);
- 
--	/* the mci instance is freed here, when the sysfs object is dropped */
--	edac_unregister_sysfs(mci);
-+	_edac_mc_free(mci);
- }
- EXPORT_SYMBOL_GPL(edac_mc_free);
- 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 0367554e7437..c70ec0a306d8 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -276,10 +276,7 @@ static const struct attribute_group *csrow_attr_groups[] = {
- 
- static void csrow_attr_release(struct device *dev)
- {
--	struct csrow_info *csrow = container_of(dev, struct csrow_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(csrow);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type csrow_attr_type = {
-@@ -447,8 +444,7 @@ static int edac_create_csrow_objects(struct mem_ctl_info *mci)
- 		csrow = mci->csrows[i];
- 		if (!nr_pages_per_csrow(csrow))
- 			continue;
--
--		device_del(&mci->csrows[i]->dev);
-+		device_unregister(&mci->csrows[i]->dev);
- 	}
- 
- 	return err;
-@@ -608,10 +604,7 @@ static const struct attribute_group *dimm_attr_groups[] = {
- 
- static void dimm_attr_release(struct device *dev)
- {
--	struct dimm_info *dimm = container_of(dev, struct dimm_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(dimm);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type dimm_attr_type = {
-@@ -893,10 +886,7 @@ static const struct attribute_group *mci_attr_groups[] = {
- 
- static void mci_attr_release(struct device *dev)
- {
--	struct mem_ctl_info *mci = container_of(dev, struct mem_ctl_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(mci);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type mci_attr_type = {
+ arch/arm/include/asm/kvm_mmu.h                |   5 +-
+ arch/arm/include/asm/pgtable.h                |   1 -
+ arch/arm/include/asm/stage2_pgtable.h         |  15 +-
+ arch/arm/lib/uaccess_with_memcpy.c            |   9 +-
+ arch/arm/mach-sa1100/assabet.c                |   2 +-
+ arch/arm/mm/dump.c                            |  29 ++-
+ arch/arm/mm/fault-armv.c                      |   7 +-
+ arch/arm/mm/fault.c                           |  28 ++-
+ arch/arm/mm/idmap.c                           |   3 +-
+ arch/arm/mm/init.c                            |   2 +-
+ arch/arm/mm/ioremap.c                         |  12 +-
+ arch/arm/mm/mm.h                              |   2 +-
+ arch/arm/mm/mmu.c                             |  35 ++-
+ arch/arm/mm/pgd.c                             |  40 +++-
+ arch/arm64/include/asm/kvm_mmu.h              |  10 +-
+ arch/arm64/include/asm/pgalloc.h              |  10 +-
+ arch/arm64/include/asm/pgtable-types.h        |   5 +-
+ arch/arm64/include/asm/pgtable.h              |  37 ++--
+ arch/arm64/include/asm/stage2_pgtable.h       |  48 +++-
+ arch/arm64/kernel/hibernate.c                 |  44 +++-
+ arch/arm64/mm/fault.c                         |   9 +-
+ arch/arm64/mm/hugetlbpage.c                   |  15 +-
+ arch/arm64/mm/kasan_init.c                    |  26 ++-
+ arch/arm64/mm/mmu.c                           |  52 +++--
+ arch/arm64/mm/pageattr.c                      |   7 +-
+ arch/h8300/include/asm/pgtable.h              |   1 -
+ arch/hexagon/include/asm/fixmap.h             |   4 +-
+ arch/hexagon/include/asm/pgtable.h            |   1 -
+ arch/ia64/include/asm/pgalloc.h               |   4 +-
+ arch/ia64/include/asm/pgtable.h               |  17 +-
+ arch/ia64/mm/fault.c                          |   7 +-
+ arch/ia64/mm/hugetlbpage.c                    |  18 +-
+ arch/ia64/mm/init.c                           |  28 ++-
+ arch/nios2/include/asm/pgtable.h              |   3 +-
+ arch/nios2/mm/fault.c                         |   9 +-
+ arch/nios2/mm/ioremap.c                       |   6 +-
+ arch/openrisc/include/asm/pgtable.h           |   1 -
+ arch/openrisc/mm/fault.c                      |  10 +-
+ arch/openrisc/mm/init.c                       |   4 +-
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |   1 -
+ arch/powerpc/include/asm/book3s/64/hash.h     |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgalloc.h  |   4 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |  58 +++--
+ arch/powerpc/include/asm/book3s/64/radix.h    |   6 +-
+ arch/powerpc/include/asm/nohash/32/pgtable.h  |   1 -
+ arch/powerpc/include/asm/nohash/64/pgalloc.h  |   2 +-
+ .../include/asm/nohash/64/pgtable-4k.h        |  32 +--
+ arch/powerpc/include/asm/nohash/64/pgtable.h  |   6 +-
+ arch/powerpc/include/asm/pgtable.h            |   8 +
+ arch/powerpc/kvm/book3s_64_mmu_radix.c        |  59 ++++-
+ arch/powerpc/lib/code-patching.c              |   7 +-
+ arch/powerpc/mm/book3s32/mmu.c                |   2 +-
+ arch/powerpc/mm/book3s32/tlb.c                |   4 +-
+ arch/powerpc/mm/book3s64/hash_pgtable.c       |   4 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  19 +-
+ arch/powerpc/mm/book3s64/subpage_prot.c       |   6 +-
+ arch/powerpc/mm/hugetlbpage.c                 |  28 ++-
+ arch/powerpc/mm/kasan/kasan_init_32.c         |   8 +-
+ arch/powerpc/mm/mem.c                         |   4 +-
+ arch/powerpc/mm/nohash/40x.c                  |   4 +-
+ arch/powerpc/mm/nohash/book3e_pgtable.c       |  15 +-
+ arch/powerpc/mm/pgtable.c                     |  25 ++-
+ arch/powerpc/mm/pgtable_32.c                  |  28 ++-
+ arch/powerpc/mm/pgtable_64.c                  |  10 +-
+ arch/powerpc/mm/ptdump/hashpagetable.c        |  20 +-
+ arch/powerpc/mm/ptdump/ptdump.c               |  22 +-
+ arch/powerpc/xmon/xmon.c                      |  17 +-
+ arch/sh/include/asm/pgtable-2level.h          |   1 -
+ arch/sh/include/asm/pgtable-3level.h          |   1 -
+ arch/sh/include/asm/pgtable_32.h              |   5 +-
+ arch/sh/include/asm/pgtable_64.h              |   5 +-
+ arch/sh/kernel/io_trapped.c                   |   7 +-
+ arch/sh/mm/cache-sh4.c                        |   4 +-
+ arch/sh/mm/cache-sh5.c                        |   7 +-
+ arch/sh/mm/fault.c                            |  65 ++++--
+ arch/sh/mm/hugetlbpage.c                      |  28 ++-
+ arch/sh/mm/init.c                             |  15 +-
+ arch/sh/mm/kmap.c                             |   2 +-
+ arch/sh/mm/tlbex_32.c                         |   6 +-
+ arch/sh/mm/tlbex_64.c                         |   7 +-
+ arch/unicore32/include/asm/pgtable.h          |   1 -
+ arch/unicore32/kernel/hibernate.c             |   4 +-
+ include/asm-generic/5level-fixup.h            |  58 -----
+ include/asm-generic/pgtable-nop4d-hack.h      |  64 ------
+ include/asm-generic/pgtable-nopud.h           |   4 -
+ include/linux/mm.h                            |   6 -
+ mm/kasan/init.c                               |  11 -
+ mm/memory.c                                   |   8 -
+ virt/kvm/arm/mmu.c                            | 209 +++++++++++++++---
+ 89 files changed, 988 insertions(+), 500 deletions(-)
+ delete mode 100644 include/asm-generic/5level-fixup.h
+ delete mode 100644 include/asm-generic/pgtable-nop4d-hack.h
 
 -- 
-Regards/Gruss,
-    Boris.
+2.24.0
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
