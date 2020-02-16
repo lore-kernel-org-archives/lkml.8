@@ -2,140 +2,260 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C06C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE082C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05D12086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BE220857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 16:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TBtr+sFo"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NUnRZFZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgBPQGL (ORCPT
+        id S1728444AbgBPQHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 11:06:11 -0500
-Received: from mout.web.de ([212.227.15.14]:52227 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbgBPQGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 11:06:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1581869161;
-        bh=AobHKk3vBm9FrVdMqe66B3ejvK1eiS83jlWFhdT/c70=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=TBtr+sFo3loTjlzzWU6woP7mKt8KuLd5ONkSYSIhchvIcCJ+vtrnPuKszWfUW/CKS
-         zk6fdy06gGKdzhBDFAhCL15WTNYGfvSeeBi74XIMbJsH5ltVYWpjJksBgh7/vwNAB8
-         gxGlIGMIjlisDTUKXgCewb4WbHy1uTO7orVqNMeo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.10] ([95.157.55.156]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Mck7d-1ilQ2S1ugz-00HsN2; Sun, 16
- Feb 2020 17:06:01 +0100
-Subject: Re: [PATCH v2 2/3] riscv: End kernel region search in setup_bootmem
- earlier
-To:     Alex Ghiti <alex@ghiti.fr>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1581767384.git.jan.kiszka@web.de>
- <b11898805c2f9f01b10867a05701aa0fafeaa886.1581767384.git.jan.kiszka@web.de>
- <8f0ddf1f-1ea9-8bde-76a0-ba60788c2a2d@ghiti.fr>
-From:   Jan Kiszka <jan.kiszka@web.de>
-Message-ID: <f64451c2-48b4-c998-c89f-29b11b371e55@web.de>
-Date:   Sun, 16 Feb 2020 17:06:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 11:07:42 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:61830 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728293AbgBPQHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 11:07:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581869261; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=N87NNl6dKJaidFch39XvQKX3vbtqKKMUGcaq4Q/mfPs=; b=NUnRZFZ1hgRrbL0kZ74gNnDU0NosvkxGjRTcz0HcxxuhQ2ePVS7ffKr7NAI9zQcDJ5ApLO89
+ GWF/O0AkyDDI7vcc7ccyeoxqn0nz2w33b8oloy488vjRY798F3KQOGdLc5WWQn+WeH3HGTa4
+ lPvXOl+ygOC0c6sSUHMoWaVBmbU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4968c6.7efda7f32618-smtp-out-n03;
+ Sun, 16 Feb 2020 16:07:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A53FEC4479C; Sun, 16 Feb 2020 16:07:33 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [103.140.231.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04E44C43383;
+        Sun, 16 Feb 2020 16:07:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04E44C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
+Date:   Sun, 16 Feb 2020 21:37:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <8f0ddf1f-1ea9-8bde-76a0-ba60788c2a2d@ghiti.fr>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BNUGMNynh2H7lblQTG5gLUjL4r434OMOeK/3yasuqwSBf2uj4M1
- uwFfD1wA3Yb2iql9LqElWiM1YM7EP4WZpOKmQ9j6cZQyi+tuKEF7iIZR2rM2+NGXKQuGBZq
- C6G27L9LMUDiPglE49pHV5C7Tr0XhmpbLJigfrADJyetdgkVhpgh51I2OJxn0Yz9n/+Hzlj
- vcyY6emlVq4y0nMRlJ/aA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oNPKDImTF/Q=:3O7jbyb5rwmIMs1StldLZY
- hKYqBKBPdW+7ZaUWd/MEcybF0rcD3ym//65j7JafDK44leGZERr0pVuq4pZxecggFKYw2onjS
- GnKIYEg3FizrbUi5fLZ+0Hbf1zs3HlUs/RjNfmGdvQUNFLe17lK0FNzoBqXEqjYXzogb1USsQ
- UAdvTIG8e2bIhoJJNNrXRLks0F8EOpQVdmjwy58y/die8O2huI8qpauCquO4kL3U6NEfkKQVK
- rroMUymzW1uarZyPBkXZzzLFO/zREcVMllnVjP/wrnAtj6ADuSTpd8lOyn4kxq6iGtQDiqgGe
- vsdxbegbJ5kYw5lbTWJx4QNesyOWcZLpPC8tNAcom9lAj7iTmaDKPsFd6yX9kKDEgHhEp4/vW
- /clKvFIo4RcGDFJXEnASyj7KftYYALp5LmtumHLuai5isT2T56F7nOlKb7/KyuPyF9SiQilgP
- rKdeRF8IRKjbXD8I5J6zCjrhoSD6P+NSWtEWtcL505CGlruCLma6g3250cq5qPQfmGy75oW//
- poa+w7F3pLdldrAq16Ac3HpZzG6mFXx5NC/T67dtFXQbWTuL34UwuTEF/osrNv4TWSFTYca9x
- 6a6km+nQbN4UzcEa4BFe7gaWJj/6OKxlDH/MeTrGORsPZLoVIWWKHIXmVR2UE3mq3AUORZSeN
- eBa+E5dL7EyvdwxZFNNCeh8Lo72e3gILdUcGUhu2M92LalIx8IkKWs6aF7+ujBKWXqEuYZkWl
- EKP6NHnZOiVHv7RG1qyoS+odr9xpMjLyaSAJQNxGipJgVQvTUGHq4yw+n5u6JQFCoa/RFvA8t
- mSnWcNs5LLPAOlKRshgn22AfYt/zG7aIXju+PwzmOvT8rNsXiu64e46qY/LPkjjmTegsua+oX
- w3Xq47ycWPebwmJuLq9McpkwpzjLyxxIMTbmjPTXc0NZVqh+3qofXHSjmjScPqvhRQvp6e0xj
- V2cgFD/c37gg7iFwM5cSMT29IErPRQMKRZsJ2uLkkzlKhNP30nFn+kC7AK6gQrca8weN5bZop
- DbpHN6vdEZPdeqRDETI7xc9VJubqGQPcnJHLMy6PKsEuaxIKn0io0kqRCadX4TDmJreJHLV1I
- 6wyE7eKoKsCNyM/J7OIUkNcKQQEFz8MD3t64HYMIZ2ekoy+9FabEwzDiwMrW+UQ64uPGcCYYw
- WY/9TDIxDXosgrBkum64kjKw4S5HxSn/hdrs5ZYw4UV72iikWKmWM4lUsNj94dW+kQ5iol6kl
- XsIBpjbVEa23sgJ0B
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.02.20 15:42, Alex Ghiti wrote:
-> Hi Jan,
->
-> On 2/15/20 6:49 AM, Jan Kiszka wrote:
->> From: Jan Kiszka <jan.kiszka@siemens.com>
->>
->> No need to look further when that single region is found.
->>
->> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->> =3D2D--
->> =A0 arch/riscv/mm/init.c | 2 ++
->> =A0 1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> index aec39a56d6cf..a774547e9021 100644
->> =3D2D-- a/arch/riscv/mm/init.c
->> +++ b/arch/riscv/mm/init.c
->> @@ -160,6 +160,8 @@ void __init setup_bootmem(void)
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (reg->base + mem_size < end)
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 memblock_remove(reg=
-->base + mem_size,
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 end - reg->base - mem_size);
->> +
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;
->> =A0=A0=A0=A0=A0=A0=A0=A0=A0 }
->> =A0=A0=A0=A0=A0 }
->> =A0=A0=A0=A0=A0 BUG_ON(mem_size =3D3D=3D3D 0);
->> =3D2D-
->> 2.16.4
->>
->>
->
-> I was looking at the test above that determines if the current memblock
-> contains the kernel:
->
-> if (reg->base <=3D vmlinux_end && vmlinux_end <=3D end)
->
-> Shouldn't it be:
->
-> if (reg->base <=3D vmlinux_start && vmlinux_end <=3D end)
->
-> ?
 
-Yes, I think you are right. Would you like to send a patch that fixes this=
-?
+On 2/4/2020 8:40 AM, Bryan O'Donoghue wrote:
+> On 03/02/2020 19:35, Bjorn Andersson wrote:
+>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+>
+> Hi Avaneesh.
+
+Hello Bryan, Thank you very much for your review comments.
+
+Will be replying to your comments and will be posting new patchset soon 
+as per review comments.
 
 >
-> Otherwise, we can indeed stop as soon as we found the region containing
-> the kernel, so feel free to add:
+>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>> which obviously is in the wrong place)
+>>
+>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>> +       depends on ARCH_QCOM
 >
-> Reviewed-by: Alexandre Ghiti <alex@ghiti.fr>
+> If we persist with the model of EXTCON you should "select EXTCON" here.
+I have asked this query with Bjorn Also against his review comments, 
+whether we need to persist with extcon or need to switch to usb role 
+switch framework, as we are notifying not only to usb controller but 
+also to pmic charger so in case we adopt usb role switch then how we 
+will notify to pmic charger to enable charging battery ? Also as i 
+mentioned there my dilema is it does not look very apt to model EUD hw 
+IP as c type connector, so please let me know your views.
 >
+>>> +       help
+>>> +         The Embedded USB Debugger (EUD) driver is a driver for the
+>>> +         control peripheral which waits on events like USB 
+>>> attach/detach
+>>> +         and charger enable/disable. The control peripheral further 
+>>> helps
+>>> +         support the USB-based debug and trace capabilities.
+>>> +         This module enables support for Qualcomm Technologies, Inc.
+>>> +         Embedded USB Debugger (EUD).
+>
+> Suggest.
+>
+> This module enables support for Qualcomm Technologies, Inc.
+> Embedded USB Debugger (EUD).
+> The EUD is a control peripheral which reports VBUS attach/detach, 
+> charger enable/disable and USB-based debug and trace capabilities.
+OK.
+>
+>
+>>> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>
+> 2020
+OK
+>
+>>> +
+>>> +static int enable_eud(struct eud_chip *priv)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    /* write into CSR to enable EUD */
+>>> +    writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
+>>> +    /* Enable vbus, chgr & safe mode warning interrupts */
+>>> +    writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
+>>> +            priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
+>>> +
+>>> +    /* Ensure Register Writes Complete */
+>
+> So... You are writing a register in an on-chip PMIC. The PMIC is 
+> responsible for detecting USB ID and supplying VBUS as appropriate.
+>
+> You then get an interrupt to inform you of the state ?
 
-Thanks,
-Jan
+I am writing to EUD control port so that when EUD is enable, EUD hw IP 
+can intercept VBUS and d+/d- signal and can reroute to PMIC or USB as 
+per host application command in debug mode.
+
+so for example in debug mode VBUS signal although asserted on connecting 
+phone with host PC, but EUD based on debug application command can 
+notify USB to detach(which otherwise would have detected and attached)
+
+>
+>>> +static ssize_t enable_store(struct device *dev,
+>>> +                struct device_attribute *attr,
+>>> +                const char *buf, size_t count)
+>>> +{
+>>> +    struct eud_chip *chip = dev_get_drvdata(dev);
+>>> +    int enable = 0;
+>>
+>> You shouldn't need to initialize this as you're checking the return
+>> value of sscanf().
+OK
+>>
+>>> +    int ret = 0;
+>>> +
+>>> +    if (sscanf(buf, "%du", &enable) != 1)
+>>> +        return -EINVAL;
+>>> +
+>>> +    if (enable == EUD_ENABLE_CMD)
+>>> +        ret = enable_eud(chip);
+>>
+>> If ret is !0 you should probably return that, rather than count...
+OK
+>>
+>>> +    else if (enable == EUD_DISABLE_CMD)
+>>> +        disable_eud(chip);
+>>> +    if (!ret)
+>>
+>> ...and then you don't need this check, or initialize ret to 0 above.
+>>
+>>> +        chip->enable = enable;
+>>
+>> So if I write 42 to "enable" nothing will change in the hardware, but
+>> chip->enable will be 42...
+>>
+>>> +    return count;
+>>> +}
+>
+> I was just going to comment on usb_connector but, does the above code 
+> need a synchronization primitive to serialize with the worker and 
+> interrupt handler ?
+Will evaluate and take corrective action if needed.
+>
+>>> +static int msm_eud_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct eud_chip *chip;
+>>> +    struct resource *res;
+>>> +    int ret;
+>>> +
+>>> +    chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>>> +    if (!chip)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    chip->dev = &pdev->dev;
+>>> +    platform_set_drvdata(pdev, chip);
+>>> +
+>>> +    chip->extcon = devm_extcon_dev_allocate(&pdev->dev, 
+>>> eud_extcon_cable);
+>>
+>> Aren't we moving away from extcon in favor of the usb role switching
+>> thing?
+>
+> Yes.
+>
+> For the VBUS notification you could use
+>
+> usb-role-switch and model the USB connector as a child-node of the 
+> dual-role controller.
+
+I am not sure if EUD interface is true USB connector or should be 
+modeled so, as EUD can trick usb controller about absence of VBUS/d+/d- 
+signal. To illustrate, when in debug mode even if phone is connected 
+with PC, EUD can notify USB controller to stop USB s/w stack, by 
+notifying USB controller about usb detach event, even when d+\d- signals 
+are valid. moreover in debug mode USB controller will always configure 
+in device mode, so let me know if EUD qualifies to be modeled as child 
+of controller node?
+
+
+>
+> See:
+> https://patchwork.kernel.org/cover/11346247/
+> https://patchwork.kernel.org/patch/11346295/
+> https://patchwork.kernel.org/patch/11346263/
+>
+> Avaneesh do you have any kernel code that cares about the charger state ?
+
+charger state is to be notified to charger driver to start charging 
+battery so if i switch to usb role switch framework, how will i notify 
+to pmic charger? so if i have to adopt usb role switch framework then 
+also i will have to keep extcon framework, let me know your comment.
+
+>
+> What we are suggesting here is dropping extcon and using 
+> role-switching but, if you have some other code that cares about 
+> EXTCON_CHG_USB_SDP you'd have to do additional work.
+>
+> But, if I understood the implication of the code above where you write 
+> to the PMIC and let it handle VBUS/CHARGER on/off and you are just 
+> notified of the state change, you should be fine with usb-role-switching.
+as i mentioned usb-role-switch will only cater need to notify to usb 
+controller so please let me know your views.
+
+>
+> ---
+> bod
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
