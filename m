@@ -2,184 +2,284 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC82C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B56C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA77F206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20269206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 19:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdCOW+h2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iP1W7z13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgBPTJo (ORCPT
+        id S1726560AbgBPTMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 14:09:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43661 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgBPTJo (ORCPT
+        Sun, 16 Feb 2020 14:12:23 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46369 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgBPTMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 14:09:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id r11so17018234wrq.10;
-        Sun, 16 Feb 2020 11:09:42 -0800 (PST)
+        Sun, 16 Feb 2020 14:12:23 -0500
+Received: by mail-qk1-f196.google.com with SMTP id u124so13705254qkh.13;
+        Sun, 16 Feb 2020 11:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=xjOJBvExwbLuUAaHs7cmXVY2L5vvN42WLt6a7/VKFUk=;
-        b=MdCOW+h2YbN6/eSjuo1ejv1p8hAt/Ty+1t0EPv3dplUdw598zdzrnAx8dZJOGTklMf
-         8ARf+GDRdwSgzZGxISaIIRVbHrpnkMl1UrDebRpclmaUNx87igazjQd4xaH0Q0rXzJSo
-         KQEf2BNEkIC3EhW1TUQJ7is1XA3BSmowH+9wG8vuH+VWA9nALa6+NCcnBJ+hr1E+GLd8
-         QlOoacoy1oyT2cEkQMFmkZLkLpIqaEnrtB7Adn8xtsPs0IO9wyJ1Udy0Cz4MbxVMo8w1
-         D3M0BdMYGkoM8Nvk7BKNQqZnZ8RkE5J1cfZhSBBMOOb3zk4SWrjBveTRCEcQtFtnBiAZ
-         dQSA==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bD6rrmziSctqGG/b+du2AiEZ+/WT7QBGT4lN7okINdo=;
+        b=iP1W7z13cHf0KgknW7F62ENi14GYqG0johntcLxrYg4M9Mh2fDwAGy2UN8JlZhKMvP
+         jkUR6SAIo6QygRqd5+xf3p9nw43G9DmWlV7PRjk1hwEKXryxEmpmV+jsqz1QoOGD5hMe
+         P2v4E1mJikpaC9TVcDb6kVWY7CUQEPWuoojP9IQbDzCSi8SqtEFBaDJp9aixAdEmHi9m
+         i4VtQhnXsP0E2MYXKgITnhpagix0JU1EmsAb5ZKFCHddneYQ7/z1N7ZqAkbJKytQGYuw
+         bXlU5weBQ/frcpS6qWwW9mK0l6ckcnB3ZkVBrQJgYRFzgVrnlB+Baf3rzBrWElH7Xnro
+         0O3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=xjOJBvExwbLuUAaHs7cmXVY2L5vvN42WLt6a7/VKFUk=;
-        b=WAUBkm4Na4g0YSfUVlBZ5kQdZwHulgIA8CV/3rn/dsrzhYxGLGt0XeCmWR17dVBnAJ
-         3ZYFlYaCz9+OefLxeV6kXVFiW1screlBwnBdb8ctZxVgNc9iLu6x9gVFTI3TKLNPB5rU
-         VUb6g+upo1N91ZZvfRZigHobxrG8/L7CKynfp8Qu2L1WFOCaDZYr9awgEpy4mhuIerw/
-         iiqjYZg2eMPNcUDCfAdKlAgli8cBACgTqdo4t7kh1f4CWdq+u+Boj+fhPrz3IXyn5o5+
-         WBWpPzi7wiI5vPB6WVAzeGUH9Q11Ru7g+ch0jza9K9TD5FkLOQSPdHovDM62YmTV4E7W
-         7EhQ==
-X-Gm-Message-State: APjAAAXmfuyb5MWr3jmY8zsq2VtwcOtdKF3hDqHhCRmbuaPoEYJgSNHn
-        OQQBjhQcF+5WSRoplAMxaBW9nWNa
-X-Google-Smtp-Source: APXvYqwECRcvJeuxRN5PmrVJG5knZDpURswEBT9a68gJl6rW2wAMYx4OBsqSbxf2S5Ss5FXEoRSoqQ==
-X-Received: by 2002:adf:dfce:: with SMTP id q14mr17375227wrn.324.1581880181955;
-        Sun, 16 Feb 2020 11:09:41 -0800 (PST)
-Received: from [192.168.43.97] ([109.126.145.198])
-        by smtp.gmail.com with ESMTPSA id x11sm17169294wmg.46.2020.02.16.11.09.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2020 11:09:41 -0800 (PST)
-Subject: Re: [PATCH v2 1/5] io_uring: add missing io_req_cancelled()
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1581785642.git.asml.silence@gmail.com>
- <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
- <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <7f5fb8fd-6162-38a7-fbf1-00c8debfcceb@gmail.com>
-Date:   Sun, 16 Feb 2020 22:09:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bD6rrmziSctqGG/b+du2AiEZ+/WT7QBGT4lN7okINdo=;
+        b=ItfgisyCbUkkszNuVecyPeI5hGgI2mDWWvsahx4lkPIK9cDPUFSNryFlhttN8xAwE+
+         +KGwZOi3q7nDiqwTb8EZcR5+zFHdU1FTDQKRNAiieGL5F2TYfXzsZV9UJvgBdJNyMZ/K
+         mrG2CsMGO9mFf+zHEav77Szn0iqiGRVDBB4Xv98bp8ahWEq10bN2tqwkQUmS+tDzeFdJ
+         d+s03zXGCLrtdgCbSqxKwQFhA1gtIPMbE5SVAjOd1dr3osDLKjrjQsZvI6d6i4pH8NTt
+         zuEhiPhCP9EvntAZvZuCt1Wg3CE2BBihh0ZG/fRlojcHQ9kipmuEN/UzY7/+PrUPt8i5
+         V6Yg==
+X-Gm-Message-State: APjAAAXd0AxrFDxBGqQt21yRVXiG6NwP2kntO+tJyD6EFee0f93TiNgG
+        xQWEKCAa9MdMqLLT6PDCPL4=
+X-Google-Smtp-Source: APXvYqwfu5o0ZsmVsnXB4LYtScalYumpQCdwybEscNX+DLvQVEFk1pY7BpYLezWIlAbFeotE6QfI+w==
+X-Received: by 2002:a37:6785:: with SMTP id b127mr10455424qkc.240.1581880341431;
+        Sun, 16 Feb 2020 11:12:21 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g11sm6100160qtc.48.2020.02.16.11.12.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 11:12:21 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sun, 16 Feb 2020 14:12:19 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nivedita@alum.mit.edu, x86@kernel.org
+Subject: Re: [PATCH 12/18] efi: clean up config_parse_tables()
+Message-ID: <20200216191219.GA589207@rani.riverdale.lan>
+References: <20200216182334.8121-1-ardb@kernel.org>
+ <20200216182334.8121-13-ardb@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="iIpd5EcSXfT43WAoiPJOgKV3Kw6r2eXOG"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200216182334.8121-13-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---iIpd5EcSXfT43WAoiPJOgKV3Kw6r2eXOG
-Content-Type: multipart/mixed; boundary="oCoLmO3fmwHPAruBElyejFIvvfkzXRA2G";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <7f5fb8fd-6162-38a7-fbf1-00c8debfcceb@gmail.com>
-Subject: Re: [PATCH v2 1/5] io_uring: add missing io_req_cancelled()
-References: <cover.1581785642.git.asml.silence@gmail.com>
- <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
- <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
-In-Reply-To: <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
+On Sun, Feb 16, 2020 at 07:23:28PM +0100, Ard Biesheuvel wrote:
+> config_parse_tables() is a jumble of pointer arithmetic, due to the
+> fact that on x86, we may be dealing with firmware whose native word
+> size differs from the kernel's.
+> 
+> This is not a concern on other architectures, and doesn't quite
+> justify the state of the code, so let's clean it up by adding a
+> non-x86 code path, constifying statically allocated tables and
+> replacing preprocessor conditionals with IS_ENABLED() checks.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/ia64/kernel/efi.c          |  3 +-
+>  arch/x86/platform/efi/efi.c     |  6 +--
+>  drivers/firmware/efi/arm-init.c |  5 +--
+>  drivers/firmware/efi/efi.c      | 47 ++++++++++----------
+>  include/linux/efi.h             |  5 ++-
+>  5 files changed, 32 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+> index 3b5cf551489c..f69f3fe0532e 100644
+> --- a/arch/ia64/kernel/efi.c
+> +++ b/arch/ia64/kernel/efi.c
+> @@ -56,7 +56,7 @@ unsigned long __initdata esi_phys = EFI_INVALID_TABLE_ADDR;
+>  unsigned long hcdp_phys = EFI_INVALID_TABLE_ADDR;
+>  unsigned long sal_systab_phys = EFI_INVALID_TABLE_ADDR;
+>  
+> -static __initdata efi_config_table_type_t arch_tables[] = {
+> +static const efi_config_table_type_t arch_tables[] __initconst = {
+>  	{ESI_TABLE_GUID, "ESI", &esi_phys},
+>  	{HCDP_TABLE_GUID, "HCDP", &hcdp_phys},
+>  	{MPS_TABLE_GUID, "MPS", &mps_phys},
+> @@ -533,7 +533,6 @@ efi_init (void)
+>  
+>  	if (efi_config_parse_tables(__va(efi_systab->tables),
+>  				    efi_systab->nr_tables,
+> -				    sizeof(efi_config_table_t),
+>  				    arch_tables) != 0)
+>  		return;
+>  
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index 26d905e6b579..f7025b9075b4 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -60,7 +60,7 @@ static u64 efi_systab_phys __initdata;
+>  static unsigned long prop_phys = EFI_INVALID_TABLE_ADDR;
+>  static unsigned long uga_phys = EFI_INVALID_TABLE_ADDR;
+>  
+> -static efi_config_table_type_t arch_tables[] __initdata = {
+> +static const efi_config_table_type_t arch_tables[] __initconst = {
+>  	{EFI_PROPERTIES_TABLE_GUID, "PROP", &prop_phys},
+>  	{UGA_IO_PROTOCOL_GUID, "UGA", &uga_phys},
+>  #ifdef CONFIG_X86_UV
+> @@ -434,7 +434,7 @@ static int __init efi_systab_init(u64 phys)
+>  	return 0;
+>  }
+>  
+> -static int __init efi_config_init(efi_config_table_type_t *arch_tables)
+> +static int __init efi_config_init(const efi_config_table_type_t *arch_tables)
+>  {
+>  	void *config_tables;
+>  	int sz, ret;
+> @@ -457,7 +457,7 @@ static int __init efi_config_init(efi_config_table_type_t *arch_tables)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	ret = efi_config_parse_tables(config_tables, efi.systab->nr_tables, sz,
+> +	ret = efi_config_parse_tables(config_tables, efi.systab->nr_tables,
+>  				      arch_tables);
+>  
+>  	early_memunmap(config_tables, efi.systab->nr_tables * sz);
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> index a656bfcd7e27..d1f44c847841 100644
+> --- a/drivers/firmware/efi/arm-init.c
+> +++ b/drivers/firmware/efi/arm-init.c
+> @@ -55,7 +55,7 @@ static phys_addr_t efi_to_phys(unsigned long addr)
+>  
+>  static __initdata unsigned long screen_info_table = EFI_INVALID_TABLE_ADDR;
+>  
+> -static __initdata efi_config_table_type_t arch_tables[] = {
+> +static const efi_config_table_type_t arch_tables[] __initconst = {
+>  	{LINUX_EFI_ARM_SCREEN_INFO_TABLE_GUID, NULL, &screen_info_table},
+>  	{NULL_GUID, NULL, NULL}
+>  };
+> @@ -85,7 +85,7 @@ static void __init init_screen_info(void)
+>  
+>  static int __init uefi_init(void)
+>  {
+> -	void *config_tables;
+> +	efi_config_table_t *config_tables;
+>  	size_t table_size;
+>  	int retval;
+>  
+> @@ -118,7 +118,6 @@ static int __init uefi_init(void)
+>  		goto out;
+>  	}
+>  	retval = efi_config_parse_tables(config_tables, efi.systab->nr_tables,
+> -					 sizeof(efi_config_table_t),
+>  					 arch_tables);
+>  
+>  	if (!retval)
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 2bfd6c0806ce..db1fe765380f 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -460,7 +460,7 @@ void __init efi_mem_reserve(phys_addr_t addr, u64 size)
+>  	efi_arch_mem_reserve(addr, size);
+>  }
+>  
+> -static __initdata efi_config_table_type_t common_tables[] = {
+> +static const efi_config_table_type_t common_tables[] __initconst = {
+>  	{ACPI_20_TABLE_GUID, "ACPI 2.0", &efi.acpi20},
+>  	{ACPI_TABLE_GUID, "ACPI", &efi.acpi},
+>  	{SMBIOS_TABLE_GUID, "SMBIOS", &efi.smbios},
+> @@ -477,9 +477,9 @@ static __initdata efi_config_table_type_t common_tables[] = {
+>  	{NULL_GUID, NULL, NULL},
+>  };
+>  
+> -static __init int match_config_table(efi_guid_t *guid,
+> +static __init int match_config_table(const efi_guid_t *guid,
+>  				     unsigned long table,
+> -				     efi_config_table_type_t *table_types)
+> +				     const efi_config_table_type_t *table_types)
+>  {
+>  	int i;
+>  
+> @@ -498,39 +498,38 @@ static __init int match_config_table(efi_guid_t *guid,
+>  	return 0;
+>  }
+>  
+> -int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+> -				   efi_config_table_type_t *arch_tables)
+> +int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+> +				   int count,
+> +				   const efi_config_table_type_t *arch_tables)
+>  {
+> -	void *tablep;
+> +	const efi_config_table_64_t *tbl64 = (void *)config_tables;
+> +	const efi_config_table_32_t *tbl32 = (void *)config_tables;
+> +	const efi_guid_t *guid;
+> +	unsigned long table;
+>  	int i;
+>  
+> -	tablep = config_tables;
+>  	pr_info("");
+>  	for (i = 0; i < count; i++) {
+> -		efi_guid_t guid;
+> -		unsigned long table;
+> -
+> -		if (efi_enabled(EFI_64BIT)) {
+> -			u64 table64;
+> -			guid = ((efi_config_table_64_t *)tablep)->guid;
+> -			table64 = ((efi_config_table_64_t *)tablep)->table;
+> -			table = table64;
+> -#ifndef CONFIG_64BIT
+> -			if (table64 >> 32) {
+> +		if (!IS_ENABLED(CONFIG_X86)) {
+> +			guid = &config_tables[i].guid;
+> +			table = (unsigned long)config_tables[i].table;
+> +		} else if (efi_enabled(EFI_64BIT)) {
+> +			guid = &tbl64[i].guid;
+> +			table = tbl64[i].table;
+> +
+> +			if (IS_ENABLED(CONFIG_X64_32) &&
+					      ^^^ typo, should be X86
 
---oCoLmO3fmwHPAruBElyejFIvvfkzXRA2G
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 16/02/2020 20:15, Jens Axboe wrote:
-> On 2/15/20 3:01 PM, Pavel Begunkov wrote:
->> fallocate_finish() is missing cancellation check. Add it.
->> It's safe to do that, as only flags setup and sqe fields copy are done=
-
->> before it gets into __io_fallocate().
->=20
-> Thanks, I added this one to the 5.6 mix.
->=20
-> Going to be sporadic this next week, but I hope I can get to your
-> 5.7 material anyway.
->=20
-
-Sure, there is plenty of time
-
---=20
-Pavel Begunkov
-
-
---oCoLmO3fmwHPAruBElyejFIvvfkzXRA2G--
-
---iIpd5EcSXfT43WAoiPJOgKV3Kw6r2eXOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl5Jk00ACgkQWt5b1Glr
-+6X5zRAAn3btzgQsP9Mmgm61KMi6BBFwQYxCSpKDYdTdkGno++d+ACtb77eH6CnO
-kQuromCtQO0gan0GZ6lO+ykucfrHq6cWpiLd2bpEdzMbzZCfnUMn89fWYJIKGc/W
-z0qfMCGY1XNg8lNOM1ApvoFyIE8nBg2hXntdUEREX4qaxZASLcyviLT26a9mtPrk
-jhxoc4WEFyPk510MnBxcWjgeB/zsLKnwZXV0Z8iysHhXEZZ1gpR9wLbkfwZJWDzQ
-2sRx2Zy6qmQE+1PrAm67FW0FxZwqI64KtNUs9EyAF1tsk2aaBHA1whFho6ckjj/H
-7PTlLrvXDcnKbo1nxKEzYVDNzaDVP6ewz5Wk0fAriisPihYTHrF5wbBggw1qQ9l1
-JIpIp/S/nZ6t1GdJAKMdNE1kYXijtARexEFz4gPtddlNW+kaBIrySlNFsIfKkMmo
-tZkXtdujXbgH+pPfVjNfCSO5jQIvaGwHePs2QsCS5Pv1VG88KYwI9yIo/Td4QHle
-0izlAhmMXSJgeFjLJKP2x0UMaAm1DNOBiTssul7ZJLxU6oFkcL2m2Irl0kWm2wIy
-R5LcHcLPDM0h+BOWbVdU+hecLV2eI6zcqFYFg9oJFysQjYMSm5M3T/hLRKYtgAED
-YBHCHLfny11SuTH0hYilXOsKtygjOufFcTLoALgWv2GZD+sV6RM=
-=Hnuo
------END PGP SIGNATURE-----
-
---iIpd5EcSXfT43WAoiPJOgKV3Kw6r2eXOG--
+> +			    tbl64[i].table > U32_MAX) {
+>  				pr_cont("\n");
+>  				pr_err("Table located above 4GB, disabling EFI.\n");
+>  				return -EINVAL;
+>  			}
+> -#endif
+>  		} else {
+> -			guid = ((efi_config_table_32_t *)tablep)->guid;
+> -			table = ((efi_config_table_32_t *)tablep)->table;
+> +			guid = &tbl32[i].guid;
+> +			table = tbl32[i].table;
+>  		}
+>  
+> -		if (!match_config_table(&guid, table, common_tables))
+> -			match_config_table(&guid, table, arch_tables);
+> -
+> -		tablep += sz;
+> +		if (!match_config_table(guid, table, common_tables))
+> +			match_config_table(guid, table, arch_tables);
+>  	}
+>  	pr_cont("\n");
+>  	set_bit(EFI_CONFIG_TABLES, &efi.flags);
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index d61c25fd5824..99a7fcbe5e9b 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -613,8 +613,9 @@ extern void __init efi_esrt_init(void);
+>  #else
+>  static inline void efi_esrt_init(void) { }
+>  #endif
+> -extern int efi_config_parse_tables(void *config_tables, int count, int sz,
+> -				   efi_config_table_type_t *arch_tables);
+> +extern int efi_config_parse_tables(const efi_config_table_t *config_tables,
+> +				   int count,
+> +				   const efi_config_table_type_t *arch_tables);
+>  extern int efi_systab_check_header(const efi_table_hdr_t *systab_hdr,
+>  				   int min_major_version);
+>  extern void efi_systab_report_header(const efi_table_hdr_t *systab_hdr,
+> -- 
+> 2.17.1
+> 
