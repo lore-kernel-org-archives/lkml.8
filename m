@@ -2,112 +2,194 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB68C7114E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71559C7114E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC442073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6782084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 00:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWX56Dh/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0WMVYVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgBPAkz (ORCPT
+        id S1727592AbgBPAuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 19:40:55 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43301 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgBPAky (ORCPT
+        Sat, 15 Feb 2020 19:50:14 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37067 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgBPAuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 19:40:54 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so12742048oth.10
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Feb 2020 16:40:52 -0800 (PST)
+        Sat, 15 Feb 2020 19:50:13 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l2so6598927otp.4;
+        Sat, 15 Feb 2020 16:50:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xP2d5mrDDYuWOGt0j6R7sVfg2HV+cZtGZwXSSh2x4yQ=;
-        b=hWX56Dh/Gge2xHbvgZPqq0cqkBYPxvOKTABmU+RD7KKAyBpKUPo00A8YOVhzTBbar6
-         NM3rb9fIi7WDXsxO8va38FgCFIYd7QFHD6vbdMs/5eJmbEkUyIJniod6cxXUtBwLp78D
-         feaU16l4g3W4RcIU7oyAk1YFOWXDSAQEZsOLkBLgG/d1BwLEg2B5+q/i6FankzykAS2B
-         GaWRLjXh3cOOcyENzTCHlCAQnlYYz3IEAc4yUA5Vtmm/MG9+VlDSlRqkQzjLhrAtqB8m
-         99mL8SjnryBPlnJSPca+ileJ1Eon14cG02YQrgVviMngbASQ0dWWIZkcbj2jxSZ5gJxb
-         bPvQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uyRNNBKtZ/pBAy6wlcISFvmc40pdoR2VRPKkepKzyLM=;
+        b=Q0WMVYVIM+b2pr/Pn3tUSRAGxAZgv4nYkNxBhG9toP/WvAIaLdYxyP/EisHgN+9XtK
+         cO+219jw4OkNMwxE1dme0AOosSoMn1fSVZZezJDyfLaLCP5mmKJ+B1up/4dGma5d7fcD
+         R35KuDmUMpPqQVeLbfnR2tQqq0819mnmLSfQWwSaE2ZD+kOEk8SvqG0v7mZ1ShkHU/0b
+         ef7TfSzPlXhbF9ibeJZ+jLq434eAPDRc7Tt93/ZyRczazQP6fIrJ7x4LJy6xnAgZXr5v
+         DVfR/DdYNvvpVowKpq+XUhfgOFeD1fDdfo9bv29ZlPLmc7Ez6QBHK9xBsk/lAcmUFOEk
+         ebCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xP2d5mrDDYuWOGt0j6R7sVfg2HV+cZtGZwXSSh2x4yQ=;
-        b=OdtgSfgcPcj5Nr6MMpsYa0GBXeu7RKCLHr0rny3Ga5cY3pzylU5/QIUHVq8YLd1Nbc
-         ie5eSjNQ5nazpNvsvRHCuYiTeAVsDUEddDe2zWFrU0G8Uzsu95T/X+FaFXX7CmsodPup
-         LCm2GwV4gm0qNORxhbIHj1FeEkXg70bVTkb/4sIXNSbFTCDdPq5r67rNtbQQoa7TGzsE
-         brnuvcV+cgAIgHLUP0uwd5GNP8JPA++52yqiYqQEq3tbjOlNhMognc7OESoY2RMrphXE
-         GG+/Q/YiA2/iaIXhDGA+YMhZ7dpf4lXcWOOYFAJbTGoWudvv4UqTb3nxX+dYdBb+9LQ+
-         Je8A==
-X-Gm-Message-State: APjAAAV5UDNMMolT5+X1Q8ZYDT3GcYiE7OL/2asVMgSXdGAIx1rCV2Fm
-        jBME5qDjtGsbmrICy646IVk=
-X-Google-Smtp-Source: APXvYqyuZpug/NB6vcKcnwbQ/XBPbV0NsCAjTD7xPqll2VAa6KJDhxw+78bpH2GMCYmcCX21JjY0XQ==
-X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr7101714otr.169.1581813652532;
-        Sat, 15 Feb 2020 16:40:52 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c12sm3438979oic.27.2020.02.15.16.40.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2020 16:40:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uyRNNBKtZ/pBAy6wlcISFvmc40pdoR2VRPKkepKzyLM=;
+        b=b+OF5cWF1xEtNNlVKUh6+EI79Jd3sirBzooN/6LZDWMMjI/3qAr9iq0kVBvgUo7xUa
+         AjhcObNZo0dxpXVNbQs6L5gucvT0tGBfMcfX2pDRwIylmI5He5iZzjOW+zOqw5sdeM39
+         vyOt7mE8vd2bOCT29NV/gAjGK3tg8wxYTAPssIZc/2LdOuAgW5PDe/moUyW9ZzHnIfRA
+         zJzKDZ+sm4BIfVCWqV2fe3oCLS5UTVs249trhI81pBqjWf8pErp14m6ih3mEn8zx4G2O
+         YKzHP3ZL8/ROhDLWwJ6Qg0XhDxDutuPXNHN440ghn98kNkBqhYrWByBIFNr5mz4guSXt
+         yyYg==
+X-Gm-Message-State: APjAAAVI9nypy+HvWwLk+wovsqI+9bKhsSwuI0fbY0puO2+wswRzuj5X
+        MK37TY5MJ0Oymf1P7AHLbV9pmIm5
+X-Google-Smtp-Source: APXvYqw24cLn9pSDb30se6fd1ilKzuFGImR7J+NkDrn/Y/GrxMH5sclpTk/kehtaW2O3M77GOCbRMA==
+X-Received: by 2002:a05:6830:138b:: with SMTP id d11mr7101057otq.38.1581814212513;
+        Sat, 15 Feb 2020 16:50:12 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id g25sm3678506otr.8.2020.02.15.16.50.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 15 Feb 2020 16:50:11 -0800 (PST)
+Date:   Sat, 15 Feb 2020 17:50:10 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] virtio_balloon: Adjust label in virtballoon_probe
-Date:   Sat, 15 Feb 2020 17:40:39 -0700
-Message-Id: <20200216004039.23464-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.0
+To:     Howard Chung <howardchung@google.com>
+Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [Bluez PATCH v5] bluetooth: secure bluetooth stack from bluedump
+ attack
+Message-ID: <20200216005010.GA24335@ubuntu-m2-xlarge-x86>
+References: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214191609.Bluez.v5.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns when CONFIG_BALLOON_COMPACTION is unset:
+Hi Howard,
 
-../drivers/virtio/virtio_balloon.c:963:1: warning: unused label
-'out_del_vqs' [-Wunused-label]
-out_del_vqs:
-^~~~~~~~~~~~
-1 warning generated.
+On Fri, Feb 14, 2020 at 07:16:41PM +0800, Howard Chung wrote:
+> Attack scenario:
+> 1. A Chromebook (let's call this device A) is paired to a legitimate
+>    Bluetooth classic device (e.g. a speaker) (let's call this device
+>    B).
+> 2. A malicious device (let's call this device C) pretends to be the
+>    Bluetooth speaker by using the same BT address.
+> 3. If device A is not currently connected to device B, device A will
+>    be ready to accept connection from device B in the background
+>    (technically, doing Page Scan).
+> 4. Therefore, device C can initiate connection to device A
+>    (because device A is doing Page Scan) and device A will accept the
+>    connection because device A trusts device C's address which is the
+>    same as device B's address.
+> 5. Device C won't be able to communicate at any high level Bluetooth
+>    profile with device A because device A enforces that device C is
+>    encrypted with their common Link Key, which device C doesn't have.
+>    But device C can initiate pairing with device A with just-works
+>    model without requiring user interaction (there is only pairing
+>    notification). After pairing, device A now trusts device C with a
+>    new different link key, common between device A and C.
+> 6. From now on, device A trusts device C, so device C can at anytime
+>    connect to device A to do any kind of high-level hijacking, e.g.
+>    speaker hijack or mouse/keyboard hijack.
+> 
+> Since we don't know whether the repairing is legitimate or not,
+> leave the decision to user space if all the conditions below are met.
+> - the pairing is initialized by peer
+> - the authorization method is just-work
+> - host already had the link key to the peer
+> 
+> Signed-off-by: Howard Chung <howardchung@google.com>
+> ---
+> 
+> Changes in v5:
+> - Rephrase the comment
+> 
+> Changes in v4:
+> - optimise the check in smp.c.
+> 
+> Changes in v3:
+> - Change confirm_hint from 2 to 1
+> - Fix coding style (declaration order)
+> 
+> Changes in v2:
+> - Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
+> - Fix the added code in classic
+> - Add a similar fix for LE
+> 
+>  net/bluetooth/hci_event.c | 10 ++++++++++
+>  net/bluetooth/smp.c       | 19 +++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 2c833dae9366..e6982f4f51ea 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4571,6 +4571,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
+>  			goto confirm;
+>  		}
+>  
+> +		/* If there already exists link key in local host, leave the
+> +		 * decision to user space since the remote device could be
+> +		 * legitimate or malicious.
+> +		 */
+> +		if (hci_find_link_key(hdev, &ev->bdaddr)) {
+> +			bt_dev_warn(hdev, "Local host already has link key");
+> +			confirm_hint = 1;
+> +			goto confirm;
+> +		}
+> +
+>  		BT_DBG("Auto-accept of user confirmation with %ums delay",
+>  		       hdev->auto_accept_delay);
+>  
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index 2cba6e07c02b..25dbf77d216b 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -2192,6 +2192,25 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+>  		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
+>  			     smp->prnd);
+>  		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
+> +
+> +		/* Only Just-Works pairing requires extra checks */
+> +		if (smp->method != JUST_WORKS)
+> +			goto mackey_and_ltk;
+> +
+> +		/* If there already exists link key in local host, leave the
+> +		 * decision to user space since the remote device could be
+> +		 * legitimate or malicious.
+> +		 */
+> +		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+> +				 hcon->role)) {
+> +			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+> +							hcon->type,
+> +							hcon->dst_type, passkey,
 
-Move the label within the preprocessor block since it is only used when
-CONFIG_BALLOON_COMPACTION is set.
+We received a report from the 0day bot when building with clang that
+passkey is uninitialized when used here:
 
-Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
-Link: https://github.com/ClangBuiltLinux/linux/issues/886
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7bfe365d9372..341458fd95ca 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -959,8 +959,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 	iput(vb->vb_dev_info.inode);
- out_kern_unmount:
- 	kern_unmount(balloon_mnt);
--#endif
- out_del_vqs:
-+#endif
- 	vdev->config->del_vqs(vdev);
- out_free_vb:
- 	kfree(vb);
--- 
-2.25.0
+It appears to be legitimate as if we get to this point, we have not
+touched the value of passkey but I do not know if there is any
+contextual code flow going on where this can never happen but I do not
+see how.
 
+Would you mind looking into it?
+
+Cheers,
+Nathan
