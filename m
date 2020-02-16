@@ -2,90 +2,115 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96825C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD7EC7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700E320659
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971A520857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FRpZhnw8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9a6Mac4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgBPRPK (ORCPT
+        id S1728556AbgBPR2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 12:15:10 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35074 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgBPRPK (ORCPT
+        Sun, 16 Feb 2020 12:28:21 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35284 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgBPR2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 12:15:10 -0500
-Received: by mail-pj1-f65.google.com with SMTP id q39so6158218pjc.0
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 09:15:08 -0800 (PST)
+        Sun, 16 Feb 2020 12:28:20 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so5773993plt.2;
+        Sun, 16 Feb 2020 09:28:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=j6In1ZMqVqL+EXVTCAEgQ5YhGd4Op+E9zTb7k2XCzGk=;
-        b=FRpZhnw8jNA6iPn+w5/D3iYi1ElYXNSDUkzmilx+bQ8810Wz0XsMUPWIpRglmBTSft
-         p1J0B7NTmshC0/phHwFPgJQONaaLwID7rNe63j4jleW1q4ISIGAVWFdQwOaewQFJ3h05
-         RIo0+dYlRtuFjVhme8xF9mRJH4fct1MRY2U8fKI4h1wuOJhbw5hULpeltMvv/cymeJos
-         iozthv+J/tGd7RVI0fas8xHdn7wEuHzzY1H6aMB4szGs9E0Oz77YTeYCc0uA1VR0/BxW
-         OKuS471grWaedWlOQ6RyjmEM7oCNYR1uj9bf63NEfm7Rcj2JH0abacbGSo86JIRGX7N1
-         Q6+g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=li9wRD+trYzeYRrIDTG7VErShRh4YzHNS/3QPJhsHYs=;
+        b=R9a6Mac428S9opSV3aq/ZhqE30jY6lafTCf7S2d1eJ1E99RSCGWcpDXTeZ3Vg3+GyD
+         ihz21YJzlyYeM3anV69vpMgMV6lksRliQJ0HCBJbYfSLI+6QzXpoQOwW0aU0izce8Ky+
+         BvU/CsSiIhoznN0iXSXvbX23to+afL5HRUjQ/g0BjQj+mjhbeXlEqW0wLFe15ZHEn8Ip
+         VZjDKptRZCNYMvxaU/Ngrb0Ps89+DO1AkcGFEVdK/ApL+P+Exqzjhlh3gNRNjQnnyuqJ
+         MzGQYvNnAP301j1JSOtlVfkSF9EnxwP70stmA832B99N7jjUloV4FBtKk5SXhWB1f6Wf
+         EL2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=j6In1ZMqVqL+EXVTCAEgQ5YhGd4Op+E9zTb7k2XCzGk=;
-        b=eJNdSvVMmbOJpaTldEte24qv5JFw6MVqUh3dI3ryP9AM0FUT74tV085Q4Cq27RUsTv
-         XTF0GnodyVBQMT9eYcFLe4/ZgIY7+TCRUVEue4Zk+wRvIlduJ4TPKtFdTKejlIdhG/To
-         /jvcEtzYILkIaOw1Nc9k9bs2zumFsBaZ7evUFybHEaYsfSHE9mIP9aZBKI3MjcA/dOmc
-         RzFBGVUnwB5QjyRFed5TXc2hgTgvVGOuQnMbu7U0/Ta85J8ADv+gelBvlz3VRQd5oNAA
-         3zgd2TQDIhggufUrwRIVG6eFr3Aqc/eJEn+XnwkbKwyF1SOCMJLP+XpGaipBcHarK1I/
-         lD3g==
-X-Gm-Message-State: APjAAAV3Zc9BiURZKm92ww+N585gI9kte8Xq5oazWoaS64/AvF8xUlHK
-        peaaPUzEhf5W3tHKMtpGFcpeX4+TsTU=
-X-Google-Smtp-Source: APXvYqz/BVLKj4CMP1lu96h4dUcFR62S1Rbi9mYMVUoHqq+uM7szXQCvmpzYtkur9nb8ngHltEpMGQ==
-X-Received: by 2002:a17:90a:b010:: with SMTP id x16mr16053385pjq.130.1581873307958;
-        Sun, 16 Feb 2020 09:15:07 -0800 (PST)
-Received: from ?IPv6:2605:e000:100e:8c61:b1fd:20cc:c368:304b? ([2605:e000:100e:8c61:b1fd:20cc:c368:304b])
-        by smtp.gmail.com with ESMTPSA id x65sm14255050pfb.171.2020.02.16.09.15.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2020 09:15:07 -0800 (PST)
-Subject: Re: [PATCH v2 1/5] io_uring: add missing io_req_cancelled()
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1581785642.git.asml.silence@gmail.com>
- <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <879b7984-c45b-6bf5-9e15-ee4b744e47f2@kernel.dk>
-Date:   Sun, 16 Feb 2020 09:15:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=li9wRD+trYzeYRrIDTG7VErShRh4YzHNS/3QPJhsHYs=;
+        b=iaA5Q+1xyKP1pbhr56lv/UDb+60N4WfU2CkhyiesjpEZk1tNfwoxgk7Co294bNA1Fa
+         f1aYZYX6knoLVyAnRBCI2D2/3HQHIys3fXFm9Nxgkd6J5V2ehz9lke7yrtZ92yirtLWU
+         qaB0VViWdipKJS00h8ZF20SHyzN2w6Kyamh8c2njePoxrgzM7l4lRPcpe6gXn/qNxOll
+         T6HcPL0+BAxwXw+X8r0vm2AKtEi4JT0rtGwqZSi00LKHBb+kq86aaYsDulG0YG9utp5k
+         f67y46QBBbPlSKrZ0KWpAbIZf0xj1tikg3gQ8xmWYOBtA2LAjY4w/NQzKbjGwq77cI+q
+         kdNA==
+X-Gm-Message-State: APjAAAXWiJqvZEWHExDCv4HSVatTIy+Af+9sAu0Xc5nTNNOs2cJ+QR7i
+        unvrGnFXO6s/K8jZBjXGvX4=
+X-Google-Smtp-Source: APXvYqwnA7pjS1054IxgkOuF4Ptq6AKSK3rxTwoaU0ILSWvT53J2OayxuX5Dez18xr9oJSMfJG/xXg==
+X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr12421746plk.265.1581874098693;
+        Sun, 16 Feb 2020 09:28:18 -0800 (PST)
+Received: from localhost.localdomain ([103.211.17.250])
+        by smtp.googlemail.com with ESMTPSA id iq22sm13836213pjb.9.2020.02.16.09.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 09:28:18 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeremy Sowden <jeremy@azazel.net>,
+        Florent Fourcot <florent.fourcot@wifirst.fr>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] netfilter: ipset: Pass lockdep expression to RCU lists
+Date:   Sun, 16 Feb 2020 22:56:54 +0530
+Message-Id: <20200216172653.19772-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <da924cbc76ca1e5b2d1528ffd88bcb180704e531.1581785642.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/15/20 3:01 PM, Pavel Begunkov wrote:
-> fallocate_finish() is missing cancellation check. Add it.
-> It's safe to do that, as only flags setup and sqe fields copy are done
-> before it gets into __io_fallocate().
+ip_set_type_list is traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of ip_set_type_mutex.
 
-Thanks, I added this one to the 5.6 mix.
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
 
-Going to be sporadic this next week, but I hope I can get to your
-5.7 material anyway.
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/netfilter/ipset/ip_set_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index cf895bc80871..97c851589160 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -86,7 +86,8 @@ find_set_type(const char *name, u8 family, u8 revision)
+ {
+ 	struct ip_set_type *type;
+ 
+-	list_for_each_entry_rcu(type, &ip_set_type_list, list)
++	list_for_each_entry_rcu(type, &ip_set_type_list, list,
++				lockdep_is_held(&ip_set_type_mutex))
+ 		if (STRNCMP(type->name, name) &&
+ 		    (type->family == family ||
+ 		     type->family == NFPROTO_UNSPEC) &&
 -- 
-Jens Axboe
+2.24.1
 
