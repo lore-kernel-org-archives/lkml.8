@@ -2,101 +2,206 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD98C7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5502C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3464F20857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="B62hACUi"
+	by mail.kernel.org (Postfix) with ESMTP id A087E2084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 15:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581868122;
+	bh=jwmU8lHHnFcZe9WrbTeQglOtPgLluzOqO3gvAX4Pu2g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kP/Ck+GnuCHv11SPfdlaFe3urnHuJRrxyZoE9jIBteugf9Cbl8k94Fhk//2D2vmHJ
+	 kr6HeJBot9weuFg5cfIkicvzKG60tz48HS+hMqkYLwjFBNEOFPJaBVjM407WSifIHu
+	 lSJ+VEv0ui9BINmUpolpU/S7ALpgC6fdos12c5wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgBPPf7 (ORCPT
+        id S1728387AbgBPPsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 10:35:59 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:58610 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgBPPf7 (ORCPT
+        Sun, 16 Feb 2020 10:48:41 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:16681 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgBPPsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 10:35:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1581867357;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ERM3RGanh1fJgg7kpnX8A1AoqKzN5Z7w2qMVfhCXT1I=;
-        b=B62hACUiCwcx0eJVymY+ugJzprPBeXkRoSzSZAHbzM4bleKfk4DDX6TUntzaHJKanWzBnk
-        D1HxNnRqj64HXoh1XTy5wSRdUXKwpTmMgvcCNaEqpOK8iku8iNtg6+e3jxpjxeka9e2G/H
-        Sk6wU7zF21xY4t1PKhmMROuotTo+VII=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Cc:     mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
-        davem@davemloft.net, b.a.t.m.a.n@lists.open-mesh.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net: batman-adv: Use built-in RCU list checking
-Date:   Sun, 16 Feb 2020 16:35:54 +0100
-Message-ID: <1634394.jP7ydfi60B@sven-edge>
-In-Reply-To: <20200216153324.GA4542@madhuparna-HP-Notebook>
-References: <20200216144718.2841-1-madhuparnabhowmik10@gmail.com> <3655191.udZcvKk8tv@sven-edge> <20200216153324.GA4542@madhuparna-HP-Notebook>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2119546.QtC4LbVagd"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+        Sun, 16 Feb 2020 10:48:41 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 01GFj6eR026453;
+        Mon, 17 Feb 2020 00:45:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01GFj6eR026453
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581867908;
+        bh=os9TnsjNHpEscmQ/pIjImR92ghmPlhtFserBXlIXFJQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yt2PJNXS2jXuA2jslkc3CMA95DynuZt62vxxsh0mm0pLwhD+Cle/RxDx0WvakAUns
+         3L03ZOArSyhVFVY3pW5RYd1tl6wmGrzrkdGkU26yAC/9qdZrJNtrPg6mm+O9UWqC+A
+         0UBZkbRAbVRMZU5g7rHIMxDaN/i5IM5++7O+AGOfn2N90lb2r+uATEV+HSK199wIjG
+         oCaNRj3MbevSo/S5QUwfpyUV3wFEzDraNeNs8rvAs73pa57MbGm7YTRfdtfbEbNyYn
+         Mfb35c7ytnmcckc+WiZ42aa668ZHiOAniV9v/3sUPYhYjoQ90eOEnmlb+zPq+BwXwq
+         JuBx/z5uSY91g==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     x86@kernel.org, sparclinux@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greentime Hu <green.hu@gmail.com>, Guo Ren <guoren@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rich Felker <dalias@libc.org>,
+        Richard Weinberger <richard@nod.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH] kbuild: use KBUILD_DEFCONFIG as the fallback for DEFCONFIG_LIST
+Date:   Mon, 17 Feb 2020 00:45:02 +0900
+Message-Id: <20200216154502.26478-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2119546.QtC4LbVagd
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Most of the Kconfig commands (except defconfig and all*config) read the
+.config file as a base set of CONFIG options.
 
-On Sunday, 16 February 2020 16:33:24 CET Madhuparna Bhowmik wrote:
-[...]
-> > Can you tell us how you've identified these four hlist_for_each_entry_rcu?
->
-> The other hlist_for_each_entry_rcu() are used under the protection of
-> rcu_read_lock(). We only need to pass the cond when
-> hlist_for_each_entry_rcu() is used under a
-> different lock (not under rcu_red_lock()) because according to the current scheme a lockdep splat
-> is generated when hlist_for_each_entry_rcu() is used outside of
-> rcu_read_lock() or the lockdep condition (the cond argument) evaluates
-> to false. So, we need to pass this cond when it is used under the
-> protection of spinlock or mutex etc. and not required if rcu_read_lock()
-> is used.
+When it does not exist, the files in DEFCONFIG_LIST are searched in this
+order and loaded if found.
 
-I understand this part. I was asking how you've identified them. Did you use 
-any tool for that? coccinelle, sparse, ...
+I do not see much sense in the last two entries in DEFCONFIG_LIST.
 
-Kind regards,
-	Sven
+[1] ARCH_DEFCONFIG
 
---nextPart2119546.QtC4LbVagd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+The entry for DEFCONFIG_LIST is guarded by 'depends on !UML'. So, the
+ARCH_DEFCONFIG definition in arch/x86/um/Kconfig is meaningless.
 
------BEGIN PGP SIGNATURE-----
+arch/{sh,sparc,x86}/Kconfig define ARCH_DEFCONFIG depending on 32 or 64
+bit variant symbols. This is a little bit strange; ARCH_DEFCONFIG should
+be a fixed string because the base config file is loaded before the symbol
+evaluation stage.
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl5JYVoACgkQXYcKB8Em
-e0ZuPRAAmCB3qGjKpbrldhlDz7BJwE/RY7I7K2zMd0bsx9IV/WmU0fmsplSNNf9m
-m7LaBD/F+4BxSBvaPlE19OXOTLurtetpsL9J7/RgP67jl9SBGglvTwNUtx45PoNZ
-QTteXCARAK9DpzpYJzMZjeplDkJ0kH7OmTFlDypKNxFyRH+29ePII0TADeYfRo/7
-B9TYrS/sT/idL15gm1KimGNbwjUpr+9KlBg6ASs2HlhhX/dI5Ah2Cpt9xZYD4FZ+
-IF5AsS+s0wEln3Yycd4xyHEHUoYrP+MjF9k7MR+o7EalZD3/2LDUUPGy8akkkZ36
-xOgDyfVVOWQ6Ew6r1fl5Tty4pz3Kkt7HewRsOkPUkJrX6JvxGoq+FlxEJwDv0oL7
-fLsCl/A3otfLCqxGTlZaIKOJmBg1t/eeFGHx6c31yza6HxgH3X8uQ7i6RtRy7Vac
-FNciX8lPZjqjldm3rRpVweopBB/11v72mZRsV/L50tx1piVfQtmYvtseSXPvyTfS
-mQufCXGXdZ0UI6rVda9bzzO7Yi1c+I2sczMw5YA7mDrAeEWldVBT/mcJsoRTz4dh
-uWGnh+fUbD5GFOSnkctXZkN4BVN75ZGztTfcsDdOF9Aa+JOq6mrljeSPsAgKxuly
-DhbSVonE5CHUVgCD/4Mv8phrEbKRIBPbFFZjlmQ9fKz6cT+Rz/s=
-=AU3U
------END PGP SIGNATURE-----
+Using KBUILD_DEFCONFIG is saner because it is fixed before Kconfig is
+invoked. Fortunately, arch/{sh,sparc,x86}/Makefile define it in the
+same way, and it works as expected. Hence, replace ARCH_DEFCONFIG with
+"arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)".
 
---nextPart2119546.QtC4LbVagd--
+[2] arch/$(ARCH)/defconfig
 
+This file path is no longer valid. The defconfig files are always located
+in the arch configs/ directories.
 
+  $ find arch -name defconfig | sort
+  arch/alpha/configs/defconfig
+  arch/arm64/configs/defconfig
+  arch/csky/configs/defconfig
+  arch/nds32/configs/defconfig
+  arch/riscv/configs/defconfig
+  arch/s390/configs/defconfig
+  arch/unicore32/configs/defconfig
+
+The path arch/*/configs/defconfig is already covered by
+"arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)". So, this file path is
+not necessary.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ arch/sh/Kconfig     | 5 -----
+ arch/sparc/Kconfig  | 5 -----
+ arch/x86/Kconfig    | 5 -----
+ arch/x86/um/Kconfig | 5 -----
+ init/Kconfig        | 3 +--
+ 5 files changed, 1 insertion(+), 22 deletions(-)
+
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 9ece111b0254..b4f0e37b83eb 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -87,11 +87,6 @@ config SUPERH64
+ 	select HAVE_EXIT_THREAD
+ 	select KALLSYMS
+ 
+-config ARCH_DEFCONFIG
+-	string
+-	default "arch/sh/configs/shx3_defconfig" if SUPERH32
+-	default "arch/sh/configs/cayman_defconfig" if SUPERH64
+-
+ config GENERIC_BUG
+ 	def_bool y
+ 	depends on BUG && SUPERH32
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index c1dd6dd642f4..0de15380d1fc 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -95,11 +95,6 @@ config SPARC64
+ 	select PCI_DOMAINS if PCI
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 
+-config ARCH_DEFCONFIG
+-	string
+-	default "arch/sparc/configs/sparc32_defconfig" if SPARC32
+-	default "arch/sparc/configs/sparc64_defconfig" if SPARC64
+-
+ config ARCH_PROC_KCORE_TEXT
+ 	def_bool y
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..98935f4387f9 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -240,11 +240,6 @@ config OUTPUT_FORMAT
+ 	default "elf32-i386" if X86_32
+ 	default "elf64-x86-64" if X86_64
+ 
+-config ARCH_DEFCONFIG
+-	string
+-	default "arch/x86/configs/i386_defconfig" if X86_32
+-	default "arch/x86/configs/x86_64_defconfig" if X86_64
+-
+ config LOCKDEP_SUPPORT
+ 	def_bool y
+ 
+diff --git a/arch/x86/um/Kconfig b/arch/x86/um/Kconfig
+index a8985e1f7432..95d26a69088b 100644
+--- a/arch/x86/um/Kconfig
++++ b/arch/x86/um/Kconfig
+@@ -27,11 +27,6 @@ config X86_64
+ 	def_bool 64BIT
+ 	select MODULES_USE_ELF_RELA
+ 
+-config ARCH_DEFCONFIG
+-	string
+-	default "arch/um/configs/i386_defconfig" if X86_32
+-	default "arch/um/configs/x86_64_defconfig" if X86_64
+-
+ config 3_LEVEL_PGTABLES
+ 	bool "Three-level pagetables" if !64BIT
+ 	default 64BIT
+diff --git a/init/Kconfig b/init/Kconfig
+index 452bc1835cd4..6ccdb168dee5 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -6,8 +6,7 @@ config DEFCONFIG_LIST
+ 	default "/lib/modules/$(shell,uname -r)/.config"
+ 	default "/etc/kernel-config"
+ 	default "/boot/config-$(shell,uname -r)"
+-	default ARCH_DEFCONFIG
+-	default "arch/$(ARCH)/defconfig"
++	default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
+ 
+ config CC_IS_GCC
+ 	def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
+-- 
+2.17.1
 
