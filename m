@@ -2,105 +2,107 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D9C7619B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B5FC76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35A720857
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581874397;
-	bh=iPN4GRSxftClYdW2bpJCs06VBDIRWUdhu33LTOPvy1Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O4yStBjwIzu1Uvd4UaGiwNivcPM2tjgTNup7aKxi356PEaqPjISkr0JNIIg2gRd6C
-	 d/q7ZBa/HHNmYsr/fN2RlzYxKVvYWfxKvj12epizq+3ZPnH9D5Vwehl1c13Ip90ZXT
-	 8xQzSgPrfLezfiPITwo+L69y9yeuaLwE1uhULUnA=
+	by mail.kernel.org (Postfix) with ESMTP id 738C320857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 17:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOWFF8mP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgBPRdQ (ORCPT
+        id S1728544AbgBPRe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 12:33:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgBPRdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 12:33:16 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7784A20857
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 17:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581874395;
-        bh=iPN4GRSxftClYdW2bpJCs06VBDIRWUdhu33LTOPvy1Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZGp3vKGqx04ZGJrBDPDq0J03AaC5AmXX6vckOQmSKI6OnFXxFQ4zDkj0x/lcMxTd5
-         d3LAu/7ooPAGLOZA5ObrWmaArrgKv37HkzZcM2Kyn84Ej6A3TlI6Ux+2ERb1RWP05O
-         OuvQ+x3hyfKs/fHCHNuElz4dGKWZGSFeNwFdQRIo=
-Received: by mail-wr1-f52.google.com with SMTP id w12so16871275wrt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 09:33:15 -0800 (PST)
-X-Gm-Message-State: APjAAAVzXWs3onU9Ptrgh5apnMYYaRlyddLq5wNWcfNbzR6t5WgCFsk6
-        dP9vHCvPE5h0XbtU7gPhGcpu3Vriua+AHj/sU6HXYA==
-X-Google-Smtp-Source: APXvYqzC09ky72ZcgkuwLRBsvoAJlw1G1Sf2p3pvdKBd8s4iPftZIwbDcMky5AWdTt8T8hmXVaRSSfXvtc3SLleoicA=
-X-Received: by 2002:a5d:6a4b:: with SMTP id t11mr16532123wrw.262.1581874393852;
- Sun, 16 Feb 2020 09:33:13 -0800 (PST)
+        Sun, 16 Feb 2020 12:34:57 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44587 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgBPRe5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 12:34:57 -0500
+Received: by mail-pg1-f194.google.com with SMTP id g3so7666113pgs.11;
+        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
+        b=pOWFF8mP+uUa5RzOE5JdYiL2dsq+GZUQ/RCtEQwsOV8POFSR//vy64zKVTnvUjDVUO
+         BoVRxVhFDuJUa2pzViEnEmFalZPLkoYjqo6eVdIzl0cXFcukrFDy1D/DXJNsIy0a1mru
+         bo5hQwu9olFbkJKMyXoClmJv7n9CM1nXtjAMb5z/+u4BuTBon6z1s+94Ifcy4V1suKhi
+         AnL5PhIGKbzl/J2YkNTVN7u/WlErmPllrFwbLzJ8Ul8l52PHg6Ya/1scFAyBu8R8quQA
+         UNuY4XiRPVFc0EIhCMnsKT0czXWwhYV3HyUjm2kUd+qr/jxta02hLW+H2wsKAFOi0V28
+         Ve7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UxaHOVEn7LlLsxvk22jYigXq5kYWEUT+TigdtVf+Dag=;
+        b=IFjZBbMSi//4gl8mvcffHjDXpkkFobqozXVcjDZno7yromkjoru+NjpZOVTuTb2WE2
+         vJvGoBxidHhnkag2E5yU6FibodBSvaP3T3HELWMfJzv0h2UmRw90sRb+ypKW9IbEcNmM
+         ZISof2wCjEjHWAzgw1zxn1JgAex1OTK4L7eTFl+O78RIQLccT0jfqHUXOu/txnVXT3rL
+         0SEpS5x+IAPcjZuUTWK3KAl4/80pdZk68rQVEW+9gLpClxk4OZsSbMA1Wmx482wXx72b
+         Jrp1t3kHSjp3yxbw/9mViaojMRLax4hRncj1sKgNaCgOhmeZTlOAHwFkB6x0q4K17vg5
+         NM6A==
+X-Gm-Message-State: APjAAAU99r84sAQXoRbijac7Pim74N0oX8bpPAe+N2Z6pB4sUFCV2Vau
+        I7xRNXDq0hduYq+csK7Es54=
+X-Google-Smtp-Source: APXvYqzIF1eNE+9kSnylg1WQyiY6aJJsMIBumzSzxu/FK/ciU3XfRBQWJbl+oi3csP2R7aOw7licJw==
+X-Received: by 2002:aa7:874b:: with SMTP id g11mr13499452pfo.225.1581874495024;
+        Sun, 16 Feb 2020 09:34:55 -0800 (PST)
+Received: from localhost.localdomain ([103.51.74.127])
+        by smtp.gmail.com with ESMTPSA id a36sm14284724pga.32.2020.02.16.09.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 09:34:54 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCHv1 0/3] Odroid N2 failes to boot using upstream kernel using microSD card
+Date:   Sun, 16 Feb 2020 17:34:43 +0000
+Message-Id: <20200216173446.1823-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200216171340.6070-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200216171340.6070-1-xypron.glpk@gmx.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 16 Feb 2020 18:33:03 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu8JEkFPN3V1mAJtCBAM2=gDhqMMaVxX7Zep-73s6CeARw@mail.gmail.com>
-Message-ID: <CAKv+Gu8JEkFPN3V1mAJtCBAM2=gDhqMMaVxX7Zep-73s6CeARw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: function description efi_allocate_pages()
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Feb 2020 at 18:13, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
->
-> Provide a Sphinx style function description for efi_allocate_pages().
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+We am trying to build the upstream u-boot and upstream kernel,
+but it fails to pass the initialization of PWM_MESON driver.
+So these patches help boot the kernel on microSD card.
 
-Thanks Heinrich. I will put this on the pile.
+Fix the clk driver help booting of the kernel.
+Any more suggestion or inputs are welcome.
 
-> ---
->  drivers/firmware/efi/libstub/mem.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> index 5808c8764e64..c6a784ed640f 100644
-> --- a/drivers/firmware/efi/libstub/mem.c
-> +++ b/drivers/firmware/efi/libstub/mem.c
-> @@ -65,8 +65,20 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
->         return status;
->  }
->
-> -/*
-> - * Allocate at the highest possible address that is not above 'max'.
-> +/**
-> + * efi_allocate_pages() - Allocate memory pages
-> + * @size:      minimum number of bytes to allocate
-> + * @addr:      On return the address of the first allocated page. The first
-> + *             allocated page has alignment EFI_ALLOC_ALIGN which is an
-> + *             architecture dependent multiple of the page size.
-> + * @max:       the address that the last allocated memory page shall not
-> + *             exceed
-> + *
-> + * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned according
-> + * to EFI_ALLOC_ALIGN. The last allocated page will not exceed the address
-> + * given by 'max'.
-> + *
-> + * Return:     status code
->   */
->  efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
->                                 unsigned long max)
-> --
-> 2.25.0
->
+Changes since RFCv1
+[0] https://lore.kernel.org/linux-amlogic/20191007131649.1768-1-linux.amoon@gmail.com/
+drop some patches and fix the clk driver as suggested by Neil.
+
+-Anand
+
+Anand Moon (3):
+  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
+    to FLASH_VDD
+  arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to
+    VDDIO_C/TF_IO
+  clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
+
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 6 ++++++
+ drivers/clk/meson/g12a.c                             | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+-- 
+2.25.0
+
