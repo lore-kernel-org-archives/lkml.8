@@ -2,106 +2,96 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1745FC76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924B7C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1192084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395592084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 22:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ccxpvO9d"
+	dkim=pass (2048-bit key) header.d=neuling.org header.i=@neuling.org header.b="izLMkKNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgBPWWm (ORCPT
+        id S1727963AbgBPWdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 17:22:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20881 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726020AbgBPWWm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 17:22:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581891761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KCOnj8m9+FhlCYw67prMvZclYCf2vCk/0VLIzDQQhnM=;
-        b=ccxpvO9d307K67+7OITLMlfuCa9FmYxvQeYiGzPVdgg+KmKGVS0v/YNpHxPP0ClN5BXLhS
-        IehL6AHmr2VZHGTd2wI+5gF6nzY+48sVj7TyVAnBVbr/59ZOiwTnDTv8QRGbqwk95Otdyq
-        DjPRXkbCNWENeb7K9BYM6xwA3fUELz4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-pn0V47wPNiGBdvpPIqjs2g-1; Sun, 16 Feb 2020 17:22:33 -0500
-X-MC-Unique: pn0V47wPNiGBdvpPIqjs2g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2273613E4;
-        Sun, 16 Feb 2020 22:22:31 +0000 (UTC)
-Received: from krava (ovpn-204-28.brq.redhat.com [10.40.204.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DCEAF19756;
-        Sun, 16 Feb 2020 22:22:28 +0000 (UTC)
-Date:   Sun, 16 Feb 2020 23:22:26 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     zhe.he@windriver.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        Sam Lunt <samueljlunt@gmail.com>
-Subject: Re: [PATCH 1/2] perf: Be compatible with all python versions when
- fetching ldflags
-Message-ID: <20200216222148.GA161771@krava>
-References: <1581618066-187262-1-git-send-email-zhe.he@windriver.com>
+        Sun, 16 Feb 2020 17:33:53 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57009 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbgBPWdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 17:33:53 -0500
+Received: from neuling.org (localhost [127.0.0.1])
+        by ozlabs.org (Postfix) with ESMTP id 48LMNG3cXPz9sPk;
+        Mon, 17 Feb 2020 09:33:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuling.org;
+        s=201811; t=1581892431;
+        bh=IzVd3zz9l6kPQTSe8Nj+Ga0PypI0I2VtiI7TPnVOQrY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=izLMkKNKro+4UaU4NyZyvFFwQxyAvV8WHby0/+sU16FohAkhCP8xpodCbETwQD4H+
+         Kbf5T+Sltm6K5SG7jU03OfXdEcvMoYnWbqk3qQtKTMEaEIjqlOvu/z7+ULva/ILRm0
+         A2nOGCJidPEC6Unmb1ho0W5lQMI5ZScWTAC4Ce/8n4M2gMdGfbvJuGK6WNknf1hkXg
+         IcjRwX4qaH/u0dwUeDgY6sn+ejB/zd+Xce1n7lp4BnpsCaanSUe02Ewd/v2RTSnFIM
+         VMSPrl7+RcB5nGZadKVKhkY9QebfoBRaxC0ynLtIjfyn1SKKbsfkcj8eo9AdIdNQAT
+         nd1nCAkuHeJQA==
+Received: by neuling.org (Postfix, from userid 1000)
+        id F1D392C01ED; Mon, 17 Feb 2020 09:33:49 +1100 (AEDT)
+Message-ID: <f61f9a59ddb0f103cd62792e13afde4ca8afa7bb.camel@neuling.org>
+Subject: Re: [PATCH 1/1] powerpc/cputable: Remove unnecessary copy of
+ cpu_spec->oprofile_type
+From:   Michael Neuling <mikey@neuling.org>
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, desnesn@linux.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Feb 2020 09:33:49 +1100
+In-Reply-To: <20200215053637.280880-1-leonardo@linux.ibm.com>
+References: <20200215053637.280880-1-leonardo@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581618066-187262-1-git-send-email-zhe.he@windriver.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 02:21:05AM +0800, zhe.he@windriver.com wrote:
-> From: He Zhe <zhe.he@windriver.com>
-> 
-> Since Python v3.8.0, with the following commit
-> 0a8e57248b91 ("bpo-36721: Add --embed option to python-config (GH-13500)"),
+On Sat, 2020-02-15 at 02:36 -0300, Leonardo Bras wrote:
+> Before checking for cpu_type =3D=3D NULL, this same copy happens, so doin=
+g
+> it here will just write the same value to the t->oprofile_type
+> again.
+>=20
+> Remove the repeated copy, as it is unnecessary.
+>=20
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 
-we got similar change recently.. might have not been picked up yet
+LGTM
 
-  https://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com/
+Reviewed-by: Michael Neuling <mikey@neuling.org>
 
-jirka
-
-> --embed option must be passed to "python3-config --ldflags --embed" or
-> "python3-config --libs --embed" to get "-lpython3.8".
-> 
-> To make it compatible with all Python versons, according to the suggestion
-> in the commit log, we try with --embed first and then witout it if fails.
-> 
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
 > ---
->  tools/perf/Makefile.config | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 80e55e7..b2eabcf 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -229,7 +229,7 @@ strip-libs  = $(filter-out -l%,$(1))
->  PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
->  
->  ifdef PYTHON_CONFIG
-> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>/dev/null || $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
->    PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
->    PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
->    PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
-> -- 
-> 2.7.4
-> 
+>  arch/powerpc/kernel/cputable.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputabl=
+e.c
+> index e745abc5457a..5a87ec96582f 100644
+> --- a/arch/powerpc/kernel/cputable.c
+> +++ b/arch/powerpc/kernel/cputable.c
+> @@ -2197,7 +2197,6 @@ static struct cpu_spec * __init setup_cpu_spec(unsi=
+gned
+> long offset,
+>  		 */
+>  		if (old.oprofile_cpu_type !=3D NULL) {
+>  			t->oprofile_cpu_type =3D old.oprofile_cpu_type;
+> -			t->oprofile_type =3D old.oprofile_type;
+>  		}
+>  	}
+> =20
 
