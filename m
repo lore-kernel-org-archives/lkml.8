@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A8AC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73B0C76199
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECE3208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8F620857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 21:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581887420;
-	bh=zRJ9f5umV6ieTK530YJ6FMkXa5tTm3dOjtwbPTng79M=;
+	s=default; t=1581887421;
+	bh=U68SFLI72USa7BtGHEfcQZ6q/QO/ejuG19BXxmni6Ro=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pp3+popPMtjLQLTBANULCGZRlsqbBn5GXA6oXkNHu/6izwM0tCw7+PcLwNWysEkf+
-	 mPs4flLcCFlk++B4rWjGxpiVGhiQ9Gf7AvdRijpBi/wBo3E4pBgx2eaUJpcL//ZCK0
-	 X8HHDbe/TkWOwQKrrgrqa3I1ZTDpzyFpO2h36J7c=
+	b=2dIvk0duIyt5RGRKYQc3mTshpX4NSuXRXbC03eEAmPcbXOX/z9mTzKbFr83wH2IxX
+	 rNmc/ILCtdR1tG4/mXeTKIYBzN2n3YtBiY/T8dfDB2wYXQsBK6xfCp63Iz848+BR53
+	 OT3YdKGYwc53tDHX6L3+VWSz3Xvx057ICNbWHDxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgBPVKT (ORCPT
+        id S1728054AbgBPVKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 16 Feb 2020 16:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgBPVKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 16:10:18 -0500
-Subject: Re: [GIT PULL] IPMI bug fixes for 5.6
+        id S1726245AbgBPVKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 16:10:19 -0500
+Subject: Re: [GIT PULL v2] KVM changes for Linux 5.6-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581887418;
-        bh=zRJ9f5umV6ieTK530YJ6FMkXa5tTm3dOjtwbPTng79M=;
+        bh=U68SFLI72USa7BtGHEfcQZ6q/QO/ejuG19BXxmni6Ro=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=szG5xPEmSFePtISxuNmT3FZuLmpqMqou1VXlo8JQE4lnzcKa/n1ndf8o2KcNRjBjP
-         HOCc29SbXFEgn7pO8PSjxP3Iy2Vr4HzNXmgbxVCR7+dHf36qHILpJGE+ui/CmHVK82
-         QPTi0jNZ1e/xTO+/L31lvQLE5wQxpTW+ymJXVKDw=
+        b=BEXPLgo0b421cSQu0g0zuwYqU4HN2tc1/wc0cLEDWEG5ad/V0G1LAGtECC6+ljeXa
+         /UlIWuFnJyTXd7tB8WXeKthN7D4nEiOYOpFKxKOr+eUVZD5+qPlwRIi3ua01xTYO6T
+         9/ejUqhokFpRaUNWZi+N4oxkqXwPWhr9vx5xW55k=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200211001836.GI7842@minyard.net>
-References: <20200211001836.GI7842@minyard.net>
+In-Reply-To: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
+References: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200211001836.GI7842@minyard.net>
-X-PR-Tracked-Remote: https://github.com/cminyard/linux-ipmi.git
- tags/for-linus-5.6-1
-X-PR-Tracked-Commit-Id: e0354d147e5889b5faa12e64fa38187aed39aad4
+X-PR-Tracked-Message-Id: <1581630529-5236-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: 120881b9e888689cbdb90a1dd1689684d8bc95f3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ab02b61f24c76b1659086fcc8b00cbeeb6e95ac7
-Message-Id: <158188741828.12275.17520604145616390715.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 44024adb4aabefd275c6f9c00cac323473447dd5
+Message-Id: <158188741880.12275.3916382760765840120.pr-tracker-bot@kernel.org>
 Date:   Sun, 16 Feb 2020 21:10:18 +0000
-To:     Corey Minyard <minyard@acm.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 10 Feb 2020 18:18:36 -0600:
+The pull request you sent on Thu, 13 Feb 2020 22:48:49 +0100:
 
-> https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.6-1
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ab02b61f24c76b1659086fcc8b00cbeeb6e95ac7
+https://git.kernel.org/torvalds/c/44024adb4aabefd275c6f9c00cac323473447dd5
 
 Thank you!
 
