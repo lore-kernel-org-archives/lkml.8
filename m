@@ -2,118 +2,185 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD66C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3EDC7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E49B2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCKRXQmL"
+	by mail.kernel.org (Postfix) with ESMTP id B9B7F20857
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 04:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgBPEAM (ORCPT
+        id S1727705AbgBPEP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Feb 2020 23:00:12 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:32876 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBPEAM (ORCPT
+        Sat, 15 Feb 2020 23:15:59 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:40752 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726634AbgBPEP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Feb 2020 23:00:12 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q81so13609650oig.0;
-        Sat, 15 Feb 2020 20:00:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZumH7VSrBkKR9NuOEmDOA6BzNCZCemt1XDqhscI/Rg8=;
-        b=oCKRXQmLkUaU9aBBVuQLL49iWPzXFYxZff6uobWah6jW+qQ07eqAIwApdkyYiYi5Ap
-         wLI95FcbLBhSE/mfgqdXZxfE1zmhlR3hDWg323ma/ErVn2kVy0472MdERY5RalCIQKn1
-         XOVWcSl19OfC5BgJHqkcJzD/mh/4pC8FNo+cxTkzOxqqh7A2UNbONOv6COOsdxoUO5hx
-         0htoYl6MMNcJ3MeF6RzyyPhDadoQDUwpC0UATY1VzRMq5MPnxWMezdkaTkwlDAtwswgH
-         p6ezQNFoZvTuB3/sqZ85+E4qZOeoXDWds/h9/yCa2+B0Qd+7J5jLC4ojKK7I2X9sJuoz
-         OQgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZumH7VSrBkKR9NuOEmDOA6BzNCZCemt1XDqhscI/Rg8=;
-        b=R0lshnfrdZdGe51i9I7iJI/yHJEloZnIhUBUqWrsNrG92bOu7Pl1vvtpvVL5qXoGet
-         VoR8SgY5ICIuBcT57pgDnqrfrO4fk6dTNzztSYJhIxnukDHbkptMHDhX3md5VyprRrZh
-         jQ5Opg7tkzQfIFoyyF9kY69QqgvRr5mWrUCh5itljditUWGPfTHti0+7yvA2v/mdwfgl
-         alKZjlsuHv32RtlBQPyqy4moFC0TccHJ6DDQuy+BVfYxpmB0N2JXbZ2+nQCs0MC3+xKO
-         SWpHNLulIfaSw9v/0qbNp9EYe2OOygo1Z9sJ3oEubL/dpZU+8wV6Fh/OQoxS+U24TIuv
-         JCaA==
-X-Gm-Message-State: APjAAAUnrumNxByewSHYkTASLzT9Km8Ie0pD1jYkK6LsqNkLAGEN/Mnk
-        tADBtOnmhztm7yMXvYobwUzIx8YjHO4P+FOtIk0=
-X-Google-Smtp-Source: APXvYqxXE4L+9tdQlq9Ap72wyc2lDsVufYTW8S5atcrR68GhBF8HhicXwwLx/LsVLq2BuvWl0nXYUujLjVkcL+EWQKI=
-X-Received: by 2002:aca:d954:: with SMTP id q81mr6429692oig.157.1581825611084;
- Sat, 15 Feb 2020 20:00:11 -0800 (PST)
+        Sat, 15 Feb 2020 23:15:59 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tq3BIwr_1581826554;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tq3BIwr_1581826554)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 16 Feb 2020 12:15:55 +0800
+Subject: Re: [PATCH] mm/slub: Detach node lock from counting free objects
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200201031502.92218-1-wenyang@linux.alibaba.com>
+ <20200212145247.bf89431272038de53dd9d975@linux-foundation.org>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <b42f7daa-4aea-1cf8-5bbb-2cd5d48b4e9a@linux.alibaba.com>
+Date:   Sun, 16 Feb 2020 12:15:54 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
- <20200123.225827.1155989593018204741.hermes@ceres.dti.ne.jp>
- <20200210.224609.499887311281343618.hermes@ceres.dti.ne.jp> <20200216.111029.687350152614907818.hermes@ceres.dti.ne.jp>
-In-Reply-To: <20200216.111029.687350152614907818.hermes@ceres.dti.ne.jp>
-From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date:   Sun, 16 Feb 2020 12:59:59 +0900
-Message-ID: <CAKFNMo=ddKezZ7_q8R0N6Ldzqbf=J6NsOvfHQ2N2XLZdeiYCjg@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference at
- 00000000000000a8 in nilfs_segctor_do_construct
-To:     ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-nilfs <linux-nilfs@vger.kernel.org>,
-        "Brian G." <gissf1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212145247.bf89431272038de53dd9d975@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Arai-san,
 
-Your method with loopback device worked to reproduce the issue
-even where the bug doesn't easily hit for physical devices.
 
-Regards,
-Ryusuke Konishi
+On 2020/2/13 6:52 上午, Andrew Morton wrote:
+> On Sat,  1 Feb 2020 11:15:02 +0800 Wen Yang <wenyang@linux.alibaba.com> wrote:
+> 
+>> The lock, protecting the node partial list, is taken when couting the free
+>> objects resident in that list. It introduces locking contention when the
+>> page(s) is moved between CPU and node partial lists in allocation path
+>> on another CPU. So reading "/proc/slabinfo" can possibily block the slab
+>> allocation on another CPU for a while, 200ms in extreme cases. If the
+>> slab object is to carry network packet, targeting the far-end disk array,
+>> it causes block IO jitter issue.
+>>
+>> This fixes the block IO jitter issue by caching the total inuse objects in
+>> the node in advance. The value is retrieved without taking the node partial
+>> list lock on reading "/proc/slabinfo".
+>>
+>> ...
+>>
+>> @@ -1768,7 +1774,9 @@ static void free_slab(struct kmem_cache *s, struct page *page)
+>>   
+>>   static void discard_slab(struct kmem_cache *s, struct page *page)
+>>   {
+>> -	dec_slabs_node(s, page_to_nid(page), page->objects);
+>> +	int inuse = page->objects;
+>> +
+>> +	dec_slabs_node(s, page_to_nid(page), page->objects, inuse);
+> 
+> Is this right?  dec_slabs_node(..., page->objects, page->objects)?
+> 
+> If no, we could simply pass the page* to inc_slabs_node/dec_slabs_node
+> and save a function argument.
+> 
+> If yes then why?
+> 
 
-On Sun, Feb 16, 2020 at 11:11 AM ARAI Shun-ichi <hermes@ceres.dti.ne.jp> wrote:
->
-> And,
->
-> In <20200210.224609.499887311281343618.hermes@ceres.dti.ne.jp>;
->    ARAI Shun-ichi <hermes@ceres.dti.ne.jp> wrote
->    as Subject "Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct":
->
-> > Hi,
-> >
-> > FYI, reporting additional test results.
-> >
-> > I reproduced this problem with clean NILFS2 fs in previous mail.
-> > "clean" means that "make filesystem before every tests."
-> > In this mail, I tried to reproduct with/without VG/LV, LUKS, loopback.
-> >
-> > * Not reproduced
-> >  USB stick - primary partition - NILFS2
-> >  USB stick - primary partition - VG/LV - NILFS2
-> >  USB stick - primary partition - VG/LV - LUKS - NILFS2
-> >  USB stick - primary partition - LUKS - VG/LV - NILFS2
-> >  USB stick - primary partition - LUKS - VG/LV - LUKS - NILFS2
-> >  /tmp (tmpfs) - regular file - NILFS2 (loopback mount, kernel 4.19.82)
-> >  USB stick - primary partition(512MiB) - NILFS2
-> >
-> > * Reproduced (always, immediately)
-> >  /tmp (tmpfs) - regular file - NILFS2 (loopback mount)
-> >  USB stick - primary partition - ext4 - regular file - NILFS2 (loopback mount)
->
-> this loopback problem is seen in Kernel 5.5.4.
->
-> > Test conditions:
-> >  kernel 4.19.86 (same as previous test)
-> >  NILFS2/ext4 filesystem, VG/LV, LUKS were made with default parameters
-> >  size of "primary partition" in USB stick is approx. 14GiB
-> >  size of "regular file" is approx. 512MiB
-> >  "reproduce": mount NILFS2, touch file, sync
+Thanks for your comments.
+We are happy to improve this patch based on your suggestions.
+
+
+When the user reads /proc/slabinfo, in order to obtain the active_objs 
+information, the kernel traverses all slabs and executes the following 
+code snippet:
+static unsigned long count_partial(struct kmem_cache_node *n,
+                                         int (*get_count)(struct page *))
+{
+         unsigned long flags;
+         unsigned long x = 0;
+         struct page *page;
+
+         spin_lock_irqsave(&n->list_lock, flags);
+         list_for_each_entry(page, &n->partial, slab_list)
+                 x += get_count(page);
+         spin_unlock_irqrestore(&n->list_lock, flags);
+         return x;
+}
+
+It may cause performance issues.
+
+Christoph suggested "you could cache the value in the userspace 
+application? Why is this value read continually?", But reading the 
+/proc/slabinfo is initiated by the user program. As a cloud provider, we 
+cannot control user behavior. If a user program inadvertently executes 
+cat /proc/slabinfo, it may affect other user programs.
+
+As Christoph said: "The count is not needed for any operations. Just for 
+the slabinfo output. The value has no operational value for the 
+allocator itself. So why use extra logic to track it in potentially 
+performance critical paths?"
+
+In this way, could we show the approximate value of active_objs in the 
+/proc/slabinfo?
+
+Based on the following information:
+In the discard_slab() function, page->inuse is equal to page->total_objects;
+In the allocate_slab() function, page->inuse is also equal to 
+page->total_objects (with one exception: for kmem_cache_node, page-> 
+inuse equals 1);
+page->inuse will only change continuously when the obj is constantly 
+allocated or released. (This should be the performance critical path 
+emphasized by Christoph)
+
+When users query the global slabinfo information, we may use 
+total_objects to approximate active_objs.
+
+In this way, the modified patch is as follows:
+
+diff --git a/mm/slub.c b/mm/slub.c
+index a0b335d..ef0e6ac 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5900,17 +5900,15 @@ void get_slabinfo(struct kmem_cache *s, struct 
+slabinfo *sinfo)
+  {
+         unsigned long nr_slabs = 0;
+         unsigned long nr_objs = 0;
+-       unsigned long nr_free = 0;
+         int node;
+         struct kmem_cache_node *n;
+
+         for_each_kmem_cache_node(s, node, n) {
+                 nr_slabs += node_nr_slabs(n);
+                 nr_objs += node_nr_objs(n);
+-               nr_free += count_partial(n, count_free);
+         }
+
+-       sinfo->active_objs = nr_objs - nr_free;
++       sinfo->active_objs = nr_objs;
+         sinfo->num_objs = nr_objs;
+         sinfo->active_slabs = nr_slabs;
+         sinfo->num_slabs = nr_slabs;
+
+
+In addition, when the user really needs to view the precise active_obj 
+value of a slab, he can query this single slab info through an interface 
+similar to the following, which avoids traversing all the slabs.
+
+# cat /sys/kernel/slab/kmalloc-512/total_objects
+1472 N0=1472
+# cat /sys/kernel/slab/kmalloc-512/objects
+1311 N0=1311
+
+or
+# cat /sys/kernel/slab/kmalloc-8k/total_objects
+60 N0=60
+# cat /sys/kernel/slab/kmalloc-8k/objects
+60 N0=60
+
+
+Best wishes,
+Wen
+
+>>   	free_slab(s, page);
+>>   }
+>>   
