@@ -6,84 +6,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02445C7619C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0534FC7619B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69582084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB242086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 10:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBPKFD (ORCPT
+        id S1726939AbgBPK1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 05:05:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:53048 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgBPKFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 05:05:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D96830E;
-        Sun, 16 Feb 2020 02:05:02 -0800 (PST)
-Received: from ssg-dev-vb.kfn.arm.com (unknown [10.50.4.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D0E63F68F;
-        Sun, 16 Feb 2020 02:04:58 -0800 (PST)
-From:   Hadar Gat <hadar.gat@arm.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
-Subject: [PATCH v4 3/3] MAINTAINERS: add HG as cctrng maintainer
-Date:   Sun, 16 Feb 2020 12:04:10 +0200
-Message-Id: <1581847450-22924-4-git-send-email-hadar.gat@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581847450-22924-1-git-send-email-hadar.gat@arm.com>
-References: <1581847450-22924-1-git-send-email-hadar.gat@arm.com>
+        Sun, 16 Feb 2020 05:27:53 -0500
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:22907 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgBPK1x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 05:27:53 -0500
+Received: from localhost.localdomain ([93.22.36.246])
+        by mwinf5d13 with ME
+        id 3NTo2200F5JeL2d03NTpE1; Sun, 16 Feb 2020 11:27:50 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 16 Feb 2020 11:27:50 +0100
+X-ME-IP: 93.22.36.246
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] tty: serial: Kconfig: Fix a typo
+Date:   Sun, 16 Feb 2020 11:27:42 +0100
+Message-Id: <20200216102742.19298-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+'exsisting' has an extra 's'
 
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/tty/serial/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a0c1618..654585a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3790,6 +3790,15 @@ S:	Supported
- F:	drivers/crypto/ccree/
- W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 52eaac21ff9f..7172f1c5fa6d 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1111,7 +1111,7 @@ config SERIAL_SC16IS7XX_SPI
+ 	help
+ 	  Enable SC16IS7xx driver on SPI bus,
+ 	  If required say y, and say n to spi if not required,
+-	  This is additional support to exsisting driver.
++	  This is additional support to existing driver.
+ 	  You must select at least one bus for the driver to be built.
  
-+CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-+M:	Hadar Gat <hadar.gat@arm.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/char/hw_random/cctrng.c
-+F:	drivers/char/hw_random/cctrng.h
-+F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-+
- CEC FRAMEWORK
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
+ config SERIAL_TIMBERDALE
 -- 
-2.7.4
+2.20.1
 
