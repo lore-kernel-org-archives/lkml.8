@@ -2,99 +2,142 @@ Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C216C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10EBC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031B224125
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qdKqy80h"
+	by mail.kernel.org (Postfix) with ESMTP id 975CA20729
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 20:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgBPUex (ORCPT
+        id S1727742AbgBPUiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 15:34:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:60357 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgBPUew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 15:34:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LJkx3GX8z9sPK;
-        Mon, 17 Feb 2020 07:34:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581885290;
-        bh=w8Oi8BX+NW2dNlxxHJo0nw9fW3osVTqQ51DPnQO10PM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qdKqy80hhXHCU3ogX4JWGq0LUmbMGOmMFa+rLdunVMeMYgcksU78pRW+M0Q1ZGpeE
-         Mfh/GlddKBtfYDrT+luAABU1OGcoF6vnpC3tJoHBegYki1KYEiPN+d/uKR9jWPUUc+
-         6gInOiWajnANhkxOBrkVvbQQ+6a9LNX8O6FCK98awClQDkfWjD09TXCZTwOKJtxyuk
-         GPA3XgOz7liaSlp8POMuHgpUxTtKjIxVk0jgkc3LEYjAfhHl96RPRgHqIuVTYkQzsH
-         dliv5/wGoPikRolKbDSluTEdll2znrdp6d4xKOk1QPGSy/CfMF307wiIv8zsvd1Yo/
-         q5Czt0WajeR+Q==
-Date:   Mon, 17 Feb 2020 07:34:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Nicolas Ferre <nicolas.ferre@atmel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: linux-next: Fixes tag needs some work in the at91 tree
-Message-ID: <20200217073442.4f73edba@canb.auug.org.au>
+        Sun, 16 Feb 2020 15:38:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:55135 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgBPUiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 15:38:46 -0500
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MOzCW-1ipDBY1olw-00PNZ6; Sun, 16 Feb 2020 21:38:44 +0100
+Received: by mail-qt1-f170.google.com with SMTP id i14so3495619qtv.13;
+        Sun, 16 Feb 2020 12:38:44 -0800 (PST)
+X-Gm-Message-State: APjAAAVQB1ZFqPArWJxfpy4FpDX1QO9LhlLggNsaxKs94ip8V/b368LQ
+        TiKErzLRSXkRtCLKgcAMFtLXd3BGz4ysNm2OnoU=
+X-Google-Smtp-Source: APXvYqzGbYZ4aYpEY0TUWZN5AxiKnI5sM7fs3pGtoCEgh1lCGT2r9R0o04dDMj4EezabIIFY8gGD+8mZfxHFiF3300Y=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr10771015qte.204.1581885523228;
+ Sun, 16 Feb 2020 12:38:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wXL9kwiTqgk0rV/qnCD.uls";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200211175507.178100-1-hannes@cmpxchg.org> <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <CAMuHMdV8-=dj5n-FM1nHjXq1DhkJVOh4rLFxERt33jAQmU4h_A@mail.gmail.com>
+ <CAK8P3a0m574dHYuKBPLf6q2prnbFxX1w7xe4-JX-drN6dqH6TQ@mail.gmail.com>
+ <CAMuHMdVpTngVXUnLzpS3hZWuVg97GVTf2Y3X8md--41AtaD1Ug@mail.gmail.com> <TYAPR01MB228505DD9E7C85F9FA4AA785B7170@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB228505DD9E7C85F9FA4AA785B7170@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 16 Feb 2020 21:38:27 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3Za8dthPE7czQs+rK+xUq+ZZC4Sbj8QF5YjXvtfzop4Q@mail.gmail.com>
+Message-ID: <CAK8P3a3Za8dthPE7czQs+rK+xUq+ZZC4Sbj8QF5YjXvtfzop4Q@mail.gmail.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "kernel-team@fb.com" <kernel-team@fb.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:gZxUUnC0/X551f/KUXxXG4ss9wKBh5msR+xhojKXYS/iO5TX7gk
+ O/rtvx0vGNDeDzfLKmXEY7KuXuzu6OTPM1VaTDkxEuXBIFHgdnmgPDth+HOE8s9fC31Bp5Y
+ lMs5YGUBVi6Mi8CTrj53jHgJemDj0khciXVQDEx2mCjcPC+poBoXoEkM2E2FGteEMEYAkFL
+ T7JXvloaDe4GtZzauy3kA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x/TUiPaEJdA=:YqkHjNVh9qsbDacAgIEJ3A
+ 8Keqiv3TPpTAyvzlkFHOVAaw16hGQqCAvh3ZpFda2UYn3U9xNVNzIMIW3mnQWFj34QGMEXsiA
+ uFmB8UQQZr7qa0o/J1UbP502x5tTo542lyGzInP7EYtAlfOAaYoleGX1zrPq2PQ6rd3sXtU+X
+ lc3RjDfbaKmhueN2R1gw/8QY9kOTqn0DwLfZyDIunV7GU1Hjwwy64pYuwhcj3Mhq9tGF/CpNG
+ kV6N80IcqMmKgrGRKudWnxa0xYV8NEGvDE6kYG3NH+iXW4EfGKZHjObNuf9iSrk8fyj+O+NG7
+ ACAmz3MDRqpCZ90Q1V5Zd4J+v42HI7g2zImvhmrOZa+gQgGqw47+7Zdpr2MzxaQ/NJLamZ64C
+ u9vCLATX5Mf3UO3eNN//0ZAznM4dS83XYGO5fTxEd1tyldf3MKp0HoOyin+TWJ/y9dz4e9XgF
+ 7SznfrvnVkCum76q1I2N82TaM4qZQ7WXqN/Q6w8Oc10n0Qzvedzvln1Hzqgpmki3ZM1fEWFN7
+ qqsJ+ZVvEKYFC2IAB74rqaVVCqUmVQWT/eJQdrRokT7vMfmJmBRQ/KDWuTSIefsVnktBqHSHW
+ l9ripVws+aVcD1HGijn4cjz5x1SvGcfSwqz0ReEnrc81U+07IRlZlY5rJqZnEp1bXd+8tzrhr
+ QDJynW8XRKKQKw1cvUqIN/4tqqAd5E1U7oxFIEaYk/LNUpp2gAhG5EJ3rrwg+aLKR8KcTCr8h
+ 0eXVjzKbqvEt8gYpo6Wv+ZCP+cyLf/l0samyt7tWmOTbuUtrSZwH9fK+QzZ9hCAeFwedb9Pr8
+ OKXc+U7bUoDuCLcJF100zQrEky4V/kO0ehn1YJort+zzNnhitY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wXL9kwiTqgk0rV/qnCD.uls
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Feb 16, 2020 at 8:54 PM Chris Paterson
+<Chris.Paterson2@renesas.com> wrote:
+>
+> Hello Arnd, Geert,
+>
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 16 February 2020 09:45
+> > To: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Hi Arnd,
+> >
+> > On Sat, Feb 15, 2020 at 5:59 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Sat, Feb 15, 2020 at 12:25 PM Geert Uytterhoeven
+> > > <geert@linux-m68k.org> wrote:
+> > > > On Thu, Feb 13, 2020 at 5:54 PM Arnd Bergmann <arnd@arndb.de>
+> > wrote:
+> > > > > On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
+> > > > > <linux@armlinux.org.uk> wrote:
+> > > >
+> > > > The CIP-supported RZ/G1 SoCs can have up to 4 GiB, typically split (even
+> > > > for 1 GiB or 2 GiB configurations) in two parts, one below and one above
+> > > > the 32-bit physical limit.
+>
+> Yep. One example is r8a7743-iwg20m.dtsi.
 
-Hi all,
+This one has 2x512MB, with half above the 4GiB limit. This means it needs
+LPAE to address high physical addresses (which is fine), but it does not need
+highmem if one uses an appropriate CONFIG_VMSPLIT_* option.
 
-In commit
+> > > Good to know. I think there are several other chips that have dual-channel
+> > > DDR3 and thus /can/ support this configuration, but this rarely happens.
+> > > Are you aware of commercial products that use a 4GB configuration, aside
+> > from
+> > > the reference board?
+>
+> iWave Systems make a range of SOM modules using the RZ/G1 SoCs.
+> I believe there are options for some of these to use 4 GB, although 1 or 2 GB is
+> used in the boards we've upstreamed support for.
+>
+> There are also other SOM vendors (e.g. Emtrion) and end users of RZ/G1,
+> but I'm not sure of the details.
 
-  cc9d5c337684 ("ARM: at91: pm: use proper master clock register offset")
+Both iWave and Emtrion only seem to list boards with 2GB or less on their
+websites today (with up to 15 year availability). My guess is that they had
+the same problem as everyone else in finding the right memory chips in
+the required quantities and/or long-term availability. iWave lists "By default
+1GB DDR3 and 4GB eMMC only supported. Contact iWave for memory
+expansion support." on some boards, but that doesn't mean they ever
+shipped a 4GB configuration.
 
-Fixes tag
-
-  Fixes: fd2280a1829b ("ARM: at91: pm: initial PM support for SAM9X60")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 01c7031cfa73 ("ARM: at91: pm: initial PM support for SAM9X60")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wXL9kwiTqgk0rV/qnCD.uls
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Jp2IACgkQAVBC80lX
-0Gwb2Af+LZjS2cksMZRXEOousRIG/mz1adb8CjvHB5C7nZ8NPEhhZfhdbeSELdQf
-a1NcagrmGGITA5vac7IaMiCH8BO6yPSIC4SjGwMw7yjhT1HBWvqV5qr1M3V7SdSZ
-s5ip4II0Sgtofh4eXTXupOQOpLWDrErKLB9jn8pu+gx43iWG3yYRMYhQsTGfGEpw
-MFupZyhRSWkjTk0j2BeBFxVbRlGyAUb1Un60sLwfHgQkwTxXHG5ly90T1pqG9y0R
-YRO5Qo1asAP4OvwVJJWL6SPF9oEj0LCI/2nTxHW9+EeQV19odEPinpJMBy4Ux6+d
-ahQ+N/cA9Seu9Hzb71G1PXCFCQ1Cog==
-=HA1C
------END PGP SIGNATURE-----
-
---Sig_/wXL9kwiTqgk0rV/qnCD.uls--
+       Arnd
