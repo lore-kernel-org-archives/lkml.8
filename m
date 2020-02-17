@@ -2,105 +2,134 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BBBC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEF8C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D219215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581957981;
-	bh=/DaX8+TZSwBPiTZVH9FgOz76O3KL16JyFS/ijkhuk44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LNokeHdoTMTlHCJWWDxVA7PNlXf38xCWUv86isk9GnfT9Cp+bkZoZ2EeksUoypy6F
-	 rpmfU4Pdwd2KCJNrZBgK6NOhkFr9zMgniMvCl3TFAu6qGZ5KldBzM5SNWfv4ULKIXT
-	 AlW7DnFF2bQkE6bR7Jtm7Wy9TAGaTrBJygYnQ4pM=
+	by mail.kernel.org (Postfix) with ESMTP id 5671621D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mII34r67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgBQQqR (ORCPT
+        id S1729312AbgBQQsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:46:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbgBQQqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:46:17 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D1C214D8;
-        Mon, 17 Feb 2020 16:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581957976;
-        bh=/DaX8+TZSwBPiTZVH9FgOz76O3KL16JyFS/ijkhuk44=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XKRFlaKp1IYIDGXDUJvH5mH8wXq/PXWxby8tJqhb0Gldfy+UFk8+5flsOaGzmHdfo
-         HlDNAYeeQrm/bDaFOCjFhUdWXO6SEKGWsxUiE0Of4uCTM0915fDbv4hNzC3UL8lKqY
-         xrdgGSn1GXDrxC+bKBaQ4bujFS0dC8o+hjZV23us=
-Date:   Mon, 17 Feb 2020 16:46:09 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arch@vger.kernel.org, ndesaulniers@google.com,
-        0x7f454c46@gmail.com, avagin@openvz.org, arnd@arndb.de,
-        sboyd@kernel.org, catalin.marinas@arm.com, x86@kernel.org,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        paul.burton@mips.com, mingo@redhat.com, bp@alien8.de,
-        luto@kernel.org, linux@armlinux.org.uk, tglx@linutronix.de,
-        salyzyn@android.com, pcc@google.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 19/19] arm64: vdso32: Enable Clang Compilation
-Message-ID: <20200217164608.GA2708@willie-the-truck>
-References: <20200213161614.23246-1-vincenzo.frascino@arm.com>
- <20200213161614.23246-20-vincenzo.frascino@arm.com>
- <20200213184454.GA4663@ubuntu-m2-xlarge-x86>
- <0cee3707-d526-3766-3dde-543c8dbd8e68@arm.com>
+        Mon, 17 Feb 2020 11:48:04 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43272 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728024AbgBQQsD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:48:03 -0500
+Received: by mail-pg1-f195.google.com with SMTP id u12so9120098pgb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+dYalRSbOahcygIG/bZllcSeh3ymAP3k2AyUse0dYCI=;
+        b=mII34r67/bufhqQd9dQqCetitoqHTrrbW8vRZnRPg1PwUkd8tJ+8Mr9084zNVxlzib
+         3eua/qF0W6iJnkf8IokoO56nKIcoKjslAX9TSz5rfujDwzvMlTseZms//itB13ofLcD3
+         gL0Dp869sIiemJpyWxNXuX29oPqTYwUI3cKdOe61cmflx30o1nNgxDBvbsbfdUGqTZPB
+         Nfik4yKH5vQA0JpniYGamAhEIzL74N6Jzkw/EPnT0elR5oLnt8gx35VUnFNEiRDpZQJe
+         kObADUG9G7Zf+mudNN4VvOfvQW5u6eiA9TQFXxT7Zjt/wW3+whiNuUBf5NKoD2Sbkbuh
+         OClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+dYalRSbOahcygIG/bZllcSeh3ymAP3k2AyUse0dYCI=;
+        b=ZB63owvxhIprz42Z1EzIEV9W9NFd5TbtrkXX852MdRIZANmvfsCY+XnxmgTnknp1Hm
+         FlDaXMBvMNUpVptRoqsryEtD8xThgdAlcnWVWivsO03IBgcsIyRsie1HRmzoDTROmeXI
+         MBnTaY+4bmd8G9dh4lOIFf85dnpSOtuNLXbrJBScH66TE1SAke9KKt8FDzpg+3DKa90K
+         sVaIyv7oDFhF5nNNq1uz2FAyOnk9w0MxmGLfpvDwK/y8ElHxqy+cjHpF0XlPM24A0kUX
+         puTI58o9YhpARU29D4SMVPg6m6ZO1OUllevbwNCQcziwcE8RsqQ41M2cRLz2SyUFIMPe
+         GvPQ==
+X-Gm-Message-State: APjAAAWAI8IfQUEMIZmMVgFCq6k8YD/6o7saIP3SaRRaSnZ1zuW+28vD
+        Qz3/zH2CWgkIlF1MZWx81trD
+X-Google-Smtp-Source: APXvYqww9hFwhQhDFppuNnetXE1spR5nHeV2J6H2V98O42q2hVUMGmmNA52WaqDLYhTNvRfQi+jCEA==
+X-Received: by 2002:a17:90a:30e8:: with SMTP id h95mr21154101pjb.30.1581958081234;
+        Mon, 17 Feb 2020 08:48:01 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:48d:3349:2df9:3778:ccac:a356])
+        by smtp.gmail.com with ESMTPSA id ev5sm19278pjb.4.2020.02.17.08.47.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Feb 2020 08:48:00 -0800 (PST)
+Date:   Mon, 17 Feb 2020 22:17:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/16] bus: mhi: core: Add support for data transfer
+Message-ID: <20200217164751.GA7305@Mani-XPS-13-9360>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-12-manivannan.sadhasivam@linaro.org>
+ <CAK8P3a1DOta5Uj3dNFWVqwgyPKs0cQsoymXE7svcOZoPiY+YGw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0cee3707-d526-3766-3dde-543c8dbd8e68@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK8P3a1DOta5Uj3dNFWVqwgyPKs0cQsoymXE7svcOZoPiY+YGw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 12:26:16PM +0000, Vincenzo Frascino wrote:
-> On 13/02/2020 18:44, Nathan Chancellor wrote:
-> > On Thu, Feb 13, 2020 at 04:16:14PM +0000, Vincenzo Frascino wrote:
-> >> Enable Clang Compilation for the vdso32 library.
+Hi Arnd,
+
+On Mon, Feb 17, 2020 at 05:13:37PM +0100, Arnd Bergmann wrote:
+> On Fri, Jan 31, 2020 at 2:51 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
 > 
-> [...]
-> 
-> >> +LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
-> > 
-> > Well this is unfortunate :/
-> > 
-> > It looks like adding the --target flag to VDSO_LDFLAGS allows
-> > clang to link the vDSO just fine although it does warn that -nostdinc
-> > is unused:
-> > 
-> > clang-11: warning: argument unused during compilation: '-nostdinc'
-> > [-Wunused-command-line-argument]
+> > @@ -648,6 +715,31 @@ static int parse_ch_cfg(struct mhi_controller *mhi_cntrl,
+> >                 mhi_chan->db_cfg.pollcfg = ch_cfg->pollcfg;
+> >                 mhi_chan->xfer_type = ch_cfg->data_type;
 > >
+> > +               switch (mhi_chan->xfer_type) {
+> > +               case MHI_BUF_RAW:
+> > +                       mhi_chan->gen_tre = mhi_gen_tre;
+> > +                       mhi_chan->queue_xfer = mhi_queue_buf;
+> > +                       break;
+> > +               case MHI_BUF_SKB:
+> > +                       mhi_chan->queue_xfer = mhi_queue_skb;
+> > +                       break;
+> > +               case MHI_BUF_SCLIST:
+> > +                       mhi_chan->gen_tre = mhi_gen_tre;
+> > +                       mhi_chan->queue_xfer = mhi_queue_sclist;
+> > +                       break;
+> > +               case MHI_BUF_NOP:
+> > +                       mhi_chan->queue_xfer = mhi_queue_nop;
+> > +                       break;
+> > +               case MHI_BUF_DMA:
+> > +               case MHI_BUF_RSC_DMA:
+> > +                       mhi_chan->queue_xfer = mhi_queue_dma;
+> > +                       break;
+> > +               default:
+> > +                       dev_err(mhi_cntrl->dev,
+> > +                               "Channel datatype not supported\n");
+> > +                       goto error_chan_cfg;
+> > +               }
+> > +
 > 
-> This is why ended up in this "unfortunate" situation :) I wanted to avoid the
-> warning.
+> While looking through the driver to see how the DMA gets handled, I came
+> across the multitude of mhi_queue_* functions, which seems like a
+> layering violation to me, given that they are all implemented by the
+> core code as well, and the client driver needs to be aware of
+> which one to call. Are you able to lift these out of the common interface
+> and make the client driver call these directly, or maybe provide a direct
+> interface based on mhi_buf_info to replace these?
 > 
-> > It would be nice if the logic of commit fe00e50b2db8 ("ARM: 8858/1:
-> > vdso: use $(LD) instead of $(CC) to link VDSO") could be adopted here
-> > but I get that this Makefile is its own beast :) at the very least, I
-> > think that the --target flag should be added to VDSO_LDFLAGS so that gcc
-> > is not a requirement for this but I am curious if you tried that already
-> > and noticed any issues with it.
-> > 
-> 
-> --target is my preferred way as well, I can try to play another little bit with
-> the flags and see what I can come up with in the next version.
 
-Yes, please. I'd even prefer the warning rather than silently assuming that
-a cross gcc is kicking around on the path.
+It sounds reasonable to me. Let me discuss this internally with Qcom guys to
+see if they have any objections.
 
-Will
+Thanks,
+Mani
+
+>       Arnd
