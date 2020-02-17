@@ -2,140 +2,126 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBC6C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE341C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E41206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9052067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVwzAvms"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jtItyBiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgBQHqP (ORCPT
+        id S1726768AbgBQHtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:46:15 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46967 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgBQHqN (ORCPT
+        Mon, 17 Feb 2020 02:49:16 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55649 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgBQHtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:46:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so18334977wrl.13
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 23:46:12 -0800 (PST)
+        Mon, 17 Feb 2020 02:49:16 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so16052210wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 23:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5qkKrOlcFFXZzVNv9icrocjiIlH9It8BWZdzD0LWt0Q=;
-        b=nVwzAvmsNR+X50r3nGA+fAKqm4lVqop6F9Orm0R72w9u0QJH/wgbx6ALhdUWwKdPfZ
-         rjuB4z7AJVDPUWjpfqGwquqJcbU7zoyj4AzStg0E64CPVyz4YIt8MRHIZgFMGArJmNBk
-         aC9N3DvtmoG6jepAu1+EVe98hhZeaZzKRyw6ZR8lzwLGqfrWlFPuCWhti3+3X3a77h9B
-         eenMFaN1CGdlEX4vF4AOpDLedZ19hyXcCzg/t51WAp78AEzQ9hVjScoV8FQyHDq2n6RQ
-         hiS6+bajefP3Bh83xlyQwTdl+wVKaRWxVTOeWPxtfSlpPvQlDDYreJWe+cRVIeIZpmoD
-         e0eQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
+        b=jtItyBiUgRgk6BmdYboXya2a/o9c2S21KkV7KiQxBx+O6/WaPpvHVfErJdssFjbZ4i
+         P30GjGDkteiyBRZp0k8BhIW+1GcTywIEbovUouGu/OgfmsDsIjMiWshH7A4OKSd28gaH
+         p5SS5NkDBquZz6AKGgu5seByFxMBbzCNQHVBbI7NAocYAgt1VqeoXMVMcjdYd9C4ccU6
+         LDQwxS+4Xepn/dGwZJkW2wyMnIxyfFq2eDYcMgs9DQ6Dt7px1HlhQqUTSIfbTL6kZZGl
+         jVFgUT/VcLP8iDlE2qaccCbQRDlQ7ewgbyFDpZ9SdHnRiRZuTI/jZHIkheuqwFHAzb/k
+         Riiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5qkKrOlcFFXZzVNv9icrocjiIlH9It8BWZdzD0LWt0Q=;
-        b=iqsOLMa4uucniTceSfEjEv7/y+qcudciIWaIoSJxkzGsstHQfdPqv/DFq2DaceCgSO
-         KyPi7nMkScigIV1mG/fxkXMMkZBw99y5o2aNGcqJgSNuTBS4amPMg7C8sV0bU83MV+6H
-         Z6tbFa63YwwkPV3Pug79M2zlXv6TDxQpxe7mPczEzrn43q+ujUSQqG0mZJzelp/g6ZUU
-         afc86VrgL0eMooXymh3mRHFUZFxnBKkZGfVv/rNGAPL1Ta6FSU5ZnovgvVFvTzXhbhcE
-         FOq4iT8qCslDCXdBNdBPK68n+17d7Fb5wsyPACwKWlDYjejtLtrmxtHV+MZjCQ4pdnPb
-         Y8Ng==
-X-Gm-Message-State: APjAAAV3yU7qmoWDbgSCoFBVMyrDZFPOOKo6d2QQP9so1lvqGvFi5x/N
-        zYvdJfZiG7uwEFe7S4uaqOZBIw==
-X-Google-Smtp-Source: APXvYqxJK1DF6QQA+j344kfPjdKZ9FNScf9ZQaa/MQTmBHsoNElLwtb1YxsehCFRWbNrdn9YAQ7Brw==
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr20797979wrv.144.1581925571717;
-        Sun, 16 Feb 2020 23:46:11 -0800 (PST)
-Received: from apalos.home (ppp-2-87-54-32.home.otenet.gr. [2.87.54.32])
-        by smtp.gmail.com with ESMTPSA id f11sm18786744wml.3.2020.02.16.23.46.09
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lcsYrSRBQv0/tuOiLtIdcGzeEqOZwy/ucgpprLmBBKY=;
+        b=ljXNxe4FauRpDjO7oPMydqFKkZj5HIz9rLvoYryFt8v2UhDQMgfcUkEX3dZZ/DBsP5
+         yM+K52+FlftdiVpd+jvwX4vK+AWrP0IHyztq2fDhyT6EIFASFZUP8i5uxIAMLmroqryu
+         p+DJnmkZmTELnQBrL95FYPv3g5TbNlPVo/ryCjUfpDM4x6AxCxaYtZ9r8ISOanJq8ETq
+         yEmelHx84LpzHShTJimYcB4b7i3smkqYMnG2QsZpG+ne41DcCgp+DW3BfY/4xkYkCATF
+         t0dYTKy/SR1yHc+kxWxfXwFLQpM58TodhBMzhz5G1V8zOmuQ30CZJPy8D0N0fqZ5F+dN
+         iosQ==
+X-Gm-Message-State: APjAAAVoSkQ/xeOmyl0PJuiTORDcEE+54QkRNXz/23rnAVSlT380VYBH
+        xPuY/XceXZqx+FcfskBepKF3ThSrtfY=
+X-Google-Smtp-Source: APXvYqyJtjN2qsgU+dia/mVioDpDwyoJ+ti/pQN/I0BI9y/1B7olbgnxkE2KdsFVusIV1tYvrwUnkA==
+X-Received: by 2002:a1c:a553:: with SMTP id o80mr20042142wme.94.1581925754379;
+        Sun, 16 Feb 2020 23:49:14 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id u23sm19462367wmu.14.2020.02.16.23.49.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 23:46:11 -0800 (PST)
-Date:   Mon, 17 Feb 2020 09:46:08 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
-        lorenzo@kernel.org, toke@redhat.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: page_pool: API cleanup and comments
-Message-ID: <20200217074608.GA139819@apalos.home>
-References: <20200217062850.133121-1-ilias.apalodimas@linaro.org>
- <20200217084133.1a67ae63@carbon>
+        Sun, 16 Feb 2020 23:49:13 -0800 (PST)
+References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-3-linux.amoon@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCHv1 2/3] arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to VDDIO_C/TF_IO
+In-reply-to: <20200216173446.1823-3-linux.amoon@gmail.com>
+Date:   Mon, 17 Feb 2020 08:49:12 +0100
+Message-ID: <1jo8txzm9z.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217084133.1a67ae63@carbon>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 08:41:33AM +0100, Jesper Dangaard Brouer wrote:
-> On Mon, 17 Feb 2020 08:28:49 +0200
-> Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> 
-> > diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-> > index cfbed00ba7ee..7c1f23930035 100644
-> > --- a/include/net/page_pool.h
-> > +++ b/include/net/page_pool.h
-> > @@ -162,39 +162,33 @@ static inline void page_pool_use_xdp_mem(struct page_pool *pool,
-> >  }
-> >  #endif
-> >  
-> > -/* Never call this directly, use helpers below */
-> > -void __page_pool_put_page(struct page_pool *pool, struct page *page,
-> > -			  unsigned int dma_sync_size, bool allow_direct);
-> > +void page_pool_release_page(struct page_pool *pool, struct page *page);
-> >  
-> > -static inline void page_pool_put_page(struct page_pool *pool,
-> > -				      struct page *page, bool allow_direct)
-> > +/* If the page refcnt == 1, this will try to recycle the page.
-> > + * if PP_FLAG_DMA_SYNC_DEV is set, it will try to sync the DMA area for
-> > + * the configured size min(dma_sync_size, pool->max_len).
-> > + * If the page refcnt != page will be returned
-> 
-> Is this last comment line fully formed?
 
-Yes, but that dosen't mena it makes sense!
-Maybe i should switch the last sentence to sometning like:
-"If the page refcnt != 1, page will be returned to memory subsystem" ?
+On Sun 16 Feb 2020 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
 
-Thanks
-/Ilias
-> 
-> 
-> > + */
-> > +void page_pool_put_page(struct page_pool *pool, struct page *page,
-> > +			unsigned int dma_sync_size, bool allow_direct);
-> > +
-> > +/* Same as above but will try to sync the entire area pool->max_len */
-> > +static inline void page_pool_put_full_page(struct page_pool *pool,
-> > +					   struct page *page, bool allow_direct)
-> 
-> 
-> 
-> -- 
-> Best regards,
->   Jesper Dangaard Brouer
->   MSc.CS, Principal Kernel Engineer at Red Hat
->   LinkedIn: http://www.linkedin.com/in/brouer
-> 
+> As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
+> regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
+
+Why ? I don't see the connection with the cover letter here ...
+
+>
+> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index 353db3b32cc4..23eddff85fe5 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -66,11 +66,14 @@ tf_io: gpio-regulator-tf_io {
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <3300000>;
+>  
+> +		/* TF_3V3N_1V8_EN */
+This is not terribly useful ... same for the previous patch
+
+>  		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+>  		gpios-states = <0>;
+>  
+>  		states = <3300000 0>,
+>  			 <1800000 1>;
+> +		/* U16 RT9179GB */
+> +		vin-supply = <&vcc_5v>;
+That is not parsed and not even part of the gpio regulator binding
+documentation. It won't make any difference.
+
+>  	};
+>  
+>  	flash_1v8: regulator-flash_1v8 {
+
