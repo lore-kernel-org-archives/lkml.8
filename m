@@ -2,173 +2,163 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1BAC34025
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80FEC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F77214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC27B2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfOX4D/P"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ffd4dHge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgBQREp (ORCPT
+        id S1728864AbgBQRGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:04:45 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:43475 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728142AbgBQREo (ORCPT
+        Mon, 17 Feb 2020 12:06:17 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41538 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728142AbgBQRGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:04:44 -0500
-Received: by mail-yb1-f193.google.com with SMTP id b141so8989226ybg.10;
-        Mon, 17 Feb 2020 09:04:44 -0800 (PST)
+        Mon, 17 Feb 2020 12:06:17 -0500
+Received: by mail-qv1-f68.google.com with SMTP id s7so7871283qvn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vPLpeSe0bKkS49okauHP5fVKtMg3RhIDXruX05dtGX8=;
-        b=LfOX4D/PTIGCnYfTvq+ADMCpaVrTm8vspeWtE6AWPdFAZKq2T9anP5EHCU3J6vE5rX
-         O+IBBqXFskHMzEU8qcTz4DaLOCRGheG+BF21M0S/Ru4mislM/hvcUN418f8gXkFdaje7
-         ZHc6ZhfNcKnewUFnVsbPAiCiPXe38lJKDoiLLXPlb0IVP5ZTd+Erw255U12Ba6nz/kO+
-         cksC6T/fpsD6w3ONjsjGdDuLbi6AZuJ4UC3x5yrLVOolpNR4QgXEHW6xQ2zNC/mVqVC6
-         CcPjTObHWyPJsfIUhH6BvhuobWLjrOzrDiSLZwyKI0eCDCnGXq3NeAMB6e+rrpDS/KDE
-         UkmQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=L6P6i8QYBtrRLDhCjXcjIS4jJjXwildK8xh5dBjAjQw=;
+        b=ffd4dHgeWvjZb9BGBU9kgw11/3oJ0Mb9QQlnBBDkZ0u0hR3L4PTyZ8LoixLO2Cj8YV
+         O6mOO3+4CYI/akamAVpZ6f7V2T6GExd5S3TaZdPNnbyi0tsVKVQvKrJ+TpldSIENEfDo
+         0afoQemXutfzDYbSevb4++hQ5x7Ij3dymdcxDToVUByCIdgF1/CXJdzjSVcVnHOL6J1Y
+         e3C0sM0JZVXMBO3wgaJRIa1NtqhVrFT0zZ18Jy4y9Rj2wYfbjD8m7MEleGq6fuAX93lq
+         JGqHg0KMMDLuMt1GCcQch6LooyUXn42ryvkpkQZQdgzllWwFYKIDpm7PyMA93hl2ib82
+         OgPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vPLpeSe0bKkS49okauHP5fVKtMg3RhIDXruX05dtGX8=;
-        b=YLNtukE6l72hyN/yG3pd7/ufptgywO83mC8hzp/CGgSIg1zm3UIWAkJ4KIfGcgD73/
-         PWf3fvLSEAPSQ0LBZgf7pCgT/ilbfrlQ+S7jeGOzdPpkRboxNCGEHE9G6OWfW2lkDMmm
-         Y/AiKKhj8W18sFbhCANC3oEO2BvEA+wIqc+qaZ6HP2fmBfUC4/bqtA0dJdBd1h6Ma8IE
-         mcWZn5cps6ariwHcv2gpDR1MEO+Yv80/w9OqaVLf+gTTn9+hvChKtWWvDmW4/j6e+ElI
-         tj3psjnn1g+50tx77CfZD6YpuGvcd500/J8fZbvvkFdKQ40mVW/Jgd4X7OLO1C9mdJlk
-         oWDw==
-X-Gm-Message-State: APjAAAVqjXqS2ec7XmnOZ0H9yHd8r83jGQTGMmpDR3364AMvawURuJY1
-        VhSN/iGqBE3UveCchqeOMzk=
-X-Google-Smtp-Source: APXvYqzGlUZIsYYiKriIz2BhmO+hg4HO/NIKKz6IDfn53XLaaE1DGqXWxL9gY+5u8szaTp/bERwFkQ==
-X-Received: by 2002:a5b:885:: with SMTP id e5mr15959811ybq.449.1581959083612;
-        Mon, 17 Feb 2020 09:04:43 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a74sm475022ywe.42.2020.02.17.09.04.42
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=L6P6i8QYBtrRLDhCjXcjIS4jJjXwildK8xh5dBjAjQw=;
+        b=Gh90TynAN7G+UkZYPGH/Mj/jB2jvv2MnISOtTi5nEmvG+xMQlGS8DKVqkQBKWxVnwM
+         oFd5mKCnTdTSRKJCd4tnT2LclludgyBLZ2Ssq+crQb4hTeeJc8MGQUZkMVr5uFa1mka6
+         xUgknFSwgjOKQlkODewJPRplLuAyBaOGkO7hxyuWll0D1eeMbcbWeJhxwbu440pxlSFB
+         vmZSDo+7cMF4KKBOzkMsvqbZkxzL8nge7POOg61nZC5lEQd2maNe/KKc4kASbIFe6r8G
+         o7yyuZju+5SNbrZYQb9gpTBLDXXisSdeHrUFkQSnh7rRc1eUR2pD5RW0bH4N7XIUCzpI
+         9xBw==
+X-Gm-Message-State: APjAAAWRkA6Aber50UC5VazgcBJEN5+Gmd0rZlnFVcdVDqoSx73Ah41j
+        Vqw/SYE6weeRksqckLGvfq4OtQ==
+X-Google-Smtp-Source: APXvYqyZvAkpULNjhb7N4xBJhjDjqP94Var1PtGA02WO4jZRgwD6CiTqtR1UVOIKnHCOGOZlIBqvVA==
+X-Received: by 2002:a05:6214:707:: with SMTP id b7mr13001067qvz.97.1581959176043;
+        Mon, 17 Feb 2020 09:06:16 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w202sm514179qkb.89.2020.02.17.09.06.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Feb 2020 09:04:43 -0800 (PST)
-Subject: Re: [PATCH v3 kunit-next 1/2] kunit: add debugfs
- /sys/kernel/debug/kunit/<suite>/results display
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, corbet@lwn.net, davidgow@google.com
-References: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
- <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
- <c42ac237-476a-526f-b445-61e7a63bc101@gmail.com>
- <alpine.LRH.2.20.2002171539210.21685@dhcp-10-175-161-198.vpn.oracle.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <51e1d60c-a232-bbef-7e6a-8695df684ae6@gmail.com>
-Date:   Mon, 17 Feb 2020 11:04:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.20.2002171539210.21685@dhcp-10-175-161-198.vpn.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 17 Feb 2020 09:06:15 -0800 (PST)
+Message-ID: <1581959174.7365.88.camel@lca.pw>
+Subject: Re: [PATCH v2] kcsan, trace: Make KCSAN compatible with tracing
+From:   Qian Cai <cai@lca.pw>
+To:     paulmck@kernel.org, Marco Elver <elver@google.com>
+Cc:     andreyknvl@google.com, glider@google.com, dvyukov@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mingo@redhat.com, x86@kernel.org
+Date:   Mon, 17 Feb 2020 12:06:14 -0500
+In-Reply-To: <20200214234004.GT2935@paulmck-ThinkPad-P72>
+References: <20200214211035.209972-1-elver@google.com>
+         <20200214234004.GT2935@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 9:45 AM, Alan Maguire wrote:
-> On Wed, 12 Feb 2020, Frank Rowand wrote:
+On Fri, 2020-02-14 at 15:40 -0800, Paul E. McKenney wrote:
+> On Fri, Feb 14, 2020 at 10:10:35PM +0100, Marco Elver wrote:
+> > Previously the system would lock up if ftrace was enabled together with
+> > KCSAN. This is due to recursion on reporting if the tracer code is
+> > instrumented with KCSAN.
+> > 
+> > To avoid this for all types of tracing, disable KCSAN instrumentation
+> > for all of kernel/trace.
+> > 
+> > Furthermore, since KCSAN relies on udelay() to introduce delay, we have
+> > to disable ftrace for udelay() (currently done for x86) in case KCSAN is
+> > used together with lockdep and ftrace. The reason is that it may corrupt
+> > lockdep IRQ flags tracing state due to a peculiar case of recursion
+> > (details in Makefile comment).
+> > 
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Reported-by: Qian Cai <cai@lca.pw>
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
 > 
->> On 2/7/20 10:58 AM, Alan Maguire wrote:
->>> add debugfs support for displaying kunit test suite results; this is
->>> especially useful for module-loaded tests to allow disentangling of
->>> test result display from other dmesg events.
->>>
->>> As well as printk()ing messages, we append them to a per-test log.
->>>
->>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
->>> ---
-
-< snip >
-
->>> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
->>> index 9242f93..aec607f 100644
->>> --- a/lib/kunit/test.c
->>> +++ b/lib/kunit/test.c
->>> @@ -10,6 +10,7 @@
->>>  #include <linux/kernel.h>
->>>  #include <linux/sched/debug.h>
->>>  
->>> +#include "debugfs.h"
->>>  #include "string-stream.h"
->>>  #include "try-catch-impl.h"
->>>  
->>> @@ -28,73 +29,91 @@ static void kunit_print_tap_version(void)
->>>  	}
->>>  }
->>>  
->>> -static size_t kunit_test_cases_len(struct kunit_case *test_cases)
->>> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
->>>  {
->>>  	struct kunit_case *test_case;
->>>  	size_t len = 0;
->>>  
->>> -	for (test_case = test_cases; test_case->run_case; test_case++)
->>> +	kunit_suite_for_each_test_case(suite, test_case)
->>>  		len++;
->>>  
->>>  	return len;
->>>  }
->>> +EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
->>>  
->>>  static void kunit_print_subtest_start(struct kunit_suite *suite)
->>>  {
->>>  	kunit_print_tap_version();
->>> -	pr_info("\t# Subtest: %s\n", suite->name);
->>> -	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
->>> +	kunit_log(KERN_INFO, suite, "# Subtest: %s", suite->name);
->>> +	kunit_log(KERN_INFO, suite, "1..%zd",
->>> +		  kunit_suite_num_test_cases(suite));
->>
->> The subtest 'is a TAP stream indented 4 spaces'.  (So the old code was
->> also incorrect since it indented with a tab.)
->>
->> kunit_print_ok_not_ok() has a similar indentation issue.
->>
+> Queued for review and further testing, thank you!
 > 
-> I'll defer to Brendan on the TAP format stuff if you don't
-> mind; the aim here is to preserve existing behaviour.  I
-> think it might be better to tackle TAP format issues in
-> a separate patchset.
+> Qian, does this also fix things for you?
 
-My first attempt to respond started with "That is a reasonable approach".
-But on reflection, the patch is adding code that is incorrect (even if
-the new code is replacing existing code that is incorrect).
+It works fine. Feel free to use,
 
-If you don't want to change the spacing in patch 1/2, then please add
-patch 3/3 that corrects the spacing.  That allows patches 1/3 and 2/3
-to preserve existing behaviour.
-
-Thanks,
-
-Frank
+Tested-by: Qian Cai <cai@lca.pw>
 
 > 
-> I also updated the documentation patch in v4 (patch 3)
-> to incorporate the suggested wording.
+> 							Thanx, Paul
 > 
-> Thanks for the careful review!
-> 
-> Alan
->  
->>
-
-< snip >
+> > ---
+> > v2:
+> > *  Fix KCSAN+lockdep+ftrace compatibility.
+> > ---
+> >  arch/x86/lib/Makefile | 5 +++++
+> >  kernel/kcsan/Makefile | 2 ++
+> >  kernel/trace/Makefile | 3 +++
+> >  3 files changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+> > index 432a077056775..6110bce7237bd 100644
+> > --- a/arch/x86/lib/Makefile
+> > +++ b/arch/x86/lib/Makefile
+> > @@ -8,6 +8,11 @@ KCOV_INSTRUMENT_delay.o	:= n
+> >  
+> >  # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
+> >  KCSAN_SANITIZE_delay.o := n
+> > +ifdef CONFIG_KCSAN
+> > +# In case KCSAN+lockdep+ftrace are enabled, disable ftrace for delay.o to avoid
+> > +# lockdep -> [other libs] -> KCSAN -> udelay -> ftrace -> lockdep recursion.
+> > +CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
+> > +endif
+> >  
+> >  # Early boot use of cmdline; don't instrument it
+> >  ifdef CONFIG_AMD_MEM_ENCRYPT
+> > diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
+> > index df6b7799e4927..d4999b38d1be5 100644
+> > --- a/kernel/kcsan/Makefile
+> > +++ b/kernel/kcsan/Makefile
+> > @@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
+> >  UBSAN_SANITIZE := n
+> >  
+> >  CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
+> > +CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
+> > +CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
+> >  
+> >  CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
+> >  	$(call cc-option,-fno-stack-protector,)
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index f9dcd19165fa2..6b601d88bf71e 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
+> >  ORIG_CFLAGS := $(KBUILD_CFLAGS)
+> >  KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+> >  
+> > +# Avoid recursion due to instrumentation.
+> > +KCSAN_SANITIZE := n
+> > +
+> >  ifdef CONFIG_FTRACE_SELFTEST
+> >  # selftest needs instrumentation
+> >  CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
+> > -- 
+> > 2.25.0.265.gbab2e86ba0-goog
+> > 
