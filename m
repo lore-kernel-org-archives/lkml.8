@@ -6,156 +6,157 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07830C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41605C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA43C206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183272072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgBQOIy (ORCPT
+        id S1728841AbgBQOKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:08:54 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46221 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbgBQOIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:08:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 06:08:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,452,1574150400"; 
-   d="scan'208";a="433801867"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Feb 2020 06:08:50 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j3h4t-002ozz-Do; Mon, 17 Feb 2020 16:08:51 +0200
-Date:   Mon, 17 Feb 2020 16:08:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 02/19] platform/x86: intel_scu_ipc: Log more
- information if SCU IPC command fails
-Message-ID: <20200217140851.GC10400@smile.fi.intel.com>
-References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
- <20200217131446.32818-3-mika.westerberg@linux.intel.com>
+        Mon, 17 Feb 2020 09:10:45 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15000 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727739AbgBQOKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 09:10:45 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HE5RuM134777;
+        Mon, 17 Feb 2020 09:10:17 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6bp07ywf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 09:10:17 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01HEA8uk008753;
+        Mon, 17 Feb 2020 14:10:16 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 2y68966pky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 14:10:15 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HEAEcS27263320
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 14:10:14 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A667CBE054;
+        Mon, 17 Feb 2020 14:10:14 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AFB1BE051;
+        Mon, 17 Feb 2020 14:10:13 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.152])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Feb 2020 14:10:13 +0000 (GMT)
+Message-ID: <423702075b0dcb129dca83ae3a98b090d58ad0e7.camel@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/8xx: Fix clearing of bits 20-23 in ITLB miss
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Feb 2020 11:10:09 -0300
+In-Reply-To: <1d6a53ab-ea72-7452-ea5f-43dd70b223c9@c-s.fr>
+References: <4f70c2778163affce8508a210f65d140e84524b4.1581272050.git.christophe.leroy@c-s.fr>
+         <546ce4737f308a4ba99a53f550de5b44abc06444.camel@linux.ibm.com>
+         <1d6a53ab-ea72-7452-ea5f-43dd70b223c9@c-s.fr>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-VzmBVc8/yToR3dI4YbK+"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217131446.32818-3-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_08:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:14:29PM +0300, Mika Westerberg wrote:
-> Currently we only log an error if the command times out which makes it
-> hard to figure out the failing command. This changes the driver to log
-> command and subcommand with the error code which should make debugging
-> easier. This also allows us to simplify the callers as they don't need
-> to log these errors themselves.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--=-VzmBVc8/yToR3dI4YbK+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_scu_ipc.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 19c2cc41fb05..7512d550b375 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -147,7 +147,6 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
->  		usleep_range(50, 100);
->  	} while (time_before(jiffies, end));
->  
-> -	dev_err(&scu->dev, "IPC timed out");
->  	return -ETIMEDOUT;
->  }
->  
-> @@ -156,10 +155,8 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
->  {
->  	int status;
->  
-> -	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
-> -		dev_err(&scu->dev, "IPC timed out\n");
-> +	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
->  		return -ETIMEDOUT;
-> -	}
->  
->  	status = ipc_read_status(scu);
->  	if (status & IPC_STATUS_ERR)
-> @@ -331,6 +328,7 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
->  int intel_scu_ipc_simple_command(int cmd, int sub)
->  {
->  	struct intel_scu_ipc_dev *scu;
-> +	u32 cmdval;
->  	int err;
->  
->  	mutex_lock(&ipclock);
-> @@ -339,9 +337,12 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
->  		return -ENODEV;
->  	}
->  	scu = ipcdev;
-> -	ipc_command(scu, sub << 12 | cmd);
-> +	cmdval = sub << 12 | cmd;
-> +	ipc_command(scu, cmdval);
->  	err = intel_scu_ipc_check_status(scu);
->  	mutex_unlock(&ipclock);
-> +	if (err)
-> +		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
->  	return err;
->  }
->  EXPORT_SYMBOL(intel_scu_ipc_simple_command);
-> @@ -362,6 +363,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->  			  u32 *out, int outlen)
->  {
->  	struct intel_scu_ipc_dev *scu;
-> +	u32 cmdval;
->  	int i, err;
->  
->  	mutex_lock(&ipclock);
-> @@ -374,7 +376,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->  	for (i = 0; i < inlen; i++)
->  		ipc_data_writel(scu, *in++, 4 * i);
->  
-> -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
-> +	cmdval = (inlen << 16) | (sub << 12) | cmd;
-> +	ipc_command(scu, cmdval);
->  	err = intel_scu_ipc_check_status(scu);
->  
->  	if (!err) {
-> @@ -383,6 +386,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->  	}
->  
->  	mutex_unlock(&ipclock);
-> +	if (err)
-> +		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
->  	return err;
->  }
->  EXPORT_SYMBOL(intel_scu_ipc_command);
-> -- 
-> 2.25.0
-> 
+On Sat, 2020-02-15 at 11:17 +0100, Christophe Leroy wrote:
+>=20
+> Le 15/02/2020 =C3=A0 07:28, Leonardo Bras a =C3=A9crit :
+> > On Sun, 2020-02-09 at 18:14 +0000, Christophe Leroy wrote:
+> > > In ITLB miss handled the line supposed to clear bits 20-23 on the
+> > > L2 ITLB entry is buggy and does indeed nothing, leading to undefined
+> > > value which could allow execution when it shouldn't.
+> > >=20
+> > > Properly do the clearing with the relevant instruction.
+> > >=20
+> > > Fixes: 74fabcadfd43 ("powerpc/8xx: don't use r12/SPRN_SPRG_SCRATCH2 i=
+n TLB Miss handlers")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > > ---
+> > >   arch/powerpc/kernel/head_8xx.S | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/hea=
+d_8xx.S
+> > > index 9922306ae512..073a651787df 100644
+> > > --- a/arch/powerpc/kernel/head_8xx.S
+> > > +++ b/arch/powerpc/kernel/head_8xx.S
+> > > @@ -256,7 +256,7 @@ InstructionTLBMiss:
+> > >   	 * set.  All other Linux PTE bits control the behavior
+> > >   	 * of the MMU.
+> > >   	 */
+> > > -	rlwimi	r10, r10, 0, 0x0f00	/* Clear bits 20-23 */
+> > > +	rlwinm	r10, r10, 0, ~0x0f00	/* Clear bits 20-23 */
+> > >   	rlwimi	r10, r10, 4, 0x0400	/* Copy _PAGE_EXEC into bit 21 */
+> > >   	ori	r10, r10, RPN_PATTERN | 0x200 /* Set 22 and 24-27 */
+> > >   	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
+> >=20
+> > Looks a valid change.
+> > rlwimi  r10, r10, 0, 0x0f00 means:
+> > r10 =3D ((r10 << 0) & 0x0f00) | (r10 & ~0x0f00) which ends up being
+> > r10 =3D r10
+> >=20
+> > On ISA, rlwinm is recommended for clearing high order bits.
+> > rlwinm  r10, r10, 0, ~0x0f00 means:
+> > r10 =3D (r10 << 0) & ~0x0f00
+> >=20
+> > Which does exactly what the comments suggests.
+> >=20
+> > FWIW:
+> > Reviwed-by: Leonardo Bras <leonardo@linux.ibm.com>
+> >=20
+>=20
+> I guess you mean
+>=20
+> Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, sorry for the typo.
 
+--=-VzmBVc8/yToR3dI4YbK+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5KnsEACgkQlQYWtz9S
+ttSWQw//Qk881kecmznRJws7Dniga+I79I0aWy8xbXeMV7u8p7eLeom2HeZydUo0
+Jg/DFMiNnoMj77138Ht07KdADYV8fdE59DW66YufBfEevltanJ6tS8Zj/MV0js5H
+H5OphYNon2NWw5fCRpYGRlQJi+BsM7c6s/fpVW0xsEWg6MvRekLSOCs/gtEwFWDn
+Rxj9jY7+gvDJyMYR59cMJH07F9Ob7Bbu4PSUM8YbPNwgFtjR49WSAGsV0VCfN9L8
+Kz+52aOj9m48kA2PG5XiejC56+Tp06vGbo4ODjZY/5+b+OcG9O5P9qM7x4TCPfL3
+BsJKBBbj4nyWUSCfYkHOSP3PenZ1g/ZUffUZA2WiDC/ia7UTG+4PWlnqchPg5kz7
+liFfO34RKPnZSjVKTjpxcRERu5azbc8LryKEW6QI4nb1Ol59JLK0HItnmPG+YW4d
+trrjOfrj/0jP6HI8HzGMDoEbMFD6lfuf81oNQV8p26U+3x02PK2dEfeilgb6QFMv
+BRvFzwj2GGuNI+vOIWm5DsdLin3KaqAFZ2CZGt/VYWH1AAil6umwsSAcQRz84tvW
+UblRqtrV5tUaA7aKzgvyuu/mSrF0URrzA75eWjneM4MljkY77cHIAZ6RpByJ/Iim
+OBUhPODqgdGdwC0R9YwRB5KX6NbEx6y/wmqsmsivWTYTecp73QM=
+=LUct
+-----END PGP SIGNATURE-----
+
+--=-VzmBVc8/yToR3dI4YbK+--
 
