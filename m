@@ -2,54 +2,54 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F3EC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A787AC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D075F206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA972072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="rA0TWI3a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AlfQlKZV"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="muGhFo1e";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="22Y80l+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgBQGnC (ORCPT
+        id S1727506AbgBQGnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:43:02 -0500
+        Mon, 17 Feb 2020 01:43:12 -0500
 Received: from new2-smtp.messagingengine.com ([66.111.4.224]:38951 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbgBQGm6 (ORCPT
+        by vger.kernel.org with ESMTP id S1727161AbgBQGnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:42:58 -0500
+        Mon, 17 Feb 2020 01:43:02 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 24A6151E1;
-        Mon, 17 Feb 2020 01:42:58 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id C5F0C51E0;
+        Mon, 17 Feb 2020 01:43:01 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:42:58 -0500
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:43:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=p9ksJoRp95f7P
-        lFbHwIyRMPpDKeA8eop3QczTiTwM5I=; b=rA0TWI3a7YFet8EoCuVsI860z8I+E
-        SUNvecqs39KS3JIqqi4RPpfstCl9Iu0k0P0q2gD+P370ar9as8z7XTME/yXhIf0o
-        0Pz3ifUxbqWnK+BILkTy2G+vAwMuTOaTptOmGT3NfPRJsKC7oe90DAYixPMoFcZ4
-        GSeMwwiv30gl01gdhxiIj1k7zFrQTdoNf4vWQH4MVfwhLxLv5vVvwRqEyLkhsYg5
-        e/CMCVuWb0U4WkpEbnmyTN4xGsrFOc0q38nJCjdtDbdhF/F5wdowWQQe76XC3BSa
-        u97lrGQaqg62vw8uTIS8242pggrnupimDn1pVK4JfhXMSrdiGijCa1fkw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=3lDAjzOIj+9xl
+        0Uviyyg4YICTqjd5DlgZCmlDUQ+E0U=; b=muGhFo1eJt2pej7+zET/+0V+tEhsk
+        MuVyrWdcsln5GkdE/PLf/tgcU/CebUwLDeiAjUBaaLbWOi4OVPrGASDdJuvgUj5S
+        u3wzagc5P/nm3t/tC6XdwZlQad3TJUD1k/1623eqGYIw1w++XKeXVvYQGWGjLidT
+        VMf+x9IoYcUELe5d3v5BwUr/sgvmLqc4ZBSXQKXDBzkovGH57M9T2A7/WMp/eYVb
+        rK5GgqA4ILWDLTXRjGjld/B5GppeDdMjAJXZ1B0KvM/chgY7P+FsaNNhKvqg5s79
+        7Mm/4PzGgspiBWK150QU8u7IjCxBsJckWAAu25WvTTSRIM3JxR/3tzPSg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=p9ksJoRp95f7PlFbHwIyRMPpDKeA8eop3QczTiTwM5I=; b=AlfQlKZV
-        qcRoroqJR4iTVy4z9ZXqbfLjezcInYcOwoGHcanXsBb6P4+ojJrWStsrkWvOe12a
-        1CuXUnSPXaJfpYNRxjzmGfcLUwlhL+spH4EcgvN8gv9Xc1jILUJRysrfTRFSr0xI
-        0AghczMyxRXG+HAsmNhla3yUAdwnZVOmcvdvEUh0BRaekNipf4hM9b7S2t1uw4PG
-        oN3aq68Eeo2CdCGC8gglEsRmFudh+9OFvwwhhNIFzMunWdxDi0H4I56lkLHWSNCK
-        HJEhz9rA8VBM8Ex1CUoZ/GXW5HvuWdwP1KR8TYEKb5et1QhXCQ6R/Kj/IRMHPLDf
-        GZvIzJmUZUBaKA==
-X-ME-Sender: <xms:8jVKXuK9HKg9G6WO2NREAqZOPZCX8hmCXdNeEnTVWwRYWpEtp-R08Q>
+        fm2; bh=3lDAjzOIj+9xl0Uviyyg4YICTqjd5DlgZCmlDUQ+E0U=; b=22Y80l+Q
+        E0uwP3twi0LKdVtRVWQ49nfiYYHvVfLQzkhLX8D7T09hSqfMq87I414dcAJPyZiQ
+        N79w1AeHRPj+ahC1DR81tMUlrzPkWUzdlzIi8MfrmCYcn2wPaaJ1g2IGgwlD5NRM
+        vSs7NeMR+FmXAzhSBr/ooUBD+H2ix7ZjZLyCQCeflyhKTQ7YQ4WqESMUq8LCwQbH
+        55yiSj2okBaSe+imPd59B/Wn1Q7Drqn2TuJG5OMT36Vj6L3NRZYhxmgguwYw4Dch
+        nYIubWoLRcdTbltLxeQbKxIl5lC1Crnx5YKCm2v2qjhcguqG9e7Ec4aGkrPkBFF+
+        v+01DFcTmnIZoQ==
+X-ME-Sender: <xms:9TVKXk3qxGth5nybN9EX70iuIOHgtOLf6Mu95OY65LG1bkoQWvz1pg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdelkecutefuodetggdote
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpeejnecurfgrrhgr
     mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:8jVKXvh2bpMMC8HC_kQnNmyw7Lm3xPXPyJE7f3uUA8Igk4vsn8qSEQ>
-    <xmx:8jVKXn32rdAvcrLynx_oIv794La04keS7WNjTjRV7-oN9eGE76TCbw>
-    <xmx:8jVKXmZvnwHAVVAjFGhKULDsskpS2SfDCpFese_5F_hfq-cLyFGkpg>
-    <xmx:8jVKXsaWB5rtxRbfRjy0WwXVusYWIB3S3_-jHErYgoffgIJ_6DLQJg>
+X-ME-Proxy: <xmx:9TVKXuzF3Mi1YJsdi1u6pdJ-n7oSC5M_td8BL3y1Jiwptqfm50UlAw>
+    <xmx:9TVKXnuTPFDSFpTgS2uu5PVuHHtw7kFUW_hDFUizCWAMvgBZQElCng>
+    <xmx:9TVKXgQJAFSfshpb0Jx1uWNqntb_7IkTnwGmeHnotgwYRz-537wuhg>
+    <xmx:9TVKXoGc2jg4pO8XJ-cMKCgUVVNw67m8V9DvwhzxkRN1Ffvmoz8_Xg>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 69ECA3280059;
-        Mon, 17 Feb 2020 01:42:57 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 117C13280059;
+        Mon, 17 Feb 2020 01:43:01 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -78,9 +78,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [RFC PATCH 11/34] ASoC: sun8i-codec: Enforce parameter symmetry
-Date:   Mon, 17 Feb 2020 00:42:27 -0600
-Message-Id: <20200217064250.15516-12-samuel@sholland.org>
+Subject: [RFC PATCH 17/34] ASoC: sun8i-codec: Sort masks in a consistent order
+Date:   Mon, 17 Feb 2020 00:42:33 -0600
+Message-Id: <20200217064250.15516-18-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200217064250.15516-1-samuel@sholland.org>
 References: <20200217064250.15516-1-samuel@sholland.org>
@@ -91,30 +91,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each of the codec's DAIs has a single set of parameters for its clock,
-channels, and word size. If both capture and playback are active on a
-single DAI, they must use compatible parameters. Set the symmetric_*
-flags in the DAI driver to enforce this.
+All other definitions are sorted from largest to smallest bit number.
+This makes the AIF1CLK_CTRL mask constants consistent with them.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/sunxi/sun8i-codec.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index bf12f5199e96..3d5ed2f4575a 100644
+index 559dec719956..36ce281286b5 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -534,6 +534,9 @@ static struct snd_soc_dai_driver sun8i_codec_dai = {
- 	},
- 	/* pcm operations */
- 	.ops = &sun8i_codec_dai_ops,
-+	.symmetric_rates = 1,
-+	.symmetric_channels = 1,
-+	.symmetric_samplebits = 1,
- };
+@@ -81,10 +81,10 @@
  
- static const struct snd_soc_component_driver sun8i_soc_component = {
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
++#define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
++#define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
++#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
+ 
+ #define SUN8I_AIF_PCM_RATES (SNDRV_PCM_RATE_8000_48000|\
+ 			     SNDRV_PCM_RATE_96000|\
 -- 
 2.24.1
 
