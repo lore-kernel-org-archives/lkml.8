@@ -2,94 +2,143 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A8C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9B8C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B375D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A361C21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rLOREUYK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C5nvWqFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgBQRLn (ORCPT
+        id S1729396AbgBQRLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:11:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40548 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgBQRLn (ORCPT
+        Mon, 17 Feb 2020 12:11:49 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45745 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726492AbgBQRLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:11:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hAkY+PHcqgUVHvVTlHhhrkpeznoFmCxKBnJE+5h2WKM=; b=rLOREUYK7Hx54iTQMj70doR7BS
-        55qa4HZJnZwT8W7SO/rDdJ6eYzDXi+Xy4ZnYcsI+j9fLHfDDkyqnvPXzwc9rzKoz5VJAWsaYFklt6
-        p0lVZ+Hy8kFcRcgXwGG9v2riXi4cUFAFF2I8fhzXq6m7bquRtoSOagVOiGSMkWLsSA/vyJd3rzxHN
-        yLFophGX+1BDxY2AeeUfS5sR2Ey7l03o/E/tzadmJlJnedxErXGhAd/vECOCJBOfSFWZWspHulgtK
-        leqEOxpnm01qR5eF3fv8kL8HEJWkhN9RR3kZSB4tqZkuynE6SRd1qPb6ORBOvfoJ8cE/zquDUFhHw
-        XM2g6dWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3jvH-0007Cc-2T; Mon, 17 Feb 2020 17:11:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 32B71300565;
-        Mon, 17 Feb 2020 18:09:13 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86C5B2B92586D; Mon, 17 Feb 2020 18:11:04 +0100 (CET)
-Date:   Mon, 17 Feb 2020 18:11:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     paulmck@kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com
-Subject: Re: [PATCH tip/core/rcu 1/4] srcu: Fix __call_srcu()/process_srcu()
- datarace
-Message-ID: <20200217171104.GV14914@hirez.programming.kicks-ass.net>
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
- <20200215002932.15976-1-paulmck@kernel.org>
- <20200217124231.GS14914@hirez.programming.kicks-ass.net>
- <20200217170157.GA166797@google.com>
+        Mon, 17 Feb 2020 12:11:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581959508;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=leoJMIVrujXHR+1B3Le9Ku9YRkCu9ED/B2eHIqy0AMM=;
+        b=C5nvWqFKEZYCaP0LO7QQ0NOB/cCAzQvSreM8sKeE2udW3/3lWUbn0i+MUzFmX2j919qFll
+        jYmqXAgeI4EJgpXM1NZ7Br7hNQrJIoephW1R84aj+V2CojblMb/3l4b2xbr0cq0xAZhu/F
+        +A+v/chpAMgeJ+9cyD7LEneGOw77Jyg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-Dhc-CyKRM72V5Adb46TF7w-1; Mon, 17 Feb 2020 12:11:46 -0500
+X-MC-Unique: Dhc-CyKRM72V5Adb46TF7w-1
+Received: by mail-wr1-f72.google.com with SMTP id r1so9227316wrc.15
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:11:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=leoJMIVrujXHR+1B3Le9Ku9YRkCu9ED/B2eHIqy0AMM=;
+        b=PC0pxHWqICzkf2N/z0Ehtx8sy72k1n3EcbFIrszq/XK1O1EG7nKBhW+S5flT6mEXGw
+         D5VjPucs4R6JxMkyoZ2fDKorloWCQjaZw7QrejNoZf/m01RNkTR+q+Tcd7NWI45bHhIf
+         xHjqQ3iuT+4/fg0dQWRObPFEWzk7hX7SeHFZgtQuO856oJMP1ngm45mVIOs0VTJRy4YY
+         6I5OYUc9RLVcH+yaGvCDRr17xq35VSguFksE8bO1szRw61sF40bdXXZZkH7D+m7MZDeD
+         sGN0O4uw4hKxhyOpNw3vaxXjmQ7Bc6TibN3m/0RzuKyVNlX2uPnIX57RnvXBJjgYgBg9
+         98Ww==
+X-Gm-Message-State: APjAAAUu2BnYXyyih6Ku21ezLPZfEytYzDkPB3gA5PlcK/X4jl7W7qEL
+        CjekQ1eswM0+dLrDigAFx99xTWBpJDZIFMO/i3ZjbTEUPMlwj++fyV0ASt4GDqOIGfHkLKNtLLF
+        bj+AEbhZms2jnHD01OCXIUUuw
+X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr53665wma.84.1581959505682;
+        Mon, 17 Feb 2020 09:11:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyc3kAzEzp60v3wlpcZz3+V4nTnF88wgPHYMMKj2MdprBmNt1fNlvlTiF7mjwEkOVmMJb97RA==
+X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr53647wma.84.1581959505445;
+        Mon, 17 Feb 2020 09:11:45 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
+        by smtp.gmail.com with ESMTPSA id 133sm74730wme.32.2020.02.17.09.11.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 09:11:44 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: eliminate some unreachable code
+To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <534d00dd-ca31-b0d1-d9be-1324a851005e@redhat.com>
+Date:   Mon, 17 Feb 2020 18:11:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217170157.GA166797@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 12:01:57PM -0500, Joel Fernandes wrote:
-
-> Peter it sounds like you have a failure scenario in mind. Could you describe
-> more if so?
+On 13/02/20 03:53, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> I am curious if you were thinking of invented-stores issue here.
+> These code are unreachable, remove them.
 > 
-> For educational purposes, I was trying to come up with an example where my
-> compiler does something bad to code without WRITE_ONCE(). So far I only can
-> reproduce a write-tearing example when write with an immediate value is split
-> into 2 writes, like Will mentioned:
-> http://lore.kernel.org/r/20190821103200.kpufwtviqhpbuv2n@willie-the-truck
-> But that does not seem to apply to this code.
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 1 -
+>  arch/x86/kvm/x86.c     | 3 ---
+>  2 files changed, 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bb5c33440af8..b6d4eafe01cf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4505,7 +4505,6 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
+>  	case GP_VECTOR:
+>  	case MF_VECTOR:
+>  		return true;
+> -	break;
+>  	}
+>  	return false;
+>  }
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..a597009aefd7 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3081,7 +3081,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		break;
+>  	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
+>  		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
+> -		break;
+>  	case MSR_IA32_TSCDEADLINE:
+>  		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
+>  		break;
+> @@ -3164,7 +3163,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		return kvm_hv_get_msr_common(vcpu,
+>  					     msr_info->index, &msr_info->data,
+>  					     msr_info->host_initiated);
+> -		break;
+>  	case MSR_IA32_BBL_CR_CTL3:
+>  		/* This legacy MSR exists but isn't fully documented in current
+>  		 * silicon.  It is however accessed by winxp in very narrow
+> @@ -8471,7 +8469,6 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
+>  		break;
+>  	default:
+>  		return -EINTR;
+> -		break;
+>  	}
+>  	return 1;
+>  }
+> 
 
-> > > -			snp->srcu_gp_seq_needed_exp = gpseq;
-> > > +			WRITE_ONCE(snp->srcu_gp_seq_needed_exp, gpseq);
+Queued, thanks.
 
-Yeah, store tearing. No sane compiler will actually do that, but it is
-allowed to do random permutations of byte stores just to fuck with us.
+Paolo
 
-WRITE_ONCE() disallows that.
-
-In that case, the READ_ONCE()s could observe garbage and the compare
-might accidentally report the wrong thing.
