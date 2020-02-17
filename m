@@ -2,195 +2,114 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6022C3B185
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E9C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDFA206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4194A206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CzaK/pYN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PieRkGbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgBQKjg (ORCPT
+        id S1729268AbgBQKkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:39:36 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:12376 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgBQKjg (ORCPT
+        Mon, 17 Feb 2020 05:40:32 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41325 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgBQKkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:39:36 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200217103933epoutp03b84196306de4fcca2b9d53a16309491a~0KmLV0RPu2024520245epoutp031
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:39:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200217103933epoutp03b84196306de4fcca2b9d53a16309491a~0KmLV0RPu2024520245epoutp031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581935973;
-        bh=X5BX/mQfUTuZ/7wEkacBaeQSNSzJ/TGWyIHmtULhFnQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=CzaK/pYNrUFBKFVy64tkU7V8/a4PXsHvO3RdhXjqxzJFt/oHeXCKYhRKn5VKRj9Tp
-         IcfIYm/nGAUJOCqsCYdRfCwjkfY0aApJ4XXOgUV5jqBYp/aG3VVQfmiaDx0aBOWK37
-         X2UYTWanoWGV3ypzv4nWQfytqdzBm78Y9BBiBlZY=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200217103932epcas1p4c51dc1a36d0d8d00b0cd388ba1fdcbdc~0KmLHQ6yU0060100601epcas1p4p;
-        Mon, 17 Feb 2020 10:39:32 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.155]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 48LgTW3zMYzMqYkk; Mon, 17 Feb
-        2020 10:39:27 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        58.8B.52419.F5D6A4E5; Mon, 17 Feb 2020 19:39:27 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd~0KmFwRFVG1226612266epcas1p2V;
-        Mon, 17 Feb 2020 10:39:27 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200217103927epsmtrp11d5b938f980be8fde71ebe3bf353d2b3~0KmFvmju11096510965epsmtrp1c;
-        Mon, 17 Feb 2020 10:39:27 +0000 (GMT)
-X-AuditID: b6c32a37-59fff7000001ccc3-3e-5e4a6d5f8f46
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BB.F5.10238.E5D6A4E5; Mon, 17 Feb 2020 19:39:26 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200217103926epsmtip1afc8cbeca342657b0e61216473f5b869~0KmFfOZVI1409014090epsmtip1H;
-        Mon, 17 Feb 2020 10:39:26 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     gregkh@linuxfoundation.org
-Cc:     cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] extcon: Remove unneeded extern keyword from
- extcon-provider.h
-Date:   Mon, 17 Feb 2020 19:47:28 +0900
-Message-Id: <20200217104728.29330-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHKsWRmVeSWpSXmKPExsWy7bCmrm58rlecwd7/ChYTb1xhsbj+5Tmr
-        RfPi9WwWl3fNYbO43biCzYHVY9OqTjaP/XPXsHv0bVnF6PF5k1wAS1S2TUZqYkpqkUJqXnJ+
-        SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QXiWFssScUqBQQGJxsZK+nU1R
-        fmlJqkJGfnGJrVJqQUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsapJffYC57IVZxbu4ix
-        gbFdqouRk0NCwETi8+KlLF2MXBxCAjsYJWZNWswM4XxilDje2s4I4XxjlNh96RcjTMvNq9PZ
-        IRJ7GSUuvz8J5XxhlHj+eTkzSBWbgJbE/hc32EBsEQE5iSe3/4DFmQXSJX7/XgcWFxYIkJi2
-        6hk7iM0ioCrx4tolFhCbV8BK4ua/ZWwQ2+QlVm84AHaThMBXVomFH1uhznCRWAT0EYQtLPHq
-        +BYoW0riZX8blF0tsfLkETaI5g5GiS37L7BCJIwl9i+dzNTFyAF0kabE+l36EGFFiZ2/5zJC
-        HMon8e5rDytIiYQAr0RHmxBEibLE5Qd3mSBsSYnF7Z1sECUeEidfZYGEhQRiJfY9n8M+gVF2
-        FsL8BYyMqxjFUguKc9NTiw0LjJFjaRMjOC1pme9g3HDO5xCjAAejEg/vi0DPOCHWxLLiytxD
-        jBIczEoivN7iXnFCvCmJlVWpRfnxRaU5qcWHGE2BgTeRWUo0OR+YMvNK4g1NjYyNjS1MDM1M
-        DQ2VxHkfRmrGCQmkJ5akZqemFqQWwfQxcXBKNTDyRRytU91h8G3Tzrt17TIHD+qrKuie9Pdf
-        Mkni26GvbHnrlEpeMLS+j13/7uSHO2XTNn6MPiusXsek2Gy5tVtHllNx52xvth0LvFkZXi/g
-        kkvveerx0VjhbUjXE+sfLzI/X2UUaijksDx/+M+FTH9/G8XOF5N0I888D1KSk54d/iu4+MWd
-        lm4lluKMREMt5qLiRAAhWtWrYQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJMWRmVeSWpSXmKPExsWy7bCSnG5crlecwfx3lhYTb1xhsbj+5Tmr
-        RfPi9WwWl3fNYbO43biCzYHVY9OqTjaP/XPXsHv0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJX
-        xqkl99gLnshVnFu7iLGBsV2qi5GTQ0LAROLm1ensXYxcHEICuxklrjadYYdISEpMu3iUuYuR
-        A8gWljh8uBii5hOjxJ7/KxhBatgEtCT2v7jBBmKLCMhJPLn9hxnEZhbIlpj8Zj0riC0s4Cex
-        /dhysHoWAVWJF9cusYDYvAJWEjf/LWOD2CUvsXrDAeYJjDwLGBlWMUqmFhTnpucWGxYY5qWW
-        6xUn5haX5qXrJefnbmIEh4mW5g7Gy0viDzEKcDAq8fC+CPSME2JNLCuuzD3EKMHBrCTC6y3u
-        FSfEm5JYWZValB9fVJqTWnyIUZqDRUmc92nesUghgfTEktTs1NSC1CKYLBMHp1QDY9JmgXvB
-        E5b1vDqaYXWh5EHwidLIBb27fQU/McsdlBc+rHzvebCB3PL7byV8Tjy46zfbWMVDYMnNXQ/T
-        Mj81Tz60dWbbF6H052eVyzVqrLVeHP1xbOXjlU+T+284etz96Mn9T3M2+w3Ww3k2q2IEmdat
-        nVH/V6dr7mSd5PSk1cmeD3klBSQ1XyuxFGckGmoxFxUnAgDcrS5SDwIAAA==
-X-CMS-MailID: 20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd
-References: <CGME20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd@epcas1p2.samsung.com>
+        Mon, 17 Feb 2020 05:40:31 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r27so15590136otc.8;
+        Mon, 17 Feb 2020 02:40:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aLCSyvqx9dWHy5GEPaxx29DRb8rkFCZA7J7ME/KDLu0=;
+        b=PieRkGbUt/Wz4EfWwgt8K4tWyVEowiDBImfFcjY5FUasEFi5vSfPpBAxy45M3QMNfU
+         JDCR1e2RGPwKt4LvANHVDgWhmhe2s1xn4zSCOAyqVW3WViRYNkvP8mrpxDW9Z9PNQTHQ
+         BhKxe/AZW3S111ACGT7FE13PJwuerLzPjZJ7UkksDkv12LxpvBwSPFEpFA8nNzlpq186
+         6U4OjECgKV+IZ/aEVgOZjDP3ER1eSJO9W7WaKrRH5TzIEkTVTQllgTcsFymHfJ3npOR6
+         JIaJuw4cLnIno0EtyzksaVyZwpfy+IbaSyBcblIWZH81xayIt/GHHAMxcHcoMIv++O0U
+         xvrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aLCSyvqx9dWHy5GEPaxx29DRb8rkFCZA7J7ME/KDLu0=;
+        b=J1Erw8G5YK43ovGMElFvurMw/+Wv1x4J7J/Iuxb2V+xSds6IOpPey7Q9CXV2km1KOI
+         ceyZ/AEB+/gNaTLuJwsLoLNmzkfrxVOPDMkBnZR8SZOGAY4Ewwf4hLPd/Q18XM9L1/7b
+         j4TufpNbIm+pIe4NydUPNH2mksXJ+zBRejseW8ec1bcZFrHoi3i7BQqnOmErw4t1LRfP
+         yvbYiVtYXODJuFvzryLbRGxFDhniKEM7fuzdNUzz3ewY2Bt4L2Kc0hCheUlSbJ2Lq7f4
+         gGUfcbQPuFsaqi4MIfBgkpkOcwMPiZByN9uCg7WQi1XNTzMzq+Fd6ImxZihgJwi3KDAc
+         ZLog==
+X-Gm-Message-State: APjAAAV6dE6iu7bFSt5A89i3GOf0eX+FDeGxuVZ4m7m57GqL+sDlXyYG
+        UFMK+2m2rsfY1GcGvh2JHWyt5OSHeljRXkzk4CEgOyJ1LhI=
+X-Google-Smtp-Source: APXvYqzQx6BFLfD+A6DxAo9HQy4ir9xWeRlnUntL7X6kVB/QZdVHZcETH9qZ13FfwD6aq1WmYIzuS00tqpq3O6clOGQ=
+X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr11248022otn.56.1581936030747;
+ Mon, 17 Feb 2020 02:40:30 -0800 (PST)
+MIME-Version: 1.0
+References: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
+In-Reply-To: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 17 Feb 2020 18:40:19 +0800
+Message-ID: <CANRm+CwQ2pCpdts_wao9Qy1EBqhOnO0PQQWX6ZU3brt2oeUTzw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: X86: Less kvmclock sync induced vmexits after
+ VM boots
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit tb7365587f513 ("extcon: Remove unneeded extern keyword
-from extcon.h") removes the unneeded extern keyword from extcon header
-file. But, The commit tb7365587f513 has missed that deletes 'extern'
-keyword from extcon-provider.h. So that it deletes extern keyword
-from extcon-provider.h.
+On Mon, 17 Feb 2020 at 18:36, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> In the progress of vCPUs creation, it queues a kvmclock sync worker to
+> the global
+> workqueue before each vCPU creation completes. Each worker will be scheduled
+> after 300 * HZ delay and request a kvmclock update for all vCPUs and kick them
+> out. This is especially worse when scaling to large VMs due to a lot of vmexits.
+> Just one worker as a leader to trigger the kvmclock sync request for
+> all vCPUs is
+> enough.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Dear Greg,
+Sorry for the alignment.
 
-When I removed the unneeded extern keyword from extcon hearder file for
-v5.6-rc1, although I should remove 'extern' keyword on both extcon.h
-and extcon-provider.h, I only removed them from extcon.h. It was my mistake.
-
-So that I send this patch for v5.6-rc3 release.
-Could you review and apply it to char-misc git repository directly?
-
- include/linux/extcon-provider.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/extcon-provider.h b/include/linux/extcon-provider.h
-index 1c143d200caa..fa70945f4e6b 100644
---- a/include/linux/extcon-provider.h
-+++ b/include/linux/extcon-provider.h
-@@ -17,30 +17,30 @@ struct extcon_dev;
- #if IS_ENABLED(CONFIG_EXTCON)
- 
- /* Following APIs register/unregister the extcon device. */
--extern int extcon_dev_register(struct extcon_dev *edev);
--extern void extcon_dev_unregister(struct extcon_dev *edev);
--extern int devm_extcon_dev_register(struct device *dev,
-+int extcon_dev_register(struct extcon_dev *edev);
-+void extcon_dev_unregister(struct extcon_dev *edev);
-+int devm_extcon_dev_register(struct device *dev,
- 				struct extcon_dev *edev);
--extern void devm_extcon_dev_unregister(struct device *dev,
-+void devm_extcon_dev_unregister(struct device *dev,
- 				struct extcon_dev *edev);
- 
- /* Following APIs allocate/free the memory of the extcon device. */
--extern struct extcon_dev *extcon_dev_allocate(const unsigned int *cable);
--extern void extcon_dev_free(struct extcon_dev *edev);
--extern struct extcon_dev *devm_extcon_dev_allocate(struct device *dev,
-+struct extcon_dev *extcon_dev_allocate(const unsigned int *cable);
-+void extcon_dev_free(struct extcon_dev *edev);
-+struct extcon_dev *devm_extcon_dev_allocate(struct device *dev,
- 				const unsigned int *cable);
--extern void devm_extcon_dev_free(struct device *dev, struct extcon_dev *edev);
-+void devm_extcon_dev_free(struct device *dev, struct extcon_dev *edev);
- 
- /* Synchronize the state and property value for each external connector. */
--extern int extcon_sync(struct extcon_dev *edev, unsigned int id);
-+int extcon_sync(struct extcon_dev *edev, unsigned int id);
- 
- /*
-  * Following APIs set the connected state of each external connector.
-  * The 'id' argument indicates the defined external connector.
-  */
--extern int extcon_set_state(struct extcon_dev *edev, unsigned int id,
-+int extcon_set_state(struct extcon_dev *edev, unsigned int id,
- 				bool state);
--extern int extcon_set_state_sync(struct extcon_dev *edev, unsigned int id,
-+int extcon_set_state_sync(struct extcon_dev *edev, unsigned int id,
- 				bool state);
- 
- /*
-@@ -52,13 +52,13 @@ extern int extcon_set_state_sync(struct extcon_dev *edev, unsigned int id,
-  * for each external connector. They are used to set the capability of the
-  * property of each external connector based on the id and property.
-  */
--extern int extcon_set_property(struct extcon_dev *edev, unsigned int id,
-+int extcon_set_property(struct extcon_dev *edev, unsigned int id,
- 				unsigned int prop,
- 				union extcon_property_value prop_val);
--extern int extcon_set_property_sync(struct extcon_dev *edev, unsigned int id,
-+int extcon_set_property_sync(struct extcon_dev *edev, unsigned int id,
- 				unsigned int prop,
- 				union extcon_property_value prop_val);
--extern int extcon_set_property_capability(struct extcon_dev *edev,
-+int extcon_set_property_capability(struct extcon_dev *edev,
- 				unsigned int id, unsigned int prop);
- 
- #else /* CONFIG_EXTCON */
--- 
-2.17.1
-
+>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/x86.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fb5d64e..d0ba2d4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9390,8 +9390,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+>      if (!kvmclock_periodic_sync)
+>          return;
+>
+> -    schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> -                    KVMCLOCK_SYNC_PERIOD);
+> +    if (kvm->created_vcpus == 1)
+> +        schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> +                        KVMCLOCK_SYNC_PERIOD);
+>  }
+>
+>  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> --
+> 2.7.4
