@@ -2,137 +2,160 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D57C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88285C3402C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37A720801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:02:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fQRsoHfi"
+	by mail.kernel.org (Postfix) with ESMTP id 5FB0120801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgBQWCj (ORCPT
+        id S1726383AbgBQWDJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:02:39 -0500
-Received: from gateway23.websitewelcome.com ([192.185.48.104]:20945 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725873AbgBQWCj (ORCPT
+        Mon, 17 Feb 2020 17:03:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55846 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgBQWDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:02:39 -0500
-X-Greylist: delayed 1338 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Feb 2020 17:02:39 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 272D84F75
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 15:40:20 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3o7ojXM69XVkQ3o7ojuR8t; Mon, 17 Feb 2020 15:40:20 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Up3NXkZ9MtOum0S7bVKL3huOyiNJmhlgLtMxveQ6vXs=; b=fQRsoHfiS305ia7mB6Tk7BCDh/
-        zu8WsjITjAx40ENo5SGDIPWQAysvcReMoY1px5no4omSD8BUVo+NaTDaafIhYlocD9N2uhjf129cn
-        q0LrXgtBRbkzJYjXJ5febzafT1u6lqfyUVKdIkDfNQaGdjCGxWnwYObZn+SMeBVTO+xO5+UsOgntB
-        SUD4DLY8MuqHtf5wrhfWuTpdfgHWmUnDQ8/voYHayRkfOjtIKD4VOmLHOsm1sDkVCxG/hxiIk1r7b
-        1ZsQSv8vO8GDPS5aWRsW0yXwDR4pHyPBTbPq6F4TZltM4pCR5sOSQ6mLRLRAqxOxlL3kIdTOAInYL
-        nPOEal+w==;
-Received: from [200.68.140.26] (port=16142 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j3o7m-001GXx-EB; Mon, 17 Feb 2020 15:40:18 -0600
-Date:   Mon, 17 Feb 2020 15:43:00 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        Sven Eckelmann <sven@narfation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] batman-adv: Replace zero-length array with
- flexible-array member
-Message-ID: <20200217214300.GA14129@embeddedor>
+        Mon, 17 Feb 2020 17:03:08 -0500
+Received: from mail-lf1-f51.google.com ([209.85.167.51])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <stgraber@ubuntu.com>)
+        id 1j3oTp-0006Xe-Ht
+        for linux-kernel@vger.kernel.org; Mon, 17 Feb 2020 22:03:05 +0000
+Received: by mail-lf1-f51.google.com with SMTP id 203so12915122lfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:03:05 -0800 (PST)
+X-Gm-Message-State: APjAAAX67DLEklwLE+Pg+R/n2cXIYFPDQbdPX0J85euLx44ZoB7Ej1ZC
+        NQW1JllidbeixIfiOO564CnxfCjJVdLOuF6MpQ+mVw==
+X-Google-Smtp-Source: APXvYqxfzaNIrWsnxmQ/xqv/hlxasa72H1Nm3nfqgJQmPhBMHU82ojwvN6/kjkL7pS2rQUVLpiWQ8R4IEbGQPJ6GeNk=
+X-Received: by 2002:ac2:47e6:: with SMTP id b6mr8894012lfp.96.1581976984864;
+ Mon, 17 Feb 2020 14:03:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.26
-X-Source-L: No
-X-Exim-ID: 1j3o7m-001GXx-EB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:16142
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
+ <1581973919.24289.12.camel@HansenPartnership.com> <CA+enf=vwd-dxzve87t7Mw1Z35RZqdLzVaKq=fZ4EGOpnES0f5w@mail.gmail.com>
+In-Reply-To: <CA+enf=vwd-dxzve87t7Mw1Z35RZqdLzVaKq=fZ4EGOpnES0f5w@mail.gmail.com>
+From:   =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
+Date:   Mon, 17 Feb 2020 17:02:52 -0500
+X-Gmail-Original-Message-ID: <CA+enf=uhST2pSVK2oFWyP9nCoQOkJwRtLw4D_3FSwz9hyHqPcQ@mail.gmail.com>
+Message-ID: <CA+enf=uhST2pSVK2oFWyP9nCoQOkJwRtLw4D_3FSwz9hyHqPcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] user_namespace: introduce fsid mappings
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        linux-security-module@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-api@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+And re-sending, this time hopefully actually in plain text mode.
+Sorry about that, my e-mail client isn't behaving today...
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Stéphane
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/batman-adv/distributed-arp-table.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index 3d21dd83f8cc..b85da4b7a77b 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -88,7 +88,7 @@ struct batadv_dhcp_packet {
- 	__u8 sname[64];
- 	__u8 file[128];
- 	__be32 magic;
--	__u8 options[0];
-+	__u8 options[];
- };
- 
- #define BATADV_DHCP_YIADDR_LEN sizeof(((struct batadv_dhcp_packet *)0)->yiaddr)
--- 
-2.25.0
-
+On Mon, Feb 17, 2020 at 4:57 PM Stéphane Graber <stgraber@ubuntu.com> wrote:
+>
+> On Mon, Feb 17, 2020 at 4:12 PM James Bottomley <James.Bottomley@hansenpartnership.com> wrote:
+>>
+>> On Fri, 2020-02-14 at 19:35 +0100, Christian Brauner wrote:
+>> [...]
+>> > With this patch series we simply introduce the ability to create fsid
+>> > mappings that are different from the id mappings of a user namespace.
+>> > The whole feature set is placed under a config option that defaults
+>> > to false.
+>> >
+>> > In the usual case of running an unprivileged container we will have
+>> > setup an id mapping, e.g. 0 100000 100000. The on-disk mapping will
+>> > correspond to this id mapping, i.e. all files which we want to appear
+>> > as 0:0 inside the user namespace will be chowned to 100000:100000 on
+>> > the host. This works, because whenever the kernel needs to do a
+>> > filesystem access it will lookup the corresponding uid and gid in the
+>> > idmapping tables of the container.
+>> > Now think about the case where we want to have an id mapping of 0
+>> > 100000 100000 but an on-disk mapping of 0 300000 100000 which is
+>> > needed to e.g. share a single on-disk mapping with multiple
+>> > containers that all have different id mappings.
+>> > This will be problematic. Whenever a filesystem access is requested,
+>> > the kernel will now try to lookup a mapping for 300000 in the id
+>> > mapping tables of the user namespace but since there is none the
+>> > files will appear to be owned by the overflow id, i.e. usually
+>> > 65534:65534 or nobody:nogroup.
+>> >
+>> > With fsid mappings we can solve this by writing an id mapping of 0
+>> > 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
+>> > access the kernel will now lookup the mapping for 300000 in the fsid
+>> > mapping tables of the user namespace. And since such a mapping
+>> > exists, the corresponding files will have correct ownership.
+>>
+>> How do we parametrise this new fsid shift for the unprivileged use
+>> case?  For newuidmap/newgidmap, it's easy because each user gets a
+>> dedicated range and everything "just works (tm)".  However, for the
+>> fsid mapping, assuming some newfsuid/newfsgid tool to help, that tool
+>> has to know not only your allocated uid/gid chunk, but also the offset
+>> map of the image.  The former is easy, but the latter is going to vary
+>> by the actual image ... well unless we standardise some accepted shift
+>> for images and it simply becomes a known static offset.
+>
+>
+> For unprivileged runtimes, I would expect images to be unshifted and be
+> unpacked from within a userns. So your unprivileged user would be allowed
+> a uid/gid range through /etc/subuid and /etc/subgid and allowed to use
+> them through newuidmap/newgidmap.In that namespace, you can then pull
+> and unpack any images/layers you may want and the resulting fs tree will
+> look correct from within that namespace.
+>
+> All that is possible today and is how for example unprivileged LXC works
+> right now.
+>
+> What this patchset then allows is for containers to have differing
+> uid/gid maps while still being based off the same image or layers.
+> In this scenario, you would carve a subset of your main uid/gid map for
+> each container you run and run them in a child user namespace while
+> setting up a fsuid/fsgid map such that their filesystem access do not
+> follow their uid/gid map. This then results in proper isolation for
+> processes, networks, ... as everything runs as different kuid/kgid but
+> the VFS view will be the same in all containers.
+>
+> Shared storage between those otherwise isolated containers would also
+> work just fine by simply bind-mounting the same path into two or more
+> containers.
+>
+>
+> Now one additional thing that would be safe for a setuid wrapper to
+> allow would be for arbitrary mapping of any of the uid/gid that the user
+> owns to be used within the fsuid/fsgid map. One potential use for this
+> would be to create any number of user namespaces, each with their own
+> mapping for uid 0 while still having all VFS access be mapped to the
+> user that spawned them (say uid=1000, gid=1000).
+>
+>
+> Note that in our case, the intended use for this is from a privileged runtime
+> where our images would be unshifted as would be the container storage
+> and any shared storage for containers. The security model effectively relying
+> on properly configured filesystem permissions and mount namespaces such
+> that the content of those paths can never be seen by anyone but root outside
+> of those containers (and therefore avoids all the issues around setuid/setgid/fscaps).
+>
+> We will then be able to allocate distinct, random, ranges of 65536 uids/gids (or more)
+> for each container without ever having to do any uid/gid shifting at the filesystem layer
+> or run into issues when having to setup shared storage between containers or attaching
+> external storage volumes to those containers.
+>
+>> James
+>
+>
+> Stéphane
