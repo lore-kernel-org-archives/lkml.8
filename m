@@ -2,88 +2,204 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8510C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A8C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEFA20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254D920718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgBQQO2 (ORCPT
+        id S1729033AbgBQQOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:14:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60203 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgBQQO2 (ORCPT
+        Mon, 17 Feb 2020 11:14:47 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:49203 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgBQQOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:14:28 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1j3j2N-0001Hx-Sj; Mon, 17 Feb 2020 17:14:23 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     lijiang <lijiang@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mon, 17 Feb 2020 11:14:46 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j3j2h-0003Cp-AT; Mon, 17 Feb 2020 16:14:43 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: crashdump: Re: [PATCH 2/2] printk: use the lockless ringbuffer
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
-        <20200128161948.8524-3-john.ogness@linutronix.de>
-        <ccbe1383-a4a4-41f8-3330-972f03c97429@redhat.com>
-        <87zhdle0s5.fsf@linutronix.de>
-        <20200217154026.7x2xyrklprgql4if@pathway.suse.cz>
-Date:   Mon, 17 Feb 2020 17:14:22 +0100
-In-Reply-To: <20200217154026.7x2xyrklprgql4if@pathway.suse.cz> (Petr Mladek's
-        message of "Mon, 17 Feb 2020 16:40:26 +0100")
-Message-ID: <87zhdh9oo1.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH net-next v2 03/10] sysfs: add sysfs_group_change_owner()
+Date:   Mon, 17 Feb 2020 17:14:29 +0100
+Message-Id: <20200217161436.1748598-4-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200217161436.1748598-1-christian.brauner@ubuntu.com>
+References: <20200217161436.1748598-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-17, Petr Mladek <pmladek@suse.com> wrote:
->>> Should the "prb"(printk tb static) symbol be exported into
->>> vmcoreinfo?  Otherwise, do you happen to know how to walk through
->>> the log_buf and get all kernel logs from vmcore?
->> 
->> You are correct. This will need to be exported as well so that the
->> descriptors can be accessed. (log_buf is only the pure human-readable
->> text.) I am currently hacking the crash tool to see exactly what
->> needs to be made available in order to access all the data of the
->> ringbuffer.
->
-> I am not sure which parts you are working on. Are you going to provide
-> also patch for makedumpfile, please?
+Add a helper to change the owner of a sysfs group.
+The ownership of a sysfs object is determined based on the ownership of
+the corresponding kobject, i.e. only if the ownership of a kobject is
+changed will this function change the ownership of the corresponding
+sysfs entry.
+This function will be used to correctly account for kobject ownership
+changes, e.g. when moving network devices between network namespaces.
 
-I'm working on crash first. makedumpfile is on my list as well.
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add comment how ownership of sysfs object is changed.
+---
+ fs/sysfs/group.c      | 93 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/sysfs.h |  8 ++++
+ 2 files changed, 101 insertions(+)
 
-> I get the following failure when creating the crashdump using:
->
->     echo c >/proc/sysrq-trigger
->
->
-> The kernel version is not supported.
-> The makedumpfile operation may be incomplete.
-> dump_dmesg: Can't find variable-length record symbols
-> makedumpfile Failed.
-> Running makedumpfile --dump-dmesg /proc/vmcore failed (1).
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index c4ab045926b7..7d158d59d097 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -13,6 +13,7 @@
+ #include <linux/dcache.h>
+ #include <linux/namei.h>
+ #include <linux/err.h>
++#include <linux/fs.h>
+ #include "sysfs.h"
+ 
+ 
+@@ -457,3 +458,95 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+ 	return PTR_ERR_OR_ZERO(link);
+ }
+ EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
++
++static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
++					  const struct attribute_group *grp,
++					  struct iattr *newattrs)
++{
++	struct kernfs_node *kn;
++	int error;
++
++	if (grp->attrs) {
++		struct attribute *const *attr;
++
++		for (attr = grp->attrs; *attr; attr++) {
++			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
++			if (!kn)
++				return -ENOENT;
++
++			error = kernfs_setattr(kn, newattrs);
++			kernfs_put(kn);
++			if (error)
++				return error;
++		}
++	}
++
++	if (grp->bin_attrs) {
++		struct bin_attribute *const *bin_attr;
++
++		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
++			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
++			if (!kn)
++				return -ENOENT;
++
++			error = kernfs_setattr(kn, newattrs);
++			kernfs_put(kn);
++			if (error)
++				return error;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * sysfs_group_change_owner - change owner of an attribute group.
++ * @kobj:	The kobject containing the group.
++ * @grp:	The attribute group.
++ *
++ * To change the ownership of a sysfs object, the caller must first change the
++ * uid/gid of the kobject and then call this function. Usually this will be
++ * taken care of by the relevant subsystem, e.g. moving a network device
++ * between network namespaces owned by different user namespaces will change
++ * the uid/gid of the kobject to the uid/gid of the root user in the user
++ * namespace. Calling this function afterwards will cause the sysfs object to
++ * reflect the new uid/gid.
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int sysfs_group_change_owner(struct kobject *kobj,
++			     const struct attribute_group *grp)
++{
++	struct kernfs_node *grp_kn;
++	kuid_t uid;
++	kgid_t gid;
++	int error;
++	struct iattr newattrs = {
++		.ia_valid = ATTR_UID | ATTR_GID,
++	};
++
++	if (!kobj->state_in_sysfs)
++		return -EINVAL;
++
++	if (grp->name) {
++		grp_kn = kernfs_find_and_get(kobj->sd, grp->name);
++	} else {
++		kernfs_get(kobj->sd);
++		grp_kn = kobj->sd;
++	}
++	if (!grp_kn)
++		return -ENOENT;
++
++	kobject_get_ownership(kobj, &uid, &gid);
++	newattrs.ia_uid = uid;
++	newattrs.ia_gid = gid;
++
++	error = kernfs_setattr(grp_kn, &newattrs);
++	if (!error)
++		error = sysfs_group_attrs_change_owner(grp_kn, grp, &newattrs);
++
++	kernfs_put(grp_kn);
++
++	return error;
++}
++EXPORT_SYMBOL_GPL(sysfs_group_change_owner);
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 238f3d7b1fa0..dd211f0a654b 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -314,6 +314,8 @@ int sysfs_file_change_owner(struct kobject *kobj);
+ int sysfs_file_change_owner_by_name(struct kobject *kobj, const char *name);
+ int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
+ 			    const char *name);
++int sysfs_group_change_owner(struct kobject *kobj,
++			     const struct attribute_group *groups);
+ 
+ #else /* CONFIG_SYSFS */
+ 
+@@ -545,6 +547,12 @@ static inline int sysfs_link_change_owner(struct kobject *kobj,
+ 	return 0;
+ }
+ 
++static inline int sysfs_group_change_owner(struct kobject *kobj,
++			 const struct attribute_group **groups)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_SYSFS */
+ 
+ static inline int __must_check sysfs_create_file(struct kobject *kobj,
+-- 
+2.25.0
 
-Yes, the symbols have changed (and some are missing). I will get this
-sorted out for v2. And I will provide some heavily hacked code for crash
-and makedumpfile to show that the necessary symbols are there and it
-works.
-
-John Ogness
