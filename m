@@ -2,83 +2,150 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BBC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F31C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84C420726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F5B20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgBQIG4 (ORCPT
+        id S1727749AbgBQIHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:06:56 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40984 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgBQIGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:06:54 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so19606356eds.8;
-        Mon, 17 Feb 2020 00:06:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H7HNmg9K88memoV4mQIdFTzsV1B2vI42lPI0r8PIbeg=;
-        b=dL8b1/I9N18AwkXpOjnUyzKOq+IVYoMmhzFajQZOyfD4oLYirOk3kg3DPaOqJczuaR
-         avKv7set26LKlMqmhlUFB3SONJZ9hLWrMDy4SJudTcWPOtcKQLjKEd3+R8KJ0YuS3csb
-         5sUlOk1trZ0jGFbdEdkQx4ZJrQdSJd+TJQQkGefGn/Jk/OWUG5QdPyNj63ab3/36maKX
-         PrF479Z/v3tWmiVIA6giL04eb3HsgNwKi1qnWBAlWSRDlgPyKQTlWrNJwxkyJPxcmRwI
-         6Z6CE45ZXgVrArhr3yCYnPNgUBPuE4+s52FqqStj+/YZZZLnbq4DShdWtNQmH9mcqMwW
-         2SGw==
-X-Gm-Message-State: APjAAAXgvKJmE+j3RsMjFa2z25GRcu35IK5M+vEjheUI6QBziQmQ7hE8
-        T+sb9oAqpVjmG1WYeK94R8aM1g2qtcw=
-X-Google-Smtp-Source: APXvYqzNwaq0yuvhJm5GWsQg1Xyaym5Z/x3W5k4Nu6x8N9admJqi8HPwKL3bZP5pepMOXs98idtb2A==
-X-Received: by 2002:a17:906:a444:: with SMTP id cb4mr13414956ejb.42.1581926811793;
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id m27sm425467eda.96.2020.02.17.00.06.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-Received: by mail-wm1-f47.google.com with SMTP id g1so16093850wmh.4;
-        Mon, 17 Feb 2020 00:06:51 -0800 (PST)
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr22204730wmg.16.1581926810934;
- Mon, 17 Feb 2020 00:06:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-13-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-13-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 16:06:40 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65e3dwji4cwRh6uTryjXq=0qmeggEjrMgL9KtB+JTWCVg@mail.gmail.com>
-Message-ID: <CAGb2v65e3dwji4cwRh6uTryjXq=0qmeggEjrMgL9KtB+JTWCVg@mail.gmail.com>
-Subject: Re: [RFC PATCH 12/34] ASoC: sun8i-codec: Fix AIF1 MODCLK widget name
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Mon, 17 Feb 2020 03:07:03 -0500
+Received: from mga17.intel.com ([192.55.52.151]:48747 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727259AbgBQIHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:07:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:07:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
+   d="scan'208";a="407698100"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 17 Feb 2020 00:07:01 -0800
+Received: from [10.125.252.180] (abudanko-mobl.ccr.corp.intel.com [10.125.252.180])
+        by linux.intel.com (Postfix) with ESMTP id 23E685804A2;
+        Mon, 17 Feb 2020 00:06:55 -0800 (PST)
+Subject: [PATCH v7 02/12] perf/core: open access to the core for CAP_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <e68be109-7174-2c9e-11a9-9770a6316834@linux.intel.com>
+Date:   Mon, 17 Feb 2020 11:06:55 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> It should be "AIF1", not "AFI1".
->
-> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Open access to monitoring of kernel code, cpus, tracepoints and
+namespaces data for a CAP_PERFMON privileged process. Providing the
+access under CAP_PERFMON capability singly, without the rest of
+CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials
+and makes operation more secure.
+
+CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
+
+For backward compatibility reasons access to perf_events subsystem
+remains open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN
+usage for secure perf_events monitoring is discouraged with respect to
+CAP_PERFMON capability.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ include/linux/perf_event.h | 6 +++---
+ kernel/events/core.c       | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 68e21e828893..5cbfc06c56b3 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1297,7 +1297,7 @@ static inline int perf_is_paranoid(void)
+ 
+ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+ 		return -EACCES;
+ 
+ 	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+@@ -1305,7 +1305,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+ 
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+ 		return -EACCES;
+ 
+ 	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+@@ -1313,7 +1313,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ 
+ static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+ 		return -EPERM;
+ 
+ 	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 3f1f77de7247..46464367c47a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11205,7 +11205,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	}
+ 
+ 	if (attr.namespaces) {
+-		if (!capable(CAP_SYS_ADMIN))
++		if (!perfmon_capable())
+ 			return -EACCES;
+ 	}
+ 
+-- 
+2.20.1
+
