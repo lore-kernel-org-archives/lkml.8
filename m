@@ -2,190 +2,162 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58854C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA75C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7E620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="B38SOaYv"
+	by mail.kernel.org (Postfix) with ESMTP id CB80C22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581935262;
+	bh=kNO1qKrVAPwz29d+xMtZD0Np2dGwp7T8QGZKGJRjlK4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vjL+1U8wkmVJx0m7C/Lj++b4YmmHiDr8SJ5mLRmJ0BitixrCUWsJZzfrXdDDe2dWu
+	 bXB1g7uD/Fda3wqXIjx2FVZK/vBy5GdOwTogDE565jo7LXLU8FVtwZxPwKuwuxhECl
+	 o76q6cxm9L3ixf1uVl4GCWJ8CNj8hgrFzDVImv5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgBQK1d (ORCPT
+        id S1729332AbgBQK1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:27:33 -0500
-Received: from mail-dm6nam10on2040.outbound.protection.outlook.com ([40.107.93.40]:6025
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728956AbgBQK1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:27:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JLW32+tltBeE5w1lmG1AftIITIxc4B+Qz+3S2Tq+oA7MxKopX7/bljlC/8UGj9ZwiX7BdRoIBuctSMfOI251Yw0WthaVFRIBhSji3s862URACSChigorsGMQM7wbX/kbHrMKwHQA3GjxW5Bl1Xs0C6TDZZ2AwDm3L5DxRStUVKdy7qt4X1a+c/4RE1wnmuzAZ1NteuuK+ggu9d1F6pa08IR2g61nnRPbci5Z4ONeMPbP6OaY/C9q3H8ByvTNYCg1B9ubnUxlONuy67VuOt/PblcN6lD2VZWMwYM0dOi7ixu3WkzlchTpmp+QlulcqWx3dEEM0QywUe3IBjYK7IsLkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WqOP/WPrORmvvQYN10IxFL0fblby8/ItvVQYGRTMke4=;
- b=h4QzFDN4gKSI8L/JHx7ddmB+8jif/abgeriWTH8G2UOBbul2x9rDxnLSR03CMiYtFGdCz9dPcI05bZ+5NRrFVdCYsPJK2vEiN7fVAwlq2jW43WRJd9K9Rvysb95ZQcg5w9dYNb7ddoxQC8ci0eCsmeWtQ8UxlvoqN2vpZNYSEJ6K5b0PBOXWW5cCHY9qFk9/e8AFayEmIyjWVYpHob/D/AIkIHKzEm1Wb+0Yj/O3Xm6ZnGQHlsIJGF+M0y/rSFl7eVgYvo+wka0pTm8UoZ1BpYHR+zfMIcrSPX+rWDZX+PmA+xBxXZr3pfnNx8xHrI36IXJMFm5JHFmZEG+ySu+IwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WqOP/WPrORmvvQYN10IxFL0fblby8/ItvVQYGRTMke4=;
- b=B38SOaYvEjD7I0xACL6ZocgcMSfcowyEBN6TZMVq1IZL9tm6D0LGVB3xMJVLkcIBiThFM+xpmKRcZMFBA2vqrIAs9ARdfWuVcCPZ1gcISfh7oUypsxKvXRJcsOG/Dwjk8ZnqPycwyogVHoQb3zEyt1OlZXe2UrlYqYI/0KRLc4M=
-Received: from BL0PR02CA0011.namprd02.prod.outlook.com (2603:10b6:207:3c::24)
- by DM6PR02MB5947.namprd02.prod.outlook.com (2603:10b6:5:17c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23; Mon, 17 Feb
- 2020 10:27:29 +0000
-Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::208) by BL0PR02CA0011.outlook.office365.com
- (2603:10b6:207:3c::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend
- Transport; Mon, 17 Feb 2020 10:27:29 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Mon, 17 Feb 2020 10:27:29 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dcf-0007nf-6n; Mon, 17 Feb 2020 02:27:29 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dca-00031i-3k; Mon, 17 Feb 2020 02:27:24 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HARD69000732;
-        Mon, 17 Feb 2020 02:27:13 -0800
-Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <kalyania@xilinx.com>)
-        id 1j3dcP-00030F-0j; Mon, 17 Feb 2020 02:27:13 -0800
-Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
-        id 1B609800C9; Mon, 17 Feb 2020 15:56:46 +0530 (IST)
-From:   Kalyani Akula <kalyani.akula@xilinx.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kalyani Akula <kalyania@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        git-dev@xilinx.com,
-        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>
-Subject: [PATCH V7 2/4] dt-bindings: crypto: Add bindings for ZynqMP AES-GCM driver
-Date:   Mon, 17 Feb 2020 15:56:42 +0530
-Message-Id: <1581935204-25673-3-git-send-email-kalyani.akula@xilinx.com>
-X-Mailer: git-send-email 1.9.5
-In-Reply-To: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-References: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(199004)(189003)(81156014)(8936002)(81166006)(44832011)(8676002)(6266002)(966005)(4326008)(6666004)(356004)(107886003)(478600001)(2616005)(36756003)(70586007)(426003)(2906002)(5660300002)(336012)(42186006)(70206006)(186003)(26005)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5947;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 50ded809-def7-40bb-c13b-08d7b393fddd
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5947:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB594748BAD3649549BFCFCB63AF160@DM6PR02MB5947.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-Forefront-PRVS: 0316567485
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UJleQeRM3tkKWNAVVwMcJFUbaRBk6+8H9LQURunLybRKX1xVtzW/eAwDLUEOroajIrpdm9JYqCiLjbNUloUe3LnI1mTSe+M4UWlrHodfTZMvpd4l/jITVRTNuSBq5mfYR8MwiWZr5IDOyG0AmjoK0fBzMrCYI7vBcp5vJw2ZDeDjgDD4aZEey5QI7nJokYY6Av0vAInZMrCbJimJo68HllSXhanH+Zm4iuOGb02c53M8K9TTz9houBDle6nQWBKw++4rFtMSSZ8nYBpsQ1/hOCDHqvXAQR6eOiq/0qfpd7A+1oe9ZDrpg3JyZQ4ScbegchCfGK+6KCciVD2URHQ/Ph9R6G1MX5G/2O7Ig7hUmWLnrDaLbGL7mx7DeSVueimXdgiftrvo+8cPdwJc/+gSjNYG3HZ0g122a2iQO8zvBD6rnPnS6oP8Sc5bqs7z+JkdErDV7/pD/DJaMg8x68aUnzVQE0JH0YhOMhAQyYa24q5kRtKd49huga/+MGiXos14aB/4Vyzwz6Gj+E+JiNq9aA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:27:29.5826
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50ded809-def7-40bb-c13b-08d7b393fddd
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5947
+        Mon, 17 Feb 2020 05:27:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728956AbgBQK1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:27:40 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F147020702;
+        Mon, 17 Feb 2020 10:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581935260;
+        bh=kNO1qKrVAPwz29d+xMtZD0Np2dGwp7T8QGZKGJRjlK4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EOKE7bV8II4d/UwdcdMfXKYf/Rt3ZweWcR1ndGd4cJzyyfeuaIiKKPvCii6gxtipC
+         fh/Ug97XBfCs9jCRnfOLMuUw1B9f/qKMY4XI5lfMi+hA2M04ZMGTQjpKVvdBu/OFpK
+         iqNojxITZFDjVausH+Hfg0220qwuXrSIAoZ/45V0=
+Date:   Mon, 17 Feb 2020 19:27:35 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
+ real mode
+Message-Id: <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+In-Reply-To: <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
+        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
+        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
+        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
+        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation to describe Xilinx ZynqMP AES-GCM driver bindings.
+On Mon, 17 Feb 2020 10:03:22 +0100
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
----
+> 
+> 
+> Le 16/02/2020 à 13:34, Masami Hiramatsu a écrit :
+> > On Sat, 15 Feb 2020 11:28:49 +0100
+> > Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> > 
+> >> Hi,
+> >>
+> >> Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
+> >>> Hi,
+> >>>
+> >>> On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
+> >>> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> >>>
+> >>>> When a program check exception happens while MMU translation is
+> >>>> disabled, following Oops happens in kprobe_handler() in the following
+> >>>> test:
+> >>>>
+> >>>> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+> >>>
+> >>> Thanks for the report and patch. I'm not so sure about powerpc implementation
+> >>> but at where the MMU translation is disabled, can the handler work correctly?
+> >>> (And where did you put the probe on?)
+> >>>
+> >>> Your fix may fix this Oops, but if the handler needs special care, it is an
+> >>> option to blacklist such place (if possible).
+> >>
+> >> I guess that's another story. Here we are not talking about a place
+> >> where kprobe has been illegitimately activated, but a place where there
+> >> is a valid trap, which generated a valid 'program check exception'. And
+> >> kprobe was off at that time.
+> > 
+> > Ah, I got it. It is not a kprobe breakpoint, but to check that correctly,
+> > it has to know the address where the breakpoint happens. OK.
+> > 
+> >>
+> >> As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON,
+> >> a debugger breakpoint, a perf breakpoint, etc...) calls
+> >> kprobe_handler(), kprobe_handler() must be prepared to handle the case
+> >> where the MMU translation is disabled, even if probes are not supposed
+> >> to be set for functions running with MMU translation disabled.
+> > 
+> > Can't we check the MMU is disabled there (as same as checking the exception
+> > happened in user space or not)?
+> > 
+> 
+> What do you mean by 'there' ? At the entry of kprobe_handler() ?
+> 
+> That's what my patch does, it checks whether MMU is disabled or not. If 
+> it is, it converts the address to a virtual address.
+> 
+> Do you mean kprobe_handler() should bail out early as it does when the 
+> trap happens in user mode ?
 
-V6 Changes:
-- Updated SPDX-License-Identifier.
+Yes, that is what I meant.
 
-V5 Changes:
-- Moved dt-bindings patch from 1/4 to 2/4
-- Converted dt-bindings from .txt to .yaml format.
+> Of course we can do that, I don't know 
+> enough about kprobe to know if kprobe_handler() should manage events 
+> that happened in real-mode or just ignore them. But I tested adding an 
+> event on a function that runs in real-mode, and it (now) works.
+> 
+> So, what should we do really ?
 
- .../bindings/crypto/xlnx,zynqmp-aes.yaml           | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+I'm not sure how the powerpc kernel runs in real mode.
+But clearly, at least kprobe event can not handle that case because
+it tries to access memory by probe_kernel_read(). Unless that function
+correctly handles the address translation, I want to prohibit kprobes
+on such address.
 
-diff --git a/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
-new file mode 100644
-index 0000000..55dd6e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/xlnx,zynqmp-aes.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP AES-GCM Hardware Accelerator Device Tree Bindings
-+
-+maintainers:
-+  - Kalyani Akula <kalyani.akula@xilinx.com>
-+  - Michal Simek <michal.simek@xilinx.com>
-+
-+description: |
-+  The ZynqMP AES-GCM hardened cryptographic accelerator is used to
-+  encrypt or decrypt the data with provided key and initialization vector.
-+
-+properties:
-+  compatible:
-+    const: xlnx,zynqmp-aes
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    firmware {
-+      zynqmp_firmware: zynqmp-firmware {
-+        compatible = "xlnx,zynqmp-firmware";
-+        method = "smc";
-+        xlnx_aes: zynqmp-aes {
-+          compatible = "xlnx,zynqmp-aes";
-+        };
-+      };
-+    };
-+...
+So what I would like to see is, something like below.
+
+diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+index 2d27ec4feee4..4771be152416 100644
+--- a/arch/powerpc/kernel/kprobes.c
++++ b/arch/powerpc/kernel/kprobes.c
+@@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
+        unsigned int *addr = (unsigned int *)regs->nip;
+        struct kprobe_ctlblk *kcb;
+ 
+-       if (user_mode(regs))
++       if (user_mode(regs) || !(regs->msr & MSR_IR))
+                return 0;
+ 
+        /*
+
+
+Thank you,
+
 -- 
-1.9.5
-
+Masami Hiramatsu <mhiramat@kernel.org>
