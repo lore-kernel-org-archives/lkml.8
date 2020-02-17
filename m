@@ -2,288 +2,324 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DFC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBE3C761A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859F120718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AYlebW98"
+	by mail.kernel.org (Postfix) with ESMTP id 9944220725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgBQMfS (ORCPT
+        id S1728462AbgBQMgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:35:18 -0500
-Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:30421
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727513AbgBQMfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:35:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vw+dT+9sWa91y2sGR9hK4gANUfOpJoRPgD91sE3huyQvZ3Yo6ULLKERMTDfEBqmfGMpwBVVuUgHyWHh5n3y41cGGsNzgXymSXZi52snOg/Ld+Fa+EcuG8h65C9+iSdeRNlx/lfZj3kXYw4tXtT1SBa4orID1yx7CQjc471E3x1VHBcweA3yISSCarfm8DGMtQfPjTXoHsnqdyfiCk120tREuEOecvLUcbuI3P7CKaUZ/5Q5bDzEtN88UW6gu2Wx59EAk9Z7VpAkpIxtaph7M/ZGw9JuiONRO3WTWTta9eQZbqyHMeC32fuUFD7xhb60LY//vNNjIYtFojuxdvzv0ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O+0vORzd3WBwY9d2eryCv4ThvMYc8u/GiLxU4zQTmy8=;
- b=PP4X7k66vWo/kV+OM6KOGKoMEoJZeCzs7ke7hHR/TXLt98PpxiF5/OZ2nK3CAr87MIQIJBEqa+2oyA0mcsu7CZdpYZjEtWG50H/3KnZmCZewIzYLNmyvQojICBMO84EL2CJEm161PlQn481hfb8otIJAN4anJETVLb9izCd0iMvAWB1HlxmFCxbeGciSJ5ZnR0ZjbXMo6vt+mSRB2iqKIDyDlBxFrcDc50lXr99iabod2/CkxHjg0iWVRJ3sv/fC7jF+gnTV8eKyg32d3GoJ2O7S6oGxuA3HyvlTVMx2qTQ2Jniy8u3GbIoRo4xyBKhmNJIOyVJwX+IXa4nEe6Q3VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O+0vORzd3WBwY9d2eryCv4ThvMYc8u/GiLxU4zQTmy8=;
- b=AYlebW98JYLX/U6vEap8g0PmfbgEJXuCWcvUQkrEj1f3NGB3rm+u+/RTSYNhYPrW/1mUUypJu0qvxbDCYitiiuXMRJGYnZaCV5c/sFIwT2Lc8MVjdVaNBxCw872UnhsPJ3+LkkyYN6Hpm6YQ6Mrt50K3Q4dUZI8NKFZy20IVUFs=
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com (10.168.65.10) by
- VI1PR0401MB2336.eurprd04.prod.outlook.com (10.169.132.145) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Mon, 17 Feb 2020 12:35:13 +0000
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae]) by VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae%9]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
- 12:35:13 +0000
-From:   Pankaj Bansal <pankaj.bansal@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>,
-        "stuyoder@gmail.com" <stuyoder@gmail.com>,
-        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Topic: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Thread-Index: AQHV1bJZgaFB40NXxUCtFFLRVXyi06f/610AgAStpQCAAAiuAIAAD1yAgBYviuCAABITAIAAAFRwgAAG0ICAAAEwoIAAF+uAgARaY6A=
-Date:   Mon, 17 Feb 2020 12:35:12 +0000
-Message-ID: <VI1PR0401MB2496308C27B7DAA7A5396970F1160@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
- <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200214161957.GA27513@e121166-lin.cambridge.arm.com>
- <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.bansal@nxp.com; 
-x-originating-ip: [92.120.1.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7afcdbc2-24e9-46b4-bd36-08d7b3a5d5b4
-x-ms-traffictypediagnostic: VI1PR0401MB2336:|VI1PR0401MB2336:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB23368FB53DD9C3321C4AB30AF1160@VI1PR0401MB2336.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0316567485
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(199004)(189003)(55016002)(66556008)(71200400001)(64756008)(478600001)(7416002)(966005)(9686003)(66446008)(33656002)(86362001)(52536014)(66946007)(76116006)(81156014)(8676002)(8936002)(2906002)(53546011)(7696005)(81166006)(26005)(4326008)(186003)(44832011)(5660300002)(45080400002)(66476007)(6916009)(54906003)(316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2336;H:VI1PR0401MB2496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IK7evDv3gQEmnw/PqX+rcRcqeLXpg8cDaO8JKiQFSodr2ycDtGbJRc1XYoX08HFPX4NGVUmllGaWMzjM0PR3tI1hgQ4Uudmj/2TgGq/R4Bj72LJFqT69k2TtapxiPBn6rEMcckQj4RhgLT42wyjG6uhcSOHM4a1k2f4dbljXE+ke3ifEQkXoQ9MMGv9Gi0rXpAWYjwyfPzttr/2YxjwcToU8aQQAVDJKkDfnNCzacD44xCbYNCu6q6b4nRHSX5dKeaOOWI2DustwRI6M4TWa2Hpgaf0XLd4lcYUKHs9z3H3QfRXPXXPHTBbM9TEJZyHEt3nc3jX1r79rna7t/3wEzwPSLiMVLryxbZSLVwid4mv2v6XUb7Ckhhc42wMRuV7UpYQrtW2sTXY/AEe8NTYQv76xnBuuPl7ojqLy3A0Er7sG5ozR0CqlDlSQqIZTot32CSq98UjfO/g5ZNkf1kisYmcUnOnaTsNWiD3nj42TDqFZpiu3PyfFpG6TYcPJw6nl7JGBC8ul6GXEIP+ZCJ35hQ==
-x-ms-exchange-antispam-messagedata: WL1esRRsJNpjC1ZxMgx5rEuikYBKXwmOku0V9Lc6QCtkvkUY7UtPxJ0aRiGlEoYKE5qYPdvLX8ssaIwZ561pmcrAJIzB7aVOzFx0mCuGyz/D35YXmv9bTapxSiSFp916ZEr4rTBX1JWo+Zjt8ZsibQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Feb 2020 07:36:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35210 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727513AbgBQMgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:36:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8A3E8AED7;
+        Mon, 17 Feb 2020 12:36:48 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH] ceph: re-org copy_file_range and fix error handling paths
+Date:   Mon, 17 Feb 2020 12:36:49 +0000
+Message-Id: <20200217123649.12316-1-lhenriques@suse.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7afcdbc2-24e9-46b4-bd36-08d7b3a5d5b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 12:35:12.8763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C+z7EWfZEe/Kx6T3CKCm/SPRsyitkwdP+amUlBAxiCoReiSbVaSVBdoQsoSLzPxdGGVavNWgWB7gRQfS6N7u6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2336
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch re-organizes copy_file_range, trying to fix a few issues in
+error handling.  Here's the summary:
 
+- Abort copy if initial do_splice_direct() returns fewer bytes than
+  requested.
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Friday, February 14, 2020 11:20 PM
-> To: Pankaj Bansal <pankaj.bansal@nxp.com>
-> Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
-> <ard.biesheuvel@linaro.org>; Makarand Pawagi <makarand.pawagi@nxp.com>;
-> Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
-> nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
-> Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo <guohanjun@huawei.com>;
-> Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
-> <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-acpi@vger.kernel.o=
-rg>;
-> Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>; Andy
-> Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
-> Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
-> kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com>; P=
-aul
-> Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-kernel@vger.kernel.=
-org>;
-> Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
-> <robin.murphy@arm.com>
-> Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
->=20
-> On Fri, Feb 14, 2020 at 04:35:10PM +0000, Pankaj Bansal wrote:
->=20
-> [...]
->=20
-> > > -----Original Message-----
-> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Sent: Friday, February 14, 2020 9:50 PM
-> > > To: Pankaj Bansal <pankaj.bansal@nxp.com>
-> > > Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
-> > > <ard.biesheuvel@linaro.org>; Makarand Pawagi
-> <makarand.pawagi@nxp.com>;
-> > > Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
-> > > nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
-> > > Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo
-> <guohanjun@huawei.com>;
-> > > Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
-> > > <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-
-> acpi@vger.kernel.org>;
-> > > Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>;
-> Andy
-> > > Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
-> > > Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
-> > > kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com=
->;
-> Paul
-> > > Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
-> > > <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-
-> kernel@vger.kernel.org>;
-> > > Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> > > Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
-> > > <robin.murphy@arm.com>
-> > > Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-=
-mc
-> Side note: would you mind removing the email headers (as above) in your
-> replies please ?
->=20
-> > > On Fri, Feb 14, 2020 at 03:58:14PM +0000, Pankaj Bansal wrote:
-> > >
-> > > [...]
-> > >
-> > > > > Why should the device know about its own ID? That's a bus/interco=
-nnect
-> > > thing.
-> > > > > And nothing should be passed *to* IORT. IORT is the source.
-> > > >
-> > > > IORT is translation between Input IDs <-> Output IDs. The Input ID =
-is still
-> > > expected to be passed to parse IORT table.
-> > >
-> > > Named components use an array of single mappings (as in entries with =
-single
-> > > mapping flag set) - Input ID is irrelevant.
-> > >
-> > > Not sure what your named component is though and what you want to do
-> with
-> > > it, the fact that IORT allows mapping for named components do not
-> necessarily
-> > > mean that it can describe what your system really is, on that you nee=
-d to
-> > > elaborate for us to be able to help.
-> >
-> > Details about MC bus can be read from here:
-> >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Felixi=
-r.boo
-> tlin.com%2Flinux%2Flatest%2Fsource%2FDocumentation%2Fnetworking%2Fdev
-> ice_drivers%2Ffreescale%2Fdpaa2%2Foverview.rst%23L324&amp;data=3D02%7C0
-> 1%7Cpankaj.bansal%40nxp.com%7Cf1bcfc907a42463b617408d7b1764f0f%7C6
-> 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637172993997763634&am
-> p;sdata=3DfPcC2UfsHoS25oYGmxJmsbPXxb1brKxP1i2qJfPdRpk%3D&amp;reserved
-> =3D0
-> >
-> > As stated above, in Linux MC is a bus (just like PCI bus, AMBA bus etc)
-> > There can be multiple devices attached to this bus. Moreover, we can
-> dynamically create/destroy these devices.
-> > Now, we want to represent this BUS (not individual devices connected to=
- bus)
-> in IORT table.
-> > The only possible way right now we see is that we describe it as Named
-> components having a pool of ID mappings.
-> > As and when devices are created and attached to bus, we sift through th=
-is pool
-> to correctly determine the output ID for the device.
-> > Now the input ID that we provide, can come from device itself.
-> > Then we can use the Platform MSI framework for MC bus devices.
->=20
-> So are you asking me if that's OK ? Or there is something you can't
-> describe with IORT ?
+- Move the 'size' initialization (with i_size_read()) further down in the
+  code, after the initial call to do_splice_direct().  This avoids issues
+  with a possibly stale value if a manual copy is done.
 
-I am asking if that would be acceptable?
-i.e. we represent MC bus as Named component is IORT table with a pool of ID=
-s (without single ID mapping flag)
-and then we use the Platform MSI framework for all children devices of MC b=
-us.
-Note that it would require the Platform MSI layer to correctly pass an inpu=
-t id for a platform device to IORT layer.
-And IORT layer ought to retrieve the output id based on single ID mapping f=
-lag as well as input id.
+- Move the object copy loop into a separate function.  This makes it
+  easier to handle errors (e.g, dirtying caps and updating the MDS
+  metadata if only some objects have been copied before an error has
+  occurred).
 
->=20
-> Side note: can you explain to me please how the MSI allocation flow
-> and kernel data structures/drivers are modeled in DT ? I had a quick
-> look at:
->=20
-> drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
->=20
-> and to start with, does that code imply that we create a
-> DOMAIN_BUS_FSL_MC_MSI on ALL DT systems with an ITS device node ?
+- Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
+  and dst_oloc
 
-Yes. It's being done for all DT systems having ITS node.
-The domain creation is handled in drivers/bus/fsl-mc/fsl-mc-msi.c
+- After the object copy loop, the new file size to be reported to the MDS
+  (if there's file size change) is now the actual file size, and not the
+  size after an eventual extra manual copy.
 
->=20
-> I *think* you have a specific API to allocate MSIs for MC devices:
->=20
-> fsl_mc_msi_domain_alloc_irqs()
->=20
-> which hook into the IRQ domain created in the file above that handles
-> the cascading to an ITS domain, correct ?
+- Added a few dout() to show the number of bytes copied in the two manual
+  copies and in the object copy loop.
 
-We associate the above created domain with dpaa2 device here:
-https://elixir.bootlin.com/linux/latest/source/drivers/bus/fsl-mc/dprc-driv=
-er.c#L640
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+Hi!
 
-Then fsl_mc_msi_domain_alloc_irqs, retrieves the domain associated with dev=
-ice and calls the msi_prepare
-API from its_fsl_mc_msi_prepare.
+Initially I was going to have this patch split in a series, but then I
+decided not to do that as this big patch allows (IMO) to better see the
+whole picture.  But please let me know if you think otherwise and I can
+split it in a few smaller patches.
 
->=20
-> Thanks,
-> Lorenzo
+I tried to cover all the issues that have been pointed out by Ilya, but I
+may have missed something or, more likely, introduced new bugs ;-)
+
+Cheers,
+--
+Luis
+
+ fs/ceph/file.c | 169 ++++++++++++++++++++++++++++---------------------
+ 1 file changed, 96 insertions(+), 73 deletions(-)
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index c3b8e8e0bf17..4d90a275f9a5 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1931,6 +1931,71 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+ 	return 0;
+ }
+ 
++static ssize_t ceph_do_objects_copy(struct ceph_inode_info *src_ci, u64 *src_off,
++				    struct ceph_inode_info *dst_ci, u64 *dst_off,
++				    struct ceph_fs_client *fsc,
++				    size_t len, unsigned int flags)
++{
++	struct ceph_object_locator src_oloc, dst_oloc;
++	struct ceph_object_id src_oid, dst_oid;
++	size_t bytes = 0;
++	u64 src_objnum, src_objoff, dst_objnum, dst_objoff;
++	u32 src_objlen, dst_objlen;
++	u32 object_size = src_ci->i_layout.object_size;
++	int ret;
++
++	src_oloc.pool = src_ci->i_layout.pool_id;
++	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
++	dst_oloc.pool = dst_ci->i_layout.pool_id;
++	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
++
++	while (len >= object_size) {
++		ceph_calc_file_object_mapping(&src_ci->i_layout, *src_off,
++					      object_size, &src_objnum,
++					      &src_objoff, &src_objlen);
++		ceph_calc_file_object_mapping(&dst_ci->i_layout, *dst_off,
++					      object_size, &dst_objnum,
++					      &dst_objoff, &dst_objlen);
++		ceph_oid_init(&src_oid);
++		ceph_oid_printf(&src_oid, "%llx.%08llx",
++				src_ci->i_vino.ino, src_objnum);
++		ceph_oid_init(&dst_oid);
++		ceph_oid_printf(&dst_oid, "%llx.%08llx",
++				dst_ci->i_vino.ino, dst_objnum);
++		/* Do an object remote copy */
++		ret = ceph_osdc_copy_from(&fsc->client->osdc,
++					  src_ci->i_vino.snap, 0,
++					  &src_oid, &src_oloc,
++					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
++					  CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
++					  &dst_oid, &dst_oloc,
++					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
++					  CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
++					  dst_ci->i_truncate_seq,
++					  dst_ci->i_truncate_size,
++					  CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
++		if (ret) {
++			if (ret == -EOPNOTSUPP) {
++				fsc->have_copy_from2 = false;
++				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
++			}
++			dout("ceph_osdc_copy_from returned %d\n", ret);
++			if (!bytes)
++				bytes = ret;
++			goto out;
++		}
++		len -= object_size;
++		bytes += object_size;
++		*src_off += object_size;
++		*dst_off += object_size;
++	}
++
++out:
++	ceph_oloc_destroy(&src_oloc);
++	ceph_oloc_destroy(&dst_oloc);
++	return bytes;
++}
++
+ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 				      struct file *dst_file, loff_t dst_off,
+ 				      size_t len, unsigned int flags)
+@@ -1941,14 +2006,11 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+-	struct ceph_object_locator src_oloc, dst_oloc;
+-	struct ceph_object_id src_oid, dst_oid;
+-	loff_t endoff = 0, size;
+-	ssize_t ret = -EIO;
++	loff_t size;
++	ssize_t ret = -EIO, bytes;
+ 	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+-	u32 src_objlen, dst_objlen, object_size;
++	u32 src_objlen, dst_objlen;
+ 	int src_got = 0, dst_got = 0, err, dirty;
+-	bool do_final_copy = false;
+ 
+ 	if (src_inode->i_sb != dst_inode->i_sb) {
+ 		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+@@ -2026,22 +2088,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	if (ret < 0)
+ 		goto out_caps;
+ 
+-	size = i_size_read(dst_inode);
+-	endoff = dst_off + len;
+-
+ 	/* Drop dst file cached pages */
+ 	ret = invalidate_inode_pages2_range(dst_inode->i_mapping,
+ 					    dst_off >> PAGE_SHIFT,
+-					    endoff >> PAGE_SHIFT);
++					    (dst_off + len) >> PAGE_SHIFT);
+ 	if (ret < 0) {
+ 		dout("Failed to invalidate inode pages (%zd)\n", ret);
+ 		ret = 0; /* XXX */
+ 	}
+-	src_oloc.pool = src_ci->i_layout.pool_id;
+-	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+-	dst_oloc.pool = dst_ci->i_layout.pool_id;
+-	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+-
+ 	ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+ 				      src_ci->i_layout.object_size,
+ 				      &src_objnum, &src_objoff, &src_objlen);
+@@ -2060,6 +2114,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	 * starting at the src_off
+ 	 */
+ 	if (src_objoff) {
++		dout("Initial partial copy of %u bytes\n", src_objlen);
++
+ 		/*
+ 		 * we need to temporarily drop all caps as we'll be calling
+ 		 * {read,write}_iter, which will get caps again.
+@@ -2067,8 +2123,9 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 		put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+ 		ret = do_splice_direct(src_file, &src_off, dst_file,
+ 				       &dst_off, src_objlen, flags);
+-		if (ret < 0) {
+-			dout("do_splice_direct returned %d\n", err);
++		/* Abort on short copies or on error */
++		if (ret < src_objlen) {
++			dout("Failed partial copy (%zd)\n", ret);
+ 			goto out;
+ 		}
+ 		len -= ret;
+@@ -2081,62 +2138,29 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 		if (err < 0)
+ 			goto out_caps;
+ 	}
+-	object_size = src_ci->i_layout.object_size;
+-	while (len >= object_size) {
+-		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+-					      object_size, &src_objnum,
+-					      &src_objoff, &src_objlen);
+-		ceph_calc_file_object_mapping(&dst_ci->i_layout, dst_off,
+-					      object_size, &dst_objnum,
+-					      &dst_objoff, &dst_objlen);
+-		ceph_oid_init(&src_oid);
+-		ceph_oid_printf(&src_oid, "%llx.%08llx",
+-				src_ci->i_vino.ino, src_objnum);
+-		ceph_oid_init(&dst_oid);
+-		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+-				dst_ci->i_vino.ino, dst_objnum);
+-		/* Do an object remote copy */
+-		err = ceph_osdc_copy_from(
+-			&src_fsc->client->osdc,
+-			src_ci->i_vino.snap, 0,
+-			&src_oid, &src_oloc,
+-			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+-			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+-			&dst_oid, &dst_oloc,
+-			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+-			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+-			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+-			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+-		if (err) {
+-			if (err == -EOPNOTSUPP) {
+-				src_fsc->have_copy_from2 = false;
+-				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+-			}
+-			dout("ceph_osdc_copy_from returned %d\n", err);
+-			if (!ret)
+-				ret = err;
+-			goto out_caps;
+-		}
+-		len -= object_size;
+-		src_off += object_size;
+-		dst_off += object_size;
+-		ret += object_size;
+-	}
+ 
+-	if (len)
+-		/* We still need one final local copy */
+-		do_final_copy = true;
++	size = i_size_read(dst_inode);
++	bytes = ceph_do_objects_copy(src_ci, &src_off, dst_ci, &dst_off,
++				     src_fsc, len, flags);
++	if (bytes <= 0) {
++		if (!ret)
++			ret = bytes;
++		goto out_caps;
++	}
++	dout("Copied %zu bytes out of %zu\n", bytes, len);
++	len -= bytes;
++	ret += bytes;
+ 
+ 	file_update_time(dst_file);
+ 	inode_inc_iversion_raw(dst_inode);
+ 
+-	if (endoff > size) {
++	if (dst_off > size) {
+ 		int caps_flags = 0;
+ 
+ 		/* Let the MDS know about dst file size change */
+-		if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
++		if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_NODELAY;
+-		if (ceph_inode_set_size(dst_inode, endoff))
++		if (ceph_inode_set_size(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_AUTHONLY;
+ 		if (caps_flags)
+ 			ceph_check_caps(dst_ci, caps_flags, NULL);
+@@ -2152,15 +2176,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ out_caps:
+ 	put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+ 
+-	if (do_final_copy) {
+-		err = do_splice_direct(src_file, &src_off, dst_file,
+-				       &dst_off, len, flags);
+-		if (err < 0) {
+-			dout("do_splice_direct returned %d\n", err);
+-			goto out;
+-		}
+-		len -= err;
+-		ret += err;
++	if (len && (ret >= 0)) {
++		dout("Final partial copy of %zu bytes\n", len);
++		bytes = do_splice_direct(src_file, &src_off, dst_file,
++					 &dst_off, len, flags);
++		if (bytes > 0)
++			ret += bytes;
++		else
++			dout("Failed partial copy (%zd)\n", bytes);
+ 	}
+ 
+ out:
