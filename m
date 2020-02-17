@@ -2,132 +2,107 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD2CC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CA6C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5821820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581941419;
-	bh=dVB6xTlXZp8Wu2yUdOgldXAQVk5MQeJ+RYVpiRtj5eQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cvmz56f4boBhBrS1lQm4botRsf0HvqN7uHrTh47Dyz0zBwriVq+gQmmrNXual2PbE
-	 64hSOoGrO75aXl/rejM21jp8ft1By8Du8Kf4tkwMVmNRhwy+NTBbqIOeuyfLRpUOqC
-	 0kEs9IZLLeTEmkXbNW8TuT/qrbL2GTqcHX7QKtZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 0F00620578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NuCMyIus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgBQMKR (ORCPT
+        id S1729627AbgBQMKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbgBQMKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:10:17 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 799B320578;
-        Mon, 17 Feb 2020 12:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581941416;
-        bh=dVB6xTlXZp8Wu2yUdOgldXAQVk5MQeJ+RYVpiRtj5eQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IObpV/3XESuy9pr6prF8WWrfljQhLXCZ3hu+Y2MbKowytN2B9IUqqagrmpQ2ypkTq
-         qGsICut5fkhgxr3pE2CS/1mYOQEZYuV1DOmdhl0kKj6VHBw5KkWNLrCnM1/v+eGmil
-         Sd9mQ/0kOkRINHg5KuPU+HrLwPNe1fHHqoku3poA=
-Date:   Mon, 17 Feb 2020 21:10:10 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH v4] perf test: Fix test trace+probe_vfs_getname.sh on
- s390
-Message-Id: <20200217211010.fa9c643c517c110abaa5b554@kernel.org>
-In-Reply-To: <20200217102111.61137-1-tmricht@linux.ibm.com>
-References: <20200217102111.61137-1-tmricht@linux.ibm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Feb 2020 07:10:45 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2658 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729049AbgBQMKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:10:45 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4a82b60000>; Mon, 17 Feb 2020 04:10:30 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 17 Feb 2020 04:10:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 17 Feb 2020 04:10:44 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Feb
+ 2020 12:10:44 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 17 Feb 2020 12:10:44 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e4a82c00000>; Mon, 17 Feb 2020 04:10:43 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V3 0/5] Add support to defer core initialization
+Date:   Mon, 17 Feb 2020 17:40:31 +0530
+Message-ID: <20200217121036.3057-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581941430; bh=G+TCTgGYyb/7NJSBkD2cISCV8tcJmRltzI9xyL6GCdk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=NuCMyIusrCLbnT9wJm7UdE+qjLgloFLg6wldtrjn+WeOmYQdtun/nenfC1CdGgikm
+         pl27PMX93crTmwpL1ETwF0GQXnqEYcjR1dXR6iNVMQVdUQm70be5Fhoodq3ymsYJXk
+         L33Cj+nkRwTAHxkGR+EYg+8xB/pTF+6mN0r34wRNQO6Mwgs31PUQUZZPoW/sAJRfom
+         XDg1la8xR9ixrIEZnbmycnXK4dpt87CqT4x8MxZw1dTUutAXrcCw6xTwjAIGTS2FmU
+         I9qgluVg6dHYRfJ9rfRnPYBKWvTc9a6Yk4rBdr9KfVXeF1+lAn/8m6wCGDcz5wty5h
+         AsM0VoNXKXmeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 11:21:11 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+EPC/DesignWare core endpoint subsystems assume that the core registers are
+available always for SW to initialize. But, that may not be the case always.
+For example, Tegra194 hardware has the core running on a clock that is derived
+from reference clock that is coming into the endpoint system from host.
+Hence core is made available asynchronously based on when host system is going
+for enumeration of devices. To accommodate this kind of hardwares, support is
+required to defer the core initialization until the respective platform driver
+informs the EPC/DWC endpoint sub-systems that the core is indeed available for
+initiaization. This patch series is attempting to add precisely that.
+This series is based on Kishon's patch that adds notification mechanism
+support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1236793/ from the
+series @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=158088
 
-> This test places a kprobe to function getname_flags() in the kernel
-> which has the following prototype:
-> 
->   struct filename *
->   getname_flags(const char __user *filename, int flags, int *empty)
-> 
-> Variable filename points to a filename located in user space memory.
-> Looking at
-> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
-> the kprobe should indicate that user space memory is accessed.
-> 
-> Output before:
->    [root@m35lp76 perf]# ./perf test  66 67
->    66: Use vfs_getname probe to get syscall args filenames   : FAILED!
->    67: Check open filename arg using perf trace + vfs_getname: FAILED!
->    [root@m35lp76 perf]#
-> 
-> Output after:
->    [root@m35lp76 perf]# ./perf test  66 67
->    66: Use vfs_getname probe to get syscall args filenames   : Ok
->    67: Check open filename arg using perf trace + vfs_getname: Ok
->    [root@m35lp76 perf]#
-> 
-> Comments from Masami Hiramatsu:
-> This bug doesn't happen on x86 or other archs on which user-address
-> space and kernel address space is same. On some arch (ppc64 in this case?)
-> user-address space is partially or completely same as kernel address space.
-> (Yes, they switch the world when running into the kernel) In this case,
-> we need to use different data access functions for each spaces.
-> That is why I introduced "ustring" type for kprobe event.
-> As far as I can see, Thomas's patch is sane. Thomas, could you show us
-> your result on your test environment?
-> Thank you
-> 
-> Comments from Thomas Richter:
-> Test results included above.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+V3:
+* Rebased this series on top of kishon's new patch series as mentioned above
+* Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-Looks good to me.
+V2:
+* Addressed review comments from Kishon
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Vidya Sagar (5):
+  PCI: endpoint: Add core init notifying feature
+  PCI: dwc: Refactor core initialization code for EP mode
+  PCI: endpoint: Add notification for core init completion
+  PCI: dwc: Add API to notify core initialization completion
+  PCI: pci-epf-test: Add support to defer core initialization
 
-Thank you,
-
-> ---
->  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 7cb99b433888..c2cc42daf924 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -14,7 +14,7 @@ add_probe_vfs_getname() {
->  	if [ $had_vfs_getname -eq 1 ] ; then
->  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
->  		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
-> -		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
->  	fi
->  }
->  
-> -- 
-> 2.21.0
-> 
-
+ .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+ drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+ drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+ include/linux/pci-epc.h                       |   2 +
+ include/linux/pci-epf.h                       |   5 +
+ 6 files changed, 164 insertions(+), 70 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
