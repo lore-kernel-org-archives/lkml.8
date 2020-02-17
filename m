@@ -2,158 +2,104 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDC8C3402C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EDC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CB02064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="h9VOpNkv"
+	by mail.kernel.org (Postfix) with ESMTP id 06473207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgBQVyx (ORCPT
+        id S1730033AbgBQV5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:54:53 -0500
-Received: from mout.gmx.net ([212.227.17.20]:39223 "EHLO mout.gmx.net"
+        Mon, 17 Feb 2020 16:57:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729204AbgBQVyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:54:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581976488;
-        bh=B2nziXmh6lJFW+2WLt9Q+OF3D2Vko/3vLipflS6cozk=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=h9VOpNkvlqksAGy17eMY5Ye/eONQ3Njxs1RN522zlVBVDiqt/qVrI4MmxPWnddkFA
-         GU2BxR2UNdQfiBSwM6YfhmnpIBHfZKweYZXke8zRf/CNfjM2c+bPvH40eXYdzeKBrF
-         4NDmkOFwvks8ZA1rX4E9q/muywfE0kTxTYAsgyh8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1McYCb-1jblWX1bGX-00czH1; Mon, 17
- Feb 2020 22:54:48 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH v2 1/1] efi/libstub: describe memory functions
-Date:   Mon, 17 Feb 2020 22:54:43 +0100
-Message-Id: <20200217215443.3004-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
+        id S1729558AbgBQV5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:57:18 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3232064C;
+        Mon, 17 Feb 2020 21:57:16 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 16:57:14 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH v3 0/6] Static calls
+Message-ID: <20200217165714.1080cfd2@gandalf.local.home>
+In-Reply-To: <CAG48ez0owFet0E43UAGd7sV9Oi0yhVpWTmy4W+Vm5+0q=74-DA@mail.gmail.com>
+References: <cover.1547073843.git.jpoimboe@redhat.com>
+        <20190110203023.GL2861@worktop.programming.kicks-ass.net>
+        <20190110205226.iburt6mrddsxnjpk@treble>
+        <CAG48ez0owFet0E43UAGd7sV9Oi0yhVpWTmy4W+Vm5+0q=74-DA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nR3PnHiek6o8c3O7s6+4afR8vKohCSVQm4b5XrVdRC44EGBd6dP
- 1PEMinRHB5i1s1Yd2OKUNlgchGPlMTTbLcoXKLr//rkYJahjcHfZHlsuXQNr+RLdxHLrsey
- VsFwRFhyWa+qDzE3cz+mZr7mrE5OcWTHNAnz9DLI4baDsdKFbe9sniT5fmmSuzu5Uajnli4
- 0JPZvGZX+lXILeEePcKRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EGjEc0owDlk=:OBlls5d8rs5WFyk3p7MfoU
- AY29vZEEomFTaAQgvv74wgYnYbMFKnlMbn63CeTKPb2bLOwERkdQz9oAVAB7YYMFBLYk9S/5g
- 5POtLRn1WBpZVvm4Lno+IDGV0WltODiQqvXP7NM/5KBHSfwjXBI8PHGnIsUbC8qJqCgzN5DWv
- MZUSJxZXIUueqYqVUhZsYho/3DFiJr9ORmfDx2JrHya0Ppwfqp+lJSg1leSQHwDUVKJ0veJiS
- XmxMdLwdnlvGqOztKS2d7RifZmPuuaNSMTVMO3Y192dnYEbyfcrswmFmQmNKC+QfuCgirjTQq
- 6XGAlugPZis5DDSWVAoAKNv6ElH7hPciQJyl0BAQcwtJ1IkVJK/aqNuf9wK+IyS3mJ1mBeBWg
- +mUaos8Hb31VhPqUEtTQiZWO33koFLOSyOgCGCb1k8kwPT+boxsFzAEYUhq9Anj3k2yPxh06h
- 3QNG8b4SomRX4paHCWqmWtQa8lKatUbatlntiXIcx1wyo9KvFErgsS8/ME9elReaez+fTvjkz
- mKW1M73Hdd9oFqMh68mrHRjxkvalnfWidlSErn1YZFFpO5D7kxvNoiBr22cij6mTugo/kqoGV
- HV4AXKqHED5HHxOWeYAJp4KWQxDJryDN+HHEJ+lxElm8JWHeWX47TunCHR5doL1r2Iw0iJrBc
- Ss0KD/nPcZe12sA/fDpWDhESurjfSQh99SsEjjMiyZCEicE+p3mRMVhouAe86Z2USBB26axCd
- Db7CAdVT1OajB7WY7Ffkzvwn26DOhSKDrbjMTTpIFQ0pjm5i9zaHsTeYL/nKB4oix1uV2o8eI
- ZjxKDMrSf7uhrPVnRKqzSLiDZ1+OVh4Md+lSdiZHLRI3I73wGrwiwXHUteQw3zQI2X6l3NkVB
- QqdHpLhyDHYVumPtDOiPqa1VeV1HteYbCnEkgZ8Bsuz8qbP9TnHRiugXdRcXwci29R+zt1ch3
- 5dzjYeDqlbvwFZdLbNjPDGnYymE09dSdgZrymd+qgkWGAdyOEXfkFuaOuVSWBu0jVrYTclNSg
- p8PnkzN4aSBNJR6//u197i0DBJ9v73DQ7JqclB7aIS01RY+BuAS3YhHbeZIkLbjpntIg0x8Sh
- 1sFbJe8c4P85hLNd2qHwYNofUADWBShf7yRTVYIWJP5+qjlkUotyTAz2Z1VA/EqbSfY3AKRhZ
- aSRL3MpfjbWhiNzHUg4hJ93X6q9kn3dfTVKlJmNEZaQtrPVFjxqQF9TsmJXNPbzJ+lIqTcGMP
- jMXJ7oW3TjURrf3E8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide descriptions of:
+On Mon, 17 Feb 2020 22:10:27 +0100
+Jann Horn <jannh@google.com> wrote:
 
-* efi_get_memory_map()
-* efi_low_alloc_above()
-* efi_free()
+> On Thu, Jan 10, 2019 at 9:52 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > On Thu, Jan 10, 2019 at 09:30:23PM +0100, Peter Zijlstra wrote:  
+> > > On Wed, Jan 09, 2019 at 04:59:35PM -0600, Josh Poimboeuf wrote:  
+> > > > With this version, I stopped trying to use text_poke_bp(), and instead
+> > > > went with a different approach: if the call site destination doesn't
+> > > > cross a cacheline boundary, just do an atomic write.  Otherwise, keep
+> > > > using the trampoline indefinitely.  
+> > >  
+> > > > - Get rid of the use of text_poke_bp(), in favor of atomic writes.
+> > > >   Out-of-line calls will be promoted to inline only if the call sites
+> > > >   don't cross cache line boundaries. [Linus/Andy]  
+> > >
+> > > Can we perserve why text_poke_bp() didn't work? I seem to have forgotten
+> > > again. The problem was poking the return address onto the stack from the
+> > > int3 handler, or something along those lines?  
+> >
+> > Right, emulating a call instruction from the #BP handler is ugly,
+> > because you have to somehow grow the stack to make room for the return
+> > address.  Personally I liked the idea of shifting the iret frame by 16
+> > bytes in the #DB entry code, but others hated it.
+> >
+> > So many bad-but-not-completely-unacceptable options to choose from.  
+> 
+> Silly suggestion from someone who has skimmed the thread:
+> 
+> Wouldn't a retpoline-style trampoline solve this without needing
+> memory allocations? Let the interrupt handler stash the destination in
+> a percpu variable and clear IF in regs->flags. Something like:
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
-v2:
-	point out how efi_free() is rounding up the memory size
-=2D--
- drivers/firmware/efi/libstub/mem.c | 36 ++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+Linus actually suggested something similar, but for ftrace, but after
+implementing it, it was hard to get right, and caused havoc with
+utilities like lockdep, and also shadow stacks.
 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
-stub/mem.c
-index c25fd9174b74..49116b9b0801 100644
-=2D-- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -16,6 +16,15 @@ static inline bool mmap_has_headroom(unsigned long buff=
-_size,
- 	return slack / desc_size >=3D EFI_MMAP_NR_SLACK_SLOTS;
- }
+See this thread:
 
-+/**
-+ * efi_get_memory_map() - get memory map
-+ * @map		on return pointer to memory map
-+ *
-+ * Retrieve the UEFI memory map. The allocated memory leaves room for
-+ * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
-+ *
-+ * Return:	status code
-+ */
- efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
- {
- 	efi_memory_desc_t *m =3D NULL;
-@@ -109,8 +118,20 @@ efi_status_t efi_allocate_pages(unsigned long size, u=
-nsigned long *addr,
- 	}
- 	return EFI_SUCCESS;
- }
--/*
-- * Allocate at the lowest possible address that is not below 'min'.
-+/**
-+ * efi_low_alloc_above() - allocate pages at or above given address
-+ * @size:	size of the memory area to allocate
-+ * @align:	minimum alignment of the allocated memory area. It should
-+ *		a power of two.
-+ * @addr:	on exit the address of the allocated memory
-+ * @min:	minimum address to used for the memory allocation
-+ *
-+ * Allocate at the lowest possible address that is not below 'min' as
-+ * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' =
-but at
-+ * least EFI_ALLOC_ALIGN. The first allocated page will not below the add=
-ress
-+ * given by 'min'.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
- 				 unsigned long *addr, unsigned long min)
-@@ -187,6 +208,17 @@ efi_status_t efi_low_alloc_above(unsigned long size, =
-unsigned long align,
- 	return status;
- }
+  https://lore.kernel.org/linux-kselftest/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com/
 
-+/**
-+ * efi_free() - free memory pages
-+ * @size	size of the memory area to free in bytes
-+ * @addr	start of the memory area to free (must be EFI_PAGE_SIZE
-+ *		aligned)
-+ *
-+ * 'size' is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
-+ * architecture specific multiple of EFI_PAGE_SIZE. So this function shou=
-ld
-+ * only be used to return pages allocated with efi_allocate_pages() or
-+ * efi_low_alloc_above().
-+ */
- void efi_free(unsigned long size, unsigned long addr)
- {
- 	unsigned long nr_pages;
-=2D-
-2.25.0
 
+ -- Steve
