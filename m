@@ -2,352 +2,237 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5583FC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C37C34020
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2022F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C032070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnAWHY35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgBQNP5 (ORCPT
+        id S1729324AbgBQNQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:15:57 -0500
-Received: from mga11.intel.com ([192.55.52.93]:16576 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbgBQNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:14:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 05:14:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,452,1574150400"; 
-   d="scan'208";a="382181893"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 17 Feb 2020 05:14:52 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2210470F; Mon, 17 Feb 2020 15:14:47 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 13/19] platform/x86: intel_telemetry: Convert to use new SCU IPC API
-Date:   Mon, 17 Feb 2020 16:14:40 +0300
-Message-Id: <20200217131446.32818-14-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
-References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+        Mon, 17 Feb 2020 08:16:01 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35679 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgBQNQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 08:16:00 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r16so16042430otd.2;
+        Mon, 17 Feb 2020 05:15:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9L+xGkQdZskmDmVK8EKNQvHsZDgIYop6ATmqu+ddc+g=;
+        b=PnAWHY350QaNmKuFFhoAVSzIc0h+RgcosNi5BhzC9J4EQxoQ32bI0zgLSQ0LqCstEv
+         s7oXUDto8+QWTqDt3XkRgZADOZXW6ve8obI1GWcqEojb6/iDltqh+1DPSewPQsnHYWZQ
+         MKYThuoqE74f16QHhxQFti9QJ21eS3/8DLlo6zIa0BAEwIKrwX+9E47TNuOUgEsQnrh8
+         /sq20etq+JIqTua/AtmEJMBjdHcS/mrnfnVj3uL7VLQcQscuI2iX+UihnIeT2xSJ5520
+         JwuTBC8LP+DP0WLH+ol3khD2KiUnOXwKUKADjFF1o+ceogfrZZT3Bz8aKHbEU0EbdpFM
+         zPUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9L+xGkQdZskmDmVK8EKNQvHsZDgIYop6ATmqu+ddc+g=;
+        b=MaN/Td2JEH4x6A2AMqmRNwgaZAb17NN0KPhiA3JcaAMFKSUh9mIgT2bgI1ntv/NUIG
+         eL3JeqlEC6At4uTIlIqpnk92iExMj984gFSTD8VAk9qQmE9QqvGA3+mewPZdHmDT+PuS
+         r4H/xQz4IpOE5Dys7/+0QdJHTAaIzdC0uTiEnMfetq3oL/YDB9S2fxrXYtjK7LTOpd8k
+         MvMPfbs8rZ3SfiEdxgEBbZvFk750gOgpYxT7fz8dQb0CJn6kqkfE/tgQD+03VVNoAuhU
+         LCZaYJlNecZ6VplTmDmc/WykuzYwAQDbQJDckXzQ3FcgSDeoY3Rr/z1Et+cIOeYcnhM+
+         pxHw==
+X-Gm-Message-State: APjAAAWmCSRcr/HJyO1yKpwXCqyYm7ykvmqlCO/0G40ryp3P4dKdp8oj
+        /H6ELFC6cycPdeQJJMRWbl3BJsjwbrvPH0Hkatw=
+X-Google-Smtp-Source: APXvYqz+LmHgmc5fI/HHeeGukyXH2hP16gHVdtW8CTvtEdHY+pJIsV7t/B9I2jzRptznDsmHLuyCUZo/NGcFMOrWSkk=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr11658462otl.118.1581945359278;
+ Mon, 17 Feb 2020 05:15:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
+ <871rqtbcve.fsf@vitty.brq.redhat.com>
+In-Reply-To: <871rqtbcve.fsf@vitty.brq.redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 17 Feb 2020 21:15:48 +0800
+Message-ID: <CANRm+Cz_gskKwa0SU0PUhtacj3Ovm_MmBASDJHOECsnYz=jxkg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for
+ both pv tlb and pv ipis
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Intel Apollo Lake telemetry driver to use the new SCU IPC
-API. This allows us to get rid of the duplicate PMC IPC implementation
-which is now covered in SCU IPC driver.
+On Mon, 17 Feb 2020 at 20:46, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Wanpeng Li <kernellwp@gmail.com> writes:
+>
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Nick Desaulniers Reported:
+> >
+> >   When building with:
+> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+> >   The following warning is observed:
+> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+> >   vector)
+> >               ^
+> >   Debugging with:
+> >   https://github.com/ClangBuiltLinux/frame-larger-than
+> >   via:
+> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+> >     kvm_send_ipi_mask_allbutself
+> >   points to the stack allocated `struct cpumask newmask` in
+> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+> >   8192, making a single instance of a `struct cpumask` 1024 B.
+> >
+> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
+> > both pv tlb and pv ipis..
+> >
+> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> >  * remove '!alloc' check
+> >  * use new pv check helpers
+> >
+> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
+> >  1 file changed, 21 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > index 76ea8c4..377b224 100644
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
+> >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
+> >  }
+> >
+> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
+> > +
+> >  #ifdef CONFIG_SMP
+> >
+> >  static bool pv_ipi_supported(void)
+> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
+> > cpumask *mask, int vector)
+> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
+> > int vector)
+> >  {
+> >      unsigned int this_cpu = smp_processor_id();
+> > -    struct cpumask new_mask;
+> > +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >      const struct cpumask *local_mask;
+> >
+> > -    cpumask_copy(&new_mask, mask);
+> > -    cpumask_clear_cpu(this_cpu, &new_mask);
+> > -    local_mask = &new_mask;
+> > +    cpumask_copy(new_mask, mask);
+> > +    cpumask_clear_cpu(this_cpu, new_mask);
+> > +    local_mask = new_mask;
+> >      __send_ipi_mask(local_mask, vector);
+> >  }
+> >
+> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
+> >      update_intr_gate(X86_TRAP_PF, async_page_fault);
+> >  }
+> >
+> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+> >
+> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+> >              const struct flush_tlb_info *info)
+> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
+> > cpumask *cpumask,
+> >      u8 state;
+> >      int cpu;
+> >      struct kvm_steal_time *src;
+> > -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
+> > +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >
+> >      cpumask_copy(flushmask, cpumask);
+> >      /*
+> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
+> >      if (pv_tlb_flush_supported()) {
+> >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+> >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> > +        pr_info("KVM setup pv remote TLB flush\n");
+>
+> Nit: to be consistent with __send_ipi_mask() the message should be
+> somthing like
+>
+> "KVM: switch to using PV TLB flush"
 
-Also move telemetry specific IPC message constant to the telemetry
-driver where it belongs.
+There is a lot of native ops we replace by pv ops in kvm.c, I use "KVM
+setup xxx" there, like pv ipis, pv tlb flush, pv sched yield, should
+we keep consistent as before?
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/include/asm/intel_pmc_ipc.h          |  1 -
- arch/x86/include/asm/intel_telemetry.h        |  3 +
- drivers/platform/x86/intel_telemetry_pltdrv.c | 95 +++++++++----------
- 3 files changed, 49 insertions(+), 50 deletions(-)
+    Wanpeng
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index b438a488f613..ddc964b9c78c 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -8,7 +8,6 @@
- #define PMC_IPC_PHY_CONFIG		0xEE
- #define PMC_IPC_NORTHPEAK_CTRL		0xED
- #define PMC_IPC_PM_DEBUG		0xEC
--#define PMC_IPC_PMC_TELEMTRY		0xEB
- #define PMC_IPC_PMC_FW_MSG_CTRL		0xEA
- 
- /* IPC return code */
-diff --git a/arch/x86/include/asm/intel_telemetry.h b/arch/x86/include/asm/intel_telemetry.h
-index 2f77e31a1283..274aaf0dae48 100644
---- a/arch/x86/include/asm/intel_telemetry.h
-+++ b/arch/x86/include/asm/intel_telemetry.h
-@@ -10,6 +10,8 @@
- #define TELEM_MAX_EVENTS_SRAM		28
- #define TELEM_MAX_OS_ALLOCATED_EVENTS	20
- 
-+#include <asm/intel_scu_ipc.h>
-+
- enum telemetry_unit {
- 	TELEM_PSS = 0,
- 	TELEM_IOSS,
-@@ -51,6 +53,7 @@ struct telemetry_plt_config {
- 	struct telemetry_unit_config ioss_config;
- 	struct mutex telem_trace_lock;
- 	struct mutex telem_lock;
-+	struct intel_scu_ipc_dev *scu;
- 	bool telem_in_use;
- };
- 
-diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c b/drivers/platform/x86/intel_telemetry_pltdrv.c
-index c4c742bb23cf..efcf214d25b1 100644
---- a/drivers/platform/x86/intel_telemetry_pltdrv.c
-+++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
-@@ -15,7 +15,6 @@
- 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
--#include <asm/intel_pmc_ipc.h>
- #include <asm/intel_punit_ipc.h>
- #include <asm/intel_telemetry.h>
- 
-@@ -35,6 +34,7 @@
- #define TELEM_SSRAM_STARTTIME_OFFSET	8
- #define TELEM_SSRAM_EVTLOG_OFFSET	16
- 
-+#define IOSS_TELEM			0xeb
- #define IOSS_TELEM_EVENT_READ		0x0
- #define IOSS_TELEM_EVENT_WRITE		0x1
- #define IOSS_TELEM_INFO_READ		0x2
-@@ -42,9 +42,6 @@
- #define IOSS_TELEM_TRACE_CTL_WRITE	0x6
- #define IOSS_TELEM_EVENT_CTL_READ	0x7
- #define IOSS_TELEM_EVENT_CTL_WRITE	0x8
--#define IOSS_TELEM_EVT_CTRL_WRITE_SIZE	0x4
--#define IOSS_TELEM_READ_WORD		0x1
--#define IOSS_TELEM_WRITE_FOURBYTES	0x4
- #define IOSS_TELEM_EVT_WRITE_SIZE	0x3
- 
- #define TELEM_INFO_SRAMEVTS_MASK	0xFF00
-@@ -253,17 +250,14 @@ static int telemetry_check_evtid(enum telemetry_unit telem_unit,
- static inline int telemetry_plt_config_ioss_event(u32 evt_id, int index)
- {
- 	u32 write_buf;
--	int ret;
- 
- 	write_buf = evt_id | TELEM_EVENT_ENABLE;
- 	write_buf <<= BITS_PER_BYTE;
- 	write_buf |= index;
- 
--	ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--				    IOSS_TELEM_EVENT_WRITE, (u8 *)&write_buf,
--				    IOSS_TELEM_EVT_WRITE_SIZE, NULL, 0);
--
--	return ret;
-+	return intel_scu_ipc_dev_command(telm_conf->scu, IOSS_TELEM,
-+					 IOSS_TELEM_EVENT_WRITE, &write_buf,
-+					 IOSS_TELEM_EVT_WRITE_SIZE, NULL, 0);
- }
- 
- static inline int telemetry_plt_config_pss_event(u32 evt_id, int index)
-@@ -281,6 +275,7 @@ static inline int telemetry_plt_config_pss_event(u32 evt_id, int index)
- static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 					 enum telemetry_action action)
- {
-+	struct intel_scu_ipc_dev *scu = telm_conf->scu;
- 	u8 num_ioss_evts, ioss_period;
- 	int ret, index, idx;
- 	u32 *ioss_evtmap;
-@@ -291,9 +286,9 @@ static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 	ioss_evtmap = evtconfig.evtmap;
- 
- 	/* Get telemetry EVENT CTL */
--	ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
-+	ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
- 				    IOSS_TELEM_EVENT_CTL_READ, NULL, 0,
--				    &telem_ctrl, IOSS_TELEM_READ_WORD);
-+				    &telem_ctrl, sizeof(telem_ctrl));
- 	if (ret) {
- 		pr_err("IOSS TELEM_CTRL Read Failed\n");
- 		return ret;
-@@ -302,11 +297,9 @@ static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 	/* Disable Telemetry */
- 	TELEM_DISABLE(telem_ctrl);
- 
--	ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--				    IOSS_TELEM_EVENT_CTL_WRITE,
--				    (u8 *)&telem_ctrl,
--				    IOSS_TELEM_EVT_CTRL_WRITE_SIZE,
--				    NULL, 0);
-+	ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
-+				    IOSS_TELEM_EVENT_CTL_WRITE, &telem_ctrl,
-+				    sizeof(telem_ctrl), NULL, 0);
- 	if (ret) {
- 		pr_err("IOSS TELEM_CTRL Event Disable Write Failed\n");
- 		return ret;
-@@ -318,10 +311,9 @@ static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 		/* Clear All Events */
- 		TELEM_CLEAR_EVENTS(telem_ctrl);
- 
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
-+		ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
- 					    IOSS_TELEM_EVENT_CTL_WRITE,
--					    (u8 *)&telem_ctrl,
--					    IOSS_TELEM_EVT_CTRL_WRITE_SIZE,
-+					    &telem_ctrl, sizeof(telem_ctrl),
- 					    NULL, 0);
- 		if (ret) {
- 			pr_err("IOSS TELEM_CTRL Event Disable Write Failed\n");
-@@ -347,10 +339,9 @@ static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 		/* Clear All Events */
- 		TELEM_CLEAR_EVENTS(telem_ctrl);
- 
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
-+		ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
- 					    IOSS_TELEM_EVENT_CTL_WRITE,
--					    (u8 *)&telem_ctrl,
--					    IOSS_TELEM_EVT_CTRL_WRITE_SIZE,
-+					    &telem_ctrl, sizeof(telem_ctrl),
- 					    NULL, 0);
- 		if (ret) {
- 			pr_err("IOSS TELEM_CTRL Event Disable Write Failed\n");
-@@ -399,10 +390,9 @@ static int telemetry_setup_iossevtconfig(struct telemetry_evtconfig evtconfig,
- 	TELEM_ENABLE_PERIODIC(telem_ctrl);
- 	telem_ctrl |= ioss_period;
- 
--	ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
-+	ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
- 				    IOSS_TELEM_EVENT_CTL_WRITE,
--				    (u8 *)&telem_ctrl,
--				    IOSS_TELEM_EVT_CTRL_WRITE_SIZE, NULL, 0);
-+				    &telem_ctrl, sizeof(telem_ctrl), NULL, 0);
- 	if (ret) {
- 		pr_err("IOSS TELEM_CTRL Event Enable Write Failed\n");
- 		return ret;
-@@ -589,8 +579,9 @@ static int telemetry_setup(struct platform_device *pdev)
- 	u32 read_buf, events, event_regs;
- 	int ret;
- 
--	ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY, IOSS_TELEM_INFO_READ,
--				    NULL, 0, &read_buf, IOSS_TELEM_READ_WORD);
-+	ret = intel_scu_ipc_dev_command(telm_conf->scu, IOSS_TELEM,
-+					IOSS_TELEM_INFO_READ, NULL, 0,
-+					&read_buf, sizeof(read_buf));
- 	if (ret) {
- 		dev_err(&pdev->dev, "IOSS TELEM_INFO Read Failed\n");
- 		return ret;
-@@ -684,6 +675,8 @@ static int telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)
- 
- 	mutex_lock(&(telm_conf->telem_lock));
- 	if (ioss_period) {
-+		struct intel_scu_ipc_dev *scu = telm_conf->scu;
-+
- 		if (TELEM_SAMPLE_PERIOD_INVALID(ioss_period)) {
- 			pr_err("IOSS Sampling Period Out of Range\n");
- 			ret = -EINVAL;
-@@ -691,9 +684,9 @@ static int telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)
- 		}
- 
- 		/* Get telemetry EVENT CTL */
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
-+		ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
- 					    IOSS_TELEM_EVENT_CTL_READ, NULL, 0,
--					    &telem_ctrl, IOSS_TELEM_READ_WORD);
-+					    &telem_ctrl, sizeof(telem_ctrl));
- 		if (ret) {
- 			pr_err("IOSS TELEM_CTRL Read Failed\n");
- 			goto out;
-@@ -702,11 +695,10 @@ static int telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)
- 		/* Disable Telemetry */
- 		TELEM_DISABLE(telem_ctrl);
- 
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--					    IOSS_TELEM_EVENT_CTL_WRITE,
--					    (u8 *)&telem_ctrl,
--					    IOSS_TELEM_EVT_CTRL_WRITE_SIZE,
--					    NULL, 0);
-+		ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
-+						IOSS_TELEM_EVENT_CTL_WRITE,
-+						&telem_ctrl, sizeof(telem_ctrl),
-+						NULL, 0);
- 		if (ret) {
- 			pr_err("IOSS TELEM_CTRL Event Disable Write Failed\n");
- 			goto out;
-@@ -718,11 +710,10 @@ static int telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)
- 		TELEM_ENABLE_PERIODIC(telem_ctrl);
- 		telem_ctrl |= ioss_period;
- 
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--					    IOSS_TELEM_EVENT_CTL_WRITE,
--					    (u8 *)&telem_ctrl,
--					    IOSS_TELEM_EVT_CTRL_WRITE_SIZE,
--					    NULL, 0);
-+		ret = intel_scu_ipc_dev_command(scu, IOSS_TELEM,
-+						IOSS_TELEM_EVENT_CTL_WRITE,
-+						&telem_ctrl, sizeof(telem_ctrl),
-+						NULL, 0);
- 		if (ret) {
- 			pr_err("IOSS TELEM_CTRL Event Enable Write Failed\n");
- 			goto out;
-@@ -1017,9 +1008,9 @@ static int telemetry_plt_get_trace_verbosity(enum telemetry_unit telem_unit,
- 		break;
- 
- 	case TELEM_IOSS:
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--				IOSS_TELEM_TRACE_CTL_READ, NULL, 0, &temp,
--				IOSS_TELEM_READ_WORD);
-+		ret = intel_scu_ipc_dev_command(telm_conf->scu,
-+				IOSS_TELEM, IOSS_TELEM_TRACE_CTL_READ,
-+				NULL, 0, &temp, sizeof(temp));
- 		if (ret) {
- 			pr_err("IOSS TRACE_CTL Read Failed\n");
- 			goto out;
-@@ -1071,9 +1062,9 @@ static int telemetry_plt_set_trace_verbosity(enum telemetry_unit telem_unit,
- 		break;
- 
- 	case TELEM_IOSS:
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--				IOSS_TELEM_TRACE_CTL_READ, NULL, 0, &temp,
--				IOSS_TELEM_READ_WORD);
-+		ret = intel_scu_ipc_dev_command(telm_conf->scu, IOSS_TELEM,
-+						IOSS_TELEM_TRACE_CTL_READ,
-+						NULL, 0, &temp, sizeof(temp));
- 		if (ret) {
- 			pr_err("IOSS TRACE_CTL Read Failed\n");
- 			goto out;
-@@ -1082,9 +1073,9 @@ static int telemetry_plt_set_trace_verbosity(enum telemetry_unit telem_unit,
- 		TELEM_CLEAR_VERBOSITY_BITS(temp);
- 		TELEM_SET_VERBOSITY_BITS(temp, verbosity);
- 
--		ret = intel_pmc_ipc_command(PMC_IPC_PMC_TELEMTRY,
--				IOSS_TELEM_TRACE_CTL_WRITE, (u8 *)&temp,
--				IOSS_TELEM_WRITE_FOURBYTES, NULL, 0);
-+		ret = intel_scu_ipc_dev_command(telm_conf->scu, IOSS_TELEM,
-+						IOSS_TELEM_TRACE_CTL_WRITE,
-+						&temp, sizeof(temp), NULL, 0);
- 		if (ret) {
- 			pr_err("IOSS TRACE_CTL Verbosity Set Failed\n");
- 			goto out;
-@@ -1139,6 +1130,12 @@ static int telemetry_pltdrv_probe(struct platform_device *pdev)
- 
- 	telm_conf->ioss_config.regmap = mem;
- 
-+	telm_conf->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!telm_conf->scu) {
-+		ret = -EPROBE_DEFER;
-+		goto out;
-+	}
-+
- 	mutex_init(&telm_conf->telem_lock);
- 	mutex_init(&telm_conf->telem_trace_lock);
- 
--- 
-2.25.0
-
+>
+> >      }
+> >
+> >      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
+> >  }
+> >  arch_initcall(activate_jump_labels);
+> >
+> > -static __init int kvm_setup_pv_tlb_flush(void)
+> > +static __init int kvm_alloc_cpumask(void)
+> >  {
+> >      int cpu;
+> > +    bool alloc = false;
+> >
+> >      if (!kvm_para_available() || nopv)
+> >          return 0;
+> >
+> > -    if (pv_tlb_flush_supported()) {
+> > +    if (pv_tlb_flush_supported())
+> > +        alloc = true;
+> > +
+> > +#if defined(CONFIG_SMP)
+> > +    if (pv_ipi_supported())
+> > +        alloc = true;
+> > +#endif
+> > +
+> > +    if (alloc)
+> >          for_each_possible_cpu(cpu) {
+> > -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+> > +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+> >                  GFP_KERNEL, cpu_to_node(cpu));
+> >          }
+> > -        pr_info("KVM setup pv remote TLB flush\n");
+> > -    }
+> >
+> >      return 0;
+> >  }
+> > -arch_initcall(kvm_setup_pv_tlb_flush);
+> > +arch_initcall(kvm_alloc_cpumask);
+> >
+> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
+> >
+> > --
+> > 2.7.4
+> >
+>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>
+> --
+> Vitaly
+>
