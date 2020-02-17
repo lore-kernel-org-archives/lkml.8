@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39697C34025
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2ACC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0B82464E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D5620801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="OGejrzJJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jxzbvijI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgBQQzt (ORCPT
+        id S1729396AbgBQQzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:55:49 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:25736 "EHLO
+        Mon, 17 Feb 2020 11:55:40 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:35428 "EHLO
         mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbgBQQzq (ORCPT
+        with ESMTP id S1728791AbgBQQzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:55:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581958543;
+        Mon, 17 Feb 2020 11:55:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581958537;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZgORgM8vXfVpxJK0cdlBAAYDc4AOvqyLMpTFmKSS8Do=;
-        b=OGejrzJJPlFmtWsEktDSNyR/N+y2qari9QnVyGkNdWoX0UhBC88VMBUgDZojInEqqv
-        x4XPqd+b8paexj8yK9r2AQUX7yFbv7SkScgIcMIm98v+wULwLprgR9d9dfQZR/meemtf
-        AfUouZ7XdV1XAmqISQsGfcpmXF2fcZ74awzFFjHp5eoEwczkGKvwwU0uTEzH6XNqxG0V
-        cq3C8Zxz56IS398nhZr51w021ffAnKs+ZRyiZTMWEioMhK6lqcxxTIInmSbuxmUB+UkG
-        ybiYmJReLT8cX5GaU+EPEcKSGHvCMbuQfqENZez/HV67A87sk78BBpbq1Cgeywdh69Er
-        pj3w==
+        bh=gTk8MRIaL+Zoo6AYmT56Y6jd8ZDzvosVYa8gE1FYjOU=;
+        b=jxzbvijIQbBRUsIBTju5RoF96hW3gOLEHd2pEUNFIYC90kpiRGznHONXB9dfySZ+bl
+        TgLY/6rHK+mZmL5MtZEdUJviKo/cP4w517ot+YVMGL4hAXQEEcB6oKvFseCOOFqV1xK3
+        b6nxuspMcW+hbDv09eIL49Q1kU67TzGCGHffQkB/rG/fM5YK+xQLrNMxEl92XsfqhcWI
+        KcMTry/xu4DdmrSyI/kaQu94f2MlGhhBscDWgcKf+lSoXb8QqIYZ9qkyqcTrbdEtt1UD
+        NeyUX81h7aF71ttjl2mKwZbzt9X7AwtAzffEREIm9H4l0kKXOxCTp4IBhGLxrzrHo17y
+        1aJw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1HGtYOqu
+        with ESMTPSA id U06217w1HGtXOqs
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Mon, 17 Feb 2020 17:55:34 +0100 (CET)
+        Mon, 17 Feb 2020 17:55:33 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -63,9 +63,9 @@ To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [RFC v4 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
-Date:   Mon, 17 Feb 2020 17:55:29 +0100
-Message-Id: <b53378842303663f88ec90d6c9dc36adab1ea96c.1581958529.git.hns@goldelico.com>
+Subject: [RFC v4 3/6] Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
+Date:   Mon, 17 Feb 2020 17:55:27 +0100
+Message-Id: <b0792c096e246be5af73fa22d42d4aac8e8e4b96.1581958529.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1581958529.git.hns@goldelico.com>
 References: <cover.1581958529.git.hns@goldelico.com>
@@ -78,55 +78,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 
-This patch brings support for the JZ4780 efuse. Currently it only exposes
-a read only access to the entire 8K bits efuse memory and the
-ethernet mac address for the davicom dm9000 chip on the CI20 board.
-
-It also changes the nemc reg range to avoid overlap.
+This patch brings support for the JZ4780 efuse. Currently it only expose
+a read only access to the entire 8K bits efuse memory.
 
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ .../ABI/testing/sysfs-driver-jz4780-efuse        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..c9461310aa8b 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -358,7 +358,7 @@
- 
- 	nemc: nemc@13410000 {
- 		compatible = "ingenic,jz4780-nemc";
--		reg = <0x13410000 0x10000>;
-+		reg = <0x13410000 0x4c>;
- 		#address-cells = <2>;
- 		#size-cells = <1>;
- 		ranges = <1 0 0x1b000000 0x1000000
-@@ -373,6 +373,21 @@
- 		status = "disabled";
- 	};
- 
-+	efuse: efuse@134100d0 {
-+		compatible = "ingenic,jz4780-efuse";
-+		reg = <0x134100d0 0x2c>;
-+
-+		clocks = <&cgu JZ4780_CLK_AHB2>;
-+		clock-names = "bus_clk";
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		eth0_addr: eth-mac-addr@0x22 {
-+			reg = <0x22 0x6>;
-+		};
-+	};
-+
- 	dma: dma@13420000 {
- 		compatible = "ingenic,jz4780-dma";
- 		reg = <0x13420000 0x400
+diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+new file mode 100644
+index 000000000000..bb6f5d6ceea0
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+@@ -0,0 +1,16 @@
++What:		/sys/devices/*/<our-device>/nvmem
++Date:		December 2017
++Contact:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
++Description:	read-only access to the efuse on the Ingenic JZ4780 SoC
++		The SoC has a one time programmable 8K efuse that is
++		split into segments. The driver supports read only.
++		The segments are
++		0x000   64 bit Random Number
++		0x008  128 bit Ingenic Chip ID
++		0x018  128 bit Customer ID
++		0x028 3520 bit Reserved
++		0x1E0    8 bit Protect Segment
++		0x1E1 2296 bit HDMI Key
++		0x300 2048 bit Security boot key
++Users:		any user space application which wants to read the Chip
++		and Customer ID
 -- 
 2.23.0
 
