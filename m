@@ -2,151 +2,96 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834E3C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56512C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C5A20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB0320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vCFFrRZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgBQKHM (ORCPT
+        id S1729153AbgBQKHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:07:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42610 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgBQKHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:07:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 76A7BAD5C;
-        Mon, 17 Feb 2020 10:07:09 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     oneukum@suse.com, phil@raspberrypi.com, tim.gover@raspberrypi.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] usb: xhci-pci: Raspberry Pi FW loader for VIA VL805
-Date:   Mon, 17 Feb 2020 11:07:00 +0100
-Message-Id: <20200217100701.19949-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.0
+        Mon, 17 Feb 2020 05:07:24 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44396 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729073AbgBQKHX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:07:23 -0500
+Received: by mail-qt1-f193.google.com with SMTP id k7so11600335qth.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QKmvUuTt70pSAatHZ0jteOvjXuuDVvr+bCMj5+FFq08=;
+        b=vCFFrRZrjoPXbs1+l6naVB0eUJ3yxVHXvgsyCrb5LjhS2ONKBUaYUtYVw8ooD3MpVN
+         rXDdKtQu97wRmL+FqAuQ7abYMjL9ccTqfVst4GoDIVCLzyEgIowJpIQIpOm8kGoeWN19
+         0sqaDpLR2KWxdmYkc+d0qvaarFa+9Y2mjq2kaOi/a2ysWjbnV/G0/acHVaeS3PrkED8Y
+         p+6l4U2D2xkPj0Zv/wY+ZaJfYPvDNR/+Z/mt8cz+c+K+ueUQY9WA1KfqUPdBBQ+TCEaV
+         CQ6Au2FpqwJYghlMkX11cuJgyBb8zSchrJE+gzsroZtPXEGUB7i8rW7QW1Ekz4/5whZ/
+         5bOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QKmvUuTt70pSAatHZ0jteOvjXuuDVvr+bCMj5+FFq08=;
+        b=Gr8OWmFmQMHJB+nTaiEU7sxmZBogZ4oRaS4APUp05tnBfryaoI+2agO6RsU+r7IMbE
+         HjEfBsnLuP8JLFq7scXnUx/2HpTgBSBaxFljGOZ5+CR9Mh/Tokr1KRWAg+op5n9T+w9Z
+         fJ3U4pg7CB4c7evbcnsBRC1k6XHQ/XUaN/HVCCRqFzFDFZ4kRh2XHAmcAYZ4gtsEOSLO
+         GtLQszRl9vK63WsnqU822Hbqk4n63XleW9Q/UB9SdfenAHdTmAO9RtLXgrt7DxDV2oHS
+         wFC8buXoydNd2UGz5ydrBBHsQ2MVwHYciUYWSzW087e2poKgzBRLuzeNFJ04l9hX5wsa
+         kmxA==
+X-Gm-Message-State: APjAAAWITAZ6w3CzApKDhg61vgCtIPdCvBKHRVmgXG4IbIjY6b5b49vF
+        f/0RNa/zf8LArr1lFyG29zA9xVZX/nFtLe85e6VEiJN/
+X-Google-Smtp-Source: APXvYqwVP2B36bbYFlQML/AXp94nphTIrkBxle/EKeNaBgmECufJ48t3oBIbJyL9Vm9rR/3FxaY+WDfBPXcQXWiWeHg=
+X-Received: by 2002:ac8:44d1:: with SMTP id b17mr5644819qto.208.1581934043023;
+ Mon, 17 Feb 2020 02:07:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com> <1581664537-14386-5-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1581664537-14386-5-git-send-email-srinivas.neeli@xilinx.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 17 Feb 2020 11:07:12 +0100
+Message-ID: <CAMpxmJVLh6uq=0PKdHZ1CrmfCTuJen3UyVeNMqmCHv8bFAYARw@mail.gmail.com>
+Subject: Re: [PATCH V2 4/7] gpio: zynq: Add Versal support
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-VideCore.  Inform VideCore that VL805 was just reset, or defer xhci's
-probe if not yet joinable trough the mailbox interface.
+pt., 14 lut 2020 o 08:16 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
+=C5=82(a):
+>
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>
+> Add Versal support in gpio.
+> Only bank 0 and 3 are connected to the Multiplexed Input output pins.
+> Bank 0 to mio and bank3 to fabric Multiplexed input output pins.
+>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> Versal devices are the industry's first adaptive compute acceleration pla=
+tforms.
+> https://www.xilinx.com/support/documentation/data_sheets/ds950-versal-ove=
+rview.pdf
+>
 
-Based on Tim Gover's downstream implementation.
+Ok so you added the description, but why isn't it part of the commit
+message? We want to make this information part of the git history -
+otherwise it'll get lost on the mailing list.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/usb/host/xhci-pci.c                | 50 ++++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h |  2 +-
- 2 files changed, 51 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 4917c5b033fa..eadace4a9339 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -13,6 +13,8 @@
- #include <linux/module.h>
- #include <linux/acpi.h>
- 
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "xhci.h"
- #include "xhci-trace.h"
- 
-@@ -308,6 +310,44 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
- 	return xhci_pci_reinit(xhci, pdev);
- }
- 
-+/*
-+ * On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-+ * loaded directly from an EEPROM or, if not present, by the SoC's VideCore.
-+ * Inform VideCore that VL805 was just reset, or defer xhci's probe if not yet
-+ * joinable trough the mailbox interface.
-+ */
-+static int raspberrypi_load_vl805_fw(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_RASPBERRYPI_FIRMWARE
-+	struct device_node *fw_np;
-+	struct rpi_firmware *fw;
-+	u32 dev_addr;
-+	int ret;
-+
-+	fw_np = of_find_compatible_node(NULL, NULL,
-+					"raspberrypi,bcm2835-firmware");
-+	if (!fw_np)
-+		return 0;
-+
-+	fw = rpi_firmware_get(fw_np);
-+	of_node_put(fw_np);
-+	if (!fw)
-+		return -EPROBE_DEFER;
-+
-+	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-+		   PCI_FUNC(pdev->devfn) << 12;
-+
-+	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-+				    &dev_addr, sizeof(dev_addr));
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(&pdev->dev, "loaded Raspberry Pi's VL805 firmware\n");
-+
-+#endif
-+	return 0;
-+}
-+
- /*
-  * We need to register our own PCI probe function (instead of the USB core's
-  * function) in order to create a second roothub under xHCI.
-@@ -321,6 +361,16 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	driver = (struct hc_driver *)id->driver_data;
- 
-+	if (dev->vendor == PCI_VENDOR_ID_VIA && dev->device == 0x3483) {
-+		retval = raspberrypi_load_vl805_fw(dev);
-+		if (retval) {
-+			if (retval != -EPROBE_DEFER)
-+				dev_err(&dev->dev,
-+					"Failed to load VL805's firmware");
-+			return retval;
-+		}
-+	}
-+
- 	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
- 	pm_runtime_get_noresume(&dev->dev);
- 
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 7800e12ee042..cc9cdbc66403 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -90,7 +90,7 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_SET_PERIPH_REG =                         0x00038045,
- 	RPI_FIRMWARE_GET_POE_HAT_VAL =                        0x00030049,
- 	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
--
-+	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
- 
- 	/* Dispmanx TAGS */
- 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
--- 
-2.25.0
-
+Bart
