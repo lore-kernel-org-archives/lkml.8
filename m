@@ -2,136 +2,124 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BC0C3402E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1643AC3402E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAD920801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581980820;
-	bh=RAdEtUevi7d8J2ZSQsHwYTyntI626a0Mi4hSPwH+4OY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0X7U6aOVvCkhHP/QStP/TJ8YG0disA7qQnLNR4Q4phbohiSZUvjOPLQ4NhJgzrTSk
-	 A4AZuQ4J2NT9q/+wRyHJwO9piCzwt6AzX7XrZgjEbraDQdWKkvIzpCCUjnNHuYQh/K
-	 wgoDxk1UK0iu1GAzRKrNk6y96DJ+lSvDSr6jJ3k4=
+	by mail.kernel.org (Postfix) with ESMTP id EADB220725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgBQXG6 (ORCPT
+        id S1726107AbgBQXKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 18:06:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52774 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 18:10:06 -0500
+Received: from muru.com ([72.249.23.125]:55732 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgBQXG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:06:58 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B16D120725;
-        Mon, 17 Feb 2020 23:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581980817;
-        bh=RAdEtUevi7d8J2ZSQsHwYTyntI626a0Mi4hSPwH+4OY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=1E4tEyn8Q3BGrBZy4ah6JCxFQYUXjEHxUSlo3eLgDzWLGsq5YbFkXG2J8Pari1k7X
-         HbYK5oaWf5ShRPrGODFiaN0xnwVRqdeFjSuu+eXGU8tNyv7mKByyMHS/nYV0A6ak5U
-         ivrEfgDGfYYrov9lVBlT5qovG+gx+JVRlGW5GwLY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 82B2535227A8; Mon, 17 Feb 2020 15:06:57 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:06:57 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
- ->srcu_gp_seq load
-Message-ID: <20200217230657.GA8985@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
- <20200215002932.15976-4-paulmck@kernel.org>
- <20200217124507.GT14914@hirez.programming.kicks-ass.net>
- <20200217183220.GS2935@paulmck-ThinkPad-P72>
+        id S1725922AbgBQXKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 18:10:06 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8890B8087;
+        Mon, 17 Feb 2020 23:10:48 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 15:10:01 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200217231001.GC35972@atomide.com>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
+ <20200214170322.GZ64767@atomide.com>
+ <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217183220.GS2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:32:20AM -0800, Paul E. McKenney wrote:
-> On Mon, Feb 17, 2020 at 01:45:07PM +0100, Peter Zijlstra wrote:
-> > On Fri, Feb 14, 2020 at 04:29:32PM -0800, paulmck@kernel.org wrote:
-> > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > 
-> > > The load of the srcu_struct structure's ->srcu_gp_seq field in
-> > > srcu_funnel_gp_start() is lockless, so this commit adds the requisite
-> > > READ_ONCE().
-> > > 
-> > > This data race was reported by KCSAN.
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [200217 12:10]:
+> On 14/02/2020 19.03, Tony Lindgren wrote:
+> > But right now in droid4 voice call case mcbsp is just the i2s transport,
+> > and everything happens betwee the modem and the cpcap pmic.
+> 
+> Iow you don't need McBSP DAI at all. If you would have added the dummy
+> codec to McBSP !3 and use that, it would work in a same way, or to DMIC
+> or McPDM...
+> 
+> The McBSP ops are NULL for the dummy dai, so McBSP is turned off.
+
+Hmm yeah I don't know if the cpcap codec on the same mcbsp needs
+mcbsp for voice call.
+
+According to Sebastian sounds like mcbsp can be idle at that point.
+
+But what about capture of voice call at the mcbsp from the
+TDM slot? In that case mcbsp would be active.
+
+> >>>> I know it was discussed, but can not find the mail:
+> >>>> Can you brief again on the audio connection?
+> >>>
+> >>> Below is a link to a mailing list thread where Sebastian describes
+> >>> the audio connection:
+> >>>
+> >>> https://lkml.org/lkml/2018/3/28/881
+> >>
+> >> Thanks!
+> >>  
+> >>>> Do you have branch with working code?
+> >>>
+> >>> Yeah I have slightly older set of the patches in my droid4-pending-v5.5
+> >>> kernel.org git branch with voice calls working.
+> >>
+> >> I think I should put my droid4 out and try to get it working...
+> >> Do you have a link for dummies to follow to get started? ;)
 > > 
-> > But is there in actual fact a data-race? AFAICT this code was just fine.
+> > Probably the easiest one to use right now is the Maemo-leste devuan based
+> > test image using v5.5 kernel + modem and audio patches:
+> > 
+> > https://leste.maemo.org/Motorola_Droid_4
+> > 
+> > Just use a decent speed micro-sd card rated "a1" for example.
 > 
-> Now that you mention it, the lock is held at that point, isn't it?  So if
-> that READ_ONCE() actually does anything, there is a bug somewhere else.
-> 
-> Good catch, I will drop this patch, thank you!
+> Cool. Now I can dual boot the droid4 :D
+> I needed to rewrite the /etc/shadow to get a known root password so I
+> can log in.
 
-But looking more closely, I saw a lockless update to that field.  Which
-can be argued to be sort of OK, but it definitely was not the intent.
-So please see below for the updated patch.
+Not sure if you mean password for the droid4-kexecboot or the
+Linux distro you installed.. But for droid4-kexecboot, you
+can configure it to automatically download new kernels over wlan.
+There's some info on the machine specific password and how to
+configure wlan in the droid4-kexecboot buildroot commits here:
 
-							Thanx, Paul
+https://github.com/tmlind/buildroot/commits/droid4-kexecboot-2017.11
 
-------------------------------------------------------------------------
+> Wifi is up, so in theory I can scp kernel/dtb to /boot/boot/ and update
+> the /boot/boot/boot.cfg to boot my kernel, right?
 
-commit 52324a7b8a025f47a1a1a9fbd23ffe59fa764764
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Fri Jan 3 11:42:05 2020 -0800
+Yeah you can update kernels and modules over wlan from the distro(s)
+you have configured, and also from droid4-kexecboot as above.
 
-    srcu: Hold srcu_struct ->lock when updating ->srcu_gp_seq
-    
-    A read of the srcu_struct structure's ->srcu_gp_seq field should not
-    need READ_ONCE() when that structure's ->lock is held.  Except that this
-    lock is not always held when updating this field.  This commit therefore
-    acquires the lock around updates and removes a now-unneeded READ_ONCE().
-    
-    This data race was reported by KCSAN.
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    [ paulmck: Switch from READ_ONCE() to lock per Peter Zilstra question. ]
+And note that kexecboot looks for a boot/boot.cfg file to use on
+every usable parition it finds and uses all the found entries
+based on the priority configured for the boot.cfg entry.
 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 119a373..c19c1df 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -450,7 +450,7 @@ static void srcu_gp_start(struct srcu_struct *ssp)
- 	spin_unlock_rcu_node(sdp);  /* Interrupts remain disabled. */
- 	smp_mb(); /* Order prior store to ->srcu_gp_seq_needed vs. GP start. */
- 	rcu_seq_start(&ssp->srcu_gp_seq);
--	state = rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq));
-+	state = rcu_seq_state(ssp->srcu_gp_seq);
- 	WARN_ON_ONCE(state != SRCU_STATE_SCAN1);
- }
- 
-@@ -1130,7 +1130,9 @@ static void srcu_advance_state(struct srcu_struct *ssp)
- 			return; /* readers present, retry later. */
- 		}
- 		srcu_flip(ssp);
-+		spin_lock_irq_rcu_node(ssp);
- 		rcu_seq_set_state(&ssp->srcu_gp_seq, SRCU_STATE_SCAN2);
-+		spin_unlock_irq_rcu_node(ssp);
- 	}
- 
- 	if (rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_SCAN2) {
+Regards,
+
+Tony
