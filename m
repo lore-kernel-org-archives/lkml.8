@@ -2,267 +2,186 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00214C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C1C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BBD206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A620206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581939920;
+	bh=zO5Udwwv9Ys92RX9T3qjhKgUMcbRBeZRM6/lvx7ptII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZbhZOv0tJie/pFGtc4DnRThUFtg11tUZWBTmfJlN0RN00W4ic4ErgcaAK2yzUFi1Z
+	 6vq1VgIPVBZ6CrIQdFKPNcZMEdKOPNjYShvLRn1DkLTAjsxTxHV5KBMtQW5/+Xg/ao
+	 5PYTQqQIvAo9GYVuwSDGDmqgkyzfBmycbQXMROqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgBQLnh (ORCPT
+        id S1728894AbgBQLpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:43:37 -0500
-Received: from mga18.intel.com ([134.134.136.126]:24157 "EHLO mga18.intel.com"
+        Mon, 17 Feb 2020 06:45:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgBQLnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:43:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 03:43:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,452,1574150400"; 
-   d="scan'208";a="435525725"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Feb 2020 03:43:33 -0800
-Subject: Re: [PATCH v4 4/4] perf tools: Support "branch-misses:pp" on arm64
-To:     James Clark <james.clark@arm.com>, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
-References: <20200210122509.GA2005279@krava>
- <20200211140445.21986-1-james.clark@arm.com>
- <20200211140445.21986-5-james.clark@arm.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <3114ea3a-5d9b-2c25-af41-cead352b6a02@intel.com>
-Date:   Mon, 17 Feb 2020 13:42:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728272AbgBQLpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:45:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18926206F4;
+        Mon, 17 Feb 2020 11:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581939917;
+        bh=zO5Udwwv9Ys92RX9T3qjhKgUMcbRBeZRM6/lvx7ptII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AzvzfXY28ydxqigdCRiIzStIgFcQIJmRtvivUVuRXF+Zmx4oTcTA1CEC0nEUTtdvl
+         IKAxHRuR9106n+epZ3vTD/rCDHb9ozJVqZIzwcWTGt4X3u+0Rn282PFthTVXcW8v5S
+         gqTEjt3GRaVBlHtqjV/5jdMxiMfCBKBzzmBdaox4=
+Date:   Mon, 17 Feb 2020 12:45:15 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200217114515.GA154666@kroah.com>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165755.GB3894455@kroah.com>
+ <20200211184130.GA11908@Mani-XPS-13-9360>
+ <20200211192055.GA1962867@kroah.com>
+ <20200213152013.GB15010@mani>
+ <20200213153418.GA3623121@kroah.com>
+ <20200213154809.GA26953@mani>
+ <20200213155302.GA3635465@kroah.com>
+ <20200217052743.GA4809@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <20200211140445.21986-5-james.clark@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217052743.GA4809@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/02/20 4:04 pm, James Clark wrote:
-> From: Tan Xiaojun <tanxiaojun@huawei.com>
+On Mon, Feb 17, 2020 at 10:57:43AM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
 > 
-> At the suggestion of James Clark, use spe to support the precise
-> ip of some events. Currently its support event is:
-> branch-misses.
+> On Thu, Feb 13, 2020 at 07:53:02AM -0800, Greg KH wrote:
+> > On Thu, Feb 13, 2020 at 09:18:09PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Greg,
+> > > 
+> > > On Thu, Feb 13, 2020 at 07:34:18AM -0800, Greg KH wrote:
+> > > > On Thu, Feb 13, 2020 at 08:50:13PM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
+> > > > > > On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > Hi Greg,
+> > > > > > > 
+> > > > > > > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
+> > > > > > > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > > > --- /dev/null
+> > > > > > > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > > > > > > @@ -0,0 +1,407 @@
+> > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > > > +/*
+> > > > > > > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > > > > > > > > + *
+> > > > > > > > > + */
+> > > > > > > > > +
+> > > > > > > > > +#define dev_fmt(fmt) "MHI: " fmt
+> > > > > > > > 
+> > > > > > > > This should not be needed, right?  The bus/device name should give you
+> > > > > > > > all you need here from what I can tell.  So why is this needed?
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > The log will have only the device name as like PCI-E. But that won't specify
+> > > > > > > where the error is coming from. Having "MHI" prefix helps the users to
+> > > > > > > quickly identify that the error is coming from MHI stack.
+> > > > > > 
+> > > > > > If the driver binds properly to the device, the name of the driver will
+> > > > > > be there in the message, so I suggest using that please.
+> > > > > > 
+> > > > > > No need for this prefix...
+> > > > > > 
+> > > > > 
+> > > > > So the driver name will be in the log but that won't help identifying where
+> > > > > the log is coming from. This is more important for MHI since it reuses the
+> > > > > `struct device` of the transport device like PCI-E. For instance, below is
+> > > > > the log without MHI prefix:
+> > > > > 
+> > > > > [   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
+> > > > > [   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
+> > > > > 
+> > > > > As you can see, this gives the assumption that the log is coming from the
+> > > > > ath11k_pci driver. But the reality is, it is coming from MHI bus.
+> > > > 
+> > > > Then you should NOT be trying to "reuse" a struct device.
+> > > > 
+> > > > > With the prefix added, we will get below:
+> > > > > 
+> > > > > [   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
+> > > > > [   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
+> > > > > 
+> > > > > IMO, the prefix will give users a clear idea of logs and that will be very
+> > > > > useful for debugging.
+> > > > > 
+> > > > > Hope this clarifies.
+> > > > 
+> > > > Don't try to reuse struct devices, if you are a bus, have your own
+> > > > devices as that's the correct way to do things.
+> > > > 
+> > > 
+> > > I assumed that the buses relying on a different physical interface for the
+> > > actual communication can reuse the `struct device`. I can see that the MOXTET
+> > > bus driver already doing it. It reuses the `struct device` of SPI.
+> > 
+> > How can you reuse anything?
+> > 
+> > > And this assumption has deep rooted in MHI bus design.
+> > 
+> > Maybe I do not understand what this is at all, but a device can only be
+> > on one "bus" at a time.  How is that being broken here?
+> > 
 > 
-> Example usage:
+> Let me share some insight on how it is being used:
 > 
-> $ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
-> (:p/pp/ppp is same for this case.)
+> The MHI bus sits on top of the actual physical bus like PCI-E and requires
+> the physical bus for doing activities like allocating I/O virtual address,
+> runtime PM etc... The part which gets tied to the PCI-E from MHI is called MHI
+> controller driver. This MHI controller driver is also the actual PCI-E driver
+> managing the device.
 > 
-> $ ./perf report --stdio
-> ("--stdio is not necessary")
+> For instance, we have QCA6390 PCI-E WLAN device. For this device, there is a
+> ath11k PCI-E driver and the same driver also registers as a MHI controller and
+> acts as a MHI controller driver. This is where I referred to reusing the PCI-E
+> struct device. It's not that MHI bus itself is reusing the PCI-E struct device
+> but we need the PCI-E device pointer to do above mentioned IOVA, PM operations
+> in some places. One of the usage is below:
 > 
-> --------------------------------------------------------------------
-> ...
->  # Samples: 14  of event 'branch-misses:pp'
->  # Event count (approx.): 14
->  #
->  # Children      Self  Command  Shared Object      Symbol
->  # ........  ........  .......  .................  ..........................
->  #
->     14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
->     14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
->      7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
->      7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
->      7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
->      7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
->      7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
->      7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
->      7.14%     7.14%  dd       ld-2.28.so         [.] check_match
->      7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
->      7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
->      7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
-> ...
-> --------------------------------------------------------------------
+> ```
+> void *buf = dma_alloc_coherent(mhi_cntrl->dev, size, dma_handle, gfp);
+> ```
 > 
-> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-> Suggested-by: James Clark <James.Clark@arm.com>
-> Tested-by: Qi Liu <liuqi115@hisilicon.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-> Cc: Al Grant <al.grant@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/arch/arm/util/auxtrace.c | 38 +++++++++++++++++++++++++++++
->  tools/perf/builtin-record.c         |  5 ++++
->  tools/perf/util/arm-spe.c           |  9 +++++++
->  tools/perf/util/arm-spe.h           |  3 +++
->  tools/perf/util/auxtrace.h          |  6 +++++
->  5 files changed, 61 insertions(+)
+> There was some discussion about it here: https://lkml.org/lkml/2020/1/27/21
 > 
-> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> index 0a6e75b8777a..18f0ea7556e7 100644
-> --- a/tools/perf/arch/arm/util/auxtrace.c
-> +++ b/tools/perf/arch/arm/util/auxtrace.c
-> @@ -10,11 +10,25 @@
->  
->  #include "../../util/auxtrace.h"
->  #include "../../util/debug.h"
-> +#include "../../util/env.h"
->  #include "../../util/evlist.h"
->  #include "../../util/pmu.h"
->  #include "cs-etm.h"
->  #include "arm-spe.h"
->  
-> +#define SPE_ATTR_TS_ENABLE		BIT(0)
-> +#define SPE_ATTR_PA_ENABLE		BIT(1)
-> +#define SPE_ATTR_PCT_ENABLE		BIT(2)
-> +#define SPE_ATTR_JITTER			BIT(16)
-> +#define SPE_ATTR_BRANCH_FILTER		BIT(32)
-> +#define SPE_ATTR_LOAD_FILTER		BIT(33)
-> +#define SPE_ATTR_STORE_FILTER		BIT(34)
-> +
-> +#define SPE_ATTR_EV_RETIRED		BIT(1)
-> +#define SPE_ATTR_EV_CACHE		BIT(3)
-> +#define SPE_ATTR_EV_TLB			BIT(5)
-> +#define SPE_ATTR_EV_BRANCH		BIT(7)
-> +
->  static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->  {
->  	struct perf_pmu **arm_spe_pmus = NULL;
-> @@ -108,3 +122,27 @@ struct auxtrace_record
->  	*err = 0;
->  	return NULL;
->  }
-> +
-> +void auxtrace__preprocess_evlist(struct evlist *evlist)
-> +{
-> +	struct evsel *evsel;
-> +	struct perf_pmu *pmu;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		/* Currently only supports precise_ip for branch-misses on arm64 */
-> +		if (!strcmp(perf_env__arch(evlist->env), "arm64")
+> The MHI bus itself has the struct device and it is the child of the physical
+> bus (PCI-E in this case).
+> 
+> Now coming to your actual question of why using a custom "MHI" prefix for
+> dev_ APIs. I agree that if we use the struct device of MHI bus it is not at all
+> needed. The fact that we are using "mhi_cntrl->dev" (which points to PCI-E dev)
+> is what confusing and it can be avoided.
 
-Isn't config ambiguous unless you also check type i.e.
+You should also rename "dev" there, as that is really a "pci device".
+So use the real pci device and name it as "parent_pci" or something like
+that, so we know just by looking at it as to what it really is.
 
-			&& evsel->core.attr.type == PERF_TYPE_HARDWARE
+Especially as traditionally "->dev" is the device structure for _this_
+device, not another one.
 
-> +			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-> +			&& evsel->core.attr.precise_ip)
-> +		{
-> +			pmu = perf_pmu__find("arm_spe_0");
-> +			if (pmu) {
+thanks,
 
-Changing the event seems a bit weird.
-
-> +				evsel->pmu_name = pmu->name;
-> +				evsel->core.attr.type = pmu->type;
-> +				evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-> +							| SPE_ATTR_BRANCH_FILTER;
-> +				evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
-> +				evsel->core.attr.precise_ip = 0;
-> +			}
-> +		}
-> +	}
-> +}
-> \ No newline at end of file
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 4c301466101b..3bc61f03d572 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2451,6 +2451,11 @@ int cmd_record(int argc, const char **argv)
->  
->  	argc = parse_options(argc, argv, record_options, record_usage,
->  			    PARSE_OPT_STOP_AT_NON_OPTION);
-> +
-> +	if (auxtrace__preprocess_evlist) {
-> +		auxtrace__preprocess_evlist(rec->evlist);
-> +	}
-> +
->  	if (quiet)
->  		perf_quiet_option();
->  
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 4ef22a0775a9..b21806c97dd8 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -778,6 +778,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  	attr.sample_id_all = evsel->core.attr.sample_id_all;
->  	attr.read_format = evsel->core.attr.read_format;
->  
-> +	/* If it is in the precise ip mode, there is no need to
-> +	 * synthesize new events. */
-> +	if (!strncmp(evsel->name, "branch-misses", 13)) {
-> +		spe->sample_branch_miss = true;
-> +		spe->branch_miss_id = evsel->core.id[0];
-> +
-> +		return 0;
-> +	}
-> +
->  	/* create new id val to be a fixed offset from evsel id */
->  	id = evsel->core.id[0] + 1000000000;
->  
-> diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-> index 98d3235781c3..8b1fb191d03a 100644
-> --- a/tools/perf/util/arm-spe.h
-> +++ b/tools/perf/util/arm-spe.h
-> @@ -20,6 +20,8 @@ enum {
->  union perf_event;
->  struct perf_session;
->  struct perf_pmu;
-> +struct evlist;
-> +struct evsel;
->  
->  struct auxtrace_record *arm_spe_recording_init(int *err,
->  					       struct perf_pmu *arm_spe_pmu);
-> @@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->  				  struct perf_session *session);
->  
->  struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
-> +void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
->  #endif
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 80617b0d044d..4f89a3a31ab2 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -584,6 +584,7 @@ void auxtrace__dump_auxtrace_sample(struct perf_session *session,
->  int auxtrace__flush_events(struct perf_session *session, struct perf_tool *tool);
->  void auxtrace__free_events(struct perf_session *session);
->  void auxtrace__free(struct perf_session *session);
-> +void auxtrace__preprocess_evlist(struct evlist *evlist) __attribute__((weak));
->  
->  #define ITRACE_HELP \
->  "				i:	    		synthesize instructions events\n"		\
-> @@ -728,6 +729,11 @@ void auxtrace__free(struct perf_session *session __maybe_unused)
->  {
->  }
->  
-> +static inline
-> +void auxtrace__preprocess_evlist(struct evlist *evlist __maybe_unused)
-> +{
-> +}
-> +
->  static inline
->  int auxtrace_index__write(int fd __maybe_unused,
->  			  struct list_head *head __maybe_unused)
-> 
-
+greg k-h
