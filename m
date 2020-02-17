@@ -2,115 +2,120 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B4C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19458C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5033320718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E253220718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vt9a75b6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puy2ySPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgBQPdr (ORCPT
+        id S1728748AbgBQPeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:33:47 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37432 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728002AbgBQPdq (ORCPT
+        Mon, 17 Feb 2020 10:34:05 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33855 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbgBQPeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:33:46 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t7so9455978edr.4;
-        Mon, 17 Feb 2020 07:33:45 -0800 (PST)
+        Mon, 17 Feb 2020 10:34:05 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so9371863pgi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 07:34:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cpDwgE9K4RX3YbsUsXFN1RxAexrY0yin13bDyT1Pydo=;
-        b=Vt9a75b6ulHLYug9ORVv2qddFUbDqbV0qW9CtOGS4oDqSVs9nx21NosXzjxYJVxMnz
-         Pu7nhiFxbbhjtAUjfyo5P+4RueOD0E/oVaELaFUW5l36zeXuWi+S7PCBLQ8v1a4Q9yXp
-         1Aq8d59GNpz3RxJ13Rzlmwbb1bLbXCvKrbPlNX29pF3Wr0730Y0v5uMzH8llyNoah3W4
-         z/TZA8eqBekmfAqV54oWYf1hPTjOXup5hzElFNxKmGJBG8bBIMYVEHKvRzIJZGDZR4//
-         sC0GJzQPl18/wNWfZ5+lT+79A3KfPwE280NF++pr6knlLSsszJkFpHSBoTZUIu8U6Ws3
-         E1uQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OnGntDBcyiKhIaqHVrJNbrm40qr8SM9LXEMNXQWW6ww=;
+        b=puy2ySPzIMygltvNUbJE8vGf3zYfJWDb5d1gMlzL/Xhr1hVyX/AOPbH4tJy8m6CBrZ
+         bOMYxrMlSPRkq7d4m4xS0UUQhkX6khSRHbB2Auv4TX6O6zaa43iDz52AQXnw0tH5hlHh
+         Ei6p1C77fcO67RzPnKOeaUXQyp33kNaePe6WzzVao7Dm2hrk3n1wd0Xd00NA1+DMHUPd
+         j7hh8bOQT+d5Fh2SjytG2tJYdalDhNkU5lVx8kx4t8GPbjbLaCJeDwkC/tZsnbsZbUPH
+         jjGAMArjlXbqwcCByr1ZBWWe0X866EBAgE+EPaYGxCohozditLw4A44lg+/KL4wEdW5c
+         4dhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cpDwgE9K4RX3YbsUsXFN1RxAexrY0yin13bDyT1Pydo=;
-        b=bPXdixltFLcclUSwt0vEN3zL1ITqYM862xPUigLWeOUlKToI1zRziCdZKkwWZQy1+Q
-         PmaY1hXNo8IXhl/CeZO+c0p0PfGcwTpVljGgQPHL+tI6QIFmckpMucm2m3QmgbCFyn+R
-         n/d4qQiDJV0dz6FD5tklO169XP5Pb4PF+AhnnZrNxTUEKjxNOfex2cgUgvGzrkugkRYc
-         1UaZ6KpZD56GeFpXhfOENV3OVfEwJxznQk758nJDAa6SutapwAdn9QkcoyqQ0B4iiPgG
-         R4ZhmAjbqPxqFgINqBcBrQRZi8kUnRWLFx+dAygZmjRcLjVfYt/2sx3q5jmHyLLXN0e1
-         ItaQ==
-X-Gm-Message-State: APjAAAUtIR7zA65Qu/Pfj6BaSOMciJUAm9QuRVAYqG2ntBWIZDe2dKJh
-        nT6mbK8u3uL20bz4o8ppTCNr0AIcjBAG1ZeGL/M=
-X-Google-Smtp-Source: APXvYqyEhbUMliSSuUHQSx5pNXCM3Cx87B6D7Hnl92XJYYx/7VuKSXcpeYZMT6j5RHmnc3Urzc5Q2GClWyL+yoXzUlw=
-X-Received: by 2002:a17:906:31c3:: with SMTP id f3mr15005416ejf.239.1581953624846;
- Mon, 17 Feb 2020 07:33:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OnGntDBcyiKhIaqHVrJNbrm40qr8SM9LXEMNXQWW6ww=;
+        b=akEk1/P3JJm0jgZf1N1HlXXyYD+xGGY6b3ChQ17H2TCVVLd6m6AYeT/M/ZeTj7WCui
+         IaN3v3WCoTzmorgmZgdGq/I+DRhBcJT7PLT5uUpQj5ynUDtlVHURLFtIVjWaSfRdLSL4
+         ZCkjWpI9HtMiO+s7V4PCqsrOt6uEbJOovDeV3a6W8OXAvHOBWfsZ9Sobt9TQ7GyatzYh
+         kJmx+1espnBJx/E9cYBb3uHOHqXHf8oklVlUwzU1X9qV4JoW5W7UmDKKGFg3y/qFBOX4
+         FYsovI8Nd3W4VZ0GVsbIcCyVGMK3ZviosIhxu1D0P2X8eeyE1R3cOxvgT5SDBu1+gHc9
+         EHpQ==
+X-Gm-Message-State: APjAAAV4hx0Y3MGlECiQDJ0Sy6doiAJ3U9Dijwkntu+zxmRQQzG3Ssws
+        58jcycwoM1W97ih2dUckvMdEOVo6Fqk=
+X-Google-Smtp-Source: APXvYqz2CFg3GxIP/H+IgdKCxm1s0BXfvZ43HoHHoeIaCPsqWl8JRxmzOBbjGUiwrh89Li2i5GusqA==
+X-Received: by 2002:a63:fc0c:: with SMTP id j12mr18071653pgi.378.1581953643383;
+        Mon, 17 Feb 2020 07:34:03 -0800 (PST)
+Received: from gmail.com ([64.251.70.126])
+        by smtp.gmail.com with ESMTPSA id z16sm820852pff.125.2020.02.17.07.34.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 07:34:02 -0800 (PST)
+Date:   Mon, 17 Feb 2020 07:34:00 -0800
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 0/5] arm64: add the time namespace support
+Message-ID: <20200217153400.GA26105@gmail.com>
+References: <20200204175913.74901-1-avagin@gmail.com>
 MIME-Version: 1.0
-References: <20200217144414.409-1-olteanv@gmail.com> <20200217144414.409-4-olteanv@gmail.com>
- <20200217152912.GE31084@lunn.ch>
-In-Reply-To: <20200217152912.GE31084@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 17 Feb 2020 17:33:33 +0200
-Message-ID: <CA+h21ho29TRG8JYfSaaSsoxM-mg0-yOKBNCq9wbHDHCf2pkdUg@mail.gmail.com>
-Subject: Re: [PATCH devicetree 3/4] arm64: dts: fsl: ls1028a: add node for
- Felix switch
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <20200204175913.74901-1-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Vincenzo, could you take a look this patchset?
 
-On Mon, 17 Feb 2020 at 17:29, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Hi Vladimir
->
-> > +                                     /* Internal port with DSA tagging */
-> > +                                     mscc_felix_port4: port@4 {
-> > +                                             reg = <4>;
-> > +                                             phy-mode = "gmii";
->
-> Is it really using gmii? Often in SoC connections use something else,
-> and phy-mode = "internal" is more appropriate.
->
-
-What would be that "something else"? Given that the host port and the
-switch are completely different hardware IP blocks, I would assume
-that a parallel GMII is what's connecting them, no optimizations done.
-Certainly no serializer. But I don't know for sure.
-Does it matter, in the end?
-
-> > +                                             ethernet = <&enetc_port2>;
-> > +
-> > +                                             fixed-link {
-> > +                                                     speed = <2500>;
-> > +                                                     full-duplex;
-> > +                                             };
->
-> gmii and 2500 also don't really go together.
-
-Not even if you raise the clock frequency?
-
->
->      Andrew
-
-Thanks,
--Vladimir
+On Tue, Feb 04, 2020 at 09:59:08AM -0800, Andrei Vagin wrote:
+> Allocate the time namespace page among VVAR pages and add the logic
+> to handle faults on VVAR properly.
+> 
+> If a task belongs to a time namespace then the VVAR page which contains
+> the system wide VDSO data is replaced with a namespace specific page
+> which has the same layout as the VVAR page. That page has vdso_data->seq
+> set to 1 to enforce the slow path and vdso_data->clock_mode set to
+> VCLOCK_TIMENS to enforce the time namespace handling path.
+> 
+> The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+> update of the VDSO data is in progress, is not really affecting regular
+> tasks which are not part of a time namespace as the task is spin waiting
+> for the update to finish and vdso_data->seq to become even again.
+> 
+> If a time namespace task hits that code path, it invokes the corresponding
+> time getter function which retrieves the real VVAR page, reads host time
+> and then adds the offset for the requested clock which is stored in the
+> special VVAR page.
+> 
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Dmitry Safonov <dima@arista.com>
+> 
+> Andrei Vagin (5):
+>   arm64/vdso: use the fault callback to map vvar pages
+>   arm64/vdso: Zap vvar pages when switching to a time namespace
+>   arm64/vdso: Add time napespace page
+>   arm64/vdso: Handle faults on timens page
+>   arm64/vdso: Restrict splitting VVAR VMA
+> 
+>  arch/arm64/Kconfig                            |   1 +
+>  .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
+>  arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
+>  arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
+>  arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
+>  arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
+>  include/vdso/datapage.h                       |   1 +
+>  7 files changed, 147 insertions(+), 14 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
