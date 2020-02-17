@@ -2,107 +2,212 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D06C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C828C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46795214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581957130;
-	bh=G2x/hcIZgjfTD4IZeUf1w/CuOjyhAfKvMkN8o462eUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LOc0MbKvEObT6XDu48i9DshgYFC46peBGThhBPJJCoD1fNKgz/fMwdyu6I8Sm6snB
-	 OD1ghUq3tjO6r1fAAPVGUAaIJz0Cl3He6tFQFcZgB4LNFNmOOwBzxpOUyWXPbNHZGo
-	 yF3Wa9fr0dsziFIR2M7cny/PbFgEWcRpFD4raRew=
+	by mail.kernel.org (Postfix) with ESMTP id 4C776214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGmxuWOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgBQQcJ (ORCPT
+        id S1729080AbgBQQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Feb 2020 11:32:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32146 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728884AbgBQQcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Feb 2020 11:32:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727922AbgBQQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:32:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBD1214D8;
-        Mon, 17 Feb 2020 16:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581957128;
-        bh=G2x/hcIZgjfTD4IZeUf1w/CuOjyhAfKvMkN8o462eUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IfnA7PO4kayrrGf+qoG8q7MueEM8YAJjHbLMpu6oF71uhHKdiXw/N+KO7nHYgsITU
-         uM1bJ3Dpidm1ApH93bTg0vqxwbURCFIYmczuHu6Q8/diHDy2FSj6YxhH3OqQu78lZD
-         kEy7z3Np1frMm8ob6jmyBGWMGsK1L/weyN55VUMg=
-Date:   Mon, 17 Feb 2020 17:32:05 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        smohanad@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200217163205.GE1502885@kroah.com>
-References: <20200211192055.GA1962867@kroah.com>
- <20200213152013.GB15010@mani>
- <20200213153418.GA3623121@kroah.com>
- <20200213154809.GA26953@mani>
- <20200213155302.GA3635465@kroah.com>
- <20200217052743.GA4809@Mani-XPS-13-9360>
- <20200217115930.GA218071@kroah.com>
- <20200217130419.GA13993@Mani-XPS-13-9360>
- <20200217141503.GA1110972@kroah.com>
- <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581957127;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6DgjkXbrR+aTgzwFOwaNUb/pGw0eTRC9dHf2eJzgmD4=;
+        b=MGmxuWOcsqMKJVPUrVb4LEV0S476PvQRPOMfpe4AY7XMauSURQgMeG1C/t9Dtyj2fBUdZg
+        /eD791wU57UfPU4SUMKFGIInR5Ab+p7Cw49vBto/Aht7KQRNe9E5+beXwko6/Kw10mcwfQ
+        I5bma4IzGEyg4G/0may3QRGTHqRuRfM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-3lXvF2PbN4qGo6V5SohVJg-1; Mon, 17 Feb 2020 11:32:05 -0500
+X-MC-Unique: 3lXvF2PbN4qGo6V5SohVJg-1
+Received: by mail-wm1-f70.google.com with SMTP id f207so7211574wme.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:32:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6DgjkXbrR+aTgzwFOwaNUb/pGw0eTRC9dHf2eJzgmD4=;
+        b=s8rDmwyNDABDgUC8+i9U5HgsraC1Pi8EAHNESUUoxJc3X+bJhb3vf8As1GMQbdNhqi
+         7jxjSdCwVez9Gg7af9AVnaUioIyd1C/cK4oOVqWUlQUv8VbpdUyH3c6s21x9EdjzqvWf
+         V3Hn2gIG6bG0mCtEf52CkwA3RLE1Er0PY9Mmz7U4+BF63QqZ9jgLqtxRKKHipmigHc8P
+         usU+KrZuizLxByAHL/+DkhDX/2/7Co11gv75ehMzHLDKzX1Gx1L89yaHJ2K4wjvjnKUL
+         +9moqXElYfPIrmS5lL9cnUtCdEJCclyc41kjy0FtZfhV4RwjNlomxdTo55rwAz2KqB2A
+         fcHw==
+X-Gm-Message-State: APjAAAWao2ZO6RgHviBg18Cqg/67yCOH4VBQzgSDa9z5yZqSfZw2cUhG
+        78wjrZ7LMrepUVA1SIfijl4IKPRYCkl7uG72eJgHd/dmKuCPQiRL3RbkNZnV6E1Epm/HIVjai0a
+        9P27xZtCzmmxXxhGpdiWyssYr
+X-Received: by 2002:adf:806c:: with SMTP id 99mr22067829wrk.328.1581957124418;
+        Mon, 17 Feb 2020 08:32:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzIkRaqPRA5fxC/o142XfHpQPvCWt4G7Lm0VpbLP9NAmGgM9VPdSXcXhEE/8ug60zSKhzy02w==
+X-Received: by 2002:adf:806c:: with SMTP id 99mr22067803wrk.328.1581957124159;
+        Mon, 17 Feb 2020 08:32:04 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
+        by smtp.gmail.com with ESMTPSA id c141sm1087609wme.41.2020.02.17.08.32.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 08:32:03 -0800 (PST)
+Subject: Re: [PATCH] kvm/emulate: fix a -Werror=cast-function-type
+To:     Qian Cai <cai@lca.pw>, Jim Mattson <jmattson@google.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1581695768-6123-1-git-send-email-cai@lca.pw>
+ <20200214165923.GA20690@linux.intel.com> <1581700124.7365.70.camel@lca.pw>
+ <CALMp9eTRn-46oKg5a9h79EZOvHGwT=8ZZN15Zmy5NUYsd+r8wQ@mail.gmail.com>
+ <1581707646.7365.72.camel@lca.pw>
+ <28680b99-d043-ee02-dab3-b5ce8c2e625b@redhat.com>
+ <1581950844.7365.82.camel@lca.pw>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <030ced86-5ef0-0a2e-7c66-dbfb1416b8b5@redhat.com>
+Date:   Mon, 17 Feb 2020 17:32:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
+In-Reply-To: <1581950844.7365.82.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:04:52PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 17, 2020 at 3:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Mon, Feb 17, 2020 at 06:34:19PM +0530, Manivannan Sadhasivam wrote:
-> > > On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
-> > > ```
-> > > struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-> > > {
-> > > ...
-> > > dev->parent = mhi_cntrl->dev;
-> > > ...
-> > > ```
-> > >
-> > > Hence, having the parent dev pointer really helps.
-> >
-> > Yes, saving the parent device is fine, but you should be doing your own
-> > dma calls using _your_ device, not the parents.  Only mess with the
-> > parent pointer if you need to do something "normal" for a parent.
+On 17/02/20 15:47, Qian Cai wrote:
+> On Fri, 2020-02-14 at 20:33 +0100, Paolo Bonzini wrote:
+>> On 14/02/20 20:14, Qian Cai wrote:
+>>>> It seems misguided to define a local variable just to get an implicit
+>>>> cast from (void *) to (fastop_t). Sean's first suggestion gives you
+>>>> the same implicit cast without the local variable. The second
+>>>> suggestion makes both casts explicit.
+>>>
+>>> OK, I'll do a v2 using the first suggestion which looks simpler once it passed
+>>> compilations.
+>>>
+>>
+>> Another interesting possibility is to use an unnamed union of a
+>> (*execute) function pointer and a (*fastop) function pointer.
+>>
 > 
-> The MHI device is not involved in DMA at all, as it is not a DMA master,
-> and has no knowledge of the memory management or whether there
-> is any DMA at all. I think it is the right abstraction for an MHI driver to
-> pass kernel pointers into the subsystem interfaces, which then get
-> mapped by the bus driver that owns the DMA master.
+> This?
+
+Yes, perfect.  Can you send it with Signed-off-by and all that?
+
+Thanks,
+
+Paolo
+
+> diff --git a/arch/x86/include/asm/kvm_emulate.h
+> b/arch/x86/include/asm/kvm_emulate.h
+> index 03946eb3e2b9..2a8f2bd2e5cf 100644
+> --- a/arch/x86/include/asm/kvm_emulate.h
+> +++ b/arch/x86/include/asm/kvm_emulate.h
+> @@ -292,6 +292,14 @@ enum x86emul_mode {
+>  #define X86EMUL_SMM_MASK             (1 << 6)
+>  #define X86EMUL_SMM_INSIDE_NMI_MASK  (1 << 7)
+>  
+> +/*
+> + * fastop functions are declared as taking a never-defined fastop parameter,
+> + * so they can't be called from C directly.
+> + */
+> +struct fastop;
+> +
+> +typedef void (*fastop_t)(struct fastop *);
+> +
+>  struct x86_emulate_ctxt {
+>  	const struct x86_emulate_ops *ops;
+>  
+> @@ -324,7 +332,10 @@ struct x86_emulate_ctxt {
+>  	struct operand src;
+>  	struct operand src2;
+>  	struct operand dst;
+> -	int (*execute)(struct x86_emulate_ctxt *ctxt);
+> +	union {
+> +		int (*execute)(struct x86_emulate_ctxt *ctxt);
+> +		fastop_t fop;
+> +	};
+>  	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
+>  	/*
+>  	 * The following six fields are cleared together,
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index ddbc61984227..dd19fb3539e0 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -191,25 +191,6 @@
+>  #define NR_FASTOP (ilog2(sizeof(ulong)) + 1)
+>  #define FASTOP_SIZE 8
+>  
+> -/*
+> - * fastop functions have a special calling convention:
+> - *
+> - * dst:    rax        (in/out)
+> - * src:    rdx        (in/out)
+> - * src2:   rcx        (in)
+> - * flags:  rflags     (in/out)
+> - * ex:     rsi        (in:fastop pointer, out:zero if exception)
+> - *
+> - * Moreover, they are all exactly FASTOP_SIZE bytes long, so functions for
+> - * different operand sizes can be reached by calculation, rather than a jump
+> - * table (which would be bigger than the code).
+> - *
+> - * fastop functions are declared as taking a never-defined fastop parameter,
+> - * so they can't be called from C directly.
+> - */
+> -
+> -struct fastop;
+> -
+>  struct opcode {
+>  	u64 flags : 56;
+>  	u64 intercept : 8;
+> @@ -311,8 +292,19 @@ static void invalidate_registers(struct x86_emulate_ctxt
+> *ctxt)
+>  #define ON64(x)
+>  #endif
+>  
+> -typedef void (*fastop_t)(struct fastop *);
+> -
+> +/*
+> + * fastop functions have a special calling convention:
+> + *
+> + * dst:    rax        (in/out)
+> + * src:    rdx        (in/out)
+> + * src2:   rcx        (in)
+> + * flags:  rflags     (in/out)
+> + * ex:     rsi        (in:fastop pointer, out:zero if exception)
+> + *
+> + * Moreover, they are all exactly FASTOP_SIZE bytes long, so functions for
+> + * different operand sizes can be reached by calculation, rather than a jump
+> + * table (which would be bigger than the code).
+> + */
+>  static int fastop(struct x86_emulate_ctxt *ctxt, fastop_t fop);
+>  
+>  #define __FOP_FUNC(name) \
+> @@ -5683,7 +5675,7 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
+>  
+>  	if (ctxt->execute) {
+>  		if (ctxt->d & Fastop)
+> -			rc = fastop(ctxt, (fastop_t)ctxt->execute);
+> +			rc = fastop(ctxt, ctxt->fop);
+>  		else
+>  			rc = ctxt->execute(ctxt);
+>  		if (rc != X86EMUL_CONTINUE)
 > 
-> This is similar to how e.g. USB drivers pass data into the USB core
-> interfaces, which then get the HCI driver to map/unmap it into the
-> DMA masters.
 
-Ok, then this needs to be named a whole lot better than the original
-"dev" name had it.  Heck, even "parent" does not show that type of
-representation, make it "controller" or something else a whole lot more
-descriptive of what it really is please.
-
-thanks,
-
-greg k-h
