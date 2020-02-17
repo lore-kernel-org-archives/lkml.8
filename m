@@ -2,103 +2,76 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CF7C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4475AC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47F02072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5DA2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBQChS (ORCPT
+        id S1726787AbgBQChd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 21:37:18 -0500
-Received: from scorn.kernelslacker.org ([45.56.101.199]:49102 "EHLO
-        scorn.kernelslacker.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgBQChS (ORCPT
+        Sun, 16 Feb 2020 21:37:33 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47850 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbgBQChc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 21:37:18 -0500
-X-Greylist: delayed 1716 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Feb 2020 21:37:18 EST
-Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
-        by scorn.kernelslacker.org with esmtp (Exim 4.92)
-        (envelope-from <davej@codemonkey.org.uk>)
-        id 1j3Vpx-0005ck-0b; Sun, 16 Feb 2020 21:08:41 -0500
-Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
-        id B3D8556022D; Sun, 16 Feb 2020 21:08:40 -0500 (EST)
-Date:   Sun, 16 Feb 2020 21:08:40 -0500
-From:   Dave Jones <davej@codemonkey.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: Re: Linux 5.6-rc2
-Message-ID: <20200217020840.GA24821@codemonkey.org.uk>
-Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 16 Feb 2020 21:37:32 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A80BE15383A6E;
+        Sun, 16 Feb 2020 18:37:31 -0800 (PST)
+Date:   Sun, 16 Feb 2020 18:37:31 -0800 (PST)
+Message-Id: <20200216.183731.2157450869886971370.davem@davemloft.net>
+To:     jhubbard@nvidia.com
+Cc:     akpm@linux-foundation.org, santosh.shilimkar@oracle.com,
+        hans.westgaard.ry@oracle.com, leonro@mellanox.com, kuba@kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] net/rds: Track user mapped pages through special
+ API
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200212030355.1600749-2-jhubbard@nvidia.com>
+References: <20200212030355.1600749-1-jhubbard@nvidia.com>
+        <20200212030355.1600749-2-jhubbard@nvidia.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Feb 2020 18:37:32 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 01:32:32PM -0800, Linus Torvalds wrote:
+From: John Hubbard <jhubbard@nvidia.com>
+Date: Tue, 11 Feb 2020 19:03:55 -0800
 
- > Outside of drivers, there's the usual smattering of changes all over.
- > Filesystems (nfs, ext4, ceph, cifs, btrfs), architecture updates (x86,
- > arm), and some core code (scheduling, tracing, networking, io_uring).
- > 
- > The shortlog is appended, you can get a feel for the details by scanning it.
- > 
- > Go forth and test,
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Convert net/rds to use the newly introduces pin_user_pages() API,
+> which properly sets FOLL_PIN. Setting FOLL_PIN is now required for
+> code that requires tracking of pinned pages.
+> 
+> Note that this effectively changes the code's behavior: it now
+> ultimately calls set_page_dirty_lock(), instead of set_page_dirty().
+> This is probably more accurate.
+> 
+> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+> dealing with a file backed page where we have reference on the inode it
+> hangs off." [1]
+> 
+> [1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+> 
+> Cc: Hans Westgaard Ry <hans.westgaard.ry@oracle.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-This didn't happen in rc1, but showed up when I booted into rc2 and
-tried to and pull some stuff with rsync.
-
-[   70.794783] BUG: sleeping function called from invalid context at mm/slab.h:565
-[   70.794834] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1141, name: rsync
-[   70.794863] 5 locks held by rsync/1141:
-[   70.794876]  #0: ffff888417b9c408 (sb_writers#17){.+.+}, at: mnt_want_write+0x20/0x50
-[   70.795030]  #1: ffff888428de28e8 (&type->i_mutex_dir_key#13/1){+.+.}, at: lock_rename+0xf1/0x100
-[   70.795051]  #2: ffff888417b9c608 (sb_internal#2){.+.+}, at: start_transaction+0x394/0x560
-[   70.795124]  #3: ffff888403081768 (btrfs-fs-01){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-[   70.795203]  #4: ffff888403086568 (btrfs-fs-00){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-[   70.795222] CPU: 5 PID: 1141 Comm: rsync Not tainted 5.6.0-rc2-backup+ #2
-[   70.795291] Hardware name: ASUS All Series/Z97-DELUXE, BIOS 3503 04/18/2018
-[   70.795362] Call Trace:
-[   70.795374]  dump_stack+0x71/0xa0
-[   70.795445]  ___might_sleep.part.96.cold.106+0xa6/0xb6
-[   70.795459]  kmem_cache_alloc+0x1d3/0x290
-[   70.795471]  alloc_extent_state+0x22/0x1c0
-[   70.795544]  __clear_extent_bit+0x3ba/0x580
-[   70.795557]  ? _raw_spin_unlock_irq+0x24/0x30
-[   70.795569]  btrfs_truncate_inode_items+0x339/0xe50
-[   70.795647]  btrfs_evict_inode+0x269/0x540
-[   70.795659]  ? dput.part.38+0x29/0x460
-[   70.795671]  evict+0xcd/0x190
-[   70.795682]  __dentry_kill+0xd6/0x180
-[   70.795754]  dput.part.38+0x2ad/0x460
-[   70.795765]  do_renameat2+0x3cb/0x540
-[   70.795777]  __x64_sys_rename+0x1c/0x20
-[   70.795788]  do_syscall_64+0x6d/0x6b0
-[   70.795864]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[   70.795876]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   70.795889] RIP: 0033:0x7f7fa39256d7
-[   70.795965] Code: e8 6e e9 07 00 85 c0 0f 95 c0 0f b6 c0 f7 d8 5b c3 66 90 b8 ff ff ff ff 5b c3 66 0f 1f 84 00 00 00 00 00 b8 52 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 89 d7 14 00 f7 d8 64 89 02 b8
-[   70.795990] RSP: 002b:00007ffc8ad171a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-[   70.796070] RAX: ffffffffffffffda RBX: 00007ffc8ad19350 RCX: 00007f7fa39256d7
-[   70.796084] RDX: 0000000000000000 RSI: 00007ffc8ad17350 RDI: 00007ffc8ad19350
-[   70.796097] RBP: 00007ffc8ad17350 R08: 0000000000000000 R09: 0000000000000000
-[   70.796170] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[   70.796184] R13: 0000000000000004 R14: 00000000000081a4 R15: 0000000000000000
-
+Applied, thank you.
