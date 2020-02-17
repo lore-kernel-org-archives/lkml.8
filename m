@@ -2,202 +2,103 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B68C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76836C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17A62072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ql/QslLI"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD92207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581949116;
+	bh=h9Fe4kx1LHPMGbLI3vHtLy7xmcJooeeh18XrtJy7gTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dxh5esZxu/wqZh8m8V7jFYWUEA6q6Phcj3fMJe/uRg2RIsCSnyTHDbH1wsymSiLsG
+	 7SMXYT1gV+rTjXpSwd1++VAt024+F71WuwPac1tbuYHA/Vj2V+LCwU3V2qigoR87G9
+	 7s9I3Gp1UGz3A+iU9RSdc2OoE7grt8nOT1npRMqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgBQOQ4 (ORCPT
+        id S1728371AbgBQOSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:16:56 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53771 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726788AbgBQOQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:16:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581949015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X5owJ1Q5kyCcEn/wK666suwQNxuxUfzmbCXN/IZugIc=;
-        b=Ql/QslLIYBgfgKNU7L0Xfdjyx8FBxDJ4HLpO6fHytDF2YVc/hw42J0d20hJz69sd1geY44
-        tiYj9X0ud2lRGGkXm7dgjFVocdKavaaxMKDqMl0e2jq01gLKHCMgEDNwAoJyiQdGaW9hgx
-        m/iCr1EGVIH+qsxZdlaxS7OMBZSn25E=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-iBpcNIS-NpSKzol34DWwMA-1; Mon, 17 Feb 2020 09:16:49 -0500
-X-MC-Unique: iBpcNIS-NpSKzol34DWwMA-1
-Received: by mail-wr1-f69.google.com with SMTP id 90so9008384wrq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 06:16:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=X5owJ1Q5kyCcEn/wK666suwQNxuxUfzmbCXN/IZugIc=;
-        b=YnfQhO8x9ZuPYWtko4VKWdwDU/Wd7aHagwwu7cCVEL7xe0Fzfa9UYUbIfSJve6HTzN
-         JeA0vKmR/OcL9x+APQyKHupFb2SdAhZpz8+G/J1L4WlJ7rPZc5hkbfwtXcuhzj5IZc5V
-         59/GRnpPPZL9yUKhA67EcJItHGWxrLm7Z0pI0uWX/rBEOpR6IMmnzDxeeNKbSgCzoodM
-         8eZxLGPuHCrdK6yNzqRwCDA1sZ6A3pXxzh8OS6zENyYPWFOarj0L5PEwl5KIGe8Z+cMn
-         n7VIYM8F8K1EM0CMfCXJWEquq3sfSEb0AhvMZITVVPKpbb+UbOyu+DHvPEVH831kmvW1
-         4sVw==
-X-Gm-Message-State: APjAAAW5aLNWLAqi2YfusmJQB5enLACvrJgqnkKzaDB/Ad0evVJWrJHn
-        9In49CbYfQC6mOP1LjmRychlokm+qnpEcIRVcxQ81m8dqyKeqRA25DtxcC1xVB9pcGpSEnyCUwc
-        EKhmEG7nyQoIFQKdQeBIV1tst
-X-Received: by 2002:a1c:ddc3:: with SMTP id u186mr22709062wmg.103.1581949008356;
-        Mon, 17 Feb 2020 06:16:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzY6ppV8fkLLxTSONFBrhFjjhdBJrSKf63MFZ71BdYb8RtzZ2UHi8XTjoJ9gzQ6Hi134wRxyw==
-X-Received: by 2002:a1c:ddc3:: with SMTP id u186mr22709044wmg.103.1581949008070;
-        Mon, 17 Feb 2020 06:16:48 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id u62sm830661wmu.17.2020.02.17.06.16.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 06:16:47 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
-In-Reply-To: <CANRm+Cz_gskKwa0SU0PUhtacj3Ovm_MmBASDJHOECsnYz=jxkg@mail.gmail.com>
-References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com> <871rqtbcve.fsf@vitty.brq.redhat.com> <CANRm+Cz_gskKwa0SU0PUhtacj3Ovm_MmBASDJHOECsnYz=jxkg@mail.gmail.com>
-Date:   Mon, 17 Feb 2020 15:16:46 +0100
-Message-ID: <87y2t19u41.fsf@vitty.brq.redhat.com>
+        Mon, 17 Feb 2020 09:18:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgBQOSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 09:18:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7170C2072C;
+        Mon, 17 Feb 2020 14:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581949113;
+        bh=h9Fe4kx1LHPMGbLI3vHtLy7xmcJooeeh18XrtJy7gTk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tQbPYAQ2qjiB4TzqFAoMr+Q9wskUBh4nz8tdJYizoJtU7Yz81PB2jRa1ZeJVbeZnR
+         q7ehePnA7v5f5IV0v+3/uOkylfgnj0EKn5/imhlpgDallDtV8M7RddiES88B9wFG7n
+         +A+1DU7IAhDnKZsuDDR1V9HKrpkrFsKmNdGUhaVE=
+Date:   Mon, 17 Feb 2020 15:18:31 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Anton Vorontsov <avorontsov@ru.mvista.com>,
+        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] usb: host: fhci-hcd: annotate PIPE_CONTROL switch case
+ with fallthrough
+Message-ID: <20200217141831.GA1123892@kroah.com>
+References: <20200213085401.27862-1-linux@rasmusvillemoes.dk>
+ <20200213125659.GB3325929@kroah.com>
+ <6ab68169-dde6-b5ba-0909-fa685bd24aac@rasmusvillemoes.dk>
+ <20200217093836.GA37937@kroah.com>
+ <a1f0f024-c1e5-8ff5-f717-f5098b4eb78d@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1f0f024-c1e5-8ff5-f717-f5098b4eb78d@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+On Mon, Feb 17, 2020 at 03:12:21PM +0100, Rasmus Villemoes wrote:
+> On 17/02/2020 10.38, Greg Kroah-Hartman wrote:
+> > On Thu, Feb 13, 2020 at 02:35:18PM +0100, Rasmus Villemoes wrote:
+> >> On 13/02/2020 13.56, Greg Kroah-Hartman wrote:
+> >>
+> >>> Shouldn't this be /* fall through */ instead?
+> >>>
+> >>> Gustavo, what's the best practice here, I count only a few
+> >>> "fallthrough;" instances in the kernel, although one is in our coding
+> >>> style document, and thousands of the /* */ version.
+> >>
+> >> Yes, I went with the attribute/macro due to that, and the history is
+> >> that Linus applied Joe's patches directly
+> >> (https://lore.kernel.org/lkml/CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com/),
+> >> so I assumed that meant the Penguin decided that the attribute/macro is
+> >> the right thing to do for new code, while existing comment annotations
+> >> can be left alone or changed piecemeal as code gets refactored anyway.
+> > 
+> > But, to be fair, Gustavo went and fixed up thousands of these, with the
+> > /* */ version, not the attribute.
+> > 
+> > Gustavo, can coverity notice the "fallthrough;" attribute properly?  I
+> > don't want to start adding things that end up triggering
+> > false-positives.
+> 
+> I'm not Gustavo, and I don't know the answer, but 1.5 years ago some guy
+> named greg k-h suggested that coverity does grok the fallthrough attribute:
+> 
+> https://patchwork.kernel.org/cover/10651357/#22279095
 
-> On Mon, 17 Feb 2020 at 20:46, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> Wanpeng Li <kernellwp@gmail.com> writes:
->>
->> > From: Wanpeng Li <wanpengli@tencent.com>
->> >
->> > Nick Desaulniers Reported:
->> >
->> >   When building with:
->> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
->> >   The following warning is observed:
->> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
->> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
->> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
->> >   vector)
->> >               ^
->> >   Debugging with:
->> >   https://github.com/ClangBuiltLinux/frame-larger-than
->> >   via:
->> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
->> >     kvm_send_ipi_mask_allbutself
->> >   points to the stack allocated `struct cpumask newmask` in
->> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
->> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
->> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
->> >   8192, making a single instance of a `struct cpumask` 1024 B.
->> >
->> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
->> > both pv tlb and pv ipis..
->> >
->> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
->> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
->> > Cc: Peter Zijlstra <peterz@infradead.org>
->> > Cc: Nick Desaulniers <ndesaulniers@google.com>
->> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->> > ---
->> > v1 -> v2:
->> >  * remove '!alloc' check
->> >  * use new pv check helpers
->> >
->> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
->> >  1 file changed, 21 insertions(+), 12 deletions(-)
->> >
->> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->> > index 76ea8c4..377b224 100644
->> > --- a/arch/x86/kernel/kvm.c
->> > +++ b/arch/x86/kernel/kvm.c
->> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
->> >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
->> >  }
->> >
->> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
->> > +
->> >  #ifdef CONFIG_SMP
->> >
->> >  static bool pv_ipi_supported(void)
->> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
->> > cpumask *mask, int vector)
->> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
->> > int vector)
->> >  {
->> >      unsigned int this_cpu = smp_processor_id();
->> > -    struct cpumask new_mask;
->> > +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->> >      const struct cpumask *local_mask;
->> >
->> > -    cpumask_copy(&new_mask, mask);
->> > -    cpumask_clear_cpu(this_cpu, &new_mask);
->> > -    local_mask = &new_mask;
->> > +    cpumask_copy(new_mask, mask);
->> > +    cpumask_clear_cpu(this_cpu, new_mask);
->> > +    local_mask = new_mask;
->> >      __send_ipi_mask(local_mask, vector);
->> >  }
->> >
->> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
->> >      update_intr_gate(X86_TRAP_PF, async_page_fault);
->> >  }
->> >
->> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
->> >
->> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
->> >              const struct flush_tlb_info *info)
->> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
->> > cpumask *cpumask,
->> >      u8 state;
->> >      int cpu;
->> >      struct kvm_steal_time *src;
->> > -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
->> > +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->> >
->> >      cpumask_copy(flushmask, cpumask);
->> >      /*
->> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
->> >      if (pv_tlb_flush_supported()) {
->> >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
->> >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
->> > +        pr_info("KVM setup pv remote TLB flush\n");
->>
->> Nit: to be consistent with __send_ipi_mask() the message should be
->> somthing like
->>
->> "KVM: switch to using PV TLB flush"
->
-> There is a lot of native ops we replace by pv ops in kvm.c, I use "KVM
-> setup xxx" there, like pv ipis, pv tlb flush, pv sched yield, should
-> we keep consistent as before?
->
+I wouldn't trust anything that bum says :)
 
-Oh, I see, it's either one or another :-) Personally, I prefer when
-subsystem is delimited with ':' so if we were to change them all I'd
-prefer the "KVM: switch to using PV TLB flush" (__send_ipi_mask()
-style). But this looks more like a separate patch idea, we can discuss
-our personal preferences there :-)
+Ok, I don't remember saying that at all, but I'll wait a day or two to
+get Gustavo's opinion befor applying the patch.
 
--- 
-Vitaly
+thanks,
 
+greg k-h
