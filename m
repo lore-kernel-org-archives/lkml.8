@@ -2,345 +2,157 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AF1C3B185
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E125AC3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E430206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="gaJjrAWO"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="aXHsu5Ff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgBQKF2 (ORCPT
+        id S1729098AbgBQKGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:05:28 -0500
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:10663 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbgBQKF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:05:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1581933927;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2gB/QZ7u4q45t/yp2TSnLERU6K4lxysDb+964WivSl4=;
-  b=gaJjrAWOl9gH9G9o5vGnVq9seJSv+TnRNG4cNcC0DrwISClwnru+p0eh
-   AubGmzsaBfIqsxYdvZo2IB+/Q1fzZS5ZqezLt1HbUPPquz+wzfTlhl8j1
-   nkoV4gzr3+TSwo/VkgHiKfqrKBHv5Jha2XJ4FW09gEIzJBJWbvdPjN7R0
-   0=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: 2b092rFWJXgE74OPGqqRjNgmQSjSJodO8MuU0fMmusZ8vT5zX3uBpug0UoVBfJdPO1oATdAEU9
- O+F05nELxG/as+2DHKBP5vJA7MCOMOBce127FfljLI+GeJi3m5rRwbLiBqpYrAMWfXB9bFzcfd
- quKX7bT7fDofLxaD1cSTHh7deVSnfwxDHDE4ozjmEk6bDse/8GdboK8xdvkMRazujeDUsJegpm
- G0fuzH/E2uDSb/INDIVGdSENM1uNKmBlyq+53vyYhflSU9u1FNGTYSoFUdg5dDdJ6SLslq/bI8
- wsI=
-X-SBRS: 2.7
-X-MesageID: 13179199
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,452,1574139600"; 
-   d="scan'208";a="13179199"
-Date:   Mon, 17 Feb 2020 11:05:09 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Anchal Agarwal <anchalag@amazon.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
-        <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
- and hibernation
-Message-ID: <20200217100509.GE4679@Air-de-Roger>
-References: <cover.1581721799.git.anchalag@amazon.com>
- <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
+        Mon, 17 Feb 2020 05:06:55 -0500
+Received: from mail-mw2nam10on2068.outbound.protection.outlook.com ([40.107.94.68]:6252
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728833AbgBQKGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:06:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OgSdvSSFIHrKDzn+rdzDeFN3Hvq3hdHdxxjO4ueehgVBq1s8gCbT7xtrQZzn2QH4s5wsq8596q5xrchIeUgqNyL+BY0BkffFC3PKIpSCLh2uS9olFNgdtJknU2gXgX/YaOELBXUdRQQDhJQIrgztWFevrMFN77gYkS+4sfqBPPbsaf4uG3uPejjr9miBFDgwJBayWS97gpb7fEeCGlqa9yC5GMa0hVCaRFZo8HapdFenqBLR5tS9erXJvbGnujlSHgLG2KJ3icUtJZlJ6sk1xuwiJlEMva7P4eoUYQHZoEdCywcC4WgJwVnLHsuw7+t+n/zG5LkJZeymBThTDbk7TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YwEL6IBrFuBo4kLUds4E47cCCgQpkK4bBGnPthAS/L4=;
+ b=D/HIchFGDatSkfuh+pwAnMQGpqe+t1N3GAxJRldtkmLq87Sp4kKhGf96sjpmDn7tBkRT6L+faqiOhG9L2O6pG6ymJC40OOLdIWX2GiS5702sX/tQ/Qe9lKLmUbyW37j3s+Fd6D8b1SSXg578Cat+EVt87Gxe3cLe/kNJSgqvUhptUVq0ItRjY1pMU9eNIJ/Iz++1/t7fMw6yCXtQOhhoJVW/Ns7ZTjyeaJBQBzqX1ywGDL8VNu1q1OuxL/H6cFDbmdmrAaRS9vwFEqGD7fwi+tmP9jQKysqLj4gTCOtBzmRHWyVHZ83vkLHgGARFvXGlhKUSuJRhd/6fDGuiF5+SwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YwEL6IBrFuBo4kLUds4E47cCCgQpkK4bBGnPthAS/L4=;
+ b=aXHsu5Ffkdf4bNzx45L30dvYb4MxehgtCRnVDarBIvJLTJYogYFob3Rdl5o+fm7F23JOfHiyS3mhC6UI+zjpIz0vSyks/eOyFRLXpZ35A3+4OIYpeF2JRArSAtPB94N8QZGyaGUl386dmS9eqHdA1//o23YrrB/0wjShtXlLxVU=
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.27.215) by
+ BN7PR02MB4242.namprd02.prod.outlook.com (52.135.250.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.30; Mon, 17 Feb 2020 10:06:49 +0000
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::3c2d:7e2:dfb6:adfe]) by BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::3c2d:7e2:dfb6:adfe%5]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
+ 10:06:48 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "monstr@seznam.cz" <monstr@seznam.cz>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        git-dev <git-dev@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michals@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohand@xilinx.com>
+Subject: RE: [PATCH V6 3/4] crypto: Add Xilinx AES driver
+Thread-Topic: [PATCH V6 3/4] crypto: Add Xilinx AES driver
+Thread-Index: AQHV1aLi86wN5Of2F06o6+V0ID53EKgY7WuAgAZaW/A=
+Date:   Mon, 17 Feb 2020 10:06:48 +0000
+Message-ID: <BN7PR02MB5124554576DEC68C9121684FAF160@BN7PR02MB5124.namprd02.prod.outlook.com>
+References: <1580192308-10952-1-git-send-email-kalyani.akula@xilinx.com>
+ <1580192308-10952-4-git-send-email-kalyani.akula@xilinx.com>
+ <20200213090241.fksu33yszqi5fjat@gondor.apana.org.au>
+In-Reply-To: <20200213090241.fksu33yszqi5fjat@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ecef6143-25ad-496e-391d-08d7b3911a24
+x-ms-traffictypediagnostic: BN7PR02MB4242:|BN7PR02MB4242:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR02MB4242EA2806CF1E6FFF45DDB7AF160@BN7PR02MB4242.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:741;
+x-forefront-prvs: 0316567485
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(199004)(189003)(9686003)(8936002)(54906003)(86362001)(316002)(107886003)(4326008)(7696005)(8676002)(81166006)(6916009)(2906002)(478600001)(81156014)(52536014)(64756008)(966005)(5660300002)(71200400001)(53546011)(66476007)(66556008)(55016002)(26005)(186003)(33656002)(66946007)(66446008)(76116006)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4242;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GKOWgz67eRTYI0WbH5YVKjLHeumoXJbT3HGeE7y6sx0zLysAkBP5iS89hq0YmJbBeRyY4BecW5J8cyD1Ogtvp/4E4jNrNFhm212MBxy0S2x7StwhK5lb28ptwGydziCmRpG+U/NbpujYUIGrQ9yhavQOMIfzQh57aqbqnAfTGkdhaETG+lOxnCd2kgSeWKxy6OMjrgosRSe5LEoIogJTJdf9bFzsgn+tuSEmrShIezHpZkNLDNJY3fJ2oEZ2bYdpsxgD+YjXq0xIgLiXqpQfkE6R8ZP3E1p/D049+ok8bf4dzIGVB11423JTYCSZMIpBvC9mCy2mo0HkTEcmErvb5r8e4S7M24sYQwOMtAVgzMHC1RHQvrb7FOYQCMyoPu0HrhMlVMWoEx01IJuSqJcK+Lo1Dq5s4YqqQmb7DXguD4F3ag5ujPSKkiO67ghHBGn7woQtrkiYvgswZaOTrp5XaBPF84USqeCxDPZdwQlIDv3HlSVvJ77u5V6XOLsWIm0WuxWOzcgDNcqv1Xn7y7A2zw==
+x-ms-exchange-antispam-messagedata: 9EHD1GoHYY/baiHOpClhjqXN8qcII/a7ENmb7vZ55FmJ6oBlDmzM9ANrLvnlc+98s3gzpTEIB/eLLcuJYRmmQMzEC5oFNCv6qv8OsrVXA+LhF16SCEyDXXjI8Ux/AbUxWBF9wH4Ak1nMUXNDEx1N3g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecef6143-25ad-496e-391d-08d7b3911a24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 10:06:48.5656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UOgwaNKfpXc/37iNl2igbl6VvWeUhZLprXEI3+JJkL5j4ez0j6O/SNXwREiPNO5s0zeF9rrGsAadfl741/XmxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
-> From: Munehisa Kamata <kamatam@amazon.com
-> 
-> Add freeze, thaw and restore callbacks for PM suspend and hibernation
-> support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
-> events, need to implement these xenbus_driver callbacks.
-> The freeze handler stops a block-layer queue and disconnect the
-> frontend from the backend while freeing ring_info and associated resources.
-> The restore handler re-allocates ring_info and re-connect to the
-> backend, so the rest of the kernel can continue to use the block device
-> transparently. Also, the handlers are used for both PM suspend and
-> hibernation so that we can keep the existing suspend/resume callbacks for
-> Xen suspend without modification. Before disconnecting from backend,
-> we need to prevent any new IO from being queued and wait for existing
-> IO to complete.
+Hi Herbert,
 
-This is different from Xen (xenstore) initiated suspension, as in that
-case Linux doesn't flush the rings or disconnects from the backend.
+The compilation issue is due to commit af5034e8e4a5 ("crypto: remove propag=
+ation of CRYPTO_TFM_RES_* flags ").
+I will fix it and send V7.
 
-This is done so that in case suspensions fails the recovery doesn't
-need to reconnect the PV devices, and in order to speed up suspension
-time (ie: waiting for all queues to be flushed can take time as Linux
-supports multiqueue, multipage rings and indirect descriptors), and
-the backend could be contended if there's a lot of IO pressure from
-guests.
+Regards,
+Kalyani
 
-Linux already keeps a shadow of the ring contents, so in-flight
-requests can be re-issued after the frontend has reconnected during
-resume.
-
-> Freeze/unfreeze of the queues will guarantee that there
-> are no requests in use on the shared ring.
-> 
-> Note:For older backends,if a backend doesn't have commit'12ea729645ace'
-> xen/blkback: unmap all persistent grants when frontend gets disconnected,
-> the frontend may see massive amount of grant table warning when freeing
-> resources.
-> [   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
-> [   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
-> 
-> In this case, persistent grants would need to be disabled.
-> 
-> [Anchal Changelog: Removed timeout/request during blkfront freeze.
-> Fixed major part of the code to work with blk-mq]
-> Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
-> Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-> ---
->  drivers/block/xen-blkfront.c | 119 ++++++++++++++++++++++++++++++++---
->  1 file changed, 112 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index 478120233750..d715ed3cb69a 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -47,6 +47,8 @@
->  #include <linux/bitmap.h>
->  #include <linux/list.h>
->  #include <linux/workqueue.h>
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
->  
->  #include <xen/xen.h>
->  #include <xen/xenbus.h>
-> @@ -79,6 +81,8 @@ enum blkif_state {
->  	BLKIF_STATE_DISCONNECTED,
->  	BLKIF_STATE_CONNECTED,
->  	BLKIF_STATE_SUSPENDED,
-> +	BLKIF_STATE_FREEZING,
-> +	BLKIF_STATE_FROZEN
->  };
->  
->  struct grant {
-> @@ -220,6 +224,7 @@ struct blkfront_info
->  	struct list_head requests;
->  	struct bio_list bio_list;
->  	struct list_head info_list;
-> +	struct completion wait_backend_disconnected;
->  };
->  
->  static unsigned int nr_minors;
-> @@ -261,6 +266,7 @@ static DEFINE_SPINLOCK(minor_lock);
->  static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
->  static void blkfront_gather_backend_features(struct blkfront_info *info);
->  static int negotiate_mq(struct blkfront_info *info);
-> +static void __blkif_free(struct blkfront_info *info);
->  
->  static int get_id_from_freelist(struct blkfront_ring_info *rinfo)
->  {
-> @@ -995,6 +1001,7 @@ static int xlvbd_init_blk_queue(struct gendisk *gd, u16 sector_size,
->  	info->sector_size = sector_size;
->  	info->physical_sector_size = physical_sector_size;
->  	blkif_set_queue_limits(info);
-> +	init_completion(&info->wait_backend_disconnected);
->  
->  	return 0;
->  }
-> @@ -1218,6 +1225,8 @@ static void xlvbd_release_gendisk(struct blkfront_info *info)
->  /* Already hold rinfo->ring_lock. */
->  static inline void kick_pending_request_queues_locked(struct blkfront_ring_info *rinfo)
->  {
-> +	if (unlikely(rinfo->dev_info->connected == BLKIF_STATE_FREEZING))
-> +		return;
->  	if (!RING_FULL(&rinfo->ring))
->  		blk_mq_start_stopped_hw_queues(rinfo->dev_info->rq, true);
->  }
-> @@ -1341,8 +1350,6 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
->  
->  static void blkif_free(struct blkfront_info *info, int suspend)
->  {
-> -	unsigned int i;
-> -
->  	/* Prevent new requests being issued until we fix things up. */
->  	info->connected = suspend ?
->  		BLKIF_STATE_SUSPENDED : BLKIF_STATE_DISCONNECTED;
-> @@ -1350,6 +1357,13 @@ static void blkif_free(struct blkfront_info *info, int suspend)
->  	if (info->rq)
->  		blk_mq_stop_hw_queues(info->rq);
->  
-> +	__blkif_free(info);
-> +}
-> +
-> +static void __blkif_free(struct blkfront_info *info)
-> +{
-> +	unsigned int i;
-> +
->  	for (i = 0; i < info->nr_rings; i++)
->  		blkif_free_ring(&info->rinfo[i]);
->  
-> @@ -1553,8 +1567,10 @@ static irqreturn_t blkif_interrupt(int irq, void *dev_id)
->  	struct blkfront_ring_info *rinfo = (struct blkfront_ring_info *)dev_id;
->  	struct blkfront_info *info = rinfo->dev_info;
->  
-> -	if (unlikely(info->connected != BLKIF_STATE_CONNECTED))
-> -		return IRQ_HANDLED;
-> +	if (unlikely(info->connected != BLKIF_STATE_CONNECTED)) {
-> +		if (info->connected != BLKIF_STATE_FREEZING)
-> +			return IRQ_HANDLED;
-> +	}
->  
->  	spin_lock_irqsave(&rinfo->ring_lock, flags);
->   again:
-> @@ -2020,6 +2036,7 @@ static int blkif_recover(struct blkfront_info *info)
->  	struct bio *bio;
->  	unsigned int segs;
->  
-> +	bool frozen = info->connected == BLKIF_STATE_FROZEN;
->  	blkfront_gather_backend_features(info);
->  	/* Reset limits changed by blk_mq_update_nr_hw_queues(). */
->  	blkif_set_queue_limits(info);
-> @@ -2046,6 +2063,9 @@ static int blkif_recover(struct blkfront_info *info)
->  		kick_pending_request_queues(rinfo);
->  	}
->  
-> +	if (frozen)
-> +		return 0;
-> +
->  	list_for_each_entry_safe(req, n, &info->requests, queuelist) {
->  		/* Requeue pending requests (flush or discard) */
->  		list_del_init(&req->queuelist);
-> @@ -2359,6 +2379,7 @@ static void blkfront_connect(struct blkfront_info *info)
->  
->  		return;
->  	case BLKIF_STATE_SUSPENDED:
-> +	case BLKIF_STATE_FROZEN:
->  		/*
->  		 * If we are recovering from suspension, we need to wait
->  		 * for the backend to announce it's features before
-> @@ -2476,12 +2497,37 @@ static void blkback_changed(struct xenbus_device *dev,
->  		break;
->  
->  	case XenbusStateClosed:
-> -		if (dev->state == XenbusStateClosed)
-> +		if (dev->state == XenbusStateClosed) {
-> +			if (info->connected == BLKIF_STATE_FREEZING) {
-> +				__blkif_free(info);
-> +				info->connected = BLKIF_STATE_FROZEN;
-> +				complete(&info->wait_backend_disconnected);
-> +				break;
-> +			}
-> +
->  			break;
-> +		}
-> +
-> +		/*
-> +		 * We may somehow receive backend's Closed again while thawing
-> +		 * or restoring and it causes thawing or restoring to fail.
-> +		 * Ignore such unexpected state anyway.
-> +		 */
-> +		if (info->connected == BLKIF_STATE_FROZEN &&
-> +				dev->state == XenbusStateInitialised) {
-> +			dev_dbg(&dev->dev,
-> +					"ignore the backend's Closed state: %s",
-> +					dev->nodename);
-> +			break;
-> +		}
->  		/* fall through */
->  	case XenbusStateClosing:
-> -		if (info)
-> -			blkfront_closing(info);
-> +		if (info) {
-> +			if (info->connected == BLKIF_STATE_FREEZING)
-> +				xenbus_frontend_closed(dev);
-> +			else
-> +				blkfront_closing(info);
-> +		}
->  		break;
->  	}
->  }
-> @@ -2625,6 +2671,62 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
->  	mutex_unlock(&blkfront_mutex);
->  }
->  
-> +static int blkfront_freeze(struct xenbus_device *dev)
-> +{
-> +	unsigned int i;
-> +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
-> +	struct blkfront_ring_info *rinfo;
-> +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
-> +	unsigned int timeout = 5 * HZ;
-> +	int err = 0;
-> +
-> +	info->connected = BLKIF_STATE_FREEZING;
-> +
-> +	blk_mq_freeze_queue(info->rq);
-> +	blk_mq_quiesce_queue(info->rq);
-> +
-> +	for (i = 0; i < info->nr_rings; i++) {
-> +		rinfo = &info->rinfo[i];
-> +
-> +		gnttab_cancel_free_callback(&rinfo->callback);
-> +		flush_work(&rinfo->work);
-> +	}
-> +
-> +	/* Kick the backend to disconnect */
-> +	xenbus_switch_state(dev, XenbusStateClosing);
-
-Are you sure this is safe?
-
-I don't think you wait for all requests pending on the ring to be
-finished by the backend, and hence you might loose requests as the
-ones on the ring would not be re-issued by blkfront_restore AFAICT.
-
-Thanks, Roger.
+> -----Original Message-----
+> From: Herbert Xu <herbert@gondor.apana.org.au>
+> Sent: Thursday, February 13, 2020 2:33 PM
+> To: Kalyani Akula <kalyania@xilinx.com>
+> Cc: davem@davemloft.net; monstr@seznam.cz; linux-crypto@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Rob Herring <robh+dt@kernel.org>;
+> devicetree@vger.kernel.org; git-dev <git-dev@xilinx.com>; Mohan Marutirao
+> Dhanawade <mohand@xilinx.com>; Sarat Chand Savitala
+> <saratcha@xilinx.com>; Harsh Jain <harshj@xilinx.com>; Michal Simek
+> <michals@xilinx.com>; Kalyani Akula <kalyania@xilinx.com>; Mohan Marutira=
+o
+> Dhanawade <mohand@xilinx.com>
+> Subject: Re: [PATCH V6 3/4] crypto: Add Xilinx AES driver
+>=20
+> On Tue, Jan 28, 2020 at 11:48:27AM +0530, Kalyani Akula wrote:
+> > This patch adds AES driver support for the Xilinx ZynqMP SoC.
+> >
+> > Signed-off-by: Mohan Marutirao Dhanawade
+> <mohan.dhanawade@xilinx.com>
+> > Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> > Acked-by: Michal Simek <michal.simek@xilinx.com>
+> > ---
+> >
+> > V5 Changes:
+> > - Replaced ARCH_ZYNQMP with ZYNQMP_FIRMWARE in Kconfig
+> > - Removed extra new lines.
+> > - Moved crypto: Add Xilinx AES driver patch from 4/4 to 3/4.
+> > - Updated Signed-off-by sequence.
+>=20
+> Sorry but this patch doesn't compile against the current cryptodev tree. =
+ Please
+> fix and respost.
+>=20
+> Thanks,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au> Home Page:
+> http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
