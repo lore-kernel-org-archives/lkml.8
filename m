@@ -2,105 +2,136 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99F4C76199
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B5FC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FE420726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RnpMjBMY"
+	by mail.kernel.org (Postfix) with ESMTP id A1E6320726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgBQBWr (ORCPT
+        id S1726717AbgBQBXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 20:22:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43625 "EHLO ozlabs.org"
+        Sun, 16 Feb 2020 20:23:02 -0500
+Received: from mga09.intel.com ([134.134.136.24]:10394 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgBQBWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 20:22:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LR7822HLz9sRJ;
-        Mon, 17 Feb 2020 12:22:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581902565;
-        bh=luamyo6WSdH/2y3M3DUvoqa26qJ9gBwp8fXnRt7PeAM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RnpMjBMYnA/iqpOCLam5sDhQqA4+jX+Keh6KbhQxfojbYueETMv0QJBeDy2UyCqzU
-         yedZlcTEu1V7o2kv1aZEaS/cxHvKAYmxS5Yxq3PvCr3cI51wG2Qs5bj1EccUCLtR31
-         uf2HwhGPWnWZExoRd2GAB1XCY1Ezx9Z/j8E1uBMJktz250c/UNo2T0Y1GS2wG6rfoh
-         +JzOX+UCg1uKzNmmmpskGUvZg6xguRWhKGZuKYSI+lxdHZ7Ow1UMB3GilR/joMcMgl
-         CVy8Kp4jvGPUrhSP2r9SKMVCI7kSWZJPVeTk5N+6oZna9yKZ9K9YAGR+Uz1GFBe08H
-         pDxN7EY56ZutA==
-Date:   Mon, 17 Feb 2020 12:22:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MaJun <majun258@linux.alibaba.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: linux-next: manual merge of the akpm-current tree with the csky
- tree
-Message-ID: <20200217122242.2da61737@canb.auug.org.au>
+        id S1726183AbgBQBXC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 20:23:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 17:23:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,450,1574150400"; 
+   d="scan'208";a="348399488"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.238.4.8]) ([10.238.4.8])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Feb 2020 17:22:58 -0800
+Subject: Re: [PATCH v4] perf stat: Show percore counts in per CPU output
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200214080452.26402-1-yao.jin@linux.intel.com>
+ <20200216225407.GB157041@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <d79a1bbe-bca5-0420-0480-1d508d2a038c@linux.intel.com>
+Date:   Mon, 17 Feb 2020 09:22:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6AU8AwlppohqBCyFoxVmg2l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200216225407.GB157041@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6AU8AwlppohqBCyFoxVmg2l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+On 2/17/2020 6:54 AM, Jiri Olsa wrote:
+> On Fri, Feb 14, 2020 at 04:04:52PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>>   CPU1               1,009,312      cpu/event=cpu-cycles,percore/
+>>   CPU2               2,784,072      cpu/event=cpu-cycles,percore/
+>>   CPU3               2,427,922      cpu/event=cpu-cycles,percore/
+>>   CPU4               2,752,148      cpu/event=cpu-cycles,percore/
+>>   CPU6               2,784,072      cpu/event=cpu-cycles,percore/
+>>   CPU7               2,427,922      cpu/event=cpu-cycles,percore/
+>>
+>>          1.001416041 seconds time elapsed
+>>
+>>   v4:
+>>   ---
+>>   Ravi Bangoria reports an issue in v3. Once we offline a CPU,
+>>   the output is not correct. The issue is we should use the cpu
+>>   idx in print_percore_thread rather than using the cpu value.
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
 
-  arch/csky/include/asm/Kbuild
+Thanks so much for ACK this patch. :)
 
-between commit:
+> btw, there's slight misalignment in -I output, but not due
+> to your change, it's there for some time now, and probably
+> in other agregation  outputs as well:
+> 
+> 
+>    $ sudo ./perf stat -e cpu/event=cpu-cycles/ -a -A  -I 1000
+>    #           time CPU                    counts unit events
+>         1.000224464 CPU0               7,251,151      cpu/event=cpu-cycles/
+>         1.000224464 CPU1              21,614,946      cpu/event=cpu-cycles/
+>         1.000224464 CPU2              30,812,097      cpu/event=cpu-cycles/
+> 
+> should be (extra space after CPUX):
+> 
+>         1.000224464 CPU2               30,812,097      cpu/event=cpu-cycles/
+> 
+> I'll put it on my TODO, but if you're welcome to check on it ;-)
+> 
+> thanks,
+> jirka
+> 
 
-  aeb58bb21421 ("csky: Add PCI support")
+I have a simple fix for this misalignment issue.
 
-from the csky tree and commit:
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index bc31fccc0057..95b29c9cba36 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -114,11 +114,11 @@ static void aggr_printout(struct perf_stat_config 
+*config,
+                         fprintf(config->output, "S%d-D%d-C%*d%s",
+                                 cpu_map__id_to_socket(id),
+                                 cpu_map__id_to_die(id),
+-                               config->csv_output ? 0 : -5,
++                               config->csv_output ? 0 : -3,
+                                 cpu_map__id_to_cpu(id), config->csv_sep);
+                 } else {
+-                       fprintf(config->output, "CPU%*d%s ",
+-                               config->csv_output ? 0 : -5,
++                       fprintf(config->output, "CPU%*d%s",
++                               config->csv_output ? 0 : -7,
+                                 evsel__cpus(evsel)->map[id],
+                                 config->csv_sep);
+                 }
 
-  25e6e2bca62a ("asm-generic: make more kernel-space headers mandatory")
+Following command lines are tested OK.
 
-from the akpm-current tree.
+perf stat -e cpu/event=cpu-cycles/ -I 1000
+perf stat -e cpu/event=cpu-cycles/ -a -I 1000
+perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
+perf stat -e cpu/event=cpu-cycles,percore/ -a -A -I 1000
+perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread 
+-I 1000
 
-I fixed it up (the latter is a superset of the former) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
+Could you help to look at that?
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6AU8AwlppohqBCyFoxVmg2l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5J6uIACgkQAVBC80lX
-0GyhKAgAkQyt4kX6yBaqXAer+7/xmL4KpEktZMmtbK+kP1ZqFn/yT14T9n2RYhwI
-T3I2nBFh8TsRLqpNyJ6w13fs6zohY550bYk+wlM7mRcqp/MB/gRqCp3ZDg87abFJ
-buTzVtB92MhegVUP9Ueomd4lxhtIGOR/EM17QhDGO7f/PJNCNu2hTDPU75FhAf4b
-3QTDalNRe1oizJaFDWOpLAjuoNL3NEKLCjLqOYM1EEr8MiqJjlNWh6gECyCbMxM4
-aiK/BWZcLkxki+JEaVPf864hm/WawUzOoZIbJS6ywh9Q10l0BwwbqmPvb3QlFw8f
-4s+Z7EXFHM9k5txvtnjD84Dg/VAVAg==
-=8Szk
------END PGP SIGNATURE-----
-
---Sig_/6AU8AwlppohqBCyFoxVmg2l--
+Thanks
+Jin Yao
