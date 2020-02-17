@@ -2,142 +2,95 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A57C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA040C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B3C20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAC6206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:47:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TN4sSOhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgBQKqb (ORCPT
+        id S1728386AbgBQKrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:46:31 -0500
-Received: from outbound-smtp62.blacknight.com ([46.22.136.251]:45383 "EHLO
-        outbound-smtp62.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728147AbgBQKqb (ORCPT
+        Mon, 17 Feb 2020 05:47:41 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35588 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgBQKrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:46:31 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp62.blacknight.com (Postfix) with ESMTPS id 4957CFAA95
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:46:29 +0000 (GMT)
-Received: (qmail 490 invoked from network); 17 Feb 2020 10:46:29 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 17 Feb 2020 10:46:28 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 13/13] sched/numa: Stop an exhastive search if a reasonable swap candidate or idle CPU is found
-Date:   Mon, 17 Feb 2020 10:44:02 +0000
-Message-Id: <20200217104402.11643-14-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200217104402.11643-1-mgorman@techsingularity.net>
-References: <20200217104402.11643-1-mgorman@techsingularity.net>
+        Mon, 17 Feb 2020 05:47:40 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w12so19097823wrt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:47:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=7uJCwOXevc3AyI7lWZC3RUDZR5Y6Ndzzd9RybpHzjy4=;
+        b=TN4sSOhdc57M5aW0Azt5rcWFA9t509h9f5TWlT3rR0Cda4TayZs+QvaajZ0/YKmsUj
+         p3qGIDUwR12TIcJRh3Aaafs/y6tDaTAl0xwT57GrBdPqV9ohV6/Nt/iE7Iw/ydSGrnjs
+         GYe0Rq7LdJxmU462FhKq+Q8MaMG9T5R7vTMa9atzWeYd55nqgs8HP3uIRNUMETJrbW1f
+         0icBO32UgF70Wk8+TvL15Qf8t1cdt6EMh4wQLfx4yw61idh5GgE+U+lJVVKEdImyo72G
+         x4JVWiIEQfDXJMlN2AwuPXp0kvZq6N/waTgn28tsw2jVJJoGdutMopr/uuw/iQZICmS6
+         YU/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7uJCwOXevc3AyI7lWZC3RUDZR5Y6Ndzzd9RybpHzjy4=;
+        b=cHq3CMIeX1OHFl+e1hZzzBkYmlmIC38rj3lPCPMw3p/zAuAi/YOiYm0c00kRLYV52n
+         04Nd+lfK/nIdjAR8scR5yDlX+s3GiA+Va6XCi+GmBX/utyvBfGnJsblLmy6GDshphaeM
+         EGZJP0fxnZjWd3ClV3OV3OoBPUxrzZrx734FFe4u9GC3cIhMFV3zBCOj62jR7eLoSDqY
+         2dc0cK2lgq+Sciia2QtWYWbWzWQnM67tPd9TBREDaFs++snCqXwHmweW+akMPbaHpqZR
+         VXa/Rb7F8Uzk3wDwixnhTUZAhLunPgyMgUlk+z7WSx7kcx7uav5Tio8qn4Lt+bNwk49u
+         gX0Q==
+X-Gm-Message-State: APjAAAXLEwdCnuf26nz72OHlz3XUlyLpHfCi2mWdEM109qNVhanrofEY
+        Yk7K1HoOckO9At81WMP9NYmRqIDoOCo=
+X-Google-Smtp-Source: APXvYqweWIhGvd8MriTQBSVGTR5SV5YIQW/7iwDKTTwI+35ZHdRkA7M8r/HFOsLIFk5ACMfPuXjVog==
+X-Received: by 2002:adf:e906:: with SMTP id f6mr21350537wrm.258.1581936457677;
+        Mon, 17 Feb 2020 02:47:37 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id m3sm352361wrs.53.2020.02.17.02.47.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Feb 2020 02:47:37 -0800 (PST)
+Subject: Re: [PATCH 1/2] nvmem: core: add nvmem_cell_read_common
+To:     Yangtao Li <tiny.windzz@gmail.com>, linux-kernel@vger.kernel.org
+References: <20200126195619.27596-1-tiny.windzz@gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <51801309-1be7-d5a6-197a-f36b85293aac@linaro.org>
+Date:   Mon, 17 Feb 2020 10:47:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200126195619.27596-1-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When domains are imbalanced or overloaded a search of all CPUs on the
-target domain is searched and compared with task_numa_compare. In some
-circumstances, a candidate is found that is an obvious win.
 
-o A task can move to an idle CPU and an idle CPU is found
-o A swap candidate is found that would move to its preferred domain
 
-This patch terminates the search when either condition is met.
+On 26/01/2020 19:56, Yangtao Li wrote:
+> Now there are nvmem_cell_read_u16 and nvmem_cell_read_u32.
+> They are very similar, let's strip out a common part.
+> 
+> And use nvmem_cell_read_common to simplify their implementation.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>   drivers/nvmem/core.c | 54 ++++++++++++++++----------------------------
+>   1 file changed, 19 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+Applied both,
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 935baf529f10..a1d5760f7985 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1707,7 +1707,7 @@ static bool load_too_imbalanced(long src_load, long dst_load,
-  * into account that it might be best if task running on the dst_cpu should
-  * be exchanged with the source task
-  */
--static void task_numa_compare(struct task_numa_env *env,
-+static bool task_numa_compare(struct task_numa_env *env,
- 			      long taskimp, long groupimp, bool maymove)
- {
- 	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
-@@ -1718,9 +1718,10 @@ static void task_numa_compare(struct task_numa_env *env,
- 	int dist = env->dist;
- 	long moveimp = imp;
- 	long load;
-+	bool stopsearch = false;
- 
- 	if (READ_ONCE(dst_rq->numa_migrate_on))
--		return;
-+		return false;
- 
- 	rcu_read_lock();
- 	cur = rcu_dereference(dst_rq->curr);
-@@ -1731,8 +1732,10 @@ static void task_numa_compare(struct task_numa_env *env,
- 	 * Because we have preemption enabled we can get migrated around and
- 	 * end try selecting ourselves (current == env->p) as a swap candidate.
- 	 */
--	if (cur == env->p)
-+	if (cur == env->p) {
-+		stopsearch = true;
- 		goto unlock;
-+	}
- 
- 	if (!cur) {
- 		if (maymove && moveimp >= env->best_imp)
-@@ -1860,8 +1863,27 @@ static void task_numa_compare(struct task_numa_env *env,
- 	}
- 
- 	task_numa_assign(env, cur, imp);
-+
-+	/*
-+	 * If a move to idle is allowed because there is capacity or load
-+	 * balance improves then stop the search. While a better swap
-+	 * candidate may exist, a search is not free.
-+	 */
-+	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
-+		stopsearch = true;
-+
-+	/*
-+	 * If a swap candidate must be identified and the current best task
-+	 * moves its preferred node then stop the search.
-+	 */
-+	if (!maymove && env->best_task &&
-+	    env->best_task->numa_preferred_nid == env->src_nid) {
-+		stopsearch = true;
-+	}
- unlock:
- 	rcu_read_unlock();
-+
-+	return stopsearch;
- }
- 
- static void task_numa_find_cpu(struct task_numa_env *env,
-@@ -1911,7 +1933,8 @@ static void task_numa_find_cpu(struct task_numa_env *env,
- 			continue;
- 
- 		env->dst_cpu = cpu;
--		task_numa_compare(env, taskimp, groupimp, maymove);
-+		if (task_numa_compare(env, taskimp, groupimp, maymove))
-+			break;
- 	}
- }
- 
--- 
-2.16.4
-
+thanks,
+srini
