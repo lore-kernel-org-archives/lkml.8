@@ -2,98 +2,165 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4241FC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C21C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD872070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F05C2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqHzEm5U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uY++/MYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgBQNQn (ORCPT
+        id S1727332AbgBQNQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:16:43 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44045 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbgBQNQm (ORCPT
+        Mon, 17 Feb 2020 08:16:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39383 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgBQNQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:16:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id m16so19652387wrx.11;
-        Mon, 17 Feb 2020 05:16:41 -0800 (PST)
+        Mon, 17 Feb 2020 08:16:44 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so16010289oty.6;
+        Mon, 17 Feb 2020 05:16:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=p/uQQdbP6CtQI5bxDvGVhaC/f+9PVyfSbatM3OlAi4s=;
-        b=lqHzEm5UNtGWjo21PqgaH03h2WQqDhZVrATmmQneQSSxw0OAWr5pYizoWChwVr0djZ
-         9KUFAShTLryHyD5zqfG4hJTz/cAqtCvOLHIhJvr3Q7KVW+EurO+Yi4kEjjAuog8RigGO
-         DGvb3aibmZxA4agX8sEpSAcwhhczpYYzAiR20y1JYwfzl9KIMKskURQ3FGYPKEQTkJRN
-         mfhY785IoICmCuxwQaqqz6Q0gZUJZCgv6fJpJiAGE/RSng4jBWiQ9BLt3pjbDIFx1u9t
-         qvzerbnGe3rAk6Qyphb33szJbzvsZVEzT4Fc1dGLbCu58TTXyOxm6I3WzYZ71ZK4MutK
-         tjtA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nuL8CtX55BPzoxygKW6S6mjcIN5tjUT7yCyHUMOTXFo=;
+        b=uY++/MYyUuwsgE64k/bddQKpPdzGtkbxV+rSZh8QMqltJT0hYCIvJnjZX3pqR2nlHC
+         aqqD/UAK3cMEOGdOoVQzgKbvz1LU1s4F3PqBtX4RIYrMan2knFMpp6iQove+FnCekIJx
+         LL25CNd/avk2I8VoI4/VrPcOHxH3GsVD8Hm97VuLvAX7x4ljb6VCrQ/YmFn877xqDkuB
+         gBcJvknwdcPJZre+JBdVZQlpTlAEJtMZilpKF9y7KFf6niLltb88TdB4cl1V2CgJwaUE
+         jyQWQiQx+8WQK7qXO/vvk9amOfCdbb9vB+MPUZt5uxc5v/7n5rz1/eGLR1wjb5q8hy1S
+         zDKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=p/uQQdbP6CtQI5bxDvGVhaC/f+9PVyfSbatM3OlAi4s=;
-        b=tNk2TjY3qGmQIOCldg8XLmO0mfJL8wLH2efnz7P2nDjtOxte6FGhAO70Qh2hpxJ2rG
-         R1tB/QOeTeivpH50IPfu0jYBab4S2TPIJtNi4ikgjAI03H2XU+HSupNVGJWkWofK4qnU
-         7Gti1CBc+dvK5dMt6BjlN2HPxltBU8P3g8G4Xe7YCw89oGBohromu89S9nsugjEKnOry
-         sjOnaTPbTU4eat1lPNg4XyPgNC013zvWkzQBBJabPz3xJ7a1cjCSL0sxtHuDBFDDrA4j
-         tHxYAOqAiJkZm6of5qEUd9trWHXo3Z2cJYUruLCCxLBemJGiCoAYuv8HwP/VIPCObwA6
-         qE9g==
-X-Gm-Message-State: APjAAAVLJG4b99lI7dF4ODaTFjy16sZnHKgcLH0HPRNpULNvPaHYD4xi
-        Rpy8QS7jJQGK7mxdhQK72HFzd5sHN1E=
-X-Google-Smtp-Source: APXvYqxl068Wx/x2bBMrsu8QHOx94CFshQcGiFI0JuLpMh4rhyh0RoBdBOR0XjR0R0lIfWKRPKlflA==
-X-Received: by 2002:a5d:484d:: with SMTP id n13mr21948552wrs.420.1581945400649;
-        Mon, 17 Feb 2020 05:16:40 -0800 (PST)
-Received: from felia ([2001:16b8:3888:da00:b474:2167:8661:27cf])
-        by smtp.gmail.com with ESMTPSA id n1sm999072wrw.52.2020.02.17.05.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 05:16:40 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Mon, 17 Feb 2020 14:16:38 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Anatoly Pugachev <matorola@gmail.com>, Pat Gefre <pfg@sgi.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-doc@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tty/serial: cleanup after ioc*_serial driver removal
-In-Reply-To: <20200217130828.GB26781@lst.de>
-Message-ID: <alpine.DEB.2.21.2002171409410.14734@felia>
-References: <20200217081558.10266-1-lukas.bulwahn@gmail.com> <CADxRZqwGBi=4A224mG0cPgONdNitnvi3LFD_KQckxdYSXzgBGg@mail.gmail.com> <alpine.DEB.2.21.2002170950390.11007@felia> <20200217130828.GB26781@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuL8CtX55BPzoxygKW6S6mjcIN5tjUT7yCyHUMOTXFo=;
+        b=mT7XRl2VlfGC6RhkHOXs+SbehXLRqOOrAa22C6H9Ug2Wq/zYdDPuMezhe9iT86eyzT
+         U1NUr3w5RsuJtOezek9VhAsR/hAll4glrL21W8CsybDaqJ2H/WgwQ1nl2f8XNUQBwNt2
+         unOaCj0Llsf8/YNac8pVhXmKylcIiFvVykwVYgS+91rAWIfmKZeMU5eDx+hLdgZRLsav
+         i1f+87I3j393+9HnVQQ6yN38/jLQCPKDO6LVODVtPMXPJyaSFVkY9mW+wJ4t9dZugUlN
+         yWZMdj1nsRVLNCzWQY5GxxpttNZvFTqhu8+o7jd+UzG0aCfk8SRtvGcuvDEDCDPUHIUu
+         yGhw==
+X-Gm-Message-State: APjAAAXjJa1je2D1yzQkmRYs93oZl/dUMS38NsKre1q3IvuzosFMFUWl
+        X9m4teeGTfQ89SwO7ULQB2nySauWyis95p70PJo=
+X-Google-Smtp-Source: APXvYqyO59KG3VGRDFRxNNSCDwt0uDuXL6mNedgykhIhPOwWQpJrde2FHja7BQSCWDOOV+Zqg2DIo1uZRUdPnbB9RPM=
+X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr11674114otn.56.1581945402563;
+ Mon, 17 Feb 2020 05:16:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CANRm+CznPq3LQUyiXr8nA7uP5q+d8Ud-Ki-W7vPCo_BjDJtOSw@mail.gmail.com>
+ <7171e537-27f9-c1e5-ae32-9305710be2c7@redhat.com> <20200214213357.GH20690@linux.intel.com>
+In-Reply-To: <20200214213357.GH20690@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 17 Feb 2020 21:16:31 +0800
+Message-ID: <CANRm+CwEnrU0ErsxXd51K5muVyYypx5HME6ZNj1b2uEUN57gwQ@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: X86: Grab KVM's srcu lock when accessing hv
+ assist page
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 15 Feb 2020 at 05:33, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> The subject shoud be rewritten to simply states that the vmcs12->shadow
+> sync is being.  The changelog can explain the motiviation, but a one-line
+> git log should clearly reveal that this affects the shadow VMCS.
+>
+> Subsystem should also be "KVM: nVMX:"
+>
+> On Fri, Feb 14, 2020 at 10:27:12AM +0100, Paolo Bonzini wrote:
+> > On 14/02/20 10:16, Wanpeng Li wrote:
+> > > From: wanpeng li <wanpengli@tencent.com>
+> > >
+> > > For the duration of mapping eVMCS, it derefences ->memslots without holding
+> > > ->srcu or ->slots_lock when accessing hv assist page. This patch fixes it by
+> > > moving nested_sync_vmcs12_to_shadow to prepare_guest_switch, where the SRCU
+> > > is already taken.
+> >
+> > Looks good, but I'd like an extra review from Sean or Vitaly.
+> >
+> > We also should add a WARN_ON_ONCE that replaces the previous location of
+> > the "if (vmx->nested.need_vmcs12_to_shadow_sync)", but I can do that myself.
+> >
+> > Thanks,
+> >
+> > Paolo
+> >
+> > > It can be reproduced by running kvm's evmcs_test selftest.
+> > >
+> > >   =============================
+> > >   warning: suspicious rcu usage
+> > >   5.6.0-rc1+ #53 tainted: g        w ioe
+> > >   -----------------------------
+> > >   ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+> > >
+> > >   other info that might help us debug this:
+> > >
+> > >    rcu_scheduler_active = 2, debug_locks = 1
+> > >   1 lock held by evmcs_test/8507:
+> > >    #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
+> > > kvm_vcpu_ioctl+0x85/0x680 [kvm]
+> > >
+> > >   stack backtrace:
+> > >   cpu: 6 pid: 8507 comm: evmcs_test tainted: g        w ioe     5.6.0-rc1+ #53
+> > >   hardware name: dell inc. optiplex 7040/0jctf8, bios 1.4.9 09/12/2016
+> > >   call trace:
+> > >    dump_stack+0x68/0x9b
+> > >    kvm_read_guest_cached+0x11d/0x150 [kvm]
+> > >    kvm_hv_get_assist_page+0x33/0x40 [kvm]
+> > >    nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
+> > >    nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
+> > >    nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
+> > >    vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
+> > >    vcpu_enter_guest+0x35e/0x1bc0 [kvm]
+> > >    kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
+> > >    kvm_vcpu_ioctl+0x370/0x680 [kvm]
+> > >    ksys_ioctl+0x235/0x850
+> > >    __x64_sys_ioctl+0x16/0x20
+> > >    do_syscall_64+0x77/0x780
+> > >    entry_syscall_64_after_hwframe+0x49/0xbe
+> > >
+> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/vmx.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index 9a66648..6bd6ca4 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -1214,6 +1214,9 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+> > >
+> > >      vmx_set_host_fs_gs(host_state, fs_sel, gs_sel, fs_base, gs_base);
+> > >      vmx->guest_state_loaded = true;
+> > > +
+> > > +    if (vmx->nested.need_vmcs12_to_shadow_sync)
+> > > +        nested_sync_vmcs12_to_shadow(vcpu);
+>
+> This needs to be above the short circuit check on guest_state_loaded, e.g.:
+>
+>         if (vmx->nested.need_vmcs12_to_shadow_sync)
+>                 nested_sync_vmcs12_to_shadow(vcpu);
+>
+>         if (vmx->guest_state_loaded)
+>                 return;
 
+Agreed, do it in new version.
 
-On Mon, 17 Feb 2020, Christoph Hellwig wrote:
-
-> On Mon, Feb 17, 2020 at 10:09:45AM +0100, Lukas Bulwahn wrote:
-> > The description is about situations on very outdated kernel versions, so 
-> > the whole page needs a general update.
-> 
-> While the file doesn't seem all that useful, I think removing or updating
-> it should probably be a separate patch.
-> 
-Okay, I will send a v2 where I keep the documentation and I will add a
-maintainers entry for Documentation/ia64/ to IA64 (Itanium) PLATFORM.
-
-Lukas
-
+    Wanpeng
