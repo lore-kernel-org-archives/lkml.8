@@ -2,111 +2,118 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBADC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A91C34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D182072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="B0FvGH8T"
+	by mail.kernel.org (Postfix) with ESMTP id 82794207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581948785;
+	bh=tzmWG3PhUjeDzHof24wrlf3ktGXFc/qnRB+HPP6zDzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z/J9mmEmFQgwwujJme6aYP6yd4Xw5RFJIkzmuASGv1sUJPvxZM9+V7QIOwGCLXQgx
+	 VePNqVhdnT3zVmJno9Po3PysWI42KLM29Cr+1tsYM/GnyDP60K4iePtmi17Xed5TiT
+	 KA7vlF2Yb+aQgvGFF0+CLObmRCRd9O+KkFdyho/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgBQOM2 (ORCPT
+        id S1728964AbgBQONE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:12:28 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42779 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgBQOM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:12:28 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so11970957lfl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 06:12:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tKSE4g/oUh8JP0cEiCIATWChO5NnMQwrTlN4DA9Lt8o=;
-        b=B0FvGH8TX29jyPG7bOm5TLFH8q5LsdhONtC1UHcUJ8h7odxJU2GxRt9z21IYmJGNzF
-         /0jTWJUiFD5TVE+48t4F6OEDVhf6OgYquJRARiAhjlzbvXHG85JG+khhY1MqMWUZNBR2
-         nh9VETpmGseZX71qeGmAo32tc3CM0M50UVpSU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tKSE4g/oUh8JP0cEiCIATWChO5NnMQwrTlN4DA9Lt8o=;
-        b=LtG+NCJ84EKP/caThZUPNC8PX/NAve9X6g/AJFaCNJC7OINyCyf4vp1m7+ZCFC4ljC
-         PQH1N/q/TfDKJYpdK78wEK4xItkOZIqwUYjdDNbPlIcUvxff8VMg8ECyqS7UKc1iCKVS
-         Kx+2pZETxNj3H+xDT1dZRDem9AVKDM+rwsA7Hs5Cb/8gOWVzQ4k5KEjDFC8y3OQu5l5o
-         nbOA8Ic5dxLxBXI3lM/Zq2LWggOwGY8ur4jSE9FR9wNI9cQ9NpN2g5JvIgV1KrMuVT0q
-         NG9fJoUIfXc44GlBIx6F2tnk0MfDQRbwcxdrQILRj2cX2N7yO9sqHJAqoRQTuUVkNl5e
-         iTSw==
-X-Gm-Message-State: APjAAAVzqugjP2EIFd1hjl97tQlLqEcwIiAlLJZu6/XiF79TvPbNLLcv
-        mp0ZYnZSZ7pow4ekpDqCsO3bZQ==
-X-Google-Smtp-Source: APXvYqxsv6WJ34fOs69KpqyEJm/T+9cC2Q9QrUx6WEOh9oqc9KmUryRCC6197x7uuj70NfRbZNvgdg==
-X-Received: by 2002:ac2:5922:: with SMTP id v2mr8089831lfi.106.1581948745665;
-        Mon, 17 Feb 2020 06:12:25 -0800 (PST)
-Received: from [172.16.11.50] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f9sm479954ljp.62.2020.02.17.06.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 06:12:23 -0800 (PST)
-Subject: Re: [PATCH] usb: host: fhci-hcd: annotate PIPE_CONTROL switch case
- with fallthrough
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Anton Vorontsov <avorontsov@ru.mvista.com>,
-        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-References: <20200213085401.27862-1-linux@rasmusvillemoes.dk>
- <20200213125659.GB3325929@kroah.com>
- <6ab68169-dde6-b5ba-0909-fa685bd24aac@rasmusvillemoes.dk>
- <20200217093836.GA37937@kroah.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a1f0f024-c1e5-8ff5-f717-f5098b4eb78d@rasmusvillemoes.dk>
-Date:   Mon, 17 Feb 2020 15:12:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 09:13:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbgBQONE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 09:13:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8662072C;
+        Mon, 17 Feb 2020 14:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581948783;
+        bh=tzmWG3PhUjeDzHof24wrlf3ktGXFc/qnRB+HPP6zDzQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n8xy5FFXPKvAA+8yxLT/UrT0uiW5UfKJEF74D7pGUMoT9DoUdTUlk1zH8kjNRU03o
+         imIMdUlsgP2/47AF+orn+EQoIIIATwGoh8PuzUmSqD9goD8whK2eQ83sYN7axaWAi8
+         hVTqX2PjmWmf2+Ax/tr1a2pYWKxnVHHdlQ0ErLDc=
+Date:   Mon, 17 Feb 2020 15:13:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     richard@nod.at, sashal@kernel.org, yi.zhang@huawei.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stable@vger.kernel.org
+Subject: Re: [PATCH 4.4] ubifs: Fix deadlock in concurrent bulk-read and
+ writepage
+Message-ID: <20200217141301.GA1096821@kroah.com>
+References: <1581942239-112920-1-git-send-email-chengzhihao1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200217093836.GA37937@kroah.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1581942239-112920-1-git-send-email-chengzhihao1@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/02/2020 10.38, Greg Kroah-Hartman wrote:
-> On Thu, Feb 13, 2020 at 02:35:18PM +0100, Rasmus Villemoes wrote:
->> On 13/02/2020 13.56, Greg Kroah-Hartman wrote:
->>
->>> Shouldn't this be /* fall through */ instead?
->>>
->>> Gustavo, what's the best practice here, I count only a few
->>> "fallthrough;" instances in the kernel, although one is in our coding
->>> style document, and thousands of the /* */ version.
->>
->> Yes, I went with the attribute/macro due to that, and the history is
->> that Linus applied Joe's patches directly
->> (https://lore.kernel.org/lkml/CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com/),
->> so I assumed that meant the Penguin decided that the attribute/macro is
->> the right thing to do for new code, while existing comment annotations
->> can be left alone or changed piecemeal as code gets refactored anyway.
+On Mon, Feb 17, 2020 at 08:23:59PM +0800, Zhihao Cheng wrote:
+> [ Upstream commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 ]
 > 
-> But, to be fair, Gustavo went and fixed up thousands of these, with the
-> /* */ version, not the attribute.
+> In ubifs, concurrent execution of writepage and bulk read on the same file
+> may cause ABBA deadlock, for example (Reproduce method see Link):
 > 
-> Gustavo, can coverity notice the "fallthrough;" attribute properly?  I
-> don't want to start adding things that end up triggering
-> false-positives.
+> Process A(Bulk-read starts from page4)         Process B(write page4 back)
+>   vfs_read                                       wb_workfn or fsync
+>   ...                                            ...
+>   generic_file_buffered_read                     write_cache_pages
+>     ubifs_readpage                                 LOCK(page4)
+> 
+>       ubifs_bulk_read                              ubifs_writepage
+>         LOCK(ui->ui_mutex)                           ubifs_write_inode
+> 
+> 	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
+> 	    find_or_create_page(alloc page4)                  ↑
+> 	      LOCK(page4)                   <--     ABBA deadlock occurs!
+> 
+> In order to ensure the serialization execution of bulk read, we can't
+> remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
+> allow ubifs_do_bulk_read() to lock page failed by replacing
+> find_or_create_page(FGP_LOCK) with
+> pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
+> 
+> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+> Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
+> Cc: <Stable@vger.kernel.org>
+> Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+> Signed-off-by: Richard Weinberger <richard@nod.at>
+> ---
+>  fs/ubifs/file.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+> index b895af7d8d80..e6d0a7df341d 100644
+> --- a/fs/ubifs/file.c
+> +++ b/fs/ubifs/file.c
+> @@ -782,8 +782,9 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
+>  
+>  		if (page_offset > end_index)
+>  			break;
+> -		page = find_or_create_page(mapping, page_offset,
+> -					   GFP_NOFS | __GFP_COLD);
+> +		page = pagecache_get_page(mapping, page_offset,
+> +				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
+> +				 GFP_NOFS | __GFP_COLD);
+>  		if (!page)
+>  			break;
+>  		if (!PageUptodate(page))
+> -- 
+> 2.7.4
+> 
 
-I'm not Gustavo, and I don't know the answer, but 1.5 years ago some guy
-named greg k-h suggested that coverity does grok the fallthrough attribute:
+Now applied, thanks!
 
-https://patchwork.kernel.org/cover/10651357/#22279095
-
-Rasmus
+greg k-h
