@@ -2,158 +2,122 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF2BC3402A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30E6C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9157F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC752070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:49:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+p1UwY0"
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="wPWkMsYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgBQVsG (ORCPT
+        id S1730009AbgBQVtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:48:06 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39990 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbgBQVsG (ORCPT
+        Mon, 17 Feb 2020 16:49:23 -0500
+Received: from dvalin.narfation.org ([213.160.73.56]:35448 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729047AbgBQVtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:48:06 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p3so22337064edx.7;
-        Mon, 17 Feb 2020 13:48:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=zfMS77r2/yOT69zQZB5nUanXr9vmDwcibatswF77RLM=;
-        b=H+p1UwY0pkxpP9j7tLcvoTxufeba8MCcndAMKeLxuH8IdIhOzeXQD8tOmiF/2a301y
-         XAaXMFIBn/5LcPF5yJy/vmIXjQC2xtRIhXMm0E1n0jsVnKlLJIeVKDx6RXW13r4Q7H06
-         04bk9OYBeyEfXLOdoJGu3RLO6u0FMKYUmCXgPGy6aKMG7EdtuaHAIad+XVdBQg8xV+pp
-         Q6kWvUmeX/MJZ0w6oka1GRbXw4LHE85qsrg9xJoc3Dx12eUdR5T65mlUyvuQqq1zlsVz
-         4c1eF5f3tgfF1yZTjyJ9wW3Nmkvy32hEr4avE7NQQa6ZN6iYoniXXs+AtE6wY/6hzsUQ
-         kWRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=zfMS77r2/yOT69zQZB5nUanXr9vmDwcibatswF77RLM=;
-        b=O1MSnS8CEILWujWies2U9UMN33s8xq547ar5cuk4CLEIUEX55sUhKSENcx4vdJ/nBu
-         n5VRCw/yTYru4dbUzJmDcSfXPwPV5M01fEVgfnRgiXerK618JQUnb6I7cePMp1pBCTSE
-         mCUvWcOIji0q2bbmWGPPgnHfYpmyA50ziDCPZ2xDVMGQwz9Q/T9WwxMD+rTqnR1G3CQY
-         coEOUFqwyBkGCocNoGiDOwZjJOw3/G/EDVDccs80lYhFJARqD4V1cDlvU8Ilr2b+ZcPN
-         LS/R1/AQ6AGyxd1YAxfFn6rg5jDdhmXlrcFYp3QBadHh3YmyD2NFav/Vy7OKKYXL2frI
-         718Q==
-X-Gm-Message-State: APjAAAXL4aZsOaUvXj5IhldGddJv5qSVYAkEyhG+Rodqix1MjBmBP+0a
-        MG27MZEUqydDppqy5cR70l584Ubf4GBnkiFTUlk=
-X-Google-Smtp-Source: APXvYqwdswv+8mGQteeErSB7yFQjychp2XnULWOThIztPi9Y3g89o2LbrvtqVap9ZG9uYBcsUUGdgo7T4c9hhkrtsfQ=
-X-Received: by 2002:a17:906:7c9:: with SMTP id m9mr16348125ejc.243.1581976083916;
- Mon, 17 Feb 2020 13:48:03 -0800 (PST)
+        Mon, 17 Feb 2020 16:49:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1581976159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HxZSzSgpbXsT6HT2RI88A1vCpV9h+fEuqtwQGza/Ass=;
+        b=wPWkMsYN/FfBSnf2qck8cq91ZnB+jbl0GQGwNhfhrbavGwKb6VFGNPCdKUPxnFwPuXSbfC
+        bFQf9kuzteF3CdlPefNA4zSNuIXK16uklWxGwOtIgSc/LRGhSAqw2zLHqN6yOPTSIGVOzL
+        W2NeHJKMBIHR/+OF3dscYAfm5YN+Als=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] batman-adv: Replace zero-length array with flexible-array member
+Date:   Mon, 17 Feb 2020 22:49:15 +0100
+Message-ID: <10763787.LixBgDfVEo@sven-edge>
+In-Reply-To: <20200217214300.GA14129@embeddedor>
+References: <20200217214300.GA14129@embeddedor>
 MIME-Version: 1.0
-References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-4-dima@arista.com>
- <CAHO5Pa2_7BzZPCXjFj4f=YoX28M4q2Au=h6GrzN-EjRffMo1iw@mail.gmail.com> <20200217145908.7epzz5nescccwvzv@wittgenstein>
-In-Reply-To: <20200217145908.7epzz5nescccwvzv@wittgenstein>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Mon, 17 Feb 2020 22:47:53 +0100
-Message-ID: <CAKgNAkjfdWFwNdFzdBY81_8WZJNtbtztfjO9T2YNQDV4ThNiNw@mail.gmail.com>
-Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@openvz.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers <containers@lists.linux-foundation.org>,
-        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
-        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart2172108.OD1FaJJAUc"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christian,
+--nextPart2172108.OD1FaJJAUc
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 17 Feb 2020 at 16:15, Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Mon, Feb 17, 2020 at 03:20:55PM +0100, Michael Kerrisk wrote:
-> > Hello Dmitry, Andrei,
-> >
-> > Is the CLONE_NEWTIME flag intended to be usable with clone3()? The
-> > mail quoted below implies (in my reading) that this should be possible
-> > once clone3() is available, which it is by now. (See also [1].)
-> >
-> > If the answer is yes, CLONE_NEWTIME  should be usable with clone3(),
-> > then I have a bug report and a question.
-> >
-> > I successfully used CLONE_NEWTIME with unshare(). But if I try to use
-> > CLONE_NEWSIGNAL with clone3(), it errors out with EINVAL, because of
->
-> s/CLONE_NEWSIGNAL/CLONE_NEWTIME/
->
-> > the following check in clone3_args_valid():
-> >
-> >         /*
-> >          * - make the CLONE_DETACHED bit reuseable for clone3
-> >          * - make the CSIGNAL bits reuseable for clone3
-> >          */
-> >         if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
-> >                 return false;
-> >
-> > The problem is that CLONE_NEWTIME matches one of the bits in the
-> > CSIGNAL mask. If the intention is to allow CLONE_NEWTIME with
-> > clone3(), then either the bit needs to be redefined, or the error
-> > checking in clone3_args_valid() needs to be reworked.
->
-> If this is intended to be useable with clone3() the check should be
-> adapted to allow for CLONE_NEWTIME. (I asked about this a while ago I
-> think.)
-> But below rather sounds like it should simply be an unshare() flag. The
-> code seems to set frozen_offsets to true right after copy_namespaces()
-> in timens_on_fork(new_ns, tsk) and so the offsets can't be changed
-> anymore unless I'm reading this wrong.
-> Alternatives seem to either make timens_offsets writable once after fork
-> and before exec, I guess - though that's probably not going to work
-> with the vdso judging from timens_on_fork().
->
-> The other alternative is that Andrei and Dmitry send me a patch to
-> enable CLONE_NEWTIME with clone3() by exposing struct timens_offsets (or
-> a version of it) in the uapi and extend struct clone_args to include a
-> pointer to a struct timens_offset that is _only_ set when CLONE_NEWTIME
-> is set.
-> Though the unshare() way sounds way less invasive simpler.
+On Monday, 17 February 2020 22:43:00 CET Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  net/batman-adv/distributed-arp-table.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Actually, I think the alternative you propose just here is better. I
-imagine there are times when one will want to create multiple
-namespaces with a single call to clone3(), including a time namespace.
-I think this should be allowed by the API. And, otherwise, clone3()
-becomes something of a second-class citizen for creating namespaces.
-(I don't really get the "less invasive" argument. Implementing this is
-just a piece of kernel to code to make user-space's life a bit simpler
-and more consistent.)
+Applied
 
-Thanks,
+Thanks, 
+	Sven
+--nextPart2172108.OD1FaJJAUc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Michael
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl5LClsACgkQXYcKB8Em
+e0YrWBAApZLl9hFI3pEEU4sF0ogqQdIrgfXgwknMtOlHbt9PZLa7AdKhuvt3Srmf
+2mPK88fPeI5Nm0ucK4auCSB6kMbivoWqhF/oI/I/IFPPjEm6HUCfquoCAKT+R+qH
+nlXa4TMfuG2MNq+++dhNOMfyrGNG37hO9mx1+l+8G3J41XWU/bvGw6318hwDeqJx
+zW8z5cJus0+FsICVvWhDHIZhVa/O8B6AJ3aC4RcLznmn/FlJdyt9W+7rI0JAWHll
+ca4gehUbHxLHB1u9CZrPW9b15O0HFcd0UF1HgpVuhlFwE3/QUp/cGCJvw8g5cee1
+YQEb2ZIyqDcElta5JmEgAqvIpmd3G+fTu6RZWiEkdyB4eeOgW0slvPj2nU0m8wlj
+TuxAzi1HllHWnvrMQ9O6OHAiOFHVan+hFc1jjmI0rAk5iKxvguzMVjYHSmSNNSe6
+Wb/AOceIjeRbIZlz3159+qubPC5/bO/1R1m4CldKqONh0NsqqntqEQG/1HTCpZiF
+69ttiD11tkerFlwcw04FulD/Qy99XP7nAfbroT4hf3WtlEDJ/xCdZzrZrV36C/KC
+Upc2AmZSj2gIjGC4cP3bpEz269xMyy7/IaVtzlI/J5vFIFdq7ivMVKoJOIT8qIDd
+FOxy3eWR1ZYe9sYgBzTpnvdUDqItHwvIIXSr+b6zytxy0oQ2g0k=
+=8qWS
+-----END PGP SIGNATURE-----
+
+--nextPart2172108.OD1FaJJAUc--
 
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+
