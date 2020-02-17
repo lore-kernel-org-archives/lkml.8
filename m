@@ -2,107 +2,113 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2EC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB7FC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C592070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68428207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gE+G+JlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgBQLUk (ORCPT
+        id S1728884AbgBQLXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:20:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:34300 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgBQLUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:20:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEF2830E;
-        Mon, 17 Feb 2020 03:20:39 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F03D3F6CF;
-        Mon, 17 Feb 2020 03:20:38 -0800 (PST)
-Date:   Mon, 17 Feb 2020 11:20:36 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] sched/rt: allow pulling unfitting task
-Message-ID: <20200217112034.54yoockxvfe3fw6y@e107158-lin.cambridge.arm.com>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-3-qais.yousef@arm.com>
- <20200217091042.GB28029@codeaurora.org>
+        Mon, 17 Feb 2020 06:23:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728572AbgBQLXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:23:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581938602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MzSShR7Baq3pMc/kBpgCJS277t/Xu5wsk9DwxCBu5Qs=;
+        b=gE+G+JlB0xdu6FzNBGbC4AngtKZfMEQaiTvaLR3FC0EljGIF5/r54HrS87Z2IR46QIcgaF
+        zOL5oIwNmoCAlDICC5HZtaFpWxI8/iPRELJ6MVsZ7fRglPOo1HLgcI4mQxRzZYrbImGnxp
+        RD4gAGse5w9waflZDwbN9cMnSTqaP4E=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-SXA9mesqOpafUisj1Yu9aA-1; Mon, 17 Feb 2020 06:23:20 -0500
+X-MC-Unique: SXA9mesqOpafUisj1Yu9aA-1
+Received: by mail-wr1-f72.google.com with SMTP id j4so8792295wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:23:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MzSShR7Baq3pMc/kBpgCJS277t/Xu5wsk9DwxCBu5Qs=;
+        b=sbkbCfSlpq+wwpkLmvJq9lc50HDD0zIczMQHJDjakHSwor75NvMGs4MxOP36VXcF86
+         I208C5DCgqUgb74YtpLXyoOMvedMnzAwcvmw/Uk5qb/TMZF14mbsqXkLfFNhf5W8qaua
+         AlbPGuSK3e2z1WS4l+Se9bExvAU/DYYnZSR5FA9bVR1Lx+2LTDeNWydZsXPO1CZKcTX1
+         V/qv7x4nqTikIOaybgb4jDrrnox20TavTxMSADLSVFG3UFINiKZlK7yeFpJ7cGXu4x+0
+         lWVn/7S+KRH97H5rNID4IDzR2L+jFSkCOzTGP4znw307EF/cJGVdlThtCCE5djrHVa0b
+         PX3A==
+X-Gm-Message-State: APjAAAWrDI/rm9T0Dj0oNIRl9mMudjZymi64BVp2bwVgp3zCUR2oIqLl
+        PCit1CvQgTPWUoO/OJ+ab932aM79Wg4Gbl+XBf5LUKFNm6FlpyHAs3e23aB7s7BNEqBtI0iglo1
+        mtVM374xgejA4W+VAlhugXMja
+X-Received: by 2002:a1c:e388:: with SMTP id a130mr21631729wmh.176.1581938598880;
+        Mon, 17 Feb 2020 03:23:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxRwSyzU0Sqecaad9VwaOksR0eo61oSfyaLYDxhxuBCi+8SmZweE1jjTzMmyVXDqR/8yH9N7Q==
+X-Received: by 2002:a1c:e388:: with SMTP id a130mr21631707wmh.176.1581938598568;
+        Mon, 17 Feb 2020 03:23:18 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
+        by smtp.gmail.com with ESMTPSA id i16sm213867wmb.36.2020.02.17.03.23.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 03:23:18 -0800 (PST)
+Subject: Re: [PATCH v3 1/2] KVM: X86: Less kvmclock sync induced vmexits after
+ VM boots
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8fd7a83a-6fde-652f-0a2e-ec7b90c13616@redhat.com>
+Date:   Mon, 17 Feb 2020 12:23:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200217091042.GB28029@codeaurora.org>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 14:40, Pavan Kondeti wrote:
-> Hi Qais,
+On 17/02/20 11:36, Wanpeng Li wrote:
 > 
-> On Fri, Feb 14, 2020 at 04:39:48PM +0000, Qais Yousef wrote:
-> > When implemented RT Capacity Awareness; the logic was done such that if
-> > a task was running on a fitting CPU, then it was sticky and we would try
-> > our best to keep it there.
-> > 
-> > But as Steve suggested, to adhere to the strict priority rules of RT
-> > class; allow pulling an RT task to unfitting CPU to ensure it gets a
-> > chance to run ASAP. When doing so, mark the queue as overloaded to give
-> > the system a chance to push the task to a better fitting CPU when a
-> > chance arises.
-> > 
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > ---
-> >  kernel/sched/rt.c | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > index 4043abe45459..0c8bac134d3a 100644
-> > --- a/kernel/sched/rt.c
-> > +++ b/kernel/sched/rt.c
-> > @@ -1646,10 +1646,20 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
-> >  
-> >  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
-> >  {
-> > -	if (!task_running(rq, p) &&
-> > -	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
-> > -	    rt_task_fits_capacity(p, cpu))
-> > +	if (!task_running(rq, p) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
-> > +
-> > +		/*
-> > +		 * If the CPU doesn't fit the task, allow pulling but mark the
-> > +		 * rq as overloaded so that we can push it again to a more
-> > +		 * suitable CPU ASAP.
-> > +		 */
-> > +		if (!rt_task_fits_capacity(p, cpu)) {
-> > +			rt_set_overload(rq);
-> > +			rq->rt.overloaded = 1;
-> > +		}
-> > +
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fb5d64e..d0ba2d4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9390,8 +9390,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+>      if (!kvmclock_periodic_sync)
+>          return;
 > 
-> Here rq is source rq from which the task is being pulled. I can't understand
-> how marking overload condition on source_rq help. Because overload condition
-> gets cleared in the task dequeue path. i.e dec_rt_tasks->dec_rt_migration->
-> update_rt_migration().
+> -    schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> -                    KVMCLOCK_SYNC_PERIOD);
+> +    if (kvm->created_vcpus == 1)
+> +        schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> +                        KVMCLOCK_SYNC_PERIOD);
 
-Err yes indeed I rushed this patch. Let me try again.
+This is called with kvm->lock not held, so you can have
+kvm->created_vcpus == 2 by the time you get here.  You can test instead
+"if (vcpu->vcpu_idx == 0)".
 
-Thanks
+Thanks,
 
---
-Qais Yousef
+Paolo
+
