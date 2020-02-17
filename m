@@ -2,102 +2,113 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43EFC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80351C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8694B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F7420725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:47:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dmMSMqlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgBQRms (ORCPT
+        id S1729741AbgBQRrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:42:48 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:34651 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgBQRms (ORCPT
+        Mon, 17 Feb 2020 12:47:00 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44507 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729312AbgBQRrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:42:48 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 83AE024000D;
-        Mon, 17 Feb 2020 17:42:44 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 18:42:44 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
-Message-ID: <20200217174244.GD3316@piout.net>
-References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
- <20200217165644.GX25745@shell.armlinux.org.uk>
+        Mon, 17 Feb 2020 12:47:00 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so7909832qvg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:47:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fclp6pj9Ohf5zy5oWRL58wezrgVRwCDmitgX4CBgiIw=;
+        b=dmMSMqlMDcoQ6t6XjGXJctcHnBHWxJyM1OYtCv+wQVsW+3NgAjeCJvKohvWRdX8eSs
+         H7ShIRPeA8kCpW/IZ2WtC7m7Qtp9baL4G3uXaOrC3jJniZmgMFYp7MVGn3fdLZl0cl2r
+         0ntUp7mzxWtokPxs3zenSYL1YmpGGzGL4LaDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fclp6pj9Ohf5zy5oWRL58wezrgVRwCDmitgX4CBgiIw=;
+        b=MS6zvcGsNGbhnpR0rnYROrOeOKQrPuCwWRuB2UnTyWuEqdoshNGQf1N5gWuoX+oF/A
+         ysRY0csI5/gUlPDwBhtuGF6ufKn9Mhkw0jsiSQPKfKSRm8dUsRQA55gV3KjvPN9iOV6l
+         hNu7eDjeJxQlUIYPhnBk4gWNHoDVIUlPWmI4ytInaR9PTvoT/UL0W0Az6eZaTxKCKfWo
+         JvkGbb3RMGeoZik+VMEJG6mobNwkZQ3/s8L3n0kfy0jNEdUxiutLYpU8zcqSPaCk3Blz
+         s8+yx1pgnvLncTdcoTW7DblgbOERu92upQa5Qac99RGNfQ6KMNq/3fTpgAqSr7/GATo0
+         I2Bw==
+X-Gm-Message-State: APjAAAX8nEkif/9orJdOiAln4P4XbklmzOfNaeDZngFRhpDH0CL5KTv8
+        YENG0RHg560mPKyXACKi7+oJgQ==
+X-Google-Smtp-Source: APXvYqzE6DvKlDvn8pSMAAIb4kG6AaX71wvMuonU8Jb0CTjX1CojS0wGkGqSs4A2hXYJ6Pq3XpUkmQ==
+X-Received: by 2002:a0c:fb0f:: with SMTP id c15mr13129726qvp.209.1581961619438;
+        Mon, 17 Feb 2020 09:46:59 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l8sm496717qtr.36.2020.02.17.09.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 09:46:58 -0800 (PST)
+Date:   Mon, 17 Feb 2020 12:46:58 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     paulmck@kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com
+Subject: Re: [PATCH tip/core/rcu 1/4] srcu: Fix __call_srcu()/process_srcu()
+ datarace
+Message-ID: <20200217174658.GC112239@google.com>
+References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
+ <20200215002932.15976-1-paulmck@kernel.org>
+ <20200217124231.GS14914@hirez.programming.kicks-ass.net>
+ <20200217170157.GA166797@google.com>
+ <20200217171104.GV14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217165644.GX25745@shell.armlinux.org.uk>
+In-Reply-To: <20200217171104.GV14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/02/2020 16:56:44+0000, Russell King - ARM Linux admin wrote:
-> On Mon, Feb 17, 2020 at 11:43:48AM +0100, Alexandre Belloni wrote:
-> > at91ether_init was handling the phy mode and speed but since the switch to
-> > phylink, the NCFGR register got overwritten by macb_mac_config().
+On Mon, Feb 17, 2020 at 06:11:04PM +0100, Peter Zijlstra wrote:
+> On Mon, Feb 17, 2020 at 12:01:57PM -0500, Joel Fernandes wrote:
 > 
-> I don't think this actually explains anything - or at least I can't
-> make sense of it with respect to your patch.
-> 
-> You claim that the NCFGR register gets overwritten in macb_mac_config(),
-> but I see that the NCFGR register is read-modify-write in there,
-> whereas your new implementation below doesn't bother reading the
-> present value.
-> 
-> I think the issue you're referring to is the clearing of the PAE bit,
-> which is also the RM9200_RMII for at91rm9200?
-> 
-
-This is the issue, I'll rework the commit message.
-
-> Next, there's some duplication of code introduced here - it seems
-> that the tail end of macb_mac_link_down() and at91ether_mac_link_down()
-> are identical, as are the tail end of macb_mac_link_up() and
-> at91ether_mac_link_up().
-> 
-
-I was split between having a new phylink_mac_ops instance or
-differentiating in the various callbacks. If your preference is the
-latter, I'm fine with that.
-
-> > Add new phylink callbacks to handle emac and at91rm9200 properly.
+> > Peter it sounds like you have a failure scenario in mind. Could you describe
+> > more if so?
 > > 
-> > Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
+> > I am curious if you were thinking of invented-stores issue here.
+> > 
+> > For educational purposes, I was trying to come up with an example where my
+> > compiler does something bad to code without WRITE_ONCE(). So far I only can
+> > reproduce a write-tearing example when write with an immediate value is split
+> > into 2 writes, like Will mentioned:
+> > http://lore.kernel.org/r/20190821103200.kpufwtviqhpbuv2n@willie-the-truck
+> > But that does not seem to apply to this code.
 > 
-> I posted a heads-up message last week about updates to phylink that
-> I'll be submitting soon (most of the prerequisits have now been sent
-> for review) which touch every phylink_mac_ops-using piece of code in
-> the tree.  Unfortunately, this patch introduces a new instance that
-> likely isn't going to get my attention, so it's going to create a
-> subtle merge conflict between net-next and net trees unless we work
-> out some way to deal with it.
+> > > > -			snp->srcu_gp_seq_needed_exp = gpseq;
+> > > > +			WRITE_ONCE(snp->srcu_gp_seq_needed_exp, gpseq);
 > 
-> I'm just mentioning that so that some thought can be applied now
-> rather than when it actually happens - especially as I've no way to
-> test the changes that will be necessary for this driver.
+> Yeah, store tearing. No sane compiler will actually do that, but it is
+> allowed to do random permutations of byte stores just to fuck with us.
 > 
+> WRITE_ONCE() disallows that.
+> 
+> In that case, the READ_ONCE()s could observe garbage and the compare
+> might accidentally report the wrong thing.
 
-Does that help if I change the callbacks instead of adding a new
-phylink_mac_ops instance? I can also wait for your work and rebase on
-top of that but that would mean that the fix will not get backported.
+Oh ok, I understand what you mean now. Thank you for clarification!
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+thanks,
+
+ - Joel
+
