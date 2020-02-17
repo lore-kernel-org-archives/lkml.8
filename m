@@ -2,79 +2,136 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6AC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE1BC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9DF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F17D20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgBQMHb (ORCPT
+        id S1729042AbgBQMIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:07:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43638 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbgBQMHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:07:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B8875AF01;
-        Mon, 17 Feb 2020 12:07:27 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-rt-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
-Subject: [PATCH] kthread: Mark timer used by delayed kthread works as IRQ safe
-Date:   Mon, 17 Feb 2020 13:07:09 +0100
-Message-Id: <20200217120709.1974-1-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Mon, 17 Feb 2020 07:08:52 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2431 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728927AbgBQMIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:08:51 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 5A01FB48AA3C8B00CA05;
+        Mon, 17 Feb 2020 12:08:50 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 17 Feb 2020 12:08:50 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 17 Feb
+ 2020 12:08:49 +0000
+Subject: Re: arm64 iommu groups issue
+To:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>,
+        "Will Deacon" <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+CC:     iommu <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Saravana Kannan" <saravanak@google.com>
+References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+ <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
+ <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
+ <ddc7eaff-c3f9-4304-9b4e-75eff2c66cd5@huawei.com>
+ <be464e2a-03d5-0b2e-24ee-96d0d14fd739@arm.com>
+ <35fc8d13-b1c1-6a9e-4242-284da7f00764@huawei.com>
+ <68643b18-c920-f997-a6d4-a5d9177c0f4e@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <828ec7b3-27af-f0b9-b4a6-0886b0c24b5a@huawei.com>
+Date:   Mon, 17 Feb 2020 12:08:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <68643b18-c920-f997-a6d4-a5d9177c0f4e@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The timer used by delayed kthread works are IRQ safe because the used
-kthread_delayed_work_timer_fn() is IRQ safe.
+>>
+>> Right, and even worse is that it relies on the port driver even 
+>> existing at all.
+>>
+>> All this iommu group assignment should be taken outside device driver 
+>> probe paths.
+>>
+>> However we could still consider device links for sync'ing the SMMU and 
+>> each device probing.
+> 
+> Yes, we should get that for DT now thanks to the of_devlink stuff, but 
+> cooking up some equivalent for IORT might be worthwhile.
 
-It is properly marked when initialized by KTHREAD_DELAYED_WORK_INIT().
-But TIMER_IRQSAFE flag is missing when initialized by
-kthread_init_delayed_work().
+It doesn't solve this problem, but at least we could remove the 
+iommu_ops check in iort_iommu_xlate().
 
-The missing flag might trigger invalid warning from del_timer_sync()
-when kthread_mod_delayed_work() is called with interrupts disabled.
+We would need to carve out a path from pci_device_add() or even 
+device_add() to solve all cases.
 
-Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
-This patch is result of a discussion about using the API, see
-https://lkml.kernel.org/r/cfa886ad-e3b7-c0d2-3ff8-58d94170eab5@ti.com
+> 
+>>> Another thought that crosses my mind is that when pci_device_group()
+>>> walks up to the point of ACS isolation and doesn't find an existing
+>>> group, it can still infer that everything it walked past *should* be put
+>>> in the same group it's then eventually going to return. Unfortunately I
+>>> can't see an obvious way for it to act on that knowledge, though, since
+>>> recursive iommu_probe_device() is unlikely to end well.
+>>
 
- include/linux/kthread.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index 0f9da966934e..8bbcaad7ef0f 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -165,7 +165,8 @@ extern void __kthread_init_worker(struct kthread_worker *worker,
- 	do {								\
- 		kthread_init_work(&(dwork)->work, (fn));		\
- 		timer_setup(&(dwork)->timer,				\
--			     kthread_delayed_work_timer_fn, 0);		\
-+			     kthread_delayed_work_timer_fn,		\
-+			     TIMER_IRQSAFE);				\
- 	} while (0)
- 
- int kthread_worker_fn(void *worker_ptr);
--- 
-2.16.4
+>> And this looks to be the reason for which current 
+>> iommu_bus_init()->bus_for_each_device(..., add_iommu_group) fails also.
+> 
+> Of course, just adding a 'correct' add_device replay without the 
+> of_xlate process doesn't help at all. No wonder this looked suspiciously 
+> simpler than where the first idea left off...
+> 
+> (on reflection, the core of this idea seems to be recycling the existing 
+> iommu_bus_init walk rather than building up a separate "waiting list", 
+> while forgetting that that wasn't the difficult part of the original 
+> idea anyway)
 
+We could still use a bus walk to add the group per iommu, but we would 
+need an additional check to ensure the device is associated with the IOMMU.
+
+> 
+>> On this current code mentioned, the principle of this seems wrong to 
+>> me - we call bus_for_each_device(..., add_iommu_group) for the first 
+>> SMMU in the system which probes, but we attempt to add_iommu_group() 
+>> for all devices on the bus, even though the SMMU for that device may 
+>> yet to have probed.
+> 
+> Yes, iommu_bus_init() is one of the places still holding a 
+> deeply-ingrained assumption that the ops go live for all IOMMU instances 
+> at once, which is what warranted the further replay in 
+> of_iommu_configure() originally. Moving that out of 
+> of_platform_device_create() to support probe deferral is where the 
+> trouble really started.
+
+I'm not too familiar with the history here, but could this be reverted 
+now with the introduction of of_devlink stuff?
+
+Cheers,
+John
