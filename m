@@ -2,125 +2,140 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FBCC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29933C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F65520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+nb5LY2"
+	by mail.kernel.org (Postfix) with ESMTP id F1B3E222D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgBQRNq (ORCPT
+        id S1729612AbgBQRNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:13:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25302 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbgBQRNp (ORCPT
+        Mon, 17 Feb 2020 12:13:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729594AbgBQRNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:13:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581959624;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zvr7zosO7XOdlphEaMtlcsDU2QFGlchxOoZ2XJ+sfA0=;
-        b=N+nb5LY2AMIvvt1qePZLKPXwPw+SanZb25pja0W6AiayNKEvdk1p6sLKi8Ht10lgzVvNP6
-        Bs2gYmTTzBH0v5Qkk57nCc1cHyIFEd7I+QMx5Ucfo4+kBYzfsKpmahotBTtAyg5e8wpb9g
-        jcHpzYPJqmIIipWNcLVqQmoAbcC7+yM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-p-MiJ9dcO4Ghapn10HhIuw-1; Mon, 17 Feb 2020 12:13:42 -0500
-X-MC-Unique: p-MiJ9dcO4Ghapn10HhIuw-1
-Received: by mail-wr1-f71.google.com with SMTP id w17so9278424wrr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:13:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zvr7zosO7XOdlphEaMtlcsDU2QFGlchxOoZ2XJ+sfA0=;
-        b=lVf05gSr1z2yjcSp+SnYcClFPfa0cFzy2wPzb6UlURJ3Sa4URUOSTkGTydQRk+4Tat
-         00x8JOZ8URRWdfll2DwtYf4LHA7y5mGmAtzI189lEPT1p49gjH6tgfp1SjHriDP2OXxz
-         EWT8F5JDDqxYZ4WxJmRNQj1W/9dQNAMUR+uY4L6QaNXaOL1hJZMhOd92UIiTchy3oYkG
-         aQhtv0gG5H4sz+1Pzr2UUf/sF/jk450gAJB1d8IPqfDXv+K7rJsvY1+DZX7TeWd5FbhU
-         9evCtrxHux2EnO/xL/AiHnl5Htv38BzY2wl2qHhHNIwrxEO3L0rw77XqivlrELy0/IUP
-         wPIQ==
-X-Gm-Message-State: APjAAAWBg9YzmkPhhPjRtNbCxX+dzqGckdJyK2LmVnfvKyCADVcS45zZ
-        +PcUdp+bgjS0fxyctXqeRYuiK9PNX28109s6Hep2wylwgnHxJq/C3To1E7FbqKCH6yacaOFRKHi
-        r90JLtgS4qT4hWYulWrEs1QHc
-X-Received: by 2002:a5d:4289:: with SMTP id k9mr23874622wrq.280.1581959621315;
-        Mon, 17 Feb 2020 09:13:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzOSN9Nebz0glINr0cP2RhJRrWjeL0Lcx1XGFRkQ6RFQce1iHmupUMsZFekj+Py6SXpZywzVw==
-X-Received: by 2002:a5d:4289:: with SMTP id k9mr23874595wrq.280.1581959621047;
-        Mon, 17 Feb 2020 09:13:41 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
-        by smtp.gmail.com with ESMTPSA id z19sm54313wmi.43.2020.02.17.09.13.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 09:13:40 -0800 (PST)
-Subject: Re: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-References: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com>
- <2fb684de-30c1-ed67-600f-08168e64d6c7@oracle.com>
- <87blpx9mfw.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a8d6f864-7014-64cf-da3a-3761385f123b@redhat.com>
-Date:   Mon, 17 Feb 2020 18:13:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 17 Feb 2020 12:13:54 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH8re4138020
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1gmvbb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Mon, 17 Feb 2020 17:13:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Feb 2020 17:13:47 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HHDkK636503712
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 17:13:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65D8D42047;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2133E4203F;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.204])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
+Date:   Mon, 17 Feb 2020 18:13:44 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
+References: <20200208141052.48476-1-natechancellor@gmail.com>
+ <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
+ <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
-In-Reply-To: <87blpx9mfw.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
+X-TM-AS-GCONF: 00
+x-cbid: 20021717-4275-0000-0000-000003A2DB4B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021717-4276-0000-0000-000038B6E05F
+Message-Id: <your-ad-here.call-01581959624-ext-8482@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_11:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/02/20 18:02, Vitaly Kuznetsov wrote:
+On Thu, Feb 13, 2020 at 11:46:28PM -0700, Nathan Chancellor wrote:
+> On Sat, Feb 08, 2020 at 12:17:20PM -0800, Joe Perches wrote:
+> > On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
+> > > Clang warns:
+> > > 
+> > > ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
+> > > of type 'const u8 *' (aka 'const unsigned char *') converts between
+> > > pointers to integer
+> > > types with different sign [-Wpointer-sign]
+> > >                                   (char *) entropy, (char *) entropy,
+> > >                                                     ^~~~~~~~~~~~~~~~
+> > > ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
+> > > parameter 'src' here
+> > >                             u8 *dest, const u8 *src, long src_len)
+> > >                                                 ^
+> > > 2 warnings generated.
+> > > 
+> > > Fix the cast to match what else is done in this function.
+> > > 
+> > > Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/862
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > >  arch/s390/boot/kaslr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
+> > > index 5d12352545c5..5591243d673e 100644
+> > > --- a/arch/s390/boot/kaslr.c
+> > > +++ b/arch/s390/boot/kaslr.c
+> > > @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
+> > >  		*(unsigned long *) prng.parm_block ^= seed;
+> > >  		for (i = 0; i < 16; i++) {
+> > >  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
+> > > -				  (char *) entropy, (char *) entropy,
+> > > +				  (u8 *) entropy, (u8 *) entropy,
+> > 
+> > Why not change the function to take void *?
+> > 
+> > static inline int cpacf_kmc(unsigned long func, void *param,
+> > 			    u8 *dest, const u8 *src, long src_len)
+> > 
+> > vs:
+> > 
+> > static inline int cpacf_kmc(unsigned long func, void *param,
+> > 			    void *dest, const void *src, long src_len)
+> > 
+> > and remove the casts?
 > 
-> Also, apic_lvt_enabled() is only used once with APIC_LVTT as the second
-> argument so I'd suggest we also do:
+> I can certainly do that if the maintainers prefer it.
 > 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index afcd30d44cbb..d85463ff4a6f 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -289,14 +289,14 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
->         recalculate_apic_map(apic->vcpu->kvm);
->  }
->  
-> -static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-> +static inline int apic_lvtt_enabled(struct kvm_lapic *apic)
->  {
-> -       return !(kvm_lapic_get_reg(apic, lvt_type) & APIC_LVT_MASKED);
-> +       return !(kvm_lapic_get_reg(apic, APIC_LVTT) & APIC_LVT_MASKED);
->  }
->  
-> -static inline int apic_lvt_vector(struct kvm_lapic *apic, int lvt_type)
-> +static inline int apic_lvtt_vector(struct kvm_lapic *apic)
->  {
-> -       return kvm_lapic_get_reg(apic, lvt_type) & APIC_VECTOR_MASK;
-> +       return kvm_lapic_get_reg(apic, APIC_LVTT) & APIC_VECTOR_MASK;
->  }
-> 
-> in addition to the above.
-> 
-> -- Vitaly
-
-Sounds good.
-
-Paolo
+> Cheers,
+> Nathan
+KBUILD_CFLAGS contains -Wno-pointer-sign but special arch/s390/boot code
+has a separate set of build flags. Anyhow the change makes sense as it is.
+Applied to fixes, thanks
 
