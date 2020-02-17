@@ -2,132 +2,163 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5388AC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E0C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7A02070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06E2207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gHyXD7h1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xr0RKjXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgBQLH6 (ORCPT
+        id S1728619AbgBQLJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:07:58 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.24]:25728 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgBQLH5 (ORCPT
+        Mon, 17 Feb 2020 06:09:13 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39105 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgBQLJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:07:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581937675;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=UjGXd+P18AGyydcaJZYftL66fRHa5kYKz/UOiMtRAek=;
-        b=gHyXD7h1HmSweJNulMgcY/iKLpziwjehGumh1vk4vkcZzG4IIOOnEk1vszoa5w9cbx
-        j3kWXrMahewVCG9JcMiE5rUzRdhfhFDWmwiDIKNHFULEWboFI8cuYa1Z+s36BkyVTxAB
-        RxKlHQmJyrJEsTcN2euCZZPyR6XB8+xgIWdzoAjkFz1HOTSOOaXiGcAYm/Mf0yDBV1dc
-        m8XloETsdXNMJyMk1Xn4hJzTi1Ioz4hyyiO74bqWO7C2ragnmKb/Hadq6+rFW1szK7z8
-        gF0XvL1nBHToS71+ym0FJ52zD5TpB7cvgonUmWdw73pkN/b86GJrxfLmq55ejFSG5Ewu
-        8bXA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA0OXQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1HB7qMEc
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Mon, 17 Feb 2020 12:07:52 +0100 (CET)
+        Mon, 17 Feb 2020 06:09:13 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c84so18001029wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:09:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=T6lGwTZh7mHp1+xNe3270Amp1AhzDEDQq2tbWytRCkc=;
+        b=xr0RKjXPVB+gRMbXfexYJNKjyWWOmWW1mV7pdgRe9rbLdRCTO7bxfxbB3RwTUZACDH
+         LC23a15L1dYMi/FvFeXO4Ab3APGymTX7wpNiPQNR/rJ+XbS4NRNIrS5iGb+/s8dXyxq3
+         nJIp/RZHptbqhL91IkiPR1Q8Lb7a2bL+wwDax9bViLe375QUVxC5xYMPzfrTvJSN/jPQ
+         V7GuOtfoyH/3rOnTx3uaNg4o+38tLK0xtCHEJWzC876dHD54ONAsKoIxrbzjUxGwktK8
+         qkmR2b2HB8vZD9IenM9u0qOu91wVN9zi7aZ6qd+uF4u94zyciEdlyPHUTgzzLYbjoVdo
+         8BZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T6lGwTZh7mHp1+xNe3270Amp1AhzDEDQq2tbWytRCkc=;
+        b=Sl7pStkRV+ngiRHDpNUUkKsP8RorH0fUwkXU3wYgm2Vyka2jzt9YQv1vNaUEqYccNe
+         JScLcgpM3U1JJpxsi+zDe77iYC5BGfzq1Ef8SiURazMzieeUzs0QQ9L8VzlczgnX7jIT
+         wYtA3IpojUP7WLtAyoHgLTl9oXSwUaimv0xCAZDVtJgDKIqT6MEMyu6a9Io/O5gAbdvN
+         I2Uku4G8CU/4D/fIpGk1l99Tj5if6abLVgsiUijOsBZvMh976xmwjeFCeyrGL9Q/HJ6I
+         1lDl4ZkN47c7rETOTkRITgXc829VMsBg5W5Bnh1WDy17lqAGzpUPV4OFPCO7ewZzR7XC
+         K6tg==
+X-Gm-Message-State: APjAAAUPN8sse+VKlgZWMCV+adSsTYXdgcDaKjV1+WwaMARJ5hvGAmEW
+        f7C+CpC21BACMLJ56twhQo9/xw==
+X-Google-Smtp-Source: APXvYqwxkBnN7m+XKv747Z5vrFKzOGd501tfmlf/OlM+5CYpkdwBSTAEIw/f9X5gGNN2xTTgzKUdrA==
+X-Received: by 2002:a05:600c:214f:: with SMTP id v15mr22120513wml.110.1581937749544;
+        Mon, 17 Feb 2020 03:09:09 -0800 (PST)
+Received: from apalos.home (ppp-2-87-54-32.home.otenet.gr. [2.87.54.32])
+        by smtp.gmail.com with ESMTPSA id u8sm178649wmm.15.2020.02.17.03.09.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 03:09:09 -0800 (PST)
+Date:   Mon, 17 Feb 2020 13:09:06 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Laszlo Ersek <lersek@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
+ from a device path
+Message-ID: <20200217110906.GA147685@apalos.home>
+References: <20200216141104.21477-1-ardb@kernel.org>
+ <20200216141104.21477-3-ardb@kernel.org>
+ <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com>
+ <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+ <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <b9fe52e9-0340-4204-ee85-44b6c1ea7f3b@samsung.com>
-Date:   Mon, 17 Feb 2020 12:07:52 +0100
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2DF972B9-EECF-44E9-93FC-74B6C3B6FFC2@goldelico.com>
-References: <CGME20200217085551epcas1p49113220d034155f8a78dc5e0767637a5@epcas1p4.samsung.com> <f65ad0ef2866e7d5b6743e13579c1efe8c572b4f.1581929741.git.hns@goldelico.com> <b9fe52e9-0340-4204-ee85-44b6c1ea7f3b@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo Choi,
+Hi Ard,
 
-> Am 17.02.2020 um 11:15 schrieb Chanwoo Choi <cw00.choi@samsung.com>:
->=20
-> Hi,
->=20
-> On 2/17/20 5:55 PM, H. Nikolaus Schaller wrote:
->> If the gpios are probed after this driver (e.g. if they
->> come from an i2c expander) there is no need to print an
->> error message.
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/extcon/extcon-palmas.c | 6 ++++--
->> 1 file changed, 4 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/extcon/extcon-palmas.c =
-b/drivers/extcon/extcon-palmas.c
->> index edc5016f46f1..9c6254c0531c 100644
->> --- a/drivers/extcon/extcon-palmas.c
->> +++ b/drivers/extcon/extcon-palmas.c
->> @@ -206,14 +206,16 @@ static int palmas_usb_probe(struct =
-platform_device *pdev)
->> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"id",
->> 							GPIOD_IN);
->> 	if (IS_ERR(palmas_usb->id_gpiod)) {
->> -		dev_err(&pdev->dev, "failed to get id gpio\n");
->> +		if (PTR_ERR(palmas_usb->id_gpiod) !=3D -EPROBE_DEFER)
->> +			dev_err(&pdev->dev, "failed to get id gpio\n");
->> 		return PTR_ERR(palmas_usb->id_gpiod);
->> 	}
->>=20
->> 	palmas_usb->vbus_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"vbus",
->> 							GPIOD_IN);
->> 	if (IS_ERR(palmas_usb->vbus_gpiod)) {
->> -		dev_err(&pdev->dev, "failed to get vbus gpio\n");
->> +		if (PTR_ERR(palmas_usb->vbus_gpiod) !=3D -EPROBE_DEFER)
->> +			dev_err(&pdev->dev, "failed to get vbus =
-gpio\n");
->> 		return PTR_ERR(palmas_usb->vbus_gpiod);
->> 	}
->>=20
->>=20
->=20
-> Usually, gpio driver like pinctrl is very early probed
-> because almost device drivers should use gpio.
-> So, I have not any experience about this situation.
-> Do you meet this situation on any h/w board?
+[...]
+> > > > +             return EFI_INVALID_PARAMETER;
+> > >
+> > > Doesn't return EFI_LOAD_ERROR.
+> > >
+> > > > +
+> > > > +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
+> > > > +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
+> > > > +     if (status != EFI_SUCCESS)
+> > > > +             return status;
+> > >
+> > > Seems safe (the only plausible error could be EFI_NOT_FOUND).
+> > >
+> > > > +
+> > > > +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
+> > > > +                          (void **)&lf2);
+> > > > +     if (status != EFI_SUCCESS)
+> > > > +             return status;
+> > >
+> > > Interesting case; this should never fail... but note, if it does, it
+> > > returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
+> > > from the handle).
+> > >
+> > > > +
+> > > > +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
+> > > > +     if (status != EFI_BUFFER_TOO_SMALL)
+> > > > +             return EFI_LOAD_ERROR;
+> > > > +
+> > > > +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
+> > > > +     if (status != EFI_SUCCESS)
+> > > > +             return status;
+> > >
+> > > Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
+> > > could return EFI_OUT_OF_RESOURCES.
+> > >
+> >
+> > Hmm, guess I was a bit sloppy with the return codes. The important
+> > thing is that EFI_NOT_FOUND is only returned in the one specifically
+> > defined case.
+> >
+> 
+> For the record [in case no respin+resend is needed for other reasons],
+> I intend to update the comment block as below, and keep the code as
+> is:
+> 
 
-Yes, I have experienced that sometimes on omap5+palmas based boards.
+Yes i think this makes more sense the return codes are already correct and the
+fallback is properly triggered.
 
-It seems to be this:
+For what it's worth 
 
-=
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/ar=
-ch/arm/boot/dts/omap5-board-common.dtsi?h=3Dv5.6-rc2#n384
+Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-The extcon_usb3 can potentially match this extcon-palmas driver at
-a moment where the palmas_gpio it is referring to has not yet been
-successfully probed. Then the palmas_gpio would return -EPROBE_DEFER.
+> 
+>   * @load_addr: pointer to store the address where the initrd was loaded
+>   * @load_size: pointer to store the size of the loaded initrd
+>   * @max:       upper limit for the initrd memory allocation
+> - * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in
+> which case
+> - *             @load_addr and @load_size are assigned accordingly
+> - *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+> - *             device path
+> + * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in which
+> + *             case @load_addr and @load_size are assigned accordingly
+> + *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+> + *             device path
+> + *             %EFI_INVALID_PARAMETER if load_addr == NULL or load_size == NULL
+> + *             %EFI_OUT_OF_RESOURCES if memory allocation failed
+>   *             %EFI_LOAD_ERROR in all other cases
 
-AFAIK there is no guarantee for a specific sequence of drivers
-being probed and it is pure luck that in most cases the gpios
-are already probed.
-
-BR and thanks,
-Nikolaus Schaller
-
+Regards
+/Ilias
