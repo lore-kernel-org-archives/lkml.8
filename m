@@ -2,151 +2,129 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5A5C3402A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D49AC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B064D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581975421;
-	bh=Z3MjIfs82PU+SZJqaYgP0md1kb2zmhXzQIJP97cDfys=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gt6u3qXNjempvhhewLnVuA2mhEUvqM5t68y6bQ5humTSW2Up1xdeOrjqYW4Fo92K2
-	 JBy7gizRL5YK1RIRHqmLiIsP+vYnRBP6N8A8G/vUPHMkpX4zxZPJPKF+Yzq5910xBk
-	 ZqXy1Z+i2HUPYp49G1MdHlh8LtXPWjTlyxoSHHkY=
+	by mail.kernel.org (Postfix) with ESMTP id CD2EE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:39:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRxbEzBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgBQVg4 (ORCPT
+        id S1729965AbgBQVjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbgBQVg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:36:56 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 525922070B;
-        Mon, 17 Feb 2020 21:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581975415;
-        bh=Z3MjIfs82PU+SZJqaYgP0md1kb2zmhXzQIJP97cDfys=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eHuj2IElQrDCVE7vAgW19UJLaZkXkMyPRzO4U9ORoKQ2UMtGeMN72/kbMMZoK2Uss
-         T1XRnD1rHjTzfMvX2Kp7JQJURbb+MiTBtngOspjcQyKmeBzdF5IvXqgucsaRfeLXr+
-         gqtkmgcUeRpVjKOYe9PBTD5ubpurcXhK5OXlOpUY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2B7C735227A8; Mon, 17 Feb 2020 13:36:55 -0800 (PST)
-Date:   Mon, 17 Feb 2020 13:36:55 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH tip/core/rcu 06/30] rcu: Add WRITE_ONCE to rcu_node
- ->exp_seq_rq store
-Message-ID: <20200217213655.GX2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-6-paulmck@kernel.org>
- <20200214224743.280772a7@oasis.local.home>
- <20200215105803.GY2935@paulmck-ThinkPad-P72>
- <20200217211135.GA207704@google.com>
+        Mon, 17 Feb 2020 16:39:37 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35710 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbgBQVjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:39:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w12so21494408wrt.2;
+        Mon, 17 Feb 2020 13:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=pQK+JSaj4X1ouX/nv3XugRaRb5vhJaYjMLbHKqXiJLs=;
+        b=tRxbEzBjpxae4/jPkX1ksr+AcCQ64ru3BPDzjqwTU82KNKYS4zCXaPWBV+ZO5ottcE
+         SWRr3JAXQpC0gyS+wvRGCiIV4U7PA5WMbz2ZSGOVn7SsIblDcq7V3IvlODWdUH8p0ZeP
+         sCvsYdTwQE2yPqtNrPz6d1lxZtBN6p6isE2YiGyv2JTZHAKg31zP2fe1rcF1Al3uFeA6
+         uiKo+SF5Lcs5EuO1azjUgTpoU2DReG7SX6W8+ujPHNv7MEWktBJFkZQKhjLy9uu1OizE
+         Jh0qS3HZKJGRz9Hc84QtlrjF3T0y9mRnpe/R7e9MGNwBJa9fWcRifsPM/jzkNm8IjdmP
+         LUxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=pQK+JSaj4X1ouX/nv3XugRaRb5vhJaYjMLbHKqXiJLs=;
+        b=EuXsJmXSuow80EnJPHYONBimakZupXfMjrmjETsHnKuMNye063HQNRX6b5wtxxlXXa
+         s5QIdUgOLCCkaRL55yqsrJyvET+MAIWC1Hilzin1hwYmx38dynfg+E0AbotrQIsdH5Bu
+         usPi4gshVIMGdOvsWdH5DYrVzuQihcpTu4U/f2oZ+gABwRr0cDvaQMUvi5cFMipYZGK5
+         AJ10owrzCHeUJCwRV01hE1ec+sWgLhD80NUAz9aWbflW5XPeS6JdJ98e1xO9h+Ue6Bf5
+         EfeOnli7lXTL/2XiECxdZemwEQhUd8hfxR5EM3uBnVvQpiZrUE6mQInRuzz9sYSQ4Jzc
+         f8pQ==
+X-Gm-Message-State: APjAAAUpBXFde1CcJPLsdrBV6lqv0wiB1JNElg7XIY3RkiXnuPeLQZ+7
+        2dlvCN1UMxeGLJC5as1Az0GLvai9Wk0=
+X-Google-Smtp-Source: APXvYqxtgfXlPYMtn3A/6f+SlQuvmEQ1uS0kThsmRCNvSY3l7Z1IWf9fXRqMYdc2QonmDvWxMh0+og==
+X-Received: by 2002:a5d:4d06:: with SMTP id z6mr24421643wrt.241.1581975575195;
+        Mon, 17 Feb 2020 13:39:35 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:41c6:31a6:d880:888? (p200300EA8F29600041C631A6D8800888.dip0.t-ipconnect.de. [2003:ea:8f29:6000:41c6:31a6:d880:888])
+        by smtp.googlemail.com with ESMTPSA id t13sm2892378wrw.19.2020.02.17.13.39.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 13:39:34 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net-next 0/3] net: core: add helper tcp_v6_gso_csum_prep
+To:     David Miller <davem@davemloft.net>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guo-Fu Tseng <cooldavid@cooldavid.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Timur Tabi <timur@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Message-ID: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com>
+Date:   Mon, 17 Feb 2020 22:39:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217211135.GA207704@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:11:35PM -0500, Joel Fernandes wrote:
-> On Sat, Feb 15, 2020 at 02:58:03AM -0800, Paul E. McKenney wrote:
-> > On Fri, Feb 14, 2020 at 10:47:43PM -0500, Steven Rostedt wrote:
-> > > On Fri, 14 Feb 2020 15:55:43 -0800
-> > > paulmck@kernel.org wrote:
-> > > 
-> > > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > > 
-> > > > The rcu_node structure's ->exp_seq_rq field is read locklessly, so
-> > > > this commit adds the WRITE_ONCE() to a load in order to provide proper
-> > > > documentation and READ_ONCE()/WRITE_ONCE() pairing.
-> > > > 
-> > > > This data race was reported by KCSAN.  Not appropriate for backporting
-> > > > due to failure being unlikely.
-> > > > 
-> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > ---
-> > > >  kernel/rcu/tree_exp.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > > > index d7e0484..85b009e 100644
-> > > > --- a/kernel/rcu/tree_exp.h
-> > > > +++ b/kernel/rcu/tree_exp.h
-> > > > @@ -314,7 +314,7 @@ static bool exp_funnel_lock(unsigned long s)
-> > > >  				   sync_exp_work_done(s));
-> > > >  			return true;
-> > > >  		}
-> > > > -		rnp->exp_seq_rq = s; /* Followers can wait on us. */
-> > > > +		WRITE_ONCE(rnp->exp_seq_rq, s); /* Followers can wait on us. */
-> > > 
-> > > Didn't Linus say this is basically bogus?
-> > > 
-> > > Perhaps just using it as documenting that it's read locklessly, but is
-> > > it really needed?
-> > 
-> > Yes, Linus explicitly stated that WRITE_ONCE() is not required in
-> > this case, but he also said that he was OK with it being there for
-> > documentation purposes.
-> 
-> Just to add, PeterZ does approve of WRITE_ONCE() to prevent store-tearing
-> where applicable.
-> 
-> And I have reproduced Will's example [1] with the arm64 Clang compiler
-> shipping with the latest Android NDK just now. It does break up stores when
-> writing zeroes to 64-bit valyes, this is a real problem which WRITE_ONCE()
-> resolves. And I've verified GCC on arm64 does break up 64-bit immediate value
-> writes without WRITE_ONCE().
+Several network drivers for chips that support TSO6 share the same code
+for preparing the TCP header. A difference is that some reset the
+payload_len whilst others don't do this. Let's factor out this common
+code to a new helper.
 
-That does sounds a bit on the required side!  ;-)
+Heiner Kallweit (3):
+  net: core: add helper tcp_v6_gso_csum_prep
+  r8169: use new helper tcp_v6_gso_csum_prep
+  net: use new helper tcp_v6_gso_csum_prep
 
-							Thanx, Paul
+ drivers/net/ethernet/atheros/alx/main.c       |  5 +---
+ .../net/ethernet/atheros/atl1c/atl1c_main.c   |  6 ++---
+ drivers/net/ethernet/brocade/bna/bnad.c       |  7 +----
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  3 +--
+ drivers/net/ethernet/intel/e1000/e1000_main.c |  6 +----
+ drivers/net/ethernet/intel/e1000e/netdev.c    |  5 +---
+ drivers/net/ethernet/jme.c                    |  7 +----
+ .../net/ethernet/pensando/ionic/ionic_txrx.c  |  5 +---
+ drivers/net/ethernet/qualcomm/emac/emac-mac.c |  7 ++---
+ drivers/net/ethernet/realtek/r8169_main.c     | 26 ++-----------------
+ drivers/net/ethernet/socionext/netsec.c       |  6 +----
+ drivers/net/hyperv/netvsc_drv.c               |  5 +---
+ drivers/net/usb/r8152.c                       | 26 ++-----------------
+ drivers/net/vmxnet3/vmxnet3_drv.c             |  5 +---
+ include/net/ip6_checksum.h                    | 12 +++++++++
+ 15 files changed, 30 insertions(+), 101 deletions(-)
 
-> thanks,
-> 
->  - Joel
-> 
-> [1] https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/
-> 
-> 
-> > And within RCU, I -do- need it because I absolutely need to see if a
-> > given patch introduced new KCSAN reports.  So I need it for the same
-> > reason that I need the build to proceed without warnings.
-> > 
-> > Others who are working with less concurrency-intensive code might quite
-> > reasonably make other choices, of course.  And my setting certain KCSAN
-> > config options in my own builds doesn't inconvenience them, so we should
-> > all be happy, right?  :-)
-> > 
-> > 							Thanx, Paul
-> > 
-> > > -- Steve
-> > > 
-> > > 
-> > > 
-> > > >  		spin_unlock(&rnp->exp_lock);
-> > > >  		trace_rcu_exp_funnel_lock(rcu_state.name, rnp->level,
-> > > >  					  rnp->grplo, rnp->grphi, TPS("nxtlvl"));
-> > > 
+-- 
+2.25.0
+
