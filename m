@@ -2,131 +2,137 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F139C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89547C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C3F215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CAD215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRvYrvD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgBQQe7 (ORCPT
+        id S1729288AbgBQQfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:34:59 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42230 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbgBQQe7 (ORCPT
+        Mon, 17 Feb 2020 11:35:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46569 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728952AbgBQQfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:34:59 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 30BF629251D;
-        Mon, 17 Feb 2020 16:34:57 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 17:34:53 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC v2 0/4] Introduce i3c device userspace interface
-Message-ID: <20200217173453.05829f83@collabora.com>
-In-Reply-To: <CAK8P3a2EhRyRG20GqMZjYa_-5X2eMiYk20NdsaXe1qVhy5si=A@mail.gmail.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
-        <20200217155141.08e87b3f@collabora.com>
-        <CAK8P3a0jAbevb6mjy7Q=C-TFGn7uHRvshHNEO8XrDPRvRoAiTA@mail.gmail.com>
-        <20200217163622.6c78fa3f@collabora.com>
-        <CAK8P3a2EhRyRG20GqMZjYa_-5X2eMiYk20NdsaXe1qVhy5si=A@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 17 Feb 2020 11:35:00 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so20482976wrl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:34:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MqBQs9mU4SVVBLSutJvTaQI0oZjEsyaLtHu9rwR0Mts=;
+        b=qRvYrvD7yOsh2/8dCM2lAVd8q7jEXhhFgspj0IrG3z3AL18Wj4rVmyUqF/juKM5A2R
+         6JHP7SuW5uRdagaIwmnuE43s1TT5lj7KSY2czGQCVsKnYz8dmhJMj2nbgWqM0A+clUay
+         v4HKWE7f8hvHbNxNO0ko3um4kopuL9sE56+KS1kG20Bu6eo/NMSHNgq8G2O6kBNXtVXA
+         lAXRUFindJHxm9YkTt5BdivaRAxx7tTx0zwoJQUq98VfoxLCwj5sK++WpZ8ct3H7ANT7
+         pmdVs3Ro5b1k/JLwkcIwmZOzXEtOdISZPmwBF+eqCuhS9sW4+4k524kIMJ+OuBzNkmmy
+         TNPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MqBQs9mU4SVVBLSutJvTaQI0oZjEsyaLtHu9rwR0Mts=;
+        b=rmg43SLzhSkN40/FcGXsPAVc0/skgKtwodrZJ9MZj1HkaADv0JdICBtYS+pqjaTOVf
+         pV9KUI8hCHF7F2MsLhTJiu/78oHCz/URAScdyNbYHTFY6LpZSrPQ6VzVlGRew/gPz3gB
+         hpu1EeVUC5qwJH9WGzhxXmhl2ynf6N6Ddma2OqOijBcbIZ4RW6CRNDoZKPC9cRZzSTbH
+         LckOTPiMNRVKTSkP7XO7AGH/OyeATWPy19dIFoKYNdoDQZQ3Pj1KPC1FjUIrLLgk1yIA
+         l47bAtmWfEOvr32fMbcuMYOrkQxkCDEX8ntD1diZpwRMZ2CXegaa2by3T2uQ6ogXaRGU
+         nFXg==
+X-Gm-Message-State: APjAAAX4hfu8Grrcenj9Es+S9iycbSIzK0YK4BTSvJGniG768onnVTJ5
+        PqoXFXkNDOQRjYjtSSx19Aj8wg==
+X-Google-Smtp-Source: APXvYqzdibfMQ0dKZdf0c3/jSs9VvhQJxWxcfIQUSqWqDnz18PMUr/RtrXlatqFz59qzGUR1ToMkfQ==
+X-Received: by 2002:a5d:5044:: with SMTP id h4mr21909158wrt.4.1581957298080;
+        Mon, 17 Feb 2020 08:34:58 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id f1sm1686139wro.85.2020.02.17.08.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 08:34:57 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:34:57 +0000
+From:   Matthias Maennich <maennich@google.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
+Subject: Re: [PATCH v4 3/3] kbuild: generate autoksyms.h early
+Message-ID: <20200217163457.GC48466@google.com>
+References: <20200212202140.138092-1-qperret@google.com>
+ <20200212202140.138092-4-qperret@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200212202140.138092-4-qperret@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 17:19:57 +0100
-Arnd Bergmann <arnd@arndb.de> wrote:
+On Wed, Feb 12, 2020 at 08:21:40PM +0000, Quentin Perret wrote:
+>When doing a cold build, autoksyms.h starts empty, and is updated late
+>in the build process to have visibility over the symbols used by in-tree
+>drivers. But since the symbol whitelist is known upfront, it can be used
+>to pre-populate autoksyms.h and maximize the amount of code that can be
+>compiled to its final state in a single pass, hence reducing build time.
+>
+>Do this by using gen_autoksyms.sh to initialize autoksyms.h instead of
+>creating an empty file.
+>
+>Signed-off-by: Quentin Perret <qperret@google.com>
 
-> On Mon, Feb 17, 2020 at 4:36 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
-> > On Mon, 17 Feb 2020 16:06:45 +0100 Arnd Bergmann <arnd@arndb.de> wrote:  
-> > > On Mon, Feb 17, 2020 at 3:51 PM Boris Brezillon
-> > > <boris.brezillon@collabora.com> wrote:  
-> > > > Sorry for taking so long to reply, and thanks for working on that topic.
-> > > >
-> > > > On Wed, 29 Jan 2020 13:17:31 +0100
-> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > >  
-> > > > > For today there is no way to use i3c devices from user space and
-> > > > > the introduction of such API will help developers during the i3c device
-> > > > > or i3c host controllers development.
-> > > > >
-> > > > > The i3cdev module is highly based on i2c-dev and yet I tried to address
-> > > > > the concerns raised in [1].
-> > > > >
-> > > > > NOTES:
-> > > > > - The i3cdev dynamically request an unused major number.
-> > > > >
-> > > > > - The i3c devices are dynamically exposed/removed from dev/ folder based
-> > > > >   on if they have a device driver bound to it.  
-> > > >
-> > > > May I ask why you need to automatically bind devices to the i3cdev
-> > > > driver when they don't have a driver matching the device id
-> > > > loaded/compiled-in? If we get the i3c subsystem to generate proper
-> > > > uevents we should be able to load the i3cdev module and bind the device
-> > > > to this driver using a udev rule.  
-> > >
-> > > I think that would require manual configuration to ensure that the correct
-> > > set of devices get bound to either the userspace driver or an in-kernel
-> > > driver.  
-> >
-> > Hm, isn't that what udev is supposed to do anyway? Remember that
-> > I3C devices expose a manufacturer and part-id (which are similar to the
-> > USB vendor and product ids), so deciding when an I3C device should be
-> > bound to the i3cdev driver should be fairly easy, and that's a
-> > per-device decision anyway.
-> >  
-> > > The method from the current patch series is more complicated,
-> > > but it means that any device can be accessed by the user space driver
-> > > as long as it's not already owned by a kernel driver.  
-> >
-> > Well, I'm more worried about the extra churn this auto-binding logic
-> > might create for the common 'on-demand driver loading' use case. At
-> > first, there's no driver matching a specific device, but userspace
-> > might load one based on the uevents it receives. With the current
-> > approach, that means we'd first have to unbind the device before
-> > loading the driver. AFAICT, no other subsystem does that.  
-> 
-> As I understand it, this is handled by the patches: when a new device
-> shows up, this triggers the creation of the userspace interface and
-> also the event that leads to the kernel driver to get loaded. If there
-> is a kernel driver for the device, that should still load and bind to the
-> device, at which point the user space interface will go away again.
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Tested-by: Matthias Maennich <maennich@google.com>
 
-Yep, that's what I figured after having a closer look at the code.
+Cheers,
+Matthias
 
-> 
-> This may waste CPU cycles for first creating and then destroying
-> the user space interface, but I don't see how it requires extra work.
-> If it does require manual configuration or unbinding, that would
-> indeed be a bad design.
-
-To be honest, I had something less invasive in mind. Something closer
-to what spidev provides (a driver that can expose I3C devices to
-userspace when explicitly requested). I see now that the USB subsystem
-does something similar to what's done here, but I'm wondering if it's
-really worth it in the I3C case. As I said in my previous reply, I
-expect i3cdev to be used when experimenting or when kernel-space driver
-is not an option (licensing/security issues).
+>---
+> Makefile                 | 7 +++++--
+> scripts/gen_autoksyms.sh | 3 ++-
+> 2 files changed, 7 insertions(+), 3 deletions(-)
+>
+>diff --git a/Makefile b/Makefile
+>index 84b71845c43f..17b7e7f441bd 100644
+>--- a/Makefile
+>+++ b/Makefile
+>@@ -1062,9 +1062,12 @@ endif
+>
+> autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
+>
+>+quiet_cmd_autoksyms_h = GEN     $@
+>+      cmd_autoksyms_h = mkdir -p $(dir $@); $(CONFIG_SHELL) \
+>+			$(srctree)/scripts/gen_autoksyms.sh $@
+>+
+> $(autoksyms_h):
+>-	$(Q)mkdir -p $(dir $@)
+>-	$(Q)touch $@
+>+	$(call cmd,autoksyms_h)
+>
+> ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+>
+>diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
+>index 2cea433616a8..f52b93ad122c 100755
+>--- a/scripts/gen_autoksyms.sh
+>+++ b/scripts/gen_autoksyms.sh
+>@@ -32,7 +32,8 @@ cat > "$output_file" << EOT
+>
+> EOT
+>
+>-sed 's/ko$/mod/' modules.order |
+>+[ -f modules.order ] && modlist=modules.order || modlist=/dev/null
+>+sed 's/ko$/mod/' $modlist |
+> xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+> cat - "$ksym_wl" |
+> sort -u |
+>-- 
+>2.25.0.225.g125e21ebc7-goog
+>
