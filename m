@@ -2,148 +2,87 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42058C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C53DC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDE520725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699F020718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBQITA (ORCPT
+        id S1728077AbgBQIT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:19:00 -0500
-Received: from mga14.intel.com ([192.55.52.115]:33550 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbgBQITA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:19:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:18:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="314711143"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 17 Feb 2020 00:18:59 -0800
-Received: from [10.125.252.180] (abudanko-mobl.ccr.corp.intel.com [10.125.252.180])
-        by linux.intel.com (Postfix) with ESMTP id 0359858052E;
-        Mon, 17 Feb 2020 00:18:56 -0800 (PST)
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     linux-man@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v1] perf_event_open.2: update the man page with CAP_PERFMON
- related information
-Organization: Intel Corp.
-Message-ID: <18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com>
-Date:   Mon, 17 Feb 2020 11:18:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 17 Feb 2020 03:19:59 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:32995 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgBQIT6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:19:58 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r21so19685824edq.0;
+        Mon, 17 Feb 2020 00:19:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ATnQLLigNnNp+3vrMMUywd96YC/sdkp/YQzir+b0HgQ=;
+        b=G242rs+PDBmmgooaB2XqYB1dGRNvDnJOs03wZzB8y9bJpR4Cd3LDMuZ9k4DvNLEdd7
+         Ey3bwblhwnKeQmCkNetL1kpwSHZdLfCqfb3Qo4XlsMmgmHsUPEjfptPqMvhxJx8Z5eYj
+         bd51hx63y1M63ZQIH6mJTneVZqI4tyqxLm6t9dfaj6IbHkqpDTdRC41PxoI/Uh5GEuN7
+         pb8JfGGphWNyvyVGJ7A+PiSCd/rHpqpmy5+8DnLyhx65laWvajKWBqhh9v2rQUf57zXL
+         cDRCrP+Pmfff6goRcRReCSQzs53NHQG3Mo/k0tyIqeQRSQDM+VtNSzM8dmUV6KOjLvyB
+         /mkg==
+X-Gm-Message-State: APjAAAXbwIYYq/LfvuIHxr7xi6isa/UG63vXKjeThAHlW0zUeV/IH+Vr
+        4zSH20qodyrY57Ct6NM4yaoHPmv/8kY=
+X-Google-Smtp-Source: APXvYqxslzR90ipQN6pVb+aQ+bJiil+U8VHigr94WA1ReDW3LRyk/OLB84bRFXvmlID7e+zGSSsnHA==
+X-Received: by 2002:a05:6402:1764:: with SMTP id da4mr13492458edb.24.1581927595038;
+        Mon, 17 Feb 2020 00:19:55 -0800 (PST)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id m7sm445260edq.37.2020.02.17.00.19.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
+Received: by mail-wm1-f45.google.com with SMTP id s144so6786815wme.1;
+        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
+X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr21454590wmd.77.1581927594021;
+ Mon, 17 Feb 2020 00:19:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-6-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-6-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 17 Feb 2020 16:19:43 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
+Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect SND_SOC_DAIFMT_DSP_B
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
+> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
+> connected to AIF2, as well as by comparing with the BSP driver.
+>
+> Remove the DSP_B option, as it is not supported by the hardware.
+>
+> Cc: stable@kernel.org
+> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Extend perf_event_open 2 man page with the information about
-CAP_PERFMON capability designed to secure performance monitoring
-and observability operation in a system according to the principle
-of least privilege [1] (POSIX IEEE 1003.1e, 2.2.2.39).
-
-[1] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- man2/perf_event_open.2 | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
-index 89d267c02..e9aab2ca1 100644
---- a/man2/perf_event_open.2
-+++ b/man2/perf_event_open.2
-@@ -98,6 +98,8 @@ when running on the specified CPU.
- .BR "pid == \-1" " and " "cpu >= 0"
- This measures all processes/threads on the specified CPU.
- This requires
-+.B CAP_PERFMON
-+or
- .B CAP_SYS_ADMIN
- capability or a
- .I /proc/sys/kernel/perf_event_paranoid
-@@ -2920,6 +2922,8 @@ to hold the result.
- This allows attaching a Berkeley Packet Filter (BPF)
- program to an existing kprobe tracepoint event.
- You need
-+.B CAP_PERFMON
-+or
- .B CAP_SYS_ADMIN
- privileges to use this ioctl.
- .IP
-@@ -2962,6 +2966,8 @@ have multiple events attached to a tracepoint.
- Querying this value on one tracepoint event returns the id
- of all BPF programs in all events attached to the tracepoint.
- You need
-+.B CAP_PERFMON
-+or
- .B CAP_SYS_ADMIN
- privileges to use this ioctl.
- .IP
-@@ -3170,6 +3176,8 @@ it was expecting.
- .TP
- .B EACCES
- Returned when the requested event requires
-+.B CAP_PERFMON
-+or
- .B CAP_SYS_ADMIN
- permissions (or a more permissive perf_event paranoid setting).
- Some common cases where an unprivileged process
-@@ -3291,6 +3299,8 @@ setting is specified.
- It can also happen, as with
- .BR EACCES ,
- when the requested event requires
-+.B CAP_PERFMON
-+or
- .B CAP_SYS_ADMIN
- permissions (or a more permissive perf_event paranoid setting).
- This includes setting a breakpoint on a kernel address,
-@@ -3321,6 +3331,23 @@ The official way of knowing if
- support is enabled is checking
- for the existence of the file
- .IR /proc/sys/kernel/perf_event_paranoid .
-+.PP
-+.B CAP_PERFMON
-+capability (since Linux X.Y) provides secure approach to
-+performance monitoring and observability operations in a system
-+according to the principal of least privilege (POSIX IEEE 1003.1e).
-+Accessing system performance monitoring and observability operations
-+using
-+.B CAP_PERFMON
-+capability singly, without the rest of
-+.B CAP_SYS_ADMIN
-+credentials, excludes chances to misuse the credentials and makes
-+the operations more secure.
-+.B CAP_SYS_ADMIN
-+usage for secure system performance monitoring and observability
-+is discouraged with respect to
-+.B CAP_PERFMON
-+capability.
- .SH BUGS
- The
- .B F_SETOWN_EX
--- 
-2.20.1
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
