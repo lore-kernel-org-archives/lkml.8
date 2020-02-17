@@ -2,149 +2,144 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A5C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3169C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B562920801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E802072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9cpGOUn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XxA/tjgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgBQQPs (ORCPT
+        id S1729375AbgBQQQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:15:48 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35254 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgBQQPq (ORCPT
+        Mon, 17 Feb 2020 11:16:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20589 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728296AbgBQQQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:15:46 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so19492692ljb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:15:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0TipqMdhS4pxSY1hXNLauRtrTPhbqoPJrasfWKPg4UA=;
-        b=X9cpGOUnC7I2syG97wbgPrFA0XREObGZFM3ywzOMlKsnnGr8hq6nFPRfsHsUT+52Vg
-         YqnSxdm7CifC6geCL8YczKeojwkw1whC57P7DdV3qySkkiG2lvhtgEBNhJPxrqwAsmYi
-         kRt8tKD+aiZZX8jY/v5dHWP2c44G3q2NeilXcU2vFveCwK5htriC6tBVD9Xs57X5Hw+D
-         zaaH5AfrZjOgDh3JAhguTdIYQMHXewcGKYqrJeftBnwsH3biOTvZ30SMqIlMFwJBJ/N+
-         hpOfq9Q6Vl5rH55EnxYqpiOqoehm2qxiKuYgTDH8K1RPj4WmVqysmKmtGiIMEybw+C6y
-         /2Iw==
+        Mon, 17 Feb 2020 11:16:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581956199;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NFyPUeouQuhyDga5QKhl60tvsLU2HEYGyhP5oV1KBMw=;
+        b=XxA/tjgUqIlOeC6wKXlZJR0NvZqgj05XHD5oQFdfq268M3iB9RLg9mFnfY8M6VFYxbb5wb
+        attYTgVlv4gi3u0+TX6mNzIOkvW3V6DjmFMP/KK4XOkLa52NuOH/bGaL+aUKvQkI5Bc6pK
+        d9PBc0f7YhpvQEIW76HIoo/eIIJrx/c=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-d9bbAWpxNzeMYKah1Q5tXw-1; Mon, 17 Feb 2020 11:16:37 -0500
+X-MC-Unique: d9bbAWpxNzeMYKah1Q5tXw-1
+Received: by mail-wr1-f72.google.com with SMTP id d15so9184473wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:16:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0TipqMdhS4pxSY1hXNLauRtrTPhbqoPJrasfWKPg4UA=;
-        b=HBkE7OJRePvHBJb6l5Y0XJBMprKBgRMdzlfHmCytUYqZ2M1Hbn5UUoA1R6b39SQlLg
-         gneA0Z5kMpFS0xj6C+5moEIyOlji6U8WwnOxn+s/AEdu5GforhMr9V+OhmLaWZ/pc6a3
-         3Anfn+Q8LVrhNw+bO7V3UMfW4nPHQQgibcTKByS2G3Y4a/QdctUANXzQ7M9FMXoT2pDc
-         eEy6N6iDRe0fF1VNy3h3dnoo9MHprZTcZ73bgA8TbEdB/AZAZ/0oACHQmPYOnAjISsNW
-         KegNIGZbjvWfAu0MfTZgk27190wx+p6uZmCHSpv3ZrIKiiTexkDBFZE5+9u8y/Aw8Un5
-         ciJw==
-X-Gm-Message-State: APjAAAW+M1mk0n3qhMkmLnlS6G5QMOdl0GwQNkehvksVJs7udrmQQ4I8
-        h19JKFLg2eW35JYAXuwgXmxukPlQwn/GpL8Nqvq+Vg==
-X-Google-Smtp-Source: APXvYqyxW5nhhU0QL+zmNwGJ49EdB0T0eePErUamWSBb9m3JbBjOMYFhwy5qIsdYpWiSh6W5IcQYngfSXV6IbjzNfIk=
-X-Received: by 2002:a2e:808a:: with SMTP id i10mr10282795ljg.151.1581956144038;
- Mon, 17 Feb 2020 08:15:44 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NFyPUeouQuhyDga5QKhl60tvsLU2HEYGyhP5oV1KBMw=;
+        b=t83GD2MkUalgEwtLO1lifsgy4UlviZNPgWnyglWJGQFqgDNuzBovH/igcCP8IUV+g4
+         9io/TwbzlG48ygsjye5jUXtsdvL/MHhrOcA+8+2+67dADMYJ309oKSrfth22zQ3jQRzV
+         vRSYAXxjfO1Mmv3vzA/Hv0rC5MqdECYKNgTgCyNLtF9x1KdXfA6/+NDkwdUYH5K5/gi7
+         I25j0nYIrD5vDNdIczO7VJTCgZARCO/m9Ffbh6ZmgxSOKD/+HGYfbKmflZ10czte3QZ6
+         saadolVSBK7SggXc0LXi66USq81C96A3k8XmoUku8XHWgRqEbZ6UsdyDvf2ag2NTKRFG
+         wTHQ==
+X-Gm-Message-State: APjAAAUnOpKOCQoruRYX4EeCNI3FZlmM14e5RgiU3N/iWjp/4wzSRLyl
+        edV+1nFdkNVuT2Ll0nd5xjPu2pIpZk3A7fC/IHONiPBSJ1He1Q5XoA8uPIvgFjRrYigqzXwZzAT
+        MGkjyZ8nLL8NAAMgVTZ16NFSG
+X-Received: by 2002:adf:806c:: with SMTP id 99mr22007642wrk.328.1581956196305;
+        Mon, 17 Feb 2020 08:16:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwRq0gQ7zvGxbVQD6lwCfxtSvMB5tAOlMD0x3vB242pZN7eh2YO0YBMLfDRNd31zyWvwFRRzA==
+X-Received: by 2002:adf:806c:: with SMTP id 99mr22007622wrk.328.1581956196116;
+        Mon, 17 Feb 2020 08:16:36 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f207sm1188765wme.9.2020.02.17.08.16.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 08:16:35 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: x86: eliminate some unreachable code
+In-Reply-To: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+References: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
+Date:   Mon, 17 Feb 2020 17:16:34 +0100
+Message-ID: <87k14l9okd.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200217104402.11643-1-mgorman@techsingularity.net>
- <CAKfTPtBfV1QGi2utnmnR21MapKw1g2mTFA_aRxOxXvpWTRX+wA@mail.gmail.com> <20200217151412.GK3466@techsingularity.net>
-In-Reply-To: <20200217151412.GK3466@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 17 Feb 2020 17:15:32 +0100
-Message-ID: <CAKfTPtDEFvYv3oOAzDHZE5BLE0AByvvHB+67yL=SfAQgEotbGw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v3
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 at 16:14, Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Mon, Feb 17, 2020 at 02:49:11PM +0100, Vincent Guittot wrote:
-> > On Mon, 17 Feb 2020 at 11:44, Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > > Changelog since V2:
-> > > o Rebase on top of Vincent's series again
-> > > o Fix a missed rcu_read_unlock
-> > > o Reduce overhead of tracepoint
-> > >
-> > > Changelog since V1:
-> > > o Rebase on top of Vincent's series and rework
-> > >
-> > > Note: The baseline for this series is tip/sched/core as of February
-> > >         12th rebased on top of v5.6-rc1. The series includes patches from
-> > >         Vincent as I needed to add a fix and build on top of it. Vincent's
-> > >         series on its own introduces performance regressions for *some*
-> > >         but not *all* machines so it's easily missed. This series overall
-> > >         is close to performance-neutral with some gains depending on the
-> > >         machine. However, the end result does less work on NUMA balancing
-> > >         and the fact that both the NUMA balancer and load balancer uses
-> > >         similar logic makes it much easier to understand.
-> > >
-> > > The NUMA balancer makes placement decisions on tasks that partially
-> > > take the load balancer into account and vice versa but there are
-> > > inconsistencies. This can result in placement decisions that override
-> > > each other leading to unnecessary migrations -- both task placement
-> > > and page placement. This series reconciles many of the decisions --
-> > > partially Vincent's work with some fixes and optimisations on top to
-> > > merge our two series.
-> > >
-> > > The first patch is unrelated. It's picked up by tip but was not present in
-> > > the tree at the time of the fork. I'm including it here because I tested
-> > > with it.
-> > >
-> > > The second and third patches are tracing only and was needed to get
-> > > sensible data out of ftrace with respect to task placement for NUMA
-> > > balancing. The NUMA balancer is *far* easier to analyse with the
-> > > patches and informed how the series should be developed.
-> > >
-> > > Patches 4-5 are Vincent's and use very similar code patterns and logic
-> > > between NUMA and load balancer. Patch 6 is a fix to Vincent's work that
-> > > is necessary to avoid serious imbalances being introduced by the NUMA
-> >
-> > Yes the test added in load_too_imbalanced() by patch 5 doesn't seem to
-> > be a good choice.
->
-> But it *did* make sense intuitively!
+linmiaohe <linmiaohe@huawei.com> writes:
 
-Yes. In fact, one difference compared to your fix is that
-load_too_imbalance() is also called by task_numa_compare() whereas
-node_type only is only tested in task_numa_find_cpu() in your patch
-
+> From: Miaohe Lin <linmiaohe@huawei.com>
 >
-> > I haven't remove it as it was done by your patch 6 but it might worth
-> > removing it directly if a new version is needed
-> >
+> These code are unreachable, remove them.
 >
-> They could be folded together or part folded together but I did not see
-> much value in that. I felt that keeping them seperate both preserved the
-> development history and acted as a historical reference on why using a
-> spare CPU can be hazardous. I do not believe it is a bisection hazard
-> as performance is roughly equivalent before and after the series (so
-> far at least). LKP might trip up on it and if so, we'll simply ask for
-> confirmation that patch 6 fixes it.
-
-that's fine for me
-
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 1 -
+>  arch/x86/kvm/x86.c     | 3 ---
+>  2 files changed, 4 deletions(-)
 >
-> --
-> Mel Gorman
-> SUSE Labs
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bb5c33440af8..b6d4eafe01cf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4505,7 +4505,6 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
+>  	case GP_VECTOR:
+>  	case MF_VECTOR:
+>  		return true;
+> -	break;
+>  	}
+>  	return false;
+>  }
+
+Unrelated to your change but what I don't in rmode_exception() is the
+second "/* fall through */" instead of just 'return true;', it makes it
+harder to read.
+
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..a597009aefd7 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3081,7 +3081,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		break;
+>  	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
+>  		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
+> -		break;
+>  	case MSR_IA32_TSCDEADLINE:
+>  		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
+>  		break;
+> @@ -3164,7 +3163,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		return kvm_hv_get_msr_common(vcpu,
+>  					     msr_info->index, &msr_info->data,
+>  					     msr_info->host_initiated);
+> -		break;
+>  	case MSR_IA32_BBL_CR_CTL3:
+>  		/* This legacy MSR exists but isn't fully documented in current
+>  		 * silicon.  It is however accessed by winxp in very narrow
+> @@ -8471,7 +8469,6 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
+>  		break;
+>  	default:
+>  		return -EINTR;
+> -		break;
+>  	}
+>  	return 1;
+>  }
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
