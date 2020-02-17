@@ -2,162 +2,108 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A19C33FA2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11264C33FE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918172070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McIHR4Hq"
+	by mail.kernel.org (Postfix) with ESMTP id E4F5D2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgBQNaQ (ORCPT
+        id S1728980AbgBQNbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:30:16 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41720 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgBQNaQ (ORCPT
+        Mon, 17 Feb 2020 08:31:13 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51442 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbgBQNbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:30:16 -0500
-Received: by mail-il1-f193.google.com with SMTP id f10so14217437ils.8;
-        Mon, 17 Feb 2020 05:30:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oKZige4m/AoNTTthLZdSUaeHyHzQ4UT6ng0N8s0kzVk=;
-        b=McIHR4HqYVgFbC6brytrdSkaOQ3tJKrEhWb45DEuUAYXqoA+IO8qwVbx2KpqFr9DUb
-         o6njCVJFfIXDCRBfv711DuWgjJphYFThWmvOv9evpZ3TsdOV/Rk1ZPIqXxZLs6Sainmc
-         S1zxOVLhQRiOwSH1GMfEcsuD2KtXgUMJrRMViVoq/UZL0HZt6ERELVgYoFml+6uggMFX
-         cGLzk6Weomiv0gAG8h5grNeHOOHNF15TVuokP0GoIDIxVc+bnGX1DzNdMRar+5yqfEM3
-         hAyOKF3b1iCXri88ClHayFeOvwp5Xp3aYia+cJ90T4xMdC1SDfrtBTehcKf/VtSEzeK+
-         LQjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oKZige4m/AoNTTthLZdSUaeHyHzQ4UT6ng0N8s0kzVk=;
-        b=oIZqnHx1fIU+6fY18zzifRFeJ/BZ68kZCa7SuKd3aZBWxmd4psvlmt72o+4cP3GmCT
-         FWCNkAEPVpnDh/3ghoAfPceiBCay3iq6IaIMySMcJztQdNiaFWK+sB8l5bdpqwLsQ9+r
-         A36EsXlEE8DU3w+x9yZE2tUkb3Q2eJ5KOk5vV/VBKMCjss60fciMzBx5pk/atwlBoVnz
-         i1aXx6Q6QM3wZup0GnpSTM85mFytq6MgQTBlBK36Z69M67O4M3yXTgNyRo8bI6wyMFRm
-         xeVVQ2+2dPmDZYyBq1dNR3rF+Jl11sqIG3aIbVYCYokR9LQUfjUZNdfZZeiw8ziV0brE
-         d7Ww==
-X-Gm-Message-State: APjAAAUifIlLy4phR3wlBwdvFy54gijNJXuX7y3COCU3sToiu8obnPPc
-        UXhWxw4qJqRjlwDaKwYLaKb7rEl6F5OJ8t9ZFiI=
-X-Google-Smtp-Source: APXvYqz/hD3abK5iZXSi3wPYlOwN8FrT1CFYkRgJTPJUClxe+fHEd7f1yn8unX05mzbhhqRWfk9p5Hb28CxRNQtgwpQ=
-X-Received: by 2002:a92:85c1:: with SMTP id f184mr14075867ilh.221.1581946214224;
- Mon, 17 Feb 2020 05:30:14 -0800 (PST)
+        Mon, 17 Feb 2020 08:31:13 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 250051C0460; Mon, 17 Feb 2020 14:31:11 +0100 (CET)
+Date:   Mon, 17 Feb 2020 14:31:10 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200217133110.GA32298@duo.ucw.cz>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-4-linux.amoon@gmail.com>
- <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 17 Feb 2020 19:00:04 +0530
-Message-ID: <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
-Subject: Re: [PATCHv1 3/3] clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeronme,
 
-Thanks for your  review comments.
-On Mon, 17 Feb 2020 at 13:32, Jerome Brunet <jbrunet@baylibre.com> wrote:
->
->
-> On Sun 16 Feb 2020 at 18:34, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> > Odroid N2 would fail to boot using microSD unless we set
-> > cpu freq clk divider flags to CLK_IS_CRITICAL to avoid stalling of
-> > cpu when booting, most likely because of PWM module linked to
->
-> Where did you see a PWM ?
->
-> > the CPU for DVFS is getting disabled in between the late_init call,
->
-> between the late_init call and what ?
->
-> > so gaiting the clock source shuts down the power to the codes.
->
-> what code ?
->
-Sorry, I was really upset about my self.
-I tried to improvise this commit message based on previous mails.
-sorry about that.
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Setting clk divider flags to CLK_IS_CRITICAL help resolve the issue.
-> >
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >
-> > Following Neil's suggestion, I have prepared this patch.
-> > https://patchwork.kernel.org/patch/11177441/#22964889
-> > ---
-> >  drivers/clk/meson/g12a.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> > index d2760a021301..accae3695fe5 100644
-> > --- a/drivers/clk/meson/g12a.c
-> > +++ b/drivers/clk/meson/g12a.c
-> > @@ -283,6 +283,7 @@ static struct clk_fixed_factor g12a_fclk_div2_div = {
-> >               .ops = &clk_fixed_factor_ops,
-> >               .parent_hws = (const struct clk_hw *[]) { &g12a_fixed_pll.hw },
-> >               .num_parents = 1,
-> > +             .flags = CLK_IS_CRITICAL,
->
-> This makes no sense for because:
-> * This clock cannot gate and none of its parents can either. IOW, the
-> output of this clock is never disabled.
-> * I cannot guess the relation between fdiv2 and the commit description
->
+Hi!
 
-Ok I check this code changes is not needed for this fix.
+> > Testing this will be a challenge, but the issue was real - a 7GB
+> > highmem machine isn't crazy and I expect the inode has become larger
+> > since those days.
+>=20
+> Hmm. I would say that in the intening years a 7GB highmem machine has
+> indeed become crazy.
+>=20
+> It used to be something we kind of supported.
+>=20
+> But we really should consider HIGHMEM to be something that is on the
+> deprecation list. In this day and age, there is no excuse for running
+> a 32-bit kernel with lots of physical memory.
+>=20
+> And if you really want to do that, and have some legacy hardware with
+> a legacy use case, maybe you should be using a legacy kernel.
+>=20
+> I'd personally be perfectly happy to start removing HIGHMEM support again.
 
-> >       },
-> >  };
-> >
-> > @@ -681,7 +682,7 @@ static struct clk_regmap g12b_cpub_clk = {
-> >                       &g12a_sys_pll.hw
-> >               },
-> >               .num_parents = 2,
-> > -             .flags = CLK_SET_RATE_PARENT,
-> > +             .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->
-> Why not. Neil what do you think of this ?
-> If nothing is claiming this clock and enabling it then I suppose it
-> could make sense.
->
-I would like core developers to handle this.
-Sorry for the noise.
+7GB HIGHMEM machine may be unusual, but AFAICT HIGHMEM is need for
+configurations like 1GB x86 machine, and definitely for 3GB x86
+machine.
 
--Anand
->
-> >       },
-> >  };
->
+32-bit machines with 1.5 to 4GB of RAM are still pretty common (I have
+two of those), and dropping HIGHMEM support will limit them to 0.8GB
+RAM and probably make them unusable even for simple web browsing. I
+have two such machines here, please don't break them :-).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXkqVngAKCRAw5/Bqldv6
+8s1bAJ4l1OVhoYxPYT4cwIGRz9Wh3dzOFgCfeQFT5Ca/em5+hdG43KO+4VJGEeM=
+=BKsR
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
