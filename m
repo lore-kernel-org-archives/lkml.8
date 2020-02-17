@@ -2,92 +2,83 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A3C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FFCC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6386520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534FF20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgBQRfX (ORCPT
+        id S1728814AbgBQRhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:35:23 -0500
-Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:53671 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729678AbgBQRfX (ORCPT
+        Mon, 17 Feb 2020 12:37:52 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42954 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgBQRhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:35:23 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6B10F837F252;
-        Mon, 17 Feb 2020 17:35:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: game24_85b8439dbbd2f
-X-Filterd-Recvd-Size: 2604
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 17 Feb 2020 17:35:18 +0000 (UTC)
-Message-ID: <e1ec529a1a01bc38513c05308757bc45b53597c3.camel@perches.com>
-Subject: Re: [PATCH] usb: host: fhci-hcd: annotate PIPE_CONTROL switch case
- with fallthrough
-From:   Joe Perches <joe@perches.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Anton Vorontsov <avorontsov@ru.mvista.com>,
-        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 17 Feb 2020 09:33:58 -0800
-In-Reply-To: <4fa8a8e9-934d-2962-1daa-fdeea6017ea1@embeddedor.com>
-References: <20200213085401.27862-1-linux@rasmusvillemoes.dk>
-         <20200213125659.GB3325929@kroah.com>
-         <4fa8a8e9-934d-2962-1daa-fdeea6017ea1@embeddedor.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 17 Feb 2020 12:37:51 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 326982934B4;
+        Mon, 17 Feb 2020 17:37:50 +0000 (GMT)
+Date:   Mon, 17 Feb 2020 18:37:47 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     Jose.Abreu@synopsys.com, Joao.Pinto@synopsys.com, arnd@arndb.de,
+        wsa@the-dreams.de, gregkh@linuxfoundation.org,
+        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, linux-i3c@lists.infradead.org
+Subject: Re: [RFC v2 0/4] Introduce i3c device userspace interface
+Message-ID: <20200217183747.6a18d6c4@collabora.com>
+In-Reply-To: <20200217155141.08e87b3f@collabora.com>
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
+        <20200217155141.08e87b3f@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-17 at 11:12 -0600, Gustavo A. R. Silva wrote:
+On Mon, 17 Feb 2020 15:51:41 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
+
+> Hello Vitor,
 > 
-> On 2/13/20 06:56, Greg Kroah-Hartman wrote:
-> > On Thu, Feb 13, 2020 at 09:54:00AM +0100, Rasmus Villemoes wrote:
-> > > After this was made buildable for something other than PPC32, kbuild
-> > > starts warning
-> > > 
-> > > drivers/usb/host/fhci-hcd.c:398:8: warning: this statement may fall
-> > > through [-Wimplicit-fallthrough=]
-> > > 
-> > > I don't know this code, but from the construction (initializing size
-> > > with 0 and explicitly using "size +=" in the PIPE_BULK case) I assume
-> > > that fallthrough is indeed intended.
-> > > 
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > Fixes: 5a35435ef4e6 (soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE)
-> > > Fixes: a035d552a93b (Makefile: Globally enable fall-through warning)
+> Sorry for taking so long to reply, and thanks for working on that topic.
 > 
-> By the way, the "Fixes" tag above makes no sense. There is nothing wrong about
-> that commit. It just enabled the fall-through warning globally. Why would you
-> "fix" that?"
+> On Wed, 29 Jan 2020 13:17:31 +0100
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> 
+> > For today there is no way to use i3c devices from user space and
+> > the introduction of such API will help developers during the i3c device
+> > or i3c host controllers development.
+> > 
+> > The i3cdev module is highly based on i2c-dev and yet I tried to address
+> > the concerns raised in [1].
+> > 
+> > NOTES:
+> > - The i3cdev dynamically request an unused major number.
+> > 
+> > - The i3c devices are dynamically exposed/removed from dev/ folder based
+> >   on if they have a device driver bound to it.  
+> 
+> May I ask why you need to automatically bind devices to the i3cdev
+> driver when they don't have a driver matching the device id
+> loaded/compiled-in? If we get the i3c subsystem to generate proper
+> uevents we should be able to load the i3cdev module and bind the device
+> to this driver using a udev rule.
 
-There could be some effort made to better specify when "Fixes:"
-tags should be used.
+Hm, looks like we already send a proper MODALIAS [1], so we can actually
+implement this auto-bind to i3cdev in udev (fall back on i3cdev
+load+bind if no matching module is found).
 
-Right now the "Fixes:" tag is used far too often for changes
-like
-whitespace only or trivial typos corrections.
-
-And those changes can get backported.
-
-I believe "Fixes:" should be used only when changes have some
-runtime impact.  "Fixes:" should not be used for changes that
-just silence compiler warnings using W=<123>.
-
-
+[1]https://elixir.bootlin.com/linux/latest/source/drivers/i3c/master.c#L269
