@@ -2,68 +2,129 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C9CC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD5C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F97206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581918789;
-	bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iCn+Rg+vgye+29BBsTR1s4lEaxqZJf+Kz9DBDwFiRtBz3BX1mVlv1jUoqaXcg47Vc
-	 rtTFPUqoyIZl09PBnjcn99Vn5rYdALZAUt9OEbZGys3OeuMZ9KA20Gp0F6pdMMoNeC
-	 2lXVl3s1vLZ6krKJDo4wOja0N2UxLu5ulteYK2sE=
+	by mail.kernel.org (Postfix) with ESMTP id CACA120725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgvk7ken"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgBQFwy (ORCPT
+        id S1726401AbgBQF5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 00:52:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgBQFwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 00:52:54 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCEAA206F4;
-        Mon, 17 Feb 2020 05:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581918773;
-        bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JqETqfL1YBqAvtHF2RyHkOTqG5cmAmPwE4k5mGeoZTCzh7dkTO64l6Ji1Vb7Vjgaw
-         cW9NWvgHNKBqOABc7ypk7UGIeKFonKSY95I1ug/KaPQc/oyChxB559B3aAkqtzqXpi
-         6fAWeyngRMt5SOm3kvRFJ9GXX5eepwXlmifhDhx0=
-Date:   Mon, 17 Feb 2020 13:52:47 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yangbo Lu <yangbo.lu@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: ls1028a: support external trigger timestamp
- fifo of PTP timer
-Message-ID: <20200217055246.GD6042@dragon>
-References: <20200211045758.8231-1-yangbo.lu@nxp.com>
+        Mon, 17 Feb 2020 00:57:43 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54302 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgBQF5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 00:57:42 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g1so15824033wmh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 21:57:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZXuMKcZyj/idpOZmGXYQMfUcYkxlliPEMPEeNplqlRo=;
+        b=jgvk7ken0jTTqqtTNtyefWsUXW4+4AkbkUxler3NbAYhbYQEw06uZfZ+o0P/Qx74NW
+         eWx0lLZOQrFNzNlaVcxoVzNIjFdBWKL3h/bq8/DeM9OmdSrRfFIA/oj/DnSSxWio70Xs
+         UUd74XVKYM463TiTXCtv2Y9LCPcLVgoQSgIX4fl+5dXzIWDV8AEFN3MTqzBwvG+83X4I
+         bg23iGsdVN32JhgL1jXnAQnMdaRpy/nqE+If/bXn2zyyZ5VqQeizgiJnQLr/M4Bij6bq
+         IsNhPgOvH2Moend9O5ivriLrjm6DsxtLkNSHsvAcfSrrtQjx653WJENd4yyKiOBdqx8j
+         AMUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZXuMKcZyj/idpOZmGXYQMfUcYkxlliPEMPEeNplqlRo=;
+        b=YMo0JR6XdhrJ8SI1Z/TdNu9MjJJtRntHzSqvWsOl/SLittc6PSXPTIlFouffEecKCI
+         uat9S2khXHr9Bcx/7S50LPH3T4bT7bZsX1y+fFSdCAAIYxtiVDD2X9sKFZXhEm0STZfY
+         /5uKdeml6PTaEFSnIQn+7K0sB1P+jdsn45uK6yypeqKELZC9cNB2vd1MoCezH7p70Q0h
+         Q9Q1lx3yir+q7ftTF4QYv6e3eSC9QegVV/YHQblj6QtKHJXoaHDphh5oH2h9aIo/x+Ey
+         stANuxNRv7pMaWEq5fPau0LzsqgEGJvr5KFPkjIu47+FWECG6QUOWRoworb7/yFFVfWS
+         unnQ==
+X-Gm-Message-State: APjAAAWFBpHXwd+8wQJWp75cpNKMntAxZX7yBnLWh1f6oX/s3sgKlxxp
+        d+r5rv+EPkvo9htpiITYwZAfzA==
+X-Google-Smtp-Source: APXvYqy4DcCMx4ZQzKPPXY+K/mHB0y/EkYkOwcFNUZ1+4YuKE84Oq5iaB6C9hx1gKGozChYFngBdJw==
+X-Received: by 2002:a1c:740a:: with SMTP id p10mr20128249wmc.65.1581919059979;
+        Sun, 16 Feb 2020 21:57:39 -0800 (PST)
+Received: from apalos.home (ppp-2-87-54-32.home.otenet.gr. [2.87.54.32])
+        by smtp.gmail.com with ESMTPSA id v22sm18366526wml.11.2020.02.16.21.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2020 21:57:39 -0800 (PST)
+Date:   Mon, 17 Feb 2020 07:57:36 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
+        lorenzo@kernel.org, thomas.petazzoni@bootlin.com,
+        jaswinder.singh@linaro.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, hawk@kernel.org, kuba@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net-next] net: page_pool: API cleanup and comments
+Message-ID: <20200217055736.GA15371@apalos.home>
+References: <20200216094056.8078-1-ilias.apalodimas@linaro.org>
+ <20200216.195300.260413184133485319.davem@davemloft.net>
+ <20200216.195957.2300038427552527679.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200211045758.8231-1-yangbo.lu@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200216.195957.2300038427552527679.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:57:58PM +0800, Yangbo Lu wrote:
-> There is an external trigger timestamp fifo for PTP timer
-> of LS1028A. Add property fsl,extts-fifo for that.
+On Sun, Feb 16, 2020 at 07:59:57PM -0800, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Sun, 16 Feb 2020 19:53:00 -0800 (PST)
 > 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> > Date: Sun, 16 Feb 2020 11:40:55 +0200
+> > 
+> >> Functions starting with __ usually indicate those which are exported,
+> >> but should not be called directly. Update some of those declared in the
+> >> API and make it more readable.
+> >> 
+> >> page_pool_unmap_page() and page_pool_release_page() were doing
+> >> exactly the same thing. Keep the page_pool_release_page() variant
+> >> and export it in order to show up on perf logs.
+> >> Finally rename __page_pool_put_page() to page_pool_put_page() since we
+> >> can now directly call it from drivers and rename the existing
+> >> page_pool_put_page() to page_pool_put_full_page() since they do the same
+> >> thing but the latter is trying to sync the full DMA area.
+> >> 
+> >> Also update netsec, mvneta and stmmac drivers which use those functions.
+> >> 
+> >> Suggested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+> >> Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> > 
+> > Applied to net-next, thanks.
+> 
+> Actually this doesn't compile, please respin:
 
-Applied, thanks.
+Ooops :(
+I was compiling for armv7, stmmac and mvneta are included but netsec isn't. 
+Sorry for the noise, i'll send a v2
+
+> 
+> drivers/net/ethernet/socionext/netsec.c: In function ‘netsec_uninit_pkt_dring’:
+> drivers/net/ethernet/socionext/netsec.c:1201:4: error: too few arguments to function ‘page_pool_put_page’
+>     page_pool_put_page(dring->page_pool, page, false);
+>     ^~~~~~~~~~~~~~~~~~
+> In file included from drivers/net/ethernet/socionext/netsec.c:17:
+> ./include/net/page_pool.h:172:6: note: declared here
+>  void page_pool_put_page(struct page_pool *pool, struct page *page,
+>       ^~~~~~~~~~~~~~~~~~
+
+Thanks
+/Ilias
