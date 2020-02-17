@@ -2,79 +2,76 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD07DC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA25EC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A228020718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BB120726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UcbBfG1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgBQJhg (ORCPT
+        id S1729090AbgBQJhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:37:36 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:51714 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgBQJhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:37:40 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28416 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729005AbgBQJhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Feb 2020 04:37:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 109281A2B0F;
-        Mon, 17 Feb 2020 10:37:16 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 58E571A2B1F;
-        Mon, 17 Feb 2020 10:37:10 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2E5B4029B;
-        Mon, 17 Feb 2020 17:37:03 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 4/7] ARM: dts: imx6sx-sabreauto: Use new pin names with DCE/DTE for UART pins
-Date:   Mon, 17 Feb 2020 17:31:23 +0800
-Message-Id: <1581931886-12173-4-git-send-email-Anson.Huang@nxp.com>
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581932237; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4CNshD0mMpQN0gvohEbak0pxOwTgkDq4jEBZ/deNQBI=; b=UcbBfG1TkHM/4d9cxtD10CV0cqCmw+ASu/iD6/d3eAn4VUwjz9Aoe2rKRaHUIsShJLTkV+Ef
+ Syz2vOxttbgOsAZ6feRXxyXCvxIFrInwTCnYzaIgGai7ot73J+ZAGhEI8t20FsFBEoDRBa2J
+ C1ABcJ3+1bLOszE10sOFhcrAM70=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a5ecc.7fb8060fc8b8-smtp-out-n03;
+ Mon, 17 Feb 2020 09:37:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5F077C447A0; Mon, 17 Feb 2020 09:37:16 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5221DC433A2;
+        Mon, 17 Feb 2020 09:37:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5221DC433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V4 0/3] Convert QUP bindings to YAML and add ICC, pin swap doc
+Date:   Mon, 17 Feb 2020 15:06:49 +0530
+Message-Id: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
-References: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new pin names containing DCE/DTE for UART RX/TX/RTS/CTS pins, this
-is to distinguish the DCE/DTE functions.
+Changes in V4:
+ - Add interconnect binding patch.
+ - Add UART pin swap binding patch.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Uwe Kleine-K枚nig <u.kleine-koenig@pengutronix.de>
----
-No change.
----
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Akash Asthana (3):
+  dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
+  dt-bindings: geni-se: Add interconnect binding for GENI QUP
+  dt-bindings: geni-se: Add binding for UART pin swap
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 315044c..8259244 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -229,8 +229,8 @@
- 
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
--			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
--			MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX		0x1b0b1
- 		>;
- 	};
- 
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ---------
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 227 +++++++++++++++++++++
+ 2 files changed, 227 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
