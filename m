@@ -4,118 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAADC761A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABFDC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688822072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37C320726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="d7j3oGOW"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="E9P//0DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgBQJ1L (ORCPT
+        id S1728866AbgBQJ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:27:11 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:47059 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728650AbgBQJ1K (ORCPT
+        Mon, 17 Feb 2020 04:27:58 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37529 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728819AbgBQJ16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:27:10 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so18708509wrl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 01:27:08 -0800 (PST)
+        Mon, 17 Feb 2020 04:27:58 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a6so17595043wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 01:27:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QvErWIb5S/uA6PFWOeMDnc2AE5YEYZNhLlZmfOWNVCk=;
-        b=d7j3oGOWhVJU1EeHCkuhfd5rV6btv2OpWWlWXsT1vDJfBvN4GyLzhjc4d3PnB6X85v
-         q90kZdGApPBVFOsTRC9hhGh7zTY582Ke7R+uwKWLMFXPJL9FUmFie67e/1tXPMYUXUo0
-         /gxnXxXqG4i5Ma75+snordE2m4kIFFW+eb13Y=
+         :mime-version:content-disposition:in-reply-to;
+        bh=W3cuPNWL6G9Mkzazr5aYw69mCYySh4JxTzpizFSnP50=;
+        b=E9P//0DIVwrempoYlQvPpQ3JLBfVeQX+Igm9H93gtrvhaRYwHmsK2QZLopBDq5HpE+
+         /s8riZMDYh/UK5hZKHwcrYWmawp1zyUPGR7QkVeB7Lfj18xoNoLqFRUNObijflqvu8dK
+         4DmxlwRS+PTg5okQaXwvwaXC50DXpUnlx6syc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=QvErWIb5S/uA6PFWOeMDnc2AE5YEYZNhLlZmfOWNVCk=;
-        b=AAUr74c6rRngZsyuw8PUX55IwIkHgS/NsCXJiDI1My1Va+IInJPjzUlbrGnXfO62tv
-         KBoNB4s7AgFrPjuWTXgWikH0cnyvqbEWao+ZPWpr+7ucPeftZAft5weVSErMBCMTKIKR
-         km8gKM9CtIwKQ6baJcNz64POvXuQlkCdrSQ03HKkmtGJA50m8jAUnkzQY+A8u5MP2x4e
-         bfZEZ9gjTUIZTC3++zHgXgPc9oI2SkMM9g3iIdTjKIC6An18xF9qBDVH/9j4SEelPQOK
-         W+xkSUupYqVEop7Td9+dkb9vwRWWbwGNNaI/g7A9YgSJIpnEAN/08aYQ/LieaCnGd60s
-         Ytzw==
-X-Gm-Message-State: APjAAAXtStXhkquJknXZPuZOgguPVNnXBT62GnBgZ2Z8FKzwEMUSzNU2
-        AuQW0x8oMu7z1g9QZ979gPCksQ==
-X-Google-Smtp-Source: APXvYqyEofBTojDI8GHGTPMb6Dq3HZCbMdNUJ6xlC4vWUe1Co3YZ5fHSHg2v5biis04RgN+hS3xOvg==
-X-Received: by 2002:a5d:6692:: with SMTP id l18mr20370782wru.382.1581931628031;
-        Mon, 17 Feb 2020 01:27:08 -0800 (PST)
+         :in-reply-to;
+        bh=W3cuPNWL6G9Mkzazr5aYw69mCYySh4JxTzpizFSnP50=;
+        b=LfWlRCf0H/xaKIcbVVbb77EvseRcIdYUqANCefHyNaNrqNIEHCpFcoYJxAtEhD9bVB
+         hq+Pf5Lyel6lcRWCSG5QIIAYuQrHd9iHn7rBrbTGNA/Wi0ykngCXaGhUBgl/rfdgvE4s
+         GK+H87T2tnBHRrbLOLsB7Mo1tJpwknikByuRRVRiQo0B4QpypgZwjFpAkKwFU6gFpiWt
+         Co/4Wpdsa7hSdF1aYe/9twZ4tihmIflLef1RQ9e5kGcCBdsTHC7fF9bPCj425FXM5zQQ
+         KOH4yC0WAIvPVWQDUbDDtEkanPDln+aAaMC7wzzw3zmVd95Iqe8pTu1AP3LREKBPc1PV
+         Sn4w==
+X-Gm-Message-State: APjAAAXpJ3C6/LNpp1mzB6sD6t/3SlwLjUrR3SBNdVe4/ANzcRUeT7CU
+        wYfOYSrfj4bN4qctWFso48H1qW0yNW4=
+X-Google-Smtp-Source: APXvYqwubPOPLq30URt7q/mmbsEDobFNeewy4T855nPo/3eKy/wiWdgXW1I99+bIl4JyIDmgOWUVgA==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr19977570wmi.146.1581931674639;
+        Mon, 17 Feb 2020 01:27:54 -0800 (PST)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id x11sm19658953wmg.46.2020.02.17.01.27.06
+        by smtp.gmail.com with ESMTPSA id v15sm114015wrf.7.2020.02.17.01.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 01:27:07 -0800 (PST)
-Date:   Mon, 17 Feb 2020 10:27:05 +0100
+        Mon, 17 Feb 2020 01:27:53 -0800 (PST)
+Date:   Mon, 17 Feb 2020 10:27:52 +0100
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Emmanuel Vadot <manu@FreeBSD.org>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, jani.nikula@intel.com,
-        efremov@linux.com, tzimmermann@suse.de, noralf@tronnes.org,
-        sam@ravnborg.org, chris@chris-wilson.co.uk, kraxel@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drm/format_helper: Dual licence the file in GPL 2
- and MIT
-Message-ID: <20200217092705.GE2363188@phenom.ffwll.local>
-Mail-Followup-To: Emmanuel Vadot <manu@FreeBSD.org>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, jani.nikula@intel.com, efremov@linux.com,
-        tzimmermann@suse.de, noralf@tronnes.org, sam@ravnborg.org,
-        chris@chris-wilson.co.uk, kraxel@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200215180911.18299-1-manu@FreeBSD.org>
- <20200215180911.18299-3-manu@FreeBSD.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     sumit.semwal@linaro.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH] dma-buf: Fix a typo in Kconfig
+Message-ID: <20200217092752.GF2363188@phenom.ffwll.local>
+Mail-Followup-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        sumit.semwal@linaro.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-media@vger.kernel.org
+References: <20200216114708.20583-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200215180911.18299-3-manu@FreeBSD.org>
+In-Reply-To: <20200216114708.20583-1-christophe.jaillet@wanadoo.fr>
 X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 07:09:11PM +0100, Emmanuel Vadot wrote:
-> From: Emmanuel Vadot <manu@FreeBSD.Org>
+On Sun, Feb 16, 2020 at 12:47:08PM +0100, Christophe JAILLET wrote:
+> A 'h' ismissing in' syncronization'
 > 
-> Contributors for this file are :
-> Gerd Hoffmann <kraxel@redhat.com>
-> Maxime Ripard <mripard@kernel.org>
-> Noralf Trønnes <noralf@tronnes.org>
-> 
-> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Patch applied since we have all the acks we need. I think for the first
-one we still need a few more.
+Applied, thanks for your patch.
 -Daniel
 
 > ---
->  drivers/gpu/drm/drm_format_helper.c | 2 +-
+>  drivers/dma-buf/Kconfig | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-> index 0897cb9aeaff..3b818f2b2392 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> +// SPDX-License-Identifier: GPL-2.0 or MIT
->  /*
->   * Copyright (C) 2016 Noralf Trønnes
->   *
+> diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+> index 0613bb7770f5..e7d820ce0724 100644
+> --- a/drivers/dma-buf/Kconfig
+> +++ b/drivers/dma-buf/Kconfig
+> @@ -6,7 +6,7 @@ config SYNC_FILE
+>  	default n
+>  	select DMA_SHARED_BUFFER
+>  	---help---
+> -	  The Sync File Framework adds explicit syncronization via
+> +	  The Sync File Framework adds explicit synchronization via
+>  	  userspace. It enables send/receive 'struct dma_fence' objects to/from
+>  	  userspace via Sync File fds for synchronization between drivers via
+>  	  userspace components. It has been ported from Android.
 > -- 
-> 2.25.0
+> 2.20.1
 > 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
 Daniel Vetter
