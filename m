@@ -2,79 +2,131 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F996C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB531C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6152A2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC5A2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dw2SFnan"
+	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="K0OvCWnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgBQBxM (ORCPT
+        id S1726672AbgBQBzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 20:53:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgBQBxM (ORCPT
+        Sun, 16 Feb 2020 20:55:24 -0500
+Received: from mx05.melco.co.jp ([192.218.140.145]:59186 "EHLO
+        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgBQBzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 20:53:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=ZvKy8cN1oeW6FFUvXPgwsqS+7nTP4G4tR9YL0f/QYMY=; b=dw2SFnanczrBwiVB1Iho3fr7ie
-        HJtHtssC1AxzBlaTxdx6p0cU+JIxiLcQenc/AT0lwTPptBkjf1h5sFExh1wwdM4M2dDpOofwpl7L+
-        /N3oC/SyJbFk/t/5jvNnww7RojkgyXvdB655RLFQmyNClJM15seyOXW+XVAjTBodxbJHs22PkxEqE
-        e6PHnS4XfRIjpickmU4XlbNrDcs4G+Z02d/kcITAVkwrzhoq1q4hjkv8OHq9yA8sCLsr2U0UndynO
-        kiUYg8I6C2ncfJ6VT8a6QQbIAII6ndk24MKm2FcmXUAGEgcb9U35JFXiLZOnQan6c46kJnf7Uu1UC
-        VQvjZ2aA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3Vax-0006fX-8X; Mon, 17 Feb 2020 01:53:11 +0000
-Subject: Re: [PATCH] Documentation: bring process docs up to date
-To:     Tony Fischetti <tony.fischetti@gmail.com>, corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200217000826.55767-1-tony.fischetti@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5e8c6ff0-951f-e447-9606-0c1177a596cd@infradead.org>
-Date:   Sun, 16 Feb 2020 17:53:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 20:55:24 -0500
+Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
+        by mx05.melco.co.jp (Postfix) with ESMTP id 85F303A2B08;
+        Mon, 17 Feb 2020 10:55:22 +0900 (JST)
+Received: from mr05.melco.co.jp (unknown [127.0.0.1])
+        by mr05.imss (Postfix) with ESMTP id 48LRrp2xZyzRkBj;
+        Mon, 17 Feb 2020 10:55:22 +0900 (JST)
+Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
+        by mr05.melco.co.jp (Postfix) with ESMTP id 48LRrp2dVzzRk3D;
+        Mon, 17 Feb 2020 10:55:22 +0900 (JST)
+Received: from mf04.melco.co.jp (unknown [133.141.98.184])
+        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48LRrp2fpRzRk9w;
+        Mon, 17 Feb 2020 10:55:22 +0900 (JST)
+Received: from JPN01-OS2-obe.outbound.protection.outlook.com (unknown [104.47.92.50])
+        by mf04.melco.co.jp (Postfix) with ESMTP id 48LRrp29fnzRkBK;
+        Mon, 17 Feb 2020 10:55:22 +0900 (JST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y6w0cP+WRCzMVna60X2e3r71uQjtLr7O4gbEp8ldaWIKxve6ANOVGpcOzFWmjWFCatvAFnOzzvxZSnnn36vZtPEGRzwogQmcqvA/3ugxKdDjmOHprFvGP25N0L29zzc0sFCBibDZtlmmLAk6DegrlQYB7kyikz5wFeIfvqRO0ZjNOgN0QNuYL0Bp/3E/y06fXy4D3aoSkA8G41qaMogRQs/AD/QKny27VGmpBHhuy5IWF7IuVt4eYqqbkNaSLzjaGdx5G4LWAZlVpwRHoLVfeOCrssDJKpboiGA4RyiaGQLLlDvgKrVZNWc8xSmZiuwHC2z0cf0GIxwdyVQWn6AfGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C/0Va6Y5vbElOQECQb5B9Kh1bpbXR4t682vZZKVvXoc=;
+ b=khabfELbbcOR4Q8g7MQlBT3Juv+Po01LTurc2A9PfXDKqH+QA69XCfL2pyZOQNmNEi0bLqcg+6nMBRNy1DEsI46hHY8nBloKiJn0nYoB3oCWU/ytYX7GQTUsvUIt5Db9OKjyOrNzRejNAX20uf5fmhWbzGBUSe4V4fowXW4uDJvAkBWQ+bthDSUzQt8OwRJEL+Pqc27l5XceHpzuEyycJX1pPyhnMJRVuC/LWNDXxGFxtONJAfJxS0SmaQpe5enQVryJIYqTnAW0jgwY6+R7PGxKQeInWw+wuH9Lu75X/YsMA0iVjitmvJGvPBFIcYDVO2h1l5gP2N4QzLVU5HnX4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
+ header.from=dc.mitsubishielectric.co.jp; dkim=pass
+ header.d=dc.mitsubishielectric.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mitsubishielectricgroup.onmicrosoft.com;
+ s=selector2-mitsubishielectricgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C/0Va6Y5vbElOQECQb5B9Kh1bpbXR4t682vZZKVvXoc=;
+ b=K0OvCWnpSIJJJo8zmX4VphT+ehuiSvypurtNtUSLBg1Z4Tj1YxnhzFbwU08YeExmQHJpVCxiBn/3XCpUo2nEqyfXrdRyq7rMH30H91tImrj55DPKeuxz8F/XH3qG1iw3mBH2e8r5cZffcaQ2IawriBN1rzCv1r5aZwZQMdGHruE=
+Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com (52.133.161.22) by
+ TY1PR01MB1595.jpnprd01.prod.outlook.com (52.133.162.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Mon, 17 Feb 2020 01:55:21 +0000
+Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com
+ ([fe80::1cea:e753:3a3b:8e1b]) by TY1PR01MB1578.jpnprd01.prod.outlook.com
+ ([fe80::1cea:e753:3a3b:8e1b%7]) with mapi id 15.20.2729.031; Mon, 17 Feb 2020
+ 01:55:21 +0000
+From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
+CC:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
+        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
+        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>
+Subject: RE: [PATCH v2 1/2] staging: exfat: remove DOSNAMEs.
+Thread-Topic: [PATCH v2 1/2] staging: exfat: remove DOSNAMEs.
+Thread-Index: AQHV4udJFqNx/CzTgECwKnDOEdxsgqga3uMAgAPDczA=
+Date:   Mon, 17 Feb 2020 01:54:07 +0000
+Deferred-Delivery: Mon, 17 Feb 2020 01:55:06 +0000
+Message-ID: <TY1PR01MB1578EA0B95FE3C29D0F9A64190160@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+References: <20200214033140.72339-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+ <20200214161810.GA3964830@kroah.com>
+In-Reply-To: <20200214161810.GA3964830@kroah.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-melpop: 1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp; 
+x-originating-ip: [121.80.0.162]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 65551ed3-38f0-421d-ea56-08d7b34c72a4
+x-ms-traffictypediagnostic: TY1PR01MB1595:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY1PR01MB15957267285B79678107B54E90160@TY1PR01MB1595.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0316567485
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(64756008)(66476007)(66556008)(7696005)(8676002)(66446008)(558084003)(478600001)(33656002)(8936002)(54906003)(5660300002)(186003)(76116006)(81156014)(81166006)(66946007)(52536014)(316002)(4326008)(6506007)(9686003)(6916009)(2906002)(71200400001)(55016002)(26005)(6666004)(86362001)(107886003)(95630200002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1595;H:TY1PR01MB1578.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: dc.MitsubishiElectric.co.jp does
+ not designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aEFhtxwV4ouI5PI00pVDpdYiM0b2S2CGHSm1VXAxZlPVZ9KDnHCIHB/BF4H0SOLs2sNhJ8bDzYrs3N9DaNIgLr54NZycAcRJmE4TD4PbUFIXCyJKkOzsERQ6vJ3MZUGuxJVAKs3cxY7pkJ8oKSDJ8ROEhoeFXrNyJ2xJAmpUw7mslVZKtL2aWpRmwt50nrmI5ETYRtxPNpXGI6G0/tQwsD4WRVxtXJFWMjPhDC8BK95assrtA2zp6XjxT5x0RrZ7mqhQOSIVH4WZ+BoS0HGxX/HuGFiwwrqjyaiChv0HSFkZKmPj35We35t/7lMd+N1IQsgIQzSFmyzZv1XBI6smEQgtuAyl36tJwKXyTA9fCdCyyYiJeGpHjpZThLa+Hkx+yD0u2L+PKu7gdQw7Igs1wCKETpeqXaShvyLWN6Fe3ovnFH2g/CQSrPmZMaI7vs2ycOS7ZVfzGLUCqMBaObKhC5nHBW7uW3+yXD7XnRlIb+QSQcYM9AR3dX2JtugSj2DG
+x-ms-exchange-antispam-messagedata: AX9PGy5Wo65VUV/ps4mZab59qaYaomhWsgPFS9Ebj2zV/Hhdt0dWryOL8X+SKk3o0oZ6edhFGytAOHx+eFQm3xi66VnWbKvJQGKKMNcQg4pMyIDL1d6LbVFZ6MGNPkLKRf6DluoPjA3NKFgG6+TGHw==
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200217000826.55767-1-tony.fischetti@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: dc.MitsubishiElectric.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65551ed3-38f0-421d-ea56-08d7b34c72a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 01:55:21.7741
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7vpXUzu30QOxEfbXz3EZqTLSFUccsV7c3uSKvXIusmE4eaWQQj9gXO35OZa1fGDIflSL5ZAXAtcrmP5a1o77nA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1595
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/16/20 4:08 PM, Tony Fischetti wrote:
-> The guide to the kernel dev process documentation, for example, contains
-> references to older kernels and their timelines. In addition, one of the
-> "long term support kernels" listed have since reached EOL, and a new one
-> has been named. This patch brings information/tables up to date.
-> 
-> Additionally, some very trivial grammatical errors, unclear sentences,
-> and potentially unsavory diction have been edited.
-> 
-> Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
-> ---
->  Documentation/process/2.Process.rst    | 108 +++++++++++++------------
->  Documentation/process/coding-style.rst |  18 ++---
->  Documentation/process/howto.rst        |  17 ++--
->  3 files changed, 73 insertions(+), 70 deletions(-)
+> I think you might need to rebase again, this patch doesn't apply at all t=
+o my tree :(
 
+Thanks for your comments.
+I'll try to rebase with 'staging-next' branch.
+Is this correct?
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
--- 
-~Randy
-
+--
+Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
