@@ -2,199 +2,163 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307A4C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F59C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B6E20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF240206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TrYNao6J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="X5l8eV95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgBQMUI (ORCPT
+        id S1729213AbgBQMVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:20:08 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14195 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728213AbgBQMUI (ORCPT
+        Mon, 17 Feb 2020 07:21:41 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:35689 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgBQMVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:20:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581942007; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Ak3LgBqGOZMnRKzcv+4G1EyGXh9VotBzC+KbdmXq/x0=;
- b=TrYNao6Jq0yqqSk9zC/akypmSzDnCg9pMrOgoiog0fyTeUT2q8fLakFiOfluPD9+QD1Y9+9y
- jX61g6Z84J+3tq473RlNp78ctLI57/+9+9J8Tsta5X1TDfuNfpv80nLepH2XHoIPfTpAv7k3
- yOgH0AWuxw7jczCIZCOTcXovPpo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a84f7.7faacf1dcb20-smtp-out-n01;
- Mon, 17 Feb 2020 12:20:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 440FFC447A3; Mon, 17 Feb 2020 12:20:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 756CEC43383;
-        Mon, 17 Feb 2020 12:20:05 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Feb 2020 20:20:05 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v3 1/2] scsi: ufs: pass device information to
- apply_dev_quirks
-In-Reply-To: <1578726707-6596-2-git-send-email-stanley.chu@mediatek.com>
-References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
- <1578726707-6596-2-git-send-email-stanley.chu@mediatek.com>
-Message-ID: <2a8fc44914b7ed8777a4a99ba6b8647a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mon, 17 Feb 2020 07:21:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581942098;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=gwvD48n/zrKQkZA3LrOyQDl0wGdy39OY1AO4/Rvx8d8=;
+        b=X5l8eV95gvqr/5zzpxllVlcTnZJlixLZP6Vf55wejxLne2+4u1z27WtJ6x6UZJReg/
+        UbjAFDIEAL6jACSh1JF7Sjl1BH8dHgdqQVnU5+PwEZGzH+3DXk8MCjQTm7f2wQgGzGtx
+        s5Dnd1EbA5NJ8yvkSdCN24o/QHgqM3z46pX6Q0+Gz9p7pmF7qNwmp4Hb0CkPzlQxMwk8
+        4+2X/AJvHTT3HQ8fNfwppOyYmjSt6rK6Tdm+edUbWo3FlwemUvdUpPLtaZfL0qd7CYu+
+        Csuo/x4Ub/2TcqLh/bHbyqATUt/LZakjW/I7VV0lZTHUhfCe+7gOeJpbts2HicGVp6jw
+        rGKw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA0OXQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HCLVMmu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 13:21:31 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <36bac0ac-f772-9f04-fb64-1c11e9d86fa5@samsung.com>
+Date:   Mon, 17 Feb 2020 13:21:30 +0100
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <673AFAA2-DF93-4FD7-BBCD-8F7FC58FFCEC@goldelico.com>
+References: <CGME20200217085551epcas1p49113220d034155f8a78dc5e0767637a5@epcas1p4.samsung.com> <f65ad0ef2866e7d5b6743e13579c1efe8c572b4f.1581929741.git.hns@goldelico.com> <b9fe52e9-0340-4204-ee85-44b6c1ea7f3b@samsung.com> <2DF972B9-EECF-44E9-93FC-74B6C3B6FFC2@goldelico.com> <36bac0ac-f772-9f04-fb64-1c11e9d86fa5@samsung.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-11 15:11, Stanley Chu wrote:
-> Pass UFS device information to vendor-specific variant callback
-> "apply_dev_quirks" because some platform vendors need to know such
-> information to apply special handlings or quirks in specific devices.
-> 
-> In the same time, modify existed vendor implementations according to
-> the new interface for those vendor drivers which will be built-in
-> or built as a module alone with UFS core driver.
-> 
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Asutosh Das <asutoshd@codeaurora.org>
-> Cc: Avri Altman <avri.altman@wdc.com>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Bean Huo <beanhuo@micron.com>
-> Cc: Can Guo <cang@codeaurora.org>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: Avri Altman <avri.altman@wdc.com>
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 3 ++-
->  drivers/scsi/ufs/ufshcd.c   | 8 ++++----
->  drivers/scsi/ufs/ufshcd.h   | 7 ++++---
->  3 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index c69c29a1ceb9..ebb5c66e069f 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -949,7 +949,8 @@ static int
-> ufs_qcom_quirk_host_pa_saveconfigtime(struct ufs_hba *hba)
->  	return err;
->  }
-> 
-> -static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
-> +static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba,
-> +				     struct ufs_dev_desc *card)
->  {
->  	int err = 0;
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 1b97f2dc0b63..7c85c890594c 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6803,7 +6803,8 @@ static int
-> ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
->  	return ret;
->  }
-> 
-> -static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
-> +static void ufshcd_tune_unipro_params(struct ufs_hba *hba,
-> +				      struct ufs_dev_desc *card)
->  {
->  	if (ufshcd_is_unipro_pa_params_tuning_req(hba)) {
->  		ufshcd_tune_pa_tactivate(hba);
-> @@ -6817,7 +6818,7 @@ static void ufshcd_tune_unipro_params(struct 
-> ufs_hba *hba)
->  	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE)
->  		ufshcd_quirk_tune_host_pa_tactivate(hba);
-> 
-> -	ufshcd_vops_apply_dev_quirks(hba);
-> +	ufshcd_vops_apply_dev_quirks(hba, card);
+Hi,
 
-Hi Stanley,
+> Am 17.02.2020 um 12:24 schrieb Chanwoo Choi <cw00.choi@samsung.com>:
+>=20
+> Hi,
+>=20
+> On 2/17/20 8:07 PM, H. Nikolaus Schaller wrote:
+>> Hi Chanwoo Choi,
+>>=20
+>>> Am 17.02.2020 um 11:15 schrieb Chanwoo Choi <cw00.choi@samsung.com>:
+>>>=20
+>>> Hi,
+>>>=20
+>>> On 2/17/20 5:55 PM, H. Nikolaus Schaller wrote:
+>>>> If the gpios are probed after this driver (e.g. if they
+>>>> come from an i2c expander) there is no need to print an
+>>>> error message.
+>>>>=20
+>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>> ---
+>>>> drivers/extcon/extcon-palmas.c | 6 ++++--
+>>>> 1 file changed, 4 insertions(+), 2 deletions(-)
+>>>>=20
+>>>> diff --git a/drivers/extcon/extcon-palmas.c =
+b/drivers/extcon/extcon-palmas.c
+>>>> index edc5016f46f1..9c6254c0531c 100644
+>>>> --- a/drivers/extcon/extcon-palmas.c
+>>>> +++ b/drivers/extcon/extcon-palmas.c
+>>>> @@ -206,14 +206,16 @@ static int palmas_usb_probe(struct =
+platform_device *pdev)
+>>>> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
+"id",
+>>>> 							GPIOD_IN);
+>>>> 	if (IS_ERR(palmas_usb->id_gpiod)) {
+>>>> -		dev_err(&pdev->dev, "failed to get id gpio\n");
+>>>> +		if (PTR_ERR(palmas_usb->id_gpiod) !=3D -EPROBE_DEFER)
+>>>> +			dev_err(&pdev->dev, "failed to get id gpio\n");
+>>>> 		return PTR_ERR(palmas_usb->id_gpiod);
+>>>> 	}
+>=20
+>=20
+> How about editing it ? as following:
+> because following suggestion reduces the one checking behavior
+> when return value is -EPROBE_DEFER.
+>=20
+> 	if (PTR_ERR(palmas_usb->id_gpiod) =3D=3D -EPROBE_DEFER) {
+> 		return -EPROBE_DEFER;
+> 	} else if (IS_ERR(palmas_usb->id_gpiod)) {
+> 		dev_err(&pdev->dev, "failed to get id gpio\n");
+> 		return PTR_ERR(palmas_usb->id_gpiod);
+> 	}
 
-Is this series merged? If no, would you mind moving
-ufshcd_vops_apply_dev_quirks(hba, card); a little bit? Like below.
+Yes, looks indeed to be valid (some discussion around
+is here: https://lore.kernel.org/patchwork/patch/999602/ ).
 
-@@ -6852,14 +6852,14 @@ static void ufshcd_tune_unipro_params(struct 
-ufs_hba *hba)
-                 ufshcd_tune_pa_hibern8time(hba);
-         }
+So I'll send an update asap.
 
-+       ufshcd_vops_apply_dev_quirks(hba, card);
-+
-         if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
-                 /* set 1ms timeout for PA_TACTIVATE */
-                 ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 10);
+>=20
+>>>>=20
+>>>> 	palmas_usb->vbus_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
+"vbus",
+>>>> 							GPIOD_IN);
+>>>> 	if (IS_ERR(palmas_usb->vbus_gpiod)) {
+>>>> -		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+>>>> +		if (PTR_ERR(palmas_usb->vbus_gpiod) !=3D -EPROBE_DEFER)
+>>>> +			dev_err(&pdev->dev, "failed to get vbus =
+gpio\n");
+>=20
+> ditto.
+>=20
+>>>> 		return PTR_ERR(palmas_usb->vbus_gpiod);
+>>>> 	}
+>>>>=20
+>>>>=20
+>>>=20
+>>> Usually, gpio driver like pinctrl is very early probed
+>>> because almost device drivers should use gpio.
+>>> So, I have not any experience about this situation.
+>>> Do you meet this situation on any h/w board?
+>>=20
+>> Yes, I have experienced that sometimes on omap5+palmas based boards.
+>>=20
+>> It seems to be this:
+>>=20
+>> =
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/ar=
+ch/arm/boot/dts/omap5-board-common.dtsi?h=3Dv5.6-rc2#n384
+>>=20
+>> The extcon_usb3 can potentially match this extcon-palmas driver at
+>> a moment where the palmas_gpio it is referring to has not yet been
+>> successfully probed. Then the palmas_gpio would return -EPROBE_DEFER.
+>>=20
+>> AFAIK there is no guarantee for a specific sequence of drivers
+>> being probed and it is pure luck that in most cases the gpios
+>> are already probed.
+>=20
+> Thanks for explaining the example.
 
-In this way, vendor codes have a chance to modify the dev_quirks
-before ufshcd_tune_unipro_params() does the rest of its job.
+BR and thanks,
+Nikolaus Schaller
 
-Thanks,
-Can Guo.
-
->  }
-> 
->  static void ufshcd_clear_dbg_ufs_stats(struct ufs_hba *hba)
-> @@ -6980,10 +6981,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
->  	}
-> 
->  	ufs_fixup_device_setup(hba, &card);
-> +	ufshcd_tune_unipro_params(hba, &card);
->  	ufs_put_device_desc(&card);
-> 
-> -	ufshcd_tune_unipro_params(hba);
-> -
->  	/* UFS device is also active now */
->  	ufshcd_set_ufs_dev_active(hba);
->  	ufshcd_force_reset_auto_bkops(hba);
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index e05cafddc87b..4f3fa71303da 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -320,7 +320,7 @@ struct ufs_hba_variant_ops {
->  	void	(*setup_task_mgmt)(struct ufs_hba *, int, u8);
->  	void    (*hibern8_notify)(struct ufs_hba *, enum uic_cmd_dme,
->  					enum ufs_notify_change_status);
-> -	int	(*apply_dev_quirks)(struct ufs_hba *);
-> +	int	(*apply_dev_quirks)(struct ufs_hba *, struct ufs_dev_desc *);
->  	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
->  	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
->  	void	(*dbg_register_dump)(struct ufs_hba *hba);
-> @@ -1052,10 +1052,11 @@ static inline void
-> ufshcd_vops_hibern8_notify(struct ufs_hba *hba,
->  		return hba->vops->hibern8_notify(hba, cmd, status);
->  }
-> 
-> -static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba)
-> +static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba,
-> +					       struct ufs_dev_desc *card)
->  {
->  	if (hba->vops && hba->vops->apply_dev_quirks)
-> -		return hba->vops->apply_dev_quirks(hba);
-> +		return hba->vops->apply_dev_quirks(hba, card);
->  	return 0;
->  }
