@@ -2,154 +2,132 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49CCC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E9C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E8F214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="C/RUgW+l"
+	by mail.kernel.org (Postfix) with ESMTP id 0171321D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgBQSia (ORCPT
+        id S1729638AbgBQSio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:38:30 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.23]:32424 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbgBQSia (ORCPT
+        Mon, 17 Feb 2020 13:38:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34317 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbgBQSio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:38:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581964705;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FrQjJ8ihAd6vGkITrjAOakArT8nZi8aEb7RBIaL49hI=;
-        b=C/RUgW+liIXAfAfCIm529v+jKked3nuE7PD3NF9M3TwOog2K4kdi5L7lty+eBiXoTJ
-        LAM9zW31gWz6eQzZigYDA+z6P63yjLqBy12HuujvSC1qogMWy9zmRT/VW66eeGJlEMYW
-        siR+NN108eqDrdHBLkWozSRDt4Bzjibgyw0SEgB1EYKufU0Re/vQDDtKB4yUbODSCPc5
-        XIRDK7jpxIs6Gn64BosL5lWMMvz9GLR0XqZnXXb9tBi3JH8qYJOuqJvewYdTr6osVRjP
-        bRSgyUj5qL7vmhFCE7SK+T/TLLjLsePc2LacG55X4Mhmjw1FtfCre84S9NxmMLIU5fHp
-        Id3Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA0OXQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1HIcGPAL
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Mon, 17 Feb 2020 19:38:16 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200217182906.GA140676@lenoch>
-Date:   Mon, 17 Feb 2020 19:38:16 +0100
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <012228CC-2B49-4AAE-B574-92E44621F0D6@goldelico.com>
-References: <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com> <C3D9F783-EE45-4681-93D9-C1407284CB59@goldelico.com> <20200217182906.GA140676@lenoch>
-To:     Ladislav Michl <ladis@linux-mips.org>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 17 Feb 2020 13:38:44 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j3lHz-0005C0-7x; Mon, 17 Feb 2020 19:38:39 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC90D1C20B4;
+        Mon, 17 Feb 2020 19:38:38 +0100 (CET)
+Date:   Mon, 17 Feb 2020 18:38:38 -0000
+From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/cpu: Move prototype for
+ get_umwait_control_msr() to a global location
+Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
+        kvm@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200123172945.7235-1-b.thiel@posteo.de>
+References: <20200123172945.7235-1-b.thiel@posteo.de>
+MIME-Version: 1.0
+Message-ID: <158196471850.13786.2863222761853021206.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/cleanups branch of tip:
 
-> Am 17.02.2020 um 19:29 schrieb Ladislav Michl <ladis@linux-mips.org>:
->=20
-> On Mon, Feb 17, 2020 at 02:58:14PM +0100, H. Nikolaus Schaller wrote:
->>=20
->>> Am 17.02.2020 um 14:38 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->>>=20
->>> If the gpios are probed after this driver (e.g. if they
->>> come from an i2c expander) there is no need to print an
->>> error message.
->>>=20
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>> ---
->>> drivers/extcon/extcon-palmas.c | 8 ++++++--
->>> 1 file changed, 6 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git a/drivers/extcon/extcon-palmas.c =
-b/drivers/extcon/extcon-palmas.c
->>> index edc5016f46f1..cea58d0cb457 100644
->>> --- a/drivers/extcon/extcon-palmas.c
->>> +++ b/drivers/extcon/extcon-palmas.c
->>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct =
-platform_device *pdev)
->>>=20
->>> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"id",
->>> 							GPIOD_IN);
->>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
->>> +	if (PTR_ERR(palmas_usb->id_gpiod) =3D=3D -EPROBE_DEFER) {
->>> +		return -EPROBE_DEFER;
->>> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
->>=20
->> Hm.
->>=20
->> While looking again at that: why do we need the "{" and "} else "?
->>=20
->> It should be sufficient to have
->>=20
->>> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"id",
->>> 							GPIOD_IN);
->>> +	if (PTR_ERR(palmas_usb->id_gpiod) =3D=3D -EPROBE_DEFER)
->>> +		return -EPROBE_DEFER;
->>> 	if (IS_ERR(palmas_usb->id_gpiod)) {
->>=20
->> What do you think is better coding style here?
->=20
-> How about something like this? (just an idea with some work left for =
-you ;-))
->=20
-> --- a/drivers/extcon/extcon-palmas.c
-> +++ b/drivers/extcon/extcon-palmas.c
-> @@ -206,8 +206,10 @@ static int palmas_usb_probe(struct =
-platform_device *pdev)
-> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"id",
-> 							GPIOD_IN);
-> 	if (IS_ERR(palmas_usb->id_gpiod)) {
-> -		dev_err(&pdev->dev, "failed to get id gpio\n");
-> -		return PTR_ERR(palmas_usb->id_gpiod);
-> +		status =3D PTR_ERR(palmas_usb->id_gpiod);
-> +		if (status !=3D -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to get id gpio: =
-%d\n", status);
-> +		return status;
-> 	}
+Commit-ID:     b10c307f6f314c068814d0e23c86f06d5d57004b
+Gitweb:        https://git.kernel.org/tip/b10c307f6f314c068814d0e23c86f06d5d57004b
+Author:        Benjamin Thiel <b.thiel@posteo.de>
+AuthorDate:    Thu, 23 Jan 2020 18:29:45 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 17 Feb 2020 19:32:45 +01:00
 
-Well, what would be the improvement?
-It needs an additional variable and makes the change more complex.
+x86/cpu: Move prototype for get_umwait_control_msr() to a global location
 
-The main suggestion by Chanwoo Choi was to move the check for =
-EPROBE_DEFER
-outside of the IS_ERR() because checking this first and then for =
-EPROBE_DEFER
-is not necessary.
+.. in order to fix a -Wmissing-prototypes warning.
 
-If acceptable I'd prefer my last proposal. It just adds 2 LOC before
-and without touching the existing if (IS_ERR(...)).
+No functional change.
 
-If the compiler is clever it can cache palmas_usb->id_gpiod in a =
-register
-which serves the same purpose as the status variable.
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: kvm@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200123172945.7235-1-b.thiel@posteo.de
+---
+ arch/x86/include/asm/mwait.h | 2 ++
+ arch/x86/kernel/cpu/umwait.c | 1 +
+ arch/x86/kvm/vmx/vmx.c       | 1 +
+ arch/x86/kvm/vmx/vmx.h       | 2 --
+ 4 files changed, 4 insertions(+), 2 deletions(-)
 
->=20
-> 	palmas_usb->vbus_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
-"vbus",
-
-BR and thanks,
-Nikolaus=
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 9d5252c..b809f11 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -23,6 +23,8 @@
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+ #define MWAITX_DISABLE_CSTATES		0xf0
+ 
++u32 get_umwait_control_msr(void);
++
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+ {
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index c222f28..300e3fd 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -4,6 +4,7 @@
+ #include <linux/cpu.h>
+ 
+ #include <asm/msr.h>
++#include <asm/mwait.h>
+ 
+ #define UMWAIT_C02_ENABLE	0
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9a66648..2068cda 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -41,6 +41,7 @@
+ #include <asm/mce.h>
+ #include <asm/mmu_context.h>
+ #include <asm/mshyperv.h>
++#include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/virtext.h>
+ #include <asm/vmx.h>
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 7f42cf3..b4e14ed 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -14,8 +14,6 @@
+ extern const u32 vmx_msr_index[];
+ extern u64 host_efer;
+ 
+-extern u32 get_umwait_control_msr(void);
+-
+ #define MSR_TYPE_R	1
+ #define MSR_TYPE_W	2
+ #define MSR_TYPE_RW	3
