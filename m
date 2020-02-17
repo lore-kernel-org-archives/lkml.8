@@ -2,99 +2,118 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492A0C761A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5158AC761A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E7E20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234DE20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D4GGp8mF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgBQMRZ (ORCPT
+        id S1729245AbgBQMRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:17:25 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10629 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726932AbgBQMRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:17:24 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BFA8EB09D511E23A9159;
-        Mon, 17 Feb 2020 20:17:21 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
- 20:17:13 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <richard@nod.at>, <gregkh@linuxfoundation.org>,
-        <sashal@kernel.org>, <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <Stable@vger.kernel.org>
-Subject: [PATCH 4.4] ubifs: Fix deadlock in concurrent bulk-read and writepage
-Date:   Mon, 17 Feb 2020 20:23:59 +0800
-Message-ID: <1581942239-112920-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Feb 2020 07:17:45 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50068 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgBQMRo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:17:44 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HCHSkP023037;
+        Mon, 17 Feb 2020 06:17:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581941848;
+        bh=E3VkN1ikCKZ9GbsHBrahfc8EY2iLwLFkjGpj5EcTql0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=D4GGp8mF7bV47mlTNJMdLLIl1wbz/lr0QD3RiX/mG5Xqp87SEnZZ3HVsa4jbOT0TR
+         Gq2ffGcqDH2Fz9bV2fUlQx8D79l5WRdVLibFb3I5N8QITj1whA3yqFhEsTkt7GB+RT
+         GXt/ghJOEHG3cxLpeUWDESHxuXb49eVhc6hKCXXs=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01HCHSRi121007
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Feb 2020 06:17:28 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
+ Feb 2020 06:17:28 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 17 Feb 2020 06:17:28 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HCHNV2078195;
+        Mon, 17 Feb 2020 06:17:24 -0600
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Mark Brown <broonie@kernel.org>,
+        "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+CC:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, <dan.carpenter@oracle.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>,
+        <dinguyen@kernel.org>, <tien.fong.chee@intel.com>
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+ <20200214121145.GF4827@sirena.org.uk>
+ <4712cdc4-34cd-990b-3d53-3d394ae1250b@linux.intel.com>
+ <20200217115213.GA9304@sirena.org.uk>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <f5f868e5-a977-7487-9395-a76dd5e7c963@ti.com>
+Date:   Mon, 17 Feb 2020 17:48:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200217115213.GA9304@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 ]
+Hi Vadivel,
 
-In ubifs, concurrent execution of writepage and bulk read on the same file
-may cause ABBA deadlock, for example (Reproduce method see Link):
+On 17/02/20 5:22 pm, Mark Brown wrote:
+> On Mon, Feb 17, 2020 at 05:28:38PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>> On 14/2/2020 8:11 PM, Mark Brown wrote:
+> 
+>>> Given that this is a new driver I'd be very surprised if it broke other
+>>> users?  I can imagine it might not work for them and it would definitely
+>>> be much better to get their review but it shouldn't be any worse than
+>>> the current lack of support.
+> 
+>> *[Vignesh]*  The legacy driver under drivers/mtd/spi-nor will be removed as
+>> we cannot
+>> support both SPI NOR and SPI NAND with single driver if its under
+>> spi-nor. New driver should be functionally equivalent to existing one.
+>> So I suggest you test this driver on legcay SoCFPGA products.
+> 
+> You're not actually removing the driver here, you're adding another
+> driver for the same thing.
+> 
 
-Process A(Bulk-read starts from page4)         Process B(write page4 back)
-  vfs_read                                       wb_workfn or fsync
-  ...                                            ...
-  generic_file_buffered_read                     write_cache_pages
-    ubifs_readpage                                 LOCK(page4)
+I agree with Mark here.
 
-      ubifs_bulk_read                              ubifs_writepage
-        LOCK(ui->ui_mutex)                           ubifs_write_inode
+I realized that you are using same CONFIG option as the old one to build
+this driver. This causes new driver to fail to probe as old driver would
+bind to the node instead (both drivers will be built into the kernel and
+both drivers have same compatible).
 
-	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
-	    find_or_create_page(alloc page4)                  â†‘
-	      LOCK(page4)                   <--     ABBA deadlock occurs!
+So, you should remove the old driver. Could you also include patches
+removing old driver? New driver and bindings are anyways backward
+compatible with existing one
 
-In order to ensure the serialization execution of bulk read, we can't
-remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
-allow ubifs_do_bulk_read() to lock page failed by replacing
-find_or_create_page(FGP_LOCK) with
-pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
- fs/ubifs/file.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-index b895af7d8d80..e6d0a7df341d 100644
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -782,8 +782,9 @@ static int ubifs_do_bulk_read(struct ubifs_info *c, struct bu_info *bu,
- 
- 		if (page_offset > end_index)
- 			break;
--		page = find_or_create_page(mapping, page_offset,
--					   GFP_NOFS | __GFP_COLD);
-+		page = pagecache_get_page(mapping, page_offset,
-+				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
-+				 GFP_NOFS | __GFP_COLD);
- 		if (!page)
- 			break;
- 		if (!PageUptodate(page))
 -- 
-2.7.4
-
+Regards
+Vignesh
