@@ -2,149 +2,106 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CDDC3402B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D3BC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C30C20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:14:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZFS8ynyc"
+	by mail.kernel.org (Postfix) with ESMTP id 8F45820725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgBQVOi (ORCPT
+        id S1729905AbgBQVTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:14:38 -0500
-Received: from mout.gmx.net ([212.227.15.18]:42879 "EHLO mout.gmx.net"
+        Mon, 17 Feb 2020 16:19:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42838 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgBQVOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:14:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1581974073;
-        bh=8H8JRzVVErLcA/Cb9W/Jfd6wJk5WexFr0YnVg4lPI9Q=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=ZFS8ynyc0sOGd37Ms2urLYqMtXjjUUR8xfk8N2GzMivAA2qr4lGGCcHxO9HEHTfpZ
-         cC+M5lJ2XA7Q3EShCtdFxmLBRHlU2nbqB8YrBf1W7ntHgfCE7oMT4NpIOLPO2PRjQd
-         eFmrhfBjTKog2dQvWOiN5Q65EZb6DfrnIafeUZVw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MtfJd-1jJh4w2WI3-00vBI0; Mon, 17
- Feb 2020 22:14:33 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/libstub: describe memory functions
-Date:   Mon, 17 Feb 2020 22:13:23 +0100
-Message-Id: <20200217211323.4878-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
+        id S1728935AbgBQVTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:19:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CA941AD6C;
+        Mon, 17 Feb 2020 21:19:22 +0000 (UTC)
+Message-ID: <7bd53a3ee156037132e85415589168345461ad7c.camel@suse.de>
+Subject: Re: [PATCH] usb: xhci-pci: Raspberry Pi FW loader for VIA VL805
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     oneukum@suse.com, phil@raspberrypi.com, tim.gover@raspberrypi.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 17 Feb 2020 22:19:20 +0100
+In-Reply-To: <185f8cae-9898-ee72-00f1-ec79d98c43f4@gmail.com>
+References: <20200217100701.19949-1-nsaenzjulienne@suse.de>
+         <185f8cae-9898-ee72-00f1-ec79d98c43f4@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-6v5SE9lBM19zZDAYXHDY"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q2AyUA5LF6qwEZq6Q+uOFmeB3JLxCGgHUi2RXlqJuONOIwkhyFG
- YLp1Y1+VrxJS6LDZP0D9KpAug6GS9nAZ51KTewxY4qlubTvAwJDW5+Cqfk2T4pd4jIpSYAX
- LeUcuaktEif0wE79/j81lgVr9BYzH5XarnngToXZr6zy5hRS3+pxZYa6BSqtyhdocUC54wb
- 1ZujKBWWo3vNwbvkRyRkA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5OSwgTjpeJg=:XaezFtnCG82PBKlTkduXgm
- ZfRBMgRF/tp8R+zxSoxrZPvxnvo2SOJ+EhNJNpDQDPxt3U39TQ2FWPNCXHHlZqovbqdI1N8LT
- cvQKPad8KzDQ4gfM1jPUeEYlKzvQscXA4XHPyQ2P3sSF677xNMR6jdDjU2cBRJyQCNLZI8i5E
- 4gEXiTFoUvjRUzB1dGT+FA1+kT8cPz+iuEE/2S84DCP1Wf0kGAfssBjrBDUSDSVv8m50HQ6vf
- 5005EAeiiLp4IW/vNuxsW4sRmypY8DiHGk6UV7D/PgLMX1n2zqYq+5M9pziChnDYuoT3PjB+J
- 4klfhYD057+Hj1P627yfmgS16vBZzjSq2wnzigN0Zak+qxRTIij1XXPgUG9Le05MpRAiz5Q0h
- 7QqMhmR+6+0sSQJiRpMZzWOtjSD3O2YhAu2F0gDyBF7xziERi7ueBH0YYuzs3x1xb37jiCBfS
- 4ks11PKLhj3fJ6w9/ztbYkBdXNpSie8wQrLQwGDCtO5YFR6XBcK8PDFMWf1r7wsLnCsvILYeY
- WuVeoXVukN8VoMAY9jkQhALcVQ7RH8/fSepEDQZAbeIFvahmWwosmEios3cn989jIih9ZCAq0
- 390d3WNCtIDKa2rAGHVEo02hJLLuMZfvqEONtCrv4hL6c3d0d8wYCen0c9H6k6ztsUG+e3Iki
- N/3rli66uA/PStk/OiLRnbdJSqVR2Orx8K++JN3+ihjkMnK7thiWz37zHyDElVidKD10xzgAH
- TDOoWBAf9WcWswif/BLE94K1nYKAtb0wRrpTT1qdzM70o3s6LIXHXH+5f1ExRbvjfAinzUEkx
- kbhns9jHwybUEZRUspYTyiryHkptdrHl+Nlz89MnNZSbiox4U2mLd4kHr2sd++nDmykrCyDXB
- e5R55gNdTK75M3JwzK7o/c3eGA1xVQblX34YxRcbNLSLw1Al+FSTJdfQLyaTs1z2HZhSdHl5p
- TJBnnXswQmadhS7ABycOLvrk0MVqS8DyAULAY3HRmK0TTQLCjlDRhCVp8HdqMFr0uGHBiruYG
- ciHCvNBiQuzHa3bOEiEScN6VL+Z3k8C6+5rRjfvP1StK/N9rR4P3zMy5P5XeQhjomefNmF/ti
- ejSUaqZce4sUBkYo/0dq4Pgz8jRg1fdB+M2N54BhacA2vcDz256aEj3bl0h773EW7PJJd5dy8
- GnPN51YgUQ/ZMXgTqH9Ncc/poHCAAetSSWfA4LWT+2H9QFPtwTzA1w/h/Rn99yf4i8JPLe+Gk
- SIuVUbUbIAcDb7ywm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide descriptions of:
 
-* efi_get_memory_map()
-* efi_low_alloc_above()
-* efi_free()
+--=-6v5SE9lBM19zZDAYXHDY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/firmware/efi/libstub/mem.c | 31 ++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+On Mon, 2020-02-17 at 12:52 -0800, Florian Fainelli wrote:
+>=20
+> On 2/17/2020 2:07 AM, Nicolas Saenz Julienne wrote:
+> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
+e
+> > loaded directly from an EEPROM or, if not present, by the SoC's
+> > VideCore.  Inform VideCore that VL805 was just reset, or defer xhci's
+> > probe if not yet joinable trough the mailbox interface.
+> >=20
+> > Based on Tim Gover's downstream implementation.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> Would it work if you registered the firmware loading as pci fixup such
+> that you would not even have to mangle xhci-pci.c at all and all the
+> logic could be contained within drivers/firmware/raspberrypi.c?
 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
-stub/mem.c
-index c25fd9174b74..be24c062115f 100644
-=2D-- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -16,6 +16,15 @@ static inline bool mmap_has_headroom(unsigned long buff=
-_size,
- 	return slack / desc_size >=3D EFI_MMAP_NR_SLACK_SLOTS;
- }
+Not that simple, PCI fix-ups don't allow for probe deferring. We depend on =
+the
+firmware and mailbox drivers to be up prior running this, so it's essential=
+. We
+could cheat and do the deferring first thing during pcie-brcmstb's probe.
 
-+/**
-+ * efi_get_memory_map() - get memory map
-+ * @map		on return pointer to memory map
-+ *
-+ * Retrieve the UEFI memory map. The allocated memory leaves room for
-+ * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
-+ *
-+ * Return:	status code
-+ */
- efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
- {
- 	efi_memory_desc_t *m =3D NULL;
-@@ -109,8 +118,20 @@ efi_status_t efi_allocate_pages(unsigned long size, u=
-nsigned long *addr,
- 	}
- 	return EFI_SUCCESS;
- }
--/*
-- * Allocate at the lowest possible address that is not below 'min'.
-+/**
-+ * efi_low_alloc_above() - allocate pages at or above given address
-+ * @size:	size of the memory area to allocate
-+ * @align:	minimum alignment of the allocated memory area. It should
-+ *		a power of two.
-+ * @addr:	on exit the address of the allocated memory
-+ * @min:	minimum address to used for the memory allocation
-+ *
-+ * Allocate at the lowest possible address that is not below 'min' as
-+ * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' =
-but at
-+ * least EFI_ALLOC_ALIGN. The first allocated page will not below the add=
-ress
-+ * given by 'min'.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
- 				 unsigned long *addr, unsigned long min)
-@@ -187,6 +208,12 @@ efi_status_t efi_low_alloc_above(unsigned long size, =
-unsigned long align,
- 	return status;
- }
+Actually this might be a workable solution (as in upstreamable):
+ - Wait for firmware to be up in pcie-brcmstb.c
+ - Add firmware code in firmware/raspberrypi.c
+ - Perform call in usb's quirk_usb_early_handoff() (usb/host/pci-quirks.c)
 
-+/**
-+ * efi_free() - free memory pages
-+ * @size	size of the memory area to free in bytes
-+ * @addr	start of the memory area to free (must be EFI_PAGE_SIZE
-+ *		aligned)
-+ */
- void efi_free(unsigned long size, unsigned long addr)
- {
- 	unsigned long nr_pages;
-=2D-
-2.25.0
+Regards,
+Nicolas
+
+
+--=-6v5SE9lBM19zZDAYXHDY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5LA1gACgkQlfZmHno8
+x/7pOQf/Rc4PUoWjbSaEnRadMhclCH4wKP/YYX30qB8pP4LdbbBhlVyFrL1pYqsA
+7SM/sYXSi77ZudG91Qdw0KZQO+8d8R/sC0AliG5qNe0qkc314TwqjAcu90kXkbEF
+lvLFkocleihvGcVPjY9LEwk2bPqSY4ScYt/WhrfGIaqvqyJ/ISqliY6HFlbjJfjq
+323xSs7Jp0SXjl8h2yOhL0kgV6HS/NTUbwUrW0lRXvZWjDyi0CM1uyxCgUy4EiRC
+wsSutseZ95JKX8Sw78dLrE1H0qQel1cAIbZSNb6/lVOvFinq8lKhh+EJVHmAiwOl
+7o2HJ9OsjY6Lb4mqgcvoPqFPVl5/tQ==
+=bl1/
+-----END PGP SIGNATURE-----
+
+--=-6v5SE9lBM19zZDAYXHDY--
 
