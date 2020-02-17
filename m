@@ -2,123 +2,79 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E621DC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162AC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A7B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:49:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KoRhZEZY"
+	by mail.kernel.org (Postfix) with ESMTP id 5C2CA20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBQStu (ORCPT
+        id S1729606AbgBQSus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:49:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48002 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbgBQSqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:46:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=TRd7Ps5bWxlwa3OWn+vpade7IP4m4k5O05zkXvvMr5Y=; b=KoRhZEZYO5r+aVQxWky2Sj5cKV
-        x5KBRIm9HCvfLDRhcpo8BUshp6Yq45beYscHHQdrq+ozwaUlWGWSSBKc50p/2rxrcZknOWpduMgh4
-        xti2jXe2tmFQgy25MwHLfu5E0Fezg/REcQJUwOvzgiH+Lp1MafCFPWO4LTpJ9BSxXFIQHqmqBHFOl
-        4wIYMJ/6quo6hrkQKaq/0UogZI/X/vzR2t6osdUETyioAtrQegqbLstedpDQB5HdRdJ9OLJofEZ2c
-        i3h+QbctO+ZRIYJgDEdD1xU6PVDrLqT0z+SIF3TRqfiy0Tb5zunZiVX4aOH6WZ0LMoDpDsSPlhkij
-        pVaN5kew==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3lPM-0005Dk-G5; Mon, 17 Feb 2020 18:46:16 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
-Date:   Mon, 17 Feb 2020 10:46:11 -0800
-Message-Id: <20200217184613.19668-31-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200217184613.19668-1-willy@infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
+        Mon, 17 Feb 2020 13:50:48 -0500
+Received: from mga12.intel.com ([192.55.52.136]:64776 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgBQSur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 13:50:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 10:50:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,453,1574150400"; 
+   d="scan'208";a="258347540"
+Received: from aottaski-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.113])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Feb 2020 10:50:44 -0800
+Date:   Mon, 17 Feb 2020 20:50:44 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        jmorris@namei.org
+Subject: [GIT PULL] tpmdd updates for Linux v5.6-rc3
+Message-ID: <20200217185044.GA7180@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Two bug fixes.
 
-By putting the 'have we reached the end of the page' condition at the end
-of the loop instead of the beginning, we can remove the 'submit the last
-page' code from iomap_readpages().  Also check that iomap_readpage_actor()
-didn't return 0, which would lead to an endless loop.
+/Jarkko
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index cb3511eb152a..44303f370b2d 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
- 		void *data, struct iomap *iomap, struct iomap *srcmap)
- {
- 	struct iomap_readpage_ctx *ctx = data;
--	loff_t done, ret;
-+	loff_t ret, done = 0;
- 
--	for (done = 0; done < length; done += ret) {
--		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
--			if (!ctx->cur_page_in_bio)
--				unlock_page(ctx->cur_page);
--			put_page(ctx->cur_page);
--			ctx->cur_page = NULL;
--		}
-+	while (done < length) {
- 		if (!ctx->cur_page) {
- 			ctx->cur_page = iomap_next_page(inode, ctx->pages,
- 					pos, length, &done);
-@@ -418,6 +412,15 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
- 		}
- 		ret = iomap_readpage_actor(inode, pos + done, length - done,
- 				ctx, iomap, srcmap);
-+		if (WARN_ON(ret == 0))
-+			break;
-+		done += ret;
-+		if (offset_in_page(pos + done) == 0) {
-+			if (!ctx->cur_page_in_bio)
-+				unlock_page(ctx->cur_page);
-+			put_page(ctx->cur_page);
-+			ctx->cur_page = NULL;
-+		}
- 	}
- 
- 	return done;
-@@ -451,11 +454,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
- done:
- 	if (ctx.bio)
- 		submit_bio(ctx.bio);
--	if (ctx.cur_page) {
--		if (!ctx.cur_page_in_bio)
--			unlock_page(ctx.cur_page);
--		put_page(ctx.cur_page);
--	}
-+	BUG_ON(ctx.cur_page);
- 
- 	/*
- 	 * Check that we didn't lose a page due to the arcance calling
--- 
-2.25.0
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
 
+are available in the Git repository at:
+
+  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20200217
+
+for you to fetch changes up to dc10e4181c05a2315ddc375e963b7c763b5ee0df:
+
+  tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST (2020-02-17 20:47:06 +0200)
+
+----------------------------------------------------------------
+tpmdd updates for Linux v5.6-rc3
+
+----------------------------------------------------------------
+Jarkko Sakkinen (1):
+      tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+
+Roberto Sassu (1):
+      tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST
+
+ drivers/char/tpm/Makefile                              | 8 +++++---
+ drivers/char/tpm/tpm2-cmd.c                            | 2 ++
+ drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} | 0
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+ rename drivers/char/tpm/{tpm_tis_spi.c => tpm_tis_spi_main.c} (100%)
