@@ -2,163 +2,173 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B172C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1BAC34025
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3846A21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F77214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGHc1jCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfOX4D/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgBQRCf (ORCPT
+        id S1728841AbgBQREp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:02:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54448 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726781AbgBQRCe (ORCPT
+        Mon, 17 Feb 2020 12:04:45 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:43475 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728142AbgBQREo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:02:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581958952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LTLhp/XySgncTqhbXJWLE8j6Db6J/GYHmTmc6aeppi0=;
-        b=UGHc1jCjn5OUaBjjMnq/okgZbmw+zk4vmeL9+nIghgpa5BICypSiH7bYiHaRJSBlU46mQd
-        V8ibIJ0HEBmFkHCzBD/Q9M9YpA7OMVYeYluC8pXnM5iO39GSAnqpNixcGFRBkjIDX2sl2q
-        kdxiU5EYubSYF5z1NDXyIcOvdFZWypc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-zfv8qWHbOiuIzNGWLEaa4g-1; Mon, 17 Feb 2020 12:02:30 -0500
-X-MC-Unique: zfv8qWHbOiuIzNGWLEaa4g-1
-Received: by mail-wr1-f70.google.com with SMTP id s13so9241696wrb.21
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:02:30 -0800 (PST)
+        Mon, 17 Feb 2020 12:04:44 -0500
+Received: by mail-yb1-f193.google.com with SMTP id b141so8989226ybg.10;
+        Mon, 17 Feb 2020 09:04:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vPLpeSe0bKkS49okauHP5fVKtMg3RhIDXruX05dtGX8=;
+        b=LfOX4D/PTIGCnYfTvq+ADMCpaVrTm8vspeWtE6AWPdFAZKq2T9anP5EHCU3J6vE5rX
+         O+IBBqXFskHMzEU8qcTz4DaLOCRGheG+BF21M0S/Ru4mislM/hvcUN418f8gXkFdaje7
+         ZHc6ZhfNcKnewUFnVsbPAiCiPXe38lJKDoiLLXPlb0IVP5ZTd+Erw255U12Ba6nz/kO+
+         cksC6T/fpsD6w3ONjsjGdDuLbi6AZuJ4UC3x5yrLVOolpNR4QgXEHW6xQ2zNC/mVqVC6
+         CcPjTObHWyPJsfIUhH6BvhuobWLjrOzrDiSLZwyKI0eCDCnGXq3NeAMB6e+rrpDS/KDE
+         UkmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=LTLhp/XySgncTqhbXJWLE8j6Db6J/GYHmTmc6aeppi0=;
-        b=gJiNPZJGgfgz84hm7cbj5L3ZDvDARKtNq7jvJuAqc42BHRIUbRaJdnyWrsABvKjvUA
-         9R3iVKVuiDVuC6LB9bsWTEMlLur86yqq9jnk9N+b/plcF0iPaq9Q2mjFoqSwvUir6qw3
-         w4kNpf2cJT0iy07Bi7nuJmJ2muxYwAzHb5a4PtTXjMrqS13Y11ZzYHG2aDobdaaPWTBU
-         MHGpMVtiNq/ryHit+r2i/m1L/C86fsYYldCAT5sQsBd3AxUSf1bugM0ZTsxzL3T7bfCx
-         qAHbTgpn5AhUfuV1s1kviDP/kuq75DGYQefOvUUfz0IXOWapiZbEAqSQGrI2YzEKei+W
-         xYRw==
-X-Gm-Message-State: APjAAAUU4S/AxBltFyr/oxIDsYJxi0aRux9YpxN1Vctg/QI3U//QZUMz
-        8cpsnUU4ntzUrTohr7A4f4BsQAUNxbVZKCuujFl2/+BG7ikao+eFyHxxrC9hQhsP/18kr4UTCzY
-        7sPAi+rW40/Lgb9IyX7AkHFVT
-X-Received: by 2002:a05:600c:217:: with SMTP id 23mr13731wmi.124.1581958949316;
-        Mon, 17 Feb 2020 09:02:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwfY3yBAKQqpVX29xpVAGynUaOiw/rNs+FoKhmA06VZKtYmd9qlKU+Q7eq6SR2DhKzSa15CBQ==
-X-Received: by 2002:a05:600c:217:: with SMTP id 23mr13718wmi.124.1581958949051;
-        Mon, 17 Feb 2020 09:02:29 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q14sm1753448wrj.81.2020.02.17.09.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 09:02:28 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
-In-Reply-To: <2fb684de-30c1-ed67-600f-08168e64d6c7@oracle.com>
-References: <1581561464-3893-1-git-send-email-linmiaohe@huawei.com> <2fb684de-30c1-ed67-600f-08168e64d6c7@oracle.com>
-Date:   Mon, 17 Feb 2020 18:02:27 +0100
-Message-ID: <87blpx9mfw.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vPLpeSe0bKkS49okauHP5fVKtMg3RhIDXruX05dtGX8=;
+        b=YLNtukE6l72hyN/yG3pd7/ufptgywO83mC8hzp/CGgSIg1zm3UIWAkJ4KIfGcgD73/
+         PWf3fvLSEAPSQ0LBZgf7pCgT/ilbfrlQ+S7jeGOzdPpkRboxNCGEHE9G6OWfW2lkDMmm
+         Y/AiKKhj8W18sFbhCANC3oEO2BvEA+wIqc+qaZ6HP2fmBfUC4/bqtA0dJdBd1h6Ma8IE
+         mcWZn5cps6ariwHcv2gpDR1MEO+Yv80/w9OqaVLf+gTTn9+hvChKtWWvDmW4/j6e+ElI
+         tj3psjnn1g+50tx77CfZD6YpuGvcd500/J8fZbvvkFdKQ40mVW/Jgd4X7OLO1C9mdJlk
+         oWDw==
+X-Gm-Message-State: APjAAAVqjXqS2ec7XmnOZ0H9yHd8r83jGQTGMmpDR3364AMvawURuJY1
+        VhSN/iGqBE3UveCchqeOMzk=
+X-Google-Smtp-Source: APXvYqzGlUZIsYYiKriIz2BhmO+hg4HO/NIKKz6IDfn53XLaaE1DGqXWxL9gY+5u8szaTp/bERwFkQ==
+X-Received: by 2002:a5b:885:: with SMTP id e5mr15959811ybq.449.1581959083612;
+        Mon, 17 Feb 2020 09:04:43 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a74sm475022ywe.42.2020.02.17.09.04.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Feb 2020 09:04:43 -0800 (PST)
+Subject: Re: [PATCH v3 kunit-next 1/2] kunit: add debugfs
+ /sys/kernel/debug/kunit/<suite>/results display
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, corbet@lwn.net, davidgow@google.com
+References: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
+ <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
+ <c42ac237-476a-526f-b445-61e7a63bc101@gmail.com>
+ <alpine.LRH.2.20.2002171539210.21685@dhcp-10-175-161-198.vpn.oracle.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <51e1d60c-a232-bbef-7e6a-8695df684ae6@gmail.com>
+Date:   Mon, 17 Feb 2020 11:04:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <alpine.LRH.2.20.2002171539210.21685@dhcp-10-175-161-198.vpn.oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Krish Sadhukhan <krish.sadhukhan@oracle.com> writes:
+On 2/17/20 9:45 AM, Alan Maguire wrote:
+> On Wed, 12 Feb 2020, Frank Rowand wrote:
+> 
+>> On 2/7/20 10:58 AM, Alan Maguire wrote:
+>>> add debugfs support for displaying kunit test suite results; this is
+>>> especially useful for module-loaded tests to allow disentangling of
+>>> test result display from other dmesg events.
+>>>
+>>> As well as printk()ing messages, we append them to a per-test log.
+>>>
+>>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+>>> ---
 
-> On 2/12/20 6:37 PM, linmiaohe wrote:
->> From: Miaohe Lin <linmiaohe@huawei.com>
+< snip >
+
+>>> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+>>> index 9242f93..aec607f 100644
+>>> --- a/lib/kunit/test.c
+>>> +++ b/lib/kunit/test.c
+>>> @@ -10,6 +10,7 @@
+>>>  #include <linux/kernel.h>
+>>>  #include <linux/sched/debug.h>
+>>>  
+>>> +#include "debugfs.h"
+>>>  #include "string-stream.h"
+>>>  #include "try-catch-impl.h"
+>>>  
+>>> @@ -28,73 +29,91 @@ static void kunit_print_tap_version(void)
+>>>  	}
+>>>  }
+>>>  
+>>> -static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+>>> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
+>>>  {
+>>>  	struct kunit_case *test_case;
+>>>  	size_t len = 0;
+>>>  
+>>> -	for (test_case = test_cases; test_case->run_case; test_case++)
+>>> +	kunit_suite_for_each_test_case(suite, test_case)
+>>>  		len++;
+>>>  
+>>>  	return len;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+>>>  
+>>>  static void kunit_print_subtest_start(struct kunit_suite *suite)
+>>>  {
+>>>  	kunit_print_tap_version();
+>>> -	pr_info("\t# Subtest: %s\n", suite->name);
+>>> -	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
+>>> +	kunit_log(KERN_INFO, suite, "# Subtest: %s", suite->name);
+>>> +	kunit_log(KERN_INFO, suite, "1..%zd",
+>>> +		  kunit_suite_num_test_cases(suite));
 >>
->> The function apic_lvt_vector() is unused now, remove it.
+>> The subtest 'is a TAP stream indented 4 spaces'.  (So the old code was
+>> also incorrect since it indented with a tab.)
 >>
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> ---
->>   arch/x86/kvm/lapic.c | 5 -----
->>   1 file changed, 5 deletions(-)
+>> kunit_print_ok_not_ok() has a similar indentation issue.
 >>
->> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
->> index eafc631d305c..0b563c280784 100644
->> --- a/arch/x86/kvm/lapic.c
->> +++ b/arch/x86/kvm/lapic.c
->> @@ -294,11 +294,6 @@ static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
->>   	return !(kvm_lapic_get_reg(apic, lvt_type) & APIC_LVT_MASKED);
->>   }
->>   
->> -static inline int apic_lvt_vector(struct kvm_lapic *apic, int lvt_type)
->> -{
->> -	return kvm_lapic_get_reg(apic, lvt_type) & APIC_VECTOR_MASK;
->> -}
->> -
->>   static inline int apic_lvtt_oneshot(struct kvm_lapic *apic)
->>   {
->>   	return apic->lapic_timer.timer_mode == APIC_LVT_TIMER_ONESHOT;
->
-> There is one place, lapic_timer_int_injected(), where this function be 
-> used :
->
->          struct kvm_lapic *apic = vcpu->arch.apic;
-> -       u32 reg = kvm_lapic_get_reg(apic, APIC_LVTT);
->
->          if (kvm_apic_hw_enabled(apic)) {
->
-> -                int vec = reg & APIC_VECTOR_MASK;
->
-> +               int vec = apic_lvt_vector(APIC_LVTT);
->                   void *bitmap = apic->regs + APIC_ISR;
->
->
-> But since that's the only place I can find, we probably don't need a 
-> separate function.
->
+> 
+> I'll defer to Brendan on the TAP format stuff if you don't
+> mind; the aim here is to preserve existing behaviour.  I
+> think it might be better to tackle TAP format issues in
+> a separate patchset.
 
-I like the alternative suggestion more than the original patch)
+My first attempt to respond started with "That is a reasonable approach".
+But on reflection, the patch is adding code that is incorrect (even if
+the new code is replacing existing code that is incorrect).
 
-Also, apic_lvt_enabled() is only used once with APIC_LVTT as the second
-argument so I'd suggest we also do:
+If you don't want to change the spacing in patch 1/2, then please add
+patch 3/3 that corrects the spacing.  That allows patches 1/3 and 2/3
+to preserve existing behaviour.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index afcd30d44cbb..d85463ff4a6f 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -289,14 +289,14 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
-        recalculate_apic_map(apic->vcpu->kvm);
- }
- 
--static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-+static inline int apic_lvtt_enabled(struct kvm_lapic *apic)
- {
--       return !(kvm_lapic_get_reg(apic, lvt_type) & APIC_LVT_MASKED);
-+       return !(kvm_lapic_get_reg(apic, APIC_LVTT) & APIC_LVT_MASKED);
- }
- 
--static inline int apic_lvt_vector(struct kvm_lapic *apic, int lvt_type)
-+static inline int apic_lvtt_vector(struct kvm_lapic *apic)
- {
--       return kvm_lapic_get_reg(apic, lvt_type) & APIC_VECTOR_MASK;
-+       return kvm_lapic_get_reg(apic, APIC_LVTT) & APIC_VECTOR_MASK;
- }
+Thanks,
 
-in addition to the above.
+Frank
 
--- 
-Vitaly
+> 
+> I also updated the documentation patch in v4 (patch 3)
+> to incorporate the suggested wording.
+> 
+> Thanks for the careful review!
+> 
+> Alan
+>  
+>>
 
+< snip >
