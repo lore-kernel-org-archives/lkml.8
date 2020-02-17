@@ -2,124 +2,93 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9553AC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF1DC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C652206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14477206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xSIYa2za"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iNgHSCbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgBQHjC (ORCPT
+        id S1726865AbgBQHju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:39:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40899 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgBQHjB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:39:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t3so18335913wru.7
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 23:38:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Ra+M29CjHPnhIpuNAQgZQpc3ckx3Pxcs/DfQWA9zI+8=;
-        b=xSIYa2za/Qrh1kzrTrcFaipMEucxZqWSY1/sGPKm7xetj4GzRFRHUlgd8Pxv7F7Amp
-         KVvw7M8fgQQK/Tz4HDQwlT2Kp9qz4Phw/SIyj0xXHUpSlF0azECO0qc1CRYOuhyt/Ueq
-         WMPzRKD3GSXgHqMlBbR8s3D8oIw/zCmV/f62nKfE3CKXSjDjR0IEHmMfmPxbkmrpZRCu
-         TfnSiEuIvqx/UKMzfhTm8kr6ev6jphuZlw6l0dkS2ouHS3uZ6dLgVgA5uZvOaiYNfTX6
-         7Naf2BDDJRtpuhJInlOKV9mO9uhL0+kTu+nQfF+TRLnXk75rqNEvH3L+ZI0mJwlNQ4xE
-         Esmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Ra+M29CjHPnhIpuNAQgZQpc3ckx3Pxcs/DfQWA9zI+8=;
-        b=Z7uWrbQklJAvYnLRcHiMAlwJF5I7Mhzq7LKdq2j4R8BtHuQ0uSADpnNJaEIlBXJWpY
-         MgTx8JBJ6GEZ4ZcR8As33omC4kZ2xYn31I0LNjF/pkND+7HM1SUHepkTlWLimyxpzWz2
-         407pJk6TFNLit3UrwJEuaSjH9wHYY6f3dhy4ulV+qV67sJGtU6y6DN3ZimPV3k0889A8
-         8r12XFHq1kHIGieqEDgqFHx1QNtZEsxjZJ8/9E0Iq8cogB6wn1GoRCB3wFRuoTZBEgBi
-         uwcLP015ik0NpA+8kPK4itwqLEHhyUM6bu00nEDtzkae01xTGFw0mMr4fyTEGzEnzD1F
-         FoOQ==
-X-Gm-Message-State: APjAAAW/0HpytPlpIDOMli/+BcV1SdGHyxuUaZ1DIvOCbho0o0gh+lun
-        dLg5Nheo9Bvf+ZKFPU2G/k9Okg==
-X-Google-Smtp-Source: APXvYqx9fOOdunfmR6iWLBjPSh9B++/NSNDOBPnAw9CgNVgoSc4uWoD7y74CF/YZ2CXXmZLxUHsT9g==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr21442762wrc.175.1581925138814;
-        Sun, 16 Feb 2020 23:38:58 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id c15sm19842783wrt.1.2020.02.16.23.38.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 23:38:58 -0800 (PST)
-References: <20200216202101.2810-1-linux.amoon@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: amlogic: odroid-n2: set usb-pwr-en regulator always on
-In-reply-to: <20200216202101.2810-1-linux.amoon@gmail.com>
-Date:   Mon, 17 Feb 2020 08:38:57 +0100
-Message-ID: <1jpnedzmr2.fsf@starbuckisacylon.baylibre.com>
+        Mon, 17 Feb 2020 02:39:50 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:44941 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgBQHju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:39:50 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id db3c7991;
+        Mon, 17 Feb 2020 07:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :in-reply-to:references:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=5qFoYGABoqiUw27DDar5aMuqQ9k=; b=iNgHSC
+        bW+WUc4LtYyc9vK9HkrE99PNnHzmB04Dq8L+aqbpbkN2JphcTIvhS5OUlMta47Rz
+        M+ASa4Qyug6D/xvcf3JnDDiGp+dijBBkfZwyLBKhI7DqWzJxzSIMHA1TwMAoZBlg
+        pl0CgD+0h9iQDB0OTPu7XFC9A5AMoQnCKFlkFKG4PBOURxWLUr13eWVoRcoXh06z
+        zTRuednI0mNuTyLSi2EZMZy9wNithBzJ+nlqeodxMajxY1r3eEVksZgx+CPVoNvQ
+        L709DNy5/cIs+48oSYBI6u2Hjg8yzmNpHHH0lGYWNP++MhHjWsQGbSlV1nSxugcy
+        5ZG8O4GLB0Nx6Azw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c393d1c5 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 17 Feb 2020 07:37:19 +0000 (UTC)
+Received: by mail-oi1-f179.google.com with SMTP id c16so15842987oic.3;
+        Sun, 16 Feb 2020 23:39:47 -0800 (PST)
+X-Gm-Message-State: APjAAAVdh5Ro/P4TRMJV1SIXrL++1tvTeKhpUmKq/O9lXFLYQfG0mKTn
+        FZIaqG5TtbMwMSiePfNzKmIiu5Odk3GqIWhXGkQ=
+X-Google-Smtp-Source: APXvYqxLgJtUBmhY1BDRIeQurZQnFngB1coYo+s31QSe1Eer5HNMVsPo+veYVDCGNWwalrM49oKMi//xq4G0/vBuVLI=
+X-Received: by 2002:aca:815:: with SMTP id 21mr9444281oii.52.1581925186693;
+ Sun, 16 Feb 2020 23:39:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Received: by 2002:a4a:dd10:0:0:0:0:0 with HTTP; Sun, 16 Feb 2020 23:39:45
+ -0800 (PST)
+In-Reply-To: <20200217032458.kwatitz3pvxeb25w@gondor.apana.org.au>
+References: <20200206163844.GA432041@zx2c4.com> <20200217032458.kwatitz3pvxeb25w@gondor.apana.org.au>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 17 Feb 2020 08:39:45 +0100
+X-Gmail-Original-Message-ID: <CAHmME9q+YYia0H3upW7ikwSii_XegNNSBkVxP-1mxaHyEVmBxA@mail.gmail.com>
+Message-ID: <CAHmME9q+YYia0H3upW7ikwSii_XegNNSBkVxP-1mxaHyEVmBxA@mail.gmail.com>
+Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     eric.dumazet@gmail.com, cai@lca.pw, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Sun 16 Feb 2020 at 21:21, Anand Moon <linux.amoon@gmail.com> wrote:
-
-> usb-pwr-en regulator is getting disable after booting, setting
-> regulator-alway-on help enable the regulator after booting.
-
-This explains what your patch does, not why it needs to be done.
-Why does this regulator need be on at all time ? What device needs it
-and cannot claim it properly ?
-
+On 2/17/20, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>> Hi Eric,
+>>
+>> On Tue, Feb 04, 2020 at 01:40:29PM -0500, Qian Cai wrote:
+>>> -     list->qlen--;
+>>> +     WRITE_ONCE(list->qlen, list->qlen - 1);
+>>
+>> Sorry I'm a bit late to the party here, but this immediately jumped out.
+>> This generates worse code with a bigger race in some sense:
+>>
+>> list->qlen-- is:
+>>
+>>   0:   83 6f 10 01             subl   $0x1,0x10(%rdi)
+>>
+>> whereas WRITE_ONCE(list->qlen, list->qlen - 1) is:
+>>
+>>   0:   8b 47 10                mov    0x10(%rdi),%eax
+>>   3:   83 e8 01                sub    $0x1,%eax
+>>   6:   89 47 10                mov    %eax,0x10(%rdi)
+>>
+>> Are you sure that's what we want?
 >
-> [   31.766097] USB_PWR_EN: disabling
+> Fixing these KCSAN warnings is actively making the kernel worse.
 >
-> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Patch generated on top of my earier patch.
-> [0] https://patchwork.kernel.org/patch/11384531/
-> [1] https://patchwork.kernel.org/patch/11384533/
+> Why are we still doing this?
 >
-> Before
-> [root@alarm ~]# cat /sys/kernel/debug/regulator/regulator_summary | grep USB
->        USB_PWR_EN                 0    1      0 unknown  5000mV     0mA  5000mV  5000mV
-> After
-> [root@alarm ~]# cat /sys/kernel/debug/regulator/regulator_summary | grep USB
->        USB_PWR_EN                 1    1      0 unknown  5000mV     0mA  5000mV  5000mV
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 23eddff85fe5..938a9e15adfc 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -177,6 +177,7 @@ usb_pwr_en: regulator-usb_pwr_en {
->  		regulator-min-microvolt = <5000000>;
->  		regulator-max-microvolt = <5000000>;
->  		vin-supply = <&vcc_5v>;
-> +		regulator-always-on;
->  
->  		/* Connected to the microUSB port power enable */
->  		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-
+Not necessarily a big fan of this either, but just for the record here
+in case it helps, while you might complain about instruction size
+blowing up a bit, cycle-wise these wind up being about the same
+anyway. On x86, one instruction != one cycle.
