@@ -2,95 +2,110 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31128C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C16C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E69F208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1C920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlCRJscS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgBQO43 (ORCPT
+        id S1729324AbgBQO4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:56:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41344 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgBQO43 (ORCPT
+        Mon, 17 Feb 2020 09:56:41 -0500
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:38831 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbgBQO4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:56:29 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4B0BE28C227;
-        Mon, 17 Feb 2020 14:56:26 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 15:56:23 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
-        bbrezillon@kernel.org, gregkh@linuxfoundation.org,
-        wsa@the-dreams.de, arnd@arndb.de, broonie@kernel.org
-Subject: Re: [RFC v2 1/4] i3c: master: export i3c_masterdev_type
-Message-ID: <20200217155623.13a94802@collabora.com>
-In-Reply-To: <7c742fba6c488b29f6fb15a5b910e799d50c5051.1580299067.git.vitor.soares@synopsys.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
-        <7c742fba6c488b29f6fb15a5b910e799d50c5051.1580299067.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 17 Feb 2020 09:56:41 -0500
+Received: by mail-lf1-f50.google.com with SMTP id r14so12082098lfm.5;
+        Mon, 17 Feb 2020 06:56:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=deWPm8yN9kcmmTRRZQ/czJmxbT7YJ6dCNZrwugRjTHM=;
+        b=dlCRJscS/I7Zjgd5XJfOSQ/pObZ4jf3//Faf5uosezUK3bOO0DGDi41z3BirhmaeHi
+         dPd9KPqWcXbveMKYkIpbcraqHsrY42cuusdCP4TjuKycUna4lFoCPYPHHcD9XSuYRgKv
+         aQyNarFffbvKa1rj3clZd7VhnSn57hbBEPjoJ1laXPtxDB1hkXaMxtFAgkFQSmWR9JB3
+         /wCsUklaZzTpEmyQSK3Akfk56CK25k/muMynmhUXCZgvfKhvmSjg/ud4M5qa31h5cpy/
+         fSNE3mNLNWjw3mQqucj7Djdz1l+aNodC5xPMO4WFEgtpWNKJtHqgS5iY4t304gIXr/3J
+         XCrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=deWPm8yN9kcmmTRRZQ/czJmxbT7YJ6dCNZrwugRjTHM=;
+        b=hHXYxSOz/uhOo8mnM8Chj5EIEEdMiIgV7wG6fGEYcHnEcSpCkpOrjQlFkt2eHUtOMn
+         zBqG+NKWi+7I+ybxYPGG6s5YPZHcBRgKkW4j6DL97DHp27Wth5gMMrFydkbcFG2coHym
+         q5+z3hzXpryRmo5csFFybSDyItpzQ9bk11PV9FO0Q6qidZRLlDc28BsZ7dYmhoccXSHU
+         tIh4VXVXwsaWVcLxhjuBfsLU27otl45/js0weYJMuEyrw68uFBewkQdzfdz7Rydtt4tY
+         SVPvv1BPaPmjHUsT3+5sxsrRuW6B1i0oG8b5KeNFqg3k32Dd8/d52HPmwtCrdz/rqNmj
+         8Q2Q==
+X-Gm-Message-State: APjAAAWeg1r35IpIz+tvG7fCraYbPMoOJdi6vdlcEYhRD087RulosRXq
+        vtlUx0us1I/mCoNQeO2tUrkTB2Xa
+X-Google-Smtp-Source: APXvYqyXuS84xRTVNL121HCAGGjTInIwaY98cdty84WeBg4/IE+anNryNYLokxK8DyI86f5Dyir10A==
+X-Received: by 2002:ac2:5388:: with SMTP id g8mr8123002lfh.43.1581951398567;
+        Mon, 17 Feb 2020 06:56:38 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p15sm470882lfo.88.2020.02.17.06.56.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 06:56:37 -0800 (PST)
+Subject: Re: [PATCH v8 18/19] dmaengine: tegra-apb: Remove unused function
+ argument
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200209163356.6439-1-digetx@gmail.com>
+ <20200209163356.6439-19-digetx@gmail.com>
+ <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
+ <392ccaf4-3cc9-e8af-130c-fa068cc56527@gmail.com>
+ <f9ea6be9-71d6-0119-eade-fe06bbbcbd5b@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1d10367e-4e1c-3d25-2e80-e601b34a01d7@gmail.com>
+Date:   Mon, 17 Feb 2020 17:56:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f9ea6be9-71d6-0119-eade-fe06bbbcbd5b@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 13:17:32 +0100
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-
-> Exporte i3c_masterdev_type so i3cdev module can verify if an i3c device
-> is a master.
+17.02.2020 14:15, Jon Hunter пишет:
 > 
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> ---
->  drivers/i3c/internals.h | 1 +
->  drivers/i3c/master.c    | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+> On 14/02/2020 16:54, Dmitry Osipenko wrote:
+>> 14.02.2020 17:16, Jon Hunter пишет:
+>> ...
+>>> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+>>>
+>>> Thanks!
+>>> Jon
+>>>
+>>
+>> Jon, thank you very much!
+>>
+>> In the patchwork I see that you acked all the patches, but my Gmail
+>> missed 2 of 4 emails, maybe the missing emails will arrive a day later :)
 > 
-> diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
-> index 86b7b44..bc062e8 100644
-> --- a/drivers/i3c/internals.h
-> +++ b/drivers/i3c/internals.h
-> @@ -11,6 +11,7 @@
->  #include <linux/i3c/master.h>
->  
->  extern struct bus_type i3c_bus_type;
-> +extern const struct device_type i3c_masterdev_type;
->  
->  void i3c_bus_normaluse_lock(struct i3c_bus *bus);
->  void i3c_bus_normaluse_unlock(struct i3c_bus *bus);
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index 7f8f896..8a0ba34 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -523,9 +523,10 @@ static void i3c_masterdev_release(struct device *dev)
->  	of_node_put(dev->of_node);
->  }
->  
-> -static const struct device_type i3c_masterdev_type = {
-> +const struct device_type i3c_masterdev_type = {
->  	.groups	= i3c_masterdev_groups,
->  };
-> +EXPORT_SYMBOL_GPL(i3c_masterdev_type);
+> Yes all should be ACK'ed now. I did receive an email from our mail
+> server saying that there was an issue and the message was delayed. So
+> not sure if you ever got it.
 
-No need to export the symbol, removing the static and adding the
-definition to internal.h should work just fine (i3c.o contains
-both master.o and device.o).
-
->  
->  static int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
->  			    unsigned long max_i2c_scl_rate)
-
+The emails arrived a day later, just like it was predicted :) Thank you
+very much for reviewing the patches!
