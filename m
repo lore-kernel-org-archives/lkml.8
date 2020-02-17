@@ -2,155 +2,143 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBABFC7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C457BC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9552067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9338220725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:28:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYq/KBaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgBQI0v (ORCPT
+        id S1728160AbgBQI2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:26:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52550 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgBQI0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:26:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72D1AAC92;
-        Mon, 17 Feb 2020 08:26:48 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] Dual licence some files in GPL-2.0 and MIT
-To:     Emmanuel Vadot <manu@FreeBSD.org>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, jani.nikula@intel.com,
-        efremov@linux.com, noralf@tronnes.org, sam@ravnborg.org,
-        chris@chris-wilson.co.uk, kraxel@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200215180911.18299-1-manu@FreeBSD.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <48540535-6a17-72a7-d00f-954dbc8d5468@suse.de>
-Date:   Mon, 17 Feb 2020 09:26:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 03:28:53 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45048 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgBQI2x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:28:53 -0500
+Received: by mail-wr1-f67.google.com with SMTP id m16so18468410wrx.11;
+        Mon, 17 Feb 2020 00:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9rFsequpH76DAtQ1WbcvoIpLURMUTLhX5O9SDTxFjLA=;
+        b=FYq/KBaafOhX8b06HqeyN/r4s8wMr8T0UwZY/auZpH6NifkNb6dwE6h4HF/EYb2jBr
+         l/splI9kXPAKOUNX037/nvVT4aDF/Bco7Ujnm5Z98GOvxFEn6LYM6oREY6L2YftEgY45
+         /JsUAY2FB7Fh+ATSEQcWK6b5wpQ9S77dMZJNVfaLjSeTrMJRDeYXaOwy8y8z8Oh7XNg6
+         xOBmzaYE62PnC2q87xUlW/Z2ucFz7uwojcRMMM3ITtD8bFeZpdKdj+7iZqvCfiuZH0Nm
+         P1iPDcwnnUB5TaYvcKKaDs5fClnjdqngFb9Dp21OjA4uh6TSUykta4YxeLTxHHiYeP+K
+         mqaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9rFsequpH76DAtQ1WbcvoIpLURMUTLhX5O9SDTxFjLA=;
+        b=F/wU4T0Pv7bIfop0dnA/TXSoHEQmAMk/W1TKpQpQhD2DNMmyHYdn5pMWbdzUIa3s56
+         Bt7Rk49nxSZQfXrfvwctEUiiCs6bIn/CNKSqiUh14JbaheELR8jyd8r3smtrOXc73cZN
+         g7BPllaKmpp91Q6RgKO/owSVQk1u14lebL/zeKMPktPJy/HfYNWEccCO9RvUQRrgprQ9
+         ShELKrcu64XsYSd8ISlLhhuirPtm6Evd98dWIwpOdd3WssHt2nDS1AjOXSNMbwpjKnYK
+         OpMZRncuAyNhAzwV3vHiQG7/XvI40nWBR+BvKBmxEPsu2K4p4cTVzehxlR4gkBNZSbqg
+         bwzQ==
+X-Gm-Message-State: APjAAAWF8/GlJ3G66YCC5UQEGI8SYCOZ5aAI7WDrIC/rE46YgntfEgLs
+        P0Y42HMf+RX9PtjihFlS2ik=
+X-Google-Smtp-Source: APXvYqzKm22rvogCW4ws794pTbFLC0vfZGvHv955egTGrcRBJIn53cERFXAfAMvwAVTQmuDXkMXOoA==
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr19754614wrl.320.1581928130230;
+        Mon, 17 Feb 2020 00:28:50 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id g17sm19942472wru.13.2020.02.17.00.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 00:28:49 -0800 (PST)
+Date:   Mon, 17 Feb 2020 09:28:48 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org, jonathanh@nvidia.com,
+        kishon@ti.com, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, nkristam@nvidia.com
+Subject: Re: [PATCH v6 2/5] phy: tegra: xusb: Add Tegra194 support
+Message-ID: <20200217082848.GA1339021@ulmo>
+References: <20200212061133.11665-1-jckuo@nvidia.com>
+ <20200212061133.11665-3-jckuo@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200215180911.18299-1-manu@FreeBSD.org>
 Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="AGLP8GzyM8YJrGNqifHoieaqtrt81ZEGD"
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
+In-Reply-To: <20200212061133.11665-3-jckuo@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---AGLP8GzyM8YJrGNqifHoieaqtrt81ZEGD
-Content-Type: multipart/mixed; boundary="999aCkxFeB5Pzqt1gH7s7mGGbVchJfzyp";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Emmanuel Vadot <manu@FreeBSD.org>, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
- jani.nikula@intel.com, efremov@linux.com, noralf@tronnes.org,
- sam@ravnborg.org, chris@chris-wilson.co.uk, kraxel@redhat.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Message-ID: <48540535-6a17-72a7-d00f-954dbc8d5468@suse.de>
-Subject: Re: [PATCH v2 0/2] Dual licence some files in GPL-2.0 and MIT
-References: <20200215180911.18299-1-manu@FreeBSD.org>
-In-Reply-To: <20200215180911.18299-1-manu@FreeBSD.org>
 
---999aCkxFeB5Pzqt1gH7s7mGGbVchJfzyp
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-Am 15.02.20 um 19:09 schrieb Emmanuel Vadot:
-> Hello all,
+On Wed, Feb 12, 2020 at 02:11:30PM +0800, JC Kuo wrote:
+> Add support for the XUSB pad controller found on Tegra194 SoCs. It is
+> mostly similar to the same IP found on Tegra186, but the number of
+> pads exposed differs, as do the programming sequences. Because most of
+> the Tegra194 XUSB PADCTL registers definition and programming sequence
+> are the same as Tegra186, Tegra194 XUSB PADCTL can share the same
+> driver, xusb-tegra186.c, with Tegra186 XUSB PADCTL.
 >=20
-> We had a discussion a while back with Noralf where he said that he woul=
-dn't
-> mind dual licence his work under GPL-2 and MIT.
-> Those files are a problem with BSDs as we cannot include them.
-> For drm_client.c the main contributors are Noralf Tr=C3=B8nnes and Thom=
-as
-> Zimmermann, the other commits are just catch ups from changes elsewhere=
-
-> (return values, struct member names, function renames etc ...).
-> For drm_format_helper the main contributors are Noralf Tr=C3=B8nnes and=
-
-> Gerd Hoffmann. Same comment as for drm_client.c for the other commits.
+> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+> is possible for some platforms have long signal trace that could not
+> provide sufficient electrical environment for Gen 2 speed. This patch
+> adds a "maximum-speed" property to usb3 ports which can be used to
+> specify the maximum supported speed for any particular USB 3.1 port.
+> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
+> property should carry "super-speed".
 >=20
-> Emmanuel Vadot (2):
->   drm/client: Dual licence the file in GPL-2 and MIT
->   drm/format_helper: Dual licence the file in GPL 2 and MIT
+> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+> ---
+> Changes in v6: none
+> Changes in v5:
+> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
+> Changes in v4: none
+> Changes in v3: none
+> Changes in v2:
+> - removed unnecessary #if/#endif pairs
+> - introduce new soc->supports_gen2 flag which indicate whether or not
+>   a soc supports USB 3.1 Gen 2 speed
 >=20
->  drivers/gpu/drm/drm_client.c        | 2 +-
->  drivers/gpu/drm/drm_format_helper.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->=20
+>  drivers/phy/tegra/Makefile        |  1 +
+>  drivers/phy/tegra/xusb-tegra186.c | 73 +++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.c          | 17 +++++++
+>  drivers/phy/tegra/xusb.h          |  5 +++
+>  4 files changed, 96 insertions(+)
 
-For the patches I contributed:
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-  Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-Best regards
-Thomas
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---999aCkxFeB5Pzqt1gH7s7mGGbVchJfzyp--
-
---AGLP8GzyM8YJrGNqifHoieaqtrt81ZEGD
+--sdtB3X0nJg68CQEu
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5KTkYACgkQaA3BHVML
-eiOHvQf/UIyF+K7nNPftG1l0eDfeIEwHnu2VsRRcSYIc0TYk/OBjIX6prRpftQk0
-y9XVnznnI67ZUpWLuRKoVm7miPyJ73Ss8ELLMZUxF4B4kc+avteThWCqtY4CrpCk
-k4ipU1YX4vzq3nlAF3/wA7W5iCB+m0/5Q6jHaVXbqP2QUDOnCJr7bOS9GLq+UOz1
-YYa+M6F51YCU+jzOZM0j5w8wv3uf+U+HZk+XuyqxBdhWSdiMCJ2Z4Cot2j+B0Drh
-tvBHk1WaxP+GMYEKuupHO0qeiVpPo/3WhSjZXe1oBBYMzRyL3kUDy/wfVxUyTR7l
-Onu7KmkG3cKfxVdrjXyWGmz8r0L3XA==
-=ShEd
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5KTrwACgkQ3SOs138+
+s6GXxA/8D37/XlTzbjLKco4jPyFn81sBehbABl9f415ypjEivpMsR9KaXQSd1G+b
+TGftxQLo/ZCqSEbbPmLRqn+v0XS/Qv/Q0Bgyam7JzU5xPpZlVB4p7B/dGGySQCEJ
+HbHOhB5KkKjqfhyjwaM0CCGOqieynpgWMd3Ij3hLIAGCGVuwt4hUs7E3VVHBwIbr
+VAjULUBCn4oIBzUsF+LEe6WiCPzy9/+9YRyK2O1UR9QnfFNInqHbDAhOWsifAkm8
+L/FdzT5n514MZwGB+99AJ3sC36BNUYJ6IeOvmEAxIxqHDoISzE/+EvUPDgGzZLnS
+6qRkohCb9Hj43h2hrCLLoYEr0oHmDULGRIqR6O2yJXLsitU94JcdefH1zoNqyO9X
+EbxQysIyfN5BVvonrESuVZfqGy7QgaZj5TzIskGRWYWXaBgPRnv5zBP5i8f2D9Rf
+Vq9MX72/9O6v42O3pQHj9A6BLFICX/Aa+l1PQhjWTSolCbHG54vnJfa+c6gsfa1O
+2200pnRcv4qhq0UNYdm36M2GdTmN2eCvSxcv/grui5qHN/PmXSlE8m265Dg0Nir1
+jx0a8nuanyZ52p9N0YVCPGu2Dndc7yNgQUwg8t3iWAtRTI6u0tl5DR8Wgt352rUA
+dAbewl7akPXh9Hew7SsK9Jgv8E9VLuoCtNIuSHPQIcXSrpZaRt4=
+=NIJH
 -----END PGP SIGNATURE-----
 
---AGLP8GzyM8YJrGNqifHoieaqtrt81ZEGD--
+--sdtB3X0nJg68CQEu--
