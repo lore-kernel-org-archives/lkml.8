@@ -4,114 +4,446 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5121EC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA4DC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B0620836
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E0820836
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PxgkLckJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oi+pwR3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgBQLf0 (ORCPT
+        id S1728728AbgBQLgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:35:26 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:29078 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728312AbgBQLfZ (ORCPT
+        Mon, 17 Feb 2020 06:36:38 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43773 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbgBQLgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:35:25 -0500
-X-UUID: 3d255e9f271344ebb1ffecef37e7560d-20200217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=eP5l76kC+wYQ1SgKc3IwEHH0X8lfLQiaEbwRojJdv0w=;
-        b=PxgkLckJECq3POl9lr7b11FiX6J7VBJhpW9lzfhfyaeC8bClzLDomAHJJNbS0AGFXgqS3lT7bRVr/0XoIUCMxYVG6uTnEwRgFURys9PNNNS1h0ZfwzfIKjaNCvsn6+sMuCkpOKLdJdA5NuyTsBr1JQgK52yKnRv5goDgA1i82tY=;
-X-UUID: 3d255e9f271344ebb1ffecef37e7560d-20200217
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2131103376; Mon, 17 Feb 2020 19:35:20 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs05n1.mediatek.inc
- (172.21.101.15) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 17 Feb
- 2020 19:34:24 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Feb 2020 19:35:55 +0800
-Message-ID: <1581939298.4784.12.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] iommu/mediatek: add support for MT8167
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Fabien Parent <fparent@baylibre.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <joro@8bytes.org>, <robh+dt@kernel.org>,
-        CK Hu <ck.hu@mediatek.com>
-Date:   Mon, 17 Feb 2020 19:34:58 +0800
-In-Reply-To: <1581902146.28283.0.camel@mtksdaap41>
-References: <20200103162632.109553-1-fparent@baylibre.com>
-         <20200103162632.109553-2-fparent@baylibre.com>
-         <1581902146.28283.0.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 17 Feb 2020 06:36:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r11so19248541wrq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:36:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=72MI3GiyxPjvpv3G+2OlwOS91R28pX2njBAR3t0C4Ng=;
+        b=Oi+pwR3y+DHoifHtuvyRPfFMPoliChqgo0G7P6/wWX1c/xWOMB4m+LESfecbT6r1et
+         850TGdR2Ee/JgMNkTvNjVfdOztk/5+gctJemx4E7VcdcWEztPTNj29uniwAWsztwIl+x
+         zH4iJ9qo17LKRklgMHHZnRMD6YIamkcheld5tsYVlXzahk4iNcQ9Qf7QTgQQADCtr+eD
+         RxT6g6PlfhiSS7o6io+dE95s2p/hQAxPpqlkrW14LZpyE6hyyrpUhW51204hNkDglgQ8
+         3xVT2JZ3FyXt93H7n1Hr6tJ2qE3dZWOGqQ9Q5p/6Dq/OOg/DmbAeXCvUomM1aysfkx68
+         65dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=72MI3GiyxPjvpv3G+2OlwOS91R28pX2njBAR3t0C4Ng=;
+        b=NAMRGmoWkSzqfKrjH1aJHGzGjmY/oJIQ3rphcd5WR4sFY+mSDUWX2+frFnyZY/XTX0
+         frxSDoXycIY8/L2dsDU5rtCo+Dhyu+Dr5+EspLQTUxJ+G87CC156CAvfbcpe+rHYD3pD
+         v5DN6nUjNdd2+OC1aVEiIlbu3TxSYTsmPPvK0SiFSMQGjXxGIZkFXRh5xkjgW+xZfXTq
+         ea1WfWzv5q1fdEGMvgDu+xwSiFw5F0AvW1tmIgklAu0cloh2EYv+eOvfVn/5KTiSD/z5
+         oahQV5V0/p7z3R17YwrpGuBUvlcBTOPXr/Cy9ZVNAlOfFtC6OipNqxaC8OWbF2ZbsCup
+         ENNQ==
+X-Gm-Message-State: APjAAAWysk/3ZHtoug5w8TIuuRm63eBnxLdYlVAoAPy5bLzVMaK3Uc0v
+        8yrOsEL2q4OuAxRfkrceBmPz4g==
+X-Google-Smtp-Source: APXvYqxIYJjbN/FSJYH53p8e9ZTc5O4/wnBxYiU5HU0NRLGAshRcnKknxRkW5TQu44o4LkHOgq19yQ==
+X-Received: by 2002:a5d:65c5:: with SMTP id e5mr21438827wrw.311.1581939395408;
+        Mon, 17 Feb 2020 03:36:35 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r1sm598056wrx.11.2020.02.17.03.36.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Feb 2020 03:36:34 -0800 (PST)
+Subject: Re: [RFC v3 1/9] nvmem: add driver for JZ4780 efuse
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+References: <cover.1581880851.git.hns@goldelico.com>
+ <40134efb901b83bb1b6bc64af0b312756459c31c.1581880851.git.hns@goldelico.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <49fa7c7a-59c2-688e-6c6d-cfdd8bc3fd32@linaro.org>
+Date:   Mon, 17 Feb 2020 11:36:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <40134efb901b83bb1b6bc64af0b312756459c31c.1581880851.git.hns@goldelico.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmFiaWVuLA0KDQpUaGFua3MgdmVyeSBtdWNoIGZvciB5b3VyIHBhdGNoLg0KDQpPbiBNb24s
-IDIwMjAtMDItMTcgYXQgMDk6MTUgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiArWW9uZy5XdS4NCj4g
-DQo+IE9uIEZyaSwgMjAyMC0wMS0wMyBhdCAxNzoyNiArMDEwMCwgRmFiaWVuIFBhcmVudCB3cm90
-ZToNCj4gPiBBZGQgc3VwcG9ydCBmb3IgdGhlIElPTU1VIG9uIE1UODE2Nw0KPiA+IA0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEZhYmllbiBQYXJlbnQgPGZwYXJlbnRAYmF5bGlicmUuY29tPg0KPiA+IC0t
-LQ0KPiA+ICBkcml2ZXJzL2lvbW11L210a19pb21tdS5jIHwgMTEgKysrKysrKysrKy0NCj4gPiAg
-ZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICAxICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAx
-MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+ID4g
-aW5kZXggNmZjMWY1ZWNmOTFlLi41ZmM2MTc4YTgyZGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
-cy9pb21tdS9tdGtfaW9tbXUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMN
-Cj4gPiBAQCAtNTY5LDcgKzU2OSw4IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X2h3X2luaXQoY29u
-c3Qgc3RydWN0IG10a19pb21tdV9kYXRhICpkYXRhKQ0KPiA+ICAJCUZfSU5UX1BSRVRFVENIX1RS
-QU5TQVRJT05fRklGT19GQVVMVDsNCj4gPiAgCXdyaXRlbF9yZWxheGVkKHJlZ3ZhbCwgZGF0YS0+
-YmFzZSArIFJFR19NTVVfSU5UX01BSU5fQ09OVFJPTCk7DQo+ID4gIA0KPiA+IC0JaWYgKGRhdGEt
-PnBsYXRfZGF0YS0+bTR1X3BsYXQgPT0gTTRVX01UODE3MykNCj4gPiArCWlmIChkYXRhLT5wbGF0
-X2RhdGEtPm00dV9wbGF0ID09IE00VV9NVDgxNzMgfHwNCj4gPiArCSAgICBkYXRhLT5wbGF0X2Rh
-dGEtPm00dV9wbGF0ID09IE00VV9NVDgxNjcpDQoNCkkgZGlkbid0IGtub3cgbXQ4MTY3IHdpbGwg
-ZG8gdXBzdHJlYW0uIEluIG15IG9yaWdpbmFsIHRob3VnaHQsIHRoZXJlIGlzDQpvbmx5IG10ODE3
-MyB1c2UgdGhpcyBzZXR0aW5nIGFuZCB0aGUgbGF0ZXIgU29DIHdvbid0IHVzZSB0aGlzLCBTbyBJ
-IHVzZWQNCnRoZSAibTR1X3BsYXQiIGRpcmVjdGx5IGhlcmUuDQoNCklmIHdlIGFsc28gbmVlZCBz
-dXBwb3J0IG10ODE2NywgdGhlbiBDSydzIHN1Z2dlc3Rpb24gaXMgcmVhc29uYWJsZS4gd2UNCmNv
-dWxkIGFkZCBhIG5ldyB2YXJpYWJsZSBsaWtlICJsZWdhY3lfaXZycF9wYWRkciIgZnJvbSBpdHMg
-cmVnaXN0ZXIgbmFtZQ0KaW4gYSBzZXBlcmF0ZWQgcGF0Y2gsIHRoZW4gc3VwcG9ydCBtdDgxNjcg
-aW4gYSBuZXcgcGF0Y2guDQoNCj4gPiAgCQlyZWd2YWwgPSAoZGF0YS0+cHJvdGVjdF9iYXNlID4+
-IDEpIHwgKGRhdGEtPmVuYWJsZV80R0IgPDwgMzEpOw0KPiA+ICAJZWxzZQ0KPiA+ICAJCXJlZ3Zh
-bCA9IGxvd2VyXzMyX2JpdHMoZGF0YS0+cHJvdGVjdF9iYXNlKSB8DQo+ID4gQEAgLTc4Miw2ICs3
-ODMsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10MjcxMl9k
-YXRhID0gew0KPiA+ICAJLmxhcmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0LCA1LCA2LCA3LCA4
-LCA5fSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11
-X3BsYXRfZGF0YSBtdDgxNjdfZGF0YSA9IHsNCj4gPiArCS5tNHVfcGxhdCAgICAgPSBNNFVfTVQ4
-MTY3LA0KPiA+ICsJLmhhc180Z2JfbW9kZSA9IHRydWUsDQo+ID4gKwkucmVzZXRfYXhpICAgID0g
-dHJ1ZSwNCj4gPiArCS5sYXJiaWRfcmVtYXAgPSB7MCwgMSwgMiwgMywgNCwgNX0sIC8qIExpbmVh
-ciBtYXBwaW5nLiAqLw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBt
-dGtfaW9tbXVfcGxhdF9kYXRhIG10ODE3M19kYXRhID0gew0KPiA+ICAJLm00dV9wbGF0ICAgICA9
-IE00VV9NVDgxNzMsDQo+ID4gIAkuaGFzXzRnYl9tb2RlID0gdHJ1ZSwNCj4gPiBAQCAtNzk4LDYg
-KzgwNiw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxODNf
-ZGF0YSA9IHsNCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10
-a19pb21tdV9vZl9pZHNbXSA9IHsNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQy
-NzEyLW00dSIsIC5kYXRhID0gJm10MjcxMl9kYXRhfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ4MTY3LW00dSIsIC5kYXRhID0gJm10ODE2N19kYXRhfSwNCj4gPiAgCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW00dSIsIC5kYXRhID0gJm10ODE3M19kYXRhfSwN
-Cj4gPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLW00dSIsIC5kYXRhID0gJm10
-ODE4M19kYXRhfSwNCj4gPiAgCXt9DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRr
-X2lvbW11LmggYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gaW5kZXggZWE5NDlhMzI0
-ZTMzLi5jYjhmZDU5NzBjZDQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9t
-bXUuaA0KPiA+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gPiBAQCAtMzAsNiAr
-MzAsNyBAQCBzdHJ1Y3QgbXRrX2lvbW11X3N1c3BlbmRfcmVnIHsNCj4gPiAgZW51bSBtdGtfaW9t
-bXVfcGxhdCB7DQo+ID4gIAlNNFVfTVQyNzAxLA0KPiA+ICAJTTRVX01UMjcxMiwNCj4gPiArCU00
-VV9NVDgxNjcsDQo+ID4gIAlNNFVfTVQ4MTczLA0KPiA+ICAJTTRVX01UODE4MywNCj4gPiAgfTsN
-Cj4gDQo+IA0KDQo=
 
+
+On 16/02/2020 19:20, H. Nikolaus Schaller wrote:
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> 
+> This patch brings support for the JZ4780 efuse. Currently it only exposes
+> a read only access to the entire 8K bits efuse memory and nvmem cells.
+> 
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> (Signed-off-by: Paul Cercueil <paul@crapouillou.net>)
+> ---
+>   drivers/nvmem/Kconfig        |  10 ++
+>   drivers/nvmem/Makefile       |   2 +
+>   drivers/nvmem/jz4780-efuse.c | 249 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 261 insertions(+)
+>   create mode 100644 drivers/nvmem/jz4780-efuse.c
+> 
+
+This patch along with 2/9 should be merged into single patch.
+Also please make sure you run checkpatch.pl before sending!
+
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 35efab1ba8d9..10f8e08f5e31 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -55,6 +55,16 @@ config NVMEM_IMX_OCOTP_SCU
+>   	  This is a driver for the SCU On-Chip OTP Controller (OCOTP)
+>   	  available on i.MX8 SoCs.
+>   
+> +config JZ4780_EFUSE
+> +	tristate "JZ4780 EFUSE Memory Support"
+> +	depends on MACH_JZ4780 || COMPILE_TEST
+
+what is that this driver depends on MACH_JZ4780 board?
+
+
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Say Y here to include support for JZ4780 efuse memory found on
+> +	  all JZ4780 SoC based devices.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called nvmem_jz4780_efuse.
+> +
+>   config NVMEM_LPC18XX_EEPROM
+>   	tristate "NXP LPC18XX EEPROM Memory Support"
+>   	depends on ARCH_LPC18XX || COMPILE_TEST
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 6b466cd1427b..65a268d17807 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -18,6 +18,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP)	+= nvmem-imx-ocotp.o
+>   nvmem-imx-ocotp-y		:= imx-ocotp.o
+>   obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)	+= nvmem-imx-ocotp-scu.o
+>   nvmem-imx-ocotp-scu-y		:= imx-ocotp-scu.o
+> +obj-$(CONFIG_JZ4780_EFUSE)		+= nvmem_jz4780_efuse.o
+> +nvmem_jz4780_efuse-y		:= jz4780-efuse.o
+>   obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+>   nvmem_lpc18xx_eeprom-y	:= lpc18xx_eeprom.o
+>   obj-$(CONFIG_NVMEM_LPC18XX_OTP)	+= nvmem_lpc18xx_otp.o
+> diff --git a/drivers/nvmem/jz4780-efuse.c b/drivers/nvmem/jz4780-efuse.c
+> new file mode 100644
+> index 000000000000..ac03e1900ef9
+> --- /dev/null
+> +++ b/drivers/nvmem/jz4780-efuse.c
+> @@ -0,0 +1,249 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * JZ4780 EFUSE Memory Support driver
+> + *
+> + * Copyright (c) 2017 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> + * Copyright (c) 2020 H. Nikolaus Schaller <hns@goldelico.com>
+> + */
+> +
+> +/*
+> + * Currently supports JZ4780 efuse which has 8K programmable bit.
+> + * Efuse is separated into seven segments as below:
+> + *
+> + * -----------------------------------------------------------------------
+> + * | 64 bit | 128 bit | 128 bit | 3520 bit | 8 bit | 2296 bit | 2048 bit |
+> + * -----------------------------------------------------------------------
+> + *
+> + * The rom itself is accessed using a 9 bit address line and an 8 word wide bus
+> + * which reads/writes based on strobes. The strobe is configured in the config
+> + * register and is based on number of cycles of the bus clock.
+> + *
+> + * Driver supports read only as the writes are done in the Factory.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+
+
+> +#include <linux/regmap.h>
+> +#include <linux/timer.h>
+?? why do we need these two headers in this patch
+
+
+> +
+> +#define JZ_EFUCTRL			(0x0)	/* Control Register */
+> +#define JZ_EFUCFG			(0x4)	/* Configure Register*/
+> +#define JZ_EFUSTATE			(0x8)	/* Status Register */
+> +#define JZ_EFUDATA(n)			(0xC + (n)*4)
+> +
+> +#define JZ_EFUSE_START_ADDR		0x200
+> +
+> +#define JZ_EFUSE_EFUCTRL_CS		BIT(30)
+> +#define JZ_EFUSE_EFUCTRL_ADDR_MASK	0x1FF
+> +#define JZ_EFUSE_EFUCTRL_ADDR_SHIFT	21
+> +#define JZ_EFUSE_EFUCTRL_LEN_MASK	0x1F
+> +#define JZ_EFUSE_EFUCTRL_LEN_SHIFT	16
+> +#define JZ_EFUSE_EFUCTRL_PG_EN		BIT(15)
+> +#define JZ_EFUSE_EFUCTRL_WR_EN		BIT(1)
+> +#define JZ_EFUSE_EFUCTRL_RD_EN		BIT(0)
+> +
+> +#define JZ_EFUSE_EFUCFG_INT_EN		BIT(31)
+> +#define JZ_EFUSE_EFUCFG_RD_ADJ_MASK	0xF
+
+consider using GENMASK for these masks here.
+
+> +#define JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT	20
+> +#define JZ_EFUSE_EFUCFG_RD_STR_MASK	0xF
+> +#define JZ_EFUSE_EFUCFG_RD_STR_SHIFT	16
+> +#define JZ_EFUSE_EFUCFG_WR_ADJ_MASK	0xF
+> +#define JZ_EFUSE_EFUCFG_WR_ADJ_SHIFT	12
+> +#define JZ_EFUSE_EFUCFG_WR_STR_MASK	0xFFF
+> +#define JZ_EFUSE_EFUCFG_WR_STR_SHIFT	0
+> +
+> +#define JZ_EFUSE_EFUSTATE_WR_DONE	BIT(1)
+> +#define JZ_EFUSE_EFUSTATE_RD_DONE	BIT(0)
+> +
+> +struct jz4780_efuse {
+> +	struct device *dev;
+> +	void __iomem *iomem;
+> +	struct clk *clk;
+> +	unsigned int rd_adj;
+> +	unsigned int rd_strobe;
+> +};
+> +
+> +/* We read 32 byte chunks to avoid complexity in the driver. */
+> +static int jz4780_efuse_read_32bytes(struct jz4780_efuse *efuse, char *buf,
+> +		unsigned int addr)
+> +{
+> +	unsigned int tmp = 0;
+> +	int i = 0;
+
+unnecessary initialization of both variables.
+
+> +	int timeout = 1000;
+> +	int size = 32;
+
+better to #define this STRIDE/CHUNK size. this driver seems to use this 
+value in multiple places.
+
+> +
+> +	/* 1. Set config register */
+> +	tmp = readl(efuse->iomem + JZ_EFUCFG);
+> +	tmp &= ~((JZ_EFUSE_EFUCFG_RD_ADJ_MASK << JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT)
+> +	| (JZ_EFUSE_EFUCFG_RD_STR_MASK << JZ_EFUSE_EFUCFG_RD_STR_SHIFT));
+> +	tmp |= (efuse->rd_adj << JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT)
+> +	| (efuse->rd_strobe << JZ_EFUSE_EFUCFG_RD_STR_SHIFT);
+
+very odd indenting.
+
+> +	writel(tmp, efuse->iomem + JZ_EFUCFG);
+> +
+> +	/*
+> +	 * 2. Set control register to indicate what to read data address,
+> +	 * read data numbers and read enable.
+> +	 */
+> +	tmp = readl(efuse->iomem + JZ_EFUCTRL);
+> +	tmp &= ~(JZ_EFUSE_EFUCFG_RD_STR_SHIFT
+> +		| (JZ_EFUSE_EFUCTRL_ADDR_MASK << JZ_EFUSE_EFUCTRL_ADDR_SHIFT)
+> +		| JZ_EFUSE_EFUCTRL_PG_EN | JZ_EFUSE_EFUCTRL_WR_EN
+> +		| JZ_EFUSE_EFUCTRL_WR_EN);
+> +
+> +	/* Need to select CS bit if address accesses upper 4Kbits memory */
+> +	if (addr >= (JZ_EFUSE_START_ADDR + 512))
+> +		tmp |= JZ_EFUSE_EFUCTRL_CS;
+> +
+> +	tmp |= (addr << JZ_EFUSE_EFUCTRL_ADDR_SHIFT)
+> +		| ((size - 1) << JZ_EFUSE_EFUCTRL_LEN_SHIFT)
+> +		| JZ_EFUSE_EFUCTRL_RD_EN;
+> +	writel(tmp, efuse->iomem + JZ_EFUCTRL);
+> +
+> +	/*
+> +	 * 3. Wait status register RD_DONE set to 1 or EFUSE interrupted,
+> +	 * software can read EFUSE data buffer 0 - 8 registers.
+> +	 */
+> +	do {
+> +		tmp = readl(efuse->iomem + JZ_EFUSTATE);
+> +		usleep_range(1000, 2000);
+> +		if (timeout--)
+> +			break;
+> +	} while (!(tmp & JZ_EFUSE_EFUSTATE_RD_DONE));
+> +
+> +	if (timeout <= 0) {
+> +		dev_err(efuse->dev, "Timed out while reading\n");
+> +		return -EAGAIN;
+> +	}
+> +
+> +	for (i = 0; i < (size / 4); i++)
+> +		*((unsigned int *)(buf + i * 4))
+
+make "unsigned int *buf32" a local variable and use it here, makes it 
+much readable code.
+
+> +			 = readl(efuse->iomem + JZ_EFUDATA(i));
+> +
+> +	return 0;
+> +}
+> +
+> +/* main entry point */
+> +static int jz4780_efuse_read(void *context, unsigned int offset,
+> +					void *val, size_t bytes)
+> +{
+> +	struct jz4780_efuse *efuse = context;
+> +	int ret;
+> +
+> +	while (bytes > 0) {
+> +		unsigned int start = offset & ~(32 - 1);
+> +		unsigned chunk = min(bytes, (start + 32 - offset));
+> +
+> +		if (start == offset && chunk == 32) {
+> +			ret = jz4780_efuse_read_32bytes(efuse, val, start);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +		} else {
+> +			char buf[32];
+> +			ret = jz4780_efuse_read_32bytes(efuse, buf, start);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			memcpy(val, &buf[offset - start], chunk);
+> +		}
+> +
+> +		val += chunk;
+> +		offset += chunk;
+> +		bytes -= chunk;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct nvmem_config jz4780_efuse_nvmem_config = {
+> +	.name = "jz4780-efuse",
+> +	.read_only = true,
+
+this value comes from device tree bindings, do we still need  to specify 
+this here?
+
+
+> +	.size = 1024,
+> +	.word_size = 1,
+> +	.stride = 1,
+> +	.owner = THIS_MODULE,
+> +	.reg_read = jz4780_efuse_read,
+> +};
+> +
+> +static int jz4780_efuse_probe(struct platform_device *pdev)
+> +{
+> +	struct nvmem_device *nvmem;
+> +	struct jz4780_efuse *efuse;
+> +	struct resource *res;
+> +	unsigned long clk_rate;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	efuse = devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
+> +	if (!efuse)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	efuse->iomem = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> +	if (IS_ERR(efuse->iomem))
+> +		return PTR_ERR(efuse->iomem);
+> +
+> +	efuse->clk = devm_clk_get(&pdev->dev, "bus_clk");
+> +	if (IS_ERR(efuse->clk))
+> +		return PTR_ERR(efuse->clk);
+
+Who is enabling this clk?
+
+
+> +
+> +	clk_rate = clk_get_rate(efuse->clk);
+> +	/*
+> +	 * rd_adj and rd_strobe are 4 bit values
+> +	 * bus clk period * (rd_adj + 1) > 6.5ns
+> +	 * bus clk period * (rd_adj + 5 + rd_strobe) > 35ns
+> +	 */
+> +	efuse->rd_adj = (((6500 * (clk_rate / 1000000)) / 1000000) + 1) - 1;
+> +	efuse->rd_strobe = ((((35000 * (clk_rate / 1000000)) / 1000000) + 1)
+> +						- 5 - efuse->rd_adj);
+> +
+> +	if ((efuse->rd_adj > 0x1F) || (efuse->rd_strobe > 0x1F)) {
+> +		dev_err(&pdev->dev, "Cannot set clock configuration\n");
+> +		return -EINVAL;
+> +	}
+> +	efuse->dev = dev;
+> +
+> +	jz4780_efuse_nvmem_config.dev = &pdev->dev;
+> +	jz4780_efuse_nvmem_config.priv = efuse;
+> +
+> +	nvmem = nvmem_register(&jz4780_efuse_nvmem_config);
+
+devm variant here?
+
+
+> +	if (IS_ERR(nvmem))
+> +		return PTR_ERR(nvmem);
+> +
+> +	platform_set_drvdata(pdev, nvmem);
+> +
+> +	return 0;
+> +}
+> +
+> +static int jz4780_efuse_remove(struct platform_device *pdev)
+> +{
+> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
+> +
+> +	nvmem_unregister(nvmem);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id jz4780_efuse_match[] = {
+> +	{ .compatible = "ingenic,jz4780-efuse" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, jz4780_efuse_match);
+> +
+> +static struct platform_driver jz4780_efuse_driver = {
+> +	.probe  = jz4780_efuse_probe,
+> +	.remove = jz4780_efuse_remove,
+> +	.driver = {
+> +		.name = "jz4780-efuse",
+> +		.of_match_table = jz4780_efuse_match,
+> +	},
+> +};
+> +module_platform_driver(jz4780_efuse_driver);
+> +
+> +MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
+> +MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+> +MODULE_DESCRIPTION("Ingenic JZ4780 efuse driver");
+> +MODULE_LICENSE("GPL v2");
+> 
