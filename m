@@ -2,106 +2,103 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D53C3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE938C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93D220718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C9820718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581906307;
+	bh=6Nwl5lHxgMykRrAY3M1rtLG0EFNQ86rSNaSjuSDDEZo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LnI9eh6yyKWcU2iavFABAygl+CgQmgk9IlaMHSE1lMjhSEGnYAgbVW25b0/5D78ue
+	 8OjmhMU96exh8ieck+uVXnDJZIHaDltlpc/Ax5hK7LjMU41Rz76Iq026kxWBmEBW6n
+	 th+eHBDyEvMcoXSNOVUzJ++dm72MUqj3aItct1Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgBQCYX (ORCPT
+        id S1726656AbgBQCZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 21:24:23 -0500
-Received: from mail.windriver.com ([147.11.1.11]:49039 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgBQCYX (ORCPT
+        Sun, 16 Feb 2020 21:25:06 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40420 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgBQCZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 21:24:23 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 01H2O0lY002285
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 16 Feb 2020 18:24:00 -0800 (PST)
-Received: from [128.224.162.175] (128.224.162.175) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sun, 16 Feb
- 2020 18:23:59 -0800
-Subject: Re: [PATCH] perf: Support Python 3.8+ in Makefile
-To:     Sam Lunt <samueljlunt@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>
-CC:     <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <trivial@kernel.org>
-References: <20200131181123.tmamivhq4b7uqasr@gmail.com>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <30752f2a-fe0b-4150-c32d-07690fb43b82@windriver.com>
-Date:   Mon, 17 Feb 2020 10:23:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 16 Feb 2020 21:25:06 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n18so16984115ljo.7
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 18:25:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kd654Jvi3N2A7MnCrIjpOQhY0mSWg+UvXc8Pmg/fHOE=;
+        b=SizI53Jr4bgQgFG2aqNiwd0aB45h4wUff+q/c2ukT27TMTpfc6iCQKNgM0Wz/Y/21F
+         Y2xX3gWBcXEarwAnkIE98K7Gz/3GxQzL+dGroH95+ucTiB1Ogh9knxsQLDxAW8vA4qtT
+         qmeuaaO+jeogpF9niJkxhFKIRFwgW6Ocj7bAc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kd654Jvi3N2A7MnCrIjpOQhY0mSWg+UvXc8Pmg/fHOE=;
+        b=m2gwS83oBpSKVryHiccXyaS7rZ8iGaLDrn7u8EspMdboeItlYxJ1bElEyQBXxjP0F6
+         OXOxw2jczW2bSpVvIaxttOC5X5czUq7GyIVvFMAN2q7RWaWTqk4qxOljWQ+GjWbEF2hX
+         Hxb70FmGO15BGkPCAaoXC9XYA/6M66Er82/KIWwAjtAexo0jEiIKa3G2BvYpS1RSA7qO
+         6qqHCEM0MRrdayjP6zbFL9iLEsIoL8y+vM1cfBsssCT3LFzjlDYrS6/rCLcR9zGRTvRj
+         tDuulG+/shB6yDT7eZhuiK9sNHffYsTeDFEYkr/040yIUDm3ufBU9o6FxHUCai31AYAO
+         nxng==
+X-Gm-Message-State: APjAAAWeoD6GW4ZGZXKHI1nRYnZIW/83H6h3LS/HBSozqN6cLSn162Hi
+        hyz6OEZmwgndk7sMXNX2vEFOiN8Q/K8=
+X-Google-Smtp-Source: APXvYqy60bOivxCXCtaPGTxSNHe5qqY8aF1JlqWi3G5td74RYMItw5IKTRft3kW8NBEAsKuQWkttJw==
+X-Received: by 2002:a2e:3609:: with SMTP id d9mr8588471lja.188.1581906303113;
+        Sun, 16 Feb 2020 18:25:03 -0800 (PST)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id t21sm7727888ljh.14.2020.02.16.18.25.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Feb 2020 18:25:02 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id w1so16985443ljh.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 18:25:01 -0800 (PST)
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr8568137ljb.150.1581906301551;
+ Sun, 16 Feb 2020 18:25:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200131181123.tmamivhq4b7uqasr@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.175]
+References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
+ <20200217020840.GA24821@codemonkey.org.uk>
+In-Reply-To: <20200217020840.GA24821@codemonkey.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 16 Feb 2020 18:24:45 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg5AkQk-9By-QeyT+5H_t6DLZD=25uOz-ujnV8oEv1Y5Q@mail.gmail.com>
+Message-ID: <CAHk-=wg5AkQk-9By-QeyT+5H_t6DLZD=25uOz-ujnV8oEv1Y5Q@mail.gmail.com>
+Subject: Re: Linux 5.6-rc2
+To:     Dave Jones <davej@codemonkey.org.uk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/1/20 2:11 AM, Sam Lunt wrote:
-> Python 3.8 changed the output of 'python-config --ldflags' to no longer
-> include the '-lpythonX.Y' flag (this apparently fixed an issue loading
-> modules with a statically linked Python executable).  The libpython
-> feature check in linux/build/feature fails if the Python library is not
-> included in FEATURE_CHECK_LDFLAGS-libpython variable.
+On Sun, Feb 16, 2020 at 6:08 PM Dave Jones <davej@codemonkey.org.uk> wrote:
 >
-> This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
-> the '--embed' flag and passes that flag alongside '--ldflags' if so.
+> This didn't happen in rc1, but showed up when I booted into rc2 and
+> tried to and pull some stuff with rsync.
 >
-> tools/perf is the only place the libpython feature check is used.
->
-> Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
-> ---
->  tools/perf/Makefile.config | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index c90f4146e5a2..ccf99351f058 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
->
->  PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
->
-> +# Python 3.8 changed the output of `python-config --ldflags` to not include the
-> +# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
-> +# libpython fails if that flag is not included in LDFLAGS
-> +ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-> +  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
-> +else
-> +  PYTHON_CONFIG_LDFLAGS := --ldflags
-> +endif
-> +
->  ifdef PYTHON_CONFIG
-> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
+> [   70.794783] BUG: sleeping function called from invalid context at mm/slab.h:565
+> [   70.795459]  kmem_cache_alloc+0x1d3/0x290
+> [   70.795471]  alloc_extent_state+0x22/0x1c0
+> [   70.795544]  __clear_extent_bit+0x3ba/0x580
+> [   70.795569]  btrfs_truncate_inode_items+0x339/0xe50
+> [   70.795647]  btrfs_evict_inode+0x269/0x540
 
-I met the same problem. Would the following change be more simple and clear?
+At a guess (just by functions involved, and the timing between rc1 and
+rc2 - no actual analysis), this is probably due to
 
--  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-+  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>/dev/null || $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+    28553fa992cb ("Btrfs: fix race between shrinking truncate and fiemap")
 
+which is also marked for stable, so... Filipe?
 
-Thanks,
-Zhe
-
-
->    PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
->    PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
->    PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
->
-> base-commit: d5d359b0ac3ffc319ca93c46a4cfd87093759ad6
-
+              Linus
