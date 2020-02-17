@@ -2,241 +2,105 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31ADC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622A8C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4EB20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3688A20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GvV1LaHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgBQQD5 (ORCPT
+        id S1729638AbgBQQE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:03:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:37906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgBQQD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:03:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFF4B30E;
-        Mon, 17 Feb 2020 08:03:56 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D73A33F68F;
-        Mon, 17 Feb 2020 08:03:55 -0800 (PST)
-Subject: Re: [RFC PATCH] iommu/iova: Add a best-fit algorithm
-To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, pratikp@codeaurora.org,
-        Liam Mark <lmark@codeaurora.org>
-References: <1581721602-17010-1-git-send-email-isaacm@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b9d31aa9-fb57-ad31-52e4-1a5c21e5e0de@arm.com>
-Date:   Mon, 17 Feb 2020 16:03:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 17 Feb 2020 11:04:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50355 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgBQQE4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:04:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581955495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eAsJ8NbGL2b46wcgIaUPisLZoLcRYPJb7lJ/X2bzICo=;
+        b=GvV1LaHtF5HhYl5PL6QkOpk1iFOHCBXL5qPIBCFzTvYxDVaRoxQqscSldqTmo0X13V84wg
+        ISwp/1RjpghrTEB5MiaLYHwci57MJz0ggupjk/T14CMWBiSyZQ334bhty/dQDL1g9NU484
+        vq3R3o3oKPQSlwuLJB760QLuSFex6Ag=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-_qXqvEkoPxynwadeA9dmTQ-1; Mon, 17 Feb 2020 11:04:52 -0500
+X-MC-Unique: _qXqvEkoPxynwadeA9dmTQ-1
+Received: by mail-qt1-f199.google.com with SMTP id z25so10884827qto.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:04:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eAsJ8NbGL2b46wcgIaUPisLZoLcRYPJb7lJ/X2bzICo=;
+        b=dHW4NWbm0JFywGuCpuzkoWQCPr3MGlOgkpQZRIRHPm+aTxMFgFGLnhFAIW77Vesk7g
+         ZF8SdcUVvGNQ8/TRTlCWQjTs79uSjSmxy7Iecb4dNkqE2EROIIYEBpqBKxjISoV/9Ext
+         q7/WDBP/aMYOyL7+yWR6Tx1ISetRyiGfvRLGkjxOn5DE/iu4TwrMNAKGrVn0Di/xzPI5
+         UzemB0cV2XlK4tgE6j9ZG6z+KuUl3Vkn8onhiiFRimAusNfWPInA6ELX8blMuWtku4qo
+         WS1pRuEsliBC5c4CE/7Q6YZPM0DrGZ5C9sPY4/g8KE+Pk9KRUSaj+hFevszZtmF41SB3
+         is5w==
+X-Gm-Message-State: APjAAAUjgZOD/lQEejF1TJT70BQ3LFEA5DvbKbAViedlCLz2ZQMD+lkZ
+        +3iCNV0wGGciQOpcSVJm8EEnHGPWy1A1C/yYUoaDNQLYM2i0dv3vKu+I+13noZFSRTVqZfJeCel
+        mNBm1MbaMdenpP0wmVG2iA55M
+X-Received: by 2002:a37:40c:: with SMTP id 12mr15009206qke.212.1581955492226;
+        Mon, 17 Feb 2020 08:04:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzvsAEaJRLANfo3ZUdT+LbldOTKe/PahIREpXyxHHS2i9rY7g2U7F193H8KoyGmAenNGyQhpg==
+X-Received: by 2002:a37:40c:: with SMTP id 12mr15009189qke.212.1581955492019;
+        Mon, 17 Feb 2020 08:04:52 -0800 (PST)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id z21sm408837qka.122.2020.02.17.08.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 08:04:51 -0800 (PST)
+Date:   Mon, 17 Feb 2020 11:04:49 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 0/3] smp: Allow smp_call_function_single_async() to
+ insert locked csd
+Message-ID: <20200217160449.GA1309280@xz-x1>
+References: <20191216213125.9536-1-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1581721602-17010-1-git-send-email-isaacm@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191216213125.9536-1-peterx@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/02/2020 11:06 pm, Isaac J. Manjarres wrote:
-> From: Liam Mark <lmark@codeaurora.org>
+On Mon, Dec 16, 2019 at 04:31:22PM -0500, Peter Xu wrote:
+> This v2 introduced two more patches to let mips/kernel/smp.c and
+> kernel/sched/core.c to start using the new feature, then we can drop
+> the customized implementations.
 > 
-> Using the best-fit algorithm, instead of the first-fit
-> algorithm, may reduce fragmentation when allocating
-> IOVAs.
-
-What kind of pathological allocation patterns make that a serious 
-problem? Is there any scope for simply changing the order of things in 
-the callers? Do these drivers also run under other DMA API backends 
-(e.g. 32-bit Arm)?
-
-More generally, if a driver knows enough to want to second-guess a 
-generic DMA API allocator, that's a reasonable argument that it should 
-perhaps be properly IOMMU-aware and managing its own address space 
-anyway. Perhaps this effort might be better spent finishing off the DMA 
-ops bypass stuff to make that approach more robust and welcoming.
-
-Robin.
-
-> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> ---
->   drivers/iommu/dma-iommu.c | 17 +++++++++++
->   drivers/iommu/iova.c      | 73 +++++++++++++++++++++++++++++++++++++++++++++--
->   include/linux/dma-iommu.h |  7 +++++
->   include/linux/iova.h      |  1 +
->   4 files changed, 96 insertions(+), 2 deletions(-)
+> One thing to mention is that cpuidle_coupled_poke_pending is another
+> candidate that we can consider, however that cpumask is special in
+> that it's not only used for singleton test of the per-vcpu csd when
+> injecting new calls, but also in cpuidle_coupled_any_pokes_pending()
+> or so to check whether there's any pending pokes.  In that sense it
+> should be good to still keep the mask because it could be faster than
+> looping over each per-cpu csd.
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index a2e96a5..af08770 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -364,9 +364,26 @@ static int iommu_dma_deferred_attach(struct device *dev,
->   	if (unlikely(ops->is_attach_deferred &&
->   			ops->is_attach_deferred(domain, dev)))
->   		return iommu_attach_device(domain, dev);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Should be called prior to using dma-apis.
-> + */
-> +int iommu_dma_enable_best_fit_algo(struct device *dev)
-> +{
-> +	struct iommu_domain *domain;
-> +	struct iova_domain *iovad;
-> +
-> +	domain = iommu_get_domain_for_dev(dev);
-> +	if (!domain || !domain->iova_cookie)
-> +		return -EINVAL;
->   
-> +	iovad = &((struct iommu_dma_cookie *)domain->iova_cookie)->iovad;
-> +	iovad->best_fit = true;
->   	return 0;
->   }
-> +EXPORT_SYMBOL(iommu_dma_enable_best_fit_algo);
->   
->   /**
->    * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
-> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> index 0e6a953..716b05f 100644
-> --- a/drivers/iommu/iova.c
-> +++ b/drivers/iommu/iova.c
-> @@ -50,6 +50,7 @@ static unsigned long iova_rcache_get(struct iova_domain *iovad,
->   	iovad->anchor.pfn_lo = iovad->anchor.pfn_hi = IOVA_ANCHOR;
->   	rb_link_node(&iovad->anchor.node, NULL, &iovad->rbroot.rb_node);
->   	rb_insert_color(&iovad->anchor.node, &iovad->rbroot);
-> +	iovad->best_fit = false;
->   	init_iova_rcaches(iovad);
->   }
->   EXPORT_SYMBOL_GPL(init_iova_domain);
-> @@ -227,6 +228,69 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
->   	return -ENOMEM;
->   }
->   
-> +static int __alloc_and_insert_iova_best_fit(struct iova_domain *iovad,
-> +		unsigned long size, unsigned long limit_pfn,
-> +			struct iova *new, bool size_aligned)
-> +{
-> +	struct rb_node *curr, *prev;
-> +	struct iova *curr_iova, *prev_iova;
-> +	unsigned long flags;
-> +	unsigned long align_mask = ~0UL;
-> +	struct rb_node *candidate_rb_parent;
-> +	unsigned long new_pfn, candidate_pfn = ~0UL;
-> +	unsigned long gap, candidate_gap = ~0UL;
-> +
-> +	if (size_aligned)
-> +		align_mask <<= limit_align(iovad, fls_long(size - 1));
-> +
-> +	/* Walk the tree backwards */
-> +	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
-> +	curr = &iovad->anchor.node;
-> +	prev = rb_prev(curr);
-> +	for (; prev; curr = prev, prev = rb_prev(curr)) {
-> +		curr_iova = rb_entry(curr, struct iova, node);
-> +		prev_iova = rb_entry(prev, struct iova, node);
-> +
-> +		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
-> +		new_pfn = (limit_pfn - size) & align_mask;
-> +		gap = curr_iova->pfn_lo - prev_iova->pfn_hi - 1;
-> +		if ((limit_pfn >= size) && (new_pfn > prev_iova->pfn_hi)
-> +				&& (gap < candidate_gap)) {
-> +			candidate_gap = gap;
-> +			candidate_pfn = new_pfn;
-> +			candidate_rb_parent = curr;
-> +			if (gap == size)
-> +				goto insert;
-> +		}
-> +	}
-> +
-> +	curr_iova = rb_entry(curr, struct iova, node);
-> +	limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
-> +	new_pfn = (limit_pfn - size) & align_mask;
-> +	gap = curr_iova->pfn_lo - iovad->start_pfn;
-> +	if (limit_pfn >= size && new_pfn >= iovad->start_pfn &&
-> +			gap < candidate_gap) {
-> +		candidate_gap = gap;
-> +		candidate_pfn = new_pfn;
-> +		candidate_rb_parent = curr;
-> +	}
-> +
-> +insert:
-> +	if (candidate_pfn == ~0UL) {
-> +		spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* pfn_lo will point to size aligned address if size_aligned is set */
-> +	new->pfn_lo = candidate_pfn;
-> +	new->pfn_hi = new->pfn_lo + size - 1;
-> +
-> +	/* If we have 'prev', it's a valid place to start the insertion. */
-> +	iova_insert_rbtree(&iovad->rbroot, new, candidate_rb_parent);
-> +	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
-> +	return 0;
-> +}
-> +
->   static struct kmem_cache *iova_cache;
->   static unsigned int iova_cache_users;
->   static DEFINE_MUTEX(iova_cache_mutex);
-> @@ -302,8 +366,13 @@ struct iova *
->   	if (!new_iova)
->   		return NULL;
->   
-> -	ret = __alloc_and_insert_iova_range(iovad, size, limit_pfn + 1,
-> -			new_iova, size_aligned);
-> +	if (iovad->best_fit) {
-> +		ret = __alloc_and_insert_iova_best_fit(iovad, size,
-> +				limit_pfn + 1, new_iova, size_aligned);
-> +	} else {
-> +		ret = __alloc_and_insert_iova_range(iovad, size, limit_pfn + 1,
-> +				new_iova, size_aligned);
-> +	}
->   
->   	if (ret) {
->   		free_iova_mem(new_iova);
-> diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-> index 2112f21..b01a31a 100644
-> --- a/include/linux/dma-iommu.h
-> +++ b/include/linux/dma-iommu.h
-> @@ -37,6 +37,8 @@ void iommu_dma_compose_msi_msg(struct msi_desc *desc,
->   
->   void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
->   
-> +int iommu_dma_enable_best_fit_algo(struct device *dev);
-> +
->   #else /* CONFIG_IOMMU_DMA */
->   
->   struct iommu_domain;
-> @@ -78,5 +80,10 @@ static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_he
->   {
->   }
->   
-> +static inline int iommu_dma_enable_best_fit_algo(struct device *dev)
-> +{
-> +	return -ENODEV;
-> +}
-> +
->   #endif	/* CONFIG_IOMMU_DMA */
->   #endif	/* __DMA_IOMMU_H */
-> diff --git a/include/linux/iova.h b/include/linux/iova.h
-> index a0637ab..58713bb 100644
-> --- a/include/linux/iova.h
-> +++ b/include/linux/iova.h
-> @@ -95,6 +95,7 @@ struct iova_domain {
->   						   flush-queues */
->   	atomic_t fq_timer_on;			/* 1 when timer is active, 0
->   						   when not */
-> +	bool best_fit;
->   };
->   
->   static inline unsigned long iova_size(struct iova *iova)
+> Patch 1 is the same as v1, no change.  Patch 2-3 are new ones.
 > 
+> Smoke tested on x86_64 only.
+> 
+> Please review, thanks.
+
+Ping?
+
+-- 
+Peter Xu
+
