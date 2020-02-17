@@ -2,155 +2,115 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C5BC3402A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA32C3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788E520725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C21207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Pzz6Zgxb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+Y9J3F7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgBQVLj (ORCPT
+        id S1729921AbgBQVL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:11:39 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35174 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727300AbgBQVLi (ORCPT
+        Mon, 17 Feb 2020 16:11:56 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39797 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729894AbgBQVLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:11:38 -0500
-Received: by mail-qk1-f196.google.com with SMTP id v2so17586768qkj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:11:37 -0800 (PST)
+        Mon, 17 Feb 2020 16:11:55 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z2so18011728oih.6;
+        Mon, 17 Feb 2020 13:11:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FxRvJ7r8F0ZhX0NHb83GmNQC4jmvCqMGLG+tYQsonZM=;
-        b=Pzz6Zgxbs2KU70lU07hCHuYB+qSwV2OzlgI3vnRxXKSknajbzUMUz9POTYrINqVTxS
-         Q4v+CqY7C/FMizwmjXn3j6MRDtN5/l3Ah0YAxZNd7CKo63eb+UYaLAr+A5NlItB3SXoF
-         Ytq8dEvLHRhR0hxyGKXmWQFFIocQ96jLq3lkE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xK3Q/4PcpI8MJ4XOzIXcS+rMbt29+yBpzx5WYzRqjFw=;
+        b=C+Y9J3F7hCeKE2UrdmV5oEk9QN3EPirr6aTHNd7poyqXHlPKK0tSfnv8fze2AX1BY2
+         TSxFrowQQmKkCsMjI2alVDrL7Z/IicYi+n1DK5INEURwPLEBxOLOFitzwDoYfFqDmk0c
+         z+GjPV3fzt+pBQkgMbaxrRVIvP1cRqs85fTSVT5yf/oWkqaGnCLpZTWNXblvcC5V34fX
+         Lw/xJV+jl/1q8vgoyvZ91EiSlWMWc97IHzVFvgigvOxSUwsZ0h5co2CCnM5/NeaCKhr/
+         7xiW9rcrq6IK7yaqbaydtaoyysWcKutcn5Lzudod/ILf45eQCzMykFBSw4l3p+QkCXUZ
+         +WnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FxRvJ7r8F0ZhX0NHb83GmNQC4jmvCqMGLG+tYQsonZM=;
-        b=ipvli4J4ykAIXBoSxox4CdDC6MMptZ/pq8wletrfT5doTLE+Sa30/U1X4FqgeTz0/L
-         Ah0IFLCncszkNkdANXjVrE6dNLd3B+MKKNjgdeQ3HrBJDnqnWOSh+zEXZX/v+7oDMdyu
-         7U+P5oelzXojCnCHlI5rf9Cy10NTulhMNI0QpjanoRfa+gHzirHhEXrABHhDpfYH3qML
-         wLHhfJx+oyOmgM2NLtPyXrfF+7EbAcm/rxxb3mhRIauSocj3NkI9AZ8m+JbXLvEUKPRj
-         4wM6BemNA3uYlkkjubNYmc8WW+Ict9kniWYc7GflIlhiCeFfLaQeKp4QJqHBnuJYQ3MN
-         xraQ==
-X-Gm-Message-State: APjAAAWZ19NSOeoZvkUuUMiG1IrfEWtUgne5lQhT0M7D5YhMqeBoRFDq
-        ylvupQK8ryBSsB8IuyBb7GxQug==
-X-Google-Smtp-Source: APXvYqygX7dLAl4Fy2BYXdFwY91MRzUP3Zm9j4CbyODQwFddsNhaRmCqH65KiokFA+D4qv930fnjMA==
-X-Received: by 2002:a37:9e0f:: with SMTP id h15mr15770994qke.287.1581973896659;
-        Mon, 17 Feb 2020 13:11:36 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 132sm429238qkn.109.2020.02.17.13.11.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xK3Q/4PcpI8MJ4XOzIXcS+rMbt29+yBpzx5WYzRqjFw=;
+        b=gJdIvMu0k9mrRPVc5B5R084n2oxTk9Kq37vaknPSB+TPYplE4nRAhK+nNA8jHvplvr
+         dgZrucF2TeCfmGUxoGHSW2sHXTtt779GPdlcy+2vQa32z7HjHEwwT9i5ZczcYAWfKlOi
+         fPSp/LUznjm8nT5wjMvVfrGmWmeZiZt2TU+wHuJQOzgo09GxgtXkHDpUPYn/vvwWvkOh
+         JX4pY2wBDZXwNPA2P++cxEBKC5oepQRgh3yjlvBcC4IzkBBWIb8G84VzLdRHNqoZrvCE
+         1XYGmC/m/51UcR9RPDAzcGqyAIe3FrYetSy51osA2rsRtM/hA1MdkNL4SPCr8q5vXNkF
+         giFQ==
+X-Gm-Message-State: APjAAAVNNp43R5zEb4sqmtZKuSv6/jnRd/Vtv6aQZEDMHelPYunGGnzP
+        WGoZCn2GN6ZFMk95AcWtCjY=
+X-Google-Smtp-Source: APXvYqwq6Q9t2ypTAPDCqs+NdTrtHzXBzQIMBMFV2yKoF+DcfhxGWNYSbM1ZaJwagWH+94hONWTdGQ==
+X-Received: by 2002:aca:3354:: with SMTP id z81mr602935oiz.129.1581973914489;
+        Mon, 17 Feb 2020 13:11:54 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id v14sm579927oto.16.2020.02.17.13.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 13:11:35 -0800 (PST)
-Date:   Mon, 17 Feb 2020 16:11:35 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH tip/core/rcu 06/30] rcu: Add WRITE_ONCE to rcu_node
- ->exp_seq_rq store
-Message-ID: <20200217211135.GA207704@google.com>
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-6-paulmck@kernel.org>
- <20200214224743.280772a7@oasis.local.home>
- <20200215105803.GY2935@paulmck-ThinkPad-P72>
+        Mon, 17 Feb 2020 13:11:53 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>
+Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] MIPS: vdso: Wrap -mexplicit-relocs in cc-option
+Date:   Mon, 17 Feb 2020 14:11:49 -0700
+Message-Id: <20200217211149.44132-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200215105803.GY2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 02:58:03AM -0800, Paul E. McKenney wrote:
-> On Fri, Feb 14, 2020 at 10:47:43PM -0500, Steven Rostedt wrote:
-> > On Fri, 14 Feb 2020 15:55:43 -0800
-> > paulmck@kernel.org wrote:
-> > 
-> > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > 
-> > > The rcu_node structure's ->exp_seq_rq field is read locklessly, so
-> > > this commit adds the WRITE_ONCE() to a load in order to provide proper
-> > > documentation and READ_ONCE()/WRITE_ONCE() pairing.
-> > > 
-> > > This data race was reported by KCSAN.  Not appropriate for backporting
-> > > due to failure being unlikely.
-> > > 
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > ---
-> > >  kernel/rcu/tree_exp.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > > index d7e0484..85b009e 100644
-> > > --- a/kernel/rcu/tree_exp.h
-> > > +++ b/kernel/rcu/tree_exp.h
-> > > @@ -314,7 +314,7 @@ static bool exp_funnel_lock(unsigned long s)
-> > >  				   sync_exp_work_done(s));
-> > >  			return true;
-> > >  		}
-> > > -		rnp->exp_seq_rq = s; /* Followers can wait on us. */
-> > > +		WRITE_ONCE(rnp->exp_seq_rq, s); /* Followers can wait on us. */
-> > 
-> > Didn't Linus say this is basically bogus?
-> > 
-> > Perhaps just using it as documenting that it's read locklessly, but is
-> > it really needed?
-> 
-> Yes, Linus explicitly stated that WRITE_ONCE() is not required in
-> this case, but he also said that he was OK with it being there for
-> documentation purposes.
+Clang does not support this option and errors out:
 
-Just to add, PeterZ does approve of WRITE_ONCE() to prevent store-tearing
-where applicable.
+clang-11: error: unknown argument: '-mexplicit-relocs'
 
-And I have reproduced Will's example [1] with the arm64 Clang compiler
-shipping with the latest Android NDK just now. It does break up stores when
-writing zeroes to 64-bit valyes, this is a real problem which WRITE_ONCE()
-resolves. And I've verified GCC on arm64 does break up 64-bit immediate value
-writes without WRITE_ONCE().
+Clang does not appear to need this flag like GCC does because the jalr
+check that was added in commit 976c23af3ee5 ("mips: vdso: add build
+time check that no 'jalr t9' calls left") passes just fine with
 
-thanks,
+$ make ARCH=mips CC=clang CROSS_COMPILE=mipsel-linux-gnu- malta_defconfig arch/mips/vdso/
 
- - Joel
+even before commit d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in
+vdso code").
 
-[1] https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/
+-mrelax-pic-calls has been supported since clang 9, which is the
+earliest version that could build a working MIPS kernel, and it is the
+default for clang so just leave it be.
 
+Fixes: d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in vdso code")
+Link: https://github.com/ClangBuiltLinux/linux/issues/890
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/mips/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> And within RCU, I -do- need it because I absolutely need to see if a
-> given patch introduced new KCSAN reports.  So I need it for the same
-> reason that I need the build to proceed without warnings.
-> 
-> Others who are working with less concurrency-intensive code might quite
-> reasonably make other choices, of course.  And my setting certain KCSAN
-> config options in my own builds doesn't inconvenience them, so we should
-> all be happy, right?  :-)
-> 
-> 							Thanx, Paul
-> 
-> > -- Steve
-> > 
-> > 
-> > 
-> > >  		spin_unlock(&rnp->exp_lock);
-> > >  		trace_rcu_exp_funnel_lock(rcu_state.name, rnp->level,
-> > >  					  rnp->grplo, rnp->grphi, TPS("nxtlvl"));
-> > 
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index 77374c1f0c77..d7fe8408603e 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -33,7 +33,7 @@ endif
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+-	-mrelax-pic-calls -mexplicit-relocs \
++	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
+-- 
+2.25.1
+
