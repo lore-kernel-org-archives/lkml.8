@@ -2,227 +2,109 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D077C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C6C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95CC215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581957075;
-	bh=geBmkKBvdkCW5/3hc5Ff7VhO4lSH27P7qmkAO5Wxr9g=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hmWPLtJjVkEIooGii97P/Bq/PInhzWTLtZMb8f39PLgHU5wuiEtA1WTJYvhREvjvy
-	 V+bCmJI1gRECKh2JivomOYvDbQCb/13O8FMy9AQTukEcjpNp91UoXuFvQDL8s4IzDW
-	 d7AsOCqX4j6SrrqB9OXH2m01zA7R1ZAti0O1X8x8=
+	by mail.kernel.org (Postfix) with ESMTP id 5C44421D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgBQQbN (ORCPT
+        id S1728923AbgBQQb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727922AbgBQQbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:31:13 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A7B0214D8;
-        Mon, 17 Feb 2020 16:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581957072;
-        bh=geBmkKBvdkCW5/3hc5Ff7VhO4lSH27P7qmkAO5Wxr9g=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=DAY6B7zUn+WVe0hHI23Stu+wQ8WvpYhKlEwAvDZriYWS0gYoQcv72U3QSG/9h/odv
-         BPqpGLFjXpZBLedhzoKxHe09LEgiclI4WkTIkiIR6fokwXyT4zCAKQgq7fU0MRqFnT
-         lbdE0I/ioM0pzv8j7aXkQ6Y/RZ8BZsWHhiChQf54=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7757735226F4; Mon, 17 Feb 2020 08:31:12 -0800 (PST)
-Date:   Mon, 17 Feb 2020 08:31:12 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200217163112.GM2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200213204444.GA94647@google.com>
- <20200213205442.GK2935@paulmck-ThinkPad-P72>
- <20200213211930.GG170680@google.com>
- <20200213163800.5c51a5f1@gandalf.local.home>
- <20200213215004.GM2935@paulmck-ThinkPad-P72>
- <20200213170451.690c4e5c@gandalf.local.home>
- <20200213223918.GN2935@paulmck-ThinkPad-P72>
- <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
- <20200215145934.GD2935@paulmck-ThinkPad-P72>
- <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
+        Mon, 17 Feb 2020 11:31:27 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:37337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbgBQQb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:31:27 -0500
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MNssA-1ioNCn26ki-00OGAh for <linux-kernel@vger.kernel.org>; Mon, 17 Feb
+ 2020 17:31:25 +0100
+Received: by mail-qt1-f182.google.com with SMTP id w47so12417235qtk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:31:25 -0800 (PST)
+X-Gm-Message-State: APjAAAUjqE8ZK/SN6o5Z9Vwz/rFItc27vaWW0eZoZ3lOuZkJqNe/r0Z9
+        hSH9G1D7KSlusg1cR2HdeuBy+nN2uWUiIZhx21k=
+X-Google-Smtp-Source: APXvYqyGebgskD9DJnggAXDAzLcpUd37EudJOxUPk6hTCsINePQmNXOJ6CgjR7jrFr4TGbNM4fkWp15166EEI9MfXls=
+X-Received: by 2002:ac8:1977:: with SMTP id g52mr13579716qtk.18.1581957084396;
+ Mon, 17 Feb 2020 08:31:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
+ <20200217155141.08e87b3f@collabora.com> <CAK8P3a0jAbevb6mjy7Q=C-TFGn7uHRvshHNEO8XrDPRvRoAiTA@mail.gmail.com>
+ <20200217163622.6c78fa3f@collabora.com> <CH2PR12MB42166ED8E84503B53340F80DAE160@CH2PR12MB4216.namprd12.prod.outlook.com>
+ <20200217172309.26697082@collabora.com>
+In-Reply-To: <20200217172309.26697082@collabora.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Feb 2020 17:31:08 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2O23=Jjmj0xTQC7pePnwHBrcJ1YeRAKp-1hVf1GNmA5w@mail.gmail.com>
+Message-ID: <CAK8P3a2O23=Jjmj0xTQC7pePnwHBrcJ1YeRAKp-1hVf1GNmA5w@mail.gmail.com>
+Subject: Re: [RFC v2 0/4] Introduce i3c device userspace interface
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:suRVh0DMABCHF5Y/93HhEREtRKP8lcCsn+LHExbJBwq7R4md+Li
+ HHoh69xbA9blE0gVsDJXJo1qtH1ax6GmWFNh426kqFbDc54MI3t1FHo49OTpL1jwg4MU//M
+ 0LDjKfbEUN5EXDdM/KXUUtH0kf/9klqkiEOcPmTSZW8d0nhHfPNQjjTLcvXUsVjPo8Y9rgS
+ s18GkeKDEbKgeAhqIg01g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QaOfZ6+nneo=:CtVg9+w01Zr7Szb/WEToFo
+ la9+Ve7WHuwaWjJo4/0nG/A3Uj8lutCs6mPkJuGRuz4g0KkK02ZI1/XdfbG1uO6i0ssH7Ji3I
+ ABeA08O/vO6xSzQsk3aV5pVNeJtEyOA3eZJySDl3U8Vgarsfjzak2cTJIJX9kiQrE0PAJ/q65
+ wsjySo1x1NUEt9BEy0l324P9tT+guLdHnKfVNtGGtPQuczLpdM8/uWd6G8Yyo4eJDJy+wndbj
+ ftbniz+0NvEGj2sdSYTXGWIooLVJuHoLXCvT5slsTayprrPNmADEIEa5qwCOhF89lEPwrcFtZ
+ 3ObDrVIlcAQHbMaY+2rqatV+xEPBeNI98vAYR+VtnFljuvJb2cVF8qtJ1ZiC80CYiGqVhqABL
+ zjHRPZ8IRUNlkLFbgGKdLAXr0RJnhUVgVgv6Hzbo/8pmd8AHQKYo7omMkwp44SchmrAd6aiBb
+ NKZYvqNDsSSYvPS9Z+zlv0pfAAz0ci0Qz3MTZCCyepXWL+Scn5F4e8OVJRwNMU+E+bCFqWCcI
+ FNpGTfFINS2zIovMftyvC6RrbqS5r0Ki7mtTB5JTGvbuP0ohtNl+yyYmxeO130eRePgpJ/w9t
+ tZYCHu0VQaGXXjL2HiQ9QI8XOYrxHgLeBvIIqyC0hj120+uuieDJI5WYVT1S/6xAEWH5n0wg1
+ wZWjp5u+2W/PMQml+aCp/ITGSWkfPfxzQf9e+chxHbKVwJ5Je0aynlqmhkNI9jIaqkWXxsN4A
+ 5Sis6K/jXBLkqmACy6MU/HagIxHH+HMma4lsEs4c4GmHKKO5UEbkOyCSxgUDYLzcabhmY6cw9
+ fK3PhTPlHzQWQ2A+Wz0yPcXt7/WdZ41HiQQZu4FR3jOa7YlK/U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:55:19PM +0900, Masami Hiramatsu wrote:
-> On Sat, 15 Feb 2020 06:59:34 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Fri, Feb 14, 2020 at 03:19:06PM +0900, Masami Hiramatsu wrote:
-> > > On Thu, 13 Feb 2020 14:39:18 -0800
-> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > 
-> > > > On Thu, Feb 13, 2020 at 05:04:51PM -0500, Steven Rostedt wrote:
-> > > > > On Thu, 13 Feb 2020 13:50:04 -0800
-> > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > 
-> > > > > > On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
-> > > > > > > [ Added Masami ]
-> > > > > > > 
-> > > > > > > On Thu, 13 Feb 2020 16:19:30 -0500
-> > > > > > > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > > > >   
-> > > > > > > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
-> > > > > > > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
-> > > > > > > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
-> > > > > > > > > > [...]     
-> > > > > > > > > > > > > It might well be that I could make these functions be NMI-safe, but
-> > > > > > > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
-> > > > > > > > > > > > > So, before looking into that, I have a question.  Given these proposed
-> > > > > > > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
-> > > > > > > > > > > > > to just use in_nmi()?    
-> > > > > > > > > > > > 
-> > > > > > > > > > > > That _should_ already be the case today. That is, if we end up in a
-> > > > > > > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
-> > > > > > > > > > > 
-> > > > > > > > > > > So something like this, then?  This is untested, probably doesn't even
-> > > > > > > > > > > build, and could use some careful review from both Peter and Steve,
-> > > > > > > > > > > at least.  As in the below is the second version of the patch, the first
-> > > > > > > > > > > having been missing a couple of important "!" characters.    
-> > > > > > > > > > 
-> > > > > > > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
-> > > > > > > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
-> > > > > > > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
-> > > > > > > > > > asymmetric.    
-> > > > > > > > > 
-> > > > > > > > > My compiler complained about the static and the __always_inline, so I
-> > > > > > > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
-> > > > > > > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
-> > > > > > > > > rcu_nmi_enter()?    
-> > > > > > > > 
-> > > > > > > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
-> > > > > > > > allowing it on exit (from a code reading standpoint) so my reaction was to
-> > > > > > > > add it to both, but we could probably keep that as a separate
-> > > > > > > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
-> > > > > > > > confuse the topic.
-> > > > > > > >  
-> > > > > > > 
-> > > > > > > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
-> > > > > > > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> > > > > > > kprobe_int3_handler()")
-> > > > > > > 
-> > > > > > > The issue was that we must not allow anything in do_int3() call kprobe
-> > > > > > > code before kprobe_int3_handler() is called. Because ist_enter() (in
-> > > > > > > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
-> > > > > > > nothing to do with it being RCU nor NMI, but because it was simply
-> > > > > > > called in do_int3().
-> > > > > > > 
-> > > > > > > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
-> > > > > > > to why rcu_nmi_enter() would probably be useful, like below:  
-> > > > > > 
-> > > > > > Thank you, Steve!  Could I please have your Signed-off-by for this?
-> > > > > 
-> > > > > Sure, but it was untested ;-)
-> > > > 
-> > > > No problem!  I will fire up rcutorture on it.  ;-)
-> > > > 
-> > > > But experience indicates that you cannot even make a joke around here.
-> > > > There is probably already someone out there somewhere building a
-> > > > comment-checker based on deep semantic analysis and machine learning.  :-/
-> > > > 
-> > > > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > > > > 
-> > > > > I'd like a Reviewed-by from Masami though.
-> > > > 
-> > > > Sounds good!  Masami, would you be willing to review?
-> > > 
-> > > Yes, the functions before calling kprobe_int3_handler() must not
-> > > be kprobed. It can cause an infinite recursive int3 trapping.
-> > > 
-> > > Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > Thank you both!
-> > 
-> > Like this?
-> > 
-> > 							Thanx, Paul
-> > 
-> 
-> This is good to me.
+On Mon, Feb 17, 2020 at 5:23 PM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+> On Mon, 17 Feb 2020 15:55:08 +0000 Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>
+> Okay, I have clearly not read the code carefully enough. I thought you
+> were declaring a new i3c_device_driver and were manually binding all
+> orphan devices to this driver. Looks like the solution is more subtle
+> than that, and i3cdevs are actually subdevices that are automatically
+> created/removed when the I3C device is unbound/bound. That means the
+> 'on-demand driver loading' logic is not impacted by this new layer. I'm
+> still not convinced this is needed (I expect i3cdev to be used mostly
+> for experiment, and in that case, having a udev rule, or manually
+> binding the device to the i3cdev driver shouldn't be a problem).
 
-Thank you for looking it over!  (I already have your
+I'm fairly sure it's not needed, other approaches could be used to
+provide user space access, but it's not clear if any other way is
+better either. It also took me a while to figure out what is going on
+when I read the code.
 
-> BTW, if you consider the x86 specific code is in the generic file,
-> we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
-> (Sorry, I've hit this idea right now)
+One thought that I had was that this could be better integrated into
+the core, with user space being there implicitly through sysfs rather
+than a /dev file.
 
-Might this affect other architectures with NMIs and probe-like things?
-If so, it might make sense to leave it where it is.
+> I'm also not sure what happens if the device is still used when
+> i3cdev_detach() is called, can transfers still be done after the device
+> is attached to its in-kernel driver?
 
-							Thanx, Paul
+I think this is still an open issue that I also pointed out. The driver
+binding/unbinding and user space access definitely needs to
+be properly serialized, whichever method is used to implement the
+user access.
 
-> Thank you,
-> 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 1817fdc8f4e4bd18c76305c9b937fb0dccbb1583
-> > Author: Steven Rostedt <rostedt@goodmis.org>
-> > Date:   Sat Feb 15 06:54:50 2020 -0800
-> > 
-> >     rcu: Provide comment for NOKPROBE() on rcu_nmi_enter()
-> >     
-> >     The rcu_nmi_enter() function was marked NOKPROBE() by commit
-> >     c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> >     kprobe_int3_handler()") because the do_int3() call kprobe code must
-> >     not be invoked before kprobe_int3_handler() is called.  It turns out
-> >     that ist_enter() (in do_int3()) calls rcu_nmi_enter(), hence the
-> >     marking NOKPROBE() being added to rcu_nmi_enter().
-> >     
-> >     This commit therefore adds a comment documenting this line of reasoning.
-> >     
-> >     Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> >     Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 132b53e..4a885af 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -835,6 +835,12 @@ void rcu_nmi_enter(void)
-> >  		   rdp->dynticks_nmi_nesting + incby);
-> >  	barrier();
-> >  }
-> > +/*
-> > + * On x86, All functions in do_int3() must be marked NOKPROBE before
-> > + * kprobe_int3_handler() is called. ist_enter() which is called in do_int3()
-> > + * before kprobe_int3_handle() happens to call rcu_nmi_enter() which means
-> > + * that rcu_nmi_enter() must be marked NOKRPOBE.
-> > + */
-> >  NOKPROBE_SYMBOL(rcu_nmi_enter);
-> >  
-> >  /**
-> 
-> 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+       Arnd
