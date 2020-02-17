@@ -2,134 +2,72 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C2BC3402B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E484BC3402B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DC82072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="PLnsB5f6"
+	by mail.kernel.org (Postfix) with ESMTP id BCF15214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581972160;
+	bh=krgoKyCV0giz5SQb9qHccoL24ZmlI7+9o/yAL45tIVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jsEMaxpJO4rrFUoH4qmvV/n/gIYJ1nLR6glKZwN76pMga+JFDG1Rg3LKKw5t6GYX1
+	 YP0IPM2W4WgI2Cw4D0vYFq+BitbMnPSoW9Ggf1cElgwkBtyA/3v6LlSIvHmy/dwscE
+	 9cGOCUkZuxk86iYAhGsUM1qQ76uJPQdW5ExyzJQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgBQUkS (ORCPT
+        id S1729676AbgBQUmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:40:18 -0500
-Received: from gateway36.websitewelcome.com ([192.185.184.18]:32225 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727332AbgBQUkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:40:18 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 8A21540FA075B
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:06:14 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3mQsjo8weRP4z3mQsjEkvy; Mon, 17 Feb 2020 13:51:54 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fs6PYRX24xfRohVEXUr8oWq2yWMbC09iZHVjQRC+Gwo=; b=PLnsB5f6nrXVqy94cZgjLGOLoQ
-        EN3T8hGVFqNQU0nxwTRyHD+UOqojMqN9wzdy2kN++YxRJ6os4xaXXarsN/IHVuWlY6zZaaWOpK15S
-        J4EE5Wz8Fzsxa6xdO1p0P8n3e2kho+UMnYH8DBSBQZMHRPLchAYvbSOPJFZk6SgSYs5chnR6PUBBu
-        UQ3bypf8pVK05RPJAtjlmAa5jk2+ZZWvqFFaUGLuwvsljc8Q2SfFb0EMFVqiAnQQNrRnkf1Qi8VU2
-        bCkdG4Vv7IEbQ6cFkFE+kpNIbO3jIkSLaCpRkmUeHGY8ruS79w9f/umSizvq1wqQv/vfLOJyQT13C
-        O4f4+e3g==;
-Received: from [200.68.140.26] (port=27288 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j3mQr-000JUr-20; Mon, 17 Feb 2020 13:51:53 -0600
-Date:   Mon, 17 Feb 2020 13:54:34 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net/mlx5: IPsec, Replace zero-length array with
- flexible-array member
-Message-ID: <20200217195434.GA1166@embeddedor>
+        Mon, 17 Feb 2020 15:42:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727300AbgBQUmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 15:42:39 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B4E20801;
+        Mon, 17 Feb 2020 20:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581972158;
+        bh=krgoKyCV0giz5SQb9qHccoL24ZmlI7+9o/yAL45tIVw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0V+Ekr1Xw8W/xyOJQ4d017IcqTclmSHITqsG/6kZNWxBxlPU3vLk9DqrNhfl/0Zkx
+         JtlbfsjJlNUwce8lY01uiLKp9NCaHePjfLfFqzPnZXUzMeo4A0hoeBXbWizs1MT0El
+         epc4Pgk+XoLdGZqPS6biYfja04Xhk8oFx6nzjnCA=
+Date:   Mon, 17 Feb 2020 21:42:34 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the modules tree
+Message-ID: <20200217204233.GA26750@linux-8ccs>
+References: <20200218073843.26b45f1b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.26
-X-Source-L: No
-X-Exim-ID: 1j3mQr-000JUr-20
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:27288
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200218073843.26b45f1b@canb.auug.org.au>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
++++ Stephen Rothwell [18/02/20 07:38 +1100]:
+>Hi all,
+>
+>Commit
+>
+>  b99931f169fe ("kernel: module: Replace zero-length array with flexible-array member")
+>
+>is missing a Signed-off-by from its committer.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Gah sorry, that's fixed now. 
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Thanks!
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-index 4c61d25d2e88..b794888fa3ba 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-@@ -57,7 +57,7 @@ struct mlx5_fpga_ipsec_cmd_context {
- 	struct completion complete;
- 	struct mlx5_fpga_device *dev;
- 	struct list_head list; /* Item in pending_cmds */
--	u8 command[0];
-+	u8 command[];
- };
- 
- struct mlx5_fpga_esp_xfrm;
--- 
-2.25.0
-
+Jessica
