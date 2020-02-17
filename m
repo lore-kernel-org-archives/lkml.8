@@ -2,51 +2,51 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BD3C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D9C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAD12072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2C6207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tgRDFPOq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g3l5Nhq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgBQO1W (ORCPT
+        id S1728952AbgBQO1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 17 Feb 2020 09:27:22 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41508 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbgBQO1V (ORCPT
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38248 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728798AbgBQO1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Feb 2020 09:27:21 -0500
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HER8p6041844;
-        Mon, 17 Feb 2020 08:27:08 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQtNf112638;
+        Mon, 17 Feb 2020 08:26:55 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581949628;
-        bh=x20XuJyDG5O2+c37QkvjXakZ6PsI56wqgW7J8Vp8Wo8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tgRDFPOqdqWFak0bU8cCloDasY+dLYgWOyjBs0QQyqJ3140cTUTkJaX5KkmLCrIg5
-         KkvdprNLDmi8wXZYwipdidm10AHKmToy0B7tJGY9lr1Si0T23BGaFcatFS84hpDm/z
-         ZoJzxIyoN8+ryGgjlZ2FS8uItpsY/ctan70MOBmw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HER86Q065030;
-        Mon, 17 Feb 2020 08:27:08 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1581949615;
+        bh=po/B6mtGdawuqToBGVPn55uQrgRGXqH10+7GXhQfSLE=;
+        h=From:To:CC:Subject:Date;
+        b=g3l5Nhq25UNXDvFYR35wDVh1fJ82s2lJ/fYKKis+BlbjT/Ji/V3sOlfHeFsIESwgb
+         ATU4N9ESsVcGqoy5y/EqlV8tl7UMFFoBw7hTp2XhFdntmB2s77CjhAuHyBJZnwkXiQ
+         FNJhcHyFBghe3hPZgaeYyLN5b3bYbXiCvF4HAaYQ=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQtMQ064540;
+        Mon, 17 Feb 2020 08:26:55 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 08:27:08 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 08:26:55 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 08:27:08 -0600
+ Frontend Transport; Mon, 17 Feb 2020 08:26:55 -0600
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQoJO033875;
-        Mon, 17 Feb 2020 08:27:04 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HEQoJL033875;
+        Mon, 17 Feb 2020 08:26:51 -0600
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -55,12 +55,10 @@ CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
         <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
         <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
         <sriram.dash@samsung.com>, <dmurphy@ti.com>, <faiz_abbas@ti.com>
-Subject: [PATCH v2 3/3] arm64: defconfig: Add Support for Bosch M_CAN controllers
-Date:   Mon, 17 Feb 2020 19:58:36 +0530
-Message-ID: <20200217142836.23702-4-faiz_abbas@ti.com>
+Subject: [PATCH v2 0/3] Add Support for MCAN in AM654x-idk
+Date:   Mon, 17 Feb 2020 19:58:33 +0530
+Message-ID: <20200217142836.23702-1-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200217142836.23702-1-faiz_abbas@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -70,27 +68,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable configs for supporting Bosch M_CAN controllers.
+This series adds driver patches to support MCAN in TI's AM654x-idk.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+v2: Model the sandby line to the transceiver as a regulator.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 905109f6814f..b25bbcf691b6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -161,6 +161,9 @@ CONFIG_QRTR=m
- CONFIG_QRTR_SMD=m
- CONFIG_QRTR_TUN=m
- CONFIG_BPF_JIT=y
-+CONFIG_CAN=m
-+CONFIG_CAN_M_CAN=m
-+CONFIG_CAN_M_CAN_PLATFORM=m
- CONFIG_BT=m
- CONFIG_BT_HIDP=m
- # CONFIG_BT_HS is not set
+Faiz Abbas (3):
+  dt-bindings: m_can: Add Documentation for transceiver regulator
+  can: m_can: m_can_platform: Add support for enabling transceiver
+  arm64: defconfig: Add Support for Bosch M_CAN controllers
+
+ Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+ arch/arm64/configs/defconfig                        | 3 +++
+ drivers/net/can/m_can/m_can_platform.c              | 6 ++++++
+ 3 files changed, 12 insertions(+)
+
 -- 
 2.19.2
 
