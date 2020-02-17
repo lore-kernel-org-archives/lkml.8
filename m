@@ -2,132 +2,113 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E9C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0F4C34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0171321D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377B521D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VMNuYUmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbgBQSio (ORCPT
+        id S1729668AbgBQSjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:38:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34317 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbgBQSio (ORCPT
+        Mon, 17 Feb 2020 13:39:02 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36855 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBQSjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:38:44 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3lHz-0005C0-7x; Mon, 17 Feb 2020 19:38:39 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC90D1C20B4;
-        Mon, 17 Feb 2020 19:38:38 +0100 (CET)
-Date:   Mon, 17 Feb 2020 18:38:38 -0000
-From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/cpu: Move prototype for
- get_umwait_control_msr() to a global location
-Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
-        kvm@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200123172945.7235-1-b.thiel@posteo.de>
-References: <20200123172945.7235-1-b.thiel@posteo.de>
+        Mon, 17 Feb 2020 13:39:02 -0500
+Received: by mail-pg1-f195.google.com with SMTP id d9so9661537pgu.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:39:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RbW7duBlVCzDcI0iF9afrjJ7KHsSIzqTpcHq8V46J2Q=;
+        b=VMNuYUmUtV6Gj6FG8unzj2/r8y8iMlywPXQRXi0jlcCEJiIzzkZK69KKDVd6PRGwqm
+         JkFAi7LU8Kc6FPxQtqfuxXRPQg0ap5JuxNtChTJ4eC4viOVh4S+s5+PbNRqjYxpTSFbs
+         bIO9clKiJJOuQ3B7K6T1eBOZeItyoXb+ponFA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RbW7duBlVCzDcI0iF9afrjJ7KHsSIzqTpcHq8V46J2Q=;
+        b=N9xvfPCxTjchjTq2FYFIVp6by3V1/DbH/an3HKX++XkvtLV42lAiWYW+wMlgd8JuCG
+         7VnpmQ6NSU/7PbS6IJBSec/SJ74Cp/sqZKWy2attsbysT8T8Jqw5dcNEfy0tFiW0i6OZ
+         qSmzSf98sAbs54Tn+wigbI5So82AS2pYTrqn63zWMkNh7GN5+NXrN1jOqhxBucTJREx3
+         ucmLm/qWMvL4XgIKee4wcuBlyFg2dpqRFuYT+phV6hCMkjofIodQpxGAiDlaT5N5JT3n
+         VFXQqLPpv78nHk4RY5j7/UBOOvgcI12EkyITYlwbtoGnnC6B5NhpQ4aThoKW8F7vZWf7
+         lZ8A==
+X-Gm-Message-State: APjAAAW9edfO7Kgm2ffJ2q9/fpBNXSVQZzrHs5S3065dnpaLu75yJ85z
+        7Qoe7N0BQZgKhryHb0qFcGm1RQ==
+X-Google-Smtp-Source: APXvYqwAJ/E9bXWArRV7T0+/OiXcVcZjQP4+pzYRR+7zBhSyLDjr8Y6RuIlXvzvSuevcOU5KtZ6ZPg==
+X-Received: by 2002:a63:5558:: with SMTP id f24mr18111297pgm.92.1581964741987;
+        Mon, 17 Feb 2020 10:39:01 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g7sm1184774pfq.33.2020.02.17.10.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 10:39:01 -0800 (PST)
+Date:   Mon, 17 Feb 2020 10:39:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        John Johansen <john.johansen@canonical.com>,
+        Micah Morton <mortonm@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: Re: [RFC PATCH] security: <linux/lsm_hooks.h>: fix all kernel-doc
+ warnings
+Message-ID: <202002171038.64EEC770@keescook>
+References: <fb2c98bd-b579-6ad0-721a-56a4f81f0d6e@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158196471850.13786.2863222761853021206.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb2c98bd-b579-6ad0-721a-56a4f81f0d6e@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Sat, Feb 15, 2020 at 11:08:38PM -0800, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix all kernel-doc warnings in <linux/lsm_hooks.h>.
+> Fixes the following warnings:
+> 
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'quotactl' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'quota_on' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_free_mnt_opts' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_eat_lsm_opts' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_kern_mount' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_show_options' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_add_mnt_opt' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'd_instantiate' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'getprocattr' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'setprocattr' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'locked_down' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_open' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_alloc' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_free' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_read' not described in 'security_list_options'
+> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_write' not described in 'security_list_options'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-Commit-ID:     b10c307f6f314c068814d0e23c86f06d5d57004b
-Gitweb:        https://git.kernel.org/tip/b10c307f6f314c068814d0e23c86f06d5d57004b
-Author:        Benjamin Thiel <b.thiel@posteo.de>
-AuthorDate:    Thu, 23 Jan 2020 18:29:45 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 17 Feb 2020 19:32:45 +01:00
+Yay! Thanks for working through these. :)
 
-x86/cpu: Move prototype for get_umwait_control_msr() to a global location
+Acked-by: Kees Cook <keescook@chromium.org>
 
-.. in order to fix a -Wmissing-prototypes warning.
-
-No functional change.
-
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: kvm@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200123172945.7235-1-b.thiel@posteo.de
----
- arch/x86/include/asm/mwait.h | 2 ++
- arch/x86/kernel/cpu/umwait.c | 1 +
- arch/x86/kvm/vmx/vmx.c       | 1 +
- arch/x86/kvm/vmx/vmx.h       | 2 --
- 4 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 9d5252c..b809f11 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -23,6 +23,8 @@
- #define MWAITX_MAX_LOOPS		((u32)-1)
- #define MWAITX_DISABLE_CSTATES		0xf0
- 
-+u32 get_umwait_control_msr(void);
-+
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
- {
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index c222f28..300e3fd 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -4,6 +4,7 @@
- #include <linux/cpu.h>
- 
- #include <asm/msr.h>
-+#include <asm/mwait.h>
- 
- #define UMWAIT_C02_ENABLE	0
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9a66648..2068cda 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -41,6 +41,7 @@
- #include <asm/mce.h>
- #include <asm/mmu_context.h>
- #include <asm/mshyperv.h>
-+#include <asm/mwait.h>
- #include <asm/spec-ctrl.h>
- #include <asm/virtext.h>
- #include <asm/vmx.h>
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 7f42cf3..b4e14ed 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -14,8 +14,6 @@
- extern const u32 vmx_msr_index[];
- extern u64 host_efer;
- 
--extern u32 get_umwait_control_msr(void);
--
- #define MSR_TYPE_R	1
- #define MSR_TYPE_W	2
- #define MSR_TYPE_RW	3
+-- 
+Kees Cook
