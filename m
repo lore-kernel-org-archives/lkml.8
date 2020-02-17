@@ -2,225 +2,157 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61F0C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F31FC761A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B555120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25634206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtKtZbvU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GXEj8u0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgBQNE1 (ORCPT
+        id S1728114AbgBQNHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:04:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36903 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgBQNE1 (ORCPT
+        Mon, 17 Feb 2020 08:07:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37211 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726801AbgBQNHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:04:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z12so9141699pgl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:04:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iEIBfVN8ix9KBBgtQRWCGVqUnRRp30TBqeX8vW+9K1w=;
-        b=jtKtZbvUwH1Vtw3obAbdrw4H7ANlZCpiQFuTcpU945D0GaPYWbfG1oFfocpzb5BUyn
-         qASY1OBb8LV+5IZ0TBIxSSu+DjrGAzqpQR5RTa6OwveVqgeTA2RSl0yb2paBi9sQH4nb
-         9dus45Smr2Y6vgh5h0rVDUnG/gmidzloB4o6bikxgYdJRZS7m0ItQHppgocgnxw1nyp2
-         mlm598/r1kEknDBoKHzWIXJtJOcSBKPnP+DKBPH0TMTcmH/Tv9BaK+lLJWXHkTonxpv+
-         NSfg4m0+eott7gx9MbdHpm8l4k4iOBy8LDKGc21/aQTEwTSWLS0q7IwdV0LYNIkS/QLG
-         K8nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iEIBfVN8ix9KBBgtQRWCGVqUnRRp30TBqeX8vW+9K1w=;
-        b=hF0s7XjY9VwaUpkuKmgMJ7lorUA8o02eK4JZgokDJmpvLegjxn/vW3u9icT8S8aYbR
-         aU337a/J7+VlMx6n3fk0/7kNHDlt0oUUmNfWYDcBXULVEO0X3xqVaEAkOI/C1tP1Uior
-         C3bpykYiLuhaBqGQBA4XOBh+aPtJqmUKtDxIcxmGkN6HGJbi58jRxQwLwCZjM4E4V7Gy
-         Cv4sYKpks99uZSxDEOblKNAOXBHWAJ8IBGazCkkFYFD5xSARhHKb2mRfiITJmLDyB0eM
-         Itwg4jF3TZHa8xs/lf3JZ2YWFZaYw9TcneTsS/Qq6hrY5DWoIFDuVcuLOvpv6ovhQoa9
-         PWug==
-X-Gm-Message-State: APjAAAWvywEvrlkIK5/CXoVCpgcz7XXHZRVaw3kPzO86AiI0yuhjaT92
-        y+tHejJHa3Xhp7PaIV7RkXMbZlLgXw==
-X-Google-Smtp-Source: APXvYqzJ8ntqVrujukpP/ziTva1saysE6WW2r9/8mGzaJazarWwL3ADKrsyu2VHAWmPG9yh1Es/PEQ==
-X-Received: by 2002:a62:8245:: with SMTP id w66mr16364886pfd.93.1581944666331;
-        Mon, 17 Feb 2020 05:04:26 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:48d:3349:6027:e3e7:afa3:2ab9])
-        by smtp.gmail.com with ESMTPSA id a18sm441085pfl.138.2020.02.17.05.04.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Feb 2020 05:04:25 -0800 (PST)
-Date:   Mon, 17 Feb 2020 18:34:19 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200217130419.GA13993@Mani-XPS-13-9360>
-References: <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
- <20200206165755.GB3894455@kroah.com>
- <20200211184130.GA11908@Mani-XPS-13-9360>
- <20200211192055.GA1962867@kroah.com>
- <20200213152013.GB15010@mani>
- <20200213153418.GA3623121@kroah.com>
- <20200213154809.GA26953@mani>
- <20200213155302.GA3635465@kroah.com>
- <20200217052743.GA4809@Mani-XPS-13-9360>
- <20200217115930.GA218071@kroah.com>
+        Mon, 17 Feb 2020 08:07:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581944832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=SpKPc5A4+hoXgRo+kcenP9f+2YW/SXepj7eKuZO/ZZc=;
+        b=GXEj8u0z86dBzZ7OE/NKDyWbUc021Nv9JALpEW6QP5qnaSibgJYAgB1BmvXf2+MlvhLfzs
+        6QTk4cI+WK3qyrO9f/0rImHMtW3WYhhJFlJ8vMf+gx5xOA8NRHn2HEEn9FXXx/NCeMuUUl
+        usZoaoJy8/wrPv3C7UdcGv3n+grHyRI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-VqZ5xVpxMWy9vMr47c6tSg-1; Mon, 17 Feb 2020 08:07:08 -0500
+X-MC-Unique: VqZ5xVpxMWy9vMr47c6tSg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53F8A800D50;
+        Mon, 17 Feb 2020 13:07:06 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFE882CC39;
+        Mon, 17 Feb 2020 13:07:03 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
+Date:   Mon, 17 Feb 2020 08:06:59 -0500
+Message-Id: <20200217130659.15895-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217115930.GA218071@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
-> On Mon, Feb 17, 2020 at 10:57:43AM +0530, Manivannan Sadhasivam wrote:
-> > Hi Greg,
-> > 
-> > On Thu, Feb 13, 2020 at 07:53:02AM -0800, Greg KH wrote:
-> > > On Thu, Feb 13, 2020 at 09:18:09PM +0530, Manivannan Sadhasivam wrote:
-> > > > Hi Greg,
-> > > > 
-> > > > On Thu, Feb 13, 2020 at 07:34:18AM -0800, Greg KH wrote:
-> > > > > On Thu, Feb 13, 2020 at 08:50:13PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
-> > > > > > > On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > Hi Greg,
-> > > > > > > > 
-> > > > > > > > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
-> > > > > > > > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > > > --- /dev/null
-> > > > > > > > > > +++ b/drivers/bus/mhi/core/init.c
-> > > > > > > > > > @@ -0,0 +1,407 @@
-> > > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > +/*
-> > > > > > > > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> > > > > > > > > > + *
-> > > > > > > > > > + */
-> > > > > > > > > > +
-> > > > > > > > > > +#define dev_fmt(fmt) "MHI: " fmt
-> > > > > > > > > 
-> > > > > > > > > This should not be needed, right?  The bus/device name should give you
-> > > > > > > > > all you need here from what I can tell.  So why is this needed?
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > The log will have only the device name as like PCI-E. But that won't specify
-> > > > > > > > where the error is coming from. Having "MHI" prefix helps the users to
-> > > > > > > > quickly identify that the error is coming from MHI stack.
-> > > > > > > 
-> > > > > > > If the driver binds properly to the device, the name of the driver will
-> > > > > > > be there in the message, so I suggest using that please.
-> > > > > > > 
-> > > > > > > No need for this prefix...
-> > > > > > > 
-> > > > > > 
-> > > > > > So the driver name will be in the log but that won't help identifying where
-> > > > > > the log is coming from. This is more important for MHI since it reuses the
-> > > > > > `struct device` of the transport device like PCI-E. For instance, below is
-> > > > > > the log without MHI prefix:
-> > > > > > 
-> > > > > > [   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
-> > > > > > [   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
-> > > > > > 
-> > > > > > As you can see, this gives the assumption that the log is coming from the
-> > > > > > ath11k_pci driver. But the reality is, it is coming from MHI bus.
-> > > > > 
-> > > > > Then you should NOT be trying to "reuse" a struct device.
-> > > > > 
-> > > > > > With the prefix added, we will get below:
-> > > > > > 
-> > > > > > [   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
-> > > > > > [   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
-> > > > > > 
-> > > > > > IMO, the prefix will give users a clear idea of logs and that will be very
-> > > > > > useful for debugging.
-> > > > > > 
-> > > > > > Hope this clarifies.
-> > > > > 
-> > > > > Don't try to reuse struct devices, if you are a bus, have your own
-> > > > > devices as that's the correct way to do things.
-> > > > > 
-> > > > 
-> > > > I assumed that the buses relying on a different physical interface for the
-> > > > actual communication can reuse the `struct device`. I can see that the MOXTET
-> > > > bus driver already doing it. It reuses the `struct device` of SPI.
-> > > 
-> > > How can you reuse anything?
-> > > 
-> > > > And this assumption has deep rooted in MHI bus design.
-> > > 
-> > > Maybe I do not understand what this is at all, but a device can only be
-> > > on one "bus" at a time.  How is that being broken here?
-> > > 
-> > 
-> > Let me share some insight on how it is being used:
-> > 
-> > The MHI bus sits on top of the actual physical bus like PCI-E and requires
-> > the physical bus for doing activities like allocating I/O virtual address,
-> > runtime PM etc... The part which gets tied to the PCI-E from MHI is called MHI
-> > controller driver. This MHI controller driver is also the actual PCI-E driver
-> > managing the device.
-> > 
-> > For instance, we have QCA6390 PCI-E WLAN device. For this device, there is a
-> > ath11k PCI-E driver and the same driver also registers as a MHI controller and
-> > acts as a MHI controller driver. This is where I referred to reusing the PCI-E
-> > struct device. It's not that MHI bus itself is reusing the PCI-E struct device
-> > but we need the PCI-E device pointer to do above mentioned IOVA, PM operations
-> > in some places. One of the usage is below:
-> > 
-> > ```
-> > void *buf = dma_alloc_coherent(mhi_cntrl->dev, size, dma_handle, gfp);
-> > ```
-> 
-> Wait, why do you need to call this with the parent dev?  Why not with
-> your struct device?  What does the parent pointer have that yours does
-> not?  Is it not correctly having whatever dma attributes the parent has
-> set properly for your device as well?  If not, why not just fix that and
-> then _your_ device can be doing the allocation?
-> 
+A user has reported that they are seeing spurious corrected errors on
+their hardware.
 
-This is _one_ of the usecases of the parent dev. We are also using it to manage
-the runtime PM operations of the physical device (pcie) when the MHI stack goes
-into respective states. For instance,
+Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+"spurious corrected errors may be logged in the IA32_MC0_STATUS register
+with the valid field (bit 63) set, the uncorrected error field (bit 61)
+not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+an MCA Error Code (bits [15:0]) of 0x0005."
 
-```
-        if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
-                mhi_cntrl->runtime_get(mhi_cntrl);
-                mhi_cntrl->runtime_put(mhi_cntrl);
-        }
-```
+Block these spurious errors from the console and logs.
 
-These runtime_put() and runtime_get() are the callbacks to be provided by the
-controller drivers for managing its runtime PM states.
+Links to Intel Specification updates:
+HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/=
+core/4th-gen-core-family-desktop-specification-update.html
+HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/=
+core/4th-gen-core-family-mobile-specification-update.html
+HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1=
+200v3-spec-update.html
+BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/c=
+ore/5th-gen-core-family-spec-update.html
 
-Also, the MHI devices for the channels will be created later on after the
-controller probe, so at that time we need this parent dev to set the MHI device
-parent:
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-edac@vger.kernel.org
+---
+ arch/x86/kernel/cpu/mce/core.c     |  2 ++
+ arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
+ arch/x86/kernel/cpu/mce/internal.h |  1 +
+ 3 files changed, 20 insertions(+)
 
-```
-struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-{
-...
-dev->parent = mhi_cntrl->dev;
-...
-```
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
+e.c
+index 2c4f949611e4..fe3983d551cc 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
+ {
+ 	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_AMD)
+ 		return amd_filter_mce(m);
++	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL)
++		return intel_filter_mce(m);
+=20
+ 	return false;
+ }
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/in=
+tel.c
+index 5627b1091b85..989148e6746c 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+ {
+ 	intel_clear_lmce();
+ }
++
++bool intel_filter_mce(struct mce *m)
++{
++	struct cpuinfo_x86 *c =3D &boot_cpu_data;
++
++	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
++	if ((c->x86 =3D=3D 6) &&
++	    ((c->x86_model =3D=3D INTEL_FAM6_HASWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_L) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_BROADWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_G)) &&
++	    (m->bank =3D=3D 0) &&
++	    ((m->status & 0xa0000000ffffffff) =3D=3D 0x80000000000f0005))
++		return true;
++
++	return false;
++}
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce=
+/internal.h
+index b785c0d0b590..821faba5b05d 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -175,5 +175,6 @@ extern bool amd_filter_mce(struct mce *m);
+ #else
+ static inline bool amd_filter_mce(struct mce *m)			{ return false; };
+ #endif
++extern bool intel_filter_mce(struct mce *m);
+=20
+ #endif /* __X86_MCE_INTERNAL_H__ */
+--=20
+2.21.1
 
-Hence, having the parent dev pointer really helps.
-
-Thanks,
-Mani
-> thanks,
-> 
-> greg k-h
