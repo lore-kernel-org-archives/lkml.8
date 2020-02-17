@@ -2,138 +2,163 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0514C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2420C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EB620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581953705;
-	bh=8efhOOieeB7D17j3jQ31Byut/zxDybXrDad5pZgzM6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JACNbsjfv3IqnRUit1xwqlwdfzU3IOugWq7sakEaWwc7cTgNmSN1XKjGecDWkDgmz
-	 7SVtYTvBx+r7VN1A+d66ql2Uual8qfJtka5WyoInl0xdNv5dNxyxGjadgRpZOggUIf
-	 WJQ0wFNK5gwgVWIaJ1HO9LcA38U/NSlIbaCurioY=
+	by mail.kernel.org (Postfix) with ESMTP id 96E7620718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uz9oWtwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgBQPfE (ORCPT
+        id S1728902AbgBQPfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:35:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbgBQPfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:35:04 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 380E020718;
-        Mon, 17 Feb 2020 15:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581953703;
-        bh=8efhOOieeB7D17j3jQ31Byut/zxDybXrDad5pZgzM6g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GUBKrAqfG8eSWxLQWWL2Hm7nfXDbOjgbkjFFHnQy6utvXaBluk+63gdAGLNnTeb30
-         H6BGDGTl6RRv71CiGYfZQM6e2IQ6OJd6B6ojZFHMj8nAM7Y+I5YMylksMDqdvFABaM
-         7usA1EvhAx1vDJlpGyn37JrX8xFPvBnuoK+EtALk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j3iQH-005xOP-JS; Mon, 17 Feb 2020 15:35:01 +0000
+        Mon, 17 Feb 2020 10:35:12 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50623 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728823AbgBQPfL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:35:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581953710;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=I94s+/OW2nmFtGVziJ+53lmgRDQEQNRHpvcvNRvPjFg=;
+        b=Uz9oWtwLYuCDLZQ6pGFOwN47vY9HVwUFSrs6OYzi17EliHIAvWEJWBDXU1KnnqjO1Qgo8T
+        xrYTr6NuHPWYBLmDFbiTNRdofkeKrdz5UTRmOqt1AeUJToSUKMZX/PXsQPC5dX8XgqEG6Y
+        mQ3yUoLOOyZgdugMWOqPRGFoIGSfsRg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-2LVmJ5_mPwuzffNM1gSIfQ-1; Mon, 17 Feb 2020 10:35:08 -0500
+X-MC-Unique: 2LVmJ5_mPwuzffNM1gSIfQ-1
+Received: by mail-wr1-f71.google.com with SMTP id w6so9118474wrm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 07:35:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=I94s+/OW2nmFtGVziJ+53lmgRDQEQNRHpvcvNRvPjFg=;
+        b=CgN4OHPVrgMHrg3vpV7YUUhghaQwGtJ9/ou/3ZRTz6mpmLTsqq5VY9M3Gxffhu8QxS
+         4+bCGj4qf6nBgIk6U9aJ0LvbddqVxBPwBXs3gFQlLiGB/1sxkp2n7l96++8x0azUGYN8
+         7hPdL9e0YkYa3f4aPHcGTzG76FpnXScop39JCFqq8PZDEPvUQEeCq5NoMblSwEFIoLRI
+         aAiyd9Fs0MaEISJhWDuL6Nv8nheFcr1zJz+IqrsWaNjhP+dE27mjR137bY2gCKAhMsxF
+         yWwVnSbpmNJAipcDhKq5nkXPz4lUbXm5LN/Rv2h2IMFIPI0Q1lcSTK5RzezxbPrL9Jt6
+         tjlw==
+X-Gm-Message-State: APjAAAUqVRbYpECfGBRpv+kOmnza6waajkVrXIHjoKzKOniTGi7wghiF
+        6rjgox+FidCXtS/yTs7qeOgLm60SiZLPKaEyNiGZM9nfN24IMSIxpWMqJXwLQvlRWuPRKOId0e7
+        /5VFoUQiDliDlLiCgsT3oFOlO
+X-Received: by 2002:a7b:cd8e:: with SMTP id y14mr22883682wmj.150.1581953707732;
+        Mon, 17 Feb 2020 07:35:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw70CrrrSfMwVWl7qnn5bAkrGx2tWvnt4qyiyI0/zrMUKDzlnUG9J1tN9btzikV0/JwRnl8xw==
+X-Received: by 2002:a7b:cd8e:: with SMTP id y14mr22883657wmj.150.1581953707447;
+        Mon, 17 Feb 2020 07:35:07 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y8sm1018221wma.10.2020.02.17.07.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 07:35:06 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic dirty log functions
+In-Reply-To: <20200207194532.GK2401@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com> <20200121223157.15263-16-sean.j.christopherson@intel.com> <20200206200200.GC700495@xz-x1> <20200206212120.GF13067@linux.intel.com> <20200206214106.GG700495@xz-x1> <20200207194532.GK2401@linux.intel.com>
+Date:   Mon, 17 Feb 2020 16:35:05 +0100
+Message-ID: <87v9o59qhi.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Feb 2020 15:35:01 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>, jon@solid-run.com,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-In-Reply-To: <20200217152518.GA18376@e121166-lin.cambridge.arm.com>
-References: <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
- <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200214161957.GA27513@e121166-lin.cambridge.arm.com>
- <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
- <VI1PR0401MB2496308C27B7DAA7A5396970F1160@VI1PR0401MB2496.eurprd04.prod.outlook.com>
- <20200217152518.GA18376@e121166-lin.cambridge.arm.com>
-Message-ID: <384eb5378ee2b240d6ab7d89aef2d5c7@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, pankaj.bansal@nxp.com, ard.biesheuvel@linaro.org, makarand.pawagi@nxp.com, calvin.johnson@nxp.com, stuyoder@gmail.com, nleeder@codeaurora.org, ioana.ciornei@nxp.com, cristian.sovaiala@nxp.com, guohanjun@huawei.com, will@kernel.org, jon@solid-run.com, linux@armlinux.org.uk, linux-acpi@vger.kernel.org, lenb@kernel.org, jason@lakedaemon.net, Andy.Wang@arm.com, V.Sethi@nxp.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com, Paul.Yang@arm.com, netdev@vger.kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, sudeep.holla@arm.com, robin.murphy@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-17 15:25, Lorenzo Pieralisi wrote:
-> On Mon, Feb 17, 2020 at 12:35:12PM +0000, Pankaj Bansal wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Hi Lorenzo,
-
-[...]
-
->> > Side note: can you explain to me please how the MSI allocation flow
->> > and kernel data structures/drivers are modeled in DT ? I had a quick
->> > look at:
->> >
->> > drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
->> >
->> > and to start with, does that code imply that we create a
->> > DOMAIN_BUS_FSL_MC_MSI on ALL DT systems with an ITS device node ?
+> +Vitaly for HyperV
+>
+> On Thu, Feb 06, 2020 at 04:41:06PM -0500, Peter Xu wrote:
+>> On Thu, Feb 06, 2020 at 01:21:20PM -0800, Sean Christopherson wrote:
+>> > On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
+>> > > But that matters to this patch because if MIPS can use
+>> > > kvm_flush_remote_tlbs(), then we probably don't need this
+>> > > arch-specific hook any more and we can directly call
+>> > > kvm_flush_remote_tlbs() after sync dirty log when flush==true.
+>> > 
+>> > Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
+>> > that prevents calling kvm_flush_remote_tlbs() directly, but I have no
+>> > clue as to the important of that code.
 >> 
->> Yes. It's being done for all DT systems having ITS node.
-> 
-> This does not seem correct to me, I will let Marc comment on
-> the matter.
+>> As said above I think the x86 lockdep is really not necessary, then
+>> considering MIPS could be the only one that will use the new hook
+>> introduced in this patch...  Shall we figure that out first?
+>
+> So I prepped a follow-up patch to make kvm_arch_dirty_log_tlb_flush() a
+> MIPS-only hook and use kvm_flush_remote_tlbs() directly for arm and x86,
+> but then I realized x86 *has* a hook to do a precise remote TLB flush.
+> There's even an existing kvm_flush_remote_tlbs_with_address() call on a
+> memslot, i.e. this exact scenario.  So arguably, x86 should be using the
+> more precise flush and should keep kvm_arch_dirty_log_tlb_flush().
+>
+> But, the hook is only used when KVM is running as an L1 on top of HyperV,
+> and I assume dirty logging isn't used much, if at all, for L1 KVM on
+> HyperV?
 
-Unfortunately, there isn't a very good way to avoid that ATM,
-other than defering the registration of the irqdomain until
-we know that a particular bus (for example a PCIe RC) is registered.
+(Sorry for the delayed reply, was traveling last week)
 
-I started working on that at some point, and ended up nowhere because
-no bus (PCI, FSL, or anything else) really give us the right information
-when it is actually required (when a device starts claiming interrupts).
+When KVM runs as an L1 on top of Hyper-V it uses eVMCS by default and
+eVMCSv1 doesn't support PML. I've also just checked Hyper-V 2019 and it
+hides SECONDARY_EXEC_ENABLE_PML from guests (this was expected).
 
-I *think* we could try a defer it until a bus root is found, and that
-this bus has a topological link to an ITS. probably invasive though,
-as you would need a set of "MSI providers" for each available irqchip
-node.
+>
+> I see three options:
+>
+>   1. Make kvm_arch_dirty_log_tlb_flush() MIPS-only and call
+>      kvm_flush_remote_tlbs() directly for arm and x86.  Add comments to
+>      explain when an arch should implement kvm_arch_dirty_log_tlb_flush().
+>
+>   2. Change x86 to use kvm_flush_remote_tlbs_with_address() when flushing
+>      a memslot after the dirty log is grabbed by userspace.
+>
+>   3. Keep the resulting code as is, but add a comment in x86's
+>      kvm_arch_dirty_log_tlb_flush() to explain why it uses
+>      kvm_flush_remote_tlbs() instead of the with_address() variant.
+>
+> I strongly prefer to (2) or (3), but I'll defer to Vitaly as to which of
+> those is preferable.
 
-In short, messy. But I'd be happy to revive this and have a look again.
+I'd vote for (2): while this will effectively be kvm_flush_remote_tlbs()
+for now, we may think of something smarter in the future (e.g. PV
+interface for KVM-on-KVM).
 
-         M.
+>
+> I don't like (1) because (a) it requires more lines code (well comments),
+> to explain why kvm_flush_remote_tlbs() is the default, and (b) it would
+> require even more comments, which would be x86-specific in generic KVM,
+> to explain why x86 doesn't use its with_address() flush, or we'd lost that
+> info altogether.
+>
+
 -- 
-Jazz is not dead. It just smells funny...
+Vitaly
+
