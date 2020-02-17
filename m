@@ -2,123 +2,159 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4F4C34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F961C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C5724658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1354520725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581967340;
-	bh=e5ynq68K7XvQCy1SpM5+Di9nf0iC5AyuVQV2dGoHBPk=;
+	s=default; t=1581967409;
+	bh=602xr8fGbZ4Uj6wDW+Ne5jhonEwkBVOajGL488Xv3nw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W39X7BBRtEceiv8FwGbvubW76v/A6ZRNJZk58BLKQOgylM1iSzYn9yZVFkPv4shFE
-	 jTnHYAmoyQelHrsyyFU0DUH0HAoJ6tgeUp91WdC+pFgL3DBdvN/CjyRWurc/9BqI1v
-	 8XAuaOJmvWPAwAT/aiy1wden9B9mwx2vlGQpkG/w=
+	b=JucBtKWfuICLLDJ44v+kuNX84xr7ny8kNiXVqPzsQbqOFOaF5cSLa57xq0IpkbkbQ
+	 xyvQVYc5hcLCMhFASaesXWmNrY30Wz/FkNhcGwHdMApOCHdwZMx6PkbK0BMcou+/G/
+	 dVifU8JToi8SYzJonfAASxKG43O1mWtA+STY1S6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgBQTWT (ORCPT
+        id S1728543AbgBQTX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:22:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35653 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbgBQTWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:22:18 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so21111904wrt.2;
-        Mon, 17 Feb 2020 11:22:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dQu0c/96h+gGpCGNJWP56GTqSBWJTi+tOW85OAlEpGo=;
-        b=PksRAbLi1ZtOjbgdvz6tprUvq0f6OpowU9ojiYRPaIU7F5N0YwIds7pS0W5SpRcfQJ
-         C51PXqT4fNTOL72d9EnFQYOTWTesf/7xskdHY0Toi1rTWHnu6BGc687KUXSIxf0sJvtI
-         SczJccJToC7TrkDTj6nU2r6s3/nysU1G/R92bJYF/QcgfaktpM3zA4CEsahoGrGu9erA
-         kLmtuJRGiGJhmtNbTb9wqnE6QNZ+ROF99DKndBgk2RkyMTcjAN8vHBd/++IVUApNcpa3
-         UBQskXwgulPfvGSd+V+xc0XiaLf/tnSF8+nC8F+yKB7/krGzfApDFcCKzL7XIDEnQFR7
-         Bwbw==
-X-Gm-Message-State: APjAAAUvJsaEX6f3ao6fcD4Qw71mJviL4lMt/pSDchNOHU+ShfnQ87VH
-        mAo/wu/p4yzakguWHhVMa8//WJr+PqNNRnXtPCU=
-X-Google-Smtp-Source: APXvYqzje049VqM8Uvs3YZgtldZLuL23bcp8xq730hDgZyw6hmDMsr2PamxYJgibsaPwTngrk4GnMvr+nAJ2rKs0gHw=
-X-Received: by 2002:a05:6000:c4:: with SMTP id q4mr22678321wrx.332.1581967335660;
- Mon, 17 Feb 2020 11:22:15 -0800 (PST)
+        Mon, 17 Feb 2020 14:23:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgBQTX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 14:23:27 -0500
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2155020836
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 19:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581967406;
+        bh=602xr8fGbZ4Uj6wDW+Ne5jhonEwkBVOajGL488Xv3nw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QiW9R5WBkYxI5ev+s1kOn4bR2TlTM+QMysiJ2EofVN6bgKM6nLs4Tii8mC67SeDcY
+         RjbKUONzD7NZpS9jPjEPeiDPD/oB+/XNTsu4aDFEoSFXgTfwLZKJLCm9JgSRS7NGsj
+         DOr0ab2UIt2+Uk6Bwewq1hnuNtmGmO5PqqH3uyVk=
+Received: by mail-wr1-f47.google.com with SMTP id y17so21102854wrh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:23:26 -0800 (PST)
+X-Gm-Message-State: APjAAAUXG4HnBFoMTqrKXJtOG8E4MK4ILQxMSCm3IjjAXk1TSxc0M2DS
+        H3AJ+s72YyXhlSXvPG/tCmgcPJwcaWivWDykDWpzMw==
+X-Google-Smtp-Source: APXvYqwsJMZfj7iGiljF60L1NGGN+k/xB8x4Q1WS1VC+9NZDJ4Klt+mARcgs7lpKKM8v2t73mxU9U0+5hcmUm7o/8AU=
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr23324673wrw.126.1581967404448;
+ Mon, 17 Feb 2020 11:23:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107133501.327117-1-namhyung@kernel.org> <20200107133501.327117-5-namhyung@kernel.org>
- <20200108215235.GA12995@krava> <CAM9d7cifgLKbu5KM+QF6ZK9DGbN=8g1oj+vzU3HcTfrUQHP5jg@mail.gmail.com>
- <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
- <20200121094246.GA707582@krava> <20200217154604.GE19953@kernel.org>
-In-Reply-To: <20200217154604.GE19953@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 17 Feb 2020 11:22:04 -0800
-Message-ID: <CAM9d7ciaNNJFxVPeCHkwkshDccbdYc2MMzM7+-eD_AVBnRM-aQ@mail.gmail.com>
-Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <20200216141104.21477-1-ardb@kernel.org> <CACi5LpN_Aqop1MQx3ouRd4V27GtiMXBiT=w916P1_zEEc2SJcQ@mail.gmail.com>
+In-Reply-To: <CACi5LpN_Aqop1MQx3ouRd4V27GtiMXBiT=w916P1_zEEc2SJcQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 17 Feb 2020 20:23:13 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu9XOcQfQCbrEgNPQWY0WhGRFPJSPPDykRHDdX+E5B6DhQ@mail.gmail.com>
+Message-ID: <CAKv+Gu9XOcQfQCbrEgNPQWY0WhGRFPJSPPDykRHDdX+E5B6DhQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] arch-agnostic initrd loading method for EFI systems
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laszlo Ersek <lersek@redhat.com>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
-
-On Mon, Feb 17, 2020 at 7:46 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon, 17 Feb 2020 at 20:11, Bhupesh Sharma <bhsharma@redhat.com> wrote:
 >
-> Em Tue, Jan 21, 2020 at 10:42:46AM +0100, Jiri Olsa escreveu:
-> > On Mon, Jan 20, 2020 at 10:57:47PM +0900, Namhyung Kim wrote:
-> > > So I tried this but then realized that it's hard to get the perf_env later
-> > > when it needs to convert a cgroup id to name (ie. in sort_entry.se_snprintf).
-> > > I also checked maybe I can resolve it when a hist entry is added,
-> > > but it doesn't have the pointer there too.
+> Hi Ard,
 >
-> > looks like there might be a path for standard report where hists
-> > are part of evsel object:
+> On Sun, Feb 16, 2020 at 7:41 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > >
-> >   'struct hist_entry' via ->hists to  'struct hists'
-> >   hists_to_evsel(hists) to 'struct evsel'
-> >   'struct evsel' via ->evlist to 'struct evlist'
-> >   and there you have evlist->env ;-)
+> > This series introduces an arch agnostic way of loading the initrd into
+> > memory from the EFI stub. This addresses a number of shortcomings that
+> > affect the current implementations that exist across architectures:
+> >
+> > - The initrd=<file> command line option can only load files that reside
+> >   on the same file system that the kernel itself was loaded from, which
+> >   requires the bootloader or firmware to expose that file system via the
+> >   appropriate EFI protocol, which is not always feasible. From the kernel
+> >   side, this protocol is problematic since it is incompatible with mixed
+> >   mode on x86 (this is due to the fact that some of its methods have
+> >   prototypes that are difficult to marshall)
+> >
+> > - The approach that is ordinarily taken by GRUB is to load the initrd into
+> >   memory, and pass it to the kernel proper via the bootparams structure or
+> >   via the device tree. This requires the boot loader to have an understanding
+> >   of those structures, which are not always set in stone, and of the policies
+> >   around where the initrd may be loaded into memory. In the ARM case, it
+> >   requires GRUB to modify the hardware description provided by the firmware,
+> >   given that the initrd base and offset in memory are passed via the same
+> >   data structure. It also creates a time window where the initrd data sits
+> >   in memory, and can potentially be corrupted before the kernel is booted.
+> >
+> > Considering that we will soon have new users of these interfaces (EFI for
+> > kvmtool on ARM, RISC-V in u-boot, etc), it makes sense to add a generic
+> > interface now, before having another wave of bespoke arch specific code
+> > coming in.
+> >
+> > Another aspect to take into account is that support for UEFI secure boot
+> > and measured boot is being taken into the upstream, and being able to
+> > rely on the PE entry point for booting any architecture makes the GRUB
+> > vs shim story much cleaner, as we should be able to rely on LoadImage
+> > and StartImage on all architectures, while retaining the ability to
+> > load initrds from anywhere.
+> >
+> > Note that these patches depend on a fair amount of cleanup work that I
+> > am targetting for v5.7. Branch can be found at:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
+> >
+> > A PoC implementation for OVMF and ArmVirtQemu (OVMF for ARM aka AAVMF) can
+> > be found at https://github.com/ardbiesheuvel/edk2/commits/linux-efi-generic.
+> >
+> > A U-Boot implementation is under development as well, and can be found at
+> > https://github.com/apalos/u-boot/commits/efi_load_file_8
 >
-> Hey, recently I did work that ended up adding a 'struct maps' to 'struct
-> map_symbol' and then hist_entry::ms has it, enough?
->
-> i.e.:
->
-> hist_entry::ms->maps->machine
->
->   he->ms->maps->machine
 
-Yep, that's enough for my use.
+Hello Bhupesh,
 
+> Thanks a lot for the patchset. I am still going through the patchset
+> and trying to understand how will it impact
+> kexec use-cases, namely:
 >
-> > however I was wondering if we could add 'machine' pointer
-> > to the hist object, that would make that simpler ;-)
+> 1. kexec_load() and kecec_file_load(), use '--initrd=<file>' like
+> command line options.
 >
-> Directly from one of its hist_entries? As above?
 
-Right, any path from hist_entry to perf_env would be ok.
+These should not be affected at all, since they don't go through the EFI stub.
 
+> 2. We have several kexec based bootloader implementations (for example
+> linuxboot, see (a) and (b) below) that replaces specific firmware
+> functionality like the UEFI DXE phase with a Linux kernel and runtime
+> and find the initrd image (for example, uroot) from that same
+> filesystem. So these would need modification(s) similar to the OVMF
+> AAVMF and u-boot, right?
 >
-> > not sure about the way.. would be nice if that'd work for
-> > both evsel hists and standalone ones like in c2c
->
-> > but maybe just some init helper that sets the pointer early on
-> > might do the job
->
-> Sorry for the delay in answering, was travelling/vacations, now taming a
-> huge mailbox :-\
 
-No problem, I'll send the next version soon.
+These changes only affect the interaction between the EFI firmware and
+the EFI stub. Anything that relies on the raw x86 boot protocol (jump
+to offset 0x0 for 32-bit or offset 0x200 for 64-bit) or the EFI
+handover protocol (find the boot offset in the setup header and jump
+into the image at the discovered offset) will work as before, although
+the EFI handover protocol is something I would like to get rid of at
+some point in the future. Kexec typically mimics the handover between
+the EFI stub and the kernel, not the EFI firmware and the EFI stub, so
+I would not expect kexec to be affected at all by any of this.
 
-Thanks
-Namhyung
+In general, the intent is to make kexec idempotent, i.e., to make the
+first boot as similar as we can to subsequent kexec boots, which is
+why we are pushing back against adding bespoke interfaces to pass ACPI
+rsdp pointer, smbios table addresses etc.
