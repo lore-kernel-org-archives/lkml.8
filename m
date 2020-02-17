@@ -2,79 +2,114 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA8AC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C707EC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7D820718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC0A2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="kQNDEUGj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+basvKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgBQGJC (ORCPT
+        id S1726776AbgBQGJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:09:02 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:38672 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgBQGJC (ORCPT
+        Mon, 17 Feb 2020 01:09:13 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:37913 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725972AbgBQGJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:09:02 -0500
-Received: by mail-io1-f72.google.com with SMTP id x2so11190880iog.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 22:09:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=KjyO2CoXoWwnkM0ow4J41Qq6MSIdJgEthJmvcyKAp34=;
-        b=XtwzvhBnBzLOnikik2Epa6GbfDPR3AYPfXqmwoJNrQF4X4h0/oZ3QiDxdTwaC+u2vg
-         2ArCstfNb1eYao41e0l4p35IKs2B7V77T4tWWCw0VmYTvYAR7yZjQlGWv7TotRRGtp8u
-         yr2zNipk/0jttWqQVyahVxSugqfxegg4DTZbSPb2VMQz7kEbdgZWxshN34RbTLg1zYlj
-         TzONwrr097nLMN3SZ6KPx2RPeftUc/tw6VF3I02mfVQnUpYJMs1jb6+ey72FFPEPpzYB
-         Jky+eOimSYgLhB60iRJ8r+PJVDdylDHdN0t7QyehMG81m/IHzYRAlK0mPndCrp8ZmAi1
-         qgxA==
-X-Gm-Message-State: APjAAAV5bn6DjFH5mQWqG/nzsH2GMfCEIThP7vPDA4ucTpf1ZIN29W3n
-        vNt4sNg2FpKlnbfYQpjRDo4EEsUlN197DIA9NScgWTsadRQx
-X-Google-Smtp-Source: APXvYqw9e8S7Ik9ZMV2fme+AyYp2vlgWW5jiJuRFAympxlHFz2ZX4EV7M5BWi5Cs3LF+f9da1xKs8iUCxvXKigJf/lEaxfjPT2fk
+        Mon, 17 Feb 2020 01:09:13 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 005A950C;
+        Mon, 17 Feb 2020 01:09:11 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:09:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=lzWvnnSAvszDDjSboHP99evSnh
+        TQIWH2Dw0zyXVLRx8=; b=kQNDEUGjcAUwdSTl2keQT54cQ1ODJzIGlHSxA/34Cp
+        sKNpP+FB/E54+FnwfGuLHKupUyRRcXc7QcSww6/sNbnhBnodgrbuWXbWOaqtoxcx
+        IHQCkqQ0mOK25xpc912arh+bcrNMCYsr2Uzp78kUv0OfasrGtWJRDrQvAmMEJq/O
+        zAme+b3HAUgoTs4fP3Azlk6kN8GJjxSJ0NzKR5FGBHITdNY7xnHJEvybwY8lppd7
+        9JHsGbdAYHCx9GxFCdEL4oLz6plI/fkqQZazSNZVHBWLxIKEls4TO5DwuhCd47F8
+        elsEtld9/L936yvL+GqFj2RMSrVGz6kE1z2j0SmxzzUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lzWvnnSAvszDDjSbo
+        HP99evSnhTQIWH2Dw0zyXVLRx8=; b=b+basvKj3oT1MeXlur2bpnXvouWW/abcf
+        SfUGqCZQTgsxHZnGOxE7k9V01rxyp0Dx/1ZG+rBuZ87aHiWg7lsFPwY6qA36aW7C
+        jaWsXPOqtLE2Ja75WEcZqDyNnea0rIko8TTt3+s2aiIH0L1lwIs1hRAw6gEFpcd/
+        aE1Tez5qYX4/0p3e5skv46zo3/yY9hO9suG7cESNNfexTnygsirQN2IO5e+1kqDk
+        h9XNKIA9ICfd0fR8M7xamNh6vt2it3cSdRxw2UNt0zHQBXV5Z9fv5cb7JH550kUb
+        HiEJBojfemjbI5hAckeyC6vztn/tjGuFmrObLxP1/h8WrFB7ZPrlg==
+X-ME-Sender: <xms:BC5KXn5mVWAhFXWLE0c7lv3dRb13JkS2bnHb7Y6XwmRcFz0qsMvINQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdeludcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
+    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:BC5KXkdfzAuz8-iTRIAC09RnaB260csLavkkCDQIdAEekDX1umrgBw>
+    <xmx:BC5KXrazGnIiNzrEgXp4rpeIoBSJupk5SGk7Z3QmU5z4YsvHnDRYcA>
+    <xmx:BC5KXmHf6K2lzpjyf47M3qMbAqZad8UDrq84XFyQwbCM0qhZs0z8Ww>
+    <xmx:By5KXkyTWgMMHDbZ3vAHUR-XdyhYduHZEtZQ30qCKR_3p7ot3NbbLQ>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B48E8328005A;
+        Mon, 17 Feb 2020 01:09:07 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH] drm/sun4i: dsi: Avoid hotplug race with DRM driver bind
+Date:   Mon, 17 Feb 2020 00:09:06 -0600
+Message-Id: <20200217060906.15152-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:5b11:: with SMTP id p17mr13306532ilb.202.1581919741345;
- Sun, 16 Feb 2020 22:09:01 -0800 (PST)
-Date:   Sun, 16 Feb 2020 22:09:01 -0800
-In-Reply-To: <00000000000014b040059c654481@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003f07f8059ebf6465@google.com>
-Subject: Re: WARNING in nf_tables_table_destroy
-From:   syzbot <syzbot+2a3b1b28cad90c608e20@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+We need to make sure that the DRM driver is fully registered before
+allowing the panel to be attached. Otherwise, we may trigger a hotplug
+event before sun4i_framebuffer_init() sets up drm->mode_config.funcs,
+causing a NULL pointer dereference.
 
-commit eb014de4fd418de1a277913cba244e47274fe392
-Author: Pablo Neira Ayuso <pablo@netfilter.org>
-Date:   Tue Jan 21 15:48:03 2020 +0000
+Fixes: 1a2703bd7356 ("drm/sun4i: dsi: Allow binding the host without a panel")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
 
-    netfilter: nf_tables: autoload modules from the abort path
+This fixes a bug in my previous patch series, that I didn't catch until
+it was already merged.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14e9cc7ee00000
-start commit:   5a9ef194 net: systemport: Fixed queue mapping in internal ..
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=2a3b1b28cad90c608e20
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15338966e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1667d8d6e00000
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If the result looks correct, please mark the bug fixed by replying with:
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 9aa78c73873c..9cc1bb69fcda 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -970,7 +970,7 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
+ 
+ 	if (IS_ERR(panel))
+ 		return PTR_ERR(panel);
+-	if (!dsi->drm)
++	if (!dsi->drm || !dsi->drm->registered)
+ 		return -EPROBE_DEFER;
+ 
+ 	dsi->panel = panel;
+-- 
+2.24.1
 
-#syz fix: netfilter: nf_tables: autoload modules from the abort path
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
