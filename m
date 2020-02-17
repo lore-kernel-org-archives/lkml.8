@@ -2,133 +2,250 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618FCC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2DCC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A73320725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2F2207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:51:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eivdHkGY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="md0FuuyI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KSNQQPta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgBQRun (ORCPT
+        id S1729768AbgBQRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:50:43 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40061 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbgBQRum (ORCPT
+        Mon, 17 Feb 2020 12:51:43 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:34013 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728467AbgBQRvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:50:42 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z7so9574143pgk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 09:50:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V0F+CPlKBaYQp5ssJ6bvuOMjKgVSOet/nt7N4287yH0=;
-        b=eivdHkGY/h+F9sRcScDOmV2CopnSm90PCYLIK8F9DeG35We8fcAhf8d8MPRxelEmVC
-         MmGHS2k/W4DnfPk1k1yQjyWopT8RJihoEy4H+cxgllhqwx8MdPC1IZiE0xH9/aygZdXx
-         IyE26geE5wo/h9w/uccwHzNAf2WVtzbWFpImdnFraSasHIRtXhurOjtVdH11iVO0Tuqv
-         1QODAiLxt6BChWR0oCWKg0fOrJEwJOLRAaVqIZq4oRyImSCGEjRP1AoFweca5042ODUi
-         yCVXHom366cEAg8OHjqLlRb2LiWR1begT5JBn0hCnVC4zgsJB0scgwuQ4esxEeiXX3PQ
-         zyDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V0F+CPlKBaYQp5ssJ6bvuOMjKgVSOet/nt7N4287yH0=;
-        b=XnjP6yU80dMkviK5aoSW6++Dslpak536JbYLLxS02xYhgDeRsGj2jp3mXodjCM1sv7
-         1A1pEoeUlXzUoSgquc4vwdKzE5FtruOHSIjFlyPN82qOWauuskv8sujmZV/qpmNEzmp2
-         qNq5noCRKrHHC1OuC754UhK4hhRwLUchMNezPiWqRU2CPUFNHCJPM7cBvLHGpUYD1taA
-         0ZQtw5Vg4OMfcd5NC0kUrIHaZJXrFbqZkZPHW0FX6XcyDB3RWJghc+D5SwefA0JjNlZ4
-         YASQ3b5R2AhMYfM6mLyrLh3lMsI0hwSwHLk6qBwgs42jUh/8DCsBoHow2JjmTZItpKBY
-         /wNg==
-X-Gm-Message-State: APjAAAUNUYD6wiKl0cJvkF0egBOpKm1fiSvvUMWKZEmWTdqjdc/NeG/B
-        lQ4DbJ8FYDYxUrfGQ1UP66x7
-X-Google-Smtp-Source: APXvYqwKIWYg4tOk1K2R+x/r28aatJUvrwXdBU/TrnBbBBKka5uFGaIMFJ+sdVvybQrMohx11V2hzA==
-X-Received: by 2002:a63:7207:: with SMTP id n7mr18948000pgc.253.1581961840426;
-        Mon, 17 Feb 2020 09:50:40 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:48d:3349:2df9:3778:ccac:a356])
-        by smtp.gmail.com with ESMTPSA id z64sm1153357pfz.23.2020.02.17.09.50.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Feb 2020 09:50:39 -0800 (PST)
-Date:   Mon, 17 Feb 2020 23:20:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, smohanad@codeaurora.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200217175031.GC7305@Mani-XPS-13-9360>
-References: <20200213152013.GB15010@mani>
- <20200213153418.GA3623121@kroah.com>
- <20200213154809.GA26953@mani>
- <20200213155302.GA3635465@kroah.com>
- <20200217052743.GA4809@Mani-XPS-13-9360>
- <20200217115930.GA218071@kroah.com>
- <20200217130419.GA13993@Mani-XPS-13-9360>
- <20200217141503.GA1110972@kroah.com>
- <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
- <20200217163205.GE1502885@kroah.com>
+        Mon, 17 Feb 2020 12:51:43 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id DF5D1568;
+        Mon, 17 Feb 2020 12:51:41 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 17 Feb 2020 12:51:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=3rFDvViY+O0Mipl0dXMR73dL45T
+        ZFzCvzq7yeICJE7A=; b=md0FuuyIBy0rAJO2YFMDjsB6epTw+dAekyG2bcDuw2g
+        OhpNQnqQ/bnm4Z4Xy0MC/YGOJCDtm6f02a82LLaF3EUaHck8I7VjnzOhitk1NDDw
+        3v1NEPyOQY+NzLhJuc+gu8H/X3PLd7jWvdwXzsxYQ6pe6KfRFMzRtKp+rPk4z39n
+        hx4fhfy1b8gGQEwUBswEj2Gz6JPqLyKG8wWebmN2dnaT0G4+VyaNf3b1KSuXCWQR
+        Mp6emmwgH1xHJBI7atHLiw1NdXUgfdkIkJQJHoEU7vJHOIYgQhkjG2KXttKZOekz
+        zTXl6c4SyOjWRz+cr132HMtVXqxB0Sm0ZtOVIdNazpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3rFDvV
+        iY+O0Mipl0dXMR73dL45TZFzCvzq7yeICJE7A=; b=KSNQQPta7i9YEHQ6fJvrrZ
+        bFgV+bvq6puf7alg8hSEr6KrKtOVP1KBgpKiq9TsBaGifdW4TS+8I88oxxGqUpO5
+        /qJwRloRWE5QLoicRbRXvD0k+4hBIgl7tIxRmy2Llm6WI06wO71MfPTddCNCUpAA
+        INng8qCXE5BSgO276au115lcWFFnsNSekYGLPrxn5uyEp58w3hyz7niE+4bcLmBO
+        VjykR6BJ9wPzi9f4ffnj91P68bDP1RmvRCwnYcpl65WRlpU7D/UEel0zeRyEs39O
+        68CgZA9VDE8rDnuxn+wsGMlQnDkEr6iNhxyG6ljplHMmcNVua6qZgMhhUkd0F8WA
+        ==
+X-ME-Sender: <xms:qdJKXox1MobeNvBVQs5JQyh5PmZ7XuF-hC0KjYHeK1K4Kc1B0WTweg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeigddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:qdJKXgCaiCFVClHRdB0QvtrVubYcoI-O-x0UuhQpJaBysFAYYQFW4A>
+    <xmx:qdJKXjOezd7dCbgLcUy-v20s1HT-DRcM_ikyL0v1L33AeIg-U03Prg>
+    <xmx:qdJKXuqUqdmVwvP6gxXbBYW_SI3rcBrclRf6gz7odQSVztly4BLOiw>
+    <xmx:rdJKXrGpAJvMOcWqV5KsUf42WkUrNpPJJOzwrJc7L0Hog1QvhXkMWw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A9C573060EF2;
+        Mon, 17 Feb 2020 12:51:37 -0500 (EST)
+Date:   Mon, 17 Feb 2020 18:51:35 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
+Message-ID: <20200217175135.ldtqji4mrwz2wbn5@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200212222355.17141-2-andrey.lebedev@gmail.com>
+ <20200213094304.hf3glhgmquypxpyf@gilmour.lan>
+ <20200213200823.GA28336@kedthinkpad>
+ <20200214075218.huxdhmd4qfoakat2@gilmour.lan>
+ <20200214084358.GA25266@kedthinkpad>
+ <20200214085351.2whnfyulrmyex2va@gilmour.lan>
+ <20200214213231.GA6583@kedthinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y2rcdgs6xbzt4vvp"
 Content-Disposition: inline
-In-Reply-To: <20200217163205.GE1502885@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200214213231.GA6583@kedthinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:32:05PM +0100, Greg KH wrote:
-> On Mon, Feb 17, 2020 at 05:04:52PM +0100, Arnd Bergmann wrote:
-> > On Mon, Feb 17, 2020 at 3:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > On Mon, Feb 17, 2020 at 06:34:19PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
-> > > > ```
-> > > > struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-> > > > {
-> > > > ...
-> > > > dev->parent = mhi_cntrl->dev;
-> > > > ...
-> > > > ```
+
+--y2rcdgs6xbzt4vvp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Andrey,
+
+On Fri, Feb 14, 2020 at 11:32:31PM +0200, Andrey Lebedev wrote:
+> On Fri, Feb 14, 2020 at 09:53:51AM +0100, Maxime Ripard wrote:
+> > On Fri, Feb 14, 2020 at 10:43:58AM +0200, Andrey Lebedev wrote:
+> > > On Fri, Feb 14, 2020 at 08:52:18AM +0100, Maxime Ripard wrote:
+> > > > > > This will create a spurious warning message for TCON1, since we
+> > > > > > adjusted the driver to tell it supports LVDS, but there's no LVDS
+> > > > > > reset line, so we need to make it finer grained.
+> > > > >
+> > > > > Yes, I can attribute two of the messages in my dmesg log [1] to this
+> > > > > ("Missing LVDS properties" and "LVDS output disabled". "sun4i-tcon
+> > > > > 1c0d000.lcd-controller" is indeed tcon1). And yes, I can see how they
+> > > > > can be confusing to someone.
+> > > > >
+> > > > > I'd need some pointers on how to deal with that though (if we want to do
+> > > > > it in this scope).
 > > > >
-> > > > Hence, having the parent dev pointer really helps.
+> > > > Like I was mentionning, you could introduce a new compatible for each
+> > > > TCON (tcon0 and tcon1) and only set the support_lvds flag for tcon0
 > > >
-> > > Yes, saving the parent device is fine, but you should be doing your own
-> > > dma calls using _your_ device, not the parents.  Only mess with the
-> > > parent pointer if you need to do something "normal" for a parent.
-> > 
-> > The MHI device is not involved in DMA at all, as it is not a DMA master,
-> > and has no knowledge of the memory management or whether there
-> > is any DMA at all. I think it is the right abstraction for an MHI driver to
-> > pass kernel pointers into the subsystem interfaces, which then get
-> > mapped by the bus driver that owns the DMA master.
-> > 
-> > This is similar to how e.g. USB drivers pass data into the USB core
-> > interfaces, which then get the HCI driver to map/unmap it into the
-> > DMA masters.
-> 
-> Ok, then this needs to be named a whole lot better than the original
-> "dev" name had it.  Heck, even "parent" does not show that type of
-> representation, make it "controller" or something else a whole lot more
-> descriptive of what it really is please.
-> 
+> > > Can you give me an idea how that compatible might look like?
+> > >
+> > > 		tcon0: lcd-controller@1c0c000 {
+> > > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,lvds";
+> > >
+> > > or
+> > >
+> > > 		tcon0: lcd-controller@1c0c000 {
+> > > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,tcon0";
+> > >
+> > > ? Or something completely different?
+> >
+> > Something like
+> >
+> > &tcon0 {
+> >     compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
+> > };
+> >
+> > &tcon1 {
+> >     compatible = "allwinner,sun7i-a20-tcon1", "allwinner,sun7i-a20-tcon";
+> > };
+> >
+>
+> Hi Maxime, here is what I came up with, please take a look. If the
+> approach is right, I'll split it up and include into the patch set.
+>
+> From f3e45c958a9551a52ac26435785bdb572e54d8db Mon Sep 17 00:00:00 2001
+> From: Andrey Lebedev <andrey@lebedev.lt>
+> Date: Fri, 14 Feb 2020 23:21:59 +0200
+> Subject: [PATCH] Mark tcon0 to be the only tcon capable of LVDS on sun7i-a20
+>
+> This allows to avoid warnings about reset line not provided for tcon1.
+>
+> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi   |  2 +-
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 22 +++++++++++++++++++++-
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
+>  3 files changed, 24 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index 3b3c366a2bee..bab59fc4d9b1 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -405,7 +405,7 @@
+>  		};
+>
+>  		tcon0: lcd-controller@1c0c000 {
+> -			compatible = "allwinner,sun7i-a20-tcon";
+> +			compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
 
-Okay. I'll come up with something more relative.
+That's correct
 
-Thanks,
-Mani
+>  			reg = <0x01c0c000 0x1000>;
+>  			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>  			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index 800a9bd86112..cb2040aec436 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -1107,6 +1107,25 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
+>  	return sun4i_tcon_find_engine_traverse(drv, node, 0);
+>  }
+>
+> +/*
+> + * Check if given tcon supports LVDS
+> + *
+> + * Some of the sunxi SoC variants contain several timing controllers, but only
+> + * one of them can be used to drive LVDS screen. In this case such tcon is
+> + * identified in respective quirks struct: lvds_compatible_tcon property will
+> + * hold "compatible" string of the tcon, that supports LVDS.
+> + *
+> + * If lvds_compatible_tcon is not set, all tcons are considered capable of
+> + * driving LVDS.
+> + */
+> +static bool sun4i_tcon_lvds_compat(struct device *dev, struct sun4i_tcon *tcon)
+> +{
+> +	if (tcon->quirks->lvds_compatible_tcon == NULL)
+> +		return true;
+> +	return of_device_is_compatible(dev->of_node,
+> +	                               tcon->quirks->lvds_compatible_tcon);
+> +}
+> +
+>  static int sun4i_tcon_bind(struct device *dev, struct device *master,
+>  			   void *data)
+>  {
+> @@ -1161,7 +1180,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+>  		return ret;
+>  	}
+>
+> -	if (tcon->quirks->supports_lvds) {
+> +	if (tcon->quirks->supports_lvds && sun4i_tcon_lvds_compat(dev, tcon)) {
+>  		/*
+>  		 * This can only be made optional since we've had DT
+>  		 * nodes without the LVDS reset properties.
+> @@ -1481,6 +1500,7 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+>
+>  static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+>  	.supports_lvds		= true,
+> +	.lvds_compatible_tcon	= "allwinner,sun7i-a20-tcon0",
+>  	.has_channel_0		= true,
+>  	.has_channel_1		= true,
+>  	.dclk_min_div		= 4,
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> index cfbf4e6c1679..bc87d28ee341 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> @@ -235,6 +235,8 @@ struct sun4i_tcon_quirks {
+>  	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+>  	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
+>  	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
+> +	/* "compatible" string of TCON that exclusively supports LVDS */
+> +	const char *lvds_compatible_tcon;
 
-> thanks,
-> 
-> greg k-h
+However this is far more complicated than needed, you can simply add a
+new quirks structure associated to the tcon0 compatible in
+sun4i_tcon_of_table, and that will do
+
+Maxime
+
+--y2rcdgs6xbzt4vvp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkrSpwAKCRDj7w1vZxhR
+xdwfAQD7pudDUJX6HqY3G7NyOLWJjTgZsxHVOwRS5d0a3dhn1QD/RfVHYhbkkxhP
+4PQVmxzPdewoSbq1VP9knAH9m/XKcAg=
+=ghuQ
+-----END PGP SIGNATURE-----
+
+--y2rcdgs6xbzt4vvp--
