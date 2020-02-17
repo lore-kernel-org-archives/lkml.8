@@ -2,115 +2,106 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68769C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD26C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4785020725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F46C20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hJQ43EsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgBQIbt (ORCPT
+        id S1728296AbgBQIca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:31:49 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:56578 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgBQIbs (ORCPT
+        Mon, 17 Feb 2020 03:32:30 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33813 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgBQIc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:31:48 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 2IEOfYiygsyNczvgLQg4UC8nf2ELD/vFq9bPoHK3s71gaHlYEHmAtObwaDFy096PMRgrVNptZQ
- dq2MQ0t9J6c2LbbUdhysV/aO5kKdL+6pB7Zx24OFoXS+5q2T1d7mSOuip+ttzRw7rb+1rokO+7
- k5zK1CREqu9U67YEJq+kNyM1GD2Uy20OBLf+90ePOnRrSVa2iiOQnpRU2y4ATGqDIqJXddAUz6
- fVqVWrYIyj6YNhlTpLj/+weXvQnVtWUk0iJendCXIfytR2gUnvghAGAfKFTvpIvXMJb5AsixBI
- fGM=
-X-IronPort-AV: E=Sophos;i="5.70,451,1574146800"; 
-   d="scan'208";a="2607181"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Feb 2020 01:31:48 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 17 Feb 2020 01:31:47 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 17 Feb 2020 01:31:46 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH] net: mscc: fix in frame extraction
-Date:   Mon, 17 Feb 2020 09:31:33 +0100
-Message-ID: <20200217083133.20828-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Feb 2020 03:32:29 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j7so6423949plt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 00:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hcs3IYu1loQeGMz6D7BaruDwBKpT/QAWJLc9WJ9RvcU=;
+        b=hJQ43EsIlapSjLKR42NfRJjH1Lsaw4P+FKomgrWFxgqnsCwR2ujO2E5Mqw+bPn0Yxu
+         wipai+3ldCMpM3eS07bSj3k5yqo6YZQVMW0tuIltyYqE4aqN0JIUZjlt0uSkIgN4ob1o
+         LoJjzNq62ebA+QLaIeie7/kd4Kvrq7jvVAz8DfqYhXkAx8DOUF69YcY38Kav0xSrk6zY
+         QbgebI39Tva9CMqOkV6GCu3glUouzusjITCZT/XCA0/MYiiAgxxOcjHtbyOlDEQ7cVm9
+         NDjvXCMOA3VE52APYJEffDbdHhbZLuJ7Q+a2OhrKWfTIzEkj45SeJmOQpZtt1HDZGWyR
+         dJCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hcs3IYu1loQeGMz6D7BaruDwBKpT/QAWJLc9WJ9RvcU=;
+        b=fnhavxxysWHJwDfhzKeYI0McMjXZ3ER5eiicPmeNsc8UyrAaKObpbS28ZUmjkhwR9g
+         9BLi2vW88Xl/+ZFp73nj46wof+hdat7dKLf7Acge/bIfrOnQbtmeYklAZ+g86fUqerNa
+         IUcc5ciQfiK6j05H2x7LRRp4pZnoKxyN3LVb66X+iUy+BOgRMGdP0cRB6cHMeZtvVwBm
+         uTINTocyzps+H4mmcAuv2ZUH9F6JK1zE3a6wKwNOeWHzL6Gv6SBVR9kvGgKw0HPyoGyZ
+         EQADmyQ+NLTe7yU+zQPRWD7xvC1ZYKYMnZiXZMHL8CSIGO0jbdTYpfaJeBTDu0pYa7xP
+         7RGw==
+X-Gm-Message-State: APjAAAUvxBDruMioyp9uuCIAXl+uRXCAOdLzxkdos72nZNGbbDstY7s8
+        1gVeZxs3pNu6AUCGKVzFl00q8g==
+X-Google-Smtp-Source: APXvYqxB9MmYpJKEMtx+61G6Xv0FfZl6HfdanIBdAUEALAkOL7licVIihuYQiaDeJscs1E4Ns8JUMQ==
+X-Received: by 2002:a17:90a:1785:: with SMTP id q5mr18885984pja.143.1581928349196;
+        Mon, 17 Feb 2020 00:32:29 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id z10sm16989319pgz.88.2020.02.17.00.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 00:32:28 -0800 (PST)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH 0/8] Support strict kernel memory permissions for security
+Date:   Mon, 17 Feb 2020 16:32:15 +0800
+Message-Id: <20200217083223.2011-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
-by reading chuncks of 4 bytes from a register.
+The main purpose of this patch series is changing the kernel mapping permission
+, make sure that code is not writeable, data is not executable, and read-only
+data is neither writable nor executable.
 
-In case the IFH and frames were read corretly it would try to read the next
-frame. In case there are no more frames in the queue, it checks if there
-were any previous errors and in that case clear the queue. But this check
-will always succeed also when there are no errors. Because when extracting
-the IFH the error is checked against 4(number of bytes read) and then the
-error is set only if the extraction of the frame failed. So in a happy case
-where there are no errors the err variable is still 4. So it could be
-a case where after the check that there are no more frames in the queue, a
-frame will arrive in the queue but because the error is not reseted, it
-would try to flush the queue. So the frame will be lost.
+This patch series also supports the relevant implementations such as
+ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
+ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
 
-The fix consist in resetting the error after reading the IFH.
+Zong Li (8):
+  riscv: add ARCH_HAS_SET_MEMORY support
+  riscv: add ARCH_HAS_SET_DIRECT_MAP support
+  riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
+  riscv: move exception table immediately after RO_DATA
+  riscv: add alignment for text, rodata and data sections
+  riscv: add STRICT_KERNEL_RWX support
+  riscv: add DEBUG_WX support
+  riscv: add two hook functions of ftrace
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/ethernet/mscc/ocelot_board.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/riscv/Kconfig                  |   6 +
+ arch/riscv/Kconfig.debug            |  30 +++++
+ arch/riscv/include/asm/ptdump.h     |   6 +
+ arch/riscv/include/asm/set_memory.h |  41 ++++++
+ arch/riscv/kernel/ftrace.c          |  18 +++
+ arch/riscv/kernel/vmlinux.lds.S     |  12 +-
+ arch/riscv/mm/Makefile              |   1 +
+ arch/riscv/mm/init.c                |  47 +++++++
+ arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
+ 9 files changed, 344 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/set_memory.h
+ create mode 100644 arch/riscv/mm/pageattr.c
 
-diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
-index b38820849faa..1135a18019c7 100644
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -114,6 +114,14 @@ static irqreturn_t ocelot_xtr_irq_handler(int irq, void *arg)
- 		if (err != 4)
- 			break;
- 
-+		/* At this point the IFH was read correctly, so it is safe to
-+		 * presume that there is no error. The err needs to be reset
-+		 * otherwise a frame could come in CPU queue between the while
-+		 * condition and the check for error later on. And in that case
-+		 * the new frame is just removed and not processed.
-+		 */
-+		err = 0;
-+
- 		ocelot_parse_ifh(ifh, &info);
- 
- 		ocelot_port = ocelot->ports[info.port];
 -- 
-2.17.1
+2.25.0
 
