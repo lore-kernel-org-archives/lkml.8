@@ -2,111 +2,109 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88881C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A0C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C8F2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TT35hLrO"
+	by mail.kernel.org (Postfix) with ESMTP id 7BF662064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgBQRHB (ORCPT
+        id S1729242AbgBQRHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:07:01 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:39288 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbgBQRHA (ORCPT
+        Mon, 17 Feb 2020 12:07:43 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726707AbgBQRHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:07:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V2b0d1gUR930/id42O1ijC2yJQ/z2WLsY4dFHF7zz9k=; b=TT35hLrOxBVLzCKJph9tBQ4I9
-        9qjfMI6ImhwTUvtKySaL+IoXUyRExCX181Kyao7+OvlCpIn2KUte7mEJImazIdbuL+X8RVggxkA+1
-        SOBF21/nbzYN1UA93A3m9qzdLRIFxHB1Mbupvuo4laKp4GBQOe6wrXt4HkagkEGw/bVaY965HSLme
-        +CyU8K5lRCjuHpoKdkcbfTJgLhHqhU7pedP0CP4XkvZiFTUNCfz73R0FxYffyaLKHtP5ZqBQvU1XI
-        gdg2bNamdlh/MIRODoV4PQoWU0SQUEDDd3cZodhzPyxQP2cK8ASvh3lMf0Elalxf8WaeeVT3wDuML
-        SHaRTJEVw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:49118)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j3jrF-00021x-7A; Mon, 17 Feb 2020 17:06:57 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j3jrE-0006T8-Ig; Mon, 17 Feb 2020 17:06:56 +0000
-Date:   Mon, 17 Feb 2020 17:06:56 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
-Message-ID: <20200217170656.GY25745@shell.armlinux.org.uk>
-References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
- <20200217165644.GX25745@shell.armlinux.org.uk>
+        Mon, 17 Feb 2020 12:07:42 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH4GTj089761
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:07:41 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y7uafrwj9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:07:40 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Mon, 17 Feb 2020 17:07:39 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Feb 2020 17:07:37 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HH7ZNv46727478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 17:07:35 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F33CA405B;
+        Mon, 17 Feb 2020 17:07:35 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 420EBA405F;
+        Mon, 17 Feb 2020 17:07:35 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.204])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 17 Feb 2020 17:07:35 +0000 (GMT)
+Date:   Mon, 17 Feb 2020 18:07:33 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against
+ zero in storage_key_init_range
+References: <20200214064207.10381-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200217165644.GX25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214064207.10381-1-natechancellor@gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20021717-0020-0000-0000-000003AB0014
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021717-0021-0000-0000-00002202F820
+Message-Id: <your-ad-here.call-01581959253-ext-9953@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_11:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:56:44PM +0000, Russell King - ARM Linux admin wrote:
-> On Mon, Feb 17, 2020 at 11:43:48AM +0100, Alexandre Belloni wrote:
-> > at91ether_init was handling the phy mode and speed but since the switch to
-> > phylink, the NCFGR register got overwritten by macb_mac_config().
+On Thu, Feb 13, 2020 at 11:42:07PM -0700, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> I don't think this actually explains anything - or at least I can't
-> make sense of it with respect to your patch.
+>  In file included from ../arch/s390/purgatory/purgatory.c:10:
+>  In file included from ../include/linux/kexec.h:18:
+>  In file included from ../include/linux/crash_core.h:6:
+>  In file included from ../include/linux/elfcore.h:5:
+>  In file included from ../include/linux/user.h:1:
+>  In file included from ../arch/s390/include/asm/user.h:11:
+>  ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
+>  '<<' to a boolean always evaluates to false
+>  [-Wtautological-constant-compare]
+>          if (PAGE_DEFAULT_KEY)
+>             ^
+>  ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
+>  'PAGE_DEFAULT_KEY'
+>  #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+>                                                   ^
+>  1 warning generated.
 > 
-> You claim that the NCFGR register gets overwritten in macb_mac_config(),
-> but I see that the NCFGR register is read-modify-write in there,
-> whereas your new implementation below doesn't bother reading the
-> present value.
+> Explicitly compare this against zero to silence the warning as it is
+> intended to be used in a boolean context.
 > 
-> I think the issue you're referring to is the clearing of the PAE bit,
-> which is also the RM9200_RMII for at91rm9200?
-> 
-> Next, there's some duplication of code introduced here - it seems
-> that the tail end of macb_mac_link_down() and at91ether_mac_link_down()
-> are identical, as are the tail end of macb_mac_link_up() and
-> at91ether_mac_link_up().
-> 
-> > Add new phylink callbacks to handle emac and at91rm9200 properly.
-> > 
-> > Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> 
-> I posted a heads-up message last week about updates to phylink that
-> I'll be submitting soon (most of the prerequisits have now been sent
-> for review) which touch every phylink_mac_ops-using piece of code in
-> the tree.  Unfortunately, this patch introduces a new instance that
-> likely isn't going to get my attention, so it's going to create a
-> subtle merge conflict between net-next and net trees unless we work
-> out some way to deal with it.
-> 
-> I'm just mentioning that so that some thought can be applied now
-> rather than when it actually happens - especially as I've no way to
-> test the changes that will be necessary for this driver.
+> Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/860
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+Applied to fixes, thanks
 
-I'm going to post these changes shortly, but not for davem to merge
-yet - it would be a good idea if people can test the changes first.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
