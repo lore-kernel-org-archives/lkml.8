@@ -2,111 +2,176 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB37AC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE89C3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCA32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tyhicks-com.20150623.gappssmtp.com header.i=@tyhicks-com.20150623.gappssmtp.com header.b="c62OHk5B"
+	by mail.kernel.org (Postfix) with ESMTP id 38AD62070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgBQUyF (ORCPT
+        id S1729846AbgBQU4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:54:05 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41501 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727300AbgBQUyF (ORCPT
+        Mon, 17 Feb 2020 15:56:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16542 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727332AbgBQU4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:54:05 -0500
-Received: by mail-qk1-f194.google.com with SMTP id d11so17471657qko.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:54:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tyhicks-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=fZySxfAnANnt+nsj5/OVRGywRHdZ5tW9LOHavZZDjwo=;
-        b=c62OHk5BUlt072x6HnPdx+3Ya+PHAQsN/DiZq2P0o2DD9Jw1mv/hqeLtB66Sf8vRdf
-         2VlKisVCL2fw8NoqsYti+odq6ZIIggslxnDiBDe9FsjRENpWGFk6opGUKyKVhdWpa8pz
-         0oYBHK//B1F8VVi69tooXo5L7HLU4jpgK9TOt6QZEAzgsrSoABPxhoSEgca1jQrivDt5
-         GK+13UzTfmL7OY1ubRO8bHhTxtoeJmOdBvJNPHfqZsYk9H5ZaHBAF9bEHEI2mtGf+F8Y
-         a9OFx+ugPLD8fRXewLyTfd3rKus56LuAwiLIbZ0AUboEE/cripAfKJ6e/tC4x9s05diI
-         p4jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=fZySxfAnANnt+nsj5/OVRGywRHdZ5tW9LOHavZZDjwo=;
-        b=OHUevWN3gF74cqpMxPmj2A9xfAXMEfowzhkA7F+DX/+ROLPdR7ueYNJdKvMWBG7jWK
-         XnUekHYf/DhF393iRN+9kbpsagrO2neqfOcS0AwIzsJ9sCh3RfXtSGOMkq4GdMv245cl
-         IIj2MKudR/C8FcQLmyYLvfeDPNG1Z/FboFbENezyyjhM0zpyXYZAIs7t9tq8MQaqEih3
-         SCNLzi7tslHr0eQiIz8pFG6UVpAqE91785BLS+SPXmL/WXxJR/WkPyILe/es3ApMsMB3
-         8AnhBy7MZ7uLfcrdjvLGsQnnIboiZdk5PzJL7qlJs/f7x8h0hXCiAk1sRFlxxWG/dZLE
-         DJ3A==
-X-Gm-Message-State: APjAAAXcM07sfOqLtofzeATJ7VQy9Q8eb0qX6LNG0cj3ERw8zEPt9+7V
-        kMIt1TY81o6VBBeZu8nxyx7bDA==
-X-Google-Smtp-Source: APXvYqzo4BZD6sctn/CUnMu2enQgFPYYUY0WU1tDjzIDMVLPiD1tQTPeT96pUKdZ1uz+ZaKUKwBQSA==
-X-Received: by 2002:a37:494f:: with SMTP id w76mr16265607qka.309.1581972844290;
-        Mon, 17 Feb 2020 12:54:04 -0800 (PST)
-Received: from elm ([184.169.45.4])
-        by smtp.gmail.com with ESMTPSA id m27sm810734qta.21.2020.02.17.12.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 12:54:03 -0800 (PST)
-Date:   Mon, 17 Feb 2020 14:53:43 -0600
-From:   Tyler Hicks <code@tyhicks.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org
-Subject: [GIT PULL] eCryptfs fixes for 5.6-rc3
-Message-ID: <20200217205343.GA280196@elm>
+        Mon, 17 Feb 2020 15:56:34 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HKs5qa128250;
+        Mon, 17 Feb 2020 15:55:58 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e2eksny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 15:55:58 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01HKtvTY131496;
+        Mon, 17 Feb 2020 15:55:57 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e2eksnn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 15:55:57 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01HKtuKf019357;
+        Mon, 17 Feb 2020 20:55:56 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma05wdc.us.ibm.com with ESMTP id 2y6896cn7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 20:55:56 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HKtuc442664230
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 20:55:56 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 070CA112061;
+        Mon, 17 Feb 2020 20:55:56 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7D81112063;
+        Mon, 17 Feb 2020 20:55:52 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.152])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Feb 2020 20:55:52 +0000 (GMT)
+Message-ID: <d0789485cc353a99e19c2d2ca4b5a628a33a312d.camel@linux.ibm.com>
+Subject: Re: [PATCH v6 02/11] mm/gup: Use functions to track lockless pgtbl
+ walks on gup_pgd_range
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Steven Price <steven.price@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>
+Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Date:   Mon, 17 Feb 2020 17:55:49 -0300
+In-Reply-To: <0c2f5a89-4890-fd84-6a6d-e470ba110399@nvidia.com>
+References: <20200206030900.147032-1-leonardo@linux.ibm.com>
+         <20200206030900.147032-3-leonardo@linux.ibm.com>
+         <760c238043196e0628c8c0eff48a8e938ef539ba.camel@linux.ibm.com>
+         <0c2f5a89-4890-fd84-6a6d-e470ba110399@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-KK5vvDthaVYFFka5IIPv"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_12:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-The following changes since commit 5f97cbe22b7616ead7ae267c29cad73bc1444811:
+--=-KK5vvDthaVYFFka5IIPv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  Merge tag 'clk-fixes-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux (2019-08-19 16:28:25 -0700)
+Hello John, comments inline;
 
-are available in the Git repository at:
+On Fri, 2020-02-07 at 14:54 -0800, John Hubbard wrote:
+> On 2/5/20 7:25 PM, Leonardo Bras wrote:
+> > On Thu, 2020-02-06 at 00:08 -0300, Leonardo Bras wrote:
+> > >                 gup_pgd_range(addr, end, gup_flags, pages, &nr);
+> > > -               local_irq_enable();
+> > > +               end_lockless_pgtbl_walk(IRQS_ENABLED);
+> > >                 ret =3D nr;
+> > >         }
+> > > =20
+> >=20
+> > Just noticed IRQS_ENABLED is not available on other archs than ppc64.
+> > I will fix this for v7.
+> >=20
+>=20
+> What's the fix going to look like, approximately?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/ecryptfs.git tags/ecryptfs-5.6-rc3-fixes
+I am not sure what is the best approach yet.=20
 
-for you to fetch changes up to 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72:
+1. On irq_mask =3D=3D 0, always enable irq on end_lockless_pgtbl_walk().
+   Not sure how bat would that affect other archs.
 
-  ecryptfs: replace BUG_ON with error handling code (2020-02-14 20:07:46 +0000)
+2. Add another function like end_lockless_pgtbl_walk_irqen() that
+always enables IRQ.
 
-----------------------------------------------------------------
-eCryptfs fixes for 5.6-rc3
-- Downgrade the eCryptfs maintenance status to "Odd Fixes"
-- Change my email address
-- Fix a couple memory leaks in error paths
-- Stability improvement to avoid a needless BUG_ON()
+3. Add another parameter in end_lockless_pgtbl_walk(), so that caller
+can choose ii IRQ must be enabled.
 
-----------------------------------------------------------------
-Aditya Pakki (1):
-      ecryptfs: replace BUG_ON with error handling code
+Also, not sure if internal_get_user_pages_fast() can possibly be called
+with IRQ disabled, and then return with it enabled. Maybe just
+saving/restoring should be fine.
 
-Tyler Hicks (2):
-      MAINTAINERS: eCryptfs: Update maintainer address and downgrade status
-      eCryptfs: Replace deactivated email address
+Other suggestions are welcome.
 
-Wenwen Wang (2):
-      ecryptfs: fix a memory leak bug in parse_tag_1_packet()
-      ecryptfs: fix a memory leak bug in ecryptfs_init_messaging()
+>=20
+>=20
+> thanks,
 
- MAINTAINERS                   | 4 ++--
- fs/ecryptfs/crypto.c          | 6 ++++--
- fs/ecryptfs/ecryptfs_kernel.h | 2 +-
- fs/ecryptfs/keystore.c        | 2 +-
- fs/ecryptfs/main.c            | 2 +-
- fs/ecryptfs/messaging.c       | 3 ++-
- 6 files changed, 11 insertions(+), 8 deletions(-)
+Best regards,
+
+Leonardo Bras
+
+--=-KK5vvDthaVYFFka5IIPv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5K/dUACgkQlQYWtz9S
+ttSomhAAti45bC0hpcyFr3ix4l0vnXi071xBs+ZLvF+V2qK1wpmBPe1ke3hfm45y
+7rd5whdeNR8cPfsXPKwerT1oB7rJXhiGQa5Vt1pNlvFXVKs+IBZr+S7JAJjIFxW+
+nPHLV4LaOnkRgg8p1tusLTJXXkPD/PYBqVu5vwWk4cI/uXmO6MjQ9ARPpc0bQYUY
+Ds8v/GoaVuGn1kf2YVIUtJlQSF2gdKAxUnTh6hmUXcwpB0Ao3tKeE+4bESkipSRg
+vlJ3aJpi72K160R3b+UwGjHLAixSsRr3pSvkqKU/B2lUEaJO99mu01NWR/X4OtVc
+8h1+tgjwjZSiIa0DJfwn44beonO8oHFTE1VpmZMxpwVMoRxVUvzIrhuDaLfKlSIE
+dlbKs43NjTvwQu5RScWqDR5u2w6q7LLXtCoLbq9JDDOf8kt9GX6SOp3NLopWqY4x
+/BSh0UYIkBlBCAY/LXdNL1C0D8g/h8MpoOyxyKzsmZQmgLJPEtDq/Gqkdsf4jtBq
+E3Ma6KYyl0wTfbQtp7iNERDukt0R2j8+meZ5ad2WUJ7GujVCp/S8ky+88jLB8eNx
+o96tDhPvhT0VBcfIrGsnAnE1CyJFgFiBF4k7Xwi7To6z5teTWfhc5z6mDfBgVH1l
+lhtHrLkT3aJxP48InKKPe7TMb2ghIzHMy9bSC1AaIgEW5zxzr8A=
+=UpXg
+-----END PGP SIGNATURE-----
+
+--=-KK5vvDthaVYFFka5IIPv--
+
