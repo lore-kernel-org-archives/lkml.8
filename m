@@ -2,266 +2,221 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCFDC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013A2C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D58B20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B052E20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wIUJin4I"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JuSBEhGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgBQDJr (ORCPT
+        id S1727086AbgBQDLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:09:47 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51426 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgBQDJq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:09:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581908986; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=2XhGGEJvO3Ntt34gfK50uTmC8sY/lgsz5WYS4dJwkJo=; b=wIUJin4IQqgDoEBpsPKzpMs1AdnTuMBs++fbBREdgLmZyHwHmnEW/G1McKZe9y96usp10IcW
- 3nXrje5MslUDnWZZdaLkSgzN2vQxcd/A8d2aDBAORRtvMkd3CnduXKagkNNg1pLv1ZHNFtYm
- Q7jNZNoQmIlUPUqLN03zP1FYEpw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a03f8.7eff6104f928-smtp-out-n02;
- Mon, 17 Feb 2020 03:09:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ADD1CC4479F; Mon, 17 Feb 2020 03:09:43 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CDD01C43383;
-        Mon, 17 Feb 2020 03:09:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CDD01C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Mon, 17 Feb 2020 08:39:37 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix the panic in do_checkpoint()
-Message-ID: <20200217030937.GC20234@codeaurora.org>
-References: <1581503665-19914-1-git-send-email-stummala@codeaurora.org>
- <5d5903e6-f089-7ecf-f1ff-ad341c4cef56@huawei.com>
- <20200214035425.GA20234@codeaurora.org>
- <7fb14366-0ae3-e2d9-49ff-b7257054002c@huawei.com>
+        Sun, 16 Feb 2020 22:11:19 -0500
+Received: from mail-eopbgr70042.outbound.protection.outlook.com ([40.107.7.42]:26913
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726485AbgBQDLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:11:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Abfp45cbWDZfrsCYmmyIRaNMC0ftGelkChlmqvJtlPDhb9hdVGInXfv4S696E/MKbS9jcl9IevUxbzYwKAP4uZJ0thBEs+sKj6XmMSmV/1THQvERhtis10NkW4bFmpxhWMiJ4EoaivE6tzTCIeR0z3625JN2HwyOvDhvdIlpPAZPB6i708R62hf5/y+cNVJft92KUsguz1numyjTrm8rHv7NgDAObRD4jRTDMOvR4s1vUwzmSSQjw5k9cNsDHG8/RlKJu6gbaHZ8sc0mInnO3KqFXbt5JElo7g0q9EsMMvwV9GrzAmuK5+4hhi+uHYr9eJkzWCqtFxeJch6lOk65jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7BJ4mGkaj1ev16I2xHnRrhihjnN3MSdcULoXZRy2mik=;
+ b=Nn7EvJpg0+rLE7jRhpBlCss8kQ+m6H5sYxQsfQgKqMYPjg56J5oRqPdOyGUvn9/+TLZY84SZ1Zb4MGCXDbiiXUn9lUtsqo1le/9+IYsa5xgAHbA31/A1t+SYb1249OHw08TwHxn7H4lyquFS6VTKbhjh9ViCxis73QiKR56MjZFShtAK+2DdIo2ZgJMULo78Uvio4aykROKROjROfZKXA2XtzplR/QmUT289yyrLGXuK/7XAormeiXdhjVuaA79q3OoTTlD0sgvvGmbllOfBgLDTd1JjXYdZhi99N5t3UDe2ZcAr0FA9fn6Sly+Cm+4hojWUerRmak/LHqK3b9wCWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7BJ4mGkaj1ev16I2xHnRrhihjnN3MSdcULoXZRy2mik=;
+ b=JuSBEhGAoXo7pcxrqFBoFk1usifjfBBF/F72Y/UviOJAjdfa0lCX6288UAfeu0L9Eybej5lyqzlZ0eJvc1LV3y/CNiiRxmNXb5jUQCdx3GqFRFpPxAdVLBEFH13skloYjLoVYQY+zqCBBuiom5Ld59TMnBlt8/gR4mPOwRy8lIw=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB4332.eurprd04.prod.outlook.com (52.135.131.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.29; Mon, 17 Feb 2020 03:11:13 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::5cb4:81c8:1618:5ca]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::5cb4:81c8:1618:5ca%7]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
+ 03:11:12 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Kajol Jain <kjain@linux.ibm.com>,
+        "acme@kernel.org" <acme@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: RE: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Thread-Topic: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Thread-Index: AQHV4WcV2Y0K+6EYb0mNmxH19eS7KageuXkA
+Date:   Mon, 17 Feb 2020 03:11:12 +0000
+Message-ID: <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+In-Reply-To: <20200212054102.9259-1-kjain@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [222.93.234.203]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 52f925a4-5303-4753-185f-08d7b3570b48
+x-ms-traffictypediagnostic: DB7PR04MB4332:
+x-microsoft-antispam-prvs: <DB7PR04MB43328925433CA13F24D16532E6160@DB7PR04MB4332.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0316567485
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(189003)(199004)(4326008)(8936002)(76116006)(9686003)(66476007)(66556008)(64756008)(66446008)(55016002)(52536014)(71200400001)(66946007)(186003)(6506007)(53546011)(26005)(110136005)(5660300002)(54906003)(7696005)(86362001)(7416002)(81166006)(81156014)(316002)(8676002)(2906002)(478600001)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4332;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wIVsRdrP+xDlSF0i39ckca9tSD04eTSaFZ3kImjhQwRC8Ecaz6+5PW0HCacSR9cqNKRxOaAPcCIwqYPPiGJbIXSu+XNZi6ti1A9Mxj/5Rh6GkboTEPm6hVhCd2Fh+UPpJHcUGLOKDhtZnvO7KG6m03MMrerRdGWBVpAIpiOS6bkbfs+Sbgm4OCM+d1sm2Y9jfOyspNlFuUoFiZV/7Gy5GpA4KGFOolwSQRUZEqboW6sJHb4ioMP6F7V00evb4+SYeGf5s7Hy8Mrgetqc+PMGuEVnHxFO7HqxyVqUtzRPrZdI/WPH/0qAudRRhdkRvmsUNWfizYWWiii0j2D/ETrdjsI7rJCXHGBEd6TqaDqyD6UU2vnH5HSZ7+WcJ6rtgTKDqwLjatAqqtoUsam2ZHbDf8aYYFq6DTXic9PSjqn/AjRGGgXK2Kx4e8wgPvKjCydf
+x-ms-exchange-antispam-messagedata: +iG9TuHw+tFe5UUr/HyZiHTk7VCGpzvRPCSCE7EC344WWUg3tz0a3XdC2e/VEKcxm+kAa14W+vBrbCQKaCZ0bgXDjOGtEhiXjenrNnByjS1O+GwqbhITYTYqmp7/2tEEjD4jcJB/EFmsTOaZ4GeQQA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7fb14366-0ae3-e2d9-49ff-b7257054002c@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52f925a4-5303-4753-185f-08d7b3570b48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 03:11:12.6686
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9TzjKhjn2Q62Dim2j6ArtrP6ngttrMJth7zQQQ2WRHmK0TfaecS1nfajefFABBSbL1ccAqI9yPDUlYKVLgtREg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4332
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 03:16:59PM +0800, Chao Yu wrote:
-> Hi Sahitya,
-> 
-> On 2020/2/14 11:54, Sahitya Tummala wrote:
-> > Hi Chao,
-> > 
-> > On Fri, Feb 14, 2020 at 10:26:18AM +0800, Chao Yu wrote:
-> >> Hi Sahitya,
-> >>
-> >> On 2020/2/12 18:34, Sahitya Tummala wrote:
-> >>> There could be a scenario where f2fs_sync_meta_pages() will not
-> >>> ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
-> >>> resulting in the below panic in do_checkpoint() -
-> >>>
-> >>> f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
-> >>> 				!f2fs_cp_error(sbi));
-> >>>
-> >>> This can happen in a low-memory condition, where shrinker could
-> >>> also be doing the writepage operation (stack shown below)
-> >>> at the same time when checkpoint is running on another core.
-> >>>
-> >>> schedule
-> >>> down_write
-> >>> f2fs_submit_page_write -> by this time, this page in page cache is tagged
-> >>> 			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
-> >>> 			is cleared, due to which f2fs_sync_meta_pages()
-> >>> 			cannot sync this page in do_checkpoint() path.
-> >>> f2fs_do_write_meta_page
-> >>> __f2fs_write_meta_page
-> >>> f2fs_write_meta_page
-> >>> shrink_page_list
-> >>> shrink_inactive_list
-> >>> shrink_node_memcg
-> >>> shrink_node
-> >>> kswapd
-> >>
-> >> IMO, there may be one more simple fix here:
-> >>
-> >> -	f2fs_do_write_meta_page(sbi, page, io_type);
-> >> 	dec_page_count(sbi, F2FS_DIRTY_META);
-> >>
-> >> +	f2fs_do_write_meta_page(sbi, page, io_type);
-> >>
-> >> If we can remove F2FS_DIRTY_META reference count before we clear
-> >> PAGECACHE_TAG_DIRTY, we can avoid this race condition.
-> >>
-> >> - dec_page_count(sbi, F2FS_DIRTY_META);
-> >> - f2fs_do_write_meta_page
-> >>  - set_page_writeback
-> >>   - __test_set_page_writeback
-> >>    - xas_clear_mark(&xas, PAGECACHE_TAG_DIRTY);
-> >>
-> >> Thoughts?
-> > 
-> > I believe it will be a problem because let's say the shrinker path is 
-> > still in the below stack -
-> > 
-> > f2fs_submit_page_write();
-> > ->down_write(&io->io_rwsem);
-> > 
-> > Then, the current f2fs_wait_on_all_pages_writeback() will not wait for
-> > that page as it is not yet tagged as F2FS_WB_CP_DATA. Hence, the checkpoint
-> > may proceed without waiting for this meta page to be written to disk.
-> 
-> Oh, you're right.
-> 
-> It looks the race can happen for data/node pages? like in fsync() procedure.
-> 
-Yes, it can happen. I see that you have already put a patch to fix that :).
-
-> > 
-> >>
-> >>>
-> >>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> >>> ---
-> >>>  fs/f2fs/checkpoint.c | 16 ++++++++--------
-> >>>  fs/f2fs/f2fs.h       |  2 +-
-> >>>  fs/f2fs/super.c      |  2 +-
-> >>>  3 files changed, 10 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> >>> index ffdaba0..2b651a3 100644
-> >>> --- a/fs/f2fs/checkpoint.c
-> >>> +++ b/fs/f2fs/checkpoint.c
-> >>> @@ -1250,14 +1250,14 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
-> >>>  	f2fs_unlock_all(sbi);
-> >>>  }
-> >>>  
-> >>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi)
-> >>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
-> >>>  {
-> >>>  	DEFINE_WAIT(wait);
-> >>>  
-> >>>  	for (;;) {
-> >>>  		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
-> >>>  
-> >>> -		if (!get_pages(sbi, F2FS_WB_CP_DATA))
-> >>> +		if (!get_pages(sbi, type))
-> >>>  			break;
-> >>>  
-> >>>  		if (unlikely(f2fs_cp_error(sbi)))
-> >>> @@ -1384,8 +1384,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
-> >>>  
-> >>>  	/* Flush all the NAT/SIT pages */
-> >>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-> >>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
-> >>> -					!f2fs_cp_error(sbi));
-> >>> +	/* Wait for all dirty meta pages to be submitted for IO */
-> >>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
-> >>
-> >> I'm afraid calling f2fs_wait_on_all_pages() after we call
-> >> f2fs_sync_meta_pages() is low efficient, as we only want to write out
-> >> dirty meta pages instead of wait for writebacking them to device cache.
-> >>
-> > 
-> > I have modified the existing function f2fs_wait_on_all_pages_writeback() to
-> > a generic one f2fs_wait_on_all_pages(), where it will wait according to the
-> > requested type. In this case, it will only wait for dirty F2FS_DIRTY_META pages
-> > but not for the writeback to device cache.
-> 
-> Oh, I see, as last dirty reference count decreaser won't wake up waiter, we need
-> to wait for timeout, right? Can we decrease timeout count, maybe HZ/50 as we did
-> for congestion.
-
-Yes, I agree that it is better to decrease the timeout to HZ/50.
-
-Thanks,
-
-> 
-> io_schedule_timeout(5*HZ);
-> 
-> Thanks,
-> 
-> > 
-> > Thanks,
-> > 
-> >> Thanks,
-> >>
-> >>>  
-> >>>  	/*
-> >>>  	 * modify checkpoint
-> >>> @@ -1493,11 +1493,11 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
-> >>>  
-> >>>  	/* Here, we have one bio having CP pack except cp pack 2 page */
-> >>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-> >>> -	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
-> >>> -					!f2fs_cp_error(sbi));
-> >>> +	/* Wait for all dirty meta pages to be submitted for IO */
-> >>> +	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
-> >>>  
-> >>>  	/* wait for previous submitted meta pages writeback */
-> >>> -	f2fs_wait_on_all_pages_writeback(sbi);
-> >>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
-> >>>  
-> >>>  	/* flush all device cache */
-> >>>  	err = f2fs_flush_device_cache(sbi);
-> >>> @@ -1506,7 +1506,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
-> >>>  
-> >>>  	/* barrier and flush checkpoint cp pack 2 page if it can */
-> >>>  	commit_checkpoint(sbi, ckpt, start_blk);
-> >>> -	f2fs_wait_on_all_pages_writeback(sbi);
-> >>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
-> >>>  
-> >>>  	/*
-> >>>  	 * invalidate intermediate page cache borrowed from meta inode
-> >>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>> index 5a888a0..b0e0535 100644
-> >>> --- a/fs/f2fs/f2fs.h
-> >>> +++ b/fs/f2fs/f2fs.h
-> >>> @@ -3196,7 +3196,7 @@ bool f2fs_is_dirty_device(struct f2fs_sb_info *sbi, nid_t ino,
-> >>>  void f2fs_update_dirty_page(struct inode *inode, struct page *page);
-> >>>  void f2fs_remove_dirty_inode(struct inode *inode);
-> >>>  int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type);
-> >>> -void f2fs_wait_on_all_pages_writeback(struct f2fs_sb_info *sbi);
-> >>> +void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type);
-> >>>  int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc);
-> >>>  void f2fs_init_ino_entry_info(struct f2fs_sb_info *sbi);
-> >>>  int __init f2fs_create_checkpoint_caches(void);
-> >>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>> index 5111e1f..084633b 100644
-> >>> --- a/fs/f2fs/super.c
-> >>> +++ b/fs/f2fs/super.c
-> >>> @@ -1105,7 +1105,7 @@ static void f2fs_put_super(struct super_block *sb)
-> >>>  	/* our cp_error case, we can wait for any writeback page */
-> >>>  	f2fs_flush_merged_writes(sbi);
-> >>>  
-> >>> -	f2fs_wait_on_all_pages_writeback(sbi);
-> >>> +	f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA);
-> >>>  
-> >>>  	f2fs_bug_on(sbi, sbi->fsync_node_num);
-> >>>  
-> >>>
-> > 
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXBlcmYtdXNlcnMt
+b3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1wZXJmLXVzZXJzLW93bmVyQHZnZXIua2Vy
+bmVsLm9yZz4gT24gQmVoYWxmIE9mIEtham9sIEphaW4NCj4gU2VudDogMjAyMMTqMtTCMTLI1SAx
+Mzo0MQ0KPiBUbzogYWNtZUBrZXJuZWwub3JnDQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsNCj4ga2phaW5AbGludXgu
+aWJtLmNvbTsgSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgQWxleGFuZGVyIFNoaXNoa2lu
+DQo+IDxhbGV4YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tPjsgQW5kaSBLbGVlbiA8YWtA
+bGludXguaW50ZWwuY29tPjsgS2FuDQo+IExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29t
+PjsgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPjsgSmluDQo+IFlhbyA8eWFv
+LmppbkBsaW51eC5pbnRlbC5jb20+OyBNYWRoYXZhbiBTcmluaXZhc2FuDQo+IDxtYWRkeUBsaW51
+eC52bmV0LmlibS5jb20+OyBBbmp1IFQgU3VkaGFrYXIgPGFuanVAbGludXgudm5ldC5pYm0uY29t
+PjsNCj4gUmF2aSBCYW5nb3JpYSA8cmF2aS5iYW5nb3JpYUBsaW51eC5pYm0uY29tPg0KPiBTdWJq
+ZWN0OiBbUEFUQ0ggdjRdIHRvb2xzL3BlcmYvbWV0cmljZ3JvdXA6IEZpeCBwcmludGluZyBldmVu
+dCBuYW1lcyBvZiBtZXRyaWMNCj4gZ3JvdXAgd2l0aCBtdWx0aXBsZSBldmVudHMgaW5jYXNlIG9m
+IG92ZXJsYXBwaW5nIGV2ZW50cw0KPiANCj4gQ29tbWl0IGYwMTY0MmU0OTEyYiAoInBlcmYgbWV0
+cmljZ3JvdXA6IFN1cHBvcnQgbXVsdGlwbGUgZXZlbnRzIGZvcg0KPiBtZXRyaWNncm91cCIpIGlu
+dHJvZHVjZWQgc3VwcG9ydCBmb3IgbXVsdGlwbGUgZXZlbnRzIGluIGEgbWV0cmljIGdyb3VwLiBC
+dXQNCj4gd2l0aCB0aGUgY3VycmVudCB1cHN0cmVhbSwgbWV0cmljIGV2ZW50cyBuYW1lcyBhcmUg
+bm90IHByaW50ZWQgcHJvcGVybHkNCj4gaW5jYXNlIHdlIHRyeSB0byBydW4gbXVsdGlwbGUgbWV0
+cmljIGdyb3VwcyB3aXRoIG92ZXJsYXBwaW5nIGV2ZW50Lg0KPiANCj4gV2l0aCBjdXJyZW50IHVw
+c3RyZWFtIHZlcnNpb24sIGluY2FzZSBvZiBvdmVybGFwcGluZyBtZXRyaWMgZXZlbnRzIGlzc3Vl
+IGlzLCB3ZQ0KPiBhbHdheXMgc3RhcnQgb3VyIGNvbXBhcmlzaW9uIGxvZ2ljIGZyb20gc3RhcnQu
+DQo+IFNvLCB0aGUgZXZlbnRzIHdoaWNoIGFscmVhZHkgbWF0Y2hlZCB3aXRoIHNvbWUgbWV0cmlj
+IGdyb3VwIGFsc28gdGFrZSBwYXJ0IGluDQo+IGNvbXBhcmlzaW9uIGxvZ2ljLiBCZWNhdXNlIG9m
+IHRoYXQgd2hlbiB3ZSBoYXZlIG92ZXJsYXBwaW5nIGV2ZW50cywgd2UgZW5kDQo+IHVwIG1hdGNo
+aW5nIGN1cnJlbnQgbWV0cmljIGdyb3VwIGV2ZW50IHdpdGggYWxyZWFkeSBtYXRjaGVkIG9uZS4N
+Cj4gDQo+IEZvciBleGFtcGxlLCBpbiBza3lsYWtlIG1hY2hpbmUgd2UgaGF2ZSBtZXRyaWMgZXZl
+bnQgQ29yZUlQQyBhbmQNCj4gSW5zdHJ1Y3Rpb25zLiBCb3RoIG9mIHRoZW0gbmVlZCAnaW5zdF9y
+ZXRpcmVkLmFueScgZXZlbnQgdmFsdWUuDQo+IEFzIGV2ZW50cyBpbiBJbnN0cnVjdGlvbnMgaXMg
+c3Vic2V0IG9mIGV2ZW50cyBpbiBDb3JlSVBDLCB0aGV5IGVuZHVwIGluIHBvaW50aW5nDQo+IHRv
+IHNhbWUgJ2luc3RfcmV0aXJlZC5hbnknIHZhbHVlLg0KPiANCj4gSW4gc2t5bGFrZSBwbGF0Zm9y
+bToNCj4gDQo+IGNvbW1hbmQ6IyAuL3BlcmYgc3RhdCAtTSBDb3JlSVBDLEluc3RydWN0aW9ucyAg
+LUMgMCBzbGVlcCAxDQo+IA0KPiAgUGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBmb3IgJ0NQVShz
+KSAwJzoNCj4gDQo+ICAgICAgMSwyNTQsOTkyLDc5MCAgICAgIGluc3RfcmV0aXJlZC5hbnkgICAg
+ICAgICAgIyAxMjU0OTkyNzkwLjANCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIEluc3RydWN0aW9ucw0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgICAgICAxLjMNCj4gQ29yZUlQQw0KPiAgICAg
+ICAgOTc3LDE3Miw4MDUgICAgICBjeWNsZXMNCj4gICAgICAxLDI1NCw5OTIsNzU2ICAgICAgaW5z
+dF9yZXRpcmVkLmFueQ0KPiANCj4gICAgICAgIDEuMDAwODAyNTk2IHNlY29uZHMgdGltZSBlbGFw
+c2VkDQo+IA0KPiBjb21tYW5kOiMgc3VkbyAuL3BlcmYgc3RhdCAtTSBVUEksSVBDIHNsZWVwIDEN
+Cj4gDQo+ICAgIFBlcmZvcm1hbmNlIGNvdW50ZXIgc3RhdHMgZm9yICdzbGVlcCAxJzoNCj4gDQo+
+ICAgICAgICAgICAgOTQ4LDY1MCAgICAgIHVvcHNfcmV0aXJlZC5yZXRpcmVfc2xvdHMNCj4gICAg
+ICAgICAgICA4NjYsMTgyICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC43
+IElQQw0KPiAgICAgICAgICAgIDg2NiwxODIgICAgICBpbnN0X3JldGlyZWQuYW55DQo+ICAgICAg
+ICAgIDEsMTc1LDY3MSAgICAgIGNwdV9jbGtfdW5oYWx0ZWQudGhyZWFkDQo+IA0KPiBQYXRjaCBm
+aXhlcyB0aGUgaXNzdWUgYnkgYWRkaW5nIGEgbmV3IGJvb2wgcG9pbnRlciAnZXZsaXN0X3VzZWQn
+IHRvIGtlZXAgdHJhY2sgb2YNCj4gZXZlbnRzIHdoaWNoIGFscmVhZHkgbWF0Y2hlZCB3aXRoIHNv
+bWUgZ3JvdXAgYnkgc2V0dGluZyBpdCB0cnVlLg0KPiBTbywgd2Ugc2tpcCBhbGwgdXNlZCBldmVu
+dHMgaW4gbGlzdCB3aGVuIHdlIHN0YXJ0IGNvbXBhcmlzaW9uIGxvZ2ljLg0KPiBQYXRjaCBhbHNv
+IG1ha2Ugc29tZSBjaGFuZ2VzIGluIGNvbXBhcmlzaW9uIGxvZ2ljLCBpbmNhc2Ugd2UgZ2V0IGEg
+bWF0Y2gNCj4gbWlzcywgd2UgZGlzY2FyZCB0aGUgd2hvbGUgbWF0Y2ggYW5kIHN0YXJ0IGFnYWlu
+IHdpdGggZmlyc3QgZXZlbnQgaWQgaW4gbWV0cmljDQo+IGV2ZW50Lg0KPiANCj4gV2l0aCB0aGlz
+IHBhdGNoOg0KPiBJbiBza3lsYWtlIHBsYXRmb3JtOg0KPiANCj4gY29tbWFuZDojIC4vcGVyZiBz
+dGF0IC1NIENvcmVJUEMsSW5zdHJ1Y3Rpb25zICAtQyAwIHNsZWVwIDENCj4gDQo+ICBQZXJmb3Jt
+YW5jZSBjb3VudGVyIHN0YXRzIGZvciAnQ1BVKHMpIDAnOg0KPiANCj4gICAgICAgICAgMywzNDgs
+NDE1ICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC4zIENvcmVJUEMNCj4g
+ICAgICAgICAxMSw3NzksMDI2ICAgICAgY3ljbGVzDQo+ICAgICAgICAgIDMsMzQ4LDM4MSAgICAg
+IGluc3RfcmV0aXJlZC5hbnkgICAgICAgICAgIyAzMzQ4MzgxLjANCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEluc3RydWN0aW9ucw0KPiANCj4g
+ICAgICAgIDEuMDAxNjQ5MDU2IHNlY29uZHMgdGltZSBlbGFwc2VkDQo+IA0KPiBjb21tYW5kOiMg
+Li9wZXJmIHN0YXQgLU0gVVBJLElQQyBzbGVlcCAxDQo+IA0KPiAgUGVyZm9ybWFuY2UgY291bnRl
+ciBzdGF0cyBmb3IgJ3NsZWVwIDEnOg0KPiANCj4gICAgICAgICAgMSwwMjMsMTQ4ICAgICAgdW9w
+c19yZXRpcmVkLnJldGlyZV9zbG90cyAjICAgICAgMS4xIFVQSQ0KPiAgICAgICAgICAgIDkyNCw5
+NzYgICAgICBpbnN0X3JldGlyZWQuYW55DQo+ICAgICAgICAgICAgOTI0LDk3NiAgICAgIGluc3Rf
+cmV0aXJlZC5hbnkgICAgICAgICAgIyAgICAgIDAuNiBJUEMNCj4gICAgICAgICAgMSw0ODksNDE0
+ICAgICAgY3B1X2Nsa191bmhhbHRlZC50aHJlYWQNCj4gDQo+ICAgICAgICAxLjAwMzA2NDY3MiBz
+ZWNvbmRzIHRpbWUgZWxhcHNlZA0KPiANCj4gU2lnbmVkLW9mZi1ieTogS2Fqb2wgSmFpbiA8a2ph
+aW5AbGludXguaWJtLmNvbT4NCj4gQ2M6IEppcmkgT2xzYSA8am9sc2FAa2VybmVsLm9yZz4NCj4g
+Q2M6IEFsZXhhbmRlciBTaGlzaGtpbiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNv
+bT4NCj4gQ2M6IEFuZGkgS2xlZW4gPGFrQGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6IEthbiBMaWFu
+ZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRl
+cnpAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IEppbiBZYW8gPHlhby5qaW5AbGludXguaW50ZWwuY29t
+Pg0KPiBDYzogTWFkaGF2YW4gU3Jpbml2YXNhbiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPg0K
+PiBDYzogQW5qdSBUIFN1ZGhha2FyIDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gQ2M6IFJh
+dmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gLS0tDQo+ICB0b29s
+cy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuYyB8IDUwICsrKysrKysrKysrKysrKysrKysrKystLS0t
+LS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
+b25zKC0pDQoNCkhpIEtham9sLA0KDQpJIGFtIG5vdCBzdXJlIGlmIGl0IGlzIGdvb2QgdG8gYXNr
+IGEgcXVlc3Rpb24gaGVyZSA6LSkNCg0KSSBlbmNvdW50ZXJlZCBhIHBlcmYgbWV0cmljZ3JvdXAg
+aXNzdWUsIHRoZSByZXN1bHQgaXMgaW5jb3JyZWN0IHdoZW4gdGhlIG1ldHJpYyBpbmNsdWRlcyBt
+b3JlIHRoYW4gMiBldmVudHMuDQoNCmdpdCBsb2cgLS1vbmVsaW5lIHRvb2xzL3BlcmYvdXRpbC9t
+ZXRyaWNncm91cC5jDQozNjM1YjI3Y2MwNTggcGVyZiBtZXRyaWNncm91cDogRml4IHByaW50aW5n
+IGV2ZW50IG5hbWVzIG9mIG1ldHJpYyBncm91cCB3aXRoIG11bHRpcGxlIGV2ZW50cw0KZjAxNjQy
+ZTQ5MTJiIHBlcmYgbWV0cmljZ3JvdXA6IFN1cHBvcnQgbXVsdGlwbGUgZXZlbnRzIGZvciBtZXRy
+aWNncm91cA0KMjg3ZjI2NDlmNzkxIHBlcmYgbWV0cmljZ3JvdXA6IFNjYWxlIHRoZSBtZXRyaWMg
+cmVzdWx0DQoNCkkgZGlkIGEgc2ltcGxlIHRlc3QsIGJlbG93IGlzIHRoZSBKU09OIGZpbGUgYW5k
+IHJlc3VsdC4NClsNCiAgICAgICAgew0KICAgICAgICAgICAgICJQdWJsaWNEZXNjcmlwdGlvbiI6
+ICJDYWxjdWxhdGUgRERSMCBidXMgYWN0dWFsIHV0aWxpemF0aW9uIHdoaWNoIHZhcnkgZnJvbSBE
+RFIwIGNvbnRyb2xsZXIgY2xvY2sgZnJlcXVlbmN5IiwNCiAgICAgICAgICAgICAiQnJpZWZEZXNj
+cmlwdGlvbiI6ICJpbXg4cW06IGRkcjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbiIsDQogICAgICAg
+ICAgICAgIk1ldHJpY05hbWUiOiAiaW14OHFtLWRkcjAtYnVzLXV0aWwiLA0KICAgICAgICAgICAg
+ICJNZXRyaWNFeHByIjogIiggaW14OF9kZHIwXFwvcmVhZFxcLWN5Y2xlc1xcLyArIGlteDhfZGRy
+MFxcL3dyaXRlXFwtY3ljbGVzXFwvICkiLA0KICAgICAgICAgICAgICJNZXRyaWNHcm91cCI6ICJp
+Lk1YOFFNX0REUjBfQlVTX1VUSUwiDQogICAgICAgIH0NCl0NCi4vcGVyZiBzdGF0IC1JIDEwMDAg
+LU0gaW14OHFtLWRkcjAtYnVzLXV0aWwNCiMgICAgICAgICAgIHRpbWUgICAgICAgICAgICAgY291
+bnRzIHVuaXQgZXZlbnRzDQogICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAxNjcyMCAgICAg
+IGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8gICAgIyAgMjI5MjEuMCBpbXg4cW0tZGRyMC1idXMtdXRp
+bA0KICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgIDYyMDEgICAgICBpbXg4X2RkcjAvd3Jp
+dGUtY3ljbGVzLw0KICAgICAyLjAwMDUyNTYyNSAgICAgICAgICAgICAgIDgzMTYgICAgICBpbXg4
+X2RkcjAvcmVhZC1jeWNsZXMvICAgICMgIDEyNzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwNCiAg
+ICAgMi4wMDA1MjU2MjUgICAgICAgICAgICAgICAyNzM4ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5
+Y2xlcy8NCiAgICAgMy4wMDA4MTkxMjUgICAgICAgICAgICAgICAxMDU2ICAgICAgaW14OF9kZHIw
+L3JlYWQtY3ljbGVzLyAgICAjICAgNDEzNi43IGlteDhxbS1kZHIwLWJ1cy11dGlsDQogICAgIDMu
+MDAwODE5MTI1ICAgICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMv
+DQogICAgIDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgNjI2MCAgICAgIGlteDhfZGRyMC9yZWFk
+LWN5Y2xlcy8gICAgIyAgIDkxNDkuOCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KICAgICA0LjAwMTEw
+Mzc1MCAgICAgICAgICAgICAgIDIzMTcgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KICAg
+ICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIwODQgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNs
+ZXMvICAgICMgICA0NTE2LjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCiAgICAgNS4wMDEzOTI3NTAg
+ICAgICAgICAgICAgICAgNjAxICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCg0KWW91IGNh
+biBzZWUgdGhhdCBvbmx5IHRoZSBmaXJzdCByZXN1bHQgaXMgY29ycmVjdCwgY291bGQgdGhpcyBi
+ZSByZXByb2R1Y2VkIGF0IHlvdSBzaWRlPw0KDQpUaGFua3MgYSBsb3QhDQoNCkJlc3QgUmVnYXJk
+cywNCkpvYWtpbSBaaGFuZw0K
