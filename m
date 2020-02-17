@@ -2,122 +2,94 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17180C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235A0C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D6220718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C3B206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="Qu7oPA1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBQHg2 (ORCPT
+        id S1726691AbgBQHhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:36:28 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41995 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgBQHg2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:36:28 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j132so15806714oih.9;
-        Sun, 16 Feb 2020 23:36:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SuOiO3WgSyJKnxTjJOQN1meORdYh4/iYGl3q0xfpi6g=;
-        b=lwVDQYb2modr4q2GgEpSvbkqRMWo1/agGejwMn+dDFAFMltLrsjz5vmrChPV/hkMsY
-         M0ixASaJS2i1sUVlQWUewYPRkq73DTnyEAb6qwMbU97XXYyMBt82fqR9p6KcprVj2QP0
-         SgQyan9Ltu+WjKK9I2C9oy0mys5SIWs055YAbViuz0n00Cg5ufqdRNWTLhp/unZJWEES
-         mGujjexNSyIFDCE1JPJ6rLb1GscDjI4uB95Hhvcji04zk932lnvtr4g9opc3/r3eM2b3
-         ZB2VUcKTGj4V4LS3aeVwG0n5O8TianOytz2cI9dpuz9wQlqXkYOYzfvuG10TZIU0eKfX
-         yPrQ==
-X-Gm-Message-State: APjAAAUANc/TcO2eBQ9a6eEcChfVG9nit+tIRtexncSpf04sCe34Ozfv
-        /ChahXXioFsuyFzEAEf5cynxJvX8k+FvmAIbseQ=
-X-Google-Smtp-Source: APXvYqxKa9A1iXEoFtvs2SQx0wwpyI+D+8O+BpCQT5TTiBwESFO3k3MigqRo69thtGMj1kz+e9do4m1f9fB6IxLYpJM=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr8802173oia.148.1581924987398;
- Sun, 16 Feb 2020 23:36:27 -0800 (PST)
+        Mon, 17 Feb 2020 02:37:05 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:59094 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbgBQHhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:37:05 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id C55C51B20178; Mon, 17 Feb 2020 10:36:59 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C55C51B20178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1581925019; bh=eMq5r5AI5OZpxp2xPSJgmnoHlWLUKUDdtJ1FhSVqTnU=;
+        h=From:To:Cc:Subject:Date;
+        b=Qu7oPA1XQlVxL8otZibt8yXwEa3ObLpHjX/fQbG6SMpYsy545pSeupm49AWZ4GJnS
+         GsGbpgQCj0GId/Ceo22WPkNJgO2RbCZa2vb2Kd8C9MugiyfqW9FELRm+9ySRRwtBEp
+         bVK/XMxeUh3BMrH+UgmTmzZzg8OaDnU1oR9x55rk=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id B9E4A1B20178;
+        Mon, 17 Feb 2020 10:36:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B9E4A1B20178
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id F38A51B21819;
+        Mon, 17 Feb 2020 10:36:52 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 17 Feb 2020 10:36:52 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH rdma] IB/mlx5: Optimize u64 division on 32-bit arches
+Date:   Mon, 17 Feb 2020 10:36:29 +0300
+Message-Id: <20200217073629.8051-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com> <1581915833-21984-3-git-send-email-anshuman.khandual@arm.com>
-In-Reply-To: <1581915833-21984-3-git-send-email-anshuman.khandual@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Feb 2020 08:36:16 +0100
-Message-ID: <CAMuHMdU0DSTZMn6akY8qZR3SDxVEruEsd3Q3sYf-tn_ooXDDBw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mm/vma: Make vma_is_accessible() available for
- general use
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 6:04 AM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
-> Lets move vma_is_accessible() helper to include/linux/mm.h which makes it
-> available for general use. While here, this replaces all remaining open
-> encodings for VMA access check with vma_is_accessible().
->
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Commit f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
+capabilities") introduced a straight "/" division of the u64
+variable "bar_size".
+This was fixed with commit 685eff513183 ("IB/mlx5: Use div64_u64
+for num_var_hw_entries calculation"). However, div64_u64() is
+redundant here as mlx5_var_table::stride_size is of type u32.
+Make the actual code way more optimized on 32-bit kernels using
+div_u64() and fix 80 chars break-through by the way.
 
->  arch/m68k/mm/fault.c    | 2 +-
+Fixes: 685eff513183 ("IB/mlx5: Use div64_u64 for num_var_hw_entries
+calculation")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ drivers/infiniband/hw/mlx5/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-For m68k:
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index e4bcfa81b70a..026391e4ceb4 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -6545,7 +6545,8 @@ static int mlx5_ib_init_var_table(struct mlx5_ib_dev *dev)
+ 					doorbell_bar_offset);
+ 	bar_size = (1ULL << log_doorbell_bar_size) * 4096;
+ 	var_table->stride_size = 1ULL << log_doorbell_stride;
+-	var_table->num_var_hw_entries = div64_u64(bar_size, var_table->stride_size);
++	var_table->num_var_hw_entries = div_u64(bar_size,
++						var_table->stride_size);
+ 	mutex_init(&var_table->bitmap_lock);
+ 	var_table->bitmap = bitmap_zalloc(var_table->num_var_hw_entries,
+ 					  GFP_KERNEL);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
