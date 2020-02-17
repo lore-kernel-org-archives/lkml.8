@@ -2,192 +2,144 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822B2C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B63C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A1020718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0884320718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="auCaW1VS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgBQI5d (ORCPT
+        id S1728662AbgBQI5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:57:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728524AbgBQI5c (ORCPT
+        Mon, 17 Feb 2020 03:57:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56695 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728654AbgBQI5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:57:32 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01H8rhMm139862
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:57:32 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6dp7vgfr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:57:32 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 17 Feb 2020 08:57:29 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 08:57:26 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01H8uU2W48234934
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 08:56:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D59F11C052;
-        Mon, 17 Feb 2020 08:57:25 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A73411C04C;
-        Mon, 17 Feb 2020 08:57:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.198])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Feb 2020 08:57:22 +0000 (GMT)
-Subject: Re: [PATCH v3 0/3] Introduce per-task latency_nice for scheduler
- hints
-From:   Parth Shah <parth@linux.ibm.com>
-To:     vincent.guittot@linaro.org, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, dhaval.giani@oracle.com,
-        dietmar.eggemann@arm.com
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, qais.yousef@arm.com, pavel@ucw.cz,
-        qperret@qperret.net, David.Laight@ACULAB.COM, pjt@google.com,
-        tj@kernel.org
-References: <20200116120230.16759-1-parth@linux.ibm.com>
-Date:   Mon, 17 Feb 2020 14:27:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 17 Feb 2020 03:57:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581929864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3kliMoTg8Lcr/Q7CgDewoOkhEDiCmvd3cNoaAkKHe/Y=;
+        b=auCaW1VSjye6vuCMqNGupsLq8NZvDqMHsVofNwJmOvzSNDZ3RjbpO79gEM3E+p0fPh/MkA
+        0+Qz1pKpyrKfutU8G/LTqUGQF6OPYOKcqDf5dargLPgWdf9zRm3p5IVjY9alsDCv9g88Gv
+        CGMA6pbe9VsWDsdVRlwdsCWtq9tD2w4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-vHvbIeqVOMK5BTcuVGw8Xg-1; Mon, 17 Feb 2020 03:57:43 -0500
+X-MC-Unique: vHvbIeqVOMK5BTcuVGw8Xg-1
+Received: by mail-wm1-f70.google.com with SMTP id u11so5939763wmb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 00:57:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=3kliMoTg8Lcr/Q7CgDewoOkhEDiCmvd3cNoaAkKHe/Y=;
+        b=T4lGZ2q0NhzY53RLzdVDhm2hMaTOXzdDvByky2n3JCFmuVFZr5GOAf8DdrroM7OkOM
+         Y8N0F8xpFUFXgr0d77hhvRzk80+u5Oslwugp/XznKsfOtGPp6af9p9tTLuGiGVb8tVpN
+         /GkcwrWrijJrJaKLuUk3gdhJT7ERHZCzzkr4P5yhLmCjkloSOL4YV4o16pPMADh0CQY8
+         R4Cbg5UK1y6+/HGjAuGG2FiNPoa9+cGAUYeOMNXPC+XikBLfYNZeK/Y96/P2Yz5TPO1Q
+         MOha9kc8bFprPk6pU2dLt3jzGNJ3qlIOawU7iytRssbBjy7P1snhNtJdMAX6T6i7Fg7S
+         S9Fg==
+X-Gm-Message-State: APjAAAXScRawWzgjaAvcdYh87LdnO8/FdHwgqx25R0N2vttqE3cjAVHu
+        NONdGfpC/mO/zwVI71scKycBQhjlnMjROoqlEVU8qMCeslphT+2oRwQ4RFNrwa6xQyu4dAomNn+
+        WKBMEAXxs8V3G+Ips2cJ/GYwy
+X-Received: by 2002:a1c:de55:: with SMTP id v82mr20900096wmg.48.1581929861734;
+        Mon, 17 Feb 2020 00:57:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxRwndD3XkbOjhzvAUd57i0vfL669NBYdxTAMC8FbfyAoZr0mnZXFUeHf/l3jE2cYXdPNgHLA==
+X-Received: by 2002:a1c:de55:: with SMTP id v82mr20900070wmg.48.1581929861516;
+        Mon, 17 Feb 2020 00:57:41 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t13sm19655105wrw.19.2020.02.17.00.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 00:57:40 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: x86: Fix print format and coding style
+In-Reply-To: <1581734662-970-1-git-send-email-linmiaohe@huawei.com>
+References: <1581734662-970-1-git-send-email-linmiaohe@huawei.com>
+Date:   Mon, 17 Feb 2020 09:57:40 +0100
+Message-ID: <87o8txbngb.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200116120230.16759-1-parth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021708-4275-0000-0000-000003A2B3D8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021708-4276-0000-0000-000038B6B743
-Message-Id: <8ed0f40c-eeb4-c487-5420-a8eb185b5cdd@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_04:2020-02-14,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
- clxscore=1015 spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002170079
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+linmiaohe <linmiaohe@huawei.com> writes:
 
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> Use %u to print u32 var and correct some coding style.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/i8254.c      | 2 +-
+>  arch/x86/kvm/mmu/mmu.c    | 3 +--
+>  arch/x86/kvm/vmx/nested.c | 2 +-
+>  3 files changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+> index b24c606ac04b..febca334c320 100644
+> --- a/arch/x86/kvm/i8254.c
+> +++ b/arch/x86/kvm/i8254.c
+> @@ -367,7 +367,7 @@ static void pit_load_count(struct kvm_pit *pit, int channel, u32 val)
+>  {
+>  	struct kvm_kpit_state *ps = &pit->pit_state;
+>  
+> -	pr_debug("load_count val is %d, channel is %d\n", val, channel);
+> +	pr_debug("load_count val is %u, channel is %d\n", val, channel);
+>  
+>  	/*
+>  	 * The largest possible initial count is 0; this is equivalent
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 7011a4e54866..9c228b9910b1 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -3568,8 +3568,7 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  		 * write-protected for dirty-logging or access tracking.
+>  		 */
+>  		if ((error_code & PFERR_WRITE_MASK) &&
+> -		    spte_can_locklessly_be_made_writable(spte))
+> -		{
+> +		    spte_can_locklessly_be_made_writable(spte)) {
+>  			new_spte |= PT_WRITABLE_MASK;
+>  
+>  			/*
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index f2d8cb68dce8..6f3e515f28fd 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -4367,7 +4367,7 @@ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+>  	if (base_is_valid)
+>  		off += kvm_register_read(vcpu, base_reg);
+>  	if (index_is_valid)
+> -		off += kvm_register_read(vcpu, index_reg)<<scaling;
+> +		off += kvm_register_read(vcpu, index_reg) << scaling;
+>  	vmx_get_segment(vcpu, &s, seg_reg);
+>  
+>  	/*
 
-On 1/16/20 5:32 PM, Parth Shah wrote:
-> This is the 3rd revision of the patch set to introduce
-> latency_{nice/tolerance} as a per task attribute.
-> 
-> The previous version can be found at:
-> v1: https://lkml.org/lkml/2019/11/25/151
-> v2: https://lkml.org/lkml/2019/12/8/10
-> 
-> Changes in this revision are:
-> v2 -> v3:
-> - This series changes the longer attribute name to "latency_nice" as per
->   the comment from Dietmar Eggemann https://lkml.org/lkml/2019/12/5/394
-> v1 -> v2:
-> - Addressed comments from Qais Yousef
-> - As per suggestion from Dietmar, moved content from newly created
->   include/linux/sched/latency_tolerance.h to kernel/sched/sched.h
-> - Extend sched_setattr() to support latency_tolerance in tools headers UAPI
-> 
-> 
-> Introduction:
-> ==============
-> This patch series introduces a new per-task attribute latency_nice to
-> provide the scheduler hints about the latency requirements of the task [1].
-> 
-> Latency_nice is a ranged attribute of a task with the value ranging
-> from [-20, 19] both inclusive which makes it align with the task nice
-> value.
-> 
-> The value should provide scheduler hints about the relative latency
-> requirements of tasks, meaning the task with "latency_nice = -20"
-> should have lower latency requirements than compared to those tasks with
-> higher values. Similarly a task with "latency_nice = 19" can have higher
-> latency and hence such tasks may not care much about latency.
-> 
-> The default value is set to 0. The usecases discussed below can use this
-> range of [-20, 19] for latency_nice for the specific purpose. This
-> patch does not implement any use cases for such attribute so that any
-> change in naming or range does not affect much to the other (future)
-> patches using this. The actual use of latency_nice during task wakeup
-> and load-balancing is yet to be coded for each of those usecases.
-> 
-> As per my view, this defined attribute can be used in following ways for a
-> some of the usecases:
-> 1 Reduce search scan time for select_idle_cpu():
-> - Reduce search scans for finding idle CPU for a waking task with lower
->   latency_nice values.
-> 
-> 2 TurboSched:
-> - Classify the tasks with higher latency_nice values as a small
->   background task given that its historic utilization is very low, for
->   which the scheduler can search for more number of cores to do task
->   packing.  A task with a latency_nice >= some_threshold (e.g, == 19)
->   and util <= 12.5% can be background tasks.
-> 
-> 3 Optimize AVX512 based workload:
-> - Bias scheduler to not put a task having (latency_nice == -20) on a
->   core occupying AVX512 based workload.
-> 
-> 
-> Series Organization:
-> ====================
-> - Patch 1: Add new attribute latency_nice to task_struct.
-> - Patch 2: Clone parent task's attribute to the child task on fork
-> - Patch 3: Add support for sched_{set,get}attr syscall to modify
->   	     latency_nice of the task
-> 
-> 
-> The patch series can be applied on tip/sched/core at the
-> commit 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-> 
-> 
-> References:
-> ============
-> [1]. Usecases for the per-task latency-nice attribute,
->      https://lkml.org/lkml/2019/9/30/215
-> [2]. Task Latency-nice, "Subhra Mazumdar",
->      https://lkml.org/lkml/2019/8/30/829
-> [3]. Introduce per-task latency_tolerance for scheduler hints,
->      https://lkml.org/lkml/2019/12/8/10
-> 
-> 
-> Parth Shah (3):
->   sched: Introduce latency-nice as a per-task attribute
->   sched/core: Propagate parent task's latency requirements to the child
->     task
->   sched: Allow sched_{get,set}attr to change latency_nice of the task
-> 
->  include/linux/sched.h            |  1 +
->  include/uapi/linux/sched.h       |  4 +++-
->  include/uapi/linux/sched/types.h | 19 +++++++++++++++++++
->  kernel/sched/core.c              | 21 +++++++++++++++++++++
->  kernel/sched/sched.h             | 18 ++++++++++++++++++
->  tools/include/uapi/linux/sched.h |  4 +++-
->  6 files changed, 65 insertions(+), 2 deletions(-)
-> 
+I would've suggested we split such unrelated changes by source files in
+the future to simplify (possible) stable backporting. Changes themselves
+look good,
 
-Its been a long time and few revisions since the beginning of the
-discussion around the latency-nice. Hence thought of asking if there is/are
-any further work that needs to be done for adding latency-nice attribute or
-am I missing any piece in here?
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-
-Thanks,
-Parth
+-- 
+Vitaly
 
