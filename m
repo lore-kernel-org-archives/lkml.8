@@ -2,110 +2,126 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDFC3402C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF5C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772C22072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:20:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igposgGn"
+	by mail.kernel.org (Postfix) with ESMTP id 59C44207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbgBQWUa (ORCPT
+        id S1726166AbgBQWVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:20:30 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39615 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgBQWUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:20:30 -0500
-Received: by mail-pj1-f67.google.com with SMTP id e9so110342pjr.4;
-        Mon, 17 Feb 2020 14:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=skdQaGpFa3cH4Eu9/LVCuOWnHrP9hFj9QUueAkZTEsQ=;
-        b=igposgGnUGnEUjVHfHO8wm3gxLpqW84uz0hRV5bgOWnefuWD4mVbRFVVaCufWeAX60
-         oaYh7Ypy/WVrjkFfxAoQK6R1KJwYyPAttXye7cb5yaVxdtMJXeojTu90gcqMaI8dpZ89
-         0c5ooXaoB2dyVmYOTib/F7I05erHYzCwJ+64sotcBbXDUbxLi908VJLh+nYhD6kDJMWj
-         HhrsSD9s1kRSCAajGBAoFaUVaVw8lxA95JRSECKEiaVR3M0ZOfpB/CfF3zwy8T4Bmcpf
-         bwaEy/v1JYxxbZXQ89CbqZGyLKle3aaCe2jZUA2pEdZjlgGBx58zHZWwssQBOcM2mb10
-         FTow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=skdQaGpFa3cH4Eu9/LVCuOWnHrP9hFj9QUueAkZTEsQ=;
-        b=bcYktdkkxpKkO3Dq9aVyl66AnQFwBB7c9Ykrhvzp2ArrLbKMuavec5d5IsYrRkNPFv
-         wi1py3pVF6so50ukmGu7KDH4JqN+MFNqvUXjANmtpeHOgSbgPw0dL7xf72brDeWyQIlK
-         8BeGMECk4Db6oDiAeUSRbYIQdUGRlY9u+cZqBt0si9w64daABjBAKyLjoKN1r83Z1OGZ
-         5OBjrXs4c0z3+g8RB9G9vK27kcA1ID3QGRXNLaDIdzEjnpBWqZ7DE36PMlx55OqrUBL4
-         TH5swYD148zk8FzPk1fPVRTc1r8CcZIdLDB7qV2Kg/StwvBgv3oWVv+SQFI955icm2jL
-         TA/g==
-X-Gm-Message-State: APjAAAUu5zDhj5F/U73eH163K5grc7rZEVVcoQU3Tc9v5QPXKxL5snNn
-        4rXDt5tnbX9/TM7faQYz5tw=
-X-Google-Smtp-Source: APXvYqzaR9lIwRYl+FFzvcclFTFLhNY1M91Qbi0upECzQfA7WYysIH9DRFVOVgW4ttXhZpsJAdgdYQ==
-X-Received: by 2002:a17:90a:8545:: with SMTP id a5mr1351157pjw.43.1581978029741;
-        Mon, 17 Feb 2020 14:20:29 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u4sm449213pgu.75.2020.02.17.14.20.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Feb 2020 14:20:28 -0800 (PST)
-Date:   Mon, 17 Feb 2020 14:20:27 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Documentation/hwmon: fix xdpe12284 Sphinx warnings
-Message-ID: <20200217222027.GA21389@roeck-us.net>
-References: <0094c570-dd4c-dc0e-386d-ea1c39b6a582@infradead.org>
+        Mon, 17 Feb 2020 17:21:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgBQWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:21:35 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC93B2070B;
+        Mon, 17 Feb 2020 22:21:32 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 17:21:31 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH tip/core/rcu 22/30] rcu: Don't flag non-starting GPs
+ before GP kthread is running
+Message-ID: <20200217172131.1f4c48d2@gandalf.local.home>
+In-Reply-To: <20200217220356.GY2935@paulmck-ThinkPad-P72>
+References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
+        <20200214235607.13749-22-paulmck@kernel.org>
+        <20200214225305.48550d6a@oasis.local.home>
+        <20200215110111.GZ2935@paulmck-ThinkPad-P72>
+        <20200215134208.GA9879@paulmck-ThinkPad-P72>
+        <20200217152517.26cc11ea@gandalf.local.home>
+        <20200217220356.GY2935@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0094c570-dd4c-dc0e-386d-ea1c39b6a582@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 08:44:09PM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix Sphinx format warnings by adding a blank line.
-> 
-> Documentation/hwmon/xdpe12284.rst:28: WARNING: Unexpected indentation.
-> Documentation/hwmon/xdpe12284.rst:29: WARNING: Block quote ends without a blank line; unexpected unindent.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: Vadim Pasternak <vadimp@mellanox.com>
+On Mon, 17 Feb 2020 14:03:56 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Applied.
+> And what is a day without micro-optimization of a slowpath?  :-)
 
-Thanks,
-Guenter
+A day you have off, but still find yourself working ;-)
 
-> ---
->  Documentation/hwmon/xdpe12284.rst |    1 +
->  1 file changed, 1 insertion(+)
 > 
-> --- lnx-56-rc2.orig/Documentation/hwmon/xdpe12284.rst
-> +++ lnx-56-rc2/Documentation/hwmon/xdpe12284.rst
-> @@ -24,6 +24,7 @@ This driver implements support for Infin
->  dual loop voltage regulators.
->  The family includes XDPE12284 and XDPE12254 devices.
->  The devices from this family complaint with:
-> +
->  - Intel VR13 and VR13HC rev 1.3, IMVP8 rev 1.2 and IMPVP9 rev 1.3 DC-DC
->    converter specification.
->  - Intel SVID rev 1.9. protocol.
+> OK, let's see...
+> 
+> Grace-period kthread wakeups are normally mediated by rcu_start_this_gp(),
+> which uses a funnel lock to consolidate concurrent requests to start
+> a grace period.  If a grace period is already in progress, it refrains
+> from doing a wakeup because that means that the grace-period kthread
+> will check for another grace period being needed at the end of the
+> current grace period.
+> 
+> Exceptions include:
+> 
+> o	The wakeup reporting the last quiescent state of the current
+> 	grace period.
+> 
+> o	Emergency situations such as callback overloads and RCU CPU stalls.
+> 
+> So on a busy system that is not overloaded, the common case is that
+> rcu_gp_kthread_wake() is invoked only once per grace period because there
+> is no emergency and there is a grace period in progress.  If this system
+> has short idle periods and a fair number of quiescent states, a reasonable
+> amount of idle time, then the last quiescent state will not normally be
+> detected by the grace-period kthread.  But workloads can of course vary.
+> 
+> The "!t" holds only during early boot.  So we could put a likely() around
+> the "t".  But more to the point, at runtime, "!t" would always be false,
+> so it really should be last in the list of "||" clauses.  This isn't
+> enough of a fastpath for a static branch to make sense.
+
+Hey! Does that mean we can add a static branch for that check?
+
+
+struct static_key rcu_booting = STATIC_KEY_INIT_TRUE;
+
+[...]
+
+	if (READ_ONCE(rcu_state.gp_flags) ||
+	    (current == t && !in_irq() && !in_serving_softirq())
+		return;
+
+	if (static_branch_unlikely(&rcu_booting) && !t)
+		return;
+
+At end of boot:
+
+	static_key_disable(&rcu_booting);
+
+That way we can really micro-optimize the slow path, and it basically
+becomes a nop!
+
+-- Steve
+
+> 
+> The "!READ_ONCE(rcu_state.gp_flags)" will normally hold, though it is
+> false often enough to pay for itself.  Or has been in the past, anyway.
+> I suspect that access to the global variable rcu_state.gp_flags is not
+> always fast either.
+> 
+> So I am having difficulty talking myself into modifying this one given
+> the frequency of operations.
+> 
+> 							Thanx, Paul
+
