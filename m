@@ -2,72 +2,108 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E484BC3402B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2A7C3402B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF15214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581972160;
-	bh=krgoKyCV0giz5SQb9qHccoL24ZmlI7+9o/yAL45tIVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jsEMaxpJO4rrFUoH4qmvV/n/gIYJ1nLR6glKZwN76pMga+JFDG1Rg3LKKw5t6GYX1
-	 YP0IPM2W4WgI2Cw4D0vYFq+BitbMnPSoW9Ggf1cElgwkBtyA/3v6LlSIvHmy/dwscE
-	 9cGOCUkZuxk86iYAhGsUM1qQ76uJPQdW5ExyzJQc=
+	by mail.kernel.org (Postfix) with ESMTP id BF0D520836
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSM1P5Sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgBQUmj (ORCPT
+        id S1729737AbgBQUnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:42:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727300AbgBQUmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:42:39 -0500
-Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B4E20801;
-        Mon, 17 Feb 2020 20:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581972158;
-        bh=krgoKyCV0giz5SQb9qHccoL24ZmlI7+9o/yAL45tIVw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0V+Ekr1Xw8W/xyOJQ4d017IcqTclmSHITqsG/6kZNWxBxlPU3vLk9DqrNhfl/0Zkx
-         JtlbfsjJlNUwce8lY01uiLKp9NCaHePjfLfFqzPnZXUzMeo4A0hoeBXbWizs1MT0El
-         epc4Pgk+XoLdGZqPS6biYfja04Xhk8oFx6nzjnCA=
-Date:   Mon, 17 Feb 2020 21:42:34 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the modules tree
-Message-ID: <20200217204233.GA26750@linux-8ccs>
-References: <20200218073843.26b45f1b@canb.auug.org.au>
+        Mon, 17 Feb 2020 15:43:39 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42426 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727300AbgBQUni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 15:43:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j132so17938514oih.9;
+        Mon, 17 Feb 2020 12:43:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mt8KEiHVFXt+VI7oyaRToYaExGUPicwbfI4j6wwtPQE=;
+        b=NSM1P5SbjhpDBQ9V9I+7JKKNZZ8Xsi/Ao/gOUbQ1xd+3FCSvZBiK2f28jPw8GLxAEi
+         aPZehpxvudMkidUrcGsB2Bew1M4jb7qwd7CU6KSuteWVELybmQqqn+sWdTuiGjRa2g10
+         +XPrCy7IfzxuiYXxJGNn7Ms7wtLppo/NuXOOLQgDXLpcxFU4SBFDoIcJJzIs6MrZpt5v
+         OK9Wpq4viCjxUrxAqvRh/W2VHdxlS/M8ZahbKDXH/U2gJQ5iTtyzaTqqisYboEJxjtVl
+         hNHbFyIaNBkGy8Y7gWacVVo0+X77h06DaEi0HIZrwH3mG260jhh4PYTM8+cJZWgXikmi
+         bYAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mt8KEiHVFXt+VI7oyaRToYaExGUPicwbfI4j6wwtPQE=;
+        b=nHxJb/N0aEXI1NLuEX6v7goMRKLqSy2/f6Oe/ur4GDnQuJUWv1J3+8Y9hjmvmTffGd
+         hDULZoeMDf0ZI8lNjXGj5mGcQjgm4DPCfCU5lHtSGCztmG9J67UAI2blGUPRa99n8X8h
+         hAK6FSREY/mooA0V2D2ww1ry/6800CZI5OBBLhE3xSp8nd38YT9Sco6bBKmkqD8RqF1X
+         TQ3JmRGtHeBALgLm5Cwlr1KtB6i35NHyMlHNhdwPSKDvZGvjTqw4YFRHiSIX16K5a9Ag
+         Axrw5TOTyicoVx7j0AmPBQI1veCKvoVSC7tCjY2QEEN1K4RjKyAVhZ154iDOanXAwne4
+         RiEA==
+X-Gm-Message-State: APjAAAWx8xNsmDH5SniaSlaS6gKI0cMNDnb6qfbkgcsQom4cDI5RRHIH
+        XioNkIq8Dk7YsiSnNin+azk=
+X-Google-Smtp-Source: APXvYqwScEu4D7KeCYqO8/1v9KdWk5GSYNtypdkxNUfqBHecf0KjewwAPXsmUl0Uj1AZUoq+J4MAcA==
+X-Received: by 2002:aca:530e:: with SMTP id h14mr505712oib.105.1581972218092;
+        Mon, 17 Feb 2020 12:43:38 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w20sm545592otj.21.2020.02.17.12.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 12:43:37 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] RDMA/core: Fix use of logical OR in get_new_pps
+Date:   Mon, 17 Feb 2020 13:43:18 -0700
+Message-Id: <20200217204318.13609-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200218073843.26b45f1b@canb.auug.org.au>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Stephen Rothwell [18/02/20 07:38 +1100]:
->Hi all,
->
->Commit
->
->  b99931f169fe ("kernel: module: Replace zero-length array with flexible-array member")
->
->is missing a Signed-off-by from its committer.
+Clang warns:
 
-Gah sorry, that's fixed now. 
+../drivers/infiniband/core/security.c:351:41: warning: converting the
+enum constant to a boolean [-Wint-in-bool-context]
+        if (!(qp_attr_mask & (IB_QP_PKEY_INDEX || IB_QP_PORT)) && qp_pps) {
+                                               ^
+1 warning generated.
 
-Thanks!
+A bitwise OR should have been used instead.
 
-Jessica
+Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
+Link: https://github.com/ClangBuiltLinux/linux/issues/889
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/infiniband/core/security.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/core/security.c b/drivers/infiniband/core/security.c
+index 2b4d80393bd0..b9a36ea244d4 100644
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -348,7 +348,7 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
+ 	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
+ 		new_pps->main.state = IB_PORT_PKEY_VALID;
+ 
+-	if (!(qp_attr_mask & (IB_QP_PKEY_INDEX || IB_QP_PORT)) && qp_pps) {
++	if (!(qp_attr_mask & (IB_QP_PKEY_INDEX | IB_QP_PORT)) && qp_pps) {
+ 		new_pps->main.port_num = qp_pps->main.port_num;
+ 		new_pps->main.pkey_index = qp_pps->main.pkey_index;
+ 		if (qp_pps->main.state != IB_PORT_PKEY_NOT_VALID)
+-- 
+2.25.1
+
