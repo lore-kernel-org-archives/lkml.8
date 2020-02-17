@@ -2,115 +2,100 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC40C34025
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6DBC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D3F215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E184720801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581952998;
-	bh=nGy1lbmlsE02K8IM752m4QrHgHMzqoytnR/N5trdhuM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jCGKTRFei/ZnxEhToJyM+yzbeQPpMKS1m6WIqE326lkH/gVTcJzl8uet+rO8FknlP
-	 s/XTxp+av0JySmzZPdUZNYafw0mGw0NQ15GGpt/DRgSdCLCwvsU6X26w7VlICZ3R0x
-	 Xu4XEHQAyQyZaXF7R7cgpWdr78vnb7ztpWFHdU6Y=
+	s=default; t=1581953065;
+	bh=2zACJdzJWOimtEDKdqtbvKk8L5olDddcqqV+IDbusDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uiGduDM+iQ2vvK6cquByDEeb1jA2SvmIoOdDNWfL2mwEPmp4+iL5TSowumGO7oU0w
+	 sDVeW5SBAH+5p7qcEpQw+3dm4fKxrg+wFXfiSFaapO4C6nzZBS5QpOry63ZlrCBRXG
+	 CN+vRcdljLaUIMdkjVrjWCAHTN1sIGGXmkXXyXAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgBQPXR (ORCPT
+        id S1728774AbgBQPYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:23:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 10:24:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:37270 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbgBQPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:23:16 -0500
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9023320801
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 15:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581952995;
-        bh=nGy1lbmlsE02K8IM752m4QrHgHMzqoytnR/N5trdhuM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YVWCIRR/YSEuKkZxwoMfjLq1DsSHOiZctotmZDFVqlpkoGBowv46KMKnVmsRnFBNP
-         azPanoikqHJ5bz84UuCbg6/ZuoHGa6LoiYK8Z3SHH6ZVMyIBOY0GQSURyfDLIPiZPC
-         skox/eI/a8OdSO99Q/B5ooboZX2Q4RQ9+FSsiJUM=
-Received: by mail-wm1-f48.google.com with SMTP id a5so17521795wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 07:23:15 -0800 (PST)
-X-Gm-Message-State: APjAAAVN2sCFX/nz6mcyw+CGQtzIvSfP2r/bhiJjseTsw6F+l9OBOUG4
-        JC0rZp8Qsx6e99zhoKVZUJ9rAnU0Nqq3xMaZ9R5B3Q==
-X-Google-Smtp-Source: APXvYqyHORjwouYreTl4kAhc6BiIMxJdcGTSfhxyKg5tSCNd6yz3fr9OpNIKkFDxeYSV+ojwle73cM5xcMxQx+jVKhA=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr22583343wmj.1.1581952993983;
- Mon, 17 Feb 2020 07:23:13 -0800 (PST)
+        id S1727428AbgBQPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:24:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F112530E;
+        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74CEB3F703;
+        Mon, 17 Feb 2020 07:24:22 -0800 (PST)
+Date:   Mon, 17 Feb 2020 15:24:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [RFC PATCH 09/34] ASoC: sun8i-codec: Fix broken DAPM routing
+Message-ID: <20200217152420.GK9304@sirena.org.uk>
+References: <20200217064250.15516-1-samuel@sholland.org>
+ <20200217064250.15516-10-samuel@sholland.org>
 MIME-Version: 1.0
-References: <20200217123354.21140-1-Jason@zx2c4.com>
-In-Reply-To: <20200217123354.21140-1-Jason@zx2c4.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 17 Feb 2020 16:23:03 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu83dOKGbYU1t3_KZevB_rn-ktoropFrjASjsv3DozrV1A@mail.gmail.com>
-Message-ID: <CAKv+Gu83dOKGbYU1t3_KZevB_rn-ktoropFrjASjsv3DozrV1A@mail.gmail.com>
-Subject: Re: [PATCH] efi: READ_ONCE rng seed size before munmap
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-10-samuel@sholland.org>
+X-Cookie: There was a phone call for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 at 13:34, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> This function is consistent with using size instead of seed->size
-> (except for one place that this patch fixes), but it reads seed->size
-> without using READ_ONCE, which means the compiler might still do
-> something unwanted. So, this commit simply adds the READ_ONCE
-> wrapper.
->
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: stable@vger.kernel.org
 
-Thanks Jason
+--opg8F0UgoHELSI+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I've queued this in efi/urgent with a fixes: tag rather than a cc:
-stable, since it only applies clean to v5.4 and later. We'll need a
-backport to 4.14 and 4.19 as well, which has a trivial conflict
-(s/add_bootloader_randomness/add_device_randomness/) but we'll need to
-wait for this patch to hit Linus's tree first.
+On Mon, Feb 17, 2020 at 12:42:25AM -0600, Samuel Holland wrote:
 
+> This commit provides the minimal necessary changes to the driver's
+> device tree ABI, so that the driver can begin to describe the full
+> hardware topology.
 
-> ---
->  drivers/firmware/efi/efi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 621220ab3d0e..21ea99f65113 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -552,7 +552,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
->
->                 seed = early_memremap(efi.rng_seed, sizeof(*seed));
->                 if (seed != NULL) {
-> -                       size = seed->size;
-> +                       size = READ_ONCE(seed->size);
->                         early_memunmap(seed, sizeof(*seed));
->                 } else {
->                         pr_err("Could not map UEFI random seed!\n");
-> @@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
->                                               sizeof(*seed) + size);
->                         if (seed != NULL) {
->                                 pr_notice("seeding entropy pool\n");
-> -                               add_bootloader_randomness(seed->bits, seed->size);
-> +                               add_bootloader_randomness(seed->bits, size);
->                                 early_memunmap(seed, sizeof(*seed) + size);
->                         } else {
->                                 pr_err("Could not map UEFI random seed!\n");
-> --
-> 2.25.0
->
+> Cc: stable@kernel.org
+
+You're changing the ABI and trying to CC this to stable.  This is
+obviously not at all OK, this would mean that if someone got a stable
+update with this change the ABI break would mean that their existing
+device tree would not work.  The code should be making every effort to
+provide a stable ABI over new kernel releases, never mind within a
+stable point release.
+
+--opg8F0UgoHELSI+9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KsCQACgkQJNaLcl1U
+h9DlOQf/fnliV8i6hOsjjmuPNKhYpYFB0CpQahOVaYcseah4KRMxgLYafPDPCBFi
+YOG1uPOnbNmX7j2Vk4tA4fobq2c9iAJjVUafUWsNm6qiftRtSKHw8NgpDcH/i5+A
+hQpjcJoW+zdzoV3a/l0/lA0Ntot3eligdLNJZEukfJTWU5KndAo0k6jJH0WNj3zw
+xjiw6WNJee1j6xkOZEWzHoIZNZ+eXQjebMa5KbArSwzBXVS3SeaYZ9eMCzph7OpI
+CXcIBWJssHvQlSxZeCjB64bwsBCbzUuRW6doz1Ikjn/IdAfjudwjwODeRENTKykJ
+JCEiaoF87UkEhPoF68ycyKTgcgrxRA==
+=pmEj
+-----END PGP SIGNATURE-----
+
+--opg8F0UgoHELSI+9--
