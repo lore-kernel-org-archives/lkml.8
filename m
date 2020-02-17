@@ -2,77 +2,75 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54BEC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8945CC7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC18D2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B83020659
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBQDZH (ORCPT
+        id S1727840AbgBQD0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:25:07 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:48208 "EHLO deadmen.hmeau.com"
+        Sun, 16 Feb 2020 22:26:36 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:48928 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbgBQDZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:25:07 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1j3X1r-0003Fn-Gw; Mon, 17 Feb 2020 11:25:03 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1j3X1m-0003P1-Vz; Mon, 17 Feb 2020 11:24:59 +0800
-Date:   Mon, 17 Feb 2020 11:24:58 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     eric.dumazet@gmail.com, cai@lca.pw, netdev@vger.kernel.org,
+        id S1726742AbgBQD0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:26:36 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3AE5C201E36;
+        Mon, 17 Feb 2020 04:26:34 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 72A7D200EBF;
+        Mon, 17 Feb 2020 04:26:24 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC27F402A7;
+        Mon, 17 Feb 2020 11:26:12 +0800 (SGT)
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, leonard.crestez@nxp.com,
+        daniel.baluta@nxp.com, aisheng.dong@nxp.com, peng.fan@nxp.com,
+        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
-Message-ID: <20200217032458.kwatitz3pvxeb25w@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206163844.GA432041@zx2c4.com>
-X-Newsgroups: apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
-Organization: Core
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH 0/7] Add FlexCAN support on i.MX8QXP
+Date:   Mon, 17 Feb 2020 11:19:14 +0800
+Message-Id: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> Hi Eric,
-> 
-> On Tue, Feb 04, 2020 at 01:40:29PM -0500, Qian Cai wrote:
->> -     list->qlen--;
->> +     WRITE_ONCE(list->qlen, list->qlen - 1);
-> 
-> Sorry I'm a bit late to the party here, but this immediately jumped out.
-> This generates worse code with a bigger race in some sense:
-> 
-> list->qlen-- is:
-> 
->   0:   83 6f 10 01             subl   $0x1,0x10(%rdi)
-> 
-> whereas WRITE_ONCE(list->qlen, list->qlen - 1) is:
-> 
->   0:   8b 47 10                mov    0x10(%rdi),%eax
->   3:   83 e8 01                sub    $0x1,%eax
->   6:   89 47 10                mov    %eax,0x10(%rdi)
-> 
-> Are you sure that's what we want?
+Add FlexCAN support on i.MX8QXP.
 
-Fixing these KCSAN warnings is actively making the kernel worse.
+Joakim Zhang (7):
+  firmware: imx: scu-pd: add power domain for I2C and INTMUX in CM40 SS
+  clk: imx8: Add SCU and LPCG clocks for I2C in CM40 SS
+  bindings: clock: imx8qxp: add "fsl,imx8qxp-lpcg-cm40" compatible
+    string
+  clk: imx: imx8qxp: Enable SCU and LPCG clocks for I2C in CM40 SS
+  arch: arm64: dts: imx8qxp: add device node for I2C and INTMUX in CM40
+    SS
+  clk: imx: imx8qxp: add LPCG clock for FlexCAN in ADMA SS
+  arch: arm64: dts: imx8qxp: add device node for CAN in ADMA SS
 
-Why are we still doing this?
+ .../bindings/clock/imx8qxp-lpcg.txt           |   1 +
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  74 ++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 106 ++++++++++++++++++
+ drivers/clk/imx/clk-imx8qxp-lpcg.c            |  15 +++
+ drivers/clk/imx/clk-imx8qxp-lpcg.h            |   3 +
+ drivers/clk/imx/clk-imx8qxp.c                 |   4 +
+ drivers/firmware/imx/scu-pd.c                 |   4 +
+ include/dt-bindings/clock/imx8-clock.h        |  13 ++-
+ 8 files changed, 219 insertions(+), 1 deletion(-)
 
-Thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
