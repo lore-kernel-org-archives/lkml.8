@@ -5,74 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A98C7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCBFC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCF32067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349182064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWvqb1ix"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAhh6AkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgBQIj0 (ORCPT
+        id S1728488AbgBQIkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:39:26 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54106 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgBQIjZ (ORCPT
+        Mon, 17 Feb 2020 03:40:25 -0500
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:38570 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgBQIkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:39:25 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so16205570wmh.3;
-        Mon, 17 Feb 2020 00:39:22 -0800 (PST)
+        Mon, 17 Feb 2020 03:40:24 -0500
+Received: by mail-wr1-f49.google.com with SMTP id y17so18529345wrh.5;
+        Mon, 17 Feb 2020 00:40:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pxEEeciF+LuNB4+RBNEBd1ZjZeWEJp318KAIkZVPMDM=;
-        b=rWvqb1ixTs8BxO1/8gTHa6D4lordYJ3amOl2r0jzD/nKYv0yF+0v1kGDq4WZGFrMzp
-         XilFMrLVFwe7+CwckSGJ959/+6nrGPtVwXlkaQRTpc89TK3ImnnoUji+QPLszAO66YKp
-         mZAPVqXpZkXRrpxrCrO4k04eOAAvNLGzlaBDrN4F+NAfV4zUupyg5kGlnBOK6d34K7Iq
-         9Mj6VH2mJ5jsjRlR4cMaRTBxz0hHLPFxc48uYZr0qT6SPg0fkeRKdtt0MZQPfEDjdkIw
-         5OOFHEf7Wc0K/UFN/NxLiY4K05MFJmuNhnV6mE/HyDx+VN1P0TgmQAgO1iqE8AfwsLsT
-         liwg==
+        bh=TRV5lwTvY6dc1Jfr/wfqaukIUerKqFN+k7D9S3reWZY=;
+        b=gAhh6AkAtRDAl5r9V6fQW387iILCD5H0v+foKnDqwd1RVZgN3QMmNcBEBBb4hasiwP
+         rpGgzsuixPl/QvSoNUwu75zgbG8cXu28PABO0HJEmxCZoBghvw17vVoXr9pCsPMNqGrK
+         8NLUG1zwmD946MqrUax+R6TybTliBKHtwpWBmlzg5yIWfFg0C6NaKQi6Vlk3AJodzNNO
+         X4xY9D20QIp08yWhdQMKvMC3tdSVkPqPfTNqUTtXGfzG+qW9BK+qmcjz43M3MwI2XOMk
+         1uE/UuDsJ3A6E24VRfz8piVlPGiROcUg/tNMA4YT258Sw5+W+Aaz93yXijrQ+Ruz44Mw
+         fbIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pxEEeciF+LuNB4+RBNEBd1ZjZeWEJp318KAIkZVPMDM=;
-        b=a8fcINR5KZZpCv9R2z41DWrRfIsJU2hHnmfYEllQNXGXfus7yRg805o5DeQYmt/MGK
-         4p7O8VNU2crOBSIeHR1INgA7rHjQaG5BSP6OCgaUyPDMOqftzEWh70jWtaA9jlOlcB57
-         zBJwfLNfc8pdTC90sxvU/Y4cMa4G8opNmuetJJ72GngYUPU6kEClaNrddjbj2bCDDLau
-         v6pZBDZv4iD72J4BJ2GoG7e/fIEeKc+O2j3J4dUxHDbcdOpmAFgyKTisDxp3Q/vajcjh
-         8m8ZKVukVb0fXOzlIp9o7K0/J/aLNCz+pzXkK/rSneErtqEONOOR5ZltKiBa4kv70S/U
-         nhgg==
-X-Gm-Message-State: APjAAAU+WH51OI9E4nwucvKoSCo/ixPpCQ3riEuCer7sPYuJV0JHyfza
-        2JZV3kp7yonQTaF/OH5DKJZRI6HW
-X-Google-Smtp-Source: APXvYqx/Q7bOEUoUcfHN49/4KjZNN909CGAqkyiTOxP/PM8N34bsiPCVp2gm5hP2nqYQxWM9jcuU9g==
-X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr20105089wml.44.1581928761598;
-        Mon, 17 Feb 2020 00:39:21 -0800 (PST)
+        bh=TRV5lwTvY6dc1Jfr/wfqaukIUerKqFN+k7D9S3reWZY=;
+        b=RUVhzgKGlV4SqLGaYMJmg0SH69QQvnHHbN86CUFcXby+ACS5TlFfHJ1ynyBgKSuIoN
+         Tyri2UTMW5n/+Wj79jX3fOKM6VnCk1B/2ECjy0TKX5SeC60tOw6TCsmRSnUOiH+VDSYQ
+         8p7qEx/5/TsbeEWR46FNx3RlBoGGlDXwFNO2cKOsEkecQb78G+hSLlVMaN9xi16awbm5
+         TY8Y5SilZzacuHJABqzMBIU47Bj+CWiSLnJPMb5JzHdQqpntdgz7Z9W3VtrDQqWTrkch
+         Uj8otiARs4iIaeQXS/VF9yDkKXTv71+JDKU03JO1SKLbwLooUfsf6jbc66fJkmXy9fm9
+         rKkg==
+X-Gm-Message-State: APjAAAWib5wSExQ1axTTG7YmdmQxZE2jdjxsqbBAeeL6HK0c9I4MQS3D
+        axFNLjjLNl4pu1HgwxlRX8zRFmqp
+X-Google-Smtp-Source: APXvYqxjE8+ZJF8beLUYGhXibZonn/lA7ME1yo+jqcGgejDevhKZoLjmhfqjz0heKJO9zifI+ria+A==
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr21657647wre.372.1581928822403;
+        Mon, 17 Feb 2020 00:40:22 -0800 (PST)
 Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id v22sm18852482wml.11.2020.02.17.00.39.20
+        by smtp.gmail.com with ESMTPSA id y139sm19859094wmd.24.2020.02.17.00.40.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 00:39:20 -0800 (PST)
-Date:   Mon, 17 Feb 2020 09:39:19 +0100
+        Mon, 17 Feb 2020 00:40:21 -0800 (PST)
+Date:   Mon, 17 Feb 2020 09:40:20 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Nagarjuna Kristam <nkristam@nvidia.com>
 Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
         mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V5 03/21] phy: tegra: xusb: Add usb-role-switch support
-Message-ID: <20200217083919.GF1339021@ulmo>
+Subject: Re: [Patch V5 10/21] usb: gadget: tegra-xudc: Add usb-phy support
+Message-ID: <20200217084020.GG1339021@ulmo>
 References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
- <1581322307-11140-4-git-send-email-nkristam@nvidia.com>
+ <1581322307-11140-11-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
+        protocol="application/pgp-signature"; boundary="MrRUTeZlqqNo1jQ9"
 Content-Disposition: inline
-In-Reply-To: <1581322307-11140-4-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1581322307-11140-11-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,60 +80,51 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sDKAb4OeUBrWWL6P
+--MrRUTeZlqqNo1jQ9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2020 at 01:41:29PM +0530, Nagarjuna Kristam wrote:
-> If usb-role-switch property is present in USB 2 port, register
-> usb-role-switch to receive usb role changes.
+On Mon, Feb 10, 2020 at 01:41:36PM +0530, Nagarjuna Kristam wrote:
+> usb-phy is used to get notified on the USB role changes. Get usb-phy from
+> the UTMI PHY.
 >=20
 > Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
-> V5
->  - No changes
+> V5:
+>  - No changes.
 > ---
 > V4:
->  - Updated function name in debug messages as suggested by Thierry.
->  - Added owner info to port->dev during USB role switch registration.
+>  - Addressed nit comments from Thierry.
+>  - usb_phy_event is used to detect device mode instead of usb_role.
 > ---
-> V3:
->  - Driver aborts if usb-role-switch is not added in dt forotg/peripheral
->    roles.
->  - Added role name strings instead of enum values in debug prints.
->  - Updated arguments and variable allignments as per Thierry inputs.
+> V2-V3:
+>  - No changes in this version
 > ---
-> V2:
->  - Removed dev_set_drvdata for port->dev.
->  - Added of_platform_depopulate during error handling and driver removal.
-> ---
->  drivers/phy/tegra/Kconfig |  1 +
->  drivers/phy/tegra/xusb.c  | 67 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/phy/tegra/xusb.h  |  3 +++
->  3 files changed, 71 insertions(+)
+>  drivers/usb/gadget/udc/tegra-xudc.c | 48 +++++++++++++++++++++++++++++++=
++++---
+>  1 file changed, 45 insertions(+), 3 deletions(-)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---sDKAb4OeUBrWWL6P
+--MrRUTeZlqqNo1jQ9
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5KUTcACgkQ3SOs138+
-s6F3aA//VUmI29LB+vP9qNxFW3wdDt2nGlLmhkG5hic35GoOPaB0U+uYacvlSRUk
-h5/OJsTN0BG9wW9jvQwQjXm4DvI0AZDYwYFTkcRuu7aPX4dEsTOtQKgnlMCQBa/E
-NpZdFP3SRUzkKVzoUyZNE609qHKW0NnLQDSrdNny3JFZt30ECaBdcV3zd8pwi2M7
-jB91dl/qly/FvCO23RDN2ngpj81bsvdNx4kMr89cvmFdLruikjtiF6Bts3FGcBh2
-hy0CBDTHXEwE9npbodqLkZjlFGowuhNfIYZBTWDfS6BIEByGAw53neXzWcOzH3eh
-qMeOswVpT+IadnejojaEDuUA4VwewPRbMqtJeGiBW0FOHzCYorix9N+wSS07fcOu
-9l622lI1Hbq+IstTjQkpUi9/GlwPzhdg3R1pJBW8vA4CGLIOw4bxBlTwrWXN6zFR
-WPI8W5iVHecVO+Y4xChoM9LviqdLa0qnOa1eNy/NkEjw0dtZnMtJQcHLyAiRkpS/
-cDPW5cAMZXrxS+sJ4/8E/6wNUjbNRxewbltwPFZHorfRd+0YBTzYfMTidXb2Nxb6
-Jf1YIaklsGKR6hbxht9g+QGj4t7V8poKdkbyePuOqZ5C42det4eMRgt6sfp4PABx
-RmEmYGOyswayZqYYGxHJp/BZFWfp9S+j0tS34N3GptE0Ik4QNS0=
-=Abay
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5KUXQACgkQ3SOs138+
+s6He/A/+NvmNzVycAfLDcJJgsSNYD4OlUiIZfaPP1qgjhMSdtb0HekLzdiKabsPz
+jp9VHDewmnEGM8Dg89vurRKJoAAMmVBTO9SrBAWcEp3ld+dLguxLG+SVpL4Ji+9S
+tl8zybuUHDNmxZLVQ1Haxmba0KaI8OuaN4bDDB73WPCXS8I753N18QN/eaKuE05+
+XjjhTmtcgmnWOyxZOf7x4V695kmFmUwckoCaSLGE+65Cdl9xifi5krBl6NfhfNKO
+O5AcGRmBLmtVdw6AjekQJJ9ZT7PTlBYaZnwUso2GKNOSNQWzk9nNqSZn/eeXpUgD
+1di8H0Fta77xSGiTO0dG4xln2B1sktjscc1Kw0xkDZLxeWS2neN3TvjYGuXzROhe
+QAbpGEG5BvA/K+7/wHP9jFEfXUh+MEzHyTpsUju55jgk7LzfL7jUfMXdu8iVcnax
+oDKdtyC+x8ugUFr3Uz/9TorjGTbKMnBV1li8CqIwMpFZBCNqnuN49PMJPkrjgCB2
+o6OTtuYxtadBB2qAoO/8LIM/0c0je7yy7it6LjPCp55ELZmjaajeBWrEjDPvXNPZ
+Fm8NkfoG7mtVCSCUQtGv/0rktNh9rCbg57JRmLPIW5yRlQL0jrVUCPAfEqD38X9s
+intiE4YDqHbL8m/1RpNiM3nWvM+kNrC0TBNSSrEIwOQtIyAVEK4=
+=gtx2
 -----END PGP SIGNATURE-----
 
---sDKAb4OeUBrWWL6P--
+--MrRUTeZlqqNo1jQ9--
