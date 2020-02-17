@@ -7,47 +7,41 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9A9C3402C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE3CC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A76215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A8320801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581977051;
-	bh=fHeEAy76nwaKfuS6Pjxm/prSU2nMk5D9/awW1Xo6MfQ=;
+	s=default; t=1581977066;
+	bh=bH3FBL9iAI688kTKzfmDBpqnQ+AmP2ss7KMOYVIasfY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=hPPvY8wDV/3bmcjmYvKrRtAD+WKr4i+Hevd98HU8uAc/Bvt0xGHvGsSDWQ1gTYt0k
-	 9Wxnq6sTG+Nxw7uX40z/TYmIxftKlHFJ5mrlvN2WuI6baZls6n6rXDrybvuLBG2ff6
-	 pO72e4eezL6uzkykUkw4GjLCSsTdoQksTG486S6M=
+	b=juR5F3mYicDHoTaTOqtMdyWSc+/jAbhprPK9zSAuiXaD4uzBkUJ/011g51FjVT6aW
+	 B2uff3jO3WARmaz55rAlLiGci75uY3Zi9nugmXRZaIAcZ8Ei7vSlsl6La69NEO04Ln
+	 XedBzTKQhueZJVjp6zCsm/HBU0Ih5o5zFKNbbvQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBQWEK (ORCPT
+        id S1726680AbgBQWEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:04:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:42188 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 17:04:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:42244 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgBQWEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:04:10 -0500
+        id S1726025AbgBQWEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:04:25 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D19211B3;
-        Mon, 17 Feb 2020 14:04:09 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94C7B106F;
+        Mon, 17 Feb 2020 14:04:24 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D82C23F703;
-        Mon, 17 Feb 2020 14:04:08 -0800 (PST)
-Date:   Mon, 17 Feb 2020 22:04:07 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1810F3F703;
+        Mon, 17 Feb 2020 14:04:23 -0800 (PST)
+Date:   Mon, 17 Feb 2020 22:04:22 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, alsa-devel@alsa-project.org,
-        broonie@kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: amd: ACP needs to be powered off in BIOS." to the asoc tree
-In-Reply-To:  <1581935964-15059-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-Message-Id:  <applied-1581935964-15059-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Applied "regulator: mp5416: Fix output discharge enable bit for LDOs" to the regulator tree
+In-Reply-To:  <20200212150223.20042-1-axel.lin@ingics.com>
+Message-Id:  <applied-20200212150223.20042-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -56,11 +50,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: amd: ACP needs to be powered off in BIOS.
+   regulator: mp5416: Fix output discharge enable bit for LDOs
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -81,63 +75,61 @@ to this mail.
 Thanks,
 Mark
 
-From 3bc7b6c15fffdf3f818df31198c8c040ad8f7ea9 Mon Sep 17 00:00:00 2001
-From: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-Date: Mon, 17 Feb 2020 16:09:19 +0530
-Subject: [PATCH] ASoC: amd: ACP needs to be powered off in BIOS.
+From 502cdd605edd95209661c8bf90927af6d05c011c Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 12 Feb 2020 23:02:23 +0800
+Subject: [PATCH] regulator: mp5416: Fix output discharge enable bit for LDOs
 
-Removed this logic because It is BIOS which needs to
-power off the ACP power domian through ACP_PGFSM_CTRL
-register when you De-initialize ACP Engine.
+The .active_discharge_on/.active_discharge_mask settings does not match
+the datasheet, fix it.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-Link: https://lore.kernel.org/r/1581935964-15059-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20200212150223.20042-1-axel.lin@ingics.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/amd/raven/pci-acp3x.c | 23 -----------------------
- 1 file changed, 23 deletions(-)
+ drivers/regulator/mp5416.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index 65330bb50e74..da60e2ec5535 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -45,23 +45,6 @@ static int acp3x_power_on(void __iomem *acp3x_base)
- 	return -ETIMEDOUT;
- }
- 
--static int acp3x_power_off(void __iomem *acp3x_base)
--{
--	u32 val;
--	int timeout;
--
--	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
--			acp3x_base + mmACP_PGFSM_CONTROL);
--	timeout = 0;
--	while (++timeout < 500) {
--		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
--		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF)
--			return 0;
--		udelay(1);
--	}
--	return -ETIMEDOUT;
--}
--
- static int acp3x_reset(void __iomem *acp3x_base)
- {
- 	u32 val;
-@@ -115,12 +98,6 @@ static int acp3x_deinit(void __iomem *acp3x_base)
- 		pr_err("ACP3x reset failed\n");
- 		return ret;
+diff --git a/drivers/regulator/mp5416.c b/drivers/regulator/mp5416.c
+index 7954ad17249b..67ce1b52a1a1 100644
+--- a/drivers/regulator/mp5416.c
++++ b/drivers/regulator/mp5416.c
+@@ -73,7 +73,7 @@
+ 		.owner			= THIS_MODULE,			\
  	}
--	/* power off */
--	ret = acp3x_power_off(acp3x_base);
--	if (ret) {
--		pr_err("ACP3x power off failed\n");
--		return ret;
--	}
- 	return 0;
- }
  
+-#define MP5416LDO(_name, _id)						\
++#define MP5416LDO(_name, _id, _dval)					\
+ 	[MP5416_LDO ## _id] = {						\
+ 		.id = MP5416_LDO ## _id,				\
+ 		.name = _name,						\
+@@ -87,9 +87,9 @@
+ 		.vsel_mask = MP5416_MASK_VSET,				\
+ 		.enable_reg = MP5416_REG_LDO ##_id,			\
+ 		.enable_mask = MP5416_REGULATOR_EN,			\
+-		.active_discharge_on	= BIT(_id),			\
++		.active_discharge_on	= _dval,			\
+ 		.active_discharge_reg	= MP5416_REG_CTL2,		\
+-		.active_discharge_mask	= BIT(_id),			\
++		.active_discharge_mask	= _dval,			\
+ 		.owner			= THIS_MODULE,			\
+ 	}
+ 
+@@ -155,10 +155,10 @@ static struct regulator_desc mp5416_regulators_desc[MP5416_MAX_REGULATORS] = {
+ 	MP5416BUCK("buck2", 2, mp5416_I_limits2, MP5416_REG_CTL1, BIT(1), 2),
+ 	MP5416BUCK("buck3", 3, mp5416_I_limits1, MP5416_REG_CTL1, BIT(2), 1),
+ 	MP5416BUCK("buck4", 4, mp5416_I_limits2, MP5416_REG_CTL2, BIT(5), 2),
+-	MP5416LDO("ldo1", 1),
+-	MP5416LDO("ldo2", 2),
+-	MP5416LDO("ldo3", 3),
+-	MP5416LDO("ldo4", 4),
++	MP5416LDO("ldo1", 1, BIT(4)),
++	MP5416LDO("ldo2", 2, BIT(3)),
++	MP5416LDO("ldo3", 3, BIT(2)),
++	MP5416LDO("ldo4", 4, BIT(1)),
+ };
+ 
+ /*
 -- 
 2.20.1
 
