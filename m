@@ -2,137 +2,155 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CC8C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C5BC3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D1C20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788E520725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAcbX/to"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Pzz6Zgxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgBQVK4 (ORCPT
+        id S1729905AbgBQVLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:10:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34331 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbgBQVK4 (ORCPT
+        Mon, 17 Feb 2020 16:11:39 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35174 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727300AbgBQVLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:10:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so17477578otl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:10:54 -0800 (PST)
+        Mon, 17 Feb 2020 16:11:38 -0500
+Received: by mail-qk1-f196.google.com with SMTP id v2so17586768qkj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:11:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cxGKMOcaVmtYBJsQFMG9XcBq+4HK9qOJedimYVGECnc=;
-        b=cAcbX/to2FsZm371gcOorgLW4wUJPwgVYzE0wQo+/g8JAurh+6E0dPlKifHY+UkgWI
-         H3znjGnqFcQMKH+W1FmGWAKQbOvQaLT/C+eCvutEx4ZUjS0QrdoCxPlsmTesaJWsZZA5
-         GeVkfvfNZ0SZM1Oi9Mfs0qRfUpZqAdWpHAk2nv3aGMwRQjQibAFixLQifDYm2M/LLRR0
-         SJTQn19ImBGpJP0SJwm9Plp61F5l01agUrX9eIywel4w4E+CPycAM3X4lG1qSh2t+t86
-         Mu5/DKJPAKBdaGm6n8U2nkzSPF8m41vR9gEMSykb4VoRuv37Swm1EL17PWdEMKUv6ncn
-         2UQw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FxRvJ7r8F0ZhX0NHb83GmNQC4jmvCqMGLG+tYQsonZM=;
+        b=Pzz6Zgxbs2KU70lU07hCHuYB+qSwV2OzlgI3vnRxXKSknajbzUMUz9POTYrINqVTxS
+         Q4v+CqY7C/FMizwmjXn3j6MRDtN5/l3Ah0YAxZNd7CKo63eb+UYaLAr+A5NlItB3SXoF
+         Ytq8dEvLHRhR0hxyGKXmWQFFIocQ96jLq3lkE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cxGKMOcaVmtYBJsQFMG9XcBq+4HK9qOJedimYVGECnc=;
-        b=CTufYu4DCo0FWxWHIdZuN0nt8HVOBo5X9sQyCm6aXyXhYge/NnMJ7kNiDDRnneUC1G
-         FBXuxYZAnmKZWTM4rFSGJS7yxtddq/UpUqOzSjjB2sLIWliMggJkPibFuiDP6QAX0UQO
-         L2KHwuLten/Zm5CD09uVmGIvx7CeojFYRMWA5gRq0uxvOP3tsKvXDPWKActbWoih5B61
-         J3whOQhx9isbKEYesO++A30CFadmf7zqQmC6gNS8qLi2Y48JI8h5Tw1x70DtxHcPrQi9
-         kmW1G+IEeU14NYBovZwQskODaMnUZfPMkAK9MCBgafO3+Ra6GMZoCeNLtGM/JwCir+k+
-         3iTA==
-X-Gm-Message-State: APjAAAXCAkub+hUAfg/M3IlBN5gqmcNq6rBj6WAqYpiZ3JYQHfXvAkeu
-        dNhrp/utInnPzG8pGrd4jitdJxmmLxDiIO4kS6oEag==
-X-Google-Smtp-Source: APXvYqxyQp2Q4c69hrEzyecMErq7xSCR4nj5SI/+asKMyk8vddsgezLaExzWs6x+JEjm3LT5MDomIT3FuLnG4Ugyp+I=
-X-Received: by 2002:a05:6830:22cc:: with SMTP id q12mr13880885otc.110.1581973853761;
- Mon, 17 Feb 2020 13:10:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FxRvJ7r8F0ZhX0NHb83GmNQC4jmvCqMGLG+tYQsonZM=;
+        b=ipvli4J4ykAIXBoSxox4CdDC6MMptZ/pq8wletrfT5doTLE+Sa30/U1X4FqgeTz0/L
+         Ah0IFLCncszkNkdANXjVrE6dNLd3B+MKKNjgdeQ3HrBJDnqnWOSh+zEXZX/v+7oDMdyu
+         7U+P5oelzXojCnCHlI5rf9Cy10NTulhMNI0QpjanoRfa+gHzirHhEXrABHhDpfYH3qML
+         wLHhfJx+oyOmgM2NLtPyXrfF+7EbAcm/rxxb3mhRIauSocj3NkI9AZ8m+JbXLvEUKPRj
+         4wM6BemNA3uYlkkjubNYmc8WW+Ict9kniWYc7GflIlhiCeFfLaQeKp4QJqHBnuJYQ3MN
+         xraQ==
+X-Gm-Message-State: APjAAAWZ19NSOeoZvkUuUMiG1IrfEWtUgne5lQhT0M7D5YhMqeBoRFDq
+        ylvupQK8ryBSsB8IuyBb7GxQug==
+X-Google-Smtp-Source: APXvYqygX7dLAl4Fy2BYXdFwY91MRzUP3Zm9j4CbyODQwFddsNhaRmCqH65KiokFA+D4qv930fnjMA==
+X-Received: by 2002:a37:9e0f:: with SMTP id h15mr15770994qke.287.1581973896659;
+        Mon, 17 Feb 2020 13:11:36 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 132sm429238qkn.109.2020.02.17.13.11.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 13:11:35 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:11:35 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH tip/core/rcu 06/30] rcu: Add WRITE_ONCE to rcu_node
+ ->exp_seq_rq store
+Message-ID: <20200217211135.GA207704@google.com>
+References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
+ <20200214235607.13749-6-paulmck@kernel.org>
+ <20200214224743.280772a7@oasis.local.home>
+ <20200215105803.GY2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <cover.1547073843.git.jpoimboe@redhat.com> <20190110203023.GL2861@worktop.programming.kicks-ass.net>
- <20190110205226.iburt6mrddsxnjpk@treble>
-In-Reply-To: <20190110205226.iburt6mrddsxnjpk@treble>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 17 Feb 2020 22:10:27 +0100
-Message-ID: <CAG48ez0owFet0E43UAGd7sV9Oi0yhVpWTmy4W+Vm5+0q=74-DA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Static calls
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200215105803.GY2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 9:52 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> On Thu, Jan 10, 2019 at 09:30:23PM +0100, Peter Zijlstra wrote:
-> > On Wed, Jan 09, 2019 at 04:59:35PM -0600, Josh Poimboeuf wrote:
-> > > With this version, I stopped trying to use text_poke_bp(), and instead
-> > > went with a different approach: if the call site destination doesn't
-> > > cross a cacheline boundary, just do an atomic write.  Otherwise, keep
-> > > using the trampoline indefinitely.
-> >
-> > > - Get rid of the use of text_poke_bp(), in favor of atomic writes.
-> > >   Out-of-line calls will be promoted to inline only if the call sites
-> > >   don't cross cache line boundaries. [Linus/Andy]
-> >
-> > Can we perserve why text_poke_bp() didn't work? I seem to have forgotten
-> > again. The problem was poking the return address onto the stack from the
-> > int3 handler, or something along those lines?
->
-> Right, emulating a call instruction from the #BP handler is ugly,
-> because you have to somehow grow the stack to make room for the return
-> address.  Personally I liked the idea of shifting the iret frame by 16
-> bytes in the #DB entry code, but others hated it.
->
-> So many bad-but-not-completely-unacceptable options to choose from.
+On Sat, Feb 15, 2020 at 02:58:03AM -0800, Paul E. McKenney wrote:
+> On Fri, Feb 14, 2020 at 10:47:43PM -0500, Steven Rostedt wrote:
+> > On Fri, 14 Feb 2020 15:55:43 -0800
+> > paulmck@kernel.org wrote:
+> > 
+> > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > > 
+> > > The rcu_node structure's ->exp_seq_rq field is read locklessly, so
+> > > this commit adds the WRITE_ONCE() to a load in order to provide proper
+> > > documentation and READ_ONCE()/WRITE_ONCE() pairing.
+> > > 
+> > > This data race was reported by KCSAN.  Not appropriate for backporting
+> > > due to failure being unlikely.
+> > > 
+> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > ---
+> > >  kernel/rcu/tree_exp.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> > > index d7e0484..85b009e 100644
+> > > --- a/kernel/rcu/tree_exp.h
+> > > +++ b/kernel/rcu/tree_exp.h
+> > > @@ -314,7 +314,7 @@ static bool exp_funnel_lock(unsigned long s)
+> > >  				   sync_exp_work_done(s));
+> > >  			return true;
+> > >  		}
+> > > -		rnp->exp_seq_rq = s; /* Followers can wait on us. */
+> > > +		WRITE_ONCE(rnp->exp_seq_rq, s); /* Followers can wait on us. */
+> > 
+> > Didn't Linus say this is basically bogus?
+> > 
+> > Perhaps just using it as documenting that it's read locklessly, but is
+> > it really needed?
+> 
+> Yes, Linus explicitly stated that WRITE_ONCE() is not required in
+> this case, but he also said that he was OK with it being there for
+> documentation purposes.
 
-Silly suggestion from someone who has skimmed the thread:
+Just to add, PeterZ does approve of WRITE_ONCE() to prevent store-tearing
+where applicable.
 
-Wouldn't a retpoline-style trampoline solve this without needing
-memory allocations? Let the interrupt handler stash the destination in
-a percpu variable and clear IF in regs->flags. Something like:
+And I have reproduced Will's example [1] with the arm64 Clang compiler
+shipping with the latest Android NDK just now. It does break up stores when
+writing zeroes to 64-bit valyes, this is a real problem which WRITE_ONCE()
+resolves. And I've verified GCC on arm64 does break up 64-bit immediate value
+writes without WRITE_ONCE().
 
-void simulate_call(unsigned long target) {
-  __this_cpu_write(static_call_restore_if, (regs->flags & X86_EFLAGS_IF) != 0);
-  regs->flags &= ~X86_EFLAGS_IF;
-  __this_cpu_write(static_call_trampoline_source, regs->ip + 5);
-  __this_cpu_write(static_call_trampoline_target, target);
-  regs->ip = magic_static_call_trampoline;
-}
+thanks,
 
-magic_static_call_trampoline:
-; set up return address for returning from target function
-pushl PER_CPU_VAR(static_call_trampoline_source)
-; set up retpoline-style return address
-pushl PER_CPU_VAR(static_call_trampoline_target)
-; restore flags if needed
-cmp PER_CPU_VAR(static_call_restore_if), 0
-je 1f
-sti ; NOTE: percpu data must not be accessed past this point
-1:
-ret ; "return" to the call target
+ - Joel
 
-By using a return to implement the call, we don't need any scratch
-registers for the call.
+[1] https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/
+
+
+> And within RCU, I -do- need it because I absolutely need to see if a
+> given patch introduced new KCSAN reports.  So I need it for the same
+> reason that I need the build to proceed without warnings.
+> 
+> Others who are working with less concurrency-intensive code might quite
+> reasonably make other choices, of course.  And my setting certain KCSAN
+> config options in my own builds doesn't inconvenience them, so we should
+> all be happy, right?  :-)
+> 
+> 							Thanx, Paul
+> 
+> > -- Steve
+> > 
+> > 
+> > 
+> > >  		spin_unlock(&rnp->exp_lock);
+> > >  		trace_rcu_exp_funnel_lock(rcu_state.name, rnp->level,
+> > >  					  rnp->grplo, rnp->grphi, TPS("nxtlvl"));
+> > 
