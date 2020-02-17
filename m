@@ -2,137 +2,95 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB6C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A4FC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83DD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="djcsP0XH"
+	by mail.kernel.org (Postfix) with ESMTP id E1F8F2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgBQJLA (ORCPT
+        id S1728786AbgBQJMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:11:00 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42694 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728272AbgBQJK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:10:59 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581930659; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=LflFX77MpWqHjBMkjGqMItAeXxvmu1fDKmf5K/EJeow=; b=djcsP0XHymByAeW4UDSojfOLZ0cAifWh76edniaHXzBcTiKYWY/ENVrf7pdiXxpcJtHOKZqG
- 7xdwghXuGxlsLntCmxnwvXBxVMHMq3GCg5BFOeOqYLl+lcURfk3Sw6wYVN1/qRv8Np7hvSID
- fGjNq9w7Unh9enpWHh28YSBWmDU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a589c.7fabdec96538-smtp-out-n01;
- Mon, 17 Feb 2020 09:10:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A4A0C447A3; Mon, 17 Feb 2020 09:10:50 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34576C447A0;
-        Mon, 17 Feb 2020 09:10:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34576C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Mon, 17 Feb 2020 14:40:42 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] sched/rt: allow pulling unfitting task
-Message-ID: <20200217091042.GB28029@codeaurora.org>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-3-qais.yousef@arm.com>
+        Mon, 17 Feb 2020 04:12:03 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43474 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728681AbgBQJMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:12:03 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C17C2B5DC1BA1A12947B;
+        Mon, 17 Feb 2020 17:11:55 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
+ 17:11:48 +0800
+Subject: Re: [PATCH v4 01/20] irqchip/gic-v4.1: Skip absent CPUs while
+ iterating over redistributors
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-2-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <1f86bcdd-01ca-4925-3163-d47e17d006ab@huawei.com>
+Date:   Mon, 17 Feb 2020 17:11:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214163949.27850-3-qais.yousef@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200214145736.18550-2-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+Hi Marc,
 
-On Fri, Feb 14, 2020 at 04:39:48PM +0000, Qais Yousef wrote:
-> When implemented RT Capacity Awareness; the logic was done such that if
-> a task was running on a fitting CPU, then it was sticky and we would try
-> our best to keep it there.
+On 2020/2/14 22:57, Marc Zyngier wrote:
+> In a system that is only sparsly populated with CPUs, we can end-up with
+> redistributors structures that are not initialized. Let's make sure we
+> don't try and access those when iterating over them (in this case when
+> checking we have a L2 VPE table).
 > 
-> But as Steve suggested, to adhere to the strict priority rules of RT
-> class; allow pulling an RT task to unfitting CPU to ensure it gets a
-> chance to run ASAP. When doing so, mark the queue as overloaded to give
-> the system a chance to push the task to a better fitting CPU when a
-> chance arises.
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->  kernel/sched/rt.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>   drivers/irqchip/irq-gic-v3-its.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 4043abe45459..0c8bac134d3a 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1646,10 +1646,20 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
->  
->  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
->  {
-> -	if (!task_running(rq, p) &&
-> -	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
-> -	    rt_task_fits_capacity(p, cpu))
-> +	if (!task_running(rq, p) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
-> +
-> +		/*
-> +		 * If the CPU doesn't fit the task, allow pulling but mark the
-> +		 * rq as overloaded so that we can push it again to a more
-> +		 * suitable CPU ASAP.
-> +		 */
-> +		if (!rt_task_fits_capacity(p, cpu)) {
-> +			rt_set_overload(rq);
-> +			rq->rt.overloaded = 1;
-> +		}
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 83b1186ffcad..da883a691028 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -2452,6 +2452,10 @@ static bool allocate_vpe_l2_table(int cpu, u32 id)
+>   	if (!gic_rdists->has_rvpeid)
+>   		return true;
+>   
+> +	/* Skip non-present CPUs */
+> +	if (!base)
+> +		return true;
 > +
 
-Here rq is source rq from which the task is being pulled. I can't understand
-how marking overload condition on source_rq help. Because overload condition
-gets cleared in the task dequeue path. i.e dec_rt_tasks->dec_rt_migration->
-update_rt_migration().
+Thanks for fixing this,
 
-Also, the overload condition with nr_running=1 may not work as expected unless
-we track this overload condition (due to unfit) separately. Because a task
-can be pushed only when it is NOT running. So a task running on silver will
-continue to run there until it wakes up next time or another high prio task
-gets queued here (due to affinity).
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-btw, Are you testing this path by disabling RT_PUSH_IPI feature? I ask this
-because, This feature gets turned on by default in our b.L platforms and
-RT task migrations happens by the busy CPU pushing the tasks. Or are there
-any cases where we can run into pick_rt_task() even when RT_PUSH_IPI is
-enabled?
+>   	val  = gicr_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+>   
+>   	esz  = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val) + 1;
+> 
 
-Thanks,
-Pavan
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
