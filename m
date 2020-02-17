@@ -2,131 +2,188 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFADEC34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD7C34028
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8614D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368672064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cuFQS8U3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SF746+Hf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgBQUEk (ORCPT
+        id S1729642AbgBQUIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:04:40 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.253]:45122 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727241AbgBQUEk (ORCPT
+        Mon, 17 Feb 2020 15:08:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49735 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728543AbgBQUIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:04:40 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 3350821BC
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:04:39 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3mdDju8cIAGTX3mdDj5IPC; Mon, 17 Feb 2020 14:04:39 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5z9m63kd28Ot+M5QQVB7v0R9bZGcWNPML78KZuOVhHU=; b=cuFQS8U3qeUC4Djbx+zGs37Pr6
-        a6QknbdqGQS1I4hszFnbzNrGV0t5zPRF0NHMDUsRQnHOqts4uTW71TxoA6e0HQyBkC3inbZ+oxLeO
-        qOGXpPkJs/pHKLXnA7YjmecF86foEzfQvCQVBeeyYRNPOjzGd6SotNfBzjNTsKrEquXAPK/Hssw9Z
-        ZF5v187TuqQPACLBd9HvcqDdnvqY10kOhskoIkymvgvPq/Ep7/7YLPgtIXv600YSuqRWLWQYEbJpW
-        tUXSlkzIWsxPxXJbm6G436s06MjdLe2/uX4+SvZrjT3XLmNa+ga/tv6W50B+QOe1dwz4XQqhFFiWK
-        yha1BMFA==;
-Received: from [200.68.140.26] (port=27988 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j3mdB-000RJy-Mc; Mon, 17 Feb 2020 14:04:37 -0600
-Date:   Mon, 17 Feb 2020 14:07:19 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: netlink: Replace zero-length array with
- flexible-array member
-Message-ID: <20200217200719.GA8545@embeddedor>
+        Mon, 17 Feb 2020 15:08:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581970099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QTc5ShnDqrR+1+XO2uWJHJ3GTXHe6seQTNXgYqcv050=;
+        b=SF746+HfNpdBsqNEt8aJUlCyE60wdgVSewEV+D/VLmx4AIzNio5XXce/+Y+2dGqM9VWSoC
+        mDHNW3qS/PZYjv6xI4QyFB6aKV+WKj/KH3N7bXohjeMQiylwQMeu/8CcqYRHdl2xyPOb1d
+        WLp7Tis97ZrCLHcbGtmfoaagSC7PZ3c=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-xC_6uDHhOieS4FIc44OIEA-1; Mon, 17 Feb 2020 15:08:13 -0500
+X-MC-Unique: xC_6uDHhOieS4FIc44OIEA-1
+Received: by mail-wr1-f71.google.com with SMTP id j4so9526776wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:08:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QTc5ShnDqrR+1+XO2uWJHJ3GTXHe6seQTNXgYqcv050=;
+        b=q0u+ZFl6tPTxdh0kHKBFZLswSrHdnkahXPkr8ON3Tlil6q+9ijUz+ibKe2M/YqxBGe
+         vCgCuegvrG9h9RtEiW8+XvlwTfF/uM806AJKuyINBmbwyYju4VRp8dcpPK9NLFSy8DTT
+         asojGr6+pqaVjH7/BMPl4uCcELhNMDzrYdD0bJ5/qEKJNOBDWv0C3Bl37LOQL2bciS02
+         6t5NZTG6CoEYK3Nfn2UPXlgcPCT9BCwKnEJg0HH53Z4kJUXBClOrmarwOSLno5Cw56j1
+         JKX3ogzjFkZonbactQxV58WnwFmCfF96FGz89gZc9PC7D38wDvv5fecIwsH4nmhgHBI1
+         6Ufw==
+X-Gm-Message-State: APjAAAXaxUSl0TOwoPKq4mA4vPhG1uk0p4XA+0ykBlfTshGCBPfYOzrx
+        jUlWS3aHUk4d5HWc5bhiIl7PeUxkCxjZZfsjQmT3rQOAWVPhU4nrPFhe55EqaGxRPGu64A8ouHp
+        4sI+PB3yUWrns4OAM/eWbr9g9+fDQDENBNm1RbPVO
+X-Received: by 2002:a5d:4a89:: with SMTP id o9mr22937406wrq.32.1581970092202;
+        Mon, 17 Feb 2020 12:08:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwBPNbYpDQ1aePUMvoCymTJ3o8aI9190iGkocZIExkK5mvFNO4INHKfail93/yp5XBWPAppQh6hqH9zeyv55dg=
+X-Received: by 2002:a5d:4a89:: with SMTP id o9mr22937374wrq.32.1581970091914;
+ Mon, 17 Feb 2020 12:08:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.26
-X-Source-L: No
-X-Exim-ID: 1j3mdB-000RJy-Mc
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:27988
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200216141104.21477-1-ardb@kernel.org> <CACi5LpN_Aqop1MQx3ouRd4V27GtiMXBiT=w916P1_zEEc2SJcQ@mail.gmail.com>
+ <CAKv+Gu9XOcQfQCbrEgNPQWY0WhGRFPJSPPDykRHDdX+E5B6DhQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9XOcQfQCbrEgNPQWY0WhGRFPJSPPDykRHDdX+E5B6DhQ@mail.gmail.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Tue, 18 Feb 2020 01:37:59 +0530
+Message-ID: <CACi5LpMBCa-E0uofr9gdW9sMHQ6Qr7QBj1kauQit-6VwBfNpEg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] arch-agnostic initrd loading method for EFI systems
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laszlo Ersek <lersek@redhat.com>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Feb 18, 2020 at 12:53 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Mon, 17 Feb 2020 at 20:11, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> >
+> > Hi Ard,
+> >
+> > On Sun, Feb 16, 2020 at 7:41 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > This series introduces an arch agnostic way of loading the initrd into
+> > > memory from the EFI stub. This addresses a number of shortcomings that
+> > > affect the current implementations that exist across architectures:
+> > >
+> > > - The initrd=<file> command line option can only load files that reside
+> > >   on the same file system that the kernel itself was loaded from, which
+> > >   requires the bootloader or firmware to expose that file system via the
+> > >   appropriate EFI protocol, which is not always feasible. From the kernel
+> > >   side, this protocol is problematic since it is incompatible with mixed
+> > >   mode on x86 (this is due to the fact that some of its methods have
+> > >   prototypes that are difficult to marshall)
+> > >
+> > > - The approach that is ordinarily taken by GRUB is to load the initrd into
+> > >   memory, and pass it to the kernel proper via the bootparams structure or
+> > >   via the device tree. This requires the boot loader to have an understanding
+> > >   of those structures, which are not always set in stone, and of the policies
+> > >   around where the initrd may be loaded into memory. In the ARM case, it
+> > >   requires GRUB to modify the hardware description provided by the firmware,
+> > >   given that the initrd base and offset in memory are passed via the same
+> > >   data structure. It also creates a time window where the initrd data sits
+> > >   in memory, and can potentially be corrupted before the kernel is booted.
+> > >
+> > > Considering that we will soon have new users of these interfaces (EFI for
+> > > kvmtool on ARM, RISC-V in u-boot, etc), it makes sense to add a generic
+> > > interface now, before having another wave of bespoke arch specific code
+> > > coming in.
+> > >
+> > > Another aspect to take into account is that support for UEFI secure boot
+> > > and measured boot is being taken into the upstream, and being able to
+> > > rely on the PE entry point for booting any architecture makes the GRUB
+> > > vs shim story much cleaner, as we should be able to rely on LoadImage
+> > > and StartImage on all architectures, while retaining the ability to
+> > > load initrds from anywhere.
+> > >
+> > > Note that these patches depend on a fair amount of cleanup work that I
+> > > am targetting for v5.7. Branch can be found at:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
+> > >
+> > > A PoC implementation for OVMF and ArmVirtQemu (OVMF for ARM aka AAVMF) can
+> > > be found at https://github.com/ardbiesheuvel/edk2/commits/linux-efi-generic.
+> > >
+> > > A U-Boot implementation is under development as well, and can be found at
+> > > https://github.com/apalos/u-boot/commits/efi_load_file_8
+> >
+>
+> Hello Bhupesh,
+>
+> > Thanks a lot for the patchset. I am still going through the patchset
+> > and trying to understand how will it impact
+> > kexec use-cases, namely:
+> >
+> > 1. kexec_load() and kecec_file_load(), use '--initrd=<file>' like
+> > command line options.
+> >
+>
+> These should not be affected at all, since they don't go through the EFI stub.
+>
+> > 2. We have several kexec based bootloader implementations (for example
+> > linuxboot, see (a) and (b) below) that replaces specific firmware
+> > functionality like the UEFI DXE phase with a Linux kernel and runtime
+> > and find the initrd image (for example, uroot) from that same
+> > filesystem. So these would need modification(s) similar to the OVMF
+> > AAVMF and u-boot, right?
+> >
+>
+> These changes only affect the interaction between the EFI firmware and
+> the EFI stub. Anything that relies on the raw x86 boot protocol (jump
+> to offset 0x0 for 32-bit or offset 0x200 for 64-bit) or the EFI
+> handover protocol (find the boot offset in the setup header and jump
+> into the image at the discovered offset) will work as before, although
+> the EFI handover protocol is something I would like to get rid of at
+> some point in the future. Kexec typically mimics the handover between
+> the EFI stub and the kernel, not the EFI firmware and the EFI stub, so
+> I would not expect kexec to be affected at all by any of this.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Thanks a lot for the clarification, Ard. You are right, currently
+there are several kexec based bootloader implementations which follow
+a non-standard (?) way of handing over the control from EFI firmware
+to the Linux kernel.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+While we cannot be sure about all, but in future we can try and move
+some of the popular ones to more standard ways of using Linux kenrel +
+kexec as a partial firmware replacement.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> In general, the intent is to make kexec idempotent, i.e., to make the
+> first boot as similar as we can to subsequent kexec boots, which is
+> why we are pushing back against adding bespoke interfaces to pass ACPI
+> rsdp pointer, smbios table addresses etc.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Got it. Thanks a lot for your clarification.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/netlink/af_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index 4e31721e7293..bced11032681 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -71,7 +71,7 @@
- 
- struct listeners {
- 	struct rcu_head		rcu;
--	unsigned long		masks[0];
-+	unsigned long		masks[];
- };
- 
- /* state bits */
--- 
-2.25.0
+Regards,
+Bhupesh
 
