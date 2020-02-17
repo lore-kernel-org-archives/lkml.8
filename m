@@ -2,47 +2,45 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EA6C33FA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14F9C33FE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D84D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F7120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XcLoP/Ee"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SIdhKw2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgBQNBa (ORCPT
+        id S1728873AbgBQNCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:01:30 -0500
+        Mon, 17 Feb 2020 08:02:00 -0500
 Received: from mail26.static.mailgun.info ([104.130.122.26]:28818 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728836AbgBQNBa (ORCPT
+        by vger.kernel.org with ESMTP id S1728297AbgBQNCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:01:30 -0500
+        Mon, 17 Feb 2020 08:02:00 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581944489; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=sG89boOD+ZTEKtSXFwLkgYqnXxWQBkZUG4IMHwlHLA0=; b=XcLoP/EelScYnidhUH/1qj7Sxbgi9si3nnS9JdyTdYleFQQoqEHvSvEwCEA/gsX5c4kUYhJT
- gPaZqscCrzRcEQf4mlW756VyMEXWUGN/k84uwIY4owkoJk6ZRGHZkIFZQu1Mmna9nHElSs8f
- 4Dj/EW/07lyAPFBK4AvPxuyM/WE=
+ s=smtp; t=1581944519; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=hvlF4xUDYEzHHoJCAPBP+F/CgU/i6FaiSI+ZjXd4Nw0=; b=SIdhKw2DvhHPhT1NU423cVZQtLSy/be3bS/8pM8mTWNeMc6nxcTr/HOpZe9cCJ3L/c67LCIi
+ Wjc74Q+m/acJQC94O90dc0zE/xtet4DtVQ+PiOnT7NBCinW5TQk/gTOLG9inXQKgwT8L0Z8h
+ /TgiazMuNsXK9ItGB7ouPY1Ps6w=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a8e9b.7f951dc650a0-smtp-out-n01;
- Mon, 17 Feb 2020 13:01:15 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4a8e97.7fe112b84f10-smtp-out-n03;
+ Mon, 17 Feb 2020 13:01:11 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EADB3C433A2; Mon, 17 Feb 2020 13:01:14 +0000 (UTC)
+        id 3C0B2C4479C; Mon, 17 Feb 2020 13:01:10 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3FC22C4479D;
-        Mon, 17 Feb 2020 13:01:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3FC22C4479D
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 736C8C43383;
+        Mon, 17 Feb 2020 13:01:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 736C8C43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -52,89 +50,53 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
         dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
         lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: [RFC 1/2] irqchip: qcom: pdc: Introduce irq_set_wake call
-Date:   Mon, 17 Feb 2020 18:30:07 +0530
-Message-Id: <1581944408-7656-2-git-send-email-mkshah@codeaurora.org>
+Subject: [RFC 0/2] pdc: Introduce irq_set_wake call
+Date:   Mon, 17 Feb 2020 18:30:06 +0530
+Message-Id: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org>
-References: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the way interrupts get enabled at wakeup capable PDC irq chip.
-Introduce irq_set_wake call which lets interrupts enabled at PDC with
-enable_irq_wake and disabled with disable_irq_wake.
+irqchip: qcom: pdc: Introduce irq_set_wake call
 
-Remove irq_disable and irq_enable calls which now will default to irq_mask
-and irq_unmask.
+Some drivers using gpio interrupts want to configure gpio for wakeup using
+enable_irq_wake() but during suspend entry disables irq and expects system
+to resume when interrupt occurs. In the driver resume call interrupt is
+re-enabled and removes wakeup capability using disable_irq_wake() one such
+example is cros ec driver.
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+With [1] in documentation saying "An irq can be disabled with disable_irq()
+and still wake the system as long as the irq has wake enabled".
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f..145d4ae 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/err.h>
-@@ -87,22 +87,17 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	raw_spin_unlock(&pdc_lock);
- }
- 
--static void qcom_pdc_gic_disable(struct irq_data *d)
-+static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
- {
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
--	pdc_enable_intr(d, false);
--	irq_chip_disable_parent(d);
--}
-+		return 0;
- 
--static void qcom_pdc_gic_enable(struct irq_data *d)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
-+	if (on)
-+		pdc_enable_intr(d, true);
-+	else
-+		pdc_enable_intr(d, false);
- 
--	pdc_enable_intr(d, true);
--	irq_chip_enable_parent(d);
-+	return irq_chip_set_wake_parent(d, on);
- }
- 
- static void qcom_pdc_gic_mask(struct irq_data *d)
-@@ -197,15 +192,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= qcom_pdc_gic_mask,
- 	.irq_unmask		= qcom_pdc_gic_unmask,
--	.irq_disable		= qcom_pdc_gic_disable,
--	.irq_enable		= qcom_pdc_gic_enable,
- 	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
- 	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
-+	.irq_set_wake		= qcom_pdc_gic_set_wake,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
--				  IRQCHIP_SET_TYPE_MASKED |
--				  IRQCHIP_SKIP_SET_WAKE,
-+				  IRQCHIP_SET_TYPE_MASKED,
- 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- };
+In such scenario the gpio irq stays disabled at gpio irqchip but needs to
+keep enabled in the hierarchy for wakeup capable parent PDC and GIC irqchip
+to be able to detect and forward wake capable interrupt to CPU when system
+is in sleep state like suspend.
+
+Sending this as an RFC since this series attempts to add support for [1] by
+introducing irq_set_wake call for PDC irqchip from which interrupt can be
+enabled/disabled at PDC hardware. This also removes irq_chip_enable_parent
+and irq_chip_disable_parent calls made from msmgpio irqchip to PDC since
+enable and disable at wakeup capable irqchip is now done from irq_set_wake.
+
+Note that *ALL* drivers using wakeup capable interrupt and want to disable
+irq with disable_irq() need to call disable_irq_wake() also if they want
+to stop wakeup capability at parent PDC irqchip. Not doing so will lead to
+system getting woken up from sleep states.
+
+[1] https://www.spinics.net/lists/kernel/msg3398294.html
+
+Maulik Shah (2):
+  irqchip: qcom: pdc: Introduce irq_set_wake call
+  pinctrl: qcom: Remove forwarding irq_disable and irq_enable call to
+    parent
+
+ drivers/irqchip/qcom-pdc.c         | 27 ++++++++++-----------------
+ drivers/pinctrl/qcom/pinctrl-msm.c |  7 +------
+ 2 files changed, 11 insertions(+), 23 deletions(-)
+
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
