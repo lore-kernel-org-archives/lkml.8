@@ -2,122 +2,71 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA2C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFBBC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9434206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF84206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TYo9FAAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgBQJtd (ORCPT
+        id S1729023AbgBQJtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:49:33 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34264 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgBQJtd (ORCPT
+        Mon, 17 Feb 2020 04:49:53 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:53251 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728928AbgBQJtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:49:33 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r18so19966329edl.1;
-        Mon, 17 Feb 2020 01:49:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hYpNZkgMugd7lxhUSqCjHE99UAOTKhfYi8V45j1F/S4=;
-        b=eDeDj0fJV6J9/K0WaAjIKJ/pkFTCuArFmkVOENwKjLoM0rTOdC0PacOhReqvHDmKL4
-         3WYX5wTMvQBw5k5Oe5wqdCwprorSl+ysRjTp6BOLYJLUw/KewTGBLtWQhcXK0Zx3Dwzm
-         KWdhsQcj95FULmeSaNZZOzSOYR3mZ3aC5fheW8vwBl0Ohaoj06tXCMzXmbJQ3JKcayrp
-         k4N/sVN7r33RZU/SgAs36pttL/KXPSCBwDmNvPrkrGXmyCaQWfSLlYGs0FLLflhZqHx9
-         wRBrL8EQgunIOPqBoXbLW6ZfAezumqZ6XyI5Qdl/rbCTibFRJHAqvbn9U8h56Z7X8FwG
-         uXyw==
-X-Gm-Message-State: APjAAAWGn2+0clrSkxnB+5xgyQOS/0lWmbMyKKZjM85RYKv+BL+TwcZ5
-        ziBXlCL44ZyX7pVdInCW51FbEbelQa0=
-X-Google-Smtp-Source: APXvYqwSVFZHFnOpMTnV5Iu9WJJx3X+sWU1HYyFQIufqIAFfvlKuHZnGWRHsASwaqarqjdv/pCnxKQ==
-X-Received: by 2002:a17:906:1e48:: with SMTP id i8mr13099279ejj.189.1581932969269;
-        Mon, 17 Feb 2020 01:49:29 -0800 (PST)
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
-        by smtp.gmail.com with ESMTPSA id f25sm807396ejx.33.2020.02.17.01.49.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 01:49:29 -0800 (PST)
-Received: by mail-wm1-f41.google.com with SMTP id s10so16443478wmh.3;
-        Mon, 17 Feb 2020 01:49:28 -0800 (PST)
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr22802965wmg.16.1581932968319;
- Mon, 17 Feb 2020 01:49:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-2-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-2-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 17:49:17 +0800
-X-Gmail-Original-Message-ID: <CAGb2v670SH1Ra26eKgOhLYAeRTV719a3TDAfCyMr49bKU8Z=PA@mail.gmail.com>
-Message-ID: <CAGb2v670SH1Ra26eKgOhLYAeRTV719a3TDAfCyMr49bKU8Z=PA@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/34] ASoC: dt-bindings: Add a separate compatible
- for the A64 codec
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Feb 2020 04:49:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581932992; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=g//IW0nJXQeUIbmBoJDPkGdvKWYJPRzClQ8OWjgSwlw=; b=TYo9FAALh4ok6imjvWt4taR5uZ2FcITW5jO0RRNa79d/uZez4q/CiSyWOBQ9yGY+l0TQv91s
+ 425gJNe3uoxrnDpjm4dO4FvnR8BRC5lxdWJ7MqWa5xyHcFoXj7+6WQ6e1QKecK8lDeNYQm8Y
+ 0fGmtOH7SmyZGgCgoqX36yx1lTI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a61be.7fb7bc9d4340-smtp-out-n02;
+ Mon, 17 Feb 2020 09:49:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2621CC447A2; Mon, 17 Feb 2020 09:49:50 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A027C43383;
+        Mon, 17 Feb 2020 09:49:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A027C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH 0/2] Convert QSPI binding to YAML and add interconnect doc
+Date:   Mon, 17 Feb 2020 15:19:32 +0530
+Message-Id: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 2:42 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> The digital codec in the A64 is largely compatible with the one in the
-> A33, with two changes:
->  - It is missing some muxing options for AIF1/2/3 (not currently
->    supported by the driver)
+Akash Asthana (2):
+  dt-bindings: spi: Convert QSPI bindings to YAML
+  dt-bindings: spi: Add interconnect binding for QSPI
 
-Is this at the pinctrl level or mixer level? If it's at the pinctrl level
-then it's out of the scope of this driver/binding. It could very well have
-those signals, just that they aren't routed outside the SoC.
+ .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 --------
+ .../bindings/spi/qcom,spi-qcom-qspi.yaml           | 97 ++++++++++++++++++++++
+ 2 files changed, 97 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
 
-
-ChenYu
-
->  - It does not have the LRCK inversion issue that A33 has
->
-> To fix the Left/Right channel inversion on the A64 caused by the A33
-> LRCK fix, we need to introduce a new compatible for the codec in the
-> A64.
->
-> Cc: stable@kernel.org
-> Fixes: ec4a95409d5c ("arm64: dts: allwinner: a64: add nodes necessary for analog sound support")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  .../devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml  | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-> index 55d28268d2f4..7c66409f13ea 100644
-> --- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-> +++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-> @@ -15,7 +15,9 @@ properties:
->      const: 0
->
->    compatible:
-> -    const: allwinner,sun8i-a33-codec
-> +    enum:
-> +      - allwinner,sun8i-a33-codec
-> +      - allwinner,sun50i-a64-codec
->
->    reg:
->      maxItems: 1
-> --
-> 2.24.1
->
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
