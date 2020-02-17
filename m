@@ -2,108 +2,149 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA4CC3402A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CDDC3402B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F092620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C30C20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZFS8ynyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgBQVN3 (ORCPT
+        id S1729927AbgBQVOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:13:29 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37201 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgBQVN3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:13:29 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q84so18039485oic.4;
-        Mon, 17 Feb 2020 13:13:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J0GeL7eRkd4dcjRk8OPC/BgFQWPRSyAiTzR79FFJ08w=;
-        b=edLGcrO/fE8YyjGi1wWA+YfvUjp3i1WeBe0mUWSbYdeauEn4xhr3JHhfdcc57NXm3O
-         Shkyyzr7VY2wixBpbB+9XIBWeBDfgald+E1XbcA7O6BYVOhs+cH2HpB8cz3VOvTf066P
-         vz3aCkKhHigRrUXxKMO+O0fCbf33uIDhqt5WW9T1FSm9FKq1gjUOITclBxul6y2fp+Wj
-         fBEEETGz/frDd+ZuoKRGMXNXv5F5Tq+jSl/yZ5EvrTlxab3X7JVXxTRl9pQ426A+h5mP
-         CLupQISvBw8/HWkWRIrZV0SPfIKmk7jiIwCdBSdniDlWW0niobNcRkbUhjmAOtuPzC8X
-         L0dw==
-X-Gm-Message-State: APjAAAXCgouvJ79MnuaO7G3RJOwgwpCohcVcBwT1FptAl/XagiV10DCt
-        z2usSwxcCtMZILg/0ZrcV0vgOidWukPLy/fPVgo=
-X-Google-Smtp-Source: APXvYqzBFvEzrAd10p0gbPXLrf/9EGhkUDYU4iloFyY0FteD0Ccd2GSHPSxJEK0JA0JCiJ461I0pGkBcbq/mfy3VG14=
-X-Received: by 2002:a54:4707:: with SMTP id k7mr562764oik.153.1581974008740;
- Mon, 17 Feb 2020 13:13:28 -0800 (PST)
+        Mon, 17 Feb 2020 16:14:38 -0500
+Received: from mout.gmx.net ([212.227.15.18]:42879 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729110AbgBQVOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:14:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1581974073;
+        bh=8H8JRzVVErLcA/Cb9W/Jfd6wJk5WexFr0YnVg4lPI9Q=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ZFS8ynyc0sOGd37Ms2urLYqMtXjjUUR8xfk8N2GzMivAA2qr4lGGCcHxO9HEHTfpZ
+         cC+M5lJ2XA7Q3EShCtdFxmLBRHlU2nbqB8YrBf1W7ntHgfCE7oMT4NpIOLPO2PRjQd
+         eFmrhfBjTKog2dQvWOiN5Q65EZb6DfrnIafeUZVw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MtfJd-1jJh4w2WI3-00vBI0; Mon, 17
+ Feb 2020 22:14:33 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi/libstub: describe memory functions
+Date:   Mon, 17 Feb 2020 22:13:23 +0100
+Message-Id: <20200217211323.4878-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200217195435.9309-1-brgl@bgdev.pl> <20200217195435.9309-7-brgl@bgdev.pl>
-In-Reply-To: <20200217195435.9309-7-brgl@bgdev.pl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Feb 2020 22:13:17 +0100
-Message-ID: <CAMuHMdWAxhUWPt06vcaHwD34=k=ihzVAxSTtFnO4r2bY7nAmjA@mail.gmail.com>
-Subject: Re: [PATCH 6/6] nvmem: increase the reference count of a gpio passed
- over config
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q2AyUA5LF6qwEZq6Q+uOFmeB3JLxCGgHUi2RXlqJuONOIwkhyFG
+ YLp1Y1+VrxJS6LDZP0D9KpAug6GS9nAZ51KTewxY4qlubTvAwJDW5+Cqfk2T4pd4jIpSYAX
+ LeUcuaktEif0wE79/j81lgVr9BYzH5XarnngToXZr6zy5hRS3+pxZYa6BSqtyhdocUC54wb
+ 1ZujKBWWo3vNwbvkRyRkA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5OSwgTjpeJg=:XaezFtnCG82PBKlTkduXgm
+ ZfRBMgRF/tp8R+zxSoxrZPvxnvo2SOJ+EhNJNpDQDPxt3U39TQ2FWPNCXHHlZqovbqdI1N8LT
+ cvQKPad8KzDQ4gfM1jPUeEYlKzvQscXA4XHPyQ2P3sSF677xNMR6jdDjU2cBRJyQCNLZI8i5E
+ 4gEXiTFoUvjRUzB1dGT+FA1+kT8cPz+iuEE/2S84DCP1Wf0kGAfssBjrBDUSDSVv8m50HQ6vf
+ 5005EAeiiLp4IW/vNuxsW4sRmypY8DiHGk6UV7D/PgLMX1n2zqYq+5M9pziChnDYuoT3PjB+J
+ 4klfhYD057+Hj1P627yfmgS16vBZzjSq2wnzigN0Zak+qxRTIij1XXPgUG9Le05MpRAiz5Q0h
+ 7QqMhmR+6+0sSQJiRpMZzWOtjSD3O2YhAu2F0gDyBF7xziERi7ueBH0YYuzs3x1xb37jiCBfS
+ 4ks11PKLhj3fJ6w9/ztbYkBdXNpSie8wQrLQwGDCtO5YFR6XBcK8PDFMWf1r7wsLnCsvILYeY
+ WuVeoXVukN8VoMAY9jkQhALcVQ7RH8/fSepEDQZAbeIFvahmWwosmEios3cn989jIih9ZCAq0
+ 390d3WNCtIDKa2rAGHVEo02hJLLuMZfvqEONtCrv4hL6c3d0d8wYCen0c9H6k6ztsUG+e3Iki
+ N/3rli66uA/PStk/OiLRnbdJSqVR2Orx8K++JN3+ihjkMnK7thiWz37zHyDElVidKD10xzgAH
+ TDOoWBAf9WcWswif/BLE94K1nYKAtb0wRrpTT1qdzM70o3s6LIXHXH+5f1ExRbvjfAinzUEkx
+ kbhns9jHwybUEZRUspYTyiryHkptdrHl+Nlz89MnNZSbiox4U2mLd4kHr2sd++nDmykrCyDXB
+ e5R55gNdTK75M3JwzK7o/c3eGA1xVQblX34YxRcbNLSLw1Al+FSTJdfQLyaTs1z2HZhSdHl5p
+ TJBnnXswQmadhS7ABycOLvrk0MVqS8DyAULAY3HRmK0TTQLCjlDRhCVp8HdqMFr0uGHBiruYG
+ ciHCvNBiQuzHa3bOEiEScN6VL+Z3k8C6+5rRjfvP1StK/N9rR4P3zMy5P5XeQhjomefNmF/ti
+ ejSUaqZce4sUBkYo/0dq4Pgz8jRg1fdB+M2N54BhacA2vcDz256aEj3bl0h773EW7PJJd5dy8
+ GnPN51YgUQ/ZMXgTqH9Ncc/poHCAAetSSWfA4LWT+2H9QFPtwTzA1w/h/Rn99yf4i8JPLe+Gk
+ SIuVUbUbIAcDb7ywm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+Provide descriptions of:
 
-On Mon, Feb 17, 2020 at 8:56 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> We can obtain the write-protect GPIO in nvmem_register() by requesting
-> it ourselves or by storing the gpio_desc passed in nvmem_config. In the
-> latter case we need to increase the reference count so that it gets
-> freed correctly.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+* efi_get_memory_map()
+* efi_low_alloc_above()
+* efi_free()
 
-Thanks for your patch!
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/firmware/efi/libstub/mem.c | 31 ++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -349,11 +349,13 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->                 return ERR_PTR(rval);
->         }
->
-> -       if (config->wp_gpio)
-> +       if (config->wp_gpio) {
->                 nvmem->wp_gpio = config->wp_gpio;
-> -       else
-> +               gpiod_ref(config->wp_gpio);
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
+stub/mem.c
+index c25fd9174b74..be24c062115f 100644
+=2D-- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -16,6 +16,15 @@ static inline bool mmap_has_headroom(unsigned long buff=
+_size,
+ 	return slack / desc_size >=3D EFI_MMAP_NR_SLACK_SLOTS;
+ }
 
-If gpiod_ref() would return the passed GPIO, or an error code, you could write
++/**
++ * efi_get_memory_map() - get memory map
++ * @map		on return pointer to memory map
++ *
++ * Retrieve the UEFI memory map. The allocated memory leaves room for
++ * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
++ *
++ * Return:	status code
++ */
+ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
+ {
+ 	efi_memory_desc_t *m =3D NULL;
+@@ -109,8 +118,20 @@ efi_status_t efi_allocate_pages(unsigned long size, u=
+nsigned long *addr,
+ 	}
+ 	return EFI_SUCCESS;
+ }
+-/*
+- * Allocate at the lowest possible address that is not below 'min'.
++/**
++ * efi_low_alloc_above() - allocate pages at or above given address
++ * @size:	size of the memory area to allocate
++ * @align:	minimum alignment of the allocated memory area. It should
++ *		a power of two.
++ * @addr:	on exit the address of the allocated memory
++ * @min:	minimum address to used for the memory allocation
++ *
++ * Allocate at the lowest possible address that is not below 'min' as
++ * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' =
+but at
++ * least EFI_ALLOC_ALIGN. The first allocated page will not below the add=
+ress
++ * given by 'min'.
++ *
++ * Return:	status code
+  */
+ efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
+ 				 unsigned long *addr, unsigned long min)
+@@ -187,6 +208,12 @@ efi_status_t efi_low_alloc_above(unsigned long size, =
+unsigned long align,
+ 	return status;
+ }
 
-        nvmem->wp_gpio = gpiod_ref(config->wp_gpio);
++/**
++ * efi_free() - free memory pages
++ * @size	size of the memory area to free in bytes
++ * @addr	start of the memory area to free (must be EFI_PAGE_SIZE
++ *		aligned)
++ */
+ void efi_free(unsigned long size, unsigned long addr)
+ {
+ 	unsigned long nr_pages;
+=2D-
+2.25.0
 
-> +       } else {
->                 nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
->                                                     GPIOD_OUT_HIGH);
-> +       }
->         if (IS_ERR(nvmem->wp_gpio))
->                 goto err_ida_remove;
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
