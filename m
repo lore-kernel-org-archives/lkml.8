@@ -2,147 +2,87 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99799C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3318C3402B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1BD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB97B2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F37deIHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgBQUdX (ORCPT
+        id S1729610AbgBQUi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:33:23 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11384 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726704AbgBQUdW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:33:22 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HKUCgs037248;
-        Mon, 17 Feb 2020 15:32:41 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dnt08fx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Feb 2020 15:32:41 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01HKUJ43038101;
-        Mon, 17 Feb 2020 15:32:41 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dnt08fc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Feb 2020 15:32:41 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01HKPSse024151;
-        Mon, 17 Feb 2020 20:32:40 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03wdc.us.ibm.com with ESMTP id 2y68964j7v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Feb 2020 20:32:40 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HKWeOV7406178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 20:32:40 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A311AE05C;
-        Mon, 17 Feb 2020 20:32:40 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A18AAE05F;
-        Mon, 17 Feb 2020 20:32:37 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.152])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Feb 2020 20:32:36 +0000 (GMT)
-Message-ID: <e09b8921d1aade7b9d2aace43fc357bdcd1001bd.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 03/11] powerpc/mm: Adds arch-specificic functions to
- track lockless pgtable walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Date:   Mon, 17 Feb 2020 17:32:33 -0300
-In-Reply-To: <efcf780cee767d0f4b06b56e216725c6bd8d60d4.camel@linux.ibm.com>
-References: <20200206030900.147032-1-leonardo@linux.ibm.com>
-         <20200206030900.147032-4-leonardo@linux.ibm.com>
-         <1311ce1c-7e5a-f7c4-2ab2-c03e124ca1c1@c-s.fr>
-         <efcf780cee767d0f4b06b56e216725c6bd8d60d4.camel@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rjDDfaEpQyTkTpCEQ2uL"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Mon, 17 Feb 2020 15:38:57 -0500
+Received: from ozlabs.org ([203.11.71.1]:47431 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726704AbgBQUi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 15:38:57 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LwnB1r0Pz9sPK;
+        Tue, 18 Feb 2020 07:38:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581971934;
+        bh=pA92iNdyZcIOkbVA2MqEQvd2it+isei9K8/w5PhBupA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F37deIHiABLzwsu5jkZ8FobLfNfxyoRC/FdwEa3WY7KYDSh6F9QVORpi6WvGWLEsN
+         1Y2xAnnqbZUMpy/iP/Cb1gqykkyv/TmgqbDw1GJLhTFc2jWiWPpsciADezVFtdhKeN
+         iwYABa4AobFgriV9a7XeSzYBJ4bpg9atOJ8s6b3T5BZokiHLkOk3zZ7bfcG1pYqSze
+         UAbpFyP1aNO8RHm02nk6NWRm0I1dMYmlB4P+nCcNmQ4FoAm9vWjjAHh9J1HmUKhF0A
+         ZPMZzOVlpZM9np5ll1eIacMT7KmhQnX9+JNrYHNiDxPm069qAbHuQGkaAUhV5y8jkx
+         HUTXT1S3eCIpQ==
+Date:   Tue, 18 Feb 2020 07:38:43 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the modules tree
+Message-ID: <20200218073843.26b45f1b@canb.auug.org.au>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_12:2020-02-17,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- malwarescore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002170168
+Content-Type: multipart/signed; boundary="Sig_/vTKsiv/yARRd_il/ac0PeX9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-rjDDfaEpQyTkTpCEQ2uL
-Content-Type: text/plain; charset="UTF-8"
+--Sig_/vTKsiv/yARRd_il/ac0PeX9
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-02-07 at 01:38 -0300, Leonardo Bras wrote:
-> > Why not make them static inline just like the generic ones ?
-> >=20
->=20
-> Sure, can be done.  It would save some function calls.
-> For that I will define the per-cpu variable in .c and declare it in .h
-> All new function can be moved to .h, while changing adding the inline
-> modifier.
+Hi all,
 
-Just tried doing that, but percpu stuff relies in paca definitions, and
-this ends up creating some cyclic dependencies.
+Commit
 
-I could try to change that, but the amount of change is big and
-probably should be dealt in another patchset.
+  b99931f169fe ("kernel: module: Replace zero-length array with flexible-ar=
+ray member")
 
---=-rjDDfaEpQyTkTpCEQ2uL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vTKsiv/yARRd_il/ac0PeX9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5K+GEACgkQlQYWtz9S
-ttRsOg//QbdkYtnYqYavQzv828W7A3KiHEHqK77HtlTbJXOE5Vj9aU05HPZJp9XT
-ck/HXYupAIcMq+qJ8tNQKbu0zHCHxQ4dk7BPRM8RP4dp/bDOGGXqmvJG0toVtumX
-mTiJKUSaq7JeacS8xsx7hNZvLvHea/zagFha49BvLj6QajY+GU+CrpMJoaX1o/pc
-2mWKJfpLvacLQBQGfKC+t81VKHZC2K2BWpGyS7/MLEw120/n+KQHqaekMcgSaqVU
-lngRVDm4dHEZUZbOXjM3tyceMCTp5xTNv9+pS2friqkfXTomMS5ZuSW1O0i/A28m
-0TBWXC+kcQq+Bi1IxIqEPYQ3xab6/Xoba11GWD1qzBiUwd/3Xg30bAB9LYJXMwiD
-outVyh5BO6w8oSp1q5iHmt3raJLNTYYlG/SZzZCsCKXHr3EALNZvByETJ2j/oGdJ
-dbpPDOxmE2jbWMtIBhdjRFBmfmAGCTgRLpCq0hngNPm2sdQTmr9+B5UcWNzJjuks
-j1lDiMHOle78bT7GTYifJjVZrgBiB/JuToqBVzBIEgOBcGXiUXGUaDHgpNjKtH9d
-MtbmDODl9st9czyK/edN39eHlz4jfK+Z87ZJQVZz93bEjaRI6pRbqgiTVudWGdMN
-TISNtFVMgBbLWmgi8HOfs0zz4naMfcorqOhsTIi95qM8ygfs98s=
-=rEX5
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5K+dMACgkQAVBC80lX
+0GxZhQf/eNibpISjVhO6uq2zadaKvXrTAs7ze0Jv7KRm+g7y/xWgLjgF8ed1D4A9
+EfiQSKNsYpK3n3eFAkRyQyO6Z0L9Y6ZzoxlohruG8BZr9D4NzBCEn5/yEzjxbcLr
+pay2vUg2CDxsp5mzFlOLBVSLapSgT7V23Bp93VAaI9rqwE3YUaCYo+lEO+3swDH5
+XX3YfmzAsn2p4FX95bvy0tz5Fn/b+VtdmtoZcTBhseoGX88wLnSFc1PB4bCEeJSo
+Pw+vNhLtcTbzP+4ktsmIGHA1JgQbJgN1hJfG4nwk2wrspNwnH6moD2v7T2pTYeH0
+dFlDFhwksZ0kQtNPqZFX9XRE5PSXeQ==
+=RIWE
 -----END PGP SIGNATURE-----
 
---=-rjDDfaEpQyTkTpCEQ2uL--
-
+--Sig_/vTKsiv/yARRd_il/ac0PeX9--
