@@ -2,103 +2,122 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785A3C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8465C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5662C20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AB420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBQJbe (ORCPT
+        id S1728920AbgBQJcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:31:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49106 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbgBQJbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:31:33 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CD095C05B;
-        Mon, 17 Feb 2020 09:31:31 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C981E1E0D47; Mon, 17 Feb 2020 10:31:28 +0100 (CET)
-Date:   Mon, 17 Feb 2020 10:31:28 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Robert Stupp <snazy@gmx.de>
-Subject: Re: [PATCH 3/3] mm: make PageReadahead more strict
-Message-ID: <20200217093128.GB12032@quack2.suse.cz>
-References: <20200212221614.215302-1-minchan@kernel.org>
- <20200212221614.215302-3-minchan@kernel.org>
+        Mon, 17 Feb 2020 04:32:04 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25684 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726397AbgBQJcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:32:04 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01H9VKRr018127
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 04:32:02 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dq5mes7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 04:32:02 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schnelle@linux.ibm.com>;
+        Mon, 17 Feb 2020 09:32:01 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Feb 2020 09:31:58 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01H9V2Rl45351242
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 09:31:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 506C311C058;
+        Mon, 17 Feb 2020 09:31:57 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1707411C052;
+        Mon, 17 Feb 2020 09:31:57 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 17 Feb 2020 09:31:57 +0000 (GMT)
+Date:   Mon, 17 Feb 2020 10:31:56 +0100
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 094/542] s390/pci: Fix possible deadlock in
+ recover_store()
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-94-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200212221614.215302-3-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214154854.6746-94-sashal@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+x-cbid: 20021709-0012-0000-0000-000003878BE7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021709-0013-0000-0000-000021C41864
+Message-Id: <20200217093156.GB42010@tuxmaker.boeblingen.de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_05:2020-02-14,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 clxscore=1031
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-02-20 14:16:14, Minchan Kim wrote:
-> PG_readahead flag is shared with PG_reclaim but PG_reclaim is only
-> used in write context while PG_readahead is used for read context.
+On Fri, Feb 14, 2020 at 10:41:26AM -0500, Sasha Levin wrote:
+> From: Niklas Schnelle <schnelle@linux.ibm.com>
 > 
-> To make it clear, let's introduce PageReadahead wrapper with
-> !PageWriteback so it could make code clear and we could drop
-> PageWriteback check in page_cache_async_readahead, which removes
-> pointless dropping mmap_sem.
+> [ Upstream commit 576c75e36c689bec6a940e807bae27291ab0c0de ]
 > 
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> With zpci_disable() working, lockdep detected a potential deadlock
+> (lockdep output at the end).
+> 
+> The deadlock is between recovering a PCI function via the
+> 
+> /sys/bus/pci/devices/<dev>/recover
+> 
+> attribute vs powering it off via
+> 
+> /sys/bus/pci/slots/<slot>/power.
+> 
+> The fix is analogous to the changes in commit 0ee223b2e1f6 ("scsi: core:
+> Avoid that SCSI device removal through sysfs triggers a deadlock")
+> that fixed a potential deadlock on removing a SCSI device via sysfs.
+[ ... snip ... ]
 
-...
+While technically useful on its own this commit really should go together with
+the following upstream commit:
 
-> +/* Clear PG_readahead only if it's PG_readahead, not PG_reclaim */
-> +static inline int TestClearPageReadahead(struct page *page)
-> +{
-> +	VM_BUG_ON_PGFLAGS(PageCompound(page), page);
-> +
-> +	return !PageWriteback(page) ||
-> +			test_and_clear_bit(PG_reclaim, &page->flags);
-> +}
+17cdec960cf776b20b1fb08c622221babe591d51
+("s390/pci: Recover handle in clp_set_pci_fn()")
 
-I think this is still wrong - if PageWriteback is not set, it will never
-clear PG_reclaim bit so effectively the page will stay in PageReadahead
-state!
+While the problem fixed here is independent,  writing to the power/recover
+attributes will often fail due to an inconsistent function handle without the
+second commit.
+In particular without it a PCI function in the error state can not be
+recovered or powered off.
 
-The logic you really want to implement is:
+I would recommend adding the second commit to the backports as well.
 
-	if (PageReadahead(page)) { <- this is your new PageReadahead
-				    implementation
-		clear_bit(PG_reclaim, &page->flags);
-		return 1;
-	}
-	return 0;
-
-Now this has the problem that it is not atomic. The only way I see to make
-this fully atomic is using cmpxchg(). If we wanted to make this kinda-sorta
-OK, the proper condition would look like:
-
-	return !PageWriteback(page) **&&**
-			test_and_clear_bit(PG_reclaim, &page->flags);
-
-Which is similar to what you originally had but different because in C '&&'
-operator is not commutative due to side-effects committed at sequence points.
-
-BTW: I share Andrew's view that we are piling hacks to fix problems caused
-by older hacks. But I don't see any good option how to unalias
-PG_readahead and PG_reclaim.
-
-								Honza
+Thanks,
+Niklas Schnelle
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Niklas Schnelle
+Linux on Z Development
+
