@@ -1,120 +1,117 @@
-Return-Path: <SRS0=C9WH=4E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F860C76199
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E39C76199
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FB720729
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Feb 2020 23:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="rcplxmb/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lq1ibPzk"
+	by mail.kernel.org (Postfix) with ESMTP id 5676D20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581898008;
+	bh=gVWmyfqTnw1WJsietsaBjsko8jXoww3QXkt4qXMXUyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ia1Ncz8R3u21PB0mvWb8RKSvgMXo/7WgY++lVlhCUfiUQZrficPA30IzjzvKyNJvF
+	 w5DvLSeCd9rKeI4PhiEfGnRzDJkOzZ8x1c2KebjSx3u7FchMxnOJ3WjwUSCVQ8EZyr
+	 hOtvs+JscX3jwFM7ij49n4610mTWk4MFTjhE3qS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgBPX5H (ORCPT
+        id S1726551AbgBQAGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 18:57:07 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:42941 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbgBPX5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 18:57:06 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BF5DB23D1;
-        Sun, 16 Feb 2020 18:57:05 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 16 Feb 2020 18:57:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=Iq3LVkD0V43Pc+mO0wAfFqV5qSaPvQ/
-        MM4fB/BoXF80=; b=rcplxmb/8uWm7hKf+9c9zjG9b88Q8NCjzvGSxUne58cHaK5
-        AGJhSJkKKdRdGy/8SFYXzKicYHBTdfm4Mv/j9go6EoTaIFAoFzkX7YFlMNjcEgyq
-        1As7W1TLCXXLGFD7f3i1uNFtEs7bMNyBGDTCZMQja640DU9muoOv/sRp/Ql04zBe
-        G/CTYIWMRHXdTstH4u7DQRtdwFJP2mFIBhNVfAiKTKDTt3ziZr9cvBH+ORaSfDYl
-        fVPXs1iHNwHc3GfRwT1UHXLX+F3hNv2uC+FtYdd45N33kcu93E2ccWrYHHpfzw1X
-        1TG3oohc3u2Tj/Ys8Xn2Rog9DB1fG33VvhltpfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Iq3LVk
-        D0V43Pc+mO0wAfFqV5qSaPvQ/MM4fB/BoXF80=; b=lq1ibPzkpvgjiRKofRT7M1
-        CJUr2d1nf4CUXLJnak+rjb0fZRWL0VhhuU+rrO35vEmz7Jw1+QMVBIu/b/h7rLJi
-        lHiZeyqbeBUNCJ7945aOHA9WnOIlcudgWi9R8MAv3CbMOzMdqyk0UzeDgy8TuKD4
-        csdlzFjeXRtbco+GhyUihPe62TfyXN8ww4hxA34/9mMYmvZBC0zCuD/sxtEsfXdr
-        cA2mBC2oA6FQ34SzK5C9v2g9Cmqc3r3bqFaZ8QPPjmqfJy5WWAaTwAAquf4iHyDz
-        izgPv1QSnIshP1wmDLuHQ2XPZxY21Ym/hHqx+XqYiZlbujMYyzj93NC/FbiCLu2g
-        ==
-X-ME-Sender: <xms:0NZJXkTfPWJ7ph-BGf8lw6Y4BnRRam1vXMEO3UDOX9D6kKJI4OosKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:0NZJXntJj7JYT3Gh4F196g4BvCaz567U-g7331QHejM-Tv7EgdBvig>
-    <xmx:0NZJXu9q2I8QUBF1xwuRXsq73ydIXGF39keIKWrbXbHNdpderRJMAg>
-    <xmx:0NZJXoxMdh764fHv5nMSvf75ZYqa3ttgzcooKbyaWhXrpYSwRm6Ctg>
-    <xmx:0dZJXgjvk7IAxL22y8MzPM2A7xInaTSyZYyqGo_jZOroRQcB-t5T1A>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id EE60AE00A2; Sun, 16 Feb 2020 18:57:03 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
-Mime-Version: 1.0
-Message-Id: <3a053c3e-0fec-4ab9-b941-a335524b3303@www.fastmail.com>
-In-Reply-To: <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
-References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
- <1579123790-6894-7-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a3HsdpLz0aDGem1BrQsNo2mEJOnOsLcKFcLjaERx9dhGg@mail.gmail.com>
-Date:   Mon, 17 Feb 2020 10:26:57 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Arnd Bergmann" <arnd@arndb.de>,
-        "Eddie James" <eajames@linux.ibm.com>
-Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v6 06/12] soc: aspeed: Add XDMA Engine Driver
-Content-Type: text/plain
+        Sun, 16 Feb 2020 19:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgBQAGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 19:06:32 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47E9208C3;
+        Mon, 17 Feb 2020 00:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581897991;
+        bh=gVWmyfqTnw1WJsietsaBjsko8jXoww3QXkt4qXMXUyA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BU6rH900fpic038GMNAWg32Tdbcib6vdKfVFjIIyWwrY/6/tu7JAlCfT7CQuTA6ld
+         zyeAKH+AyOoMXo9XEidNtKxrtQ2SxMAEv0x+ZiHxLJPj5w5teB2pnXXqPeXViiyCsz
+         VGbmHR7E1xWBchQJwtBr7mLGKKujabUJnfRCHDbM=
+Date:   Sun, 16 Feb 2020 19:06:30 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Jean Delvare <jdelvare@suse.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 495/542] docs: i2c: writing-clients: properly
+ name the stop condition
+Message-ID: <20200217000630.GK1734@sasha-vm>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-495-sashal@kernel.org>
+ <20200215071402.027c9120@endymion>
+ <dfb3d313-ad9e-8f53-a7f6-d3bfe655d493@lucaceresoli.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <dfb3d313-ad9e-8f53-a7f6-d3bfe655d493@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Feb 16, 2020 at 10:49:39PM +0100, Luca Ceresoli wrote:
+>Hi,
+>
+>On 15/02/20 07:14, Jean Delvare wrote:
+>> On Fri, 14 Feb 2020 10:48:07 -0500, Sasha Levin wrote:
+>>> From: Luca Ceresoli <luca@lucaceresoli.net>
+>>>
+>>> [ Upstream commit 4fcb445ec688a62da9c864ab05a4bd39b0307cdc ]
+>>>
+>>> In I2C there is no such thing as a "stop bit". Use the proper naming: "stop
+>>> condition".
+>>>
+>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>> Reported-by: Jean Delvare <jdelvare@suse.de>
+>>> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+>>> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>> ---
+>>>  Documentation/i2c/writing-clients.rst | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
+>>> index ced309b5e0cc8..3869efdf84cae 100644
+>>> --- a/Documentation/i2c/writing-clients.rst
+>>> +++ b/Documentation/i2c/writing-clients.rst
+>>> @@ -357,9 +357,9 @@ read/written.
+>>>
+>>>  This sends a series of messages. Each message can be a read or write,
+>>>  and they can be mixed in any way. The transactions are combined: no
+>>> -stop bit is sent between transaction. The i2c_msg structure contains
+>>> -for each message the client address, the number of bytes of the message
+>>> -and the message data itself.
+>>> +stop condition is issued between transaction. The i2c_msg structure
+>>> +contains for each message the client address, the number of bytes of the
+>>> +message and the message data itself.
+>>>
+>>>  You can read the file ``i2c-protocol`` for more information about the
+>>>  actual I2C protocol.
+>>
+>> I wouldn't bother backporting this documentation patch to stable and
+>> longterm trees. That's a minor vocabulary thing really, it does not
+>> qualify.
+>
+>I also feel no need to have it in stable branches. Hovever it would not
+>hurt, so whatever is fine for who's maintaining that branch will be fine
+>for me as well.
 
+No, you're right, this isn't stable material - I've missed it during
+review and I'll drop it now. Thanks for pointing it out.
 
-On Tue, 11 Feb 2020, at 03:05, Arnd Bergmann wrote:
-> On Wed, Jan 15, 2020 at 10:31 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >
-> > The XDMA engine embedded in the AST2500 and AST2600 SOCs performs PCI
-> > DMA operations between the SOC (acting as a BMC) and a host processor
-> > in a server.
-> >
-> > This commit adds a driver to control the XDMA engine and adds functions
-> > to initialize the hardware and memory and start DMA operations.
-> >
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> 
-> Hi Eddie,
-> 
-> I'm missing the bigger picture in the description here, how does this fit into
-> the PCIe endpoint framework and the dmaengine subsystem?
-> 
-> Does the AST2500 show up as a PCIe device in the host, or do you just
-> inject DMAs into the host and hope that bypasses the IOMMU?
-
-The host needs to coordinate out-of-band with the BMC to communicate host
-addresses to be used. The host should configure the IOMMU as required before
-triggering transfers (either from it's own XDMA interface or requesting the BMC
-queue the transfer).
-
-Andrew
+-- 
+Thanks,
+Sasha
