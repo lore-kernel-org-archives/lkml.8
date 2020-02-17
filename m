@@ -2,56 +2,42 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EDC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06A7C3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06473207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE8A20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgBQV5S (ORCPT
+        id S1726185AbgBQWAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:57:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 17:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729558AbgBQV5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:57:18 -0500
+        id S1725934AbgBQWAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:00:04 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3232064C;
-        Mon, 17 Feb 2020 21:57:16 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 16:57:14 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id 664D8207FD;
+        Mon, 17 Feb 2020 22:00:03 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 17:00:02 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH v3 0/6] Static calls
-Message-ID: <20200217165714.1080cfd2@gandalf.local.home>
-In-Reply-To: <CAG48ez0owFet0E43UAGd7sV9Oi0yhVpWTmy4W+Vm5+0q=74-DA@mail.gmail.com>
-References: <cover.1547073843.git.jpoimboe@redhat.com>
-        <20190110203023.GL2861@worktop.programming.kicks-ass.net>
-        <20190110205226.iburt6mrddsxnjpk@treble>
-        <CAG48ez0owFet0E43UAGd7sV9Oi0yhVpWTmy4W+Vm5+0q=74-DA@mail.gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [ANNOUNCE] 4.19.103-rt42
+Message-ID: <20200217170002.56181fef@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,45 +47,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 22:10:27 +0100
-Jann Horn <jannh@google.com> wrote:
 
-> On Thu, Jan 10, 2019 at 9:52 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > On Thu, Jan 10, 2019 at 09:30:23PM +0100, Peter Zijlstra wrote:  
-> > > On Wed, Jan 09, 2019 at 04:59:35PM -0600, Josh Poimboeuf wrote:  
-> > > > With this version, I stopped trying to use text_poke_bp(), and instead
-> > > > went with a different approach: if the call site destination doesn't
-> > > > cross a cacheline boundary, just do an atomic write.  Otherwise, keep
-> > > > using the trampoline indefinitely.  
-> > >  
-> > > > - Get rid of the use of text_poke_bp(), in favor of atomic writes.
-> > > >   Out-of-line calls will be promoted to inline only if the call sites
-> > > >   don't cross cache line boundaries. [Linus/Andy]  
-> > >
-> > > Can we perserve why text_poke_bp() didn't work? I seem to have forgotten
-> > > again. The problem was poking the return address onto the stack from the
-> > > int3 handler, or something along those lines?  
-> >
-> > Right, emulating a call instruction from the #BP handler is ugly,
-> > because you have to somehow grow the stack to make room for the return
-> > address.  Personally I liked the idea of shifting the iret frame by 16
-> > bytes in the #DB entry code, but others hated it.
-> >
-> > So many bad-but-not-completely-unacceptable options to choose from.  
-> 
-> Silly suggestion from someone who has skimmed the thread:
-> 
-> Wouldn't a retpoline-style trampoline solve this without needing
-> memory allocations? Let the interrupt handler stash the destination in
-> a percpu variable and clear IF in regs->flags. Something like:
+Dear RT Folks,
 
-Linus actually suggested something similar, but for ftrace, but after
-implementing it, it was hard to get right, and caused havoc with
-utilities like lockdep, and also shadow stacks.
-
-See this thread:
-
-  https://lore.kernel.org/linux-kselftest/CAHk-=wh5OpheSU8Em_Q3Hg8qw_JtoijxOdPtHru6d+5K8TWM=A@mail.gmail.com/
+I'm pleased to announce the 4.19.103-rt42 stable release.
 
 
- -- Steve
+This release is just an update to the new stable 4.19.103 version
+and no RT specific changes have been made.
+
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v4.19-rt
+  Head SHA1: 7236c801a5e9c5997f919e511090083cf7570c83
+
+
+Or to build 4.19.103-rt42 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.103.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.103-rt42.patch.xz
+
+
+
+
+Enjoy,
+
+-- Steve
+
