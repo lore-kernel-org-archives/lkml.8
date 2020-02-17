@@ -2,105 +2,111 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF74C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4D2C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EA1208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16203206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mgKM+8Nw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVRAktaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgBQBPy (ORCPT
+        id S1726482AbgBQBUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 20:15:54 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:56056 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726183AbgBQBPy (ORCPT
+        Sun, 16 Feb 2020 20:20:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51575 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgBQBUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 20:15:54 -0500
-X-UUID: 58ba2fca33f14c9791cf60f1413a63f1-20200217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=udU/3e9H9cGpZ7qWkk4wYru8GgYPMObjkY0Yy3r1L74=;
-        b=mgKM+8Nwn5zTb+/rSNb5iz+ExOM4Sc8MJzwPOEl9Zm6o724DKBP/zA1xoJZiHL8YDpP6WEh3nDoNYG3A98KErmjV79kxkXk2ic/+xGEQid62GraYImiua/s7hbcxQZMmDCcEhbSqFxp1+sYvJe5XBz2/Jf5E7vi6ycpB47HVuBk=;
-X-UUID: 58ba2fca33f14c9791cf60f1413a63f1-20200217
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 689842576; Mon, 17 Feb 2020 09:15:48 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 17 Feb 2020 09:14:16 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Feb 2020 09:15:24 +0800
-Message-ID: <1581902146.28283.0.camel@mtksdaap41>
-Subject: Re: [PATCH 2/2] iommu/mediatek: add support for MT8167
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Fabien Parent <fparent@baylibre.com>,
-        Yong Wu <yong.wu@mediatek.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <joro@8bytes.org>, <robh+dt@kernel.org>
-Date:   Mon, 17 Feb 2020 09:15:46 +0800
-In-Reply-To: <20200103162632.109553-2-fparent@baylibre.com>
-References: <20200103162632.109553-1-fparent@baylibre.com>
-         <20200103162632.109553-2-fparent@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 16 Feb 2020 20:20:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so15496536wmi.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 17:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZuOsBWqGR/J6P3qYbyUpxOiY4OTNviM6Oswc2b07mTA=;
+        b=gVRAktaILye8n+mbqfmhURirjsVfqG2q4nOtT/GeqUkCOd1kd/Uj34DA2Q1JFf7a57
+         73e/yvG9aa7ZbNEryLbR1xaYweLxVAQ9f8XLKOxBndaTaCj01ovebid95IMiJD0iLAV3
+         /Va+PEzoe1p1jFSSOa5P/gZcho8td6rHI8jszCmi2YC6eQAC5Cw7KMiDzaaJRb5vazEh
+         /c5Z2hGuODsqbR2+gZjfwku567RASslLZJ8id5E/oRX9LnPvwYCSzcBvBXlOXDs9KYw9
+         7XtWvCXlDER99H1dJebmqoy08cdDPjgmibojAh5Cwwqt4PR4hLJ5N9OYaSb7T99zlNXJ
+         9k5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZuOsBWqGR/J6P3qYbyUpxOiY4OTNviM6Oswc2b07mTA=;
+        b=lC7C2Qy0bfrk3NT185BB07C7oIfBcDrvbOwdeUmVBWveB3KD2YUr01O3F3gEUQFe3Y
+         xze3zzDMqGXTxg1wA5tv3t6BpQ5swb5btTsywxHl2AIbrwqLMntCu6wMqXvgR0MTakRs
+         J76m1YUwrtSnIqasaOJAqZcB90grLcBrQYwNXS2yOSRu4FVs0Nfr/regGm79uYrRGz8k
+         NGDM/fTLwsqagV0HZsh5sbrsrrsBybOXd90iBSRDyXTZFw6BxhI8BMnJd6vKnq+gLSCz
+         LGQJponhekzUI18VBUjZVMH+2ejO4mOfK5YLfkv+49CTXc2IMY2kc0q8zT2KLcF+/P29
+         6gyQ==
+X-Gm-Message-State: APjAAAW9xcOL5l6y+lFndVgIC986Af7FRVsUiSzeXkrPWDs9bXiud/4d
+        1ngexIhHaH7DXf96p+x6VUjT/bR7/tdJhT3pfCWgrEzf
+X-Google-Smtp-Source: APXvYqx6PBWOpIYIYZLMR1Nb2Yc4mw9pfeBqzDwp/d/kSibSFsfc1P+NGYm2h5IY/YBNVroxq/ho+kWtTgAodNjYPi8=
+X-Received: by 2002:a7b:cd92:: with SMTP id y18mr14505338wmj.133.1581902437832;
+ Sun, 16 Feb 2020 17:20:37 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 1FF58C5F95081E4197AD9A1E11E99E371D55C8CC78938A0A06E74C41163DCFFC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200215035026.3180698-1-anarsoul@gmail.com>
+In-Reply-To: <20200215035026.3180698-1-anarsoul@gmail.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Mon, 17 Feb 2020 09:20:26 +0800
+Message-ID: <CAKGbVbvEDYJ19KVWXN0k-5niXLjmPYvxGJQ2-3GWTyYyFkH0Gw@mail.gmail.com>
+Subject: Re: [PATCH] drm/lima: fix recovering from PLBU out of memory
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lima@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-K1lvbmcuV3UuDQoNCk9uIEZyaSwgMjAyMC0wMS0wMyBhdCAxNzoyNiArMDEwMCwgRmFiaWVuIFBh
-cmVudCB3cm90ZToNCj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBJT01NVSBvbiBNVDgxNjcNCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBQYXJlbnQgPGZwYXJlbnRAYmF5bGlicmUuY29tPg0KPiAt
-LS0NCj4gIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgfCAxMSArKysrKysrKysrLQ0KPiAgZHJp
-dmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICAxICsNCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9t
-bXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+IGluZGV4IDZmYzFm
-NWVjZjkxZS4uNWZjNjE3OGE4MmRjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19p
-b21tdS5jDQo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gQEAgLTU2OSw3ICs1
-NjksOCBAQCBzdGF0aWMgaW50IG10a19pb21tdV9od19pbml0KGNvbnN0IHN0cnVjdCBtdGtfaW9t
-bXVfZGF0YSAqZGF0YSkNCj4gIAkJRl9JTlRfUFJFVEVUQ0hfVFJBTlNBVElPTl9GSUZPX0ZBVUxU
-Ow0KPiAgCXdyaXRlbF9yZWxheGVkKHJlZ3ZhbCwgZGF0YS0+YmFzZSArIFJFR19NTVVfSU5UX01B
-SU5fQ09OVFJPTCk7DQo+ICANCj4gLQlpZiAoZGF0YS0+cGxhdF9kYXRhLT5tNHVfcGxhdCA9PSBN
-NFVfTVQ4MTczKQ0KPiArCWlmIChkYXRhLT5wbGF0X2RhdGEtPm00dV9wbGF0ID09IE00VV9NVDgx
-NzMgfHwNCj4gKwkgICAgZGF0YS0+cGxhdF9kYXRhLT5tNHVfcGxhdCA9PSBNNFVfTVQ4MTY3KQ0K
-PiAgCQlyZWd2YWwgPSAoZGF0YS0+cHJvdGVjdF9iYXNlID4+IDEpIHwgKGRhdGEtPmVuYWJsZV80
-R0IgPDwgMzEpOw0KPiAgCWVsc2UNCj4gIAkJcmVndmFsID0gbG93ZXJfMzJfYml0cyhkYXRhLT5w
-cm90ZWN0X2Jhc2UpIHwNCj4gQEAgLTc4Miw2ICs3ODMsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10MjcxMl9kYXRhID0gew0KPiAgCS5sYXJiaWRfcmVtYXAg
-PSB7MCwgMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOX0sDQo+ICB9Ow0KPiAgDQo+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTY3X2RhdGEgPSB7DQo+ICsJLm00
-dV9wbGF0ICAgICA9IE00VV9NVDgxNjcsDQo+ICsJLmhhc180Z2JfbW9kZSA9IHRydWUsDQo+ICsJ
-LnJlc2V0X2F4aSAgICA9IHRydWUsDQo+ICsJLmxhcmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0
-LCA1fSwgLyogTGluZWFyIG1hcHBpbmcuICovDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qg
-c3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTczX2RhdGEgPSB7DQo+ICAJLm00dV9wbGF0
-ICAgICA9IE00VV9NVDgxNzMsDQo+ICAJLmhhc180Z2JfbW9kZSA9IHRydWUsDQo+IEBAIC03OTgs
-NiArODA2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10ODE4
-M19kYXRhID0gew0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtf
-aW9tbXVfb2ZfaWRzW10gPSB7DQo+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MTIt
-bTR1IiwgLmRhdGEgPSAmbXQyNzEyX2RhdGF9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0
-ZWssbXQ4MTY3LW00dSIsIC5kYXRhID0gJm10ODE2N19kYXRhfSwNCj4gIAl7IC5jb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10ODE3My1tNHUiLCAuZGF0YSA9ICZtdDgxNzNfZGF0YX0sDQo+ICAJeyAu
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtbTR1IiwgLmRhdGEgPSAmbXQ4MTgzX2RhdGF9
-LA0KPiAgCXt9DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oIGIvZHJp
-dmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiBpbmRleCBlYTk0OWEzMjRlMzMuLmNiOGZkNTk3MGNk
-NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiArKysgYi9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5oDQo+IEBAIC0zMCw2ICszMCw3IEBAIHN0cnVjdCBtdGtfaW9t
-bXVfc3VzcGVuZF9yZWcgew0KPiAgZW51bSBtdGtfaW9tbXVfcGxhdCB7DQo+ICAJTTRVX01UMjcw
-MSwNCj4gIAlNNFVfTVQyNzEyLA0KPiArCU00VV9NVDgxNjcsDQo+ICAJTTRVX01UODE3MywNCj4g
-IAlNNFVfTVQ4MTgzLA0KPiAgfTsNCg0K
+Looks good for me, patch is:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
+Regards,
+Qiang
+
+On Sat, Feb 15, 2020 at 11:50 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> It looks like on PLBU_OUT_OF_MEM interrupt we need to resume from where we
+> stopped, i.e. new PLBU heap start is old end. Also update end address
+> in GP frame to grow heap on 2nd and subsequent out of memory interrupts.
+>
+> Fixes: 2081e8dcf1ee ("drm/lima: recover task by enlarging heap buffer")
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  drivers/gpu/drm/lima/lima_gp.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/lima/lima_gp.c b/drivers/gpu/drm/lima/lima_gp.c
+> index d1e7826c2d74..325604262def 100644
+> --- a/drivers/gpu/drm/lima/lima_gp.c
+> +++ b/drivers/gpu/drm/lima/lima_gp.c
+> @@ -224,8 +224,13 @@ static int lima_gp_task_recover(struct lima_sched_pipe *pipe)
+>         }
+>
+>         gp_write(LIMA_GP_INT_MASK, LIMA_GP_IRQ_MASK_USED);
+> +       /* Resume from where we stopped, i.e. new start is old end */
+> +       gp_write(LIMA_GP_PLBU_ALLOC_START_ADDR,
+> +                f[LIMA_GP_PLBU_ALLOC_END_ADDR >> 2]);
+> +       f[LIMA_GP_PLBU_ALLOC_END_ADDR >> 2] =
+> +               f[LIMA_GP_PLBU_ALLOC_START_ADDR >> 2] + task->heap->heap_size;
+>         gp_write(LIMA_GP_PLBU_ALLOC_END_ADDR,
+> -                f[LIMA_GP_PLBU_ALLOC_START_ADDR >> 2] + task->heap->heap_size);
+> +                f[LIMA_GP_PLBU_ALLOC_END_ADDR >> 2]);
+>         gp_write(LIMA_GP_CMD, LIMA_GP_CMD_UPDATE_PLBU_ALLOC);
+>         return 0;
+>  }
+> --
+> 2.25.0
+>
