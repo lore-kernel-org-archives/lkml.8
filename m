@@ -2,62 +2,66 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2781DC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A4C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF78122B48
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B7922B48
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="JLTbFHMr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="CfA7MMRT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgBQPoy (ORCPT
+        id S1729315AbgBQPo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:44:54 -0500
-Received: from www149.your-server.de ([78.47.15.70]:59744 "EHLO
+        Mon, 17 Feb 2020 10:44:56 -0500
+Received: from www149.your-server.de ([78.47.15.70]:59824 "EHLO
         www149.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgBQPox (ORCPT
+        with ESMTP id S1726528AbgBQPoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:44:53 -0500
-X-Greylist: delayed 1207 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Feb 2020 10:44:53 EST
+        Mon, 17 Feb 2020 10:44:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hanno.de;
-         s=default1911; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-        Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=kwxIYXO9ZQLxZYLWCibVPzyp30EQ5TPRFr5H4jfiVTI=; b=JLTbFHMrzb0U/YZo+Q2GX34SRM
-        8/DeFYvH+bgrA6GDjZ/ATzJ4wnXfrdOX6I2m6tOZxCJa7T+NPbUuO94BICoBeAHETxx65yfJYoj1S
-        BiwmYZ7ieysCJvj+xcJMeuA9z/qHajM7rv4ZaTRgRxl0y9YU/StytnAGklintSrSUHkl+Pj/yYXnC
-        mR/WYuIoOPOqUw/SKF2JPCawaTdoQso/OpT/OUK33SDznwQNilxi+EqzOatiYfTJ68ohBgN0j1FLi
-        nMbkYK68SRiR55Vl/qmTtYL5ee7m4uPLRbLVIzqfK8FVC0gbKyL9H0z38ZccAhkxApE0k4fGLfUU3
-        N3J+0pGQ==;
+         s=default1911; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:To:From:Subject:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wcHYCgvIc1V4L4eqgKkfizJKSrtKfmAWPhFBpvyI6bQ=; b=CfA7MMRTU9iH7WaHpY+SpuuLuS
+        wTXycQngxf33BvZiH7nz/WRHkiRUmkZEaSSOzK3Vg82OuD0KXbwIMIono5wT4BCW3bDLmCzcnIWn6
+        Hw8gmHBlnkak3TwCNcC8bJrVwGhNqakK0nhRHer79drJ0t/2tRGH5Bt3GyzGdO5zOt1x2mM0GYYst
+        qE72AZnmmqGYewTYW1oj/KDOj7mvQdOuO+m7FrCXxBXlIbah6fLIShjejJFIiYNVmb8vtAxfNe2l6
+        4HGb7wkdGdZT+ovAJbFGOf4coUJ58T4Mb+gG8zy67Gc93LU8YVi/f/NshVFmKVKhHIct4gDsp+R8f
+        f3MstsZQ==;
 Received: from sslproxy06.your-server.de ([78.46.172.3])
         by www149.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <abos@hanno.de>)
-        id 1j3iGH-0004g8-J2; Mon, 17 Feb 2020 16:24:41 +0100
+        id 1j3iJJ-0004sF-OY; Mon, 17 Feb 2020 16:27:49 +0100
 Received: from [62.96.7.134] (helo=[10.1.0.41])
         by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <abos@hanno.de>)
-        id 1j3iGH-0002Cx-Fs; Mon, 17 Feb 2020 16:24:41 +0100
+        id 1j3iJJ-000GeY-Jh; Mon, 17 Feb 2020 16:27:49 +0100
+Subject: [PATCH 3/3] HID: hid-bigbenff: fix race condition for scheduled work
+ during removal
+From:   Hanno Zulla <abos@hanno.de>
 To:     Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Hanno Zulla <abos@hanno.de>
-Subject: [PATCH 0/3] HID: hid-bigbenff: fixing three crash bugs in a gamepad
- driver
-Message-ID: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
-Date:   Mon, 17 Feb 2020 16:24:41 +0100
+References: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
+ <798ec119-ce24-e1e3-17c9-b6018b04d75f@hanno.de>
+ <1c355bbe-c0fb-395c-9050-346f87eb324c@hanno.de>
+Message-ID: <782af9b1-b648-bd21-b0f0-b0db22b8c0b7@hanno.de>
+Date:   Mon, 17 Feb 2020 16:27:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1c355bbe-c0fb-395c-9050-346f87eb324c@hanno.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
 X-Authenticated-Sender: abos@hanno.de
 X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
@@ -66,29 +70,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi there,
+HID: hid-bigbenff: fix race condition for scheduled work during removal
 
-the hid-bigbenff.c had three bugs causing possible kernel crashes.
+It's possible that there is scheduled work left while the device is
+already being removed, which can cause a kernel crash. Adding a flag
+will avoid this.
 
-The first patch fixes a double free during device removal, which was 
-caused by a wrong use of input_ff_create_memless(). The 
-"driver-specific data to be passed into play_effect" parameter of 
-input_ff_create_memless() would later be freed automatically when the ff 
-device is removed. Since the driver also uses the managed resource API, 
-it would automatically free the memory of this parameter twice, causing 
-a general protection fault moments later.
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+---
+ drivers/hid/hid-bigbenff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-The second patch fixes the error path after hid_hw_start(), as a call 
-to hid_hw_stop() is required in case of an error.
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f8c552b64a89..db6da21ade06 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -174,6 +174,7 @@ static __u8 pid0902_rdesc_fixed[] = {
+ struct bigben_device {
+ 	struct hid_device *hid;
+ 	struct hid_report *report;
++	bool removed;
+ 	u8 led_state;         /* LED1 = 1 .. LED4 = 8 */
+ 	u8 right_motor_on;    /* right motor off/on 0/1 */
+ 	u8 left_motor_force;  /* left motor force 0-255 */
+@@ -190,6 +191,9 @@ static void bigben_worker(struct work_struct *work)
+ 		struct bigben_device, worker);
+ 	struct hid_field *report_field = bigben->report->field[0];
+ 
++	if (bigben->removed)
++		return;
++
+ 	if (bigben->work_led) {
+ 		bigben->work_led = false;
+ 		report_field->value[0] = 0x01; /* 1 = led message */
+@@ -304,6 +308,7 @@ static void bigben_remove(struct hid_device *hid)
+ {
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 
++	bigben->removed = true;
+ 	cancel_work_sync(&bigben->worker);
+ 	hid_hw_stop(hid);
+ }
+@@ -324,6 +329,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		return -ENOMEM;
+ 	hid_set_drvdata(hid, bigben);
+ 	bigben->hid = hid;
++	bigben->removed = false;
+ 
+ 	error = hid_parse(hid);
+ 	if (error) {
+-- 
+2.20.1
 
-The second patch also removes the hid_hw_close() call during device 
-removal, as several other hid device drivers don't call this routine, 
-either.
 
-The third patch adds a flag to avoid a race condition when there is 
-still scheduled work left (or newly being scheduled) during or after 
-device removal, which could cause a kernel crash.
-
-Thanks in advance for your review & kind regards,
-
-Hanno
