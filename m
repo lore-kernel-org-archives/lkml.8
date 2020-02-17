@@ -2,122 +2,88 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943A8C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6BEC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744BB206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4B4206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgBQPwK (ORCPT
+        id S1729488AbgBQPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:52:10 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41878 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbgBQPwK (ORCPT
+        Mon, 17 Feb 2020 10:52:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60080 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbgBQPwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:52:10 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1FA3F293C88;
-        Mon, 17 Feb 2020 15:52:08 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 16:52:04 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [RFC v2 0/4] Introduce i3c device userspace interface
-Message-ID: <20200217165204.7f2d2774@collabora.com>
-In-Reply-To: <CH2PR12MB4216459E37F9AB1AAF0B2EFDAE160@CH2PR12MB4216.namprd12.prod.outlook.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
-        <20200217155141.08e87b3f@collabora.com>
-        <CH2PR12MB4216459E37F9AB1AAF0B2EFDAE160@CH2PR12MB4216.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 17 Feb 2020 10:52:41 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j3ihI-0000Y4-Em; Mon, 17 Feb 2020 16:52:36 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2E281C20B0;
+        Mon, 17 Feb 2020 16:52:35 +0100 (CET)
+Date:   Mon, 17 Feb 2020 15:52:35 -0000
+From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/iopl: Include prototype header for ksys_ioperm()
+Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200123133051.5974-1-b.thiel@posteo.de>
+References: <20200123133051.5974-1-b.thiel@posteo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <158195475557.13786.12758785543744091411.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 15:32:55 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+The following commit has been merged into the x86/cleanups branch of tip:
 
-> Hi Boris,
-> 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Mon, Feb 17, 2020 at 14:51:41
-> 
-> > Hello Vitor,
-> > 
-> > Sorry for taking so long to reply, and thanks for working on that topic.
-> > 
-> > On Wed, 29 Jan 2020 13:17:31 +0100
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > For today there is no way to use i3c devices from user space and
-> > > the introduction of such API will help developers during the i3c device
-> > > or i3c host controllers development.
-> > > 
-> > > The i3cdev module is highly based on i2c-dev and yet I tried to address
-> > > the concerns raised in [1].
-> > > 
-> > > NOTES:
-> > > - The i3cdev dynamically request an unused major number.
-> > > 
-> > > - The i3c devices are dynamically exposed/removed from dev/ folder based
-> > >   on if they have a device driver bound to it.  
-> > 
-> > May I ask why you need to automatically bind devices to the i3cdev
-> > driver when they don't have a driver matching the device id
-> > loaded/compiled-in? If we get the i3c subsystem to generate proper
-> > uevents we should be able to load the i3cdev module and bind the device
-> > to this driver using a udev rule.  
-> 
-> My idea was to expose every device to user-space by default so we can 
-> test them without a driver (more or less the i2c use case) but as we 
-> agreed during the i3c subsystem only expose devices that doesn't have 
-> device driver.
+Commit-ID:     cdcb58cc05ed9a7f74509a023762488c111cdfb3
+Gitweb:        https://git.kernel.org/tip/cdcb58cc05ed9a7f74509a023762488c111cdfb3
+Author:        Benjamin Thiel <b.thiel@posteo.de>
+AuthorDate:    Thu, 23 Jan 2020 14:30:51 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 17 Feb 2020 16:36:53 +01:00
 
-Those that do not have a driver *yet*. What if i3cdev is compiled-in
-and other I3C drivers are enabled as modules? When the device is
-discovered at boot time is will be automatically bound to the i3cdev
-driver since no matching drivers are available at that point. But
-the end user probably expects this device to be attached to the in
-kernel driver.
+x86/iopl: Include prototype header for ksys_ioperm()
 
-> I considered to have a uevent but to expose the devices by default it 
-> would required something generic, what I didn't figure out and tend to 
-> follow the i2c-dev module.
+.. in order to fix a -Wmissing-prototype warning.
 
-Well, I3C and I2C/SPI are quite different in this regard. I2C dev
-exposes the whole bus, and SPI devs don't have a standard way to
-uniquely identify the device connected on the bus (unless it has a
-dedicated compatible for DT-based boards). In that case it might make
-sense to auto-bind all orphan devs to the default spidev driver, though
-I'm not entirely sure it's really necessary since that's probably a
-per-board decision, and having a udev rule matching the bus/CS would
-make sense too.
+No functional change.
 
-> 
-> With this current approach even if a device has a driver we can unbind it 
-> through the Sysfs and have access from user space which I found useful 
-> for debug.
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200123133051.5974-1-b.thiel@posteo.de
+---
+ arch/x86/kernel/ioport.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-That's my point. We're making the default 'on-demand driver loading'
-use case more complicated to ease the less common 'userspace driver'
-use case.
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index 8abeee0..a53e7b4 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -13,6 +13,7 @@
+ 
+ #include <asm/io_bitmap.h>
+ #include <asm/desc.h>
++#include <asm/syscalls.h>
+ 
+ #ifdef CONFIG_X86_IOPL_IOPERM
+ 
