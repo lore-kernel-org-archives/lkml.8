@@ -2,132 +2,280 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E014C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA997C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB5720702
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7F420702
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581934943;
+	bh=FUjf9GMM5bYNMdqW0EEu086wDGI935Eaue4FXllc6P8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZH01mWa6/vhB/NO9CsLSlTvFhq2kYBH7ZqcW2n6Vz16auWCk8BrsnCP6Re7rk+uej
+	 13JvnEtzV7n3zBBflpuEPM12NxupJtfgM8EGW2FgfH5xEPJhBJQVTpn8xH+w6cjb0u
+	 QhJm4zWX6V5lJbPbxCcVmlo+Ce1Tg7bi+QddlD5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgBQKVl (ORCPT
+        id S1729206AbgBQKWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:21:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65258 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726397AbgBQKVl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:21:41 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HAJcWp170863
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:21:39 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6b55a330-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:21:39 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 17 Feb 2020 10:21:37 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 10:21:35 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HALXTa43647216
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 10:21:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46ED0AE057;
-        Mon, 17 Feb 2020 10:21:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03D51AE055;
-        Mon, 17 Feb 2020 10:21:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Feb 2020 10:21:32 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, mhiramat@kernel.org
-Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v4] perf test: Fix test trace+probe_vfs_getname.sh on s390
-Date:   Mon, 17 Feb 2020 11:21:11 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20021710-0020-0000-0000-000003AAE0D6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021710-0021-0000-0000-00002202D71D
-Message-Id: <20200217102111.61137-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_05:2020-02-14,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
- spamscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002170089
+        Mon, 17 Feb 2020 05:22:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729045AbgBQKWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:22:22 -0500
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69418222D9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581934940;
+        bh=FUjf9GMM5bYNMdqW0EEu086wDGI935Eaue4FXllc6P8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C3tUPolGmi4u4OZJoYOdynjgDLw3rv9+LtJLDtwPIfU7P5rs1Wh9Y+b1c4iQOXkXv
+         AnLfTFtkYEgdF8LO0Je3Q4VeGtj7fPQKJ7NnNGZ4HyZwbkH5fRzcsi2HDBtEpKKwD8
+         0FWXJhL5Oohk1WNjM9VN6JRSPBC2tvQZrbRAlwhM=
+Received: by mail-wm1-f52.google.com with SMTP id c84so17823953wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:22:20 -0800 (PST)
+X-Gm-Message-State: APjAAAW4qcL2kOmnnYP6+Pn3L/eMM9op1bfk0FQ3Sy38ufkJcDVNqUH6
+        XnnmTcFcQGjXQknoPauBACEDqwgA92DWZ+QZhi9Ryg==
+X-Google-Smtp-Source: APXvYqwwkF+c0FUerp1kIaBRtENAy8VTts+RWB6Dfu/2huDMOEOqCjBirvMJIWNc998VgcOlSd/hI/wUajJ+2s6NQKk=
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr21340370wmj.1.1581934938588;
+ Mon, 17 Feb 2020 02:22:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20200216141104.21477-1-ardb@kernel.org> <20200216141104.21477-3-ardb@kernel.org>
+ <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com> <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 17 Feb 2020 11:22:07 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
+Message-ID: <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
+ from a device path
+To:     Laszlo Ersek <lersek@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This test places a kprobe to function getname_flags() in the kernel
-which has the following prototype:
+On Mon, 17 Feb 2020 at 10:23, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Mon, 17 Feb 2020 at 10:15, Laszlo Ersek <lersek@redhat.com> wrote:
+> >
+> > On 02/16/20 15:11, Ard Biesheuvel wrote:
+> > > There are currently two ways to specify the initrd to be passed to the
+> > > Linux kernel when booting via the EFI stub:
+> > > - it can be passed as a initrd= command line option when doing a pure PE
+> > >   boot (as opposed to the EFI handover protocol that exists for x86)
+> > > - otherwise, the bootloader or firmware can load the initrd into memory,
+> > >   and pass the address and size via the bootparams struct (x86) or
+> > >   device tree (ARM)
+> > >
+> > > In the first case, we are limited to loading from the same file system
+> > > that the kernel was loaded from, and it is also problematic in a trusted
+> > > boot context, given that we cannot easily protect the command line from
+> > > tampering without either adding complicated white/blacklisting of boot
+> > > arguments or locking down the command line altogether.
+> > >
+> > > In the second case, we force the bootloader to duplicate knowledge about
+> > > the boot protocol which is already encoded in the stub, and which may be
+> > > subject to change over time, e.g., bootparams struct definitions, memory
+> > > allocation/alignment requirements for the placement of the initrd etc etc.
+> > > In the ARM case, it also requires the bootloader to modify the hardware
+> > > description provided by the firmware, as it is passed in the same file.
+> > > On systems where the initrd is measured after loading, it creates a time
+> > > window where the initrd contents might be manipulated in memory before
+> > > handing over to the kernel.
+> > >
+> > > Address these concerns by adding support for loading the initrd into
+> > > memory by invoking the EFI LoadFile2 protocol installed on a vendor
+> > > GUIDed device path that specifically designates a Linux initrd.
+> > > This addresses the above concerns, by putting the EFI stub in charge of
+> > > placement in memory and of passing the base and size to the kernel proper
+> > > (via whatever means it desires) while still leaving it up to the firmware
+> > > or bootloader to obtain the file contents, potentially from other file
+> > > systems than the one the kernel itself was loaded from. On platforms that
+> > > implement measured boot, it permits the firmware to take the measurement
+> > > right before the kernel actually consumes the contents.
+> > >
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > ---
+> > >  drivers/firmware/efi/libstub/arm-stub.c        | 15 +++-
+> > >  drivers/firmware/efi/libstub/efi-stub-helper.c | 82 ++++++++++++++++++++
+> > >  drivers/firmware/efi/libstub/efistub.h         |  4 +
+> > >  drivers/firmware/efi/libstub/x86-stub.c        | 23 ++++++
+> > >  include/linux/efi.h                            |  1 +
+> > >  5 files changed, 122 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+> > > index 2edc673ea06c..4bae620b95b9 100644
+> > > --- a/drivers/firmware/efi/libstub/arm-stub.c
+> > > +++ b/drivers/firmware/efi/libstub/arm-stub.c
+> > > @@ -160,6 +160,7 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+> > >       enum efi_secureboot_mode secure_boot;
+> > >       struct screen_info *si;
+> > >       efi_properties_table_t *prop_tbl;
+> > > +     unsigned long max_addr;
+> > >
+> > >       sys_table = sys_table_arg;
+> > >
+> > > @@ -258,10 +259,18 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+> > >       if (!fdt_addr)
+> > >               pr_efi("Generating empty DTB\n");
+> > >
+> > > -     status = efi_load_initrd(image, &initrd_addr, &initrd_size, ULONG_MAX,
+> > > -                              efi_get_max_initrd_addr(dram_base, *image_addr));
+> > > +     max_addr = efi_get_max_initrd_addr(dram_base, *image_addr);
+> > > +     status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size, max_addr);
+> > > +     if (status == EFI_SUCCESS) {
+> > > +             pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
+> > > +     } else if (status == EFI_NOT_FOUND) {
+> > > +             status = efi_load_initrd(image, &initrd_addr, &initrd_size,
+> > > +                                      ULONG_MAX, max_addr);
+> > > +             if (status == EFI_SUCCESS)
+> > > +                     pr_efi("Loaded initrd from command line option\n");
+> > > +     }
+> > >       if (status != EFI_SUCCESS)
+> > > -             pr_efi_err("Failed initrd from command line!\n");
+> > > +             pr_efi_err("Failed to load initrd!\n");
+> > >
+> > >       efi_random_get_seed();
+> > >
+> > > diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > index 49008ac88b63..e37afe2c752e 100644
+> > > --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> > > @@ -299,3 +299,85 @@ void efi_char16_printk(efi_char16_t *str)
+> > >       efi_call_proto(efi_table_attr(efi_system_table(), con_out),
+> > >                      output_string, str);
+> > >  }
+> > > +
+> > > +/*
+> > > + * The LINUX_EFI_INITRD_MEDIA_GUID vendor media device path below provides a way
+> > > + * for the firmware or bootloader to expose the initrd data directly to the stub
+> > > + * via the trivial LoadFile2 protocol, which is defined in the UEFI spec, and is
+> > > + * very easy to implement. It is a simple Linux initrd specific conduit between
+> > > + * kernel and firmware, allowing us to put the EFI stub (being part of the
+> > > + * kernel) in charge of where and when to load the initrd, while leaving it up
+> > > + * to the firmware to decide whether it needs to expose its filesystem hierarchy
+> > > + * via EFI protocols.
+> > > + */
+> > > +static const struct {
+> > > +     struct efi_vendor_dev_path      vendor;
+> > > +     struct efi_generic_dev_path     end;
+> > > +} __packed initrd_dev_path = {
+> > > +     {
+> > > +             EFI_DEV_MEDIA,
+> > > +             EFI_DEV_MEDIA_VENDOR,
+> > > +             sizeof(struct efi_vendor_dev_path),
+> > > +             LINUX_EFI_INITRD_MEDIA_GUID
+> > > +     }, {
+> > > +             EFI_DEV_END_PATH,
+> > > +             EFI_DEV_END_ENTIRE,
+> > > +             sizeof(struct efi_generic_dev_path)
+> > > +     }
+> > > +};
+> > > +
+> > > +/**
+> > > + * efi_load_initrd_dev_path - load the initrd from the Linux initrd device path
+> > > + * @load_addr:       pointer to store the address where the initrd was loaded
+> > > + * @load_size:       pointer to store the size of the loaded initrd
+> > > + * @max:     upper limit for the initrd memory allocation
+> > > + * @return:  %EFI_SUCCESS if the initrd was loaded successfully, in which case
+> > > + *           @load_addr and @load_size are assigned accordingly
+> > > + *           %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+> > > + *           device path
+> > > + *           %EFI_LOAD_ERROR in all other cases
+> >
+> > [*]
+> >
+> > > + */
+> > > +efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
+> > > +                                   unsigned long *load_size,
+> > > +                                   unsigned long max)
+> > > +{
+> > > +     efi_guid_t lf2_proto_guid = EFI_LOAD_FILE2_PROTOCOL_GUID;
+> > > +     efi_device_path_protocol_t *dp;
+> > > +     efi_load_file2_protocol_t *lf2;
+> > > +     unsigned long initrd_addr;
+> > > +     unsigned long initrd_size;
+> > > +     efi_handle_t handle;
+> > > +     efi_status_t status;
+> > > +
+> > > +     if (!load_addr || !load_size)
+> > > +             return EFI_INVALID_PARAMETER;
+> >
+> > Doesn't return EFI_LOAD_ERROR.
+> >
+> > > +
+> > > +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
+> > > +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
+> > > +     if (status != EFI_SUCCESS)
+> > > +             return status;
+> >
+> > Seems safe (the only plausible error could be EFI_NOT_FOUND).
+> >
+> > > +
+> > > +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
+> > > +                          (void **)&lf2);
+> > > +     if (status != EFI_SUCCESS)
+> > > +             return status;
+> >
+> > Interesting case; this should never fail... but note, if it does, it
+> > returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
+> > from the handle).
+> >
+> > > +
+> > > +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
+> > > +     if (status != EFI_BUFFER_TOO_SMALL)
+> > > +             return EFI_LOAD_ERROR;
+> > > +
+> > > +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
+> > > +     if (status != EFI_SUCCESS)
+> > > +             return status;
+> >
+> > Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
+> > could return EFI_OUT_OF_RESOURCES.
+> >
+>
+> Hmm, guess I was a bit sloppy with the return codes. The important
+> thing is that EFI_NOT_FOUND is only returned in the one specifically
+> defined case.
+>
 
-  struct filename *
-  getname_flags(const char __user *filename, int flags, int *empty)
+For the record [in case no respin+resend is needed for other reasons],
+I intend to update the comment block as below, and keep the code as
+is:
 
-Variable filename points to a filename located in user space memory.
-Looking at
-commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
-the kprobe should indicate that user space memory is accessed.
 
-Output before:
-   [root@m35lp76 perf]# ./perf test  66 67
-   66: Use vfs_getname probe to get syscall args filenames   : FAILED!
-   67: Check open filename arg using perf trace + vfs_getname: FAILED!
-   [root@m35lp76 perf]#
-
-Output after:
-   [root@m35lp76 perf]# ./perf test  66 67
-   66: Use vfs_getname probe to get syscall args filenames   : Ok
-   67: Check open filename arg using perf trace + vfs_getname: Ok
-   [root@m35lp76 perf]#
-
-Comments from Masami Hiramatsu:
-This bug doesn't happen on x86 or other archs on which user-address
-space and kernel address space is same. On some arch (ppc64 in this case?)
-user-address space is partially or completely same as kernel address space.
-(Yes, they switch the world when running into the kernel) In this case,
-we need to use different data access functions for each spaces.
-That is why I introduced "ustring" type for kprobe event.
-As far as I can see, Thomas's patch is sane. Thomas, could you show us
-your result on your test environment?
-Thank you
-
-Comments from Thomas Richter:
-Test results included above.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 7cb99b433888..c2cc42daf924 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -14,7 +14,7 @@ add_probe_vfs_getname() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
- 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-+		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
- 	fi
- }
- 
--- 
-2.21.0
-
+  * @load_addr: pointer to store the address where the initrd was loaded
+  * @load_size: pointer to store the size of the loaded initrd
+  * @max:       upper limit for the initrd memory allocation
+- * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in
+which case
+- *             @load_addr and @load_size are assigned accordingly
+- *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+- *             device path
++ * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in which
++ *             case @load_addr and @load_size are assigned accordingly
++ *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
++ *             device path
++ *             %EFI_INVALID_PARAMETER if load_addr == NULL or load_size == NULL
++ *             %EFI_OUT_OF_RESOURCES if memory allocation failed
+  *             %EFI_LOAD_ERROR in all other cases
