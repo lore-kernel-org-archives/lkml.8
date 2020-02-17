@@ -2,87 +2,180 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E61C3402F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A3BC34030
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2489520801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591E4207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgBQX3u (ORCPT
+        id S1726185AbgBQXdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 18:29:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34977 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgBQX3u (ORCPT
+        Mon, 17 Feb 2020 18:33:14 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43226 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgBQXdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:29:50 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j3ppQ-0001U1-Uu; Tue, 18 Feb 2020 00:29:29 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4D4DA100292; Tue, 18 Feb 2020 00:29:27 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
-Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@openvz.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers <containers@lists.linux-foundation.org>,
-        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
-        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
-Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
-In-Reply-To: <20200217230331.he6p5bs766zp6smx@wittgenstein>
-Date:   Tue, 18 Feb 2020 00:29:27 +0100
-Message-ID: <874kvossh4.fsf@nanos.tec.linutronix.de>
+        Mon, 17 Feb 2020 18:33:14 -0500
+Received: by mail-io1-f71.google.com with SMTP id v15so12693292iol.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 15:33:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=QFDVh6DndK/OU8fD9C6Hc41l36lCVHDEzQ6kAXyNM18=;
+        b=jxkn9lhZCLE+hOqQ4EFDxixM7CFYuqUJeHFoFGGUn6T6DMvD4/eDloiwGvnC+JUPJi
+         sh4GlVQPwkrdS8xn54t/KD3sUUs2gaI63RDTtrkye0YXwnmnspPLxZ3ngmwtdXOM7174
+         MGfLRALo9gxfi0RgvZfaIub5C+lLxRUO7AjOaLojBPPmpqZb9w5Nnza8LjFauryqnHsP
+         8dQXyV9auL5DElqHm7nZxa+bS6WtfALYf1w5fnlRK7nRcWSdY/1cFh7GkmmOtnDw2Hdy
+         qHSKHwmwOGvHSktPVoeBd8VclZYZi68grxNkyi/Mh04yKFCkWegKSeLfjwPME6mHUHGS
+         NZhg==
+X-Gm-Message-State: APjAAAVIPcD4wS0yH8b55E2SYNpuNzNSC4CXcJ+zsczjOoXix9L7ykg/
+        /M0SRmusyTKzLPJbTpao80z4sY2LhZx0zrhxNtncFrbKuR4Q
+X-Google-Smtp-Source: APXvYqx9gUoQBk+NjbUzdZgqnAou4Wq3+phXqHQHy17mB7TB+1AL7v/L9CI1vGvukztrHFSTMCXdA7sjj+Y6VZo4NQQJitytwHaC
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a6b:e705:: with SMTP id b5mr14605943ioh.139.1581982393876;
+ Mon, 17 Feb 2020 15:33:13 -0800 (PST)
+Date:   Mon, 17 Feb 2020 15:33:13 -0800
+In-Reply-To: <00000000000012a4cd05854a1d0a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a0c73b059ecdfafa@google.com>
+Subject: Re: KASAN: use-after-free Read in rdma_listen (2)
+From:   syzbot <syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, danielj@mellanox.com, danitg@mellanox.com,
+        dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, swise@opengridcomputing.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
-> On Mon, Feb 17, 2020 at 10:47:53PM +0100, Michael Kerrisk (man-pages) wrote:
->> Actually, I think the alternative you propose just here is better. I
->> imagine there are times when one will want to create multiple
->> namespaces with a single call to clone3(), including a time namespace.
->> I think this should be allowed by the API. And, otherwise, clone3()
->> becomes something of a second-class citizen for creating namespaces.
->> (I don't really get the "less invasive" argument. Implementing this is
->> just a piece of kernel to code to make user-space's life a bit simpler
->> and more consistent.)
->
-> I don't particularly mind either way. If there's actual users that need
-> to set it at clone3() time then we can extend it. So I'd like to hear
-> what Adrian, Dmitry, and Thomas think since they are well-versed how
-> this will be used in the wild. I'm weary of exposing a whole new uapi
-> struct and extending clone3() without any real use-case but I'm happy to
-> if there is!
+syzbot has found a reproducer for the following crash on:
 
-I really have no clue. I merily helped getting this in shape without
-creating havoc for timekeeping and VDSO. I have to punt to the container
-wizards.
+HEAD commit:    c25a951c Add linux-next specific files for 20200217
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10df082de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
+dashboard link: https://syzkaller.appspot.com/bug?extid=adb15cf8c2798e4e0db4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112b9d6ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147abb11e00000
 
-Thanks,
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-        tglx
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b80c3f200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16b80c3f200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b80c3f200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
+Read of size 8 at addr ffff888093bbb1e0 by task syz-executor570/10159
+
+CPU: 1 PID: 10159 Comm: syz-executor570 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
+ __list_add include/linux/list.h:67 [inline]
+ list_add_tail include/linux/list.h:100 [inline]
+ cma_listen_on_all drivers/infiniband/core/cma.c:2517 [inline]
+ rdma_listen+0x6b7/0x970 drivers/infiniband/core/cma.c:3628
+ ucma_listen+0x14d/0x1c0 drivers/infiniband/core/ucma.c:1092
+ ucma_write+0x2d7/0x3c0 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0x8a/0x110 fs/read_write.c:494
+ vfs_write+0x268/0x5d0 fs/read_write.c:558
+ ksys_write+0x220/0x290 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446a69
+Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fdd8433eda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446a69
+RDX: 0000000000000010 RSI: 00000000200001c0 RDI: 0000000000000004
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 0000000000000000 R14: 0000000000000000 R15: 20c49ba5e353f7cf
+
+Allocated by task 10155:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ __rdma_create_id+0x5e/0x870 drivers/infiniband/core/cma.c:861
+ ucma_create_id+0x1de/0x620 drivers/infiniband/core/ucma.c:501
+ ucma_write+0x2d7/0x3c0 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0x8a/0x110 fs/read_write.c:494
+ vfs_write+0x268/0x5d0 fs/read_write.c:558
+ ksys_write+0x220/0x290 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 10157:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ rdma_destroy_id+0x7c6/0xdd0 drivers/infiniband/core/cma.c:1866
+ ucma_close+0x115/0x310 drivers/infiniband/core/ucma.c:1762
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xbcb/0x3030 kernel/exit.c:802
+ do_group_exit+0x135/0x360 kernel/exit.c:900
+ get_signal+0x47c/0x24f0 kernel/signal.c:2734
+ do_signal+0x87/0x1700 arch/x86/kernel/signal.c:813
+ exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888093bbb000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 480 bytes inside of
+ 2048-byte region [ffff888093bbb000, ffff888093bbb800)
+The buggy address belongs to the page:
+page:ffffea00024eeec0 refcount:1 mapcount:0 mapping:00000000f8d67f88 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00026b2908 ffffea00024eee88 ffff8880aa400e00
+raw: 0000000000000000 ffff888093bbb000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888093bbb080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888093bbb100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888093bbb180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                       ^
+ ffff888093bbb200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888093bbb280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
