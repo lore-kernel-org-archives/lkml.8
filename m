@@ -2,100 +2,80 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2C1C761A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AFCC33FA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA69206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB48206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epRTAwIz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c4eGnLXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgBQNMv (ORCPT
+        id S1728754AbgBQNM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:12:51 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37669 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgBQNMv (ORCPT
+        Mon, 17 Feb 2020 08:12:56 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60431 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727285AbgBQNMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:12:51 -0500
-Received: by mail-ot1-f67.google.com with SMTP id l2so9820726otp.4;
-        Mon, 17 Feb 2020 05:12:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xyDoQXaxUnAhbcSh1pD7Fmld76RkwiIErcec174JinM=;
-        b=epRTAwIzLUTlnb+/jUX+cHtyDo7U5ekQ1QXhi8Dtx2GLxvNAwcaB7Uv0VQQxmV8ja6
-         mvbMtUMfKzn4o+a4bPe1hysnGfVg6UhfoSwKe3Eqdlpguw6o9rj5F1pDx6axSDir0hPH
-         K4pFMtOcfzc/jC3kHlze9t+Jjs7+cnWF2ffzOwB0QWAuqlFCO4PUYBv7qwBATZKyUPXO
-         DXTjXcVefk6VfasXOhLb03ByM+xyTTGfZssbYOvv3CzB+Q7LkP/pRDymT/Kmak6B6JSL
-         /jkwuwwuaeoLbuHX84scx9G2dtMYtKUs2IBeP7uMGj/Hfmqi9Z8267U5dxnaqj2t+lxe
-         CbwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xyDoQXaxUnAhbcSh1pD7Fmld76RkwiIErcec174JinM=;
-        b=nuwdCIudEnmFNCczJvbMp3NS9/rwxvTEvjKKRLpw/wDjnb4/KhBAO2spBL6Ne3zFwr
-         LC92RlR5wG7RzMbYVNRzNuT8lcfejT04LRyzlLhOHjhUSqM8rqFyGsup0lOYa2ersfqr
-         i/L8xSNmNUSn/T4K4EBe37kje2sPrI5mRyXrLH6u9OiH3p3RzZEd3j52OoOkPe0+p/ki
-         CjSb0zApnCdjHLm6zLjz8dcPsE4zkBpkkfnlF6Ga1EwSi1Vg9JzNsmWZyIGWVCyMmx0t
-         a+3hdWEQ+fjXH+QeBii1OUreZ5FfwCHToH4mCunV8vMzbh5JZ+TDrfQa9truYElv1mT6
-         jIQw==
-X-Gm-Message-State: APjAAAVy+OmHB72glnTHBdeIRzoWypxDq8FXP+RWsKTxVmoqll+knZK3
-        yeQQOuSWwtDLYnSW2ffQrJkHW8xS1XaW7RbEpLt60Q6JIkI=
-X-Google-Smtp-Source: APXvYqzfL7ZMeN9pKFsyZ9L4G9+Gn2ozS60R8nAHEorU6lGOmN4Eg5nc99nLnEbP0RSwoAMKoOvY7SshdPTjhs4leoQ=
-X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr11661299otn.56.1581945170431;
- Mon, 17 Feb 2020 05:12:50 -0800 (PST)
-MIME-Version: 1.0
-References: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
- <8fd7a83a-6fde-652f-0a2e-ec7b90c13616@redhat.com>
-In-Reply-To: <8fd7a83a-6fde-652f-0a2e-ec7b90c13616@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 17 Feb 2020 21:12:39 +0800
-Message-ID: <CANRm+CxZRCs6h_mffFQsX6N7KFJFFhSADR4vn1J-1OopU+UEAA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: X86: Less kvmclock sync induced vmexits after
- VM boots
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+        Mon, 17 Feb 2020 08:12:55 -0500
+X-UUID: 919c576f96ae40d69450de853a9b6952-20200217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=I/tzgvV2R++XQqqJXAJs1pGeA3QGkcVi7IaA4ozzCKc=;
+        b=c4eGnLXnZ4GKfGe12tWJAX2BDHbZR+ybkFWRgfB3jbekxVbg9wMEb10urm3SVu9D0DFzeLALeSGMYC9+MdvQQ8tnDAhM7HVJbRyEKVS9kgaUxYtKyzWIuRbcd843WPPbBhP+qc8etrAB0zSF3hP2tHTSWnA+eIIlCrHo0Tyafb8=;
+X-UUID: 919c576f96ae40d69450de853a9b6952-20200217
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 232153309; Mon, 17 Feb 2020 21:12:49 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Feb 2020 21:11:05 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Feb 2020 21:12:33 +0800
+Message-ID: <1581945168.26304.4.camel@mtksdccf07>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
+ reference clock
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Date:   Mon, 17 Feb 2020 21:12:48 +0800
+In-Reply-To: <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
+References: <20200217093559.16830-1-stanley.chu@mediatek.com>
+         <20200217093559.16830-2-stanley.chu@mediatek.com>
+         <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 at 19:23, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 17/02/20 11:36, Wanpeng Li wrote:
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index fb5d64e..d0ba2d4 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -9390,8 +9390,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
-> >      if (!kvmclock_periodic_sync)
-> >          return;
-> >
-> > -    schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> > -                    KVMCLOCK_SYNC_PERIOD);
-> > +    if (kvm->created_vcpus == 1)
-> > +        schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
-> > +                        KVMCLOCK_SYNC_PERIOD);
->
-> This is called with kvm->lock not held, so you can have
-> kvm->created_vcpus == 2 by the time you get here.  You can test instead
-> "if (vcpu->vcpu_idx == 0)".
+SGkgQ2FuLA0KDQoNCj4gPiAgCQkJfSBlbHNlIGlmICghb24gJiYgY2xraS0+ZW5hYmxlZCkgew0K
+PiA+ICAJCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGNsa2ktPmNsayk7DQo+ID4gKwkJCQl3YWl0
+X3VzID0gaGJhLT5kZXZfaW5mby5jbGtfZ2F0aW5nX3dhaXRfdXM7DQo+ID4gKwkJCQlpZiAocmVm
+X2NsayAmJiB3YWl0X3VzKQ0KPiA+ICsJCQkJCXVzbGVlcF9yYW5nZSh3YWl0X3VzLCB3YWl0X3Vz
+ICsgMTApOw0KPiANCj4gSGkgU3RhbmxleSwNCj4gDQo+IElmIHdhaXRfdXMgaXMgMXVzLCBpdCB3
+b3VsZCBiZSBpbmFwcHJvcHJpYXRlIHRvIHVzZSB1c2xlZXBfcmFuZ2UoKSBoZXJlLg0KPiBZb3Ug
+aGF2ZSBjaGVja3Mgb2YgdGhlIGRlbGF5IGluIHBhdGNoICMyLCBidXQgd2h5IGl0IGlzIG5vdCBu
+ZWVkZWQgaGVyZT8NCj4gDQo+IFRoYW5rcywNCj4gQ2FuIEd1by4NCg0KWW91IGFyZSByaWdodC4g
+SSBjb3VsZCBtYWtlIHRoYXQgZGVsYXkgY2hlY2tpbmcgYXMgY29tbW9uIGZ1bmN0aW9uIHNvIGl0
+DQpjYW4gYmUgdXNlZCBoZXJlIGFzIHdlbGwgdG8gY292ZXIgYWxsIHBvc3NpYmxlIHZhbHVlcy4N
+Cg0KVGhhbmtzIGZvciBzdWdnZXN0aW9uLg0KU3RhbmxleQ0KDQo=
 
-Agreed.
-
-    Wanpeng
