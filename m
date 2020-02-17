@@ -2,118 +2,80 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52304C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE39C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348F72064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973B82064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pyZzDjG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgBQH7j (ORCPT
+        id S1727125AbgBQH7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:59:39 -0500
-Received: from mga11.intel.com ([192.55.52.93]:16751 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgBQH7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:59:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 23:59:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="229120141"
-Received: from zhouy1-mobl1.ccr.corp.intel.com ([10.249.169.88])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Feb 2020 23:59:35 -0800
-Message-ID: <19d5aad060442ca4917046286b82e723199d4088.camel@intel.com>
-Subject: Re: [PATCH] thermal/intel_powerclamp: Don't report an error for AMD
- CPUs
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Alexander Koskovich <zvnexus@gmail.com>, arjan@linux.intel.com,
-        jacob.jun.pan@linux.intel.com
-Cc:     Alexander Koskovich <zvnexus@outlook.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 17 Feb 2020 15:59:34 +0800
-In-Reply-To: <20200215160938.1025-1-zvnexus@outlook.com>
-References: <20200215160938.1025-1-zvnexus@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Feb 2020 02:59:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39178 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgBQH7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:59:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=u+qbunCLoImJlKPf9M1OUAgIIN//AvIrEPu2le+1et4=; b=pyZzDjG5VaY1EeVrlxpSbjyZtU
+        Oc+ORmiYlpXPZYKPNwgtE3N70SZArwV4dNwu/uyRhr5D7d1nd+M/oAwUFpNi82iEKtGutr1Yq0DfS
+        vlnRayUCiWp68ayBF2HYwfFpAl6jB6gtVQ9gsOdDxt36/kCngrQwHRluzHHR/a3ejAp8dQY4it7eH
+        MYVZBrSo1YJGU0Mp42zhYMZ0psyRuXBuLF+fV2QcWPxV0mVIHpIFFT9rEdZs/J95YzGXZJdc48GBR
+        Md+sIfXEEFbBJ/WzjIPd3Hg7PXWxRsVaDOcbYmPrkaFixt0iwmUba7PiJqk8BHAJVHPqqhutiyydc
+        /ayUKuaA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3bJc-0002xV-MM; Mon, 17 Feb 2020 07:59:40 +0000
+Date:   Sun, 16 Feb 2020 23:59:40 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH v5 4/7] pid: export pidfd_get_pid
+Message-ID: <20200217075940.GA10342@infradead.org>
+References: <20200214170520.160271-1-minchan@kernel.org>
+ <20200214170520.160271-5-minchan@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214170520.160271-5-minchan@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-15 at 11:09 -0500, Alexander Koskovich wrote:
-> Resolves dmesg error "intel_powerclamp: CPU does not support MWAIT".
-> 
-> The error that is outputted in dmesg prior to this patch
-> is innacurate, AMD Ryzen CPUs do support MWAIT. We could
-> also add the AMD vendor to the MWAIT check, but even though
-> AMD CPUs do support MWAIT, they fail the C-state package
-> check so it's better just to bail out in the beginning.
-> 
-> Signed-off-by: Alexander Koskovich <zvnexus@outlook.com>
+On Fri, Feb 14, 2020 at 09:05:17AM -0800, Minchan Kim wrote:
+> process_madvise syscall needs pidfd_get_pid function to translate
+> pidfd to pid so this patch exports the function.
 
-I think you're resending the same patch.
+For that it should not need to exported, but then again the actual
+patch doesn't export it anyway, so this is just a commit log issue.
 
-As intel_powerclamp_ids already checks for Intel CPUs, so we don't need
-the check for AMD CPU, but instead, just remove the following line
+>  extern struct pid *pidfd_pid(const struct file *file);
+> +extern struct pid *pidfd_get_pid(unsigned int fd);
 
-"pr_err("CPU does not support MWAIT\n");"
-
-when intel_powerclamp driver fails to probe.
-
-thanks,
-rui
-
-> ---
->  drivers/thermal/intel/intel_powerclamp.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/thermal/intel/intel_powerclamp.c
-> b/drivers/thermal/intel/intel_powerclamp.c
-> index 53216dcbe173..3c5b25bfa596 100644
-> --- a/drivers/thermal/intel/intel_powerclamp.c
-> +++ b/drivers/thermal/intel/intel_powerclamp.c
-> @@ -650,6 +650,11 @@ static struct thermal_cooling_device_ops
-> powerclamp_cooling_ops = {
->  	.set_cur_state = powerclamp_set_cur_state,
->  };
->  
-> +static const struct x86_cpu_id amd_cpu[] = {
-> +	{ X86_VENDOR_AMD },
-> +	{},
-> +};
-> +
->  static const struct x86_cpu_id __initconst intel_powerclamp_ids[] =
-> {
->  	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY,
-> X86_FEATURE_MWAIT },
->  	{}
-> @@ -659,6 +664,11 @@ MODULE_DEVICE_TABLE(x86cpu,
-> intel_powerclamp_ids);
->  static int __init powerclamp_probe(void)
->  {
->  
-> +	if (x86_match_cpu(amd_cpu)) {
-> +		pr_info("Intel PowerClamp does not support AMD
-> CPUs\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	if (!x86_match_cpu(intel_powerclamp_ids)) {
->  		pr_err("CPU does not support MWAIT\n");
->  		return -ENODEV;
-
+... and there is no need for the extern keyword on prototypes in
+headers.
