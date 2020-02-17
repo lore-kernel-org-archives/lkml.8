@@ -2,113 +2,131 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E339C34025
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52D9C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90832072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9661A2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dJwFzaEL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1c9Ac3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgBQO2o (ORCPT
+        id S1728991AbgBQO3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:28:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54582 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728817AbgBQO2n (ORCPT
+        Mon, 17 Feb 2020 09:29:40 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46663 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbgBQO3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:28:43 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01HEMldC045577;
-        Mon, 17 Feb 2020 14:28:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=F33e2h/VKg524zfDno3YmF4kFLz8ceA2/AbSPfczn2w=;
- b=dJwFzaELeFN4Iqx4jKy0xAUOUXyK4Qg/4OcKstysntyZ9ZoAORL2nzgz4XRXftvI82/D
- S9RxOheeEnDWNkz01bdJ/X8CSFF2pGAHl6TJ6i8BrkEfrDLRSj1gsW4NcsbRmJDGI7bL
- 3ZZQzTYKbsAko9Nxcm0JFlmY2cIInv9HwYnVCwjbjuS+yk4KpqckKoTOWCVhaoZgU/NP
- sfWsriNOHKZ1D/Jyg01KUxKPTxKeHlLH9jxjOfPcvu/gisGP0aaANNohd0ACfJYxstwO
- nV5j3fCLGKpfkHuJJLjjTbN3U/S/bobOqI14q0DAygJxsh/51+k1/l4xduRUt5NaA7S+ pQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y7aq5kq0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 14:28:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01HERjbB055355;
-        Mon, 17 Feb 2020 14:28:37 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y6t4g6j41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 14:28:37 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01HESZ8X011075;
-        Mon, 17 Feb 2020 14:28:35 GMT
-Received: from dhcp-10-175-161-198.vpn.oracle.com (/10.175.161.198)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Feb 2020 06:28:35 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     skhan@linuxfoundation.org, brendanhiggins@google.com,
-        frowand.list@gmail.com
-Cc:     gregkh@linuxfoundation.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v4 kunit-next 3/3] kunit: update documentation to describe debugfs representation
-Date:   Mon, 17 Feb 2020 14:27:40 +0000
-Message-Id: <1581949660-20113-4-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1581949660-20113-1-git-send-email-alan.maguire@oracle.com>
-References: <1581949660-20113-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9533 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 malwarescore=0 suspectscore=3
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002170120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9533 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
- spamscore=0 priorityscore=1501 suspectscore=3 clxscore=1015 bulkscore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002170119
+        Mon, 17 Feb 2020 09:29:40 -0500
+Received: by mail-qk1-f195.google.com with SMTP id u124so15814039qkh.13;
+        Mon, 17 Feb 2020 06:29:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ifhvgKgI6cTWHXPEnaAyEUDSTCBWJ+KZaGmCrBza/1c=;
+        b=C1c9Ac3dO4qTNAxrehHi5Lee1eIVFDCiei2+1u8WVmCTxz3+U0Hsq3ay+xNSl8pMrS
+         J2VuTVV9mR5kCb8QXP6HX9EM00EkseoO78/ijG1qDu29USrGHRPnUFfYgvDUl1kEywAm
+         op+qplXMh4i34wjCpUlAgzuRFl5m3gfVGYwnHeCQK/oOE3vsz9XJtSxLBvJXkxYCdvJ9
+         oUvMCUYRihGZ70hNrAvUEpbmVRn6C8ulkqRAu3c5bo+8XpcL03btqRICOrMshb7mEx50
+         3czipOu3udEuoZ3QfU6WAc/IVIgAE51iwpfhfDiZW77skX7D6Fkfver0nn5SR+dHsbDa
+         yPlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ifhvgKgI6cTWHXPEnaAyEUDSTCBWJ+KZaGmCrBza/1c=;
+        b=Z7WFxjPxtgbi23SzaEUikJe4E2q56q+7nzwy8YZU87YNj2RcAqz7laTqjRDNG3JbZ1
+         BRD5dtNXWIojO18hjkKbVYl8qLM0FLQ5Fjx7dOlz/1mGCeo/6PE9R1gnRj0FFsxYVeCy
+         vzN2vrA8wQ5YkCFdxtjkUsxTUf9h706661kNBzEdDCPSCg9o0zmvFMz/+Wl3Kw9t5uoL
+         9GfQncskXS9x2r8T8eIg0LruQ0TfVds4ntMhuHIcSg7xky6dCrNLVMMeD7VEi8O9gXJ6
+         RecUihYye0nerBI0NBOfcQfTv5tF4h6pR2v/zXE9Veow8I5WlIdD2esR126ujc2T1K/y
+         mxpQ==
+X-Gm-Message-State: APjAAAUeuA+XCoJbK6K6LagAUKdVCkrbRFiqeKGb+kZLKD7SNhiScGYx
+        fireGP8UpsLuqMedIa4Ydks=
+X-Google-Smtp-Source: APXvYqxL8R5m+lUaiW+Gfj0/xS6u9e5XVjk4kxV1EJh+wvOWiiTkELaDtZP/RTMFsR/zU/ndTOVs2Q==
+X-Received: by 2002:a37:652:: with SMTP id 79mr14604728qkg.464.1581949778766;
+        Mon, 17 Feb 2020 06:29:38 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id n189sm291877qke.9.2020.02.17.06.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 06:29:37 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B7F57403AD; Mon, 17 Feb 2020 11:29:35 -0300 (-03)
+Date:   Mon, 17 Feb 2020 11:29:35 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v4] perf test: Fix test trace+probe_vfs_getname.sh on s390
+Message-ID: <20200217142935.GA19953@kernel.org>
+References: <20200217102111.61137-1-tmricht@linux.ibm.com>
+ <20200217211010.fa9c643c517c110abaa5b554@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217211010.fa9c643c517c110abaa5b554@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation should describe debugfs layout and semantics.
+Em Mon, Feb 17, 2020 at 09:10:10PM +0900, Masami Hiramatsu escreveu:
+> On Mon, 17 Feb 2020 11:21:11 +0100
+> Thomas Richter <tmricht@linux.ibm.com> wrote:
+> 
+> > This test places a kprobe to function getname_flags() in the kernel
+> > which has the following prototype:
+> > 
+> >   struct filename *
+> >   getname_flags(const char __user *filename, int flags, int *empty)
+> > 
+> > Variable filename points to a filename located in user space memory.
+> > Looking at
+> > commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> > the kprobe should indicate that user space memory is accessed.
+> > 
+> > Output before:
+> >    [root@m35lp76 perf]# ./perf test  66 67
+> >    66: Use vfs_getname probe to get syscall args filenames   : FAILED!
+> >    67: Check open filename arg using perf trace + vfs_getname: FAILED!
+> >    [root@m35lp76 perf]#
+> > 
+> > Output after:
+> >    [root@m35lp76 perf]# ./perf test  66 67
+> >    66: Use vfs_getname probe to get syscall args filenames   : Ok
+> >    67: Check open filename arg using perf trace + vfs_getname: Ok
+> >    [root@m35lp76 perf]#
+> > 
+> > Comments from Masami Hiramatsu:
+> > This bug doesn't happen on x86 or other archs on which user-address
+> > space and kernel address space is same. On some arch (ppc64 in this case?)
+> > user-address space is partially or completely same as kernel address space.
+> > (Yes, they switch the world when running into the kernel) In this case,
+> > we need to use different data access functions for each spaces.
+> > That is why I introduced "ustring" type for kprobe event.
+> > As far as I can see, Thomas's patch is sane. Thomas, could you show us
+> > your result on your test environment?
+> > Thank you
+> > 
+> > Comments from Thomas Richter:
+> > Test results included above.
+> > 
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> 
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
----
- Documentation/dev-tools/kunit/usage.rst | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Thanks, I tested it successfully on x86-64, applying.
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 7cd56a1..816fff4 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -590,3 +590,16 @@ able to run one test case per invocation.
- 
- .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
-    dependent KUnit test.
-+
-+KUnit debugfs representation
-+============================
-+When kunit test suites are initialized, they create an associated directory
-+in /sys/kernel/debug/kunit/<test-suite>.  The directory contains one file
-+
-+- results: "cat results" displays results of each test case and the results
-+  of the entire suite for the last test run.
-+
-+The debugfs representation is primarily of use when kunit test suites are
-+run in a native environment, either as modules or builtin.  Having a way
-+to display results like this is valuable as otherwise results can be
-+intermixed with other events in dmesg output.
--- 
-1.8.3.1
-
+- Arnaldo
