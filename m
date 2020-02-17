@@ -7,79 +7,61 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE93C7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692E1C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0C3206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C309206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581920205;
-	bh=DLvMATAzEWVQjYRixiWO3+rDmcBnoRjcRpX5U858a+8=;
+	s=default; t=1581920347;
+	bh=f3VOOy6CTJtnh0VI3z3/xaikmMNxZ4lv5y2xGGj1zxI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wu5SBIpDwSDbdecyrmpJRq0v7dpk3RTsXUZdOQXIlpl4xZpZa388PTSrEii8ub14D
-	 Z+JXhJEVZ0zecLqEMYIR2LjLFHnsfB/J69nkPxxqv572SN4QasHxIda6TrrV+Z2YO3
-	 GsaVyz5xk5kUusUxGMNl6MGd9pdphc6PmiKOx9G4=
+	b=P5KJTMolJhl4vPVGIqTT3k/th4bFrA+uopZxo3fV2D7G5mF5oXiDsLw6AtqyQjlze
+	 qaDDVJvwg0azWRkNDks9qe23GxR72KWbydz1mImX/ouhX0bhnGdJuxRsQX6S/Xb4z6
+	 JimG4oKj4PLYtNqC+zS+0jWd/qw05MmKfiiR8tbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgBQGQo (ORCPT
+        id S1726294AbgBQGTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:16:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 01:19:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgBQGQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:16:44 -0500
+        id S1725835AbgBQGTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:19:05 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF73020679;
-        Mon, 17 Feb 2020 06:16:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C41120679;
+        Mon, 17 Feb 2020 06:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581920203;
-        bh=DLvMATAzEWVQjYRixiWO3+rDmcBnoRjcRpX5U858a+8=;
+        s=default; t=1581920345;
+        bh=f3VOOy6CTJtnh0VI3z3/xaikmMNxZ4lv5y2xGGj1zxI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LEO1sA0guMEqD++vNYCPcJAPujIvm6A5mDDD/+UcI6BBqPrjR7K+oVw1kCzr2uZh6
-         TSBCI8DSgGRjikqFJqbTr6YELYwhxKZw20MZt2nesBP7DwU4SMqftXE18I1FI6nKk2
-         N5AVGfVeSNY4tu3wgsrU9gRaXwKeQ3rC6/2HyjhQ=
-Date:   Mon, 17 Feb 2020 14:16:33 +0800
+        b=oK3n/P4t8LarlsfbQ3YsmW+KybfaWi6krW3i5QTm0kbSLRrUYev40fhu2ZQKZu2Fq
+         5FfKCNAou/P+Z3oUvD1LIJs5CgCn4XYERsv16tTXBNS7kcFmfIYTDzPljgsErjV8Ut
+         F/d9+/lWUpANjBWERRggEnktaFRf2fUx2TP+04YU=
+Date:   Mon, 17 Feb 2020 14:18:59 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        marcel.ziswiler@toradex.com, rjones@gateworks.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        gary.bisson@boundarydevices.com, angus@akkea.ca,
-        pramod.kumar_1@nxp.com, rabeeh@solid-run.com,
-        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/4] arm64: dts: freescale: Add i.MX8MP dtsi support
-Message-ID: <20200217061629.GA6659@dragon>
-References: <1581425307-18567-1-git-send-email-Anson.Huang@nxp.com>
- <1581425307-18567-2-git-send-email-Anson.Huang@nxp.com>
+To:     Alifer Moraes <alifer.wsdm@gmail.com>
+Cc:     robh+dt@kernel.org, festevam@gmail.com, marco.franchi@nxp.com,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: imx8mq-phanbell: Add support for ethernet
+Message-ID: <20200217061849.GA6790@dragon>
+References: <20200211134828.138-1-alifer.wsdm@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581425307-18567-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200211134828.138-1-alifer.wsdm@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 08:48:25PM +0800, Anson Huang wrote:
-> The i.MX8M Plus Media Applications Processor is part of the growing
-> mScale family targeting the consumer and industrial market. It brings
-> an effective Machine Learning and AI accelerator that enables a new
-> class of applications. It is built in Samsung 14LPP to achieve both
-> high performance and low power consumption and relies on a powerful
-> fully coherent core complex based on a quad core ARM Cortex-A53 cluster
-> and Cortex-M7 low-power coprocessor, audio digital signal processor,
-> machine learning and graphics accelerators.
+On Tue, Feb 11, 2020 at 10:48:28AM -0300, Alifer Moraes wrote:
+> Add support for ethernet on Google's i.MX 8MQ Phanbell
 > 
-> Add the basic dtsi support for i.MX8MP.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
 
-Applied 2 ~ 4, thanks.
+Applied, thanks.
