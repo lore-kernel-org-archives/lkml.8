@@ -2,303 +2,153 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9EEC761A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAE2C761A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A52207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D87208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qmbrv+Er"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DJT52cbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgBQMLK (ORCPT
+        id S1729670AbgBQMLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:11:10 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52334 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgBQMLJ (ORCPT
+        Mon, 17 Feb 2020 07:11:12 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2716 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbgBQMLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:11:09 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HC9opQ078984;
-        Mon, 17 Feb 2020 06:09:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581941390;
-        bh=5RdcTPY1/TNCyHkqGcLmh6974mxbJWb+KCZa1FCYArA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qmbrv+ErtksY64o0zYfZ3d9OL5erxqzCHJLw+0m7JzGsaZBMEaZTVEkfukCWmzMAl
-         Mgu5VJssiYm/Z8xkjk22qpQo6vzvv1OJJe1Ix3zp2OEOnfI45pe25sOJA4uxBGKXQb
-         bsDC9X5Fs7LeviHIqEkpPQVYDqLv/36yfTyrr7Vo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HC9oPb128197;
-        Mon, 17 Feb 2020 06:09:50 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 06:09:50 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 06:09:50 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HC9kus066148;
-        Mon, 17 Feb 2020 06:09:47 -0600
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
-Date:   Mon, 17 Feb 2020 14:09:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 17 Feb 2020 07:11:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4a82d00000>; Mon, 17 Feb 2020 04:10:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Feb 2020 04:11:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Feb 2020 04:11:09 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Feb
+ 2020 12:11:09 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 17 Feb 2020 12:11:09 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e4a82d90002>; Mon, 17 Feb 2020 04:11:09 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V3 3/5] PCI: endpoint: Add notification for core init completion
+Date:   Mon, 17 Feb 2020 17:40:34 +0530
+Message-ID: <20200217121036.3057-4-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200217121036.3057-1-vidyas@nvidia.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20200214170322.GZ64767@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581941456; bh=6Iopf0Q6A3DDLlHopVYOdLyoIpX4hHn9y3CGW1XIkKU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=DJT52cbXjSQEPGFh2grgktj414HkaetbwuoCPvvvtaU/N84NiGNKoH/rshjN3Qoxm
+         9KhIEGc6E9Gjj2hzOD469ayLzx5e1ARJDulAsCVFvI9GK5loWHqKsAKFtbHfGBYnvD
+         QAn7GQeCeWH3zKGgoV3qFEpEfnd6ICWm7igQ0pA2DG38D+lvQ8hllAP/8tOeomxHM2
+         wMcmmxwgqzGD6+EaiI1wqcmQs5wNH6ANf1LFEa/m9Z62b8zNAeWYJm/Vl7V2T4Sk4J
+         xBIk8ACRIHSvHMs60P5G9/olkX76a36HPmjGh/CK53szDR2/cKe53Q1WUJcYxAXqUg
+         wsyPjZZs6AGdg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+Add support to send notifications to EPF from EPC once the core
+registers initialization is complete.
 
-On 14/02/2020 19.03, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200214 12:42]:
->> Hi Tony,
->>
->> On 12/02/2020 16.35, Tony Lindgren wrote:
->>> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 08:02]:
->>>>
->>>>
->>>> On 11/02/2020 19.16, Tony Lindgren wrote:
->>>>> We can have multiple connections on a single McBSP instance configured
->>>>> with audio graph card when using TDM (Time Division Multiplexing). Let's
->>>>> allow that by configuring dais dynamically.
->>>>
->>>> It is still one DAI...
->>>> If you have multiple codec connected to the same I2S lines, but the
->>>> codecs communicate within different time slots, you still have one DAI
->>>> on the CPU side, but multiple codecs (codec DAIs) with different TDM slot.
->>>
->>> OK so subject should say "dodec DAIs" then I guess?
->>>
->>>>> See Documentation/devicetree/bindings/sound/audio-graph-card.txt and
->>>>> Documentation/devicetree/bindings/graph.txt for more details for
->>>>> multiple endpoints.
->>>>
->>>> See the example for 'Multi DAI with DPCM' in audio-graph-card.txt
->>>> The PCM3168a have 2 DAIs: playback and capture, but you can have
->>>> multiple endpoints within a DAI.
->>>
->>> Yes this should follow the audio-graph-card.txt example. We end up with
->>> mcbsp3 dts node as below on droid4:
->>>
->>> &mcbsp3 {
->>>         #sound-dai-cells = <0>;
->>>         pinctrl-names = "default";
->>>         pinctrl-0 = <&mcbsp3_pins>;
->>>         status = "okay";
->>>
->>>         ports {
->>>                 mcbsp3_port: port@0 {
->>>                         #address-cells = <1>;
->>>                         #size-cells = <0>;
->>>
->>>                         cpu_dai3: endpoint@0 {
->>>                                 reg = <0>;
->>>                                 dai-format = "dsp_a";
->>>                                 frame-master = <&cpcap_audio_codec1>;
->>>                                 bitclock-master = <&cpcap_audio_codec1>;
->>>                                 remote-endpoint = <&cpcap_audio_codec1>;
->>>                         };
->>>
->>>                         cpu_dai_mdm: endpoint@1 {
->>>                                 reg = <1>;
->>>                                 dai-format = "dsp_a";
->>>                                 frame-master = <&cpcap_audio_codec1>;
->>>                                 bitclock-master = <&cpcap_audio_codec1>;
->>>                                 remote-endpoint = <&mot_mdm6600_audio_codec0>;
->>>                         };
->>>                 };
->>>         };
->>> };
->>
->> According to
->> Documentation/devicetree/bindings/sound/audio-graph-card.txt
->> it should be something like this:
->> &mcbsp3 {
->>         #sound-dai-cells = <0>;
->>         pinctrl-names = "default";
->>         pinctrl-0 = <&mcbsp3_pins>;
->>         status = "okay";
->>
->>         ports {
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>                 port@0 {
->> 			reg = <0>;
->>
->> 			cpu_dai3: endpoint@0 {
->> 				dai-format = "dsp_a";
->> 				frame-master = <&cpcap_audio_codec1>;
->> 				bitclock-master = <&cpcap_audio_codec1>;
->> 				remote-endpoint = <&cpcap_audio_codec1>;
->> 			};
->>
->> 			cpu_dai_mdm: endpoint@1 {
->> 				dai-format = "dsp_a";
->> 				frame-master = <&cpcap_audio_codec1>;
->> 				bitclock-master = <&cpcap_audio_codec1>;
->> 				remote-endpoint = <&mot_mdm6600_audio_codec0>;
->> 			};
->> 		};
->> 	};
->> };
-> 
-> Hmms so I only spot reg use at different level changing above. Well
-> that's not according to Documentation/devicetree/bindings/graph.txt,
-> the reg numbering is per endpoint.
-> 
-> Sounds like the we have the example not following graph.txt in
-> Documentation/devicetree/bindings/sound/audio-graph-card.txt while
-> the code is now behaving as in graph.txt.
-> 
->> If you span out dummy DAIs got dai1+ then how you will get anything
->> working via endpoint1+?
->> There will be no ops for McBSP, so it is not going to do anything...
-> 
-> Eventually it could have ops though. For things like capture of the tdm
-> slot data for recording audio call for example, I don't know how that's
-> supposed to work though. I guess mcbsp could be the clock master too,
-> and for those cases it would have ops.
-> 
-> But right now in droid4 voice call case mcbsp is just the i2s transport,
-> and everything happens betwee the modem and the cpcap pmic.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+V3:
+* Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-Iow you don't need McBSP DAI at all. If you would have added the dummy
-codec to McBSP !3 and use that, it would work in a same way, or to DMIC
-or McPDM...
+V2:
+* None
 
-The McBSP ops are NULL for the dummy dai, so McBSP is turned off.
+ drivers/pci/endpoint/pci-epc-core.c | 19 ++++++++++++++++++-
+ include/linux/pci-epc.h             |  1 +
+ include/linux/pci-epf.h             |  5 +++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-> 
->>> That is pretty much the same as the 'Multi DAI with DPCM' example, with
->>> dne dai, and multiple endpoints. I think we still have just one port
->>> for one i2s transport on the mcbsp :)
->>>
->>> Does the above look as what you would expect based on the binding?
->>
->> The audio-graph-card.txt example shows pcm3168a which have two DAIs,
->> one for playback and one for capture.
->>
->> I guess Morimoto-san can explain if he carries out of tree patches to
->> get the described setup working on top of mainline...
->>
->> But, no, based on the documentation I don't ;)
-> 
-> Sounds like audio-graph-card.txt is just out of sync with graph.txt
-> as we do have several working examples?
-> 
->>>>> I've tested this with droid4 where cpcap pmic and modem voice are both
->>>>> both wired to mcbsp3. I've also tested this on droid4 both with and
->>>>> without the pending modem audio codec driver that is waiting for n_gsm
->>>>> serdev dependencies to clear.
->>>>
->>>> What this patch you effectively just creating dummy-dais on top of the
->>>> real McBSP DAI.
->>>
->>> Yes I think this is needed for snd-soc-audio-graph-card, and this allows
->>> configuring whatever is needed for the i2s slot. But maybe you have some
->>> better way of doing it in mind?
->>>
->>>> You also rename the DAIs, which might break ams-delta.
->>>
->>> Oops, that's not good. So should we just keep the old naming if there's
->>> only one endpoint?
->>
->> That's an option, yes, if we really need extra dummy McBSP DAIs at all,
->> again, let's hear from Morimoto-san or Mark.
-> 
-> Well it would not necessarily be a dummy mcbsp dai in all cases it seems
-> to me. But yeah nothing for the second dai to do right now for droid4
-> voice call as it's all between the modem and the pmic.
-> 
->>>> We still have legacy support in
->>>> omap-twl4030.c
->>>> omap3pandora.c
->>>> osk5912.c
->>>> rx51.c
->>>>
->>>> which will break with the renamed DAI. On the other hand I think the
->>>> legacy support can be dropped from them.
->>>
->>> I'm not sure what all that would take.
->>
->> For some it should not be a big deal as they only boot in DT mode.
->> /me adds this to the TODO list.
-> 
-> OK
-> 
->>>> I know it was discussed, but can not find the mail:
->>>> Can you brief again on the audio connection?
->>>
->>> Below is a link to a mailing list thread where Sebastian describes
->>> the audio connection:
->>>
->>> https://lkml.org/lkml/2018/3/28/881
->>
->> Thanks!
->>  
->>>> Do you have branch with working code?
->>>
->>> Yeah I have slightly older set of the patches in my droid4-pending-v5.5
->>> kernel.org git branch with voice calls working.
->>
->> I think I should put my droid4 out and try to get it working...
->> Do you have a link for dummies to follow to get started? ;)
-> 
-> Probably the easiest one to use right now is the Maemo-leste devuan based
-> test image using v5.5 kernel + modem and audio patches:
-> 
-> https://leste.maemo.org/Motorola_Droid_4
-> 
-> Just use a decent speed micro-sd card rated "a1" for example.
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index dc1c673534e0..0d22a377a0cf 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -540,10 +540,27 @@ void pci_epc_linkup(struct pci_epc *epc)
+ 	if (!epc || IS_ERR(epc))
+ 		return;
+ 
+-	atomic_notifier_call_chain(&epc->notifier, 0, NULL);
++	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_linkup);
+ 
++/**
++ * pci_epc_init_notify() - Notify the EPF device that EPC device's core
++ *			   initialization is completed.
++ * @epc: the EPC device whose core initialization is completeds
++ *
++ * Invoke to Notify the EPF device that the EPC device's initialization
++ * is completed.
++ */
++void pci_epc_init_notify(struct pci_epc *epc)
++{
++	if (!epc || IS_ERR(epc))
++		return;
++
++	atomic_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
++}
++EXPORT_SYMBOL_GPL(pci_epc_init_notify);
++
+ /**
+  * pci_epc_destroy() - destroy the EPC device
+  * @epc: the EPC device that has to be destroyed
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 9ffe6bd081ae..0d7e91bad91e 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -165,6 +165,7 @@ void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
+ void pci_epc_destroy(struct pci_epc *epc);
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf);
+ void pci_epc_linkup(struct pci_epc *epc);
++void pci_epc_init_notify(struct pci_epc *epc);
+ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf);
+ int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
+ 			 struct pci_epf_header *hdr);
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index bcdf4f07bde7..0c628e30c582 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -15,6 +15,11 @@
+ 
+ struct pci_epf;
+ 
++enum pci_notify_event {
++	CORE_INIT,
++	LINK_UP,
++};
++
+ enum pci_barno {
+ 	BAR_0,
+ 	BAR_1,
+-- 
+2.17.1
 
-Cool. Now I can dual boot the droid4 :D
-I needed to rewrite the /etc/shadow to get a known root password so I
-can log in.
-
-Wifi is up, so in theory I can scp kernel/dtb to /boot/boot/ and update
-the /boot/boot/boot.cfg to boot my kernel, right?
-
-> Regards,
-> 
-> Tony
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
