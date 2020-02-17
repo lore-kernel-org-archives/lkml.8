@@ -2,72 +2,149 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F4C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D55FC7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F3220702
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581924571;
-	bh=PzJnrAL6dkjz00fAFrEN8q+0YVZh2JFrrbuh0fisg+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EMCBW0O0LKKj7JBDjQuQtHPq5bXQ/qkgtUjx/wEjJHyW/Y/oWSjv+4nABhmpX650Z
-	 hYYUxUnCSeuYelORVCyjlhXR7dhmVUrj7QqO95OspRCUCu4GnrWI+NS+ePOPQKt2Uo
-	 P7wXN7p8AoL+zlrLsudaJhonOWbrjLce8co4J9Jk=
+	by mail.kernel.org (Postfix) with ESMTP id 24D7B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBQH31 (ORCPT
+        id S1726770AbgBQH3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:29:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgBQH31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:29:27 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A4CC20702;
-        Mon, 17 Feb 2020 07:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581924566;
-        bh=PzJnrAL6dkjz00fAFrEN8q+0YVZh2JFrrbuh0fisg+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I4YH1e0UVDh7EPKnEJsRt6NZTF1zNwH/ttGxk7FFyy6yj1PPssxqCAYd1AGi+aRxr
-         tNpzWA6JnnaRFr8O3H9RXy/03mGDPfMMqrTcnU4C+Mwbpn+AKQn5gfomYeSnXiNhUW
-         aVtMKTCHXRh6SiG2WKuHvZCnpEnunljLSmAchr7U=
-Date:   Mon, 17 Feb 2020 15:29:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Robert Jones <rjones@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-gw553x.dtsi: add lsm9ds1 iio
- imu/magn support
-Message-ID: <20200217072919.GF7973@dragon>
-References: <20200214210241.32611-1-rjones@gateworks.com>
+        Mon, 17 Feb 2020 02:29:48 -0500
+Received: from mx04.melco.co.jp ([192.218.140.144]:57118 "EHLO
+        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgBQH3r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:29:47 -0500
+Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
+        by mx04.melco.co.jp (Postfix) with ESMTP id 3E9243A2BEF;
+        Mon, 17 Feb 2020 16:29:45 +0900 (JST)
+Received: from mr04.melco.co.jp (unknown [127.0.0.1])
+        by mr04.imss (Postfix) with ESMTP id 48LbGd1BwZzRk5N;
+        Mon, 17 Feb 2020 16:29:45 +0900 (JST)
+Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
+        by mr04.melco.co.jp (Postfix) with ESMTP id 48LbGd0tffzRk4d;
+        Mon, 17 Feb 2020 16:29:45 +0900 (JST)
+Received: from mf04.melco.co.jp (unknown [133.141.98.184])
+        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48LbGd0sHqzRkBH;
+        Mon, 17 Feb 2020 16:29:45 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf04.melco.co.jp (Postfix) with ESMTP id 48LbGd0PvgzRk9J;
+        Mon, 17 Feb 2020 16:29:45 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01H7TidH027723;
+        Mon, 17 Feb 2020 16:29:44 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id B298217E075;
+        Mon, 17 Feb 2020 16:29:44 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tux100.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 9BBC317E073;
+        Mon, 17 Feb 2020 16:29:44 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01H7Th9I002105;
+        Mon, 17 Feb 2020 16:29:44 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/2] staging: exfat: dedicate count_entries() to sub-dir counting.
+Date:   Mon, 17 Feb 2020 16:29:41 +0900
+Message-Id: <20200217072941.34116-2-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200217072941.34116-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+References: <20200217072941.34116-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214210241.32611-1-rjones@gateworks.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 01:02:41PM -0800, Robert Jones wrote:
-> Add one node for the accel/gyro i2c device and another for the separate
-> magnetometer device in the lsm9ds1.
-> 
-> Signed-off-by: Robert Jones <rjones@gateworks.com>
+count_entries() function is only used to count sub-dirs.
+Clarify the role and rename to count_dir_entries().
 
-Applied, thanks.
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+Changes in v3:
+- Rebase to staging-next.
+
+Changes in v2:
+- Rebase to linux-next-next-20200213.
+
+ drivers/staging/exfat/exfat.h       | 2 +-
+ drivers/staging/exfat/exfat_core.c  | 8 ++------
+ drivers/staging/exfat/exfat_super.c | 4 ++--
+ 3 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index ca9d3b5a3076..c4ef6c2de329 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -683,7 +683,7 @@ struct entry_set_cache_t *get_entry_set_in_dir(struct super_block *sb,
+ 					       u32 type,
+ 					       struct dentry_t **file_ep);
+ void release_entry_set(struct entry_set_cache_t *es);
+-s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type);
++s32 count_dir_entries(struct super_block *sb, struct chain_t *p_dir);
+ void update_dir_checksum(struct super_block *sb, struct chain_t *p_dir,
+ 			 s32 entry);
+ void update_dir_checksum_with_entry_set(struct super_block *sb,
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 94a10c5984ac..7308e50c0aaf 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -1850,7 +1850,7 @@ s32 exfat_count_ext_entries(struct super_block *sb, struct chain_t *p_dir,
+ 	return count;
+ }
+ 
+-s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type)
++s32 count_dir_entries(struct super_block *sb, struct chain_t *p_dir)
+ {
+ 	int i, count = 0;
+ 	s32 dentries_per_clu;
+@@ -1881,11 +1881,7 @@ s32 count_entries(struct super_block *sb, struct chain_t *p_dir, u32 type)
+ 
+ 			if (entry_type == TYPE_UNUSED)
+ 				return count;
+-			if (!(type & TYPE_CRITICAL_PRI) &&
+-			    !(type & TYPE_BENIGN_PRI))
+-				continue;
+-
+-			if ((type == TYPE_ALL) || (type == entry_type))
++			if (entry_type == TYPE_DIR)
+ 				count++;
+ 		}
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index f31f771a3dc0..b398114c2604 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -1468,7 +1468,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 						p_fs->cluster_size_bits;
+ 			}
+ 
+-			count = count_entries(sb, &dir, TYPE_DIR);
++			count = count_dir_entries(sb, &dir);
+ 			if (count < 0) {
+ 				ret = count; /* propagate error upward */
+ 				goto out;
+@@ -1535,7 +1535,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
+ 			info->Size = (u64)count_num_clusters(sb, &dir) <<
+ 					p_fs->cluster_size_bits;
+ 
+-		count = count_entries(sb, &dir, TYPE_DIR);
++		count = count_dir_entries(sb, &dir);
+ 		if (count < 0) {
+ 			ret = count; /* propagate error upward */
+ 			goto out;
+-- 
+2.25.0
+
