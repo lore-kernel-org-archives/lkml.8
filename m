@@ -2,210 +2,148 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F67C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAAEC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838A8207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581948909;
-	bh=Shzw2PTES55J4aj4NRVAVAR0mDFpO/yXwhg/BA3New8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V+3nsk5v3UJDxFtkzliuUC0k7bnFn4P7mssO/FI1EGfhHg17z9NRnpilZ4owdlro3
-	 C1zLiBuaapWBs5AP8XOL//6gMhVAs0v1lB85qpL+H11hWyhxidnSimNUBgHug4hOcZ
-	 DKMIElAnnZGUXNtqVzNb90pAK16stbbnOrpUfy14=
+	by mail.kernel.org (Postfix) with ESMTP id 2C0E02072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgBQOPI (ORCPT
+        id S1728493AbgBQOQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgBQOPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:15:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C13582072C;
-        Mon, 17 Feb 2020 14:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581948906;
-        bh=Shzw2PTES55J4aj4NRVAVAR0mDFpO/yXwhg/BA3New8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agxYjoaTMIx4QSUJkwvv8MhTusnIBnnCedYHzmDEUNi5CKlrXnBoRuDID8xa6TAqP
-         Q8IDa3RkIorYx34BUiDpPSazOoAtzeRKci9O/P6niZAcDzS9ZS8xcCalVxF/pYZAxh
-         y2kVs1Ht6KrytMcnUWmxzv55Vt2Vg7AkSsJnwv7s=
-Date:   Mon, 17 Feb 2020 15:15:03 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
- controllers
-Message-ID: <20200217141503.GA1110972@kroah.com>
-References: <20200206165755.GB3894455@kroah.com>
- <20200211184130.GA11908@Mani-XPS-13-9360>
- <20200211192055.GA1962867@kroah.com>
- <20200213152013.GB15010@mani>
- <20200213153418.GA3623121@kroah.com>
- <20200213154809.GA26953@mani>
- <20200213155302.GA3635465@kroah.com>
- <20200217052743.GA4809@Mani-XPS-13-9360>
- <20200217115930.GA218071@kroah.com>
- <20200217130419.GA13993@Mani-XPS-13-9360>
+        Mon, 17 Feb 2020 09:16:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726788AbgBQOQL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 09:16:11 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HEFRwV129122;
+        Mon, 17 Feb 2020 09:15:45 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6buma029-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 09:15:44 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01HEA8n8003987;
+        Mon, 17 Feb 2020 14:15:43 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04wdc.us.ibm.com with ESMTP id 2y689627sv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Feb 2020 14:15:43 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HEFgRi56623462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 14:15:42 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 400F9BE054;
+        Mon, 17 Feb 2020 14:15:42 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A59FBE051;
+        Mon, 17 Feb 2020 14:15:40 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.152])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Feb 2020 14:15:40 +0000 (GMT)
+Message-ID: <4177ac465032c043fc2bd2d257cfed1f9b32130f.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc/cputable: Remove unnecessary copy of
+ cpu_spec->oprofile_type
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Neuling <mikey@neuling.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, desnesn@linux.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Feb 2020 11:15:39 -0300
+In-Reply-To: <f61f9a59ddb0f103cd62792e13afde4ca8afa7bb.camel@neuling.org>
+References: <20200215053637.280880-1-leonardo@linux.ibm.com>
+         <f61f9a59ddb0f103cd62792e13afde4ca8afa7bb.camel@neuling.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-miUKIdMazE7d2FNrQGQu"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217130419.GA13993@Mani-XPS-13-9360>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_08:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ adultscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 06:34:19PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
-> > On Mon, Feb 17, 2020 at 10:57:43AM +0530, Manivannan Sadhasivam wrote:
-> > > Hi Greg,
-> > > 
-> > > On Thu, Feb 13, 2020 at 07:53:02AM -0800, Greg KH wrote:
-> > > > On Thu, Feb 13, 2020 at 09:18:09PM +0530, Manivannan Sadhasivam wrote:
-> > > > > Hi Greg,
-> > > > > 
-> > > > > On Thu, Feb 13, 2020 at 07:34:18AM -0800, Greg KH wrote:
-> > > > > > On Thu, Feb 13, 2020 at 08:50:13PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
-> > > > > > > > On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > > Hi Greg,
-> > > > > > > > > 
-> > > > > > > > > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
-> > > > > > > > > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > > > > --- /dev/null
-> > > > > > > > > > > +++ b/drivers/bus/mhi/core/init.c
-> > > > > > > > > > > @@ -0,0 +1,407 @@
-> > > > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > > +/*
-> > > > > > > > > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> > > > > > > > > > > + *
-> > > > > > > > > > > + */
-> > > > > > > > > > > +
-> > > > > > > > > > > +#define dev_fmt(fmt) "MHI: " fmt
-> > > > > > > > > > 
-> > > > > > > > > > This should not be needed, right?  The bus/device name should give you
-> > > > > > > > > > all you need here from what I can tell.  So why is this needed?
-> > > > > > > > > > 
-> > > > > > > > > 
-> > > > > > > > > The log will have only the device name as like PCI-E. But that won't specify
-> > > > > > > > > where the error is coming from. Having "MHI" prefix helps the users to
-> > > > > > > > > quickly identify that the error is coming from MHI stack.
-> > > > > > > > 
-> > > > > > > > If the driver binds properly to the device, the name of the driver will
-> > > > > > > > be there in the message, so I suggest using that please.
-> > > > > > > > 
-> > > > > > > > No need for this prefix...
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > So the driver name will be in the log but that won't help identifying where
-> > > > > > > the log is coming from. This is more important for MHI since it reuses the
-> > > > > > > `struct device` of the transport device like PCI-E. For instance, below is
-> > > > > > > the log without MHI prefix:
-> > > > > > > 
-> > > > > > > [   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
-> > > > > > > [   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
-> > > > > > > 
-> > > > > > > As you can see, this gives the assumption that the log is coming from the
-> > > > > > > ath11k_pci driver. But the reality is, it is coming from MHI bus.
-> > > > > > 
-> > > > > > Then you should NOT be trying to "reuse" a struct device.
-> > > > > > 
-> > > > > > > With the prefix added, we will get below:
-> > > > > > > 
-> > > > > > > [   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
-> > > > > > > [   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
-> > > > > > > 
-> > > > > > > IMO, the prefix will give users a clear idea of logs and that will be very
-> > > > > > > useful for debugging.
-> > > > > > > 
-> > > > > > > Hope this clarifies.
-> > > > > > 
-> > > > > > Don't try to reuse struct devices, if you are a bus, have your own
-> > > > > > devices as that's the correct way to do things.
-> > > > > > 
-> > > > > 
-> > > > > I assumed that the buses relying on a different physical interface for the
-> > > > > actual communication can reuse the `struct device`. I can see that the MOXTET
-> > > > > bus driver already doing it. It reuses the `struct device` of SPI.
-> > > > 
-> > > > How can you reuse anything?
-> > > > 
-> > > > > And this assumption has deep rooted in MHI bus design.
-> > > > 
-> > > > Maybe I do not understand what this is at all, but a device can only be
-> > > > on one "bus" at a time.  How is that being broken here?
-> > > > 
-> > > 
-> > > Let me share some insight on how it is being used:
-> > > 
-> > > The MHI bus sits on top of the actual physical bus like PCI-E and requires
-> > > the physical bus for doing activities like allocating I/O virtual address,
-> > > runtime PM etc... The part which gets tied to the PCI-E from MHI is called MHI
-> > > controller driver. This MHI controller driver is also the actual PCI-E driver
-> > > managing the device.
-> > > 
-> > > For instance, we have QCA6390 PCI-E WLAN device. For this device, there is a
-> > > ath11k PCI-E driver and the same driver also registers as a MHI controller and
-> > > acts as a MHI controller driver. This is where I referred to reusing the PCI-E
-> > > struct device. It's not that MHI bus itself is reusing the PCI-E struct device
-> > > but we need the PCI-E device pointer to do above mentioned IOVA, PM operations
-> > > in some places. One of the usage is below:
-> > > 
-> > > ```
-> > > void *buf = dma_alloc_coherent(mhi_cntrl->dev, size, dma_handle, gfp);
-> > > ```
-> > 
-> > Wait, why do you need to call this with the parent dev?  Why not with
-> > your struct device?  What does the parent pointer have that yours does
-> > not?  Is it not correctly having whatever dma attributes the parent has
-> > set properly for your device as well?  If not, why not just fix that and
-> > then _your_ device can be doing the allocation?
-> > 
-> 
-> This is _one_ of the usecases of the parent dev. We are also using it to manage
-> the runtime PM operations of the physical device (pcie) when the MHI stack goes
-> into respective states. For instance,
-> 
-> ```
->         if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
->                 mhi_cntrl->runtime_get(mhi_cntrl);
->                 mhi_cntrl->runtime_put(mhi_cntrl);
->         }
-> ```
-> 
-> These runtime_put() and runtime_get() are the callbacks to be provided by the
-> controller drivers for managing its runtime PM states.
-> 
-> Also, the MHI devices for the channels will be created later on after the
-> controller probe, so at that time we need this parent dev to set the MHI device
-> parent:
-> 
-> ```
-> struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-> {
-> ...
-> dev->parent = mhi_cntrl->dev;
-> ...
-> ```
-> 
-> Hence, having the parent dev pointer really helps.
 
-Yes, saving the parent device is fine, but you should be doing your own
-dma calls using _your_ device, not the parents.  Only mess with the
-parent pointer if you need to do something "normal" for a parent.
+--=-miUKIdMazE7d2FNrQGQu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Mon, 2020-02-17 at 09:33 +1100, Michael Neuling wrote:
+> On Sat, 2020-02-15 at 02:36 -0300, Leonardo Bras wrote:
+> > Before checking for cpu_type =3D=3D NULL, this same copy happens, so do=
+ing
+> > it here will just write the same value to the t->oprofile_type
+> > again.
+> >=20
+> > Remove the repeated copy, as it is unnecessary.
+> >=20
+> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+>=20
+> LGTM
+>=20
+> Reviewed-by: Michael Neuling <mikey@neuling.org>
+>=20
 
-greg k-h
+Thanks!
+
+> > ---
+> >  arch/powerpc/kernel/cputable.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >=20
+> > diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputa=
+ble.c
+> > index e745abc5457a..5a87ec96582f 100644
+> > --- a/arch/powerpc/kernel/cputable.c
+> > +++ b/arch/powerpc/kernel/cputable.c
+> > @@ -2197,7 +2197,6 @@ static struct cpu_spec * __init setup_cpu_spec(un=
+signed
+> > long offset,
+> >  		 */
+> >  		if (old.oprofile_cpu_type !=3D NULL) {
+> >  			t->oprofile_cpu_type =3D old.oprofile_cpu_type;
+> > -			t->oprofile_type =3D old.oprofile_type;
+> >  		}
+> >  	}
+> > =20
+
+--=-miUKIdMazE7d2FNrQGQu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5KoAsACgkQlQYWtz9S
+ttSMkBAAloSDxI0JohdkvgvExJbJjNZFsMlB+OpXFavgD0axzhXdgPJGVuJCkS4o
+ZdEahayhfkTsHyHEj/JosZGo5FcLlAW7yPtJKWA+HQhqezM+LrvFr0IFqPdV6SjP
+RPfta0nf1OOk4KA7bik2fBAFbLZUJ2k2ujxLgFFeIuDinxIa82K661DJ3Kr8MpSc
+39CQeRe/rcAIb+x+vpHa7KkL/jB/Nh7DZ5IeTvOnCE0oKoZq/cETSqmEgq3OBiHI
+tC0+HgYRr4T4FCTnUktgSp7oomvMy8SB/8rcypxkkrxucN1522mL5vDhcDxa25f+
+QxsIK95jjYVrJrVsRUdXccIfush9eSUMtZobyllSGO9AqMZ/8b3HxubyS9gT7Ag8
+yGxBM8H8mD0G4ITxv+ylP9I1I3YuNPkT93JD+7nU6OPvGXmD0xnN0x+cgK/1x5SD
+0UOwGnbJ4yAeQBIu+1uHT795psAUF0j2t7EN2H+haIWJfAXu4l188ALU9jvtqoOC
+KoXcSi0YzG7mEfB5IyQyAVKI/7r3jbrbfl4rDSaf2IhOvZT7ueR/sA3G2u5u3Bw1
+8QoP6MjRb6d7R+wbFUvMeW+Rk2IGTfdbEJr7vABlIwUMR0yLGc2LeGIyJ+9+7P+A
+BsomQjSu6cPEQsQ2FwWKdBeKbnyQWZRpcjCj2xPhut/XJwS9z1s=
+=7iTa
+-----END PGP SIGNATURE-----
+
+--=-miUKIdMazE7d2FNrQGQu--
+
