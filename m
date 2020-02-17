@@ -2,683 +2,301 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D68C761A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7CBC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94B020702
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7635920702
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EXhBNAKA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I2w1Ccsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgBQK05 (ORCPT
+        id S1729262AbgBQK07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:26:57 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:44333 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgBQK04 (ORCPT
+        Mon, 17 Feb 2020 05:26:59 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25570 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729100AbgBQK06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:26:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1581935215; x=1613471215;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=B6/QBiKcbLLT6n1pLhuWZIuWTpvozLtdsrSESZyAb6g=;
-  b=EXhBNAKAo7Ay8ty0v8IpQ+ADhIosAI56Unc3M4HudUk6GrMv16yWaPEv
-   tlRhZFQiqE1hsQjlHukWcxnk9hBx+KrwG8zig+BHHFJ7tZSHK0Hu60jZi
-   RnuaIg8WAXV6sSZB27bvVZwOS9WVOR5xmQDfOFgPl+RY5qAvxYy/08tft
-   M=;
-IronPort-SDR: +CQel/n+xy7QBZXBZvOE6eFLEjk2QwXESLUDPJJ10/Kaxe586r4O/wPIZm5eppZZjQgWC7mvl/
- Y62cZrQqQr+g==
-X-IronPort-AV: E=Sophos;i="5.70,452,1574121600"; 
-   d="scan'208";a="17329264"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 17 Feb 2020 10:26:39 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id E04F4A2E1A;
-        Mon, 17 Feb 2020 10:26:36 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 17 Feb 2020 10:26:36 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 17 Feb 2020 10:26:26 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 02/14] mm/damon: Implement region based sampling
-Date:   Mon, 17 Feb 2020 11:25:32 +0100
-Message-ID: <20200217102544.29012-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200217102544.29012-1-sjpark@amazon.com>
-References: <20200217102544.29012-1-sjpark@amazon.com>
+        Mon, 17 Feb 2020 05:26:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581935217;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kvztgHHdXJpn4KfypwkzWXcDhEJB7aBlhb6kVJm8K3M=;
+        b=I2w1Ccsr2FlSih/GaPUnGT3aYC9YGazIuj4m4fSEObqVr6kcI0jQ7zCk+gzj5a96n+LBfw
+        786KULRsgnkQkXkxytDf94BTo2TJekBmRBtaMuHDM1ynf8K6x4EMGAVx/kWWYO/vl50TPQ
+        tnRmQ3C0RtlejqRDefMfcQgOR8bIlQk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-328-jB-rg9oTM0ucKan7Xs5aiw-1; Mon, 17 Feb 2020 05:26:55 -0500
+X-MC-Unique: jB-rg9oTM0ucKan7Xs5aiw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB147DBBC;
+        Mon, 17 Feb 2020 10:26:52 +0000 (UTC)
+Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-195.ams2.redhat.com [10.36.116.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 943D6867F9;
+        Mon, 17 Feb 2020 10:26:49 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
+ from a device path
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
+References: <20200216141104.21477-1-ardb@kernel.org>
+ <20200216141104.21477-3-ardb@kernel.org>
+ <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com>
+ <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+ <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
+From:   Laszlo Ersek <lersek@redhat.com>
+Message-ID: <b4eb9c01-b395-15de-cb4e-f1d4a539d9f7@redhat.com>
+Date:   Mon, 17 Feb 2020 11:26:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.214]
-X-ClientProxiedBy: EX13D30UWB004.ant.amazon.com (10.43.161.51) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 02/17/20 11:22, Ard Biesheuvel wrote:
+> On Mon, 17 Feb 2020 at 10:23, Ard Biesheuvel <ardb@kernel.org> wrote:
+>>
+>> On Mon, 17 Feb 2020 at 10:15, Laszlo Ersek <lersek@redhat.com> wrote:
+>>>
+>>> On 02/16/20 15:11, Ard Biesheuvel wrote:
+>>>> There are currently two ways to specify the initrd to be passed to the
+>>>> Linux kernel when booting via the EFI stub:
+>>>> - it can be passed as a initrd= command line option when doing a pure PE
+>>>>   boot (as opposed to the EFI handover protocol that exists for x86)
+>>>> - otherwise, the bootloader or firmware can load the initrd into memory,
+>>>>   and pass the address and size via the bootparams struct (x86) or
+>>>>   device tree (ARM)
+>>>>
+>>>> In the first case, we are limited to loading from the same file system
+>>>> that the kernel was loaded from, and it is also problematic in a trusted
+>>>> boot context, given that we cannot easily protect the command line from
+>>>> tampering without either adding complicated white/blacklisting of boot
+>>>> arguments or locking down the command line altogether.
+>>>>
+>>>> In the second case, we force the bootloader to duplicate knowledge about
+>>>> the boot protocol which is already encoded in the stub, and which may be
+>>>> subject to change over time, e.g., bootparams struct definitions, memory
+>>>> allocation/alignment requirements for the placement of the initrd etc etc.
+>>>> In the ARM case, it also requires the bootloader to modify the hardware
+>>>> description provided by the firmware, as it is passed in the same file.
+>>>> On systems where the initrd is measured after loading, it creates a time
+>>>> window where the initrd contents might be manipulated in memory before
+>>>> handing over to the kernel.
+>>>>
+>>>> Address these concerns by adding support for loading the initrd into
+>>>> memory by invoking the EFI LoadFile2 protocol installed on a vendor
+>>>> GUIDed device path that specifically designates a Linux initrd.
+>>>> This addresses the above concerns, by putting the EFI stub in charge of
+>>>> placement in memory and of passing the base and size to the kernel proper
+>>>> (via whatever means it desires) while still leaving it up to the firmware
+>>>> or bootloader to obtain the file contents, potentially from other file
+>>>> systems than the one the kernel itself was loaded from. On platforms that
+>>>> implement measured boot, it permits the firmware to take the measurement
+>>>> right before the kernel actually consumes the contents.
+>>>>
+>>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>>> ---
+>>>>  drivers/firmware/efi/libstub/arm-stub.c        | 15 +++-
+>>>>  drivers/firmware/efi/libstub/efi-stub-helper.c | 82 ++++++++++++++++++++
+>>>>  drivers/firmware/efi/libstub/efistub.h         |  4 +
+>>>>  drivers/firmware/efi/libstub/x86-stub.c        | 23 ++++++
+>>>>  include/linux/efi.h                            |  1 +
+>>>>  5 files changed, 122 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+>>>> index 2edc673ea06c..4bae620b95b9 100644
+>>>> --- a/drivers/firmware/efi/libstub/arm-stub.c
+>>>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
+>>>> @@ -160,6 +160,7 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+>>>>       enum efi_secureboot_mode secure_boot;
+>>>>       struct screen_info *si;
+>>>>       efi_properties_table_t *prop_tbl;
+>>>> +     unsigned long max_addr;
+>>>>
+>>>>       sys_table = sys_table_arg;
+>>>>
+>>>> @@ -258,10 +259,18 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+>>>>       if (!fdt_addr)
+>>>>               pr_efi("Generating empty DTB\n");
+>>>>
+>>>> -     status = efi_load_initrd(image, &initrd_addr, &initrd_size, ULONG_MAX,
+>>>> -                              efi_get_max_initrd_addr(dram_base, *image_addr));
+>>>> +     max_addr = efi_get_max_initrd_addr(dram_base, *image_addr);
+>>>> +     status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size, max_addr);
+>>>> +     if (status == EFI_SUCCESS) {
+>>>> +             pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
+>>>> +     } else if (status == EFI_NOT_FOUND) {
+>>>> +             status = efi_load_initrd(image, &initrd_addr, &initrd_size,
+>>>> +                                      ULONG_MAX, max_addr);
+>>>> +             if (status == EFI_SUCCESS)
+>>>> +                     pr_efi("Loaded initrd from command line option\n");
+>>>> +     }
+>>>>       if (status != EFI_SUCCESS)
+>>>> -             pr_efi_err("Failed initrd from command line!\n");
+>>>> +             pr_efi_err("Failed to load initrd!\n");
+>>>>
+>>>>       efi_random_get_seed();
+>>>>
+>>>> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>>> index 49008ac88b63..e37afe2c752e 100644
+>>>> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>>> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>>> @@ -299,3 +299,85 @@ void efi_char16_printk(efi_char16_t *str)
+>>>>       efi_call_proto(efi_table_attr(efi_system_table(), con_out),
+>>>>                      output_string, str);
+>>>>  }
+>>>> +
+>>>> +/*
+>>>> + * The LINUX_EFI_INITRD_MEDIA_GUID vendor media device path below provides a way
+>>>> + * for the firmware or bootloader to expose the initrd data directly to the stub
+>>>> + * via the trivial LoadFile2 protocol, which is defined in the UEFI spec, and is
+>>>> + * very easy to implement. It is a simple Linux initrd specific conduit between
+>>>> + * kernel and firmware, allowing us to put the EFI stub (being part of the
+>>>> + * kernel) in charge of where and when to load the initrd, while leaving it up
+>>>> + * to the firmware to decide whether it needs to expose its filesystem hierarchy
+>>>> + * via EFI protocols.
+>>>> + */
+>>>> +static const struct {
+>>>> +     struct efi_vendor_dev_path      vendor;
+>>>> +     struct efi_generic_dev_path     end;
+>>>> +} __packed initrd_dev_path = {
+>>>> +     {
+>>>> +             EFI_DEV_MEDIA,
+>>>> +             EFI_DEV_MEDIA_VENDOR,
+>>>> +             sizeof(struct efi_vendor_dev_path),
+>>>> +             LINUX_EFI_INITRD_MEDIA_GUID
+>>>> +     }, {
+>>>> +             EFI_DEV_END_PATH,
+>>>> +             EFI_DEV_END_ENTIRE,
+>>>> +             sizeof(struct efi_generic_dev_path)
+>>>> +     }
+>>>> +};
+>>>> +
+>>>> +/**
+>>>> + * efi_load_initrd_dev_path - load the initrd from the Linux initrd device path
+>>>> + * @load_addr:       pointer to store the address where the initrd was loaded
+>>>> + * @load_size:       pointer to store the size of the loaded initrd
+>>>> + * @max:     upper limit for the initrd memory allocation
+>>>> + * @return:  %EFI_SUCCESS if the initrd was loaded successfully, in which case
+>>>> + *           @load_addr and @load_size are assigned accordingly
+>>>> + *           %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+>>>> + *           device path
+>>>> + *           %EFI_LOAD_ERROR in all other cases
+>>>
+>>> [*]
+>>>
+>>>> + */
+>>>> +efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
+>>>> +                                   unsigned long *load_size,
+>>>> +                                   unsigned long max)
+>>>> +{
+>>>> +     efi_guid_t lf2_proto_guid = EFI_LOAD_FILE2_PROTOCOL_GUID;
+>>>> +     efi_device_path_protocol_t *dp;
+>>>> +     efi_load_file2_protocol_t *lf2;
+>>>> +     unsigned long initrd_addr;
+>>>> +     unsigned long initrd_size;
+>>>> +     efi_handle_t handle;
+>>>> +     efi_status_t status;
+>>>> +
+>>>> +     if (!load_addr || !load_size)
+>>>> +             return EFI_INVALID_PARAMETER;
+>>>
+>>> Doesn't return EFI_LOAD_ERROR.
+>>>
+>>>> +
+>>>> +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
+>>>> +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
+>>>> +     if (status != EFI_SUCCESS)
+>>>> +             return status;
+>>>
+>>> Seems safe (the only plausible error could be EFI_NOT_FOUND).
+>>>
+>>>> +
+>>>> +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
+>>>> +                          (void **)&lf2);
+>>>> +     if (status != EFI_SUCCESS)
+>>>> +             return status;
+>>>
+>>> Interesting case; this should never fail... but note, if it does, it
+>>> returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
+>>> from the handle).
+>>>
+>>>> +
+>>>> +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
+>>>> +     if (status != EFI_BUFFER_TOO_SMALL)
+>>>> +             return EFI_LOAD_ERROR;
+>>>> +
+>>>> +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
+>>>> +     if (status != EFI_SUCCESS)
+>>>> +             return status;
+>>>
+>>> Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
+>>> could return EFI_OUT_OF_RESOURCES.
+>>>
+>>
+>> Hmm, guess I was a bit sloppy with the return codes. The important
+>> thing is that EFI_NOT_FOUND is only returned in the one specifically
+>> defined case.
+>>
+> 
+> For the record [in case no respin+resend is needed for other reasons],
+> I intend to update the comment block as below, and keep the code as
+> is:
+> 
+> 
+>   * @load_addr: pointer to store the address where the initrd was loaded
+>   * @load_size: pointer to store the size of the loaded initrd
+>   * @max:       upper limit for the initrd memory allocation
+> - * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in
+> which case
+> - *             @load_addr and @load_size are assigned accordingly
+> - *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+> - *             device path
+> + * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in which
+> + *             case @load_addr and @load_size are assigned accordingly
+> + *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+> + *             device path
+> + *             %EFI_INVALID_PARAMETER if load_addr == NULL or load_size == NULL
+> + *             %EFI_OUT_OF_RESOURCES if memory allocation failed
+>   *             %EFI_LOAD_ERROR in all other cases
+> 
 
-This commit implements DAMON's basic access check and region based
-sampling mechanisms.  This change would seems make no sense, mainly
-because it is only a part of the DAMON's logics.  Following two commits
-will make more sense.
+Right, I agree that updating the comments suffices for consistency; the
+code is not wrong, only the comments and the code don't match.
 
-This commit also exports `lookup_page_ext()` to GPL modules because
-DAMON uses the function but also supports the module build.
+So with that
 
-Basic Access Check
-------------------
+Acked-by: Laszlo Ersek <lersek@redhat.com>
 
-DAMON basically reports what pages are how frequently accessed.  Note
-that the frequency is not an absolute number of accesses, but a relative
-frequency among the pages of the target workloads.
 
-Users can control the resolution of the reports by setting two time
-intervals, ``sampling interval`` and ``aggregation interval``.  In
-detail, DAMON checks access to each page per ``sampling interval``,
-aggregates the results (counts the number of the accesses to each page),
-and reports the aggregated results per ``aggregation interval``.  For
-the access check of each page, DAMON uses the Accessed bits of PTEs.
-
-This is thus similar to common periodic access checks based access
-tracking mechanisms, which overhead is increasing as the size of the
-target process grows.
-
-Region Based Sampling
----------------------
-
-To avoid the unbounded increase of the overhead, DAMON groups a number
-of adjacent pages that assumed to have same access frequencies into a
-region.  As long as the assumption (pages in a region have same access
-frequencies) is kept, only one page in the region is required to be
-checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-page in each region and clears its Accessed bit.  After one more
-``sampling interval``, DAMON reads the Accessed bit of the page and
-increases the access frequency of the region if the bit has set
-meanwhile.  Therefore, the monitoring overhead is controllable by
-setting the number of regions.
-
-Nonetheless, this scheme cannot preserve the quality of the output if
-the assumption is not kept.  Following commit will introduce how we can
-make the guarantee with best effort.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- mm/damon.c    | 509 ++++++++++++++++++++++++++++++++++++++++++++++++++
- mm/page_ext.c |   1 +
- 2 files changed, 510 insertions(+)
-
-diff --git a/mm/damon.c b/mm/damon.c
-index aafdca35b7b8..ca21a617b5ff 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -9,9 +9,14 @@
- 
- #define pr_fmt(fmt) "damon: " fmt
- 
-+#include <linux/delay.h>
-+#include <linux/kthread.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/page_idle.h>
- #include <linux/random.h>
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
- #include <linux/slab.h>
- 
- #define damon_get_task_struct(t) \
-@@ -51,7 +56,24 @@ struct damon_task {
- 	struct list_head list;
- };
- 
-+/*
-+ * For each 'sample_interval', DAMON checks whether each region is accessed or
-+ * not.  It aggregates and keeps the access information (number of accesses to
-+ * each region) for each 'aggr_interval' time.
-+ *
-+ * All time intervals are in micro-seconds.
-+ */
- struct damon_ctx {
-+	unsigned long sample_interval;
-+	unsigned long aggr_interval;
-+	unsigned long min_nr_regions;
-+
-+	struct timespec64 last_aggregation;
-+
-+	struct task_struct *kdamond;
-+	bool kdamond_stop;
-+	spinlock_t kdamond_lock;
-+
- 	struct rnd_state rndseed;
- 
- 	struct list_head tasks_list;	/* 'damon_task' objects */
-@@ -204,6 +226,493 @@ static unsigned int nr_damon_regions(struct damon_task *t)
- 	return ret;
- }
- 
-+/*
-+ * Get the mm_struct of the given task
-+ *
-+ * Callser should put the mm_struct after use, unless it is NULL.
-+ *
-+ * Returns the mm_struct of the task on success, NULL on failure
-+ */
-+static struct mm_struct *damon_get_mm(struct damon_task *t)
-+{
-+	struct task_struct *task;
-+	struct mm_struct *mm;
-+
-+	task = damon_get_task_struct(t);
-+	if (!task)
-+		return NULL;
-+
-+	mm = get_task_mm(task);
-+	put_task_struct(task);
-+	return mm;
-+}
-+
-+/*
-+ * Size-evenly split a region into 'nr_pieces' small regions
-+ *
-+ * Returns 0 on success, or negative error code otherwise.
-+ */
-+static int damon_split_region_evenly(struct damon_ctx *ctx,
-+		struct damon_region *r, unsigned int nr_pieces)
-+{
-+	unsigned long sz_orig, sz_piece, orig_end;
-+	struct damon_region *piece = NULL, *next;
-+	unsigned long start;
-+
-+	if (!r || !nr_pieces)
-+		return -EINVAL;
-+
-+	orig_end = r->vm_end;
-+	sz_orig = r->vm_end - r->vm_start;
-+	sz_piece = sz_orig / nr_pieces;
-+
-+	if (!sz_piece)
-+		return -EINVAL;
-+
-+	r->vm_end = r->vm_start + sz_piece;
-+	next = damon_next_region(r);
-+	for (start = r->vm_end; start + sz_piece <= orig_end;
-+			start += sz_piece) {
-+		piece = damon_new_region(ctx, start, start + sz_piece);
-+		damon_add_region(piece, r, next);
-+		r = piece;
-+	}
-+	if (piece)
-+		piece->vm_end = orig_end;
-+	return 0;
-+}
-+
-+struct region {
-+	unsigned long start;
-+	unsigned long end;
-+};
-+
-+static unsigned long sz_region(struct region *r)
-+{
-+	return r->end - r->start;
-+}
-+
-+static void swap_regions(struct region *r1, struct region *r2)
-+{
-+	struct region tmp;
-+
-+	tmp = *r1;
-+	*r1 = *r2;
-+	*r2 = tmp;
-+}
-+
-+/*
-+ * Find the three regions in an address space
-+ *
-+ * vma		the head vma of the target address space
-+ * regions	an array of three 'struct region's that results will be saved
-+ *
-+ * This function receives an address space and finds three regions in it which
-+ * separated by the two biggest unmapped regions in the space.  Please refer to
-+ * below comments of 'damon_init_regions_of()' function to know why this is
-+ * necessary.
-+ *
-+ * Returns 0 if success, or negative error code otherwise.
-+ */
-+static int damon_three_regions_in_vmas(struct vm_area_struct *vma,
-+		struct region regions[3])
-+{
-+	struct region gap = {0,}, first_gap = {0,}, second_gap = {0,};
-+	struct vm_area_struct *last_vma = NULL;
-+	unsigned long start = 0;
-+
-+	/* Find two biggest gaps so that first_gap > second_gap > others */
-+	for (; vma; vma = vma->vm_next) {
-+		if (!last_vma) {
-+			start = vma->vm_start;
-+			last_vma = vma;
-+			continue;
-+		}
-+		gap.start = last_vma->vm_end;
-+		gap.end = vma->vm_start;
-+		if (sz_region(&gap) > sz_region(&second_gap)) {
-+			swap_regions(&gap, &second_gap);
-+			if (sz_region(&second_gap) > sz_region(&first_gap))
-+				swap_regions(&second_gap, &first_gap);
-+		}
-+		last_vma = vma;
-+	}
-+
-+	if (!sz_region(&second_gap) || !sz_region(&first_gap))
-+		return -EINVAL;
-+
-+	/* Sort the two biggest gaps by address */
-+	if (first_gap.start > second_gap.start)
-+		swap_regions(&first_gap, &second_gap);
-+
-+	/* Store the result */
-+	regions[0].start = start;
-+	regions[0].end = first_gap.start;
-+	regions[1].start = first_gap.end;
-+	regions[1].end = second_gap.start;
-+	regions[2].start = second_gap.end;
-+	regions[2].end = last_vma->vm_end;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Get the three regions in the given task
-+ *
-+ * Returns 0 on success, negative error code otherwise.
-+ */
-+static int damon_three_regions_of(struct damon_task *t,
-+				struct region regions[3])
-+{
-+	struct mm_struct *mm;
-+	int ret;
-+
-+	mm = damon_get_mm(t);
-+	if (!mm)
-+		return -EINVAL;
-+
-+	down_read(&mm->mmap_sem);
-+	ret = damon_three_regions_in_vmas(mm->mmap, regions);
-+	up_read(&mm->mmap_sem);
-+
-+	mmput(mm);
-+	return ret;
-+}
-+
-+/*
-+ * Initialize the monitoring target regions for the given task
-+ *
-+ * t	the given target task
-+ *
-+ * Because only a number of small portions of the entire address space
-+ * is acutally mapped to the memory and accessed, monitoring the unmapped
-+ * regions is wasteful.  That said, because we can deal with small noises,
-+ * tracking every mapping is not strictly required but could even incur a high
-+ * overhead if the mapping frequently changes or the number of mappings is
-+ * high.  Nonetheless, this may seems very weird.  DAMON's dynamic regions
-+ * adjustment mechanism, which will be implemented with following commit will
-+ * make this more sense.
-+ *
-+ * For the reason, we convert the complex mappings to three distinct regions
-+ * that cover every mapped areas of the address space.  Also the two gaps
-+ * between the three regions are the two biggest unmapped areas in the given
-+ * address space.  In detail, this function first identifies the start and the
-+ * end of the mappings and the two biggest unmapped areas of the address space.
-+ * Then, it constructs the three regions as below:
-+ *
-+ *     [mappings[0]->start, big_two_unmapped_areas[0]->start)
-+ *     [big_two_unmapped_areas[0]->end, big_two_unmapped_areas[1]->start)
-+ *     [big_two_unmapped_areas[1]->end, mappings[nr_mappings - 1]->end)
-+ *
-+ * As usual memory map of processes is as below, the gap between the heap and
-+ * the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-+ * region and the stack will be two biggest unmapped regions.  Because these
-+ * gaps are exceptionally huge areas in usual address space, excluding these
-+ * two biggest unmapped regions will be sufficient to make a trade-off.
-+ *
-+ *   <heap>
-+ *   <BIG UNMAPPED REGION 1>
-+ *   <uppermost mmap()-ed region>
-+ *   (other mmap()-ed regions and small unmapped regions)
-+ *   <lowermost mmap()-ed region>
-+ *   <BIG UNMAPPED REGION 2>
-+ *   <stack>
-+ */
-+static void damon_init_regions_of(struct damon_ctx *c, struct damon_task *t)
-+{
-+	struct damon_region *r;
-+	struct region regions[3];
-+	int i;
-+
-+	if (damon_three_regions_of(t, regions)) {
-+		pr_err("Failed to get three regions of task %lu\n", t->pid);
-+		return;
-+	}
-+
-+	/* Set the initial three regions of the task */
-+	for (i = 0; i < 3; i++) {
-+		r = damon_new_region(c, regions[i].start, regions[i].end);
-+		damon_add_region_tail(r, t);
-+	}
-+
-+	/* Split the middle region into 'min_nr_regions - 2' regions */
-+	r = damon_nth_region_of(t, 1);
-+	if (damon_split_region_evenly(c, r, c->min_nr_regions - 2))
-+		pr_warn("Init middle region failed to be split\n");
-+}
-+
-+/* Initialize '->regions_list' of every task */
-+static void kdamond_init_regions(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(ctx, t)
-+		damon_init_regions_of(ctx, t);
-+}
-+
-+/*
-+ * Check whether the given region has accessed since the last check
-+ *
-+ * mm	'mm_struct' for the given virtual address space
-+ * r	the region to be checked
-+ */
-+static void kdamond_check_access(struct damon_ctx *ctx,
-+			struct mm_struct *mm, struct damon_region *r)
-+{
-+	pte_t *pte = NULL;
-+	pmd_t *pmd = NULL;
-+	spinlock_t *ptl;
-+
-+	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-+		goto mkold;
-+
-+	/* Read the page table access bit of the page */
-+	if (pte && pte_young(*pte))
-+		r->nr_accesses++;
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	else if (pmd && pmd_young(*pmd))
-+		r->nr_accesses++;
-+#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-+
-+	spin_unlock(ptl);
-+
-+mkold:
-+	/* mkold next target */
-+	r->sampling_addr = damon_rand(ctx, r->vm_start, r->vm_end);
-+
-+	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-+		return;
-+
-+	if (pte) {
-+		if (pte_young(*pte)) {
-+			clear_page_idle(pte_page(*pte));
-+			set_page_young(pte_page(*pte));
-+		}
-+		*pte = pte_mkold(*pte);
-+	}
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	else if (pmd) {
-+		if (pmd_young(*pmd)) {
-+			clear_page_idle(pmd_page(*pmd));
-+			set_page_young(pte_page(*pte));
-+		}
-+		*pmd = pmd_mkold(*pmd);
-+	}
-+#endif
-+
-+	spin_unlock(ptl);
-+}
-+
-+/*
-+ * Check whether a time interval is elapsed
-+ *
-+ * baseline	the time to check whether the interval has elapsed since
-+ * interval	the time interval (microseconds)
-+ *
-+ * See whether the given time interval has passed since the given baseline
-+ * time.  If so, it also updates the baseline to current time for next check.
-+ *
-+ * Returns true if the time interval has passed, or false otherwise.
-+ */
-+static bool damon_check_reset_time_interval(struct timespec64 *baseline,
-+		unsigned long interval)
-+{
-+	struct timespec64 now;
-+
-+	ktime_get_coarse_ts64(&now);
-+	if ((timespec64_to_ns(&now) - timespec64_to_ns(baseline)) <
-+			interval * 1000)
-+		return false;
-+	*baseline = now;
-+	return true;
-+}
-+
-+/*
-+ * Check whether it is time to flush the aggregated information
-+ */
-+static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
-+{
-+	return damon_check_reset_time_interval(&ctx->last_aggregation,
-+			ctx->aggr_interval);
-+}
-+
-+/*
-+ * Reset the aggregated monitoring results
-+ */
-+static void kdamond_flush_aggregated(struct damon_ctx *c)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(c, t) {
-+		damon_for_each_region(r, t)
-+			r->nr_accesses = 0;
-+	}
-+}
-+
-+/*
-+ * Check whether current monitoring should be stopped
-+ *
-+ * If users asked to stop, need stop.  Even though no user has asked to stop,
-+ * need stop if every target task has dead.
-+ *
-+ * Returns true if need to stop current monitoring.
-+ */
-+static bool kdamond_need_stop(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	struct task_struct *task;
-+	bool stop;
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	stop = ctx->kdamond_stop;
-+	spin_unlock(&ctx->kdamond_lock);
-+	if (stop)
-+		return true;
-+
-+	damon_for_each_task(ctx, t) {
-+		task = damon_get_task_struct(t);
-+		if (task) {
-+			put_task_struct(task);
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * The monitoring daemon that runs as a kernel thread
-+ */
-+static int kdamond_fn(void *data)
-+{
-+	struct damon_ctx *ctx = (struct damon_ctx *)data;
-+	struct damon_task *t;
-+	struct damon_region *r, *next;
-+	struct mm_struct *mm;
-+
-+	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
-+	kdamond_init_regions(ctx);
-+	while (!kdamond_need_stop(ctx)) {
-+		damon_for_each_task(ctx, t) {
-+			mm = damon_get_mm(t);
-+			if (!mm)
-+				continue;
-+			damon_for_each_region(r, t)
-+				kdamond_check_access(ctx, mm, r);
-+			mmput(mm);
-+		}
-+
-+		if (kdamond_aggregate_interval_passed(ctx))
-+			kdamond_flush_aggregated(ctx);
-+
-+		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
-+	}
-+	damon_for_each_task(ctx, t) {
-+		damon_for_each_region_safe(r, next, t)
-+			damon_destroy_region(r);
-+	}
-+	pr_info("kdamond (%d) finishes\n", ctx->kdamond->pid);
-+	spin_lock(&ctx->kdamond_lock);
-+	ctx->kdamond = NULL;
-+	spin_unlock(&ctx->kdamond_lock);
-+	return 0;
-+}
-+
-+/*
-+ * Controller functions
-+ */
-+
-+/*
-+ * Start or stop the kdamond
-+ *
-+ * Returns 0 if success, negative error code otherwise.
-+ */
-+static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
-+{
-+	spin_lock(&ctx->kdamond_lock);
-+	ctx->kdamond_stop = !on;
-+	if (!ctx->kdamond && on) {
-+		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-+		if (!ctx->kdamond)
-+			goto fail;
-+		goto success;
-+	}
-+	if (ctx->kdamond && !on) {
-+		spin_unlock(&ctx->kdamond_lock);
-+		while (true) {
-+			spin_lock(&ctx->kdamond_lock);
-+			if (!ctx->kdamond)
-+				goto success;
-+			spin_unlock(&ctx->kdamond_lock);
-+
-+			usleep_range(ctx->sample_interval,
-+					ctx->sample_interval * 2);
-+		}
-+	}
-+
-+	/* tried to turn on while turned on, or turn off while turned off */
-+
-+fail:
-+	spin_unlock(&ctx->kdamond_lock);
-+	return -EINVAL;
-+
-+success:
-+	spin_unlock(&ctx->kdamond_lock);
-+	return 0;
-+}
-+
-+/*
-+ * This function should not be called while the kdamond is running.
-+ */
-+static int damon_set_pids(struct damon_ctx *ctx,
-+			unsigned long *pids, ssize_t nr_pids)
-+{
-+	ssize_t i;
-+	struct damon_task *t, *next;
-+
-+	damon_for_each_task_safe(ctx, t, next)
-+		damon_destroy_task(t);
-+
-+	for (i = 0; i < nr_pids; i++) {
-+		t = damon_new_task(pids[i]);
-+		if (!t) {
-+			pr_err("Failed to alloc damon_task\n");
-+			return -ENOMEM;
-+		}
-+		damon_add_task_tail(ctx, t);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set attributes for the monitoring
-+ *
-+ * sample_int		time interval between samplings
-+ * aggr_int		time interval between aggregations
-+ * min_nr_reg		minimal number of regions
-+ *
-+ * This function should not be called while the kdamond is running.
-+ * Every time interval is in micro-seconds.
-+ *
-+ * Returns 0 on success, negative error code otherwise.
-+ */
-+static int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long min_nr_reg)
-+{
-+	if (min_nr_reg < 3) {
-+		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
-+				min_nr_reg);
-+		return -EINVAL;
-+	}
-+
-+	ctx->sample_interval = sample_int;
-+	ctx->aggr_interval = aggr_int;
-+	ctx->min_nr_regions = min_nr_reg;
-+	return 0;
-+}
-+
- static int __init damon_init(void)
- {
- 	pr_info("init\n");
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 4ade843ff588..71169b45bba9 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
- 					MAX_ORDER_NR_PAGES);
- 	return get_entry(base, index);
- }
-+EXPORT_SYMBOL_GPL(lookup_page_ext);
- 
- static int __init alloc_node_page_ext(int nid)
- {
--- 
-2.17.1
+Thanks!
+Laszlo
 
