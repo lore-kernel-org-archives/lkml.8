@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564DBC34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA0E2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D369D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fK82/v2Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OoWInDjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgBQT6c (ORCPT
+        id S1729618AbgBQT76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:58:32 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.133]:32848 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727241AbgBQT6c (ORCPT
+        Mon, 17 Feb 2020 14:59:58 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.253]:39708 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727241AbgBQT75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:58:32 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 04D99400CD152
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:58:31 -0600 (CST)
+        Mon, 17 Feb 2020 14:59:57 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 27ADE4F0D
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:59:56 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 3mXGjorpHvBMd3mXGjmVVE; Mon, 17 Feb 2020 13:58:31 -0600
+        id 3mYejtytyAGTX3mYej58kJ; Mon, 17 Feb 2020 13:59:56 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,28 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lL/wXEQHi6LCYu2lhykWxgmf1aHw3CsCn1BREA1tfRE=; b=fK82/v2ZvhIZLJatuoWe0R1cPJ
-        pAvAjXK22AfD8Z/Du17oJLpt7auD8pYHZpKBB5J93519ocXDYMERj8cONkZeFbahHPRH5RXYxIV6M
-        AxzvuVd+cg9PG2eh6aUyqpWWR5DGeUMpcKYOi6/yZAEAeDTNOh0CNhynuWryGDMeuClYY6/XY8KcR
-        dU7c4txB1QAsHDWa2eJ0kkK2gS9XZNT4IULQgdkyqeZPtKP4AuwVy1PI7jyvQ9+nXskmDHhkGjJUV
-        pov0c83Un8z+vtC6yzGbPB4+hhdAN5lLBUjjw+BIy0nquFVXVfDhGShblYTzr9s4zijvIESHIUHlg
-        nkjnRtMg==;
-Received: from [200.68.140.26] (port=19134 helo=embeddedor)
+        bh=929lp/Iuc8INilIkWPNb9nJfTKFc7WUnJSYdlEHz9UE=; b=OoWInDjcF2rK6pGWgtahaeeP6X
+        mIfVW8Ni0FNxeQoGVLnrJ/YaVglB3E9jJ7+FkMECg0NX95dyTukfSw3m3Fp5dc8gsb9wXBAO+YiKy
+        +sFsCxssJFAVrolk8hNCWC9w98hPFHN6gNd22ErxrrkYQzAdpQ5k/zE51x6VqQurABUzJkpjuKpNv
+        /mHXVsV4aZmKbZ7zpF7CApB/P2zJ3xlmyVa3NfMqoa/A4ACGwUGxFvRra3RFMOoePNe+0MW1i8IIU
+        7bZCWa09S4k5a7PpYvb0EsuEdWBmneDK1ZV6YJrm0/Eaai1T+wpatO/WVmpUB5UZdkFxSxAcpgxt5
+        bWP+zUng==;
+Received: from [200.68.140.26] (port=15030 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j3mXF-000Mi0-Fe; Mon, 17 Feb 2020 13:58:29 -0600
-Date:   Mon, 17 Feb 2020 14:01:11 -0600
+        id 1j3mYc-000NQC-J5; Mon, 17 Feb 2020 13:59:54 -0600
+Date:   Mon, 17 Feb 2020 14:02:36 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+To:     Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] bpf, sockmap: Replace zero-length array with
+Subject: [PATCH][next] net: switchdev: Replace zero-length array with
  flexible-array member
-Message-ID: <20200217200111.GA5283@embeddedor>
+Message-ID: <20200217200236.GA6194@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -70,13 +68,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.140.26
 X-Source-L: No
-X-Exim-ID: 1j3mXF-000Mi0-Fe
+X-Exim-ID: 1j3mYc-000NQC-J5
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:19134
+X-Source-Sender: (embeddedor) [200.68.140.26]:15030
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 29
+X-Email-Count: 35
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -114,22 +112,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- net/core/sock_map.c | 2 +-
+ net/switchdev/switchdev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 085cef5857bb..3a7a96ab088a 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -518,7 +518,7 @@ struct bpf_htab_elem {
- 	u32 hash;
- 	struct sock *sk;
- 	struct hlist_node node;
--	u8 key[0];
-+	u8 key[];
+diff --git a/net/switchdev/switchdev.c b/net/switchdev/switchdev.c
+index 3a1d428c1336..60630762a748 100644
+--- a/net/switchdev/switchdev.c
++++ b/net/switchdev/switchdev.c
+@@ -29,7 +29,7 @@ struct switchdev_deferred_item {
+ 	struct list_head list;
+ 	struct net_device *dev;
+ 	switchdev_deferred_func_t *func;
+-	unsigned long data[0];
++	unsigned long data[];
  };
  
- struct bpf_htab_bucket {
+ static struct switchdev_deferred_item *switchdev_deferred_dequeue(void)
 -- 
 2.25.0
 
