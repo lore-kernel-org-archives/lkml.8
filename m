@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE3CC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B866C3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A8320801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D724D20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581977066;
-	bh=bH3FBL9iAI688kTKzfmDBpqnQ+AmP2ss7KMOYVIasfY=;
+	s=default; t=1581977076;
+	bh=S8qvMJ1RFqBQi9UM6bjCTZi0syltkVUkHS0sa806KwY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=juR5F3mYicDHoTaTOqtMdyWSc+/jAbhprPK9zSAuiXaD4uzBkUJ/011g51FjVT6aW
-	 B2uff3jO3WARmaz55rAlLiGci75uY3Zi9nugmXRZaIAcZ8Ei7vSlsl6La69NEO04Ln
-	 XedBzTKQhueZJVjp6zCsm/HBU0Ih5o5zFKNbbvQ0=
+	b=cDby760Ge6K3Wrv2XSooXkC7eJxXplPQqvqiLeQAiAJdId5B0I9JmD4pTBB32xLLH
+	 VYqlrGrn8YrXXBrc9Sl/EbGHIv8dQhj+M51N5pltWUkSR9KQgoAVVK5W+jpNeH5IaF
+	 EfRqRiHDKoikEjCLjDmvqgyxcGEnRCdUIs2GKUVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBQWEZ (ORCPT
+        id S1726696AbgBQWEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:04:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:42244 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 17:04:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:42262 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgBQWEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:04:25 -0500
+        id S1726010AbgBQWEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:04:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94C7B106F;
-        Mon, 17 Feb 2020 14:04:24 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 388F930E;
+        Mon, 17 Feb 2020 14:04:34 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1810F3F703;
-        Mon, 17 Feb 2020 14:04:23 -0800 (PST)
-Date:   Mon, 17 Feb 2020 22:04:22 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1DA23F703;
+        Mon, 17 Feb 2020 14:04:33 -0800 (PST)
+Date:   Mon, 17 Feb 2020 22:04:32 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: Applied "regulator: mp5416: Fix output discharge enable bit for LDOs" to the regulator tree
-In-Reply-To:  <20200212150223.20042-1-axel.lin@ingics.com>
-Message-Id:  <applied-20200212150223.20042-1-axel.lin@ingics.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Tudor.Ambarus@microchip.com
+Subject: Applied "spi: spi-mem: Fix typo, s/fallback/falls back" to the spi tree
+In-Reply-To:  <20200216214012.1106658-1-tudor.ambarus@microchip.com>
+Message-Id:  <applied-20200216214012.1106658-1-tudor.ambarus@microchip.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -50,11 +50,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: mp5416: Fix output discharge enable bit for LDOs
+   spi: spi-mem: Fix typo, s/fallback/falls back
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -75,61 +75,34 @@ to this mail.
 Thanks,
 Mark
 
-From 502cdd605edd95209661c8bf90927af6d05c011c Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 12 Feb 2020 23:02:23 +0800
-Subject: [PATCH] regulator: mp5416: Fix output discharge enable bit for LDOs
+From 32a9d0545c5da9717395264de9b8e004e4b90893 Mon Sep 17 00:00:00 2001
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Date: Sun, 16 Feb 2020 21:40:17 +0000
+Subject: [PATCH] spi: spi-mem: Fix typo, s/fallback/falls back
 
-The .active_discharge_on/.active_discharge_mask settings does not match
-the datasheet, fix it.
+"Fallback" in one word is a noun. "Fall back" is two separate words,
+a verb and an adverb. Use the latter.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20200212150223.20042-1-axel.lin@ingics.com
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Link: https://lore.kernel.org/r/20200216214012.1106658-1-tudor.ambarus@microchip.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/mp5416.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/spi/spi-mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mp5416.c b/drivers/regulator/mp5416.c
-index 7954ad17249b..67ce1b52a1a1 100644
---- a/drivers/regulator/mp5416.c
-+++ b/drivers/regulator/mp5416.c
-@@ -73,7 +73,7 @@
- 		.owner			= THIS_MODULE,			\
- 	}
- 
--#define MP5416LDO(_name, _id)						\
-+#define MP5416LDO(_name, _id, _dval)					\
- 	[MP5416_LDO ## _id] = {						\
- 		.id = MP5416_LDO ## _id,				\
- 		.name = _name,						\
-@@ -87,9 +87,9 @@
- 		.vsel_mask = MP5416_MASK_VSET,				\
- 		.enable_reg = MP5416_REG_LDO ##_id,			\
- 		.enable_mask = MP5416_REGULATOR_EN,			\
--		.active_discharge_on	= BIT(_id),			\
-+		.active_discharge_on	= _dval,			\
- 		.active_discharge_reg	= MP5416_REG_CTL2,		\
--		.active_discharge_mask	= BIT(_id),			\
-+		.active_discharge_mask	= _dval,			\
- 		.owner			= THIS_MODULE,			\
- 	}
- 
-@@ -155,10 +155,10 @@ static struct regulator_desc mp5416_regulators_desc[MP5416_MAX_REGULATORS] = {
- 	MP5416BUCK("buck2", 2, mp5416_I_limits2, MP5416_REG_CTL1, BIT(1), 2),
- 	MP5416BUCK("buck3", 3, mp5416_I_limits1, MP5416_REG_CTL1, BIT(2), 1),
- 	MP5416BUCK("buck4", 4, mp5416_I_limits2, MP5416_REG_CTL2, BIT(5), 2),
--	MP5416LDO("ldo1", 1),
--	MP5416LDO("ldo2", 2),
--	MP5416LDO("ldo3", 3),
--	MP5416LDO("ldo4", 4),
-+	MP5416LDO("ldo1", 1, BIT(4)),
-+	MP5416LDO("ldo2", 2, BIT(3)),
-+	MP5416LDO("ldo3", 3, BIT(2)),
-+	MP5416LDO("ldo4", 4, BIT(1)),
- };
- 
- /*
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index e5a46f0eb93b..3c46747bacb1 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -487,7 +487,7 @@ static ssize_t spi_mem_no_dirmap_write(struct spi_mem_dirmap_desc *desc,
+  * This function is creating a direct mapping descriptor which can then be used
+  * to access the memory using spi_mem_dirmap_read() or spi_mem_dirmap_write().
+  * If the SPI controller driver does not support direct mapping, this function
+- * fallback to an implementation using spi_mem_exec_op(), so that the caller
++ * falls back to an implementation using spi_mem_exec_op(), so that the caller
+  * doesn't have to bother implementing a fallback on his own.
+  *
+  * Return: a valid pointer in case of success, and ERR_PTR() otherwise.
 -- 
 2.20.1
 
