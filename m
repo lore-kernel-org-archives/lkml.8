@@ -6,95 +6,80 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E4C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E819C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BEA206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58507206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgBQHlk (ORCPT
+        id S1726667AbgBQHlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:41:40 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52811 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgBQHlk (ORCPT
+        Mon, 17 Feb 2020 02:41:44 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46672 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgBQHln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:41:40 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost.discworld.emantor.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <r.czerwinski@pengutronix.de>)
-        id 1j3b2B-0007Cj-4F; Mon, 17 Feb 2020 08:41:39 +0100
-Message-ID: <d7298ea03ab71c414aabc7cac13a7a7511e00ceb.camel@pengutronix.de>
-Subject: Re: [PATCH] ARM: imx: build v7_cpu_resume() unconditionally
-From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
-To:     s.hauer@pengutronix.de, shawnguo@kernel.org
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        Lucas Stach <l.stach@pengutronix.de>
-Date:   Mon, 17 Feb 2020 08:41:37 +0100
-In-Reply-To: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
-References: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
-Organization: Pengutronix e.K.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        Mon, 17 Feb 2020 02:41:43 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p14so11383636edy.13;
+        Sun, 16 Feb 2020 23:41:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=76WiewyfAQysMsVYcXQkeWLkjiTOOZNh8t0AnmKu14M=;
+        b=lqg1TAIE3mMMWfgMrHXFUlYHiwEs6KzOI5RPvLytgfv+dIDrwuR/MLUY0/uTy6Z2oA
+         p9OkFEYvhmxQ7i1fx3+RM5/47BnPwneyy9u8XwZ3H3KEGgJZThS9Pe0bdGyM3KtlCslf
+         0d8ZhCULpIliDW9/Xo2lUux3xnHE9tEDSk1RWq6RBJezs+K3regj6Y/FetmDWMKS0jc9
+         6UAHQmahBslp1YOyLvZ27kXTrcF/7Wv+AHG9O+px7ISDISVqikLGHxwoAHHIURsekDuj
+         WPa2vh9OCC2Cl8988391EVOagXXJTBYVSyAZbWMmTUbm5XxhTas6NuSZliOD/zrbSsLF
+         Pfhw==
+X-Gm-Message-State: APjAAAXGS7Etms5CLxYizd0uy6VpSRFJ3F7ojxxg7lRGAc0r+J0eWp1v
+        cjI8VTu0HD2p4MdwAgVcekZbQ78R8tQ=
+X-Google-Smtp-Source: APXvYqxNUwWtuzyu3XLYnlq0qag2tmGzszgI1Ec/xqs4MRbkWjAwqvblKHzNX73QxFhI0fj0dlOFgw==
+X-Received: by 2002:a05:6402:22c1:: with SMTP id dm1mr12303346edb.21.1581925301367;
+        Sun, 16 Feb 2020 23:41:41 -0800 (PST)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id r24sm501431edv.69.2020.02.16.23.41.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Feb 2020 23:41:40 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id w15so18358543wru.4;
+        Sun, 16 Feb 2020 23:41:40 -0800 (PST)
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr20324028wrs.365.1581925300705;
+ Sun, 16 Feb 2020 23:41:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: r.czerwinski@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-5-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-5-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 17 Feb 2020 15:41:29 +0800
+X-Gmail-Original-Message-ID: <CAGb2v6543yLuBUi_37DbFdfkOo_OBK8v-rB2hViex_BCzAurPQ@mail.gmail.com>
+Message-ID: <CAGb2v6543yLuBUi_37DbFdfkOo_OBK8v-rB2hViex_BCzAurPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/34] ASoC: sun8i-codec: Remove unused dev from codec struct
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+On Mon, Feb 17, 2020 at 2:42 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> This field is not used anywhere in the driver, so remove it.
+>
+> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-On Thu, 2020-01-16 at 15:18 +0100, Rouven Czerwinski wrote:
-> From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> 
-> This function is not only needed by the platform suspend code, but is
-> also
-> reused as the CPU resume function when the ARM cores can be powered
-> down
-> completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
-> 
-> Providing the static inline stub whenever CONFIG_SUSPEND is disabled
-> means
-> that those platforms will hang on resume from cpuidle if suspend is
-> disabled.
-> 
-> So there are two problems:
-> 
->   - The static inline stub masks the linker error
->   - The function is not available where needed
-> 
-> Fix both by just building the function unconditionally, when
-> CONFIG_SOC_IMX6 is enabled. The actual code is three instructions
-> long,
-> so it's arguably ok to just leave it in for all i.MX6 kernel
-> configurations.
-> 
-> Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for
-> i.mx6sx")
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-> ---
->  arch/arm/mach-imx/Makefile       |  2 ++
->  arch/arm/mach-imx/common.h       |  4 ++--
->  arch/arm/mach-imx/resume-imx6.S  | 24 ++++++++++++++++++++++++
->  arch/arm/mach-imx/suspend-imx6.S | 14 --------------
->  4 files changed, 28 insertions(+), 16 deletions(-)
->  create mode 100644 arch/arm/mach-imx/resume-imx6.S
-
-Gentle ping.
-
-Can be found on patchwork: https://patchwork.kernel.org/patch/11337147/
-
-Thanks,
-Rouven Czerwinski
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
