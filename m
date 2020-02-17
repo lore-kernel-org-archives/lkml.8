@@ -2,106 +2,123 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E40EC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC148C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67964215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UUzhm7q1"
+	by mail.kernel.org (Postfix) with ESMTP id 9138C21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581957377;
+	bh=NCQqIN5Kmoitt0UNkCbypXgsb9gcydB2SYQaWeUgi8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IDJ0lQ9kiMQz26WGQFRGw5Z4m54ubtL+nNhrNK4a9qnq171a4db476LA22Qk1oCpr
+	 R3U/oh+6uEyr+8OLjyGkWyN0rQuou4Xe2kjR3A7optMi142sekXPVsT+4p5Z6SjYeF
+	 9S+rVxTLUJk5QYemkzBbuuPg6nFQ9MlEKrJfTZjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgBQQfp (ORCPT
+        id S1729084AbgBQQgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:35:45 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44265 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgBQQfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:35:45 -0500
-Received: by mail-wr1-f66.google.com with SMTP id m16so20479999wrx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=52jPAcnAoB9nyjNBUO8yybzpzXsdhabpDRivx/vqyIc=;
-        b=UUzhm7q1EVvdF1Pd6XLhsq/6MA/y1xrp8bBCv3aUs70L/SB+mVD+PPnxZxSYvQ90JB
-         habZdDrMlFUGlPZEspdHoOl1FN3HNbEa9eaXIk3OTxLHS7zBWOezzdlrQMPnpVfG53GP
-         6lpVCKlpBLuULKoT4lipuGr5cJ13bXi/W7sKxGmo0OlElT6DlPV0i1ogCy3ogJfj9n+Y
-         q+lNWpLjWG9TFE+IQGWUlARMjMjmXJMalkhlb9l1VtOIqPjkd08t15nc/Da5fehNM1as
-         ugGJrsLTzwklZlJDxJkoyDp5+PxlQNRq8CGt1JXZQZIjvepFR9S93/sJ8e8pH14kqKAX
-         vgdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=52jPAcnAoB9nyjNBUO8yybzpzXsdhabpDRivx/vqyIc=;
-        b=Z3fZyt38wp8t6kzxgU2VX+N9hkGsLKqC8JNM0cYkNnkEHTtNglE/06WOAAt8owTCIN
-         SFmNSFgA6lJ4vtWcY3/10PE/au+HqY+8L3bbjTBmfsi/8NeMmVSrt9GYFzBGfYh/xKZ+
-         rDC7P1PHusGh6HrmTXlGbB2zO0t0sBJtyisTMBYrxiQffEFCXc5IvAcMIT5eYE6tnxK5
-         9qKlFvKVkOnhL0K7TwNpQZheb6yfjDlovi6HPXne6fkGJHI/29BVx/YkMo3hHlgn8xRQ
-         fX+GxPf43HiGx6yHmSmvI6OUsB/eVmPG3jc68caR1lL177tsT1DSyyrr2DLGfRp+GaYf
-         QZoA==
-X-Gm-Message-State: APjAAAUdTDSqYq5aT8AyW5XgcXPgFrmdfRYab6JTWRM3Ejbsp6i8FGx4
-        cG7tnLTMoIPhhsVne3Z/q5QkNg==
-X-Google-Smtp-Source: APXvYqwANjyM01+uFceFTRuN/F5AwPa51jyHgN/NDw+AGq5VKaoIAKf9kFJD3a2KrUDWQZ8Lx3dckA==
-X-Received: by 2002:a5d:4d0a:: with SMTP id z10mr22888113wrt.253.1581957341244;
-        Mon, 17 Feb 2020 08:35:41 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id r6sm1633466wrp.95.2020.02.17.08.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 08:35:40 -0800 (PST)
-Date:   Mon, 17 Feb 2020 16:35:40 +0000
-From:   Matthias Maennich <maennich@google.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Quentin Perret <qperret@google.com>, masahiroy@kernel.org,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
-Subject: Re: [PATCH v4 1/3] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYMS
-Message-ID: <20200217163540.GD48466@google.com>
-References: <20200212202140.138092-1-qperret@google.com>
- <20200212202140.138092-2-qperret@google.com>
- <20200217152201.GA48466@google.com>
- <20200217153023.GA71210@google.com>
- <nycvar.YSQ.7.76.2002171059230.1559@knanqh.ubzr>
+        Mon, 17 Feb 2020 11:36:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729080AbgBQQgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:36:16 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B65502072C;
+        Mon, 17 Feb 2020 16:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581957375;
+        bh=NCQqIN5Kmoitt0UNkCbypXgsb9gcydB2SYQaWeUgi8A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W1sUl7c1cQL7SlIRcLudZhge4mF+BDZc6o7m5VLqDNq0T0hxuocdzMotgj0eMPRes
+         ZuCGMChm96eImIzUmk7ef9dvIaMDu9A2ZVhkEwEzmg1FSYy0fiDVruRT2uuKwHAZDt
+         1Q5XR0ArLVmiXxm6SMbc0EIL/ebp9xkb1e869b5w=
+Date:   Mon, 17 Feb 2020 17:36:11 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: module: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200217163610.GA16560@linux-8ccs>
+References: <20200213151409.GA30541@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.2002171059230.1559@knanqh.ubzr>
+In-Reply-To: <20200213151409.GA30541@embeddedor>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 11:00:39AM -0500, Nicolas Pitre wrote:
->On Mon, 17 Feb 2020, Quentin Perret wrote:
++++ Gustavo A. R. Silva [13/02/20 09:14 -0600]:
+>The current codebase makes use of the zero-length array language
+>extension to the C90 standard, but the preferred mechanism to declare
+>variable-length types such as these ones is a flexible array member[1][2],
+>introduced in C99:
 >
->> On Monday 17 Feb 2020 at 15:22:01 (+0000), Matthias Maennich wrote:
->> > In case the whitelist file can't be found, the error message is
->> >
->> >  cat: path/to/file: file not found
->> >
->> > I wonder whether we can make this error message a bit more specific by
->> > telling the user that the KSYMS_WHITELIST is missing.
->>
->> +1, that'd be really useful. I'll check the file existence in v5 (in a
->> POSIX-compliant way, I promise).
+>struct foo {
+>        int stuff;
+>        struct boo array[];
+>};
 >
->In fact, if you explicitly provide a file that is not there, then this
->is arguably a good reason to even fail the build.
+>By making use of the mechanism above, we will get a compiler warning
+>in case the flexible array does not occur last in the structure, which
+>will help us prevent some kind of undefined behavior bugs from being
+>inadvertently introduced[3] to the codebase from now on.
+>
+>Also, notice that, dynamic memory allocations won't be affected by
+>this change:
+>
+>"Flexible array members have incomplete type, and so the sizeof operator
+>may not be applied. As a quirk of the original implementation of
+>zero-length arrays, sizeof evaluates to zero."[1]
+>
+>This issue was found with the help of Coccinelle.
+>
+>[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>[2] https://github.com/KSPP/linux/issues/21
+>[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+>Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-I agree, I would expect the build to fail in that case.
+Applied, thanks Gustavo!
 
-Cheers,
-Matthias
+Jessica
 
+>---
+> kernel/module.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 >
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 33569a01d6e1..b88ec9cd2a7f 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -1515,7 +1515,7 @@ struct module_sect_attr {
+> struct module_sect_attrs {
+> 	struct attribute_group grp;
+> 	unsigned int nsections;
+>-	struct module_sect_attr attrs[0];
+>+	struct module_sect_attr attrs[];
+> };
 >
->Nicolas
+> static ssize_t module_sect_show(struct module_attribute *mattr,
+>@@ -1608,7 +1608,7 @@ static void remove_sect_attrs(struct module *mod)
+> struct module_notes_attrs {
+> 	struct kobject *dir;
+> 	unsigned int notes;
+>-	struct bin_attribute attrs[0];
+>+	struct bin_attribute attrs[];
+> };
+>
+> static ssize_t module_notes_read(struct file *filp, struct kobject *kobj,
+>-- 
+>2.25.0
+>
