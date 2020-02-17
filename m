@@ -4,197 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D97DC34028
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528FC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C39C20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6491E20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDHPDp6Q"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="XTbyy9M0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgBQTnz (ORCPT
+        id S1728810AbgBQToK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:43:55 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38373 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbgBQTnz (ORCPT
+        Mon, 17 Feb 2020 14:44:10 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40308 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728519AbgBQToJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:43:55 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a9so510703wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:43:53 -0800 (PST)
+        Mon, 17 Feb 2020 14:44:09 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t3so21168967wru.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:44:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=rasmusvillemoes.dk; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MQN/uQOAgTxfQZT9bKJbi8MiiNV6j8hTfUj5PJ1weJ0=;
-        b=TDHPDp6Qy9GVhleprEuXg8YbmQwbvavXGTPGo3wKAVYBEXvnHZlMGgZ/T1sbZpoEar
-         aaMI6W7O8hul/Ds/2GfpnqjfowKSKIOPsaFVC2XIt8VvehaC63UoOzkzUwKtphMEEbJD
-         CC56WZoMfv5rE691nqul8IHEhPBykJhShUC93ndMTFz2rAg4OCx2ggCx0mNUH8lOGVrA
-         yu9CtX3BnX/WOYOX3H/6s6ddP7n/kuSZWSUo+qNxByHsUq3gaO965dzKFXIMxPg5Y8oN
-         +JWIrVJyNjr6Oip6ZqoEc7A5JwyIKHqqH1YrQhSsMoheed88HX99B0FEY6643b1BaoRu
-         TCig==
+        bh=hAGXzttVTU3vTW9zSwiZjIbEGfhltW6+ZpeX5a9RjkI=;
+        b=XTbyy9M07afpglRT+iO35JnldTEcjCx+vuZqDIGZLoJUF5D8I6my6oLFj4WIviUcnJ
+         bYRT5UvCaV5yo75SihEbI+WE1l2Sms5tQ4sIfilEjwnfngXf8dG17m8MduU0fKBwiJNt
+         TPa7Qyx53xL/Nrje5HmA6kNtu+bMGA3b5vtWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=MQN/uQOAgTxfQZT9bKJbi8MiiNV6j8hTfUj5PJ1weJ0=;
-        b=rmIQjN5jo0agyjdJLzkd02oexJ68Njosbbnb2kzODp3iqSHbtK/h8NFwce+LOXwakF
-         5TTAeGTalJnVIk/Izp/JqH33O7SJ3YuoQKEqN8yKMoZ4O0w8xE/roso2hJdRz0MBaGkG
-         iaRajg1+LiER5CWrQf82SdIpfLwqBsCAde47F19Hn66FmyE/BdAG9FTEquKcyWjIH55v
-         KzDAn8yzGsKHPZmSu048b76BrG1PUDY2NdSB1WO1/ni7y5DZmNHclb6n53jr+tLwtzjS
-         PQG3eBCUMIEjMhFYVYlNgpVCVjeMIwG2Dq9NoL7nQOgX9o5sgX7zfFtIhhBkU2ItgFhk
-         suFg==
-X-Gm-Message-State: APjAAAU4sSmHMGdc6W8wn7KorjfkZK2deGx0j4ri01ImZd/w7mF/0IxF
-        UskhVI7xeCS2Fr4L2VMykezY+g==
-X-Google-Smtp-Source: APXvYqzZesqSrj60noF/hfZAIPNAZOIwy+5Sz4etxosPd38aWA0SMBevC2CaLdyOdxmJpfEw52HuBw==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr518714wma.159.1581968633205;
-        Mon, 17 Feb 2020 11:43:53 -0800 (PST)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id v22sm561053wml.11.2020.02.17.11.43.51
+        bh=hAGXzttVTU3vTW9zSwiZjIbEGfhltW6+ZpeX5a9RjkI=;
+        b=IRZYReQXe+J/CZt62a0ErsB78zGdvvBUW//me2V9zzxTyYpg4RPGIkYHpfq1eoZf98
+         6lqmx1xU9xZZw00PV8CTyokZHR+vBATRB7dom0f1ZwqLrqhkFT1fvHPSrwmkjlzarfn7
+         cE2SeriQDa1pGVe61IqcqJNY1B5G0+di1v5QhFLtautGoITVjl9qts8oYTUomdnIiC9q
+         p9VxUuDrLT/qBIwaHURY7O6+WJ2cbMmLEup2aMzKf2R6m4DScBnJTO7I9OCNJg9PQRoX
+         Ord4flQUkDYc5wZ3SGVTRKyw/jhmWxlShv1zJ51oaHb1EFZlpd5n1mI4dz9FKFR/0KQD
+         qO0g==
+X-Gm-Message-State: APjAAAUqQFAIbw8wH8cuwgtqJfJb3ODXyLaa8PTLbwc7lW/Ca/QnTBp6
+        xOS8goL9s/tQ1ZLpf8lyEnCRgL4FH6v9189w
+X-Google-Smtp-Source: APXvYqwsy2IOKCJiD9wh/kEnYRcXUngZn1zVk1BtlNaw1ZmsgD6sHqsI8nu2NXlqdyRBAqM2FrJW2Q==
+X-Received: by 2002:adf:f802:: with SMTP id s2mr25170420wrp.201.1581968646062;
+        Mon, 17 Feb 2020 11:44:06 -0800 (PST)
+Received: from [192.168.1.149] (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id e17sm2278476wrn.62.2020.02.17.11.44.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 11:43:52 -0800 (PST)
-Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
-To:     "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        bryanh@codeaurora.org, psodagud@codeaurora.org,
-        rnayak@codeaurora.org, satyap@codeaurora.org,
-        pheragu@codeaurora.org
-References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
- <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
- <20200203193533.GL3948@builder>
- <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
- <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <8a854c02-7435-46c6-5bd1-05273e5249e4@linaro.org>
-Date:   Mon, 17 Feb 2020 19:44:00 +0000
+        Mon, 17 Feb 2020 11:44:05 -0800 (PST)
+Subject: Re: [PATCH] usb: host: fhci-hcd: annotate PIPE_CONTROL switch case
+ with fallthrough
+To:     Joe Perches <joe@perches.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Timur Tabi <timur@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Anton Vorontsov <avorontsov@ru.mvista.com>,
+        kbuild test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200213085401.27862-1-linux@rasmusvillemoes.dk>
+ <20200213125659.GB3325929@kroah.com>
+ <4fa8a8e9-934d-2962-1daa-fdeea6017ea1@embeddedor.com>
+ <e1ec529a1a01bc38513c05308757bc45b53597c3.camel@perches.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f0e804c2-f7a3-da91-9929-38ac7f017081@rasmusvillemoes.dk>
+Date:   Mon, 17 Feb 2020 20:44:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <e1ec529a1a01bc38513c05308757bc45b53597c3.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/02/2020 16:07, Dwivedi, Avaneesh Kumar (avani) wrote:
-> 
-> On 2/4/2020 8:40 AM, Bryan O'Donoghue wrote:
->> On 03/02/2020 19:35, Bjorn Andersson wrote:
->>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+On 17/02/2020 18.33, Joe Perches wrote:
+> On Mon, 2020-02-17 at 11:12 -0600, Gustavo A. R. Silva wrote:
 >>
->> Hi Avaneesh.
-> 
-> Hello Bryan, Thank you very much for your review comments.
-> 
-> Will be replying to your comments and will be posting new patchset soon 
-> as per review comments.
-> 
+>>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>>> Fixes: 5a35435ef4e6 (soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE)
+>>>> Fixes: a035d552a93b (Makefile: Globally enable fall-through warning)
 >>
->>> Please aim for keeping the sort order in this file (ignore QCOM_APR
->>> which obviously is in the wrong place)
->>>
->>>> +       tristate "QTI Embedded USB Debugger (EUD)"
->>>> +       depends on ARCH_QCOM
->>
->> If we persist with the model of EXTCON you should "select EXTCON" here.
+>> By the way, the "Fixes" tag above makes no sense. There is nothing wrong about
+>> that commit. It just enabled the fall-through warning globally. Why would you
+>> "fix" that?"
 
-> I have asked this query with Bjorn Also against his review comments, 
-> whether we need to persist with extcon or need to switch to usb role 
-> switch framework, as we are notifying not only to usb controller but 
-> also to pmic charger so in case we adopt usb role switch then how we 
-> will notify to pmic charger to enable charging battery ? Also as i 
-> mentioned there my dilema is it does not look very apt to model EUD hw 
-> IP as c type connector, so please let me know your views.
+Depends on whether you consider a change that introduces a warning in an
+otherwise warning-free build a regression or not. That commit claimed
 
-I think there's a desire to model USB ports as connector child nodes of 
-a USB controllers as opposed to the more generic extcon so, I think the 
-effort should probably be made to model it up as typec.
+    Now that all the fall-through warnings have been addressed in the
+    kernel, enable the fall-through warning globally.
 
-1. Model as a typec connector
-    You can use usb-role-switch based on the VBUS interrupt you get
-    drivers/extcon/extcon-axp288.c::axp288_usb_role_work()
-    as an exmple
+but as I explained below the fold, any CONFIG_PPC32+CONFIG_USB_FHCI_HCD
+.config grew a warning due to a035d552a93b. So at least in that sense
+there is something wrong about that commit - the above claim is simply
+false. Please note that I don't expect anybody to ever be able to
+actually cover everything before doing something like what a035d552a93b
+does, so I'm not complaining, just explaining.
 
-2. Model the registers/gpios in the PMIC interface as regulators
-    that your typec driver could then own.
+Then I introduced a change which made that code compile for a ppc64
+allmodconfig, which apparently 0day does cover, which is why I added
+that other tag.
 
-    You wouldn't have to notify outside of your typec driver then
-    you'd just be using the regulator API.
+> There could be some effort made to better specify when "Fixes:"
+> tags should be used.
 
-You can use regmap to divide up the registers between devices for that.
+Indeed. I explicitly chose not to cc stable because I don't think it's
+for -stable. But in case somebody (or Sasha's ML) decides it is, I went
+out of my way to include relevant commits and an explanation for the
+somewhat odd dual Fixes:. So no, I don't think Fixes implies or should
+imply Cc stable - and I think this is all consistent with
+submitting-patches.rst:
 
-Can that work for you ?
+  Patches that fix a severe bug in a released kernel should be directed
+toward the stable maintainers...
 
->>>> +static int enable_eud(struct eud_chip *priv)
->>>> +{
->>>> +    int ret;
->>>> +
->>>> +    /* write into CSR to enable EUD */
->>>> +    writel_relaxed(BIT(0), priv->eud_reg_base + EUD_REG_CSR_EUD_EN);
->>>> +    /* Enable vbus, chgr & safe mode warning interrupts */
->>>> +    writel_relaxed(EUD_INT_VBUS | EUD_INT_CHGR | EUD_INT_SAFE_MODE,
->>>> +            priv->eud_reg_base + EUD_REG_INT1_EN_MASK);
->>>> +
->>>> +    /* Ensure Register Writes Complete */
->>
->> So... You are writing a register in an on-chip PMIC. The PMIC is 
->> responsible for detecting USB ID and supplying VBUS as appropriate.
->>
->> You then get an interrupt to inform you of the state ?
-> 
-> I am writing to EUD control port so that when EUD is enable, EUD hw IP 
-> can intercept VBUS and d+/d- signal and can reroute to PMIC or USB as 
-> per host application command in debug mode.
+and
 
-Reading the dts that goes with this
+  A Fixes: tag indicates that the patch fixes an issue in a previous commit.
 
-+The EUD (Embedded USB Debugger) is a mini-USB hub implemented
-+on chip to support the USB-based debug and trace capabilities.
+Nothing says that Fixes is reserved for -stable material.
 
-Ah so, the EUD is a mux, that sits between the connector and the 
-controller, routing UTMI signals to an internal USB hub, which in-turn 
-has debug functions attached to the hub...
+> I believe "Fixes:" should be used only when changes have some
+> runtime impact. 
 
-Can the Arm core see the hub ? I assume not ?
+Perhaps. But it's hard to make the rules completely rigid - suppose
+commit A does fix a real bug and is backported, however, in some configs
+it introduces some warnings; that gets fixed by B which doesn't change
+generated code. Should B be backported, or should the -stable tree(s)
+live with those warnings?
 
-There are a few different modes - you should probably be clear on which 
-mode it is you are supporting.
+"Fixes:" should not be used for changes that
+> just silence compiler warnings using W=<123>.
 
-Normal mode: (Bypass)
-Port | EUD | Controller
+I tend to agree, but that's completely irrelevant in this case, as this
+is not a warning that only appears for W=<123>.
 
-Normal + debug hub mode: (Debug)
-Port | EUD | Controller + HUB -> debug functions
-
-Debug hub mode: (Control Peripheral)
-Port | EUD | HUB -> debug functions
-
-its not clear to me from the documentation or the code which mode it is 
-we are targeting to be supported here.
-
-I think you should support Debug mode only here, so that the Arm core 
-never has to deal with the situation where the USB connector "goes away".
-
-If we were to support Control Peripheral where the local DWC3 controller 
-has the signals routed away entirely, then I think we would need to look 
-into modelling that in device tree - and using an overlay to show the 
-DWC3 controller going away in Control Peripheral mode and coming back.
-
-Also final thought since the EUD can operate in different modes, it 
-really should be a string that gets passed in - with the string name 
-aligning to the documentation "bypass", "debug" and so on, so that the 
-mode we are switching to is obvious to anybody who has the spec and the 
-driver.
-
----
-bod
+Rasmus
