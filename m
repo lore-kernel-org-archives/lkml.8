@@ -2,159 +2,109 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDA9C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C3BC7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BE720718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85E820718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgBQJBO (ORCPT
+        id S1728669AbgBQJBb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:01:14 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:38503 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728563AbgBQJBN (ORCPT
+        Mon, 17 Feb 2020 04:01:31 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41611 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbgBQJBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:01:13 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Feb 2020 14:29:05 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Feb 2020 14:28:45 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id E92BA24EF; Mon, 17 Feb 2020 14:28:43 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v3] arm64: dts: sc7180: add nodes for idp display
-Date:   Mon, 17 Feb 2020 14:28:42 +0530
-Message-Id: <20200217085842.28333-1-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
+        Mon, 17 Feb 2020 04:01:31 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E71E8FF80E;
+        Mon, 17 Feb 2020 09:01:24 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 10:01:24 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     masonccyang@mxic.com.tw
+Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
+        bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, vigneshr@ti.com
+Subject: Re: [PATCH v2 1/4] mtd: rawnand: Add support manufacturer specific
+ lock/unlock operatoin
+Message-ID: <20200217100124.6ff71191@xps13>
+In-Reply-To: <OF505D0437.0130F15A-ON48258511.002C7F75-48258511.002D4341@mxic.com.tw>
+References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>
+        <1572256527-5074-2-git-send-email-masonccyang@mxic.com.tw>
+        <20200109203055.2370a358@collabora.com>
+        <OF505D0437.0130F15A-ON48258511.002C7F75-48258511.002D4341@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for IDP display. The display is Visionox RM69299.
+Hi Mason,
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
+masonccyang@mxic.com.tw wrote on Mon, 17 Feb 2020 16:14:23 +0800:
 
-Changes in v2:
-	- Adding dependency patchwork series
-	- Removing suspend configuration
-	- Adding blank before space curly brace
-Changes in v3:
-	- Updating status for mdp and mdss node to get the
-	display working
-	- Change in commit text
+> Hi Boris,
+> 
+> >   
+> > >  /* Set default functions */
+> > >  static void nand_set_defaults(struct nand_chip *chip)
+> > >  {
+> > > @@ -5782,8 +5810,8 @@ static int nand_scan_tail(struct nand_chip   
+> *chip)
+> > >     mtd->_read_oob = nand_read_oob;
+> > >     mtd->_write_oob = nand_write_oob;
+> > >     mtd->_sync = nand_sync;
+> > > -   mtd->_lock = NULL;
+> > > -   mtd->_unlock = NULL;
+> > > +   mtd->_lock = nand_lock;
+> > > +   mtd->_unlock = nand_unlock;
+> > >     mtd->_suspend = nand_suspend;
+> > >     mtd->_resume = nand_resume;
+> > >     mtd->_reboot = nand_shutdown;
+> > > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+> > > index 4ab9bcc..2430ecd 100644
+> > > --- a/include/linux/mtd/rawnand.h
+> > > +++ b/include/linux/mtd/rawnand.h
+> > > @@ -1136,6 +1136,9 @@ struct nand_chip {
+> > >        const struct nand_manufacturer *desc;
+> > >        void *priv;
+> > >     } manufacturer;
+> > > +
+> > > +   int (*_lock)(struct nand_chip *chip, loff_t ofs, uint64_t len);
+> > > +   int (*_unlock)(struct nand_chip *chip, loff_t ofs, uint64_t len);  
+> > 
+> > Please drop this _ prefix.  
+> 
+> Drop _ prefix of _lock will get compile error due to there is already 
+> defined "struct mutex lock" in struct nand_chip.
 
-This patch depends on following patchwork series:
+Right!
 
-https://patchwork.kernel.org/patch/11364687/
-https://patchwork.kernel.org/patch/11366303/
+> 
+> What about keep this _ prefix or patch it to blocklock/blockunlock,
+> i.e.,
+> int (*blocklock)(struct nand_chip *chip, loff_t ofs, uint64_t len);
+> int (*blockunlock)(struct nand_chip *chip, loff_t ofs, uint64_t len);
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 63 +++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+What about lock_area() unlock_area() ? Seems more accurate to me, tell
+me if I'm wrong.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50ad4fde..349db8fe78a5 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
-@@ -232,6 +233,57 @@ vreg_bob: bob {
- 	};
- };
- 
-+&dsi0 {
-+	status = "okay";
-+
-+	vdda-supply = <&vreg_l3c_1p2>;
-+
-+	panel@0 {
-+		compatible = "visionox,rm69299-1080p-display";
-+		reg = <0>;
-+
-+		vdda-supply = <&vreg_l8c_1p8>;
-+		vdd3p3-supply = <&vreg_l18a_2p8>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&disp_pins>;
-+
-+		reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&panel0_in>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi_phy {
-+	status = "okay";
-+};
-+
-+&mdp {
-+	status = "okay";
-+};
-+
-+&mdss {
-+	status = "okay";
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -289,6 +341,17 @@ &usb_1_qmpphy {
- 
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
-+&pm6150l_gpio {
-+	disp_pins: disp-pins {
-+		pins = "gpio3";
-+		function = "func1";
-+		qcom,drive-strength = <2>;
-+		power-source = <0>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
- &qspi_clk {
- 	pinconf {
- 		pins = "gpio63";
--- 
-2.25.0
+>  
+> 
+> thanks for your time & comments.
+> Mason
 
+Thanks,
+Miquèl
