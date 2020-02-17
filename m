@@ -2,128 +2,71 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB4C3402E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79697C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FAF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5382070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fB16ZjEj"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PJWCQCab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgBQWWn (ORCPT
+        id S1726070AbgBQW1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:22:43 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37583 "EHLO ozlabs.org"
+        Mon, 17 Feb 2020 17:27:42 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:37418 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgBQWWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:22:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725829AbgBQW1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:27:42 -0500
+Received: from zn.tnic (p200300EC2F060D003890503FBB74C433.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:d00:3890:503f:bb74:c433])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Lz4s3TWQz9sPJ;
-        Tue, 18 Feb 2020 09:22:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581978159;
-        bh=T/Ho1UZEyFt8rs4SdRhU3v+8yxewmcXVrq7So23AQHU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fB16ZjEjWQ1+Dxc9OAbPk1bDSsmg4otnhc3HTmHHRUZxQHUqv5wcWqNqrxOTW+r1J
-         oZlKigjMDFIO/I4jB/cGtIYxaqCPFdkr9TZeALZFb0sAljMlUU63CmHp+e1vbZIFwA
-         u+L8sHcmVeoBFKhmD5BKx7+YPh9dLhdnPOAuMZJNqvTVmYZz8yB44kQUBOEnjUNHFl
-         8OwTcN2z4rNA74p27snEmuoIiyUCDSBxm01OyfUdfYBKYvKUttrenaWdpsuNCjWh1+
-         27rmHRv6oHPkLT/lmu2Z8Eb++7cOZcqH0Rargn+kVEKD+RPyQHIxPiEAFtm5GJgnW5
-         ylz9hfujI2HIQ==
-Date:   Tue, 18 Feb 2020 09:22:29 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH] soc: amlogic: fix compile failure with
- MESON_SECURE_PM_DOMAINS & !MESON_SM
-Message-ID: <20200218092229.0448d266@canb.auug.org.au>
-In-Reply-To: <20200218080743.07e58c6e@canb.auug.org.au>
-References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
-        <20200218080743.07e58c6e@canb.auug.org.au>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3229E1EC0CBD;
+        Mon, 17 Feb 2020 23:27:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581978461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/FJJbCDOjUUmIUjMyPfoaIaLPNSqF3CmeICmYvc3W8g=;
+        b=PJWCQCabxkS21RV5mj+zPgHQgLexge4YBqr7R8AD+YLRwOAvyYvku5qXJ8loni+8xdPqIF
+        iEI0W3bu7pKZz3HQKdmOU86GIHPiFTA8dRp0eQ5J80okED4X25EGO0ay7C80fDNxfMMhEG
+        2y9wv30+YrPL2ZQkTtmCX/7oUppDgYM=
+Date:   Mon, 17 Feb 2020 23:27:36 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH] x86: Don't clare __force_order in kaslr_64.c
+Message-ID: <20200217222736.GG14426@zn.tnic>
+References: <20200124181811.4780-1-hjl.tools@gmail.com>
+ <E184715B-30CD-4951-BAF4-E95135AEE938@amacapital.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.qVlDOXsSXuL3sxUO2UwZ_+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <E184715B-30CD-4951-BAF4-E95135AEE938@amacapital.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 24, 2020 at 10:24:19AM -0800, Andy Lutomirski wrote:
+> Why does anything actually define that variable? Surely any actual
+> references are just an outright bug. Is it needed for LTO?
 
-Hi all,
+I think the answer to your question is at the top of
+arch/x86/include/asm/special_insns.h
 
-On Tue, 18 Feb 2020 08:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Tue, 18 Feb 2020 00:12:13 +0800 Jianxin Pan <jianxin.pan@amlogic.com> =
-wrote:
-> >
-> > When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
-> > .../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
-> > .../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
-> >=20
-> > Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
-> >=20
-> > Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domain=
-s controller")
-> >=20
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@ke=
-rnel.org>
-> > Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
-> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> > ---
-> >  drivers/soc/amlogic/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-) =20
->=20
-> I will apply that patch to linux-next today.
 
-This fixes the build for me.
+-- 
+Regards/Gruss,
+    Boris.
 
-Tested-by: Stephen Rothwell<sfr@canb.auug.org.au>
-
-Also, please keep the commit message tags together at the end of the
-commit message i.e. remove the blank line after the Fixes: tag above.
-(see "git interpret-trailers ")
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5LEiUACgkQAVBC80lX
-0GxiFQf/YRVKJcX4m5O/6kWTlxZ2/vzcKlyfDLSY2sadgEbNcCoGpqHg3C8MuVN5
-SHJd3URexLrLU3zLpCtgxCgDTjoQRNjqUIZVQYnWFBI0bOiWu+rc9Z+SCuJ62UVq
-Ct6I89voQEMg9Wdz37uordsgbGJIRq+VFiA2lOSLJhMxQIJ9/5Wf5AO0i2g/RDxz
-j/xX2bbl2nb3fFBBWQ59Hs1/GHaXCv73apLt0WTxxw8I5slbF0sRYqWDo0BABABX
-PIar9gHeIOrBLJWJJTqJV3E7/JepXwBpfZK7fuZKcroirNefQrkQdhRW26C7gKFN
-9uuM1INSTOTPFxa5jaYaw0r3vAnkYg==
-=IwNd
------END PGP SIGNATURE-----
-
---Sig_/.qVlDOXsSXuL3sxUO2UwZ_+--
+https://people.kernel.org/tglx/notes-about-netiquette
