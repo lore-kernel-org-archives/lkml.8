@@ -2,216 +2,215 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4917DC7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7D4C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B3E20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bn2Ivfz3"
+	by mail.kernel.org (Postfix) with ESMTP id AC34820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581929728;
+	bh=LiD0wpeLuAZLFDhqBJDQhakw+QOv6Ro2nF6g7+1ShYI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oEs3HLcgcEOrKtDJl8ifh5JAAPvENjZxM7FpCXgRyH4B1yszRcgyvhxPRcjc9b4Wr
+	 8ovn4MJ9gJuxdrUhSZ0GoQ2B6eNqP1icAAzFvuvdbXsxv+BwSKIiocQ/QgbbsMdNJ0
+	 M190nNKC2j3lN+wf3WtaFX+sHNOC0VubwTzQuUXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgBQIzU (ORCPT
+        id S1728601AbgBQIz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:55:20 -0500
-Received: from mail-eopbgr50041.outbound.protection.outlook.com ([40.107.5.41]:56614
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728217AbgBQIzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:55:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A7nwjWKlegqtO7ecCuTx/gA3bkLH9QK3o8jqJKysBUKVk1+GmOkT3KNeT030KNUGEfdzABjg6ylI/3llAcvhRR097y+uq0Yl59VwackWt/gVqFtsqiJmdfJJi3dcU0SVIJPXMM10lgrBjznvgM+On0GjA5vRRjKSwm9S9f4cx6EXoWzBGWFfgYfWn/9TCSw+o7YgY0bz50hWAoV9Q0qy2eIoIf24MA1do18w54S7x8JZPoGGFJJEm3YhCI3Wz/QEWJPcwwXW+zam4vi5haUTo5bWW9mwwMfmnuxAH00gG90sZnPYNyySyWGc6EpqR1DQQySa+XtF9EYbhcSUYSpOcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pQ7tGMSPobEIhwh6Usal09Dh2Tq0Ikkh7DfWkoYsfvw=;
- b=X9bhDEBid/tUnVdNNg5RolLrYT05gBdXcNXTxYmPsaBbO/L/ZCAJfDQ2uUFQcxxuS+PvdJEKLUHWneZPXdFcq/4guciSlpBn5ceNDzEBqHgxyCeYoH+CwsWIkZrBrYAAs1Fp0Agh01cv+akJ67rxZNh733sYiJXBC9iZFUMSqwMMCCrXERcfuCX2auUMZItB4zRlsuOr3+83bE1oXASPaVPljABJwvmrh76xRilpFhvt/HOP9iGI4CnuH0ncRwV3SvcUFzcXKyJFq2RreI1dWirWndc/vV6yGtV1zd7QYyZngUjrPhMXchbJUnr/XkCYW/NOBkdli3VOmWhGbNRo/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pQ7tGMSPobEIhwh6Usal09Dh2Tq0Ikkh7DfWkoYsfvw=;
- b=bn2Ivfz3EsURTSoulMCqp09oQyNf9puLi8gY5FhjjEIhFK+cMKk06YjoAD+usOtnYv+LW+GBLMzFBD6uRQ5dHyql3eQOPakt8Wmrjc18qmOBNdQ9IPfuEUYlkBc/v2XNoI6dmsbD0UEO5z1nmNCIKv0L7/LLqdVTMvoJl4x1zFU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.bansal@nxp.com; 
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com (10.168.65.10) by
- VI1PR0401MB2415.eurprd04.prod.outlook.com (10.169.134.140) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Mon, 17 Feb 2020 08:55:16 +0000
-Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae]) by VI1PR0401MB2496.eurprd04.prod.outlook.com
- ([fe80::196a:28a9:bb9:2fae%9]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
- 08:55:16 +0000
-From:   Pankaj Bansal <pankaj.bansal@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Varun Sethi <V.Sethi@nxp.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI/IORT: fix output id retrieval for platform devices
-Date:   Mon, 17 Feb 2020 19:45:04 +0530
-Message-Id: <20200217141504.4183-1-pankaj.bansal@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12)
- To VI1PR0401MB2496.eurprd04.prod.outlook.com (2603:10a6:800:56::10)
-MIME-Version: 1.0
-Received: from uefi-workstation.ap.freescale.net (92.120.1.69) by BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Mon, 17 Feb 2020 08:55:14 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [92.120.1.69]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0c2cf02e-7e34-46f6-a15e-08d7b3871bca
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2415:|VI1PR0401MB2415:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB24155332E265715CABEA91ADF1160@VI1PR0401MB2415.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0316567485
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(189003)(199004)(36756003)(1076003)(5660300002)(26005)(6666004)(16526019)(2906002)(6486002)(186003)(44832011)(81166006)(110136005)(8936002)(8676002)(956004)(2616005)(66476007)(66556008)(66946007)(86362001)(6506007)(81156014)(6512007)(52116002)(478600001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2415;H:VI1PR0401MB2496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AKjJaYuLdvavEbbk78aIBQTVxaTQwvY8qTIsR24V2C/fSXMafMyw1mEbUf2SUw9vuJmo4q1e7Ifl8dKvAB3rd1Wynvf/u6kQxWzbMmLvFda1nNTheBvbA2YEg8BO/CvNoDWUHl7ooVs8/AQTx5iRCBV8/p53vYigW99Cl+QDmZJh9zZ97oTwYkp4h3j/bor7IjLzFXUSX4oDxF2tkpR2sEkozEabhn4QO0pyM8DQefCBhG0tidI81ZcKURbg6yDaelyVB8USWusg7YItfSmCj6mFsVFrT8C6WPZe4Ogex7OSuu9MpjRLf9pXNqVUEZO3VTF7XZ45HQWO7Qh1kzIarpPPtG1WibowxwEtQn+wAFomcirv4ATT6lKQFj/DqYibPEbdmQojGp/Jny+DMsgoF4P1VQMHDgm7kyvdd1eVQFda1ZAwtMbFEeQHSta9shEp
-X-MS-Exchange-AntiSpam-MessageData: U+h/5Zq/9l9qaZLPw3KeXzRdXxQZItMcpFqAbnJohK/oO4FNwe6moPQ+5x9W4Hgutqa7uRiapz1R0jzooKZXH+XcJiBVANkChQ3ldBX53BtbRrGxu33DwEJP+xDL9/IfdBI45t/usaMdi4fdQ4k+1w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c2cf02e-7e34-46f6-a15e-08d7b3871bca
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 08:55:16.7104
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6QhP/dF7CTiF6hObrjebCzo8m75rS8FW+x6kPaXSXWM8JE+XIlTH9SYULayCKWqo/+SaawIvErdChuZdM0vHag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2415
+        Mon, 17 Feb 2020 03:55:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728217AbgBQIz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:55:26 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C331520718;
+        Mon, 17 Feb 2020 08:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581929725;
+        bh=LiD0wpeLuAZLFDhqBJDQhakw+QOv6Ro2nF6g7+1ShYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T7j5g6BqDf63jH2rOMD76ozsTApstwhm6WAn6KxHSeOYJd1va3x3KizirWGUirv4T
+         1V9pPbHndMu/++4cKBFG9hQXRiLTr6nfYWL7plWP3SmZLT8n05+EoTzIH33ry2rx8V
+         h1n1wdA2B9OiI9W004ewtnR6ggjG8CLQ3LH0wxiE=
+Date:   Mon, 17 Feb 2020 17:55:19 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     paulmck@kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-Id: <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
+In-Reply-To: <20200215145934.GD2935@paulmck-ThinkPad-P72>
+References: <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+        <20200213185612.GG2935@paulmck-ThinkPad-P72>
+        <20200213204444.GA94647@google.com>
+        <20200213205442.GK2935@paulmck-ThinkPad-P72>
+        <20200213211930.GG170680@google.com>
+        <20200213163800.5c51a5f1@gandalf.local.home>
+        <20200213215004.GM2935@paulmck-ThinkPad-P72>
+        <20200213170451.690c4e5c@gandalf.local.home>
+        <20200213223918.GN2935@paulmck-ThinkPad-P72>
+        <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
+        <20200215145934.GD2935@paulmck-ThinkPad-P72>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per IORT spec if Single mapping flag is not defined for
-a node, the output id ought to to be retrieved using input
-id from an ID mapping.
+On Sat, 15 Feb 2020 06:59:34 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Current code of output id retrieval for platform devices
-ignored this case. fixed the same.
+> On Fri, Feb 14, 2020 at 03:19:06PM +0900, Masami Hiramatsu wrote:
+> > On Thu, 13 Feb 2020 14:39:18 -0800
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > On Thu, Feb 13, 2020 at 05:04:51PM -0500, Steven Rostedt wrote:
+> > > > On Thu, 13 Feb 2020 13:50:04 -0800
+> > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > > > 
+> > > > > On Thu, Feb 13, 2020 at 04:38:25PM -0500, Steven Rostedt wrote:
+> > > > > > [ Added Masami ]
+> > > > > > 
+> > > > > > On Thu, 13 Feb 2020 16:19:30 -0500
+> > > > > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > > >   
+> > > > > > > On Thu, Feb 13, 2020 at 12:54:42PM -0800, Paul E. McKenney wrote:  
+> > > > > > > > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:    
+> > > > > > > > > On Thu, Feb 13, 2020 at 10:56:12AM -0800, Paul E. McKenney wrote:
+> > > > > > > > > [...]     
+> > > > > > > > > > > > It might well be that I could make these functions be NMI-safe, but
+> > > > > > > > > > > > rcu_prepare_for_idle() in particular would be a bit ugly at best.
+> > > > > > > > > > > > So, before looking into that, I have a question.  Given these proposed
+> > > > > > > > > > > > changes, will rcu_nmi_exit_common() and rcu_nmi_enter_common() be able
+> > > > > > > > > > > > to just use in_nmi()?    
+> > > > > > > > > > > 
+> > > > > > > > > > > That _should_ already be the case today. That is, if we end up in a
+> > > > > > > > > > > tracer and in_nmi() is unreliable we're already screwed anyway.    
+> > > > > > > > > > 
+> > > > > > > > > > So something like this, then?  This is untested, probably doesn't even
+> > > > > > > > > > build, and could use some careful review from both Peter and Steve,
+> > > > > > > > > > at least.  As in the below is the second version of the patch, the first
+> > > > > > > > > > having been missing a couple of important "!" characters.    
+> > > > > > > > > 
+> > > > > > > > > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > > > > > > > > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > > > > > > > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > > > > > > > > asymmetric.    
+> > > > > > > > 
+> > > > > > > > My compiler complained about the static and the __always_inline, so I
+> > > > > > > > fixed those.  But please help me out on adding the NOKPROBE_SYMBOL()
+> > > > > > > > to rcu_nmi_exit().  What bad thing happens if we leave this on only
+> > > > > > > > rcu_nmi_enter()?    
+> > > > > > > 
+> > > > > > > It seemed odd to me we were not allowing kprobe on the rcu_nmi_enter() but
+> > > > > > > allowing it on exit (from a code reading standpoint) so my reaction was to
+> > > > > > > add it to both, but we could probably keep that as a separate
+> > > > > > > patch/discussion since it is slightly unrelated to the patch.. Sorry to
+> > > > > > > confuse the topic.
+> > > > > > >  
+> > > > > > 
+> > > > > > rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
+> > > > > > c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+> > > > > > kprobe_int3_handler()")
+> > > > > > 
+> > > > > > The issue was that we must not allow anything in do_int3() call kprobe
+> > > > > > code before kprobe_int3_handler() is called. Because ist_enter() (in
+> > > > > > do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
+> > > > > > nothing to do with it being RCU nor NMI, but because it was simply
+> > > > > > called in do_int3().
+> > > > > > 
+> > > > > > Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
+> > > > > > to why rcu_nmi_enter() would probably be useful, like below:  
+> > > > > 
+> > > > > Thank you, Steve!  Could I please have your Signed-off-by for this?
+> > > > 
+> > > > Sure, but it was untested ;-)
+> > > 
+> > > No problem!  I will fire up rcutorture on it.  ;-)
+> > > 
+> > > But experience indicates that you cannot even make a joke around here.
+> > > There is probably already someone out there somewhere building a
+> > > comment-checker based on deep semantic analysis and machine learning.  :-/
+> > > 
+> > > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > > > 
+> > > > I'd like a Reviewed-by from Masami though.
+> > > 
+> > > Sounds good!  Masami, would you be willing to review?
+> > 
+> > Yes, the functions before calling kprobe_int3_handler() must not
+> > be kprobed. It can cause an infinite recursive int3 trapping.
+> > 
+> > Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Thank you both!
+> 
+> Like this?
+> 
+> 							Thanx, Paul
+> 
 
-Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
----
- drivers/acpi/arm64/iort.c | 36 +++++++++++++++++-------------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+This is good to me.
+BTW, if you consider the x86 specific code is in the generic file,
+we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
+(Sorry, I've hit this idea right now)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1a7ae9..00e562dadd2a 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -358,7 +358,9 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 	/* Single mapping does not care for input id */
- 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
- 		if (type == ACPI_IORT_NODE_NAMED_COMPONENT ||
--		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
-+		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
-+		    type == ACPI_IORT_NODE_SMMU_V3 ||
-+		    type == ACPI_IORT_NODE_PMCG) {
- 			*rid_out = map->output_base;
- 			return 0;
- 		}
-@@ -376,7 +378,8 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- }
- 
- static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
--					       u32 *id_out, int index)
-+					       u32 id_in, u32 *id_out,
-+					       int index)
- {
- 	struct acpi_iort_node *parent;
- 	struct acpi_iort_id_mapping *map;
-@@ -398,15 +401,8 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- 	parent = ACPI_ADD_PTR(struct acpi_iort_node, iort_table,
- 			       map->output_reference);
- 
--	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
--		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
--		    node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
--		    node->type == ACPI_IORT_NODE_SMMU_V3 ||
--		    node->type == ACPI_IORT_NODE_PMCG) {
--			*id_out = map->output_base;
--			return parent;
--		}
--	}
-+	if (!iort_id_map(map, node->type, id_in, id_out))
-+		return parent;
- 
- 	return NULL;
- }
-@@ -510,14 +506,14 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
- }
- 
- static struct acpi_iort_node *iort_node_map_platform_id(
--		struct acpi_iort_node *node, u32 *id_out, u8 type_mask,
--		int index)
-+		struct acpi_iort_node *node, u32 id_in, u32 *id_out,
-+		u8 type_mask, int index)
- {
- 	struct acpi_iort_node *parent;
- 	u32 id;
- 
- 	/* step 1: retrieve the initial dev id */
--	parent = iort_node_get_id(node, &id, index);
-+	parent = iort_node_get_id(node, id_in, &id, index);
- 	if (!parent)
- 		return NULL;
- 
-@@ -592,7 +588,8 @@ u32 iort_msi_map_rid(struct device *dev, u32 req_id)
- /**
-  * iort_pmsi_get_dev_id() - Get the device id for a device
-  * @dev: The device for which the mapping is to be done.
-- * @dev_id: The device ID found.
-+ * @dev_id: On function entry the input id for device.
-+ *          On successful function exit, the output device ID found.
-  *
-  * Returns: 0 for successful find a dev id, -ENODEV on error
-  */
-@@ -608,11 +605,11 @@ int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
- 	index = iort_get_id_mapping_index(node);
- 	/* if there is a valid index, go get the dev_id directly */
- 	if (index >= 0) {
--		if (iort_node_get_id(node, dev_id, index))
-+		if (iort_node_get_id(node, *dev_id, dev_id, index))
- 			return 0;
- 	} else {
- 		for (i = 0; i < node->mapping_count; i++) {
--			if (iort_node_map_platform_id(node, dev_id,
-+			if (iort_node_map_platform_id(node, *dev_id, dev_id,
- 						      IORT_MSI_TYPE, i))
- 				return 0;
- 		}
-@@ -761,7 +758,7 @@ static struct irq_domain *iort_get_platform_device_domain(struct device *dev)
- 
- 	/* then find its msi parent node */
- 	for (i = 0; i < node->mapping_count; i++) {
--		msi_parent = iort_node_map_platform_id(node, NULL,
-+		msi_parent = iort_node_map_platform_id(node, 0, NULL,
- 						       IORT_MSI_TYPE, i);
- 		if (msi_parent)
- 			break;
-@@ -1038,7 +1035,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 			return NULL;
- 
- 		do {
--			parent = iort_node_map_platform_id(node, &streamid,
-+			parent = iort_node_map_platform_id(node, streamid,
-+							   &streamid,
- 							   IORT_IOMMU_TYPE,
- 							   i++);
- 
+Thank you,
+
+> ------------------------------------------------------------------------
+> 
+> commit 1817fdc8f4e4bd18c76305c9b937fb0dccbb1583
+> Author: Steven Rostedt <rostedt@goodmis.org>
+> Date:   Sat Feb 15 06:54:50 2020 -0800
+> 
+>     rcu: Provide comment for NOKPROBE() on rcu_nmi_enter()
+>     
+>     The rcu_nmi_enter() function was marked NOKPROBE() by commit
+>     c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+>     kprobe_int3_handler()") because the do_int3() call kprobe code must
+>     not be invoked before kprobe_int3_handler() is called.  It turns out
+>     that ist_enter() (in do_int3()) calls rcu_nmi_enter(), hence the
+>     marking NOKPROBE() being added to rcu_nmi_enter().
+>     
+>     This commit therefore adds a comment documenting this line of reasoning.
+>     
+>     Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+>     Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 132b53e..4a885af 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -835,6 +835,12 @@ void rcu_nmi_enter(void)
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+>  }
+> +/*
+> + * On x86, All functions in do_int3() must be marked NOKPROBE before
+> + * kprobe_int3_handler() is called. ist_enter() which is called in do_int3()
+> + * before kprobe_int3_handle() happens to call rcu_nmi_enter() which means
+> + * that rcu_nmi_enter() must be marked NOKRPOBE.
+> + */
+>  NOKPROBE_SYMBOL(rcu_nmi_enter);
+>  
+>  /**
+
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
