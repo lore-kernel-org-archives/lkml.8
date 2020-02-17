@@ -2,117 +2,126 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62248C3402D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72591C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FDA20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4530920718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DXewcExy";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="HSt7T32/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kxzPl+66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgBQWfl (ORCPT
+        id S1726091AbgBQWkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:35:41 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39500 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725853AbgBQWfk (ORCPT
+        Mon, 17 Feb 2020 17:40:06 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35386 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgBQWkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:35:40 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 2FCB98EE218;
-        Mon, 17 Feb 2020 14:35:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1581978940;
-        bh=kGqNQ/LKDec1th/13RGNLf+24LtFPEsPCjEL8hK6Zbs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DXewcExyZkcYnVoT0ZlEZ+F/Xe2t82jrdbs4fH7V3GEeuQOV1b254dwImz26RcCou
-         5WvStYzvMmz+awUORnUJS2OWnsVIHfYE1/zoGTe9vafwynWYJwf2PoJJDotjV8qcH5
-         lFwR3XUqYBemIvEuorMZ7vXNaW+IAKRvecjFqi6M=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HLoCSdDGbND4; Mon, 17 Feb 2020 14:35:40 -0800 (PST)
-Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 4ED3D8EE0F5;
-        Mon, 17 Feb 2020 14:35:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1581978939;
-        bh=kGqNQ/LKDec1th/13RGNLf+24LtFPEsPCjEL8hK6Zbs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HSt7T32/extC6bQnxlu4qis+fZzEyxV+jShQLDnasUEpmLEQkKlB7BgJPHhiFnbh/
-         LMrE1PBQz0ckwqT10y+tJYFnwWfrGGxiVwLch5l3pfgRAIchM9b6QH08UjxDEi0Qqc
-         ygH0zaozLQi1ajwR6Arqx1Kagrp3pIgrfY/ZFFIU=
-Message-ID: <1581978938.24289.18.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 00/28] user_namespace: introduce fsid mappings
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-security-module@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Date:   Mon, 17 Feb 2020 14:35:38 -0800
-In-Reply-To: <20200217212022.2rfex3qsdjyyqrq7@wittgenstein>
-References: <20200214183554.1133805-1-christian.brauner@ubuntu.com>
-         <1581973568.24289.6.camel@HansenPartnership.com>
-         <20200217212022.2rfex3qsdjyyqrq7@wittgenstein>
+        Mon, 17 Feb 2020 17:40:05 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w12so21630048wrt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=76Z6CK20GgcJDSbhtaVsIFc+JofKd4d7bU36INZrWq8=;
+        b=kxzPl+66GzU0tsmDlLsFrMwRER4GjmMjrCsQ8WBsJpK7WvBK66WgF+Za2d5YquYg0F
+         56RJP+B7UnTuynnPArjOIS1mmcoVxNYTlc14JckbL5FQk3LgaTbIghYssIHIN6EAxt+U
+         t8iJ5dQuIFhTYJQhYFKFKc0tUg1isJ4xiyna6ZbcvPum0pst/kjre1zEdMQWE4DGB6Qx
+         ywSlGjIKeXfeyfQuvaTNBYECdGcYQGdrc6GKo7gxv7XmTTW/Vv6OhAGMH8kp9Z+ytHGc
+         86TWTERacFcFKshU+EVa4AX9mCL/p8VC4HwrbpCPGflRZljZRLqzoRQLprmBJyPhQaMl
+         9QWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=76Z6CK20GgcJDSbhtaVsIFc+JofKd4d7bU36INZrWq8=;
+        b=pB20RDVAzF0Zg2wzyzyoZDKSbVyerJdbRb35+aj/mIMsMd+hkw+ggBBuCX2/QD8ce1
+         oZkNbXglYnbED2eizYB/SRYX/haEfruiH6dq2x8SM+vzwG/KSoJuKzNtWVgBtE/JxmgH
+         cKA+dP3vT6oOgygLTrR1jJYwv3Dt8gAUFMfzMFRHIqXlfdqLuBJSuZK4mYo+dnZXgaqA
+         eXw9WCh2eSf6WwFIPt8qTzFdOmTdt9WFK3D6MSr6A7AhEQqyD+2nGl6KmC8vnAaw37NH
+         AcGsIFcERRKc0Vo1+LvhKi1hxorvlL0A5FUobXCucxCrx2ZbR9kzW7htmli9dh77tU7F
+         KgWw==
+X-Gm-Message-State: APjAAAUhh7Du+2p/fOquDlvSze7/aOgqEndv1v1uEoNUooMVXgLFGt6L
+        sJIlgCl8FwI9X4Btl+gZcNxuYaY/NUDqEmuSr4IfsQ==
+X-Google-Smtp-Source: APXvYqwNZrDDXyuSSAFRXCKsy/wiMe0qfoB8DAfRSRnoO8OLRY0g8yoVJOVwgE7xeIdVzjRpZGxBZ5gLv8/0K5cJ2j4=
+X-Received: by 2002:a5d:6a4b:: with SMTP id t11mr24090235wrw.262.1581979204034;
+ Mon, 17 Feb 2020 14:40:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20200213161614.23246-1-vincenzo.frascino@arm.com>
+ <20200213161614.23246-20-vincenzo.frascino@arm.com> <20200213184454.GA4663@ubuntu-m2-xlarge-x86>
+ <0cee3707-d526-3766-3dde-543c8dbd8e68@arm.com> <20200217164608.GA2708@willie-the-truck>
+In-Reply-To: <20200217164608.GA2708@willie-the-truck>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 17 Feb 2020 23:39:53 +0100
+Message-ID: <CAKv+Gu8Qh495twz-3UQrFiKfPq-Kt_o+JrCNwEcdMedV2DqPEA@mail.gmail.com>
+Subject: Re: [PATCH 19/19] arm64: vdso32: Enable Clang Compilation
+To:     Will Deacon <will@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        0x7f454c46@gmail.com, linux-mips@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>, pcc@google.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        avagin@openvz.org, Stephen Boyd <sboyd@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        salyzyn@android.com, Paul Burton <paul.burton@mips.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-17 at 22:20 +0100, Christian Brauner wrote:
-> On Mon, Feb 17, 2020 at 01:06:08PM -0800, James Bottomley wrote:
-> > On Fri, 2020-02-14 at 19:35 +0100, Christian Brauner wrote:
+On Mon, 17 Feb 2020 at 17:46, Will Deacon <will@kernel.org> wrote:
+>
+> On Mon, Feb 17, 2020 at 12:26:16PM +0000, Vincenzo Frascino wrote:
+> > On 13/02/2020 18:44, Nathan Chancellor wrote:
+> > > On Thu, Feb 13, 2020 at 04:16:14PM +0000, Vincenzo Frascino wrote:
+> > >> Enable Clang Compilation for the vdso32 library.
+> >
 > > [...]
-> > > People not as familiar with user namespaces might not be aware
-> > > that fsid mappings already exist. Right now, fsid mappings are
-> > > always identical to id mappings. Specifically, the kernel will
-> > > lookup fsuids in the uid mappings and fsgids in the gid mappings
-> > > of the relevant user namespace.
-> > 
-> > This isn't actually entirely true: today we have the superblock
-> > user namespace, which can be used for fsid remapping on filesystems
-> > that support it (currently f2fs and fuse).  Since this is a single
-> > shift,
-> 
-> Note that this states "the relevant" user namespace not the caller's
-> user namespace. And the point is true even for such filesystems. fuse
-> does call make_kuid(fc->user_ns, attr->uid) and hence looks up the
-> mapping in the id mappings.. This would be replaced by make_kfsuid().
-> 
-> > how is it going to play with s_user_ns?  Do you have to understand
-> > the superblock mapping to use this shift, or are we simply using
-> > this to replace s_user_ns?
-> 
-> I'm not sure what you mean by understand the superblock mapping. The
-> case is not different from the devpts patch in this series.
+> >
+> > >> +LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+> > >
+> > > Well this is unfortunate :/
+> > >
+> > > It looks like adding the --target flag to VDSO_LDFLAGS allows
+> > > clang to link the vDSO just fine although it does warn that -nostdinc
+> > > is unused:
+> > >
+> > > clang-11: warning: argument unused during compilation: '-nostdinc'
+> > > [-Wunused-command-line-argument]
+> > >
+> >
+> > This is why ended up in this "unfortunate" situation :) I wanted to avoid the
+> > warning.
+> >
+> > > It would be nice if the logic of commit fe00e50b2db8 ("ARM: 8858/1:
+> > > vdso: use $(LD) instead of $(CC) to link VDSO") could be adopted here
+> > > but I get that this Makefile is its own beast :) at the very least, I
+> > > think that the --target flag should be added to VDSO_LDFLAGS so that gcc
+> > > is not a requirement for this but I am curious if you tried that already
+> > > and noticed any issues with it.
+> > >
+> >
+> > --target is my preferred way as well, I can try to play another little bit with
+> > the flags and see what I can come up with in the next version.
+>
+> Yes, please. I'd even prefer the warning rather than silently assuming that
+> a cross gcc is kicking around on the path.
+>
 
-So since devpts wasn't originally a s_user_ns consumer, I assume you're
-thinking that this patch series just replaces the whole of s_user_ns
-for fuse and f2fs and we can remove it?
-
-> Fuse needs to be changed to call make_kfsuid() since it is mountable
-> inside user namespaces at which point everthing just works.
-
-The fuse case is slightly more complicated because there are sound
-reasons to run the daemon in a separate user namespace regardless of
-where the end fuse mount is.
-
-James
-
+Doesn't Clang have -Qunused-arguments for that?
