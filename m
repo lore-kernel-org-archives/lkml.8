@@ -2,72 +2,91 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64C6C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAB2C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8974422464
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72174206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgBQPuv (ORCPT
+        id S1729436AbgBQPvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:50:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:37772 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgBQPuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:50:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14BF430E;
-        Mon, 17 Feb 2020 07:50:51 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C9833F6CF;
-        Mon, 17 Feb 2020 07:50:50 -0800 (PST)
-Subject: Re: [RFC PATCH] iommu/dma: Allow drivers to reserve an iova range
-To:     Christoph Hellwig <hch@infradead.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Cc:     pratikp@codeaurora.org, linux-kernel@vger.kernel.org,
-        Liam Mark <lmark@codeaurora.org>,
-        iommu@lists.linux-foundation.org, kernel-team@android.com
-References: <1581721096-16235-1-git-send-email-isaacm@codeaurora.org>
- <20200217080138.GB10342@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <c58fd502-52a4-cb0f-6e7f-e9cc00627313@arm.com>
-Date:   Mon, 17 Feb 2020 15:50:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 17 Feb 2020 10:51:51 -0500
+Received: from www62.your-server.de ([213.133.104.62]:33808 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbgBQPvu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:51:50 -0500
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j3igV-0008VT-Oq; Mon, 17 Feb 2020 16:51:47 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j3igV-000Tkh-EV; Mon, 17 Feb 2020 16:51:47 +0100
+Subject: Re: [PATCH] bpf: Avoid function casting when calculating immediate
+To:     Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sami Tolvanen <samitolvanen@google.com>, bpf@vger.kernel.org
+References: <202001291335.31F425A198@keescook>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <92bcfdab-79df-c3f4-bae8-00116b39e015@iogearbox.net>
+Date:   Mon, 17 Feb 2020 16:51:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200217080138.GB10342@infradead.org>
+In-Reply-To: <202001291335.31F425A198@keescook>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/02/2020 8:01 am, Christoph Hellwig wrote:
-> On Fri, Feb 14, 2020 at 02:58:16PM -0800, Isaac J. Manjarres wrote:
->> From: Liam Mark <lmark@codeaurora.org>
->>
->> Some devices have a memory map which contains gaps or holes.
->> In order for the device to have as much IOVA space as possible,
->> allow its driver to inform the DMA-IOMMU layer that it should
->> not allocate addresses from these holes.
+On 1/29/20 10:36 PM, Kees Cook wrote:
+> In an effort to enable -Wcast-function-type in the top-level Makefile
+> to support Control Flow Integrity builds, rework the BPF instruction
+> immediate calculation macros to avoid mismatched function pointers. Since
+> these calculations are only ever between function address (these are
+> not function calls, just address calculations), they can be cast to u64
+> instead, where the result will be assigned to the s32 insn->imm.
 > 
-> Layering violation.  dma-iommu is the translation layer between the
-> DMA API and the IOMMU API.  And calls into it from drivers performing
-> DMA mappings need to go through the DMA API (and be documented there).
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   include/linux/filter.h |  6 +++---
+>   kernel/bpf/hashtab.c   |  6 +++---
+>   kernel/bpf/verifier.c  | 21 +++++++--------------
+>   3 files changed, 13 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index f349e2c0884c..b5beee7bf2ea 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -340,8 +340,8 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
+>   
+>   /* Function call */
+>   
+> -#define BPF_CAST_CALL(x)					\
+> -		((u64 (*)(u64, u64, u64, u64, u64))(x))
+> +#define BPF_FUNC_IMM(FUNC)					\
+> +		((u64)(FUNC) - (u64)__bpf_call_base)
 
-+1
+Looks good to me in general. My only concern is compilation on 32bit archs: I think
+the cast needs to be of '(u64)(unsigned long)' to avoid introducing new warnings a la
+'cast from pointer to integer of different size'.
 
-More than that, though, we already have "holes in the address space" 
-support for the sake of PCI host bridge windows - assuming this is the 
-same kind of thing (i.e. the holes are between memory regions and other 
-resources in PA space, so are only relevant once address translation 
-comes into the picture), then this is IOMMU API level stuff, so even a 
-DMA API level interface would be inappropriate.
-
-Robin.
+Thanks,
+Daniel
