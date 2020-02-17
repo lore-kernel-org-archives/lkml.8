@@ -2,126 +2,87 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D5FC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF7C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB64206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D692920725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDob0D2g"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="B5+UnAVh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="pj+Qrzbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgBQP7V (ORCPT
+        id S1729535AbgBQQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:59:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39265 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbgBQP7V (ORCPT
+        Mon, 17 Feb 2020 11:00:43 -0500
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:55575 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgBQQAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:59:21 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o15so19439780ljg.6;
-        Mon, 17 Feb 2020 07:59:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=dHYSbY8DgUo7Pn7yVZAxh0Tlo9+8NTFXFAbrlJ6RWIQ=;
-        b=hDob0D2gjwaX3LGAPa1TSVo5hjFh8v7DQbNhVIFTY+wdXpd0eOjmyluIW+WOgQvBGG
-         12oqLStg+/rJYmKzX3gsY5iYYQrNXqsY7OWZM58VAsB7+bpxL+cUOtwosd7GaPJVxiIR
-         BrGuYdfNiIym6+/rRE6q232iRYZMI2l34m8NJlrqKqE5sKtwNftc+YFE0/j+6bxS77CV
-         eaaHSFXZTCndtP9wy6GXGKDjL02WoJQxcJt9A2ZZwz+UMjrtH1upJspPqP+7vtgX4BtE
-         sSE9sQyhBGWitmnnql4vZOdCNDelLIHxkcyWxo+JOMZKA8BxjuHk//aDk3uUA0/no/V0
-         0yAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dHYSbY8DgUo7Pn7yVZAxh0Tlo9+8NTFXFAbrlJ6RWIQ=;
-        b=HfoUvhIdphwjtfh3yKIemfbmWApyzUAW/k0+sWIfOxAiGKn2Ar44VIgBB2vlQ6i3gV
-         +6ML1UKV8XHPaCdGF8O1JXmouAvBcffx85/R4S5JW69KcwXd9rQYTIYrlbClhM8sQY4P
-         ou5cliA/FSS6QWTzndNH450Wjr3LD1j6Ce+V3cNk2kC2MlLDnd8dcS/bwWn4sUYvmRIU
-         LlahV/F3njLnJpMJLVY94QZUJeuc2DieMu5UzEYrY8hP83jDaxv+xELi8Y6wPmwErbVs
-         GnTj2zhiymc7IpFJ0dOyWXwTs7NYFPTVQVBAvLYRYs6mAu6DmEYAidYdFtDrXHzgKt1p
-         vWYg==
-X-Gm-Message-State: APjAAAV54SOMgtulUVeFxKkxGDemdRzxELlKNybmHg2abWqVfX9XnBhy
-        rVIZ/QN+SW6byRNETOUrIwFNQZZ5TblW9Q==
-X-Google-Smtp-Source: APXvYqwSolTctQ5z1XmqXD5luY8WULh18KOaWRBm5mRxsBdKnBkpMa6GBJg8JxyFs/HRWu5DpdfsqQ==
-X-Received: by 2002:a2e:3608:: with SMTP id d8mr10324540lja.152.1581955158267;
-        Mon, 17 Feb 2020 07:59:18 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id w19sm561554lfl.55.2020.02.17.07.59.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 07:59:17 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] io_uring: add splice(2) support
-To:     Stefan Metzmacher <metze@samba.org>, Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1581802973.git.asml.silence@gmail.com>
- <b33d7315f266225237dfd10f483162c51c2ed5bc.1581802973.git.asml.silence@gmail.com>
- <6d803558-ab09-1850-2c38-38848b8ddf27@samba.org>
- <b44a4692-f43c-e625-3eb7-cc4e12041f48@gmail.com>
- <033a6560-df47-39a2-871b-13f2d84bb1ec@samba.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <4d9c4fd2-d319-11bf-dfd2-e02e0f759a8b@gmail.com>
-Date:   Mon, 17 Feb 2020 18:59:16 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 17 Feb 2020 11:00:43 -0500
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id EDC795CE84;
+        Mon, 17 Feb 2020 11:00:40 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=2CMqNie/jgw27GZLCTfFeu7CdIg=; b=B5+UnA
+        VhqAWU3+g3omzzdBVexEpAa+wKzJF+DQ73CPdMwDpjCMxleLkCkFcZEK5Nnqjz6E
+        Ukw8Yu901D2gPGF5dKgwbz/bCLmrV+ZoHK8Ot3D8u5qCR927mSctKW2jBLc+SM1D
+        7C5MtwPWqYdGG5WIXUfIt48/F6vjBeG0IKzKU=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id E2F155CE83;
+        Mon, 17 Feb 2020 11:00:40 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=9oU7m/+N59y4UIzicilnkFO8xw/KIfHOdwGXAKP2J3U=; b=pj+Qrzbzi+EXyQElrTgV2eg6jl+bTwoWKCmw4Qqt+X92of6rUpK3Go8QdGr+0tAcp0NADL6GBQWzZZ236lKRjYbZaDeYhN1Stle+tMbCsXLuvMtNCd4lvuOuLqddest4ErCDDverKmfghtzA1WQr/Z6wqnN7TVJSrgcAQles/v8=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 594B05CE82;
+        Mon, 17 Feb 2020 11:00:40 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 83CC62DA01B8;
+        Mon, 17 Feb 2020 11:00:39 -0500 (EST)
+Date:   Mon, 17 Feb 2020 11:00:39 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Quentin Perret <qperret@google.com>
+cc:     Matthias Maennich <maennich@google.com>, masahiroy@kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
+Subject: Re: [PATCH v4 1/3] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+In-Reply-To: <20200217153023.GA71210@google.com>
+Message-ID: <nycvar.YSQ.7.76.2002171059230.1559@knanqh.ubzr>
+References: <20200212202140.138092-1-qperret@google.com> <20200212202140.138092-2-qperret@google.com> <20200217152201.GA48466@google.com> <20200217153023.GA71210@google.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <033a6560-df47-39a2-871b-13f2d84bb1ec@samba.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: A50A65BE-519E-11EA-992F-C28CBED8090B-78420484!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/2020 6:54 PM, Stefan Metzmacher wrote:
-> Am 17.02.20 um 16:40 schrieb Pavel Begunkov:
->> On 2/17/2020 6:18 PM, Stefan Metzmacher wrote:
->>> Hi Pavel,
->>>
->>>> +static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
->>>> +{
->>>> +	struct io_splice* sp = &req->splice;
->>>> +	unsigned int valid_flags = SPLICE_F_FD_IN_FIXED | SPLICE_F_ALL;
->>>> +	int ret;
->>>> +
->>>> +	if (req->flags & REQ_F_NEED_CLEANUP)
->>>> +		return 0;
->>>> +
->>>> +	sp->file_in = NULL;
->>>> +	sp->off_in = READ_ONCE(sqe->off_in);
->>>> +	sp->off_out = READ_ONCE(sqe->off);
->>>> +	sp->len = READ_ONCE(sqe->len);
->>>> +	sp->flags = READ_ONCE(sqe->splice_flags);
->>>> +
->>>> +	if (unlikely(READ_ONCE(sqe->ioprio) || (sp->flags & ~valid_flags)))
->>>> +		return -EINVAL;
->>>
->>> Why is ioprio not supported?
->>
->> Because there is no way to set it without changing much of splice code.
->> It may be added later
->>
->> BTW, it seems, only opcodes cares about ioprio are read*/write*.
->> recv*() and send*() don't reject it, but never use.
+On Mon, 17 Feb 2020, Quentin Perret wrote:
+
+> On Monday 17 Feb 2020 at 15:22:01 (+0000), Matthias Maennich wrote:
+> > In case the whitelist file can't be found, the error message is
+> > 
+> >  cat: path/to/file: file not found
+> > 
+> > I wonder whether we can make this error message a bit more specific by
+> > telling the user that the KSYMS_WHITELIST is missing.
 > 
-> I guess it's more like a hint, so should we just ignore it until
-> it's passed down? Otherwise applications need to do some logic to
-> find out if they can pass a value or not.
+> +1, that'd be really useful. I'll check the file existence in v5 (in a
+> POSIX-compliant way, I promise).
 
-Then it probably needs to validate the value, but not just ignore it
+In fact, if you explicitly provide a file that is not there, then this 
+is arguably a good reason to even fail the build.
 
-> I'm not sure what's better, but I think it needs to be discussed...
 
-meh, let's see what Jens think
-
--- 
-Pavel Begunkov
+Nicolas
