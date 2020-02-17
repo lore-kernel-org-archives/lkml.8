@@ -2,144 +2,104 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3169C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF8C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E802072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XxA/tjgU"
+	by mail.kernel.org (Postfix) with ESMTP id 01ECD2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgBQQQk (ORCPT
+        id S1728766AbgBQQRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:16:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728296AbgBQQQk (ORCPT
+        Mon, 17 Feb 2020 11:17:20 -0500
+Received: from mail-pl1-f181.google.com ([209.85.214.181]:43943 "EHLO
+        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgBQQRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:16:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581956199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NFyPUeouQuhyDga5QKhl60tvsLU2HEYGyhP5oV1KBMw=;
-        b=XxA/tjgUqIlOeC6wKXlZJR0NvZqgj05XHD5oQFdfq268M3iB9RLg9mFnfY8M6VFYxbb5wb
-        attYTgVlv4gi3u0+TX6mNzIOkvW3V6DjmFMP/KK4XOkLa52NuOH/bGaL+aUKvQkI5Bc6pK
-        d9PBc0f7YhpvQEIW76HIoo/eIIJrx/c=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-d9bbAWpxNzeMYKah1Q5tXw-1; Mon, 17 Feb 2020 11:16:37 -0500
-X-MC-Unique: d9bbAWpxNzeMYKah1Q5tXw-1
-Received: by mail-wr1-f72.google.com with SMTP id d15so9184473wru.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:16:37 -0800 (PST)
+        Mon, 17 Feb 2020 11:17:20 -0500
+Received: by mail-pl1-f181.google.com with SMTP id p11so6898021plq.10;
+        Mon, 17 Feb 2020 08:17:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=NFyPUeouQuhyDga5QKhl60tvsLU2HEYGyhP5oV1KBMw=;
-        b=t83GD2MkUalgEwtLO1lifsgy4UlviZNPgWnyglWJGQFqgDNuzBovH/igcCP8IUV+g4
-         9io/TwbzlG48ygsjye5jUXtsdvL/MHhrOcA+8+2+67dADMYJ309oKSrfth22zQ3jQRzV
-         vRSYAXxjfO1Mmv3vzA/Hv0rC5MqdECYKNgTgCyNLtF9x1KdXfA6/+NDkwdUYH5K5/gi7
-         I25j0nYIrD5vDNdIczO7VJTCgZARCO/m9Ffbh6ZmgxSOKD/+HGYfbKmflZ10czte3QZ6
-         saadolVSBK7SggXc0LXi66USq81C96A3k8XmoUku8XHWgRqEbZ6UsdyDvf2ag2NTKRFG
-         wTHQ==
-X-Gm-Message-State: APjAAAUnOpKOCQoruRYX4EeCNI3FZlmM14e5RgiU3N/iWjp/4wzSRLyl
-        edV+1nFdkNVuT2Ll0nd5xjPu2pIpZk3A7fC/IHONiPBSJ1He1Q5XoA8uPIvgFjRrYigqzXwZzAT
-        MGkjyZ8nLL8NAAMgVTZ16NFSG
-X-Received: by 2002:adf:806c:: with SMTP id 99mr22007642wrk.328.1581956196305;
-        Mon, 17 Feb 2020 08:16:36 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwRq0gQ7zvGxbVQD6lwCfxtSvMB5tAOlMD0x3vB242pZN7eh2YO0YBMLfDRNd31zyWvwFRRzA==
-X-Received: by 2002:adf:806c:: with SMTP id 99mr22007622wrk.328.1581956196116;
-        Mon, 17 Feb 2020 08:16:36 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f207sm1188765wme.9.2020.02.17.08.16.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 08:16:35 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: x86: eliminate some unreachable code
-In-Reply-To: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
-References: <1581562405-30321-1-git-send-email-linmiaohe@huawei.com>
-Date:   Mon, 17 Feb 2020 17:16:34 +0100
-Message-ID: <87k14l9okd.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DhtAN8Z1lq+smog5hx8tnmyToocbQyCvpNHXj+TDxUI=;
+        b=X5h6J5+j/Yl0g84xS0FpBrfhtAb688x6//ncCQ1ThTFLwHGdEi+7S8evrL2Vy2M4LU
+         tRUFubqpJnQNKfd2+G22Q6idbZm0vyiR8t2Dd9LbU59jX+Hj4QE0L3tRCub+78t5wAB1
+         kDrGFtPzKeDp7lBxhGOUpANm8He44eOBezlBZVt/SvUVEahIMuryp5pgt/pXVacxQ6Kt
+         06KZ/dGymI/BZ1z+IH0wCmix5AgtcbN+Ow8NogCnp7HNlvd9shlZkDS0mZk9r6yHM/9P
+         73vzHshITVo2HgB+q6K593A581PBFWzuXE/m2iEP86D+ui9xDKKpGxNB3Si+Iw71K5XJ
+         4/wg==
+X-Gm-Message-State: APjAAAULOmrDaRdtfZi+EZfUpLUUF21qMKJXmL+IpISlT5goJAYiSskn
+        AMt7WK7R/7iewDxETtOiSSw=
+X-Google-Smtp-Source: APXvYqyUGmGotOQnonxrVSNJHOnl6B9x5PFX1abnD5SGe8SeBqp456IotnkFNe/oXDoMuKeEr2m6JA==
+X-Received: by 2002:a17:902:694b:: with SMTP id k11mr16630726plt.334.1581956239464;
+        Mon, 17 Feb 2020 08:17:19 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:2474:e036:5bee:ca5b? ([2601:647:4000:d7:2474:e036:5bee:ca5b])
+        by smtp.gmail.com with ESMTPSA id o11sm1148585pjs.6.2020.02.17.08.17.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 08:17:18 -0800 (PST)
+Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
+ reference clock
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, asutoshd@codeaurora.org, cang@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200217093559.16830-1-stanley.chu@mediatek.com>
+ <20200217093559.16830-2-stanley.chu@mediatek.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <87f03ff5-445b-25c2-308d-5c9e18942a0f@acm.org>
+Date:   Mon, 17 Feb 2020 08:17:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200217093559.16830-2-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> writes:
+On 2020-02-17 01:35, Stanley Chu wrote:
+> -			if (skip_ref_clk && !strcmp(clki->name, "ref_clk"))
+> +			ref_clk = !strcmp(clki->name, "ref_clk") ? true : false;
+> +			if (skip_ref_clk && ref_clk)
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> These code are unreachable, remove them.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 1 -
->  arch/x86/kvm/x86.c     | 3 ---
->  2 files changed, 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index bb5c33440af8..b6d4eafe01cf 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4505,7 +4505,6 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
->  	case GP_VECTOR:
->  	case MF_VECTOR:
->  		return true;
-> -	break;
->  	}
->  	return false;
->  }
+Since the " ? true : false" part is superfluous, please leave it out.
 
-Unrelated to your change but what I don't in rmode_exception() is the
-second "/* fall through */" instead of just 'return true;', it makes it
-harder to read.
+Thanks,
 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fbabb2f06273..a597009aefd7 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3081,7 +3081,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		break;
->  	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
->  		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
-> -		break;
->  	case MSR_IA32_TSCDEADLINE:
->  		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
->  		break;
-> @@ -3164,7 +3163,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		return kvm_hv_get_msr_common(vcpu,
->  					     msr_info->index, &msr_info->data,
->  					     msr_info->host_initiated);
-> -		break;
->  	case MSR_IA32_BBL_CR_CTL3:
->  		/* This legacy MSR exists but isn't fully documented in current
->  		 * silicon.  It is however accessed by winxp in very narrow
-> @@ -8471,7 +8469,6 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
->  		break;
->  	default:
->  		return -EINTR;
-> -		break;
->  	}
->  	return 1;
->  }
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+Bart.
