@@ -2,275 +2,108 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A14C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4703C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85992206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8F3206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VSgxNoy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgBQKp7 (ORCPT
+        id S1729493AbgBQKqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:45:59 -0500
-Received: from outbound-smtp03.blacknight.com ([81.17.249.16]:47460 "EHLO
-        outbound-smtp03.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727332AbgBQKp7 (ORCPT
+        Mon, 17 Feb 2020 05:46:03 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46240 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgBQKqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:45:59 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp03.blacknight.com (Postfix) with ESMTPS id 40F0A98AAE
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:45:57 +0000 (GMT)
-Received: (qmail 30804 invoked from network); 17 Feb 2020 10:45:57 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 17 Feb 2020 10:45:57 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 10/13] sched/numa: Prefer using an idle cpu as a migration target instead of comparing tasks
-Date:   Mon, 17 Feb 2020 10:43:59 +0000
-Message-Id: <20200217104402.11643-11-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200217104402.11643-1-mgorman@techsingularity.net>
-References: <20200217104402.11643-1-mgorman@techsingularity.net>
+        Mon, 17 Feb 2020 05:46:03 -0500
+Received: by mail-pf1-f196.google.com with SMTP id k29so8630800pfp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=svQBb2pE2QDQnmXJ2ubumEvy+YYsjoxi5Gck3ouG2Pw=;
+        b=VSgxNoy3lGhMfX52oQ6yUxFZlbLuvX1XQGrJ37RVE7JDDtOq0NzfyJMiAndI/obPga
+         FRIJ3BH8RMheb1KS0hm431MUigHhUUGG+yFg9AK1bOacl9Q7kHwDxSlI4rVMJ/vB9U7I
+         Cu1FCwflCaNV+HHeDqUmzJqnn2xSXHEU8S/RzAj8b3M5Bt2tN8tK//B6VFvXhHvjPWDH
+         yXzGIU9Sfwcx92rbolAciLKyx5QhtNHLqz3ngD107WFx/JadZ/5eZ9kRSly8CQTKQYuc
+         HaYWqY1ea1mp19t2N8kdC/4n+m+YfQ1ZLfEfLLIPJ+/3+Ai1BpIEv3CYlUKgWBMT9O6+
+         t/2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=svQBb2pE2QDQnmXJ2ubumEvy+YYsjoxi5Gck3ouG2Pw=;
+        b=ha5Q8f0EyFoLtjSJ8HCg9lNJXVY6ixmoJLGu0H9za6V1cSGILnNapdMJ+sD31AQCfI
+         FC+671iyNiKWNwnUJUa8RnAO8y/R9Z57Kn3iuiHg/m4YE3CSmHg/6op8OTJE5+8oONog
+         jjrPqn4uVmhSTUvsolpwbaqZxcYq6HeQyn/cL15LC9IwlzSn4c5WEY5zJvAZeRCzfM2a
+         4vJcZDc6i568ctd3EkO0YbFTkdbxvtwrR1U0sh++fq/DfVBtiOQmQa+kD2oPcpCxFO4t
+         83fjS8NxnMLv5aJxhF7c7xVuXf0j427oscen2K8gXp8jFkOw2kMT7vTx5TCQGmJK2l9U
+         mpXg==
+X-Gm-Message-State: APjAAAVJYyJ4IIzmIE0afMOZbD0G7ovSOE11w8HkhMIzc0haBUSsQmhh
+        HEhVvYNKKo70gph6NNvtxfqZFQ==
+X-Google-Smtp-Source: APXvYqyXp8U1tk+ME6RA6QMdmXVIxA4ED5Cr/xo6hKDH+QebkM5tx/yuEXLTrJzkQ3LHPLrBblH/nA==
+X-Received: by 2002:aa7:9a8b:: with SMTP id w11mr16691847pfi.38.1581936362610;
+        Mon, 17 Feb 2020 02:46:02 -0800 (PST)
+Received: from localhost ([223.226.55.170])
+        by smtp.gmail.com with ESMTPSA id 199sm16748003pfu.71.2020.02.17.02.46.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Feb 2020 02:46:01 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:16:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rjw@rjwysocki.net, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] cpufreq: imx-cpufreq-dt: Add "cpu-supply" property check
+Message-ID: <20200217104600.5hkb6hclglb2x4fk@vireshk-i7>
+References: <1581932575-13177-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581932575-13177-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-task_numa_find_cpu can scan a node multiple times. Minimally it scans to
-gather statistics and later to find a suitable target. In some cases, the
-second scan will simply pick an idle CPU if the load is not imbalanced.
+On 17-02-20, 17:42, Anson Huang wrote:
+> The cpufreq-dt driver allows cpufreq driver enabled without valid
+> regulator assigned, however, all i.MX platforms using cpufreq-dt
+> driver now require valid regulator, add "cpu-supply" property check
+> to avoid i.MX platforms' cpufreq enabled without valid regulator
+> and lead to system unstable.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/cpufreq/imx-cpufreq-dt.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
+> index 6cb8193..0e29d88 100644
+> --- a/drivers/cpufreq/imx-cpufreq-dt.c
+> +++ b/drivers/cpufreq/imx-cpufreq-dt.c
+> @@ -31,6 +31,9 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+>  	int speed_grade, mkt_segment;
+>  	int ret;
+>  
+> +	if (!of_find_property(cpu_dev->of_node, "cpu-supply", NULL))
+> +		return -ENODEV;
+> +
+>  	ret = nvmem_cell_read_u32(cpu_dev, "speed_grade", &cell_value);
+>  	if (ret)
+>  		return ret;
 
-This patch caches information on an idle core while gathering statistics
-and uses it immediately if load is not imbalanced to avoid a second scan
-of the node runqueues. Preference is given to an idle core rather than an
-idle SMT sibling to avoid packing HT siblings due to linearly scanning the
-node cpumask.
+Applied. Thanks.
 
-As a side-effect, even when the second scan is necessary, the importance
-of using select_idle_sibling is much reduced because information on idle
-CPUs is cached and can be reused.
-
-Note that this patch actually makes is harder to move to an idle CPU
-as multiple tasks can race for the same idle CPU due to a race checking
-numa_migrate_on. This is addressed in the next patch.
-
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 119 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 102 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3d5b8240a356..91f8156c0b0f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1500,8 +1500,29 @@ struct numa_stats {
- 	unsigned int nr_running;
- 	unsigned int weight;
- 	enum numa_type node_type;
-+	int idle_cpu;
- };
- 
-+static inline bool is_core_idle(int cpu)
-+{
-+#ifdef CONFIG_SCHED_SMT
-+	int sibling;
-+
-+	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
-+		if (cpu == sibling)
-+			continue;
-+
-+		if (!idle_cpu(cpu))
-+			return false;
-+	}
-+#endif
-+
-+	return true;
-+}
-+
-+/* Forward declarations of select_idle_sibling helpers */
-+static inline bool test_idle_cores(int cpu, bool def);
-+
- struct task_numa_env {
- 	struct task_struct *p;
- 
-@@ -1537,15 +1558,39 @@ numa_type numa_classify(unsigned int imbalance_pct,
- 	return node_fully_busy;
- }
- 
-+static inline int numa_idle_core(int idle_core, int cpu)
-+{
-+#ifdef CONFIG_SCHED_SMT
-+	if (!static_branch_likely(&sched_smt_present) ||
-+	    idle_core >= 0 || !test_idle_cores(cpu, false))
-+		return idle_core;
-+
-+	/*
-+	 * Prefer cores instead of packing HT siblings
-+	 * and triggering future load balancing.
-+	 */
-+	if (is_core_idle(cpu))
-+		idle_core = cpu;
-+#endif
-+
-+	return idle_core;
-+}
-+
- /*
-- * XXX borrowed from update_sg_lb_stats
-+ * Gather all necessary information to make NUMA balancing placement
-+ * decisions that are compatible with standard load balancer. This
-+ * borrows code and logic from update_sg_lb_stats but sharing a
-+ * common implementation is impractical.
-  */
- static void update_numa_stats(struct task_numa_env *env,
--			      struct numa_stats *ns, int nid)
-+			      struct numa_stats *ns, int nid,
-+			      bool find_idle)
- {
--	int cpu;
-+	int cpu, idle_core = -1;
- 
- 	memset(ns, 0, sizeof(*ns));
-+	ns->idle_cpu = -1;
-+
- 	for_each_cpu(cpu, cpumask_of_node(nid)) {
- 		struct rq *rq = cpu_rq(cpu);
- 
-@@ -1553,11 +1598,25 @@ static void update_numa_stats(struct task_numa_env *env,
- 		ns->util += cpu_util(cpu);
- 		ns->nr_running += rq->cfs.h_nr_running;
- 		ns->compute_capacity += capacity_of(cpu);
-+
-+		if (find_idle && !rq->nr_running && idle_cpu(cpu)) {
-+			if (READ_ONCE(rq->numa_migrate_on) ||
-+			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
-+				continue;
-+
-+			if (ns->idle_cpu == -1)
-+				ns->idle_cpu = cpu;
-+
-+			idle_core = numa_idle_core(idle_core, cpu);
-+		}
- 	}
- 
- 	ns->weight = cpumask_weight(cpumask_of_node(nid));
- 
- 	ns->node_type = numa_classify(env->imbalance_pct, ns);
-+
-+	if (idle_core >= 0)
-+		ns->idle_cpu = idle_core;
- }
- 
- static void task_numa_assign(struct task_numa_env *env,
-@@ -1566,7 +1625,7 @@ static void task_numa_assign(struct task_numa_env *env,
- 	struct rq *rq = cpu_rq(env->dst_cpu);
- 
- 	/* Bail out if run-queue part of active NUMA balance. */
--	if (xchg(&rq->numa_migrate_on, 1))
-+	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1))
- 		return;
- 
- 	/*
-@@ -1730,19 +1789,39 @@ static void task_numa_compare(struct task_numa_env *env,
- 		goto unlock;
- 
- assign:
--	/*
--	 * One idle CPU per node is evaluated for a task numa move.
--	 * Call select_idle_sibling to maybe find a better one.
--	 */
-+	/* Evaluate an idle CPU for a task numa move. */
- 	if (!cur) {
-+		int cpu = env->dst_stats.idle_cpu;
-+
-+		/* Nothing cached so current CPU went idle since the search. */
-+		if (cpu < 0)
-+			cpu = env->dst_cpu;
-+
- 		/*
--		 * select_idle_siblings() uses an per-CPU cpumask that
--		 * can be used from IRQ context.
-+		 * If the CPU is no longer truly idle and the previous best CPU
-+		 * is, keep using it.
- 		 */
--		local_irq_disable();
--		env->dst_cpu = select_idle_sibling(env->p, env->src_cpu,
-+		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
-+		    idle_cpu(env->best_cpu)) {
-+			cpu = env->best_cpu;
-+		}
-+
-+		/*
-+		 * Use select_idle_sibling if the previously found idle CPU is
-+		 * not idle any more.
-+		 */
-+		if (!idle_cpu(cpu)) {
-+			/*
-+			 * select_idle_siblings() uses an per-CPU cpumask that
-+			 * can be used from IRQ context.
-+			 */
-+			local_irq_disable();
-+			cpu = select_idle_sibling(env->p, env->src_cpu,
- 						   env->dst_cpu);
--		local_irq_enable();
-+			local_irq_enable();
-+		}
-+
-+		env->dst_cpu = cpu;
- 	}
- 
- 	task_numa_assign(env, cur, imp);
-@@ -1771,8 +1850,14 @@ static void task_numa_find_cpu(struct task_numa_env *env,
- 		imbalance = adjust_numa_imbalance(imbalance, src_running);
- 
- 		/* Use idle CPU if there is no imbalance */
--		if (!imbalance)
-+		if (!imbalance) {
- 			maymove = true;
-+			if (env->dst_stats.idle_cpu >= 0) {
-+				env->dst_cpu = env->dst_stats.idle_cpu;
-+				task_numa_assign(env, NULL, 0);
-+				return;
-+			}
-+		}
- 	} else {
- 		long src_load, dst_load, load;
- 		/*
-@@ -1845,10 +1930,10 @@ static int task_numa_migrate(struct task_struct *p)
- 	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
- 	taskweight = task_weight(p, env.src_nid, dist);
- 	groupweight = group_weight(p, env.src_nid, dist);
--	update_numa_stats(&env, &env.src_stats, env.src_nid);
-+	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
- 	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
- 	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
--	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
-+	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
- 
- 	/* Try to find a spot on the preferred nid. */
- 	task_numa_find_cpu(&env, taskimp, groupimp);
-@@ -1881,7 +1966,7 @@ static int task_numa_migrate(struct task_struct *p)
- 
- 			env.dist = dist;
- 			env.dst_nid = nid;
--			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
-+			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
- 			task_numa_find_cpu(&env, taskimp, groupimp);
- 		}
- 	}
 -- 
-2.16.4
-
+viresh
