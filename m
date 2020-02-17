@@ -2,307 +2,259 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D209C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB05BC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56126214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581958604;
-	bh=Edvx6KbF8UjElss9iYmaIvA5mtFtMhntgr5ab8Lgl/g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dATV42lfF5eXXjNC5U1KnMccvstsKcyAuNCppvZq7+8uXiL4NMebfMMhreRKtpN6y
-	 C611qa9vlLdCiwKGbFuN5HVnrKTA1XAbsezr5RXLJIshWdGVyiuGl6zdPgOAiTLhdJ
-	 RhH+ScoT4Y//6yqjoeiwU68Bd9HWBVCIOG1nvl4k=
+	by mail.kernel.org (Postfix) with ESMTP id 84077214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iHB8AbZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgBQQ4m (ORCPT
+        id S1729556AbgBQQ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:56:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgBQQ4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:56:42 -0500
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFAF20725;
-        Mon, 17 Feb 2020 16:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581958601;
-        bh=Edvx6KbF8UjElss9iYmaIvA5mtFtMhntgr5ab8Lgl/g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ubA0du5n7XqckDVKPrx7Qs0rSXq/UUmcCp2JKGCl94grdLcYnBovlzl8TDo2OKbqG
-         3KUiYJSkRAi48djgR1lqqqTuhXc7ey4fbEEbRmVanG3Sg2A8szJI9APB+9rM4JAJ9i
-         OoZjr23gp8ovaUWEpjCbo96KbShIe1kACeUmMBg8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 17 Feb 2020 11:56:56 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39154 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgBQQ44 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:56:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2/En5IBaP1moV+pglClAUBUFc5ut9gbuR38WbrIBi8E=; b=iHB8AbZ1Vnw4mfaL2XpqFSha0
+        Phl21B5adT9qkUS+oIjhwKzNrJ9zF9ogY5LwOPq8/CwAacml5pUsOH/US9s33sSoRB0zaqGsEEH8K
+        ipyEWYXdeLXd+7K7lBqES9rPn8pJTBFsEr7XzFAA+rAUb/Sgm8oZLJI4uQKOiGWa3BUUhXJahyaaV
+        f4L5JMSjUAoZ5dAgRskiP0wGNqe6kqQ3vuTkoMey0doLT9/E53VLppdWit9LTNj4yTxWKb3NbN6XC
+        M+T+TP7Y8FwbUEVECeD0m94bSgLC6cQPj2uNP1xTmFmW3l02B3Cfv4M4psMwtJwbb9fQeP3ISwKc4
+        N0cJWPOLg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41594)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j3jhO-0001yk-Pd; Mon, 17 Feb 2020 16:56:46 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j3jhM-0006St-61; Mon, 17 Feb 2020 16:56:44 +0000
+Date:   Mon, 17 Feb 2020 16:56:44 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] MIPS: configs: Cleanup old Kconfig options
-Date:   Mon, 17 Feb 2020 17:56:34 +0100
-Message-Id: <20200217165634.5362-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
+Message-ID: <20200217165644.GX25745@shell.armlinux.org.uk>
+References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_MTD_NAND_IDS is gone and not needed (part of CONFIG_MTD_NAND)
-since commit f16bd7ca0457 ("mtd: nand: Kill the MTD_NAND_IDS Kconfig
-option").
+On Mon, Feb 17, 2020 at 11:43:48AM +0100, Alexandre Belloni wrote:
+> at91ether_init was handling the phy mode and speed but since the switch to
+> phylink, the NCFGR register got overwritten by macb_mac_config().
 
-CONFIG_IOSCHED_DEADLINE, CONFIG_IOSCHED_CFQ and CONFIG_DEFAULT_NOOP are
-gone since commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+I don't think this actually explains anything - or at least I can't
+make sense of it with respect to your patch.
 
-The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-now enabled by default (along with MQ_IOSCHED_KYBER).
+You claim that the NCFGR register gets overwritten in macb_mac_config(),
+but I see that the NCFGR register is read-modify-write in there,
+whereas your new implementation below doesn't bother reading the
+present value.
 
-The BFQ_GROUP_IOSCHED is the only multiqueue scheduler which comes with
-group scheduling so select it in configs previously choosing
-CFQ_GROUP_IOSCHED.
+I think the issue you're referring to is the clearing of the PAE bit,
+which is also the RM9200_RMII for at91rm9200?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Next, there's some duplication of code introduced here - it seems
+that the tail end of macb_mac_link_down() and at91ether_mac_link_down()
+are identical, as are the tail end of macb_mac_link_up() and
+at91ether_mac_link_up().
 
----
+> Add new phylink callbacks to handle emac and at91rm9200 properly.
+> 
+> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
 
-Changes since v1:
-1. Add Philippe's review.
----
- arch/mips/configs/ar7_defconfig                 | 1 -
- arch/mips/configs/ath25_defconfig               | 1 -
- arch/mips/configs/ath79_defconfig               | 1 -
- arch/mips/configs/bcm63xx_defconfig             | 2 --
- arch/mips/configs/bmips_be_defconfig            | 2 --
- arch/mips/configs/bmips_stb_defconfig           | 2 --
- arch/mips/configs/db1xxx_defconfig              | 1 -
- arch/mips/configs/generic/board-ni169445.config | 1 -
- arch/mips/configs/lasat_defconfig               | 2 --
- arch/mips/configs/lemote2f_defconfig            | 2 +-
- arch/mips/configs/loongson3_defconfig           | 5 +++--
- arch/mips/configs/msp71xx_defconfig             | 2 --
- arch/mips/configs/pnx8335_stb225_defconfig      | 2 --
- arch/mips/configs/rb532_defconfig               | 1 -
- arch/mips/configs/rt305x_defconfig              | 1 -
- arch/mips/configs/xway_defconfig                | 1 -
- 16 files changed, 4 insertions(+), 23 deletions(-)
+I posted a heads-up message last week about updates to phylink that
+I'll be submitting soon (most of the prerequisits have now been sent
+for review) which touch every phylink_mac_ops-using piece of code in
+the tree.  Unfortunately, this patch introduces a new instance that
+likely isn't going to get my attention, so it's going to create a
+subtle merge conflict between net-next and net trees unless we work
+out some way to deal with it.
 
-diff --git a/arch/mips/configs/ar7_defconfig b/arch/mips/configs/ar7_defconfig
-index cef2754bd408..cf9c6329b807 100644
---- a/arch/mips/configs/ar7_defconfig
-+++ b/arch/mips/configs/ar7_defconfig
-@@ -21,7 +21,6 @@ CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_BSD_DISKLABEL=y
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
-index c35add2fd716..7143441f5476 100644
---- a/arch/mips/configs/ath25_defconfig
-+++ b/arch/mips/configs/ath25_defconfig
-@@ -22,7 +22,6 @@ CONFIG_HZ_100=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
-diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
-index 4ffc59cab436..3d14d67dc746 100644
---- a/arch/mips/configs/ath79_defconfig
-+++ b/arch/mips/configs/ath79_defconfig
-@@ -23,7 +23,6 @@ CONFIG_PCI=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/bcm63xx_defconfig b/arch/mips/configs/bcm63xx_defconfig
-index 54e2f9a659fb..861f680184b9 100644
---- a/arch/mips/configs/bcm63xx_defconfig
-+++ b/arch/mips/configs/bcm63xx_defconfig
-@@ -21,8 +21,6 @@ CONFIG_PCI=y
- CONFIG_PCCARD=y
- CONFIG_PCMCIA_BCM63XX=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_UNIX=y
- CONFIG_INET=y
-diff --git a/arch/mips/configs/bmips_be_defconfig b/arch/mips/configs/bmips_be_defconfig
-index f669a40e085b..032bb51defe8 100644
---- a/arch/mips/configs/bmips_be_defconfig
-+++ b/arch/mips/configs/bmips_be_defconfig
-@@ -12,8 +12,6 @@ CONFIG_NR_CPUS=4
- # CONFIG_SECCOMP is not set
- CONFIG_MIPS_O32_FP64_SUPPORT=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_PACKET_DIAG=y
-diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
-index a0b775893dba..625bd2d7e685 100644
---- a/arch/mips/configs/bmips_stb_defconfig
-+++ b/arch/mips/configs/bmips_stb_defconfig
-@@ -21,8 +21,6 @@ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
- CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
- CONFIG_BMIPS_CPUFREQ=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_PACKET_DIAG=y
-diff --git a/arch/mips/configs/db1xxx_defconfig b/arch/mips/configs/db1xxx_defconfig
-index bc9b6ae046b2..e6f3e8e3da39 100644
---- a/arch/mips/configs/db1xxx_defconfig
-+++ b/arch/mips/configs/db1xxx_defconfig
-@@ -28,7 +28,6 @@ CONFIG_PCMCIA_ALCHEMY_DEVBOARD=y
- CONFIG_FIRMWARE_MEMMAP=y
- CONFIG_BLK_DEV_BSGLIB=y
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_DEFAULT_NOOP=y
- CONFIG_CMA=y
- CONFIG_CMA_DEBUG=y
- CONFIG_NET=y
-diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
-index 1ed0d3e8715e..fc3580e4e6bc 100644
---- a/arch/mips/configs/generic/board-ni169445.config
-+++ b/arch/mips/configs/generic/board-ni169445.config
-@@ -19,7 +19,6 @@ CONFIG_MTD_NAND_ECC_SW_HAMMING=y
- CONFIG_MTD_NAND_ECC_SW_BCH=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPIO=y
--CONFIG_MTD_NAND_IDS=y
- 
- CONFIG_MTD_UBI=y
- CONFIG_MTD_UBI_BLOCK=y
-diff --git a/arch/mips/configs/lasat_defconfig b/arch/mips/configs/lasat_defconfig
-index c66ca3785655..00cf461db971 100644
---- a/arch/mips/configs/lasat_defconfig
-+++ b/arch/mips/configs/lasat_defconfig
-@@ -16,8 +16,6 @@ CONFIG_HZ_1000=y
- # CONFIG_SECCOMP is not set
- CONFIG_PCI=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
-index f9f93427c9bd..8254d7d1396f 100644
---- a/arch/mips/configs/lemote2f_defconfig
-+++ b/arch/mips/configs/lemote2f_defconfig
-@@ -26,7 +26,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- CONFIG_BLK_DEV_INTEGRITY=y
--CONFIG_IOSCHED_DEADLINE=m
-+CONFIG_MQ_IOSCHED_DEADLINE=m
- CONFIG_BINFMT_MISC=m
- CONFIG_NET=y
- CONFIG_PACKET=y
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 360c6b2d397a..51675f5000d6 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -38,8 +38,9 @@ CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_IOSCHED_DEADLINE=m
--CONFIG_CFQ_GROUP_IOSCHED=y
-+CONFIG_MQ_IOSCHED_DEADLINE=m
-+CONFIG_IOSCHED_BFQ=y
-+CONFIG_BFQ_GROUP_IOSCHED=y
- CONFIG_BINFMT_MISC=m
- CONFIG_KSM=y
- CONFIG_NET=y
-diff --git a/arch/mips/configs/msp71xx_defconfig b/arch/mips/configs/msp71xx_defconfig
-index 0fdc03fda12e..6ad1a2381226 100644
---- a/arch/mips/configs/msp71xx_defconfig
-+++ b/arch/mips/configs/msp71xx_defconfig
-@@ -14,8 +14,6 @@ CONFIG_PCI=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_UNIX=y
- CONFIG_XFRM_USER=y
-diff --git a/arch/mips/configs/pnx8335_stb225_defconfig b/arch/mips/configs/pnx8335_stb225_defconfig
-index 738ba3b1374b..d06db6b87959 100644
---- a/arch/mips/configs/pnx8335_stb225_defconfig
-+++ b/arch/mips/configs/pnx8335_stb225_defconfig
-@@ -14,8 +14,6 @@ CONFIG_HZ_128=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
-index 5b947183852b..252d472387aa 100644
---- a/arch/mips/configs/rb532_defconfig
-+++ b/arch/mips/configs/rb532_defconfig
-@@ -23,7 +23,6 @@ CONFIG_MODULE_UNLOAD=y
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_MAC_PARTITION=y
- CONFIG_BSD_DISKLABEL=y
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/rt305x_defconfig b/arch/mips/configs/rt305x_defconfig
-index 110948bc6b39..8c2ead53007a 100644
---- a/arch/mips/configs/rt305x_defconfig
-+++ b/arch/mips/configs/rt305x_defconfig
-@@ -21,7 +21,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COREDUMP is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
-diff --git a/arch/mips/configs/xway_defconfig b/arch/mips/configs/xway_defconfig
-index 49b5ea6eff62..9abbc0debc2a 100644
---- a/arch/mips/configs/xway_defconfig
-+++ b/arch/mips/configs/xway_defconfig
-@@ -23,7 +23,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COREDUMP is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
+I'm just mentioning that so that some thought can be applied now
+rather than when it actually happens - especially as I've no way to
+test the changes that will be necessary for this driver.
+
+>  drivers/net/ethernet/cadence/macb.h      |  1 +
+>  drivers/net/ethernet/cadence/macb_main.c | 81 +++++++++++++++++++++---
+>  2 files changed, 73 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> index dbf7070fcdba..a3f0f27fc79a 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -652,6 +652,7 @@
+>  #define MACB_CAPS_GEM_HAS_PTP			0x00000040
+>  #define MACB_CAPS_BD_RD_PREFETCH		0x00000080
+>  #define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
+> +#define MACB_CAPS_MACB_IS_EMAC			0x08000000
+>  #define MACB_CAPS_FIFO_MODE			0x10000000
+>  #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+>  #define MACB_CAPS_SG_DISABLED			0x40000000
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index def94e91883a..529a1d0d7dab 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -654,6 +654,72 @@ static const struct phylink_mac_ops macb_phylink_ops = {
+>  	.mac_link_up = macb_mac_link_up,
+>  };
+>  
+> +static void at91ether_mac_config(struct phylink_config *config,
+> +				 unsigned int mode,
+> +				 const struct phylink_link_state *state)
+> +{
+> +	struct net_device *ndev = to_net_dev(config->dev);
+> +	struct macb *bp = netdev_priv(ndev);
+> +	unsigned long flags;
+> +	u32 ctrl;
+> +
+> +	spin_lock_irqsave(&bp->lock, flags);
+> +
+> +	ctrl = MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG);
+> +	if (state->speed == SPEED_100)
+> +		ctrl |= MACB_BIT(SPD);
+> +
+> +	if (state->duplex)
+> +		ctrl |= MACB_BIT(FD);
+> +
+> +	if (state->interface == PHY_INTERFACE_MODE_RMII)
+> +		ctrl |= MACB_BIT(RM9200_RMII);
+> +
+> +	macb_writel(bp, NCFGR, ctrl);
+> +
+> +	bp->speed = state->speed;
+> +
+> +	spin_unlock_irqrestore(&bp->lock, flags);
+> +}
+> +
+> +static void at91ether_mac_link_down(struct phylink_config *config,
+> +				    unsigned int mode,
+> +				    phy_interface_t interface)
+> +{
+> +	struct net_device *ndev = to_net_dev(config->dev);
+> +	struct macb *bp = netdev_priv(ndev);
+> +	u32 ctrl;
+> +
+> +	/* Disable Rx and Tx */
+> +	ctrl = macb_readl(bp, NCR) & ~(MACB_BIT(RE) | MACB_BIT(TE));
+> +	macb_writel(bp, NCR, ctrl);
+> +
+> +	netif_tx_stop_all_queues(ndev);
+> +}
+> +
+> +static void at91ether_mac_link_up(struct phylink_config *config,
+> +				  unsigned int mode,
+> +				  phy_interface_t interface,
+> +				  struct phy_device *phy)
+> +{
+> +	struct net_device *ndev = to_net_dev(config->dev);
+> +	struct macb *bp = netdev_priv(ndev);
+> +
+> +	/* Enable Rx and Tx */
+> +	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
+> +
+> +	netif_tx_wake_all_queues(ndev);
+> +}
+> +
+> +static const struct phylink_mac_ops at91ether_phylink_ops = {
+> +	.validate = macb_validate,
+> +	.mac_pcs_get_state = macb_mac_pcs_get_state,
+> +	.mac_an_restart = macb_mac_an_restart,
+> +	.mac_config = at91ether_mac_config,
+> +	.mac_link_down = at91ether_mac_link_down,
+> +	.mac_link_up = at91ether_mac_link_up,
+> +};
+> +
+>  static bool macb_phy_handle_exists(struct device_node *dn)
+>  {
+>  	dn = of_parse_phandle(dn, "phy-handle", 0);
+> @@ -695,13 +761,17 @@ static int macb_phylink_connect(struct macb *bp)
+>  /* based on au1000_eth. c*/
+>  static int macb_mii_probe(struct net_device *dev)
+>  {
+> +	const struct phylink_mac_ops *phylink_ops = &macb_phylink_ops;
+>  	struct macb *bp = netdev_priv(dev);
+>  
+> +	if (bp->caps & MACB_CAPS_MACB_IS_EMAC)
+> +		phylink_ops = &at91ether_phylink_ops;
+> +
+>  	bp->phylink_config.dev = &dev->dev;
+>  	bp->phylink_config.type = PHYLINK_NETDEV;
+>  
+>  	bp->phylink = phylink_create(&bp->phylink_config, bp->pdev->dev.fwnode,
+> -				     bp->phy_interface, &macb_phylink_ops);
+> +				     bp->phy_interface, phylink_ops);
+>  	if (IS_ERR(bp->phylink)) {
+>  		netdev_err(dev, "Could not create a phylink instance (%ld)\n",
+>  			   PTR_ERR(bp->phylink));
+> @@ -4041,7 +4111,6 @@ static int at91ether_init(struct platform_device *pdev)
+>  	struct net_device *dev = platform_get_drvdata(pdev);
+>  	struct macb *bp = netdev_priv(dev);
+>  	int err;
+> -	u32 reg;
+>  
+>  	bp->queues[0].bp = bp;
+>  
+> @@ -4055,12 +4124,6 @@ static int at91ether_init(struct platform_device *pdev)
+>  
+>  	macb_writel(bp, NCR, 0);
+>  
+> -	reg = MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG);
+> -	if (bp->phy_interface == PHY_INTERFACE_MODE_RMII)
+> -		reg |= MACB_BIT(RM9200_RMII);
+> -
+> -	macb_writel(bp, NCFGR, reg);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -4218,7 +4281,7 @@ static const struct macb_config sama5d4_config = {
+>  };
+>  
+>  static const struct macb_config emac_config = {
+> -	.caps = MACB_CAPS_NEEDS_RSTONUBR,
+> +	.caps = MACB_CAPS_NEEDS_RSTONUBR | MACB_CAPS_MACB_IS_EMAC,
+>  	.clk_init = at91ether_clk_init,
+>  	.init = at91ether_init,
+>  };
+> -- 
+> 2.24.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
