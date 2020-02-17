@@ -2,148 +2,172 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FFC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DFDC3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854EF20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XltBufQf"
+	by mail.kernel.org (Postfix) with ESMTP id 437A9206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgBQKhz (ORCPT
+        id S1729230AbgBQKjY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:37:55 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43766 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBQKhz (ORCPT
+        Mon, 17 Feb 2020 05:39:24 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:51355 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgBQKjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:37:55 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so16209610oif.10;
-        Mon, 17 Feb 2020 02:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=k8BSp0O0KfBeVprk778t84qb07TP/hfwso06rDN0yGc=;
-        b=XltBufQfP7wpwCaNj3e2sGKjeJdqeCFagWjLEArZeghTwlgQn7jnZ/rCVwGXc+spcI
-         GPND8ggd8u9g3YV/+UTlF28LLPC7SJXtT6k3e54xDfkWHJMcqJkzxpIAY0PeoIVvOjsD
-         3F42Be7kyt/JCWZ5oF/8cJofMIJwXPgLAfv4oNCixaLgbCjwq3t2HoGyFmtoSq3Ua4vJ
-         wN1BGhcyrqivi+J9AdRuHJNe3fEvUMBqLyK9u1PrgbOPH1z6ozTSZ7VJVkKNby57b8EM
-         5KrPb5MaPkfT5H336GfRnPEZx+r0nXv8Bd8Jr+kbJ6ZL7uAsTIIDpKpYXAp8xHRzzTsM
-         1O7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=k8BSp0O0KfBeVprk778t84qb07TP/hfwso06rDN0yGc=;
-        b=SMOzQqIfub+NHS5fSuiwWrv2J9pb6/DVYDBzt/tdR6BwmyIXMT9IzGueP8/sXujdfM
-         VdLDjCA9qeW6/ZEarb3SDudL+RPEdPAJF56mGfvRssNctkf03RjvoDu7xaGskc6fKx5j
-         BxGsUPZMjqjScG3gPwURqtxI5YUtTVPDW235B+SvsFBn08J5fRqagTlYyoRpOhPPX/oo
-         +1DxpUtCycBn58kEL8VV4VcOsXu2/Fbc7kuWLqGNBdHLri+D50VCJaedwC+MG4mQv3Bs
-         eT+CHn+9yO4JnLRliCvyYtP6rTpI8Eao9u1XODyccNc1PCo3B+YC5R8c7tOz5apiEngg
-         1oPQ==
-X-Gm-Message-State: APjAAAXRiisXytfZ6JhSuakkTnBqFjc+/wJlLUqXpxEzz012Xog0K09c
-        3BT6Cvab1Zsmx8wH4LH3JxYsGYvs912JpC5y0RRGwFj47xEbIQ==
-X-Google-Smtp-Source: APXvYqxDjBYcTjQcr5nocEiOj7Htq4tDWpJtbNMIsIoV6egKz/W1ZjwiadRqjn1/jSJ5/DdLuvCwUa09BsVcra6xkbo=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr9150053oii.141.1581935873942;
- Mon, 17 Feb 2020 02:37:53 -0800 (PST)
+        Mon, 17 Feb 2020 05:39:23 -0500
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9E731100019;
+        Mon, 17 Feb 2020 10:39:20 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 11:39:19 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Peter Pan <peterpandong@micron.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "Richard Weinberger" <richard@nod.at>
+Subject: Re: [PATCH 3/3] mtd: spinand: Wait for the erase op to finish
+ before writing a bad block marker
+Message-ID: <20200217113919.0508acc4@xps13>
+In-Reply-To: <20200211163452.25442-4-frieder.schrempf@kontron.de>
+References: <20200211163452.25442-1-frieder.schrempf@kontron.de>
+        <20200211163452.25442-4-frieder.schrempf@kontron.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 17 Feb 2020 18:37:43 +0800
-Message-ID: <CANRm+Cx2ifbbQWk0yAm=W5Us69GybSdtO8uLYXx-qe9F=jNeeQ@mail.gmail.com>
-Subject: [PATCH v3 2/2] KVM: nVMX: Hold KVM's srcu lock when syncing vmcs12->shadow
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wanpeng li <wanpengli@tencent.com>
+Hi Frieder,
 
-For the duration of mapping eVMCS, it derefences ->memslots without holding
-->srcu or ->slots_lock when accessing hv assist page. This patch fixes it by
-moving nested_sync_vmcs12_to_shadow to prepare_guest_switch, where the SRCU
-is already taken.
+Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 11 Feb
+2020 16:35:53 +0000:
 
-It can be reproduced by running kvm's evmcs_test selftest.
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> Currently when marking a block, we use spinand_erase_op() to erase
+> the block before writing the marker to the OOB area without waiting
+> for the operation to succeed. This can lead to the marking failing
+> silently and no bad block marker being written to the flash.
+> 
+> To fix this we reuse the spinand_erase() function, that already does
+> everything we need to do before actually writing the marker.
+> 
 
-  =============================
-  warning: suspicious rcu usage
-  5.6.0-rc1+ #53 tainted: g        w ioe
-  -----------------------------
-  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
+Thanks a lot for this series!
 
-  other info that might help us debug this:
+Yet I don't really understand the point of waiting for the erasure if
+it failed: we don't really care as programming (1 -> 0) cells is always
+possible. Are you sure this lead to an error?
 
-   rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/8507:
-   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
-kvm_vcpu_ioctl+0x85/0x680 [kvm]
+Also, why just not calling spinand_erase() instead of
+spinand_erase_op() from spinand_markbad()?
 
-  stack backtrace:
-  cpu: 6 pid: 8507 comm: evmcs_test tainted: g        w ioe     5.6.0-rc1+ #53
-  hardware name: dell inc. optiplex 7040/0jctf8, bios 1.4.9 09/12/2016
-  call trace:
-   dump_stack+0x68/0x9b
-   kvm_read_guest_cached+0x11d/0x150 [kvm]
-   kvm_hv_get_assist_page+0x33/0x40 [kvm]
-   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
-   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
-   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
-   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
-   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
-   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
-   kvm_vcpu_ioctl+0x370/0x680 [kvm]
-   ksys_ioctl+0x235/0x850
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x77/0x780
-   entry_syscall_64_after_hwframe+0x49/0xbe
+> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  drivers/mtd/nand/spi/core.c | 56 ++++++++++++++++++-------------------
+>  1 file changed, 28 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+> index 925db6269861..8a69d13639e2 100644
+> --- a/drivers/mtd/nand/spi/core.c
+> +++ b/drivers/mtd/nand/spi/core.c
+> @@ -600,6 +600,32 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
+>  	return ret;
+>  }
+>  
+> +static int __spinand_erase(struct nand_device *nand, const struct nand_pos *pos,
+> +			   bool hard_fail)
+> +{
+> +	struct spinand_device *spinand = nand_to_spinand(nand);
+> +	u8 status;
+> +	int ret;
+> +
+> +	ret = spinand_select_target(spinand, pos->target);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = spinand_write_enable_op(spinand);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = spinand_erase_op(spinand, pos);
+> +	if (ret && hard_fail)
+> +		return ret;
+> +
+> +	ret = spinand_wait(spinand, &status);
+> +	if (!ret && (status & STATUS_ERASE_FAILED))
+> +		ret = -EIO;
+> +
+> +	return ret;
+> +}
+> +
+>  static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+>  {
+>  	struct spinand_device *spinand = nand_to_spinand(nand);
+> @@ -614,16 +640,10 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+>  	int ret;
+>  
+>  	/* Erase block before marking it bad. */
+> -	ret = spinand_select_target(spinand, pos->target);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = spinand_write_enable_op(spinand);
+> +	ret = __spinand_erase(nand, pos, false);
+>  	if (ret)
+>  		return ret;
+>  
+> -	spinand_erase_op(spinand, pos);
+> -
+>  	return spinand_write_page(spinand, &req);
+>  }
+>  
+> @@ -644,27 +664,7 @@ static int spinand_mtd_block_markbad(struct mtd_info *mtd, loff_t offs)
+>  
+>  static int spinand_erase(struct nand_device *nand, const struct nand_pos *pos)
+>  {
+> -	struct spinand_device *spinand = nand_to_spinand(nand);
+> -	u8 status;
+> -	int ret;
+> -
+> -	ret = spinand_select_target(spinand, pos->target);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = spinand_write_enable_op(spinand);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = spinand_erase_op(spinand, pos);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = spinand_wait(spinand, &status);
+> -	if (!ret && (status & STATUS_ERASE_FAILED))
+> -		ret = -EIO;
+> -
+> -	return ret;
+> +	return __spinand_erase(nand, pos, true);
+>  }
+>  
+>  static int spinand_mtd_erase(struct mtd_info *mtd,
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v1 -> v2:
- * update Subject
- * move the check above
- * add the WARN_ON_ONCE
-
- arch/x86/kvm/vmx/vmx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3be25ec..9a6797f 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1175,6 +1175,10 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
-                        vmx->guest_msrs[i].mask);
-
-     }
-+
-+    if (vmx->nested.need_vmcs12_to_shadow_sync)
-+        nested_sync_vmcs12_to_shadow(vcpu);
-+
-     if (vmx->guest_state_loaded)
-         return;
-
-@@ -6482,8 +6486,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-         vmcs_write32(PLE_WINDOW, vmx->ple_window);
-     }
-
--    if (vmx->nested.need_vmcs12_to_shadow_sync)
--        nested_sync_vmcs12_to_shadow(vcpu);
-+    WARN_ON_ONCE(vmx->nested.need_vmcs12_to_shadow_sync);
-
-     if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
-         vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
---
-2.7.4
+Thanks,
+Miquèl
