@@ -2,214 +2,97 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D800DC33FA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613A8C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B802070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303EE2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m9Ib4xAI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="IonV6P7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBQNiJ (ORCPT
+        id S1727983AbgBQNi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:38:09 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44816 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgBQNiJ (ORCPT
+        Mon, 17 Feb 2020 08:38:27 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:23670 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgBQNi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:38:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so19736968wrx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:38:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nDiRsEAIhvUGr0lYuEJebsL5PJq7c20YrBjsG0G5asE=;
-        b=m9Ib4xAIBqaXvlSAko9uT/dWqaqwCVRkGpAodBbksRx3pH28oU8qRSFzow5t4iDqZq
-         9V9bL9GnITj1pRVR8K3xRsdlCcCvPq80SAnT8nt6B9If3bxb6W4H/xKmfy5Tvrerc1In
-         YTRPyZI/KB1ZLd3VJvDaQxqLZzZhrTf1le7HuQCP19qI0myl2EJzGGF5mPI+hjB8GD/+
-         6nG4OtQ4vdUG/Fe0lRcKlSBGRZEdyqQJArih/bfqU91tPSxgywfrYCLKR8jggkmlIx3j
-         xuYmlr3zYjlbPK8p0+EKn/zTRj9yckxcIX5Mmr0VY+8moVN/EL3z7w+It7Ra3dvD1z56
-         pCew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nDiRsEAIhvUGr0lYuEJebsL5PJq7c20YrBjsG0G5asE=;
-        b=UTqo5bpjV5AJluxV7kykRon3zDyNz7PrJamRE9Lv0hmR/Nm3TNndsJO9N7fBVnkB0b
-         OS23vBa8m7VRLUgeE9ufc1ZYnXhGhbN1Brn7TdPkSAaivBGMUaViF/PtvcFsxuNL872f
-         9+bHnetxzDlLqnAs/FJZfuwBYZ9HkZLdAbrX09pSWthHGe9xF5fgR92UFU/YuaQv6xp1
-         BRbbsnh0JvtpFHY7hC381RjdHo71dH/uZ9BtRmGk4eKASzNNej4PjpxDAEDdsFTGOASt
-         oVVqCNzwLvTuZnWVgaY0ByJElcV7wo1dOGN+kgUOEDjQxGESop+rc6kDnn70c8D2cHAw
-         9kLA==
-X-Gm-Message-State: APjAAAWB7K/Wag/cC3UNpKFgF3casjrPoTQ+tDf8Pt3xJzNdZx6EnTE4
-        iuuZdwLTc+DbzJGAPP2yBezgFUZ2OpXBqxUt4cmhnQ==
-X-Google-Smtp-Source: APXvYqwOUBucYswqUNyMIHc1aiTamfVBZWGT+dn/rwRaci4zG+s/D1nwmO/6x5V/pkNlnsTqLUeNB8BucEtyklRsh1I=
-X-Received: by 2002:adf:8564:: with SMTP id 91mr22934838wrh.252.1581946685893;
- Mon, 17 Feb 2020 05:38:05 -0800 (PST)
+        Mon, 17 Feb 2020 08:38:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581946704;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=cBUUlAZ6i+U9PJhnWDfCJgK6bPL4IpEvunrE61nzboc=;
+        b=IonV6P7gZndFOVguOLjAdcZH4YnjBM8dzfr+KxzwFf/3krjV7jMTzdJuBoJHsmEmc+
+        AKAw6nCg5LHNv8CgWbLsAaHgT6Rtr8S/ympNl50OUSDMJEfSDH41ggQgt0ucz0i8QaUm
+        HFCo5ZBnZel0LEuKo75VuZ//LEgOm0OAfy/yVfmH+7qVrDQGqomQNbwi+pcDHWj4423Z
+        ZHP2jwD/NRBgTtzIuPsrOCSKN5KPbTWF0/8O6qslGzmdO8XNbSq09NvqodGMPsufA4mC
+        EsiKGwwIpCMCsb9OQ1v53aOcWt7qut6RvDdHLVs3oVhmZHCF+U6nnelMAizaG4sfGPMz
+        JrZQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HDcGNXg
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 14:38:16 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
+Date:   Mon, 17 Feb 2020 14:38:15 +0100
+Message-Id: <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20200217113947.2070436-1-javierm@redhat.com>
-In-Reply-To: <20200217113947.2070436-1-javierm@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 17 Feb 2020 14:37:54 +0100
-Message-ID: <CAKv+Gu-a5Bo9i=K55pa3jEXRq-u5JYVGp1jFEE=UY5B=6eUkRQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
- certs if EFI vars are found
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 at 12:40, Javier Martinez Canillas
-<javierm@redhat.com> wrote:
->
-> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
-> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
->
-> But it just assumes that the variables will be present and prints an error
-> if the certs can't be loaded, even when is possible that the variables may
-> not exist. For example the MokListRT variable will only be present if shim
-> is used.
->
-> So only print an error message about failing to get the certs list from an
-> EFI variable if this is found. Otherwise these printed errors just pollute
-> the kernel log ring buffer with confusing messages like the following:
->
-> [    5.427251] Couldn't get size: 0x800000000000000e
-> [    5.427261] MODSIGN: Couldn't get UEFI db list
-> [    5.428012] Couldn't get size: 0x800000000000000e
-> [    5.428023] Couldn't get UEFI MokListRT
->
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+If the gpios are probed after this driver (e.g. if they
+come from an i2c expander) there is no need to print an
+error message.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/extcon/extcon-palmas.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
->
-> ---
->
-> Changes in v2:
-> - Fix flaws in the logic, that caused the signature list was parsed if
->   the return code was EFI_NOT_FOUND that pointed out Hans de Goede.
-> - Print debug messages if the variables are not found.
->
->  security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
->  1 file changed, 26 insertions(+), 14 deletions(-)
->
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index 111898aad56..f0c90824196 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -35,16 +35,18 @@ static __init bool uefi_check_ignore_db(void)
->   * Get a certificate list blob from the named EFI variable.
->   */
->  static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> -                                 unsigned long *size)
-> +                                 unsigned long *size, efi_status_t *status)
->  {
-> -       efi_status_t status;
->         unsigned long lsize = 4;
->         unsigned long tmpdb[4];
->         void *db;
->
-> -       status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-> -       if (status != EFI_BUFFER_TOO_SMALL) {
-> -               pr_err("Couldn't get size: 0x%lx\n", status);
-> +       *status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-> +       if (*status == EFI_NOT_FOUND)
-> +               return NULL;
-> +
-> +       if (*status != EFI_BUFFER_TOO_SMALL) {
-> +               pr_err("Couldn't get size: 0x%lx\n", *status);
->                 return NULL;
->         }
->
-> @@ -52,10 +54,10 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
->         if (!db)
->                 return NULL;
->
-> -       status = efi.get_variable(name, guid, NULL, &lsize, db);
-> -       if (status != EFI_SUCCESS) {
-> +       *status = efi.get_variable(name, guid, NULL, &lsize, db);
-> +       if (*status != EFI_SUCCESS) {
->                 kfree(db);
-> -               pr_err("Error reading db var: 0x%lx\n", status);
-> +               pr_err("Error reading db var: 0x%lx\n", *status);
->                 return NULL;
->         }
->
-> @@ -74,6 +76,7 @@ static int __init load_uefi_certs(void)
->         efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
->         void *db = NULL, *dbx = NULL, *mok = NULL;
->         unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
-> +       efi_status_t status;
->         int rc = 0;
->
->         if (!efi.get_variable)
-> @@ -83,9 +86,12 @@ static int __init load_uefi_certs(void)
->          * an error if we can't get them.
->          */
->         if (!uefi_check_ignore_db()) {
-> -               db = get_cert_list(L"db", &secure_var, &dbsize);
-> +               db = get_cert_list(L"db", &secure_var, &dbsize, &status);
->                 if (!db) {
-> -                       pr_err("MODSIGN: Couldn't get UEFI db list\n");
-> +                       if (status == EFI_NOT_FOUND)
-> +                               pr_debug("MODSIGN: db variable wasn't found\n");
-> +                       else
-> +                               pr_err("MODSIGN: Couldn't get UEFI db list\n");
->                 } else {
->                         rc = parse_efi_signature_list("UEFI:db",
->                                         db, dbsize, get_handler_for_db);
-> @@ -96,9 +102,12 @@ static int __init load_uefi_certs(void)
->                 }
->         }
->
-> -       mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
->         if (!mok) {
-> -               pr_info("Couldn't get UEFI MokListRT\n");
-> +               if (status == EFI_NOT_FOUND)
-> +                       pr_debug("MokListRT variable wasn't found\n");
-> +               else
-> +                       pr_info("Couldn't get UEFI MokListRT\n");
->         } else {
->                 rc = parse_efi_signature_list("UEFI:MokListRT",
->                                               mok, moksize, get_handler_for_db);
-> @@ -107,9 +116,12 @@ static int __init load_uefi_certs(void)
->                 kfree(mok);
->         }
->
-> -       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-> +       dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
->         if (!dbx) {
-> -               pr_info("Couldn't get UEFI dbx list\n");
-> +               if (status == EFI_NOT_FOUND)
-> +                       pr_debug("dbx variable wasn't found\n");
-> +               else
-> +                       pr_info("Couldn't get UEFI dbx list\n");
->         } else {
->                 rc = parse_efi_signature_list("UEFI:dbx",
->                                               dbx, dbxsize,
-> --
-> 2.24.1
->
+diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+index edc5016f46f1..cea58d0cb457 100644
+--- a/drivers/extcon/extcon-palmas.c
++++ b/drivers/extcon/extcon-palmas.c
+@@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
+ 
+ 	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
+ 							GPIOD_IN);
+-	if (IS_ERR(palmas_usb->id_gpiod)) {
++	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(palmas_usb->id_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get id gpio\n");
+ 		return PTR_ERR(palmas_usb->id_gpiod);
+ 	}
+ 
+ 	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
+ 							GPIOD_IN);
+-	if (IS_ERR(palmas_usb->vbus_gpiod)) {
++	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+ 		return PTR_ERR(palmas_usb->vbus_gpiod);
+ 	}
+-- 
+2.23.0
+
