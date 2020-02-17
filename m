@@ -2,92 +2,97 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3189EC34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69163C34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6B820836
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581966768;
-	bh=bBGh2zu9Ak33pj6iJVskOUz3q/3+KzGXfk104cCS3vU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=uXePDQVThQyTkkmWpKdII84MqUzxWnAH/4T0mXC6falgTF7StE/jugAa5mNZwDmWQ
-	 uhjdCgSlDHuHlphyonl1l3MfKseXCgboWcS/ygr321M+EsgXMw/Oc+dvtMNJBBoY6B
-	 p6LO1aVcIQO6GN66wOOhPtwMOiayLoIaBuxSsWS0=
+	by mail.kernel.org (Postfix) with ESMTP id 4BC81227BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgBQTMq (ORCPT
+        id S1729745AbgBQTSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgBQTMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:12:46 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A929C20801;
-        Mon, 17 Feb 2020 19:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581966765;
-        bh=bBGh2zu9Ak33pj6iJVskOUz3q/3+KzGXfk104cCS3vU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=iyZl7rw31feSNE1LTuRorqDiXP3Y9G62s0sBByNr9ZfckstTUZna1LpW9NalhgpeN
-         Pnos4z7iBNdkFOzl1ZiWV3+PoQ0IRaWrXzHWiVejbX9c7RO+4747YJJzt5L+569DwX
-         ygpx5EoDxiZS63BHPbPFBCzexMUAQ3dma9kFZjIM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7921D352273C; Mon, 17 Feb 2020 11:12:45 -0800 (PST)
-Date:   Mon, 17 Feb 2020 11:12:45 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
-        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH memory-model] Add recent references
-Message-ID: <20200217191245.GV2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214233139.GA12521@paulmck-ThinkPad-P72>
- <Pine.LNX.4.44L0.2002161158140.30459-100000@netrider.rowland.org>
+        Mon, 17 Feb 2020 14:18:49 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34627 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729705AbgBQTSt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 14:18:49 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j3luo-0006BQ-1W; Mon, 17 Feb 2020 20:18:46 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7026A1C20B8;
+        Mon, 17 Feb 2020 20:18:45 +0100 (CET)
+Date:   Mon, 17 Feb 2020 19:18:45 -0000
+From:   "tip-bot2 for Amol Grover" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] posix-timers: Pass lockdep expression to RCU lists
+Cc:     Amol Grover <frextrite@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200216074330.GA14025@workstation-portable>
+References: <20200216074330.GA14025@workstation-portable>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2002161158140.30459-100000@netrider.rowland.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <158196712510.13786.4601056224517728789.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 12:01:14PM -0500, Alan Stern wrote:
-> On Fri, 14 Feb 2020, Paul E. McKenney wrote:
-> 
-> > This commit updates the list of LKMM-related publications in
-> > Documentation/references.txt.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> >  o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
-> > -	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
-> > -	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
-> > +	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
-> > +	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
-> 
-> Even though this is an update, the new version referenced here is
-> already out-of-date (in particular, with regard to its discussions of 
-> the ordering properties of unlock-lock sequences as viewed by threads 
-> not holding the lock).  And it contains a few typos scattered 
-> throughout.
+The following commit has been merged into the timers/core branch of tip:
 
-Indeed, 18 months is a long time for LKMM, isn't it?  ;-)
+Commit-ID:     5fb1c2a5bbf79ccca8d17cf97f66085be5808027
+Gitweb:        https://git.kernel.org/tip/5fb1c2a5bbf79ccca8d17cf97f66085be5808027
+Author:        Amol Grover <frextrite@gmail.com>
+AuthorDate:    Sun, 16 Feb 2020 13:13:30 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 17 Feb 2020 20:12:19 +01:00
 
-Sounds like time to update it for the next meeting.  I of course would
-welcome any notes you might have taken while going through it.
+posix-timers: Pass lockdep expression to RCU lists
 
-							Thanx, Paul
+head is traversed using hlist_for_each_entry_rcu outside an RCU read-side
+critical section but under the protection of hash_lock.
+
+Hence, add corresponding lockdep expression to silence false-positive
+lockdep warnings, and harden RCU lists.
+
+[ tglx: Removed the macro and put the condition right where it's used ]
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200216074330.GA14025@workstation-portable
+
+
+---
+ kernel/time/posix-timers.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index ff0eb30..07709ac 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -121,7 +121,8 @@ static struct k_itimer *__posix_timers_find(struct hlist_head *head,
+ {
+ 	struct k_itimer *timer;
+ 
+-	hlist_for_each_entry_rcu(timer, head, t_hash) {
++	hlist_for_each_entry_rcu(timer, head, t_hash,
++				 lockdep_is_held(&hash_lock)) {
+ 		if ((timer->it_signal == sig) && (timer->it_id == id))
+ 			return timer;
+ 	}
