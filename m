@@ -2,191 +2,288 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2EDC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DFC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6592072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859F120718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VbUoC4ZP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AYlebW98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgBQMee (ORCPT
+        id S1728524AbgBQMfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:34:34 -0500
-Received: from mail-dm6nam12on2041.outbound.protection.outlook.com ([40.107.243.41]:6049
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Mon, 17 Feb 2020 07:35:18 -0500
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:30421
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727233AbgBQMed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:34:33 -0500
+        id S1727513AbgBQMfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:35:17 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A0cqnMujP6M7c3CaRhSTDD9TluOBFqDk+SDrGTgK1c1RsVGV6QmRsJTHdDMYVBB+R05d+3WPDeMKmeXTKVGm6AINUng2ftuGAvxDdo5AVT5qtbNJSNBILNLu8DnrpVwnHSBi+fqYypp23E6w9Kxj1iczo/IGT86Tn1oRde6SOhdTetVvBYZSvq3gGPwf4tfw60mXU3Di+LxkbL2pR9uIM9vpC3M+bq8qIw6jN/+ja3rCJ6x7MJA8dAvuTOrQCgMjDv22LUFqa2CywNB7GySNSxDxTIkeH2DwVkWqV0e30kNdNqOuzmxV0nguzQIRwj2awWD8b4nILor6JXna7wiEzg==
+ b=Vw+dT+9sWa91y2sGR9hK4gANUfOpJoRPgD91sE3huyQvZ3Yo6ULLKERMTDfEBqmfGMpwBVVuUgHyWHh5n3y41cGGsNzgXymSXZi52snOg/Ld+Fa+EcuG8h65C9+iSdeRNlx/lfZj3kXYw4tXtT1SBa4orID1yx7CQjc471E3x1VHBcweA3yISSCarfm8DGMtQfPjTXoHsnqdyfiCk120tREuEOecvLUcbuI3P7CKaUZ/5Q5bDzEtN88UW6gu2Wx59EAk9Z7VpAkpIxtaph7M/ZGw9JuiONRO3WTWTta9eQZbqyHMeC32fuUFD7xhb60LY//vNNjIYtFojuxdvzv0ew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=96lmm/m9X4pYH/c3YVANjdHqmCAjoHOI1sptdry4dEs=;
- b=O/5NdvtMuoxspc3mgVhMh18Ycq80xw//0DWb4R5zPPeoYeQU4gT6NUswXpaO3WNBNhNjplQqoOzjXoBauZ/ANzDRtD6tYfiyzYcrBJ1f8NN/9ZAZjqz2XWB3th5gpAomdptpPhFj2JgNFNAaNGMhpg/KDBt1yblLPSVDvx5+Q0HUD8mghpFn63WRzj+oJqASNUKalOVpedXqxS3jhwZXLw2cUaJqOIfq4cSlHkIgsvpKX9TXekPfngEKcfqjB3UZjmFcn0+IaInaRlrBJeWDap5U9pAMor730ABEnQb7O08uKhn/i5AqohTGlPMgaZ6/nDNn91MKmSgJVhZ9EyxzsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=O+0vORzd3WBwY9d2eryCv4ThvMYc8u/GiLxU4zQTmy8=;
+ b=PP4X7k66vWo/kV+OM6KOGKoMEoJZeCzs7ke7hHR/TXLt98PpxiF5/OZ2nK3CAr87MIQIJBEqa+2oyA0mcsu7CZdpYZjEtWG50H/3KnZmCZewIzYLNmyvQojICBMO84EL2CJEm161PlQn481hfb8otIJAN4anJETVLb9izCd0iMvAWB1HlxmFCxbeGciSJ5ZnR0ZjbXMo6vt+mSRB2iqKIDyDlBxFrcDc50lXr99iabod2/CkxHjg0iWVRJ3sv/fC7jF+gnTV8eKyg32d3GoJ2O7S6oGxuA3HyvlTVMx2qTQ2Jniy8u3GbIoRo4xyBKhmNJIOyVJwX+IXa4nEe6Q3VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=96lmm/m9X4pYH/c3YVANjdHqmCAjoHOI1sptdry4dEs=;
- b=VbUoC4ZPY/Qr7hYbQ9MidJwKEk5MVFAaaK37PbUGNltwE0Pfp/gdgUJIgPALYGl4BM05aeFFuBOpZVDx67QseebLQtIWUKVH7sSINZ+gPffRW5JQClboU7r/kTW0r7HTIIsiIBk6BLrW1HtQgDcxIajowqWPjszA5dmd3zqP1CU=
-Received: from CY4PR02CA0035.namprd02.prod.outlook.com (2603:10b6:903:117::21)
- by MN2PR02MB5725.namprd02.prod.outlook.com (2603:10b6:208:11c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Mon, 17 Feb
- 2020 12:33:54 +0000
-Received: from BL2NAM02FT018.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by CY4PR02CA0035.outlook.office365.com
- (2603:10b6:903:117::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
- Transport; Mon, 17 Feb 2020 12:33:48 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT018.mail.protection.outlook.com (10.152.77.170) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Mon, 17 Feb 2020 12:33:47 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fat-0000TN-9q; Mon, 17 Feb 2020 04:33:47 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fao-0001yh-6e; Mon, 17 Feb 2020 04:33:42 -0800
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HCXW0e025992;
-        Mon, 17 Feb 2020 04:33:32 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fad-0001uE-QT; Mon, 17 Feb 2020 04:33:32 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V3 6/7] gpio: zynq: Add pmc gpio support
-Date:   Mon, 17 Feb 2020 18:03:12 +0530
-Message-Id: <1581942793-19468-7-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(199004)(189003)(2906002)(6666004)(7696005)(356004)(26005)(966005)(336012)(426003)(186003)(498600001)(5660300002)(2616005)(44832011)(70206006)(9786002)(8936002)(70586007)(81166006)(6636002)(81156014)(36756003)(4326008)(8676002)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5725;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+ bh=O+0vORzd3WBwY9d2eryCv4ThvMYc8u/GiLxU4zQTmy8=;
+ b=AYlebW98JYLX/U6vEap8g0PmfbgEJXuCWcvUQkrEj1f3NGB3rm+u+/RTSYNhYPrW/1mUUypJu0qvxbDCYitiiuXMRJGYnZaCV5c/sFIwT2Lc8MVjdVaNBxCw872UnhsPJ3+LkkyYN6Hpm6YQ6Mrt50K3Q4dUZI8NKFZy20IVUFs=
+Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com (10.168.65.10) by
+ VI1PR0401MB2336.eurprd04.prod.outlook.com (10.169.132.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Mon, 17 Feb 2020 12:35:13 +0000
+Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com
+ ([fe80::196a:28a9:bb9:2fae]) by VI1PR0401MB2496.eurprd04.prod.outlook.com
+ ([fe80::196a:28a9:bb9:2fae%9]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
+ 12:35:13 +0000
+From:   Pankaj Bansal <pankaj.bansal@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: RE: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Thread-Topic: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Thread-Index: AQHV1bJZgaFB40NXxUCtFFLRVXyi06f/610AgAStpQCAAAiuAIAAD1yAgBYviuCAABITAIAAAFRwgAAG0ICAAAEwoIAAF+uAgARaY6A=
+Date:   Mon, 17 Feb 2020 12:35:12 +0000
+Message-ID: <VI1PR0401MB2496308C27B7DAA7A5396970F1160@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
+ <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <VI1PR0401MB249622CFA9B213632F1DE955F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <7349fa0e6d62a3e0d0e540f2e17646e0@kernel.org>
+ <VI1PR0401MB2496373E0C6D1097F22B3026F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <20200214161957.GA27513@e121166-lin.cambridge.arm.com>
+ <VI1PR0401MB2496800C88A3A2CF912959E6F1150@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+ <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200214174949.GA30484@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.bansal@nxp.com; 
+x-originating-ip: [92.120.1.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7afcdbc2-24e9-46b4-bd36-08d7b3a5d5b4
+x-ms-traffictypediagnostic: VI1PR0401MB2336:|VI1PR0401MB2336:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0401MB23368FB53DD9C3321C4AB30AF1160@VI1PR0401MB2336.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0316567485
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(199004)(189003)(55016002)(66556008)(71200400001)(64756008)(478600001)(7416002)(966005)(9686003)(66446008)(33656002)(86362001)(52536014)(66946007)(76116006)(81156014)(8676002)(8936002)(2906002)(53546011)(7696005)(81166006)(26005)(4326008)(186003)(44832011)(5660300002)(45080400002)(66476007)(6916009)(54906003)(316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2336;H:VI1PR0401MB2496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IK7evDv3gQEmnw/PqX+rcRcqeLXpg8cDaO8JKiQFSodr2ycDtGbJRc1XYoX08HFPX4NGVUmllGaWMzjM0PR3tI1hgQ4Uudmj/2TgGq/R4Bj72LJFqT69k2TtapxiPBn6rEMcckQj4RhgLT42wyjG6uhcSOHM4a1k2f4dbljXE+ke3ifEQkXoQ9MMGv9Gi0rXpAWYjwyfPzttr/2YxjwcToU8aQQAVDJKkDfnNCzacD44xCbYNCu6q6b4nRHSX5dKeaOOWI2DustwRI6M4TWa2Hpgaf0XLd4lcYUKHs9z3H3QfRXPXXPHTBbM9TEJZyHEt3nc3jX1r79rna7t/3wEzwPSLiMVLryxbZSLVwid4mv2v6XUb7Ckhhc42wMRuV7UpYQrtW2sTXY/AEe8NTYQv76xnBuuPl7ojqLy3A0Er7sG5ozR0CqlDlSQqIZTot32CSq98UjfO/g5ZNkf1kisYmcUnOnaTsNWiD3nj42TDqFZpiu3PyfFpG6TYcPJw6nl7JGBC8ul6GXEIP+ZCJ35hQ==
+x-ms-exchange-antispam-messagedata: WL1esRRsJNpjC1ZxMgx5rEuikYBKXwmOku0V9Lc6QCtkvkUY7UtPxJ0aRiGlEoYKE5qYPdvLX8ssaIwZ561pmcrAJIzB7aVOzFx0mCuGyz/D35YXmv9bTapxSiSFp916ZEr4rTBX1JWo+Zjt8ZsibQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9c085b15-9b81-4f54-1d30-08d7b3a5a2f3
-X-MS-TrafficTypeDiagnostic: MN2PR02MB5725:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB57255CF5EEC1D9D5C3D97D94AF160@MN2PR02MB5725.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 0316567485
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S3Ncxls5JF6NGv9Wi9lycZBj7Fqicm2XAyCmIMRD5YNtnu+DPAj6AZiXyDtY9vzmdq1RyNweTMw0+MEGnzVN80O8IQdjZ/Qdy4Jw6pxZnuAslPsdm5VpXslNG8mb9LqK6nNHUzFs3/mKLo3iFDWYWYXpx75pInoBW/nVTgZewssDjhRP0IeP7cHAw+4ruHChF86Praqie7Cy5OlhO6qdP18Uf34crtaQbzmZp24IzRc/6q3wP+M0FXY7yJX9qQnHIhWVHmnz1Jz2BuC8a28F7f5I2kkpi3sRxgci8Ts1dx355igv7tOP4CuLiieYyCIHLpfst7Qb1f1/yhvHVCDeEhmjKY8EbrLLVdMpVHZQBM7gwvOyru7BLYt/3mlcJDQynhv4fGS6THTenNcxl+2Vwx4WCftL0Vdlq/msXgxoSjvei6axoiAI2jHh4bv6iuPKAhD/arLTE85mr7LDMj7KWmz+WnE7nR+JcQqTNmxw+XJ08LB7G5Z/ntEQUYz+TDPpQZA6+ZHm7kn2lX2hnFsqJg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 12:33:47.8640
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7afcdbc2-24e9-46b4-bd36-08d7b3a5d5b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 12:35:12.8763
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c085b15-9b81-4f54-1d30-08d7b3a5a2f3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5725
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C+z7EWfZEe/Kx6T3CKCm/SPRsyitkwdP+amUlBAxiCoReiSbVaSVBdoQsoSLzPxdGGVavNWgWB7gRQfS6N7u6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2336
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Add PMC gpio support.
-Only bank 0,1, 3 and 4 are connected to the multiplexed Input output
-pins. Bank 0 and 1 to mio and bank 3 and 4 to extended multiplexed input
-output pins.
 
-Versal devices are the industry's first adaptive compute
-acceleration platforms.
-https://www.xilinx.com/support/documentation/data_sheets/ds950-versal-overview.pdf
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Friday, February 14, 2020 11:20 PM
+> To: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
+> <ard.biesheuvel@linaro.org>; Makarand Pawagi <makarand.pawagi@nxp.com>;
+> Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
+> nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
+> Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo <guohanjun@huawei.com>;
+> Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
+> <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-acpi@vger.kernel.o=
+rg>;
+> Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>; Andy
+> Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
+> Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
+> kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com>; P=
+aul
+> Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
+> <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-kernel@vger.kernel.=
+org>;
+> Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
+> Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
+> <robin.murphy@arm.com>
+> Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+>=20
+> On Fri, Feb 14, 2020 at 04:35:10PM +0000, Pankaj Bansal wrote:
+>=20
+> [...]
+>=20
+> > > -----Original Message-----
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: Friday, February 14, 2020 9:50 PM
+> > > To: Pankaj Bansal <pankaj.bansal@nxp.com>
+> > > Cc: Marc Zyngier <maz@kernel.org>; Ard Biesheuvel
+> > > <ard.biesheuvel@linaro.org>; Makarand Pawagi
+> <makarand.pawagi@nxp.com>;
+> > > Calvin Johnson <calvin.johnson@nxp.com>; stuyoder@gmail.com;
+> > > nleeder@codeaurora.org; Ioana Ciornei <ioana.ciornei@nxp.com>; Cristi
+> > > Sovaiala <cristian.sovaiala@nxp.com>; Hanjun Guo
+> <guohanjun@huawei.com>;
+> > > Will Deacon <will@kernel.org>; jon@solid-run.com; Russell King
+> > > <linux@armlinux.org.uk>; ACPI Devel Maling List <linux-
+> acpi@vger.kernel.org>;
+> > > Len Brown <lenb@kernel.org>; Jason Cooper <jason@lakedaemon.net>;
+> Andy
+> > > Wang <Andy.Wang@arm.com>; Varun Sethi <V.Sethi@nxp.com>; Thomas
+> > > Gleixner <tglx@linutronix.de>; linux-arm-kernel <linux-arm-
+> > > kernel@lists.infradead.org>; Laurentiu Tudor <laurentiu.tudor@nxp.com=
+>;
+> Paul
+> > > Yang <Paul.Yang@arm.com>; netdev@vger.kernel.org; Rafael J. Wysocki
+> > > <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>;
+> > > Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
+> > > Sudeep Holla <sudeep.holla@arm.com>; Robin Murphy
+> > > <robin.murphy@arm.com>
+> > > Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-=
+mc
+> Side note: would you mind removing the email headers (as above) in your
+> replies please ?
+>=20
+> > > On Fri, Feb 14, 2020 at 03:58:14PM +0000, Pankaj Bansal wrote:
+> > >
+> > > [...]
+> > >
+> > > > > Why should the device know about its own ID? That's a bus/interco=
+nnect
+> > > thing.
+> > > > > And nothing should be passed *to* IORT. IORT is the source.
+> > > >
+> > > > IORT is translation between Input IDs <-> Output IDs. The Input ID =
+is still
+> > > expected to be passed to parse IORT table.
+> > >
+> > > Named components use an array of single mappings (as in entries with =
+single
+> > > mapping flag set) - Input ID is irrelevant.
+> > >
+> > > Not sure what your named component is though and what you want to do
+> with
+> > > it, the fact that IORT allows mapping for named components do not
+> necessarily
+> > > mean that it can describe what your system really is, on that you nee=
+d to
+> > > elaborate for us to be able to help.
+> >
+> > Details about MC bus can be read from here:
+> >
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Felixi=
+r.boo
+> tlin.com%2Flinux%2Flatest%2Fsource%2FDocumentation%2Fnetworking%2Fdev
+> ice_drivers%2Ffreescale%2Fdpaa2%2Foverview.rst%23L324&amp;data=3D02%7C0
+> 1%7Cpankaj.bansal%40nxp.com%7Cf1bcfc907a42463b617408d7b1764f0f%7C6
+> 86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637172993997763634&am
+> p;sdata=3DfPcC2UfsHoS25oYGmxJmsbPXxb1brKxP1i2qJfPdRpk%3D&amp;reserved
+> =3D0
+> >
+> > As stated above, in Linux MC is a bus (just like PCI bus, AMBA bus etc)
+> > There can be multiple devices attached to this bus. Moreover, we can
+> dynamically create/destroy these devices.
+> > Now, we want to represent this BUS (not individual devices connected to=
+ bus)
+> in IORT table.
+> > The only possible way right now we see is that we describe it as Named
+> components having a pool of ID mappings.
+> > As and when devices are created and attached to bus, we sift through th=
+is pool
+> to correctly determine the output ID for the device.
+> > Now the input ID that we provide, can come from device itself.
+> > Then we can use the Platform MSI framework for MC bus devices.
+>=20
+> So are you asking me if that's OK ? Or there is something you can't
+> describe with IORT ?
 
-On the Versal platform, we are using two customized GPIO controllers(IP)
-which were used in Zynq/ZynqMp platform.
-One of them present in the Platform Management Controller(PMC) block and
-other in Processing System(PS) block.
+I am asking if that would be acceptable?
+i.e. we represent MC bus as Named component is IORT table with a pool of ID=
+s (without single ID mapping flag)
+and then we use the Platform MSI framework for all children devices of MC b=
+us.
+Note that it would require the Platform MSI layer to correctly pass an inpu=
+t id for a platform device to IORT layer.
+And IORT layer ought to retrieve the output id based on single ID mapping f=
+lag as well as input id.
 
-In PMC_GPIO only Bank0,1,3 & 4 are enabled and in PS_GPIO only
-Bank 0 & 3 are enabled.
+>=20
+> Side note: can you explain to me please how the MSI allocation flow
+> and kernel data structures/drivers are modeled in DT ? I had a quick
+> look at:
+>=20
+> drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+>=20
+> and to start with, does that code imply that we create a
+> DOMAIN_BUS_FSL_MC_MSI on ALL DT systems with an ITS device node ?
 
-You can find more details of GPIO IP in ZynqMP TRM General Purpose
-I/O(Chapter-27).
-https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
+Yes. It's being done for all DT systems having ITS node.
+The domain creation is handled in drivers/bus/fsl-mc/fsl-mc-msi.c
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+>=20
+> I *think* you have a specific API to allocate MSIs for MC devices:
+>=20
+> fsl_mc_msi_domain_alloc_irqs()
+>=20
+> which hook into the IRQ domain created in the file above that handles
+> the cascading to an ITS domain, correct ?
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index b6261a3aec55..2ddb59b242e7 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -23,6 +23,7 @@
- #define ZYNQ_GPIO_MAX_BANK	4
- #define ZYNQMP_GPIO_MAX_BANK	6
- #define VERSAL_GPIO_MAX_BANK	4
-+#define PMC_GPIO_MAX_BANK	5
- #define VERSAL_UNUSED_BANKS	2
- 
- #define ZYNQ_GPIO_BANK0_NGPIO	32
-@@ -815,6 +816,20 @@ static const struct zynq_platform_data versal_gpio_def = {
- 	.bank_max[3] = 57, /* Bank 3 is connected to FMIOs (32 pins) */
- };
- 
-+static const struct zynq_platform_data pmc_gpio_def = {
-+	.label = "pmc_gpio",
-+	.ngpio = 116,
-+	.max_bank = PMC_GPIO_MAX_BANK,
-+	.bank_min[0] = 0,
-+	.bank_max[0] = 25, /* 0 to 25 are connected to MIOs (26 pins) */
-+	.bank_min[1] = 26,
-+	.bank_max[1] = 51, /* Bank 1 are connected to MIOs (26 pins) */
-+	.bank_min[3] = 52,
-+	.bank_max[3] = 83, /* Bank 3 is connected to EMIOs (32 pins) */
-+	.bank_min[4] = 84,
-+	.bank_max[4] = 115, /* Bank 4 is connected to EMIOs (32 pins) */
-+};
-+
- static const struct zynq_platform_data zynqmp_gpio_def = {
- 	.label = "zynqmp_gpio",
- 	.quirks = GPIO_QUIRK_DATA_RO_BUG,
-@@ -853,6 +868,7 @@ static const struct of_device_id zynq_gpio_of_match[] = {
- 	{ .compatible = "xlnx,zynq-gpio-1.0", .data = &zynq_gpio_def },
- 	{ .compatible = "xlnx,zynqmp-gpio-1.0", .data = &zynqmp_gpio_def },
- 	{ .compatible = "xlnx,versal-gpio-1.0", .data = &versal_gpio_def },
-+	{ .compatible = "xlnx,pmc-gpio-1.0", .data = &pmc_gpio_def },
- 	{ /* end of table */ }
- };
- MODULE_DEVICE_TABLE(of, zynq_gpio_of_match);
--- 
-2.7.4
+We associate the above created domain with dpaa2 device here:
+https://elixir.bootlin.com/linux/latest/source/drivers/bus/fsl-mc/dprc-driv=
+er.c#L640
 
+Then fsl_mc_msi_domain_alloc_irqs, retrieves the domain associated with dev=
+ice and calls the msi_prepare
+API from its_fsl_mc_msi_prepare.
+
+>=20
+> Thanks,
+> Lorenzo
