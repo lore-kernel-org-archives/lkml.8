@@ -2,113 +2,76 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D35DC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48CFC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC95214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FBD20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UcrU4Z6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgBQP0t (ORCPT
+        id S1728404AbgBQP3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:26:49 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgBQP0s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:26:48 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7A8B72939C1;
-        Mon, 17 Feb 2020 15:26:47 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 16:26:44 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
-        bbrezillon@kernel.org, gregkh@linuxfoundation.org,
-        wsa@the-dreams.de, arnd@arndb.de, broonie@kernel.org
-Subject: Re: [RFC v2 4/4] i3c: add i3cdev module to expose i3c dev in /dev
-Message-ID: <20200217162644.7f305d58@collabora.com>
-In-Reply-To: <442a0c2c52223f9ff1a1d1018ff863fb23105389.1580299067.git.vitor.soares@synopsys.com>
-References: <cover.1580299067.git.vitor.soares@synopsys.com>
-        <442a0c2c52223f9ff1a1d1018ff863fb23105389.1580299067.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 17 Feb 2020 10:29:21 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:50082 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbgBQP3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:29:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=B3MQFO6OCVy3CaonUG+ggsdLMmIu76Cs+DwnBQUzbNE=; b=UcrU4Z6N0sY6vQwq1LiOEY0WJQ
+        UZdGGqBcYl6pDrIO0E2I4R379eX8YplMipjv53nsB9QPtcCY6ok5UMDGA926zEictJkl/onyFRicB
+        FmDJXsNtk9SZaIxV9Hn6UVRtjv27BMN/jOX2iEk8ozRW1CwYQa1tEDXfH7eu6FHJVoe0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j3iKe-0005L3-6K; Mon, 17 Feb 2020 16:29:12 +0100
+Date:   Mon, 17 Feb 2020 16:29:12 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: Re: [PATCH devicetree 3/4] arm64: dts: fsl: ls1028a: add node for
+ Felix switch
+Message-ID: <20200217152912.GE31084@lunn.ch>
+References: <20200217144414.409-1-olteanv@gmail.com>
+ <20200217144414.409-4-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217144414.409-4-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 13:17:35 +0100
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Hi Vladimir
 
-> diff --git a/include/uapi/linux/i3c/i3cdev.h b/include/uapi/linux/i3c/i3cdev.h
-> new file mode 100644
-> index 0000000..0897313
-> --- /dev/null
-> +++ b/include/uapi/linux/i3c/i3cdev.h
-> @@ -0,0 +1,38 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (c) 2019 Synopsys, Inc. and/or its affiliates.
-> + *
-> + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> + */
-> +
-> +#ifndef _UAPI_I3C_DEV_H_
-> +#define _UAPI_I3C_DEV_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +
-> +/* IOCTL commands */
-> +#define I3C_DEV_IOC_MAGIC	0x07
+> +					/* Internal port with DSA tagging */
+> +					mscc_felix_port4: port@4 {
+> +						reg = <4>;
+> +						phy-mode = "gmii";
 
-I guess you already made sure there was no collision with other magic
-values.
+Is it really using gmii? Often in SoC connections use something else,
+and phy-mode = "internal" is more appropriate.
 
+> +						ethernet = <&enetc_port2>;
 > +
-> +/**
-> + * struct i3c_ioc_priv_xfer - I3C SDR ioctl private transfer
-> + * @data: Holds pointer to userspace buffer with transmit data.
-> + * @len: Length of data buffer buffers, in bytes.
-> + * @rnw: encodes the transfer direction. true for a read, false for a write
-> + */
-> +struct i3c_ioc_priv_xfer {
-> +	__u64 data;
-> +	__u16 len;
-> +	__u8 rnw;
-> +	__u8 pad[5];
-> +};
-> +
-> +
-> +#define I3C_PRIV_XFER_SIZE(N)	\
-> +	((((sizeof(struct i3c_ioc_priv_xfer)) * (N)) < (1 << _IOC_SIZEBITS)) \
-> +	? ((sizeof(struct i3c_ioc_priv_xfer)) * (N)) : 0)
-> +
-> +#define I3C_IOC_PRIV_XFER(N)	\
-> +	_IOC(_IOC_READ|_IOC_WRITE, I3C_DEV_IOC_MAGIC, 30, I3C_PRIV_XFER_SIZE(N))
+> +						fixed-link {
+> +							speed = <2500>;
+> +							full-duplex;
+> +						};
 
-Any reason for starting at 30 instead of 0x0 or 0x1?
+gmii and 2500 also don't really go together.
 
-Also, this ioctl definition is a bit unusual. Most of the time, when we
-want to pass an array of elements we pass a struct that contains the
-number of entries in this array, and a pointer to the array itself.
-
-struct i3cdev_priv_xfers {
-	__u64 nxfers;
-	__u64 xfers; /*Use u64_to_user_ptr() to get the __user pointer*/
-};
-
-> +
-> +#endif
-
+     Andrew
