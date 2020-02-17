@@ -2,84 +2,85 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3226AC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B4C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0199A20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581921385;
-	bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LmhB7TgXhYY5ZFWbz6Ma6ZJ/bMTL56i/0L6uVAt/p2LyePSKMKPje4vujKdIa3S3s
-	 KJ1585EwyhrgQKoR7y+0bA8/Wgfuo7PSPECq1Qm3NRgE8ExdVrQu8OQUzYHO4WcfIi
-	 vszc90xlFhyjeweZKYvOTV/q7Twhnu1tmAqboAXk=
+	by mail.kernel.org (Postfix) with ESMTP id 5A4A620718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgBQGgY (ORCPT
+        id S1726420AbgBQGhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:36:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgBQGgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:36:23 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1729B20702;
-        Mon, 17 Feb 2020 06:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581921383;
-        bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RTmpKC/hl12WkzSFTmeztlSc0NpSAbIB5OnqD67xudkgJeHI41q9afz61Ah05tBxK
-         4P1SSZKEIknhn63/MKcLnB8RzdcjwrNYu+M6UkOLeXdpjjxqzRuWeo1Wa9KpnEt8F3
-         +2KkkLItfPTZtk4oZrUyKiqA9VpMXgNjFh+bprlA=
-Date:   Mon, 17 Feb 2020 14:36:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sanchayan Maity <maitysanchayan@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible
- properties
-Message-ID: <20200217063616.GC6952@dragon>
-References: <20200212104629.20272-1-johan@kernel.org>
+        Mon, 17 Feb 2020 01:37:23 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38876 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbgBQGhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:37:23 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 540A681730E4C590B2C5;
+        Mon, 17 Feb 2020 14:37:19 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Feb
+ 2020 14:37:18 +0800
+Subject: Re: [PATCH V2] f2fs: fix the panic in do_checkpoint()
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     <linux-kernel@vger.kernel.org>
+References: <1581911024-23660-1-git-send-email-stummala@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <1c80288f-aea1-874b-4ca0-d18d00ed60e2@huawei.com>
+Date:   Mon, 17 Feb 2020 14:37:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212104629.20272-1-johan@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1581911024-23660-1-git-send-email-stummala@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 11:46:29AM +0100, Johan Hovold wrote:
-> The sram-node compatible properties have mistakingly combined the
-> model-specific string with the generic "mtd-ram" string.
+On 2020/2/17 11:43, Sahitya Tummala wrote:
+> There could be a scenario where f2fs_sync_meta_pages() will not
+> ensure that all F2FS_DIRTY_META pages are submitted for IO. Thus,
+> resulting in the below panic in do_checkpoint() -
 > 
-> Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
-> "cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
-> not present in any binding.
+> f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
+> 				!f2fs_cp_error(sbi));
 > 
-> The physmap driver will however bind to platform devices that specify
-> "mtd-ram".
+> This can happen in a low-memory condition, where shrinker could
+> also be doing the writepage operation (stack shown below)
+> at the same time when checkpoint is running on another core.
 > 
-> Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
-> Cc: Sanchayan Maity <maitysanchayan@gmail.com>
-> Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> schedule
+> down_write
+> f2fs_submit_page_write -> by this time, this page in page cache is tagged
+> 			as PAGECACHE_TAG_WRITEBACK and PAGECACHE_TAG_DIRTY
+> 			is cleared, due to which f2fs_sync_meta_pages()
+> 			cannot sync this page in do_checkpoint() path.
+> f2fs_do_write_meta_page
+> __f2fs_write_meta_page
+> f2fs_write_meta_page
+> shrink_page_list
+> shrink_inactive_list
+> shrink_node_memcg
+> shrink_node
+> kswapd
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 
-Applied, thanks.
+Looks good to me.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+BTW, I can't apply this based dev branch of Jaegeuk's tree, could you rebase it?
+
+Thanks,
