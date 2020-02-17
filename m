@@ -2,184 +2,111 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4080C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF45C34031
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07CE2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C3A2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DEEc8jKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgBQXpy (ORCPT
+        id S1726292AbgBQXrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 18:45:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:42850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgBQXpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:45:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7A3F30E;
-        Mon, 17 Feb 2020 15:45:53 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 551EA3F703;
-        Mon, 17 Feb 2020 15:45:52 -0800 (PST)
-Date:   Mon, 17 Feb 2020 23:45:49 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] sched/rt: cpupri_find: implement fallback mechanism
- for !fit case
-Message-ID: <20200217234549.rpv3ns7bd7l6twqu@e107158-lin>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-2-qais.yousef@arm.com>
- <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
+        Mon, 17 Feb 2020 18:47:04 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48794 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgBQXrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 18:47:03 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 681C3891A9;
+        Tue, 18 Feb 2020 12:47:00 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1581983220;
+        bh=lIKEtIoXS2FCD30rLdTZz7ER2jiWy8CL5ADzRqw2N9Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=DEEc8jKRKxzXG/g+Vo8jWELD/gqdXXkQ5boV1iHyUd9DKRIGXP3ywKHH/AKCGQqdf
+         zAZWEZyVUumHPzu9N6gyLrU4n+nxOHjWsKJh67f1zEcQLsZywGpLb1vTUvqh17Kspm
+         fo66LXjXR74v9ipM3vD3sYAvquC2lfGj/V7Or3UEYoZxexqUGQ6qaIRw6DHOODWe3h
+         NogAfSjGkjbHMsDb5TnWMEqLiVSOqdGdP2A8DrfnIT+G46LweTdnd+4hoqKvWxOm2s
+         1OSwOX5oKXy1IHM4bEHpYaE6NlEVRuJwTp+BBc2YZA3vcLsh08VG0j4kuRxN4eitfJ
+         eg9AkPR3c9vFQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e4b25f30002>; Tue, 18 Feb 2020 12:46:59 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id A90A913EED4;
+        Tue, 18 Feb 2020 12:46:59 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 253E928006C; Tue, 18 Feb 2020 12:47:00 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/5] dt-bindings: hwmon: Document adt7475 bypass-attenuator property
+Date:   Tue, 18 Feb 2020 12:46:54 +1300
+Message-Id: <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
+References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 20:09, Dietmar Eggemann wrote:
-> On 14/02/2020 17:39, Qais Yousef wrote:
-> 
-> [...]
-> 
-> >  /**
-> >   * cpupri_find - find the best (lowest-pri) CPU in the system
-> >   * @cp: The cpupri context
-> > @@ -62,80 +115,72 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
-> >  		struct cpumask *lowest_mask,
-> >  		bool (*fitness_fn)(struct task_struct *p, int cpu))
-> >  {
-> > -	int idx = 0;
-> >  	int task_pri = convert_prio(p->prio);
-> > +	int best_unfit_idx = -1;
-> > +	int idx = 0, cpu;
-> >  
-> >  	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);
-> >  
-> >  	for (idx = 0; idx < task_pri; idx++) {
-> > -		struct cpupri_vec *vec  = &cp->pri_to_cpu[idx];
-> > -		int skip = 0;
-> >  
-> > -		if (!atomic_read(&(vec)->count))
-> > -			skip = 1;
-> > -		/*
-> > -		 * When looking at the vector, we need to read the counter,
-> > -		 * do a memory barrier, then read the mask.
-> > -		 *
-> > -		 * Note: This is still all racey, but we can deal with it.
-> > -		 *  Ideally, we only want to look at masks that are set.
-> > -		 *
-> > -		 *  If a mask is not set, then the only thing wrong is that we
-> > -		 *  did a little more work than necessary.
-> > -		 *
-> > -		 *  If we read a zero count but the mask is set, because of the
-> > -		 *  memory barriers, that can only happen when the highest prio
-> > -		 *  task for a run queue has left the run queue, in which case,
-> > -		 *  it will be followed by a pull. If the task we are processing
-> > -		 *  fails to find a proper place to go, that pull request will
-> > -		 *  pull this task if the run queue is running at a lower
-> > -		 *  priority.
-> > -		 */
-> > -		smp_rmb();
-> > -
-> > -		/* Need to do the rmb for every iteration */
-> > -		if (skip)
-> > -			continue;
-> > -
-> > -		if (cpumask_any_and(p->cpus_ptr, vec->mask) >= nr_cpu_ids)
-> > +		if (!__cpupri_find(cp, p, lowest_mask, idx))
-> >  			continue;
-> >  
-> > -		if (lowest_mask) {
-> > -			int cpu;
-> 
-> Shouldn't we add an extra condition here?
-> 
-> +               if (!static_branch_unlikely(&sched_asym_cpucapacity))
-> +                       return 1;
-> +
-> 
-> Otherwise non-heterogeneous systems have to got through this
-> for_each_cpu(cpu, lowest_mask) further below for no good reason.
+From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 
-Hmm below is the best solution I can think of at the moment. Works for you?
+Add documentation for the bypass-attenuator-in[0-4] property.
 
-It's independent of what this patch tries to fix, so I'll add as a separate
-patch to the series in the next update.
-
-Thanks
-
---
-Qais Yousef
-
+Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
+ .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 5ea235f2cfe8..5f2eaf3affde 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -14,6 +14,8 @@ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
-
- struct rt_bandwidth def_rt_bandwidth;
-
-+typedef bool (*fitness_fn_t)(struct task_struct *p, int cpu);
+diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
+entation/devicetree/bindings/hwmon/adt7475.yaml
+index 2252499ea201..61da90c82649 100644
+--- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
++++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+@@ -39,6 +39,17 @@ properties:
+   reg:
+     maxItems: 1
+=20
++patternProperties:
++  "^bypass-attenuator-in[0-4]$":
++    maxItems: 1
++    minimum: 0
++    maximum: 1
++    description: |
++      Configures bypassing the individual voltage input attenuator. If
++      set to 1 the attenuator is bypassed if set to 0 the attenuator is
++      not bypassed. If the property is absent then the attenuator
++      retains it's configuration from the bios/bootloader.
 +
- static enum hrtimer_restart sched_rt_period_timer(struct hrtimer *timer)
- {
-        struct rt_bandwidth *rt_b =
-@@ -1708,6 +1710,7 @@ static int find_lowest_rq(struct task_struct *task)
-        struct cpumask *lowest_mask = this_cpu_cpumask_var_ptr(local_cpu_mask);
-        int this_cpu = smp_processor_id();
-        int cpu      = task_cpu(task);
-+       fitness_fn_t fitness_fn;
+ required:
+   - compatible
+   - reg
+@@ -52,6 +63,8 @@ examples:
+       hwmon@2e {
+         compatible =3D "adi,adt7476";
+         reg =3D <0x2e>;
++        bypass-attenuator-in0 =3D <1>;
++        bypass-attenuator-in1 =3D <0>;
+       };
+     };
+=20
+--=20
+2.25.0
 
-        /* Make sure the mask is initialized first */
-        if (unlikely(!lowest_mask))
-@@ -1716,8 +1719,17 @@ static int find_lowest_rq(struct task_struct *task)
-        if (task->nr_cpus_allowed == 1)
-                return -1; /* No other targets possible */
-
-+       /*
-+        * Help cpupri_find avoid the cost of looking for a fitting CPU when
-+        * not really needed.
-+        */
-+       if (static_branch_unlikely(&sched_asym_cpucapacity))
-+               fitness_fn = rt_task_fits_capacity;
-+       else
-+               fitness_fn = NULL;
-+
-        if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
--                        rt_task_fits_capacity))
-+                        fitness_fn))
-                return -1; /* No targets found */
-
-        /*
-
-
-> 
-> > +		if (!lowest_mask || !fitness_fn)
-> > +			return 1;
-> >  
-> > -			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
-> > +		/* Ensure the capacity of the CPUs fit the task */
-> > +		for_each_cpu(cpu, lowest_mask) {
-> > +			if (!fitness_fn(p, cpu))
-> > +				cpumask_clear_cpu(cpu, lowest_mask);
-> > +		}
-> 
-> [...]
