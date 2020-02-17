@@ -2,193 +2,92 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CCBC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3189EC34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766C72070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:11:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXFQT6nh"
+	by mail.kernel.org (Postfix) with ESMTP id 0B6B820836
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581966768;
+	bh=bBGh2zu9Ak33pj6iJVskOUz3q/3+KzGXfk104cCS3vU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=uXePDQVThQyTkkmWpKdII84MqUzxWnAH/4T0mXC6falgTF7StE/jugAa5mNZwDmWQ
+	 uhjdCgSlDHuHlphyonl1l3MfKseXCgboWcS/ygr321M+EsgXMw/Oc+dvtMNJBBoY6B
+	 p6LO1aVcIQO6GN66wOOhPtwMOiayLoIaBuxSsWS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgBQTLC (ORCPT
+        id S1729570AbgBQTMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:11:02 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43881 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728615AbgBQTLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:11:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581966659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vsDIkm7LcuaYgzQdXvjeLYGIluTZwoeMgvuGfii/8og=;
-        b=iXFQT6nhA7av4n3K+nVmXGojTRzyM4EsPEqV4Ise/pr0UUnrFvQcd6FSS8/qf32j1qTEDk
-        jLl/vWmbRxshXaZ+fnLhEz2CVbcdGSpqhREOK7blM3BUqaTXB3tjAPDXYlELbM0l23uAQR
-        L3zYmC3gduxyOHA40FkLziHLSh2wUbI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-GUe3pPqgNdufi0A4oJ1f7Q-1; Mon, 17 Feb 2020 14:10:53 -0500
-X-MC-Unique: GUe3pPqgNdufi0A4oJ1f7Q-1
-Received: by mail-wm1-f69.google.com with SMTP id 7so158161wmf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:10:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vsDIkm7LcuaYgzQdXvjeLYGIluTZwoeMgvuGfii/8og=;
-        b=b0Nt6x5sofAVz3yXWuWedkyLyjM3IDrSB5jXKX9EOJUxfXwC+Qr2gXBCr0ik8ttWZ3
-         jG49qkKiMQkbFYCfSlwN3ePZmGIYI9FXqsB4Iqwhq2Im5diGnKgvSfJCFW0jN1PkQ5wS
-         oSErZUKXdUU0mFDqMSdeqppLowvZ8sKMAp3V98lhpvFkQLhz4LpsaL8+iZ2kJwUq4PO8
-         dEbY5LbXvdcV9XI0rOFzn/70RyyX0mDiUp21OKf69SZyiWV1j4yRU/HoK2Mjxe4YMbYK
-         R0j2ey9LzXB0pIj2B9wSop9tSn3fQAnFde8vfhs6/jhjieLSiWnsPFMT/Kqqsp53bSPX
-         IwTA==
-X-Gm-Message-State: APjAAAWENtNmJNwoITYjkWpn396BUeBqQsq8AmbmOV+raPNlslZI1gXb
-        yLA8sjInfTUYh0t0SUc1WcfPCOodN7as92oXfGCKvZ03UzO37cma6K7thuop49yIbeOntleexux
-        vIyi27Fms7wXcnUlpbzkXKpXru8mGek0DPY++jE6c
-X-Received: by 2002:a5d:5485:: with SMTP id h5mr19369837wrv.346.1581966652468;
-        Mon, 17 Feb 2020 11:10:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy2W+Do9mbl/R68triIgvVafhz3P423qEuLPfPsfDhryaTHHrYIbw4irtNBbdRLZQKhBtvRYA3UOCzsxbOjDeA=
-X-Received: by 2002:a5d:5485:: with SMTP id h5mr19369814wrv.346.1581966652120;
- Mon, 17 Feb 2020 11:10:52 -0800 (PST)
+        Mon, 17 Feb 2020 14:12:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728467AbgBQTMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 14:12:46 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A929C20801;
+        Mon, 17 Feb 2020 19:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581966765;
+        bh=bBGh2zu9Ak33pj6iJVskOUz3q/3+KzGXfk104cCS3vU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=iyZl7rw31feSNE1LTuRorqDiXP3Y9G62s0sBByNr9ZfckstTUZna1LpW9NalhgpeN
+         Pnos4z7iBNdkFOzl1ZiWV3+PoQ0IRaWrXzHWiVejbX9c7RO+4747YJJzt5L+569DwX
+         ygpx5EoDxiZS63BHPbPFBCzexMUAQ3dma9kFZjIM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7921D352273C; Mon, 17 Feb 2020 11:12:45 -0800 (PST)
+Date:   Mon, 17 Feb 2020 11:12:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
+        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH memory-model] Add recent references
+Message-ID: <20200217191245.GV2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200214233139.GA12521@paulmck-ThinkPad-P72>
+ <Pine.LNX.4.44L0.2002161158140.30459-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <20200216141104.21477-1-ardb@kernel.org>
-In-Reply-To: <20200216141104.21477-1-ardb@kernel.org>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Tue, 18 Feb 2020 00:40:39 +0530
-Message-ID: <CACi5LpN_Aqop1MQx3ouRd4V27GtiMXBiT=w916P1_zEEc2SJcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] arch-agnostic initrd loading method for EFI systems
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laszlo Ersek <lersek@redhat.com>, leif@nuviainc.com,
-        Peter Jones <pjones@redhat.com>, mjg59@google.com,
-        agraf@csgraf.de, ilias.apalodimas@linaro.org, xypron.glpk@gmx.de,
-        daniel.kiper@oracle.com, nivedita@alum.mit.edu,
-        James.Bottomley@hansenpartnership.com, lukas@wunner.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2002161158140.30459-100000@netrider.rowland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
+On Sun, Feb 16, 2020 at 12:01:14PM -0500, Alan Stern wrote:
+> On Fri, 14 Feb 2020, Paul E. McKenney wrote:
+> 
+> > This commit updates the list of LKMM-related publications in
+> > Documentation/references.txt.
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> >  o	Paul E. McKenney, Ulrich Weigand, Andrea Parri, and Boqun
+> > -	Feng. 2016. "Linux-Kernel Memory Model". (6 June 2016).
+> > -	http://open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0124r2.html.
+> > +	Feng. 2018. "Linux-Kernel Memory Model". (27 September 2018).
+> > +	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0124r6.html.
+> 
+> Even though this is an update, the new version referenced here is
+> already out-of-date (in particular, with regard to its discussions of 
+> the ordering properties of unlock-lock sequences as viewed by threads 
+> not holding the lock).  And it contains a few typos scattered 
+> throughout.
 
-On Sun, Feb 16, 2020 at 7:41 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> This series introduces an arch agnostic way of loading the initrd into
-> memory from the EFI stub. This addresses a number of shortcomings that
-> affect the current implementations that exist across architectures:
->
-> - The initrd=<file> command line option can only load files that reside
->   on the same file system that the kernel itself was loaded from, which
->   requires the bootloader or firmware to expose that file system via the
->   appropriate EFI protocol, which is not always feasible. From the kernel
->   side, this protocol is problematic since it is incompatible with mixed
->   mode on x86 (this is due to the fact that some of its methods have
->   prototypes that are difficult to marshall)
->
-> - The approach that is ordinarily taken by GRUB is to load the initrd into
->   memory, and pass it to the kernel proper via the bootparams structure or
->   via the device tree. This requires the boot loader to have an understanding
->   of those structures, which are not always set in stone, and of the policies
->   around where the initrd may be loaded into memory. In the ARM case, it
->   requires GRUB to modify the hardware description provided by the firmware,
->   given that the initrd base and offset in memory are passed via the same
->   data structure. It also creates a time window where the initrd data sits
->   in memory, and can potentially be corrupted before the kernel is booted.
->
-> Considering that we will soon have new users of these interfaces (EFI for
-> kvmtool on ARM, RISC-V in u-boot, etc), it makes sense to add a generic
-> interface now, before having another wave of bespoke arch specific code
-> coming in.
->
-> Another aspect to take into account is that support for UEFI secure boot
-> and measured boot is being taken into the upstream, and being able to
-> rely on the PE entry point for booting any architecture makes the GRUB
-> vs shim story much cleaner, as we should be able to rely on LoadImage
-> and StartImage on all architectures, while retaining the ability to
-> load initrds from anywhere.
->
-> Note that these patches depend on a fair amount of cleanup work that I
-> am targetting for v5.7. Branch can be found at:
-> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
->
-> A PoC implementation for OVMF and ArmVirtQemu (OVMF for ARM aka AAVMF) can
-> be found at https://github.com/ardbiesheuvel/edk2/commits/linux-efi-generic.
->
-> A U-Boot implementation is under development as well, and can be found at
-> https://github.com/apalos/u-boot/commits/efi_load_file_8
+Indeed, 18 months is a long time for LKMM, isn't it?  ;-)
 
-Thanks a lot for the patchset. I am still going through the patchset
-and trying to understand how will it impact
-kexec use-cases, namely:
+Sounds like time to update it for the next meeting.  I of course would
+welcome any notes you might have taken while going through it.
 
-1. kexec_load() and kecec_file_load(), use '--initrd=<file>' like
-command line options.
-
-2. We have several kexec based bootloader implementations (for example
-linuxboot, see (a) and (b) below) that replaces specific firmware
-functionality like the UEFI DXE phase with a Linux kernel and runtime
-and find the initrd image (for example, uroot) from that same
-filesystem. So these would need modification(s) similar to the OVMF
-AAVMF and u-boot, right?
-
-a. https://www.linuxboot.org/
-b. https://github.com/linuxboot/linuxboot/blob/master/dxe/linuxboot.c
-
-Thanks,
-Bhupesh
-
-
-> Changes since v1:
-> - merge vendor media device path type definition with the existing device path
->   definitions we already have, and rework the latter slightly to be more easily
->   reusable
-> - use 'dev_path' not 'devpath' consistently
-> - pass correct FilePath value to LoadFile2 (i.e., the device path pointer that
->   was advanced to point to the 'end' node by locate_device_path())
-> - add kerneldoc comment to efi_load_initrd_dev_path()
-> - take care to only return EFI_NOT_FOUND from efi_load_initrd_dev_path() if the
->   LoadFile2 protocol does not exist on the LINUX_EFI_INITRD_MEDIA_GUID device
->   path - this makes the logic whether to fallback to the command line method
->   more robust
->
-> Cc: lersek@redhat.com
-> Cc: leif@nuviainc.com
-> Cc: pjones@redhat.com
-> Cc: mjg59@google.com
-> Cc: agraf@csgraf.de
-> Cc: ilias.apalodimas@linaro.org
-> Cc: xypron.glpk@gmx.de
-> Cc: daniel.kiper@oracle.com
-> Cc: nivedita@alum.mit.edu
-> Cc: James.Bottomley@hansenpartnership.com
-> Cc: lukas@wunner.de
->
-> Ard Biesheuvel (3):
->   efi/dev-path-parser: Add struct definition for vendor type device path
->     nodes
->   efi/libstub: Add support for loading the initrd from a device path
->   efi/libstub: Take noinitrd cmdline argument into account for devpath
->     initrd
->
->  drivers/firmware/efi/apple-properties.c       |  8 +-
->  drivers/firmware/efi/dev-path-parser.c        | 38 ++++----
->  drivers/firmware/efi/libstub/arm-stub.c       | 20 ++++-
->  .../firmware/efi/libstub/efi-stub-helper.c    | 89 +++++++++++++++++++
->  drivers/firmware/efi/libstub/efistub.h        |  5 ++
->  drivers/firmware/efi/libstub/x86-stub.c       | 47 ++++++++--
->  include/linux/efi.h                           | 49 ++++++----
->  7 files changed, 201 insertions(+), 55 deletions(-)
->
-> --
-> 2.17.1
->
-
+							Thanx, Paul
