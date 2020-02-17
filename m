@@ -2,101 +2,234 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80C5C761A6
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05879C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8082B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F9620725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mdlW35hN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gTcaC1yD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgBQMpu (ORCPT
+        id S1728712AbgBQMqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:45:50 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41862 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgBQMpt (ORCPT
+        Mon, 17 Feb 2020 07:46:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38013 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728436AbgBQMqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:45:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FelI1iG9O0CpNorqieVC1Sm3aQjwvDBCFxEQykU0JaM=; b=mdlW35hNjSoqGAmHrcq3Pl3S9I
-        gVImasJMb74z/FdjbstMj7gbfhFrGVaProoFs/gOahV72Jb2VB6cl7cNKFwSy83qA3r5evh/U6+9r
-        yX2UMSpvl/tzVViTfNxsExlzSlPmsmruCI/yKbvcpjHQ5hDTuy7GFkOrbovggmbRmkXrcNH+EwhXa
-        6EQI+klkY6CStdM8djQVB3rJIMisuqhan+0ufImKSKLQOg3zvN3EeHBh99pL3kkG1wzhc5HvJ7gLp
-        x18ymWk6lWZIqRr4bU7lrVqKlB8pSwvs+VSUtPXilvp07j3QnS/JLz7HMhoFx6qy3AKVFKq9das12
-        hZhEhLUg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3flu-0003tS-Ag; Mon, 17 Feb 2020 12:45:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2B65E300EBB;
-        Mon, 17 Feb 2020 13:43:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 538622B782E24; Mon, 17 Feb 2020 13:45:07 +0100 (CET)
-Date:   Mon, 17 Feb 2020 13:45:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
- ->srcu_gp_seq load
-Message-ID: <20200217124507.GT14914@hirez.programming.kicks-ass.net>
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
- <20200215002932.15976-4-paulmck@kernel.org>
+        Mon, 17 Feb 2020 07:46:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581943579;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1IBRJqn+scoqGFE7Ecg3JdfKODqslJ6sMFIQcaVmgmQ=;
+        b=gTcaC1yDdaKsG2Ig+/8h5igXLVkFcMrUAvlq0/bWCGYVZxsihSNetTH3BGytrhgKz0G5D7
+        mzM3mOfe5DR67pohMH5NEE+/xzhq3c0bn7++0qO9aX75+RZKTOGD+9hUW0pGUWdcOPOew2
+        BhmnxZDvxwjjkVVoDo8TPRLGEJ1kLoA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-7K2_9xTKMYSf5cBxzgJkHg-1; Mon, 17 Feb 2020 07:46:16 -0500
+X-MC-Unique: 7K2_9xTKMYSf5cBxzgJkHg-1
+Received: by mail-wr1-f70.google.com with SMTP id d8so8850721wrq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 04:46:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=1IBRJqn+scoqGFE7Ecg3JdfKODqslJ6sMFIQcaVmgmQ=;
+        b=f3RqQQjfDDWdREnFTAY4z7LR8iiLzT9KLiqemqL2m8Lyw0UlYwhR1ooFiHZjoC5f8h
+         mcCbetPkhg6DMggpCW62WS0LFaMQjtiDWZ9eFFBlI+HBaPuxwzNadUcs9UOUXrm8IKVj
+         soZCHS3WwBkSXlLtVJjs250165xmHmH/LZtt+mYEmjyY1597XOEvrz4BV+6YZPKtLOaQ
+         6y5f8/rNErACOwiuyk2fA+/jHY66vRab0Mjfgxx5kGtvZYIIsrsAnRXf3WMg+kkhw+2x
+         l2Xt7jOcpomGwIvmAFF3Eskjf8kgop8Z//SSGU6iDTgTbXqNjAGeKWfDAfiOmC3jhi+U
+         7IOA==
+X-Gm-Message-State: APjAAAXi9cOB3a082/kCQbt1ezEZuW0wpDEdl0HP4WVQhNMJiC3ePrec
+        MNqCQjnFAOQ7E6qBFRLuuJBj+QaGjUlEOQTlEJJ4EZvaFoHi+hgU1ncmPKcEQW4Iwfo2iuBxRX5
+        acm+sIHg4SR+t5DqCw+PZOqf4
+X-Received: by 2002:a7b:c459:: with SMTP id l25mr21600360wmi.17.1581943575040;
+        Mon, 17 Feb 2020 04:46:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxzvRniTXW6DUJ8zXCaDWv4tXMB+/SKFo/9HDJN5SVbn7+nrb4j0vfkutpvM9Y+DkMMk74TTQ==
+X-Received: by 2002:a7b:c459:: with SMTP id l25mr21600335wmi.17.1581943574741;
+        Mon, 17 Feb 2020 04:46:14 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t12sm775315wrq.97.2020.02.17.04.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 04:46:14 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
+In-Reply-To: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
+References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
+Date:   Mon, 17 Feb 2020 13:46:13 +0100
+Message-ID: <871rqtbcve.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200215002932.15976-4-paulmck@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:29:32PM -0800, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-> 
-> The load of the srcu_struct structure's ->srcu_gp_seq field in
-> srcu_funnel_gp_start() is lockless, so this commit adds the requisite
-> READ_ONCE().
-> 
-> This data race was reported by KCSAN.
+Wanpeng Li <kernellwp@gmail.com> writes:
 
-But is there in actual fact a data-race? AFAICT this code was just fine.
-
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> Nick Desaulniers Reported:
+>
+>   When building with:
+>   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+>   The following warning is observed:
+>   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+>   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+>   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+>   vector)
+>               ^
+>   Debugging with:
+>   https://github.com/ClangBuiltLinux/frame-larger-than
+>   via:
+>   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+>     kvm_send_ipi_mask_allbutself
+>   points to the stack allocated `struct cpumask newmask` in
+>   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+>   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+>   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+>   8192, making a single instance of a `struct cpumask` 1024 B.
+>
+> This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
+> both pv tlb and pv ipis..
+>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 > ---
->  kernel/rcu/srcutree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> index 119a373..90ab475 100644
-> --- a/kernel/rcu/srcutree.c
-> +++ b/kernel/rcu/srcutree.c
-> @@ -678,7 +678,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
->  
->  	/* If grace period not already done and none in progress, start it. */
->  	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
-> -	    rcu_seq_state(ssp->srcu_gp_seq) == SRCU_STATE_IDLE) {
-> +	    rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_IDLE) {
->  		WARN_ON_ONCE(ULONG_CMP_GE(ssp->srcu_gp_seq, ssp->srcu_gp_seq_needed));
->  		srcu_gp_start(ssp);
->  		if (likely(srcu_init_done))
-> -- 
-> 2.9.5
-> 
+> v1 -> v2:
+>  * remove '!alloc' check
+>  * use new pv check helpers
+>
+>  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 76ea8c4..377b224 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
+>          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
+>  }
+>
+> +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
+> +
+>  #ifdef CONFIG_SMP
+>
+>  static bool pv_ipi_supported(void)
+> @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
+> cpumask *mask, int vector)
+>  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
+> int vector)
+>  {
+>      unsigned int this_cpu = smp_processor_id();
+> -    struct cpumask new_mask;
+> +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+>      const struct cpumask *local_mask;
+>
+> -    cpumask_copy(&new_mask, mask);
+> -    cpumask_clear_cpu(this_cpu, &new_mask);
+> -    local_mask = &new_mask;
+> +    cpumask_copy(new_mask, mask);
+> +    cpumask_clear_cpu(this_cpu, new_mask);
+> +    local_mask = new_mask;
+>      __send_ipi_mask(local_mask, vector);
+>  }
+>
+> @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
+>      update_intr_gate(X86_TRAP_PF, async_page_fault);
+>  }
+>
+> -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+>
+>  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+>              const struct flush_tlb_info *info)
+> @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
+> cpumask *cpumask,
+>      u8 state;
+>      int cpu;
+>      struct kvm_steal_time *src;
+> -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
+> +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+>
+>      cpumask_copy(flushmask, cpumask);
+>      /*
+> @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
+>      if (pv_tlb_flush_supported()) {
+>          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+>          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> +        pr_info("KVM setup pv remote TLB flush\n");
+
+Nit: to be consistent with __send_ipi_mask() the message should be
+somthing like
+
+"KVM: switch to using PV TLB flush"
+
+>      }
+>
+>      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+> @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
+>  }
+>  arch_initcall(activate_jump_labels);
+>
+> -static __init int kvm_setup_pv_tlb_flush(void)
+> +static __init int kvm_alloc_cpumask(void)
+>  {
+>      int cpu;
+> +    bool alloc = false;
+>
+>      if (!kvm_para_available() || nopv)
+>          return 0;
+>
+> -    if (pv_tlb_flush_supported()) {
+> +    if (pv_tlb_flush_supported())
+> +        alloc = true;
+> +
+> +#if defined(CONFIG_SMP)
+> +    if (pv_ipi_supported())
+> +        alloc = true;
+> +#endif
+> +
+> +    if (alloc)
+>          for_each_possible_cpu(cpu) {
+> -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+> +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+>                  GFP_KERNEL, cpu_to_node(cpu));
+>          }
+> -        pr_info("KVM setup pv remote TLB flush\n");
+> -    }
+>
+>      return 0;
+>  }
+> -arch_initcall(kvm_setup_pv_tlb_flush);
+> +arch_initcall(kvm_alloc_cpumask);
+>
+>  #ifdef CONFIG_PARAVIRT_SPINLOCKS
+>
+> --
+> 2.7.4
+>
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
