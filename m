@@ -2,93 +2,134 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF1DC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304BC35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14477206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iNgHSCbW"
+	by mail.kernel.org (Postfix) with ESMTP id 21605206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgBQHju (ORCPT
+        id S1726927AbgBQHjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:39:50 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:44941 "EHLO frisell.zx2c4.com"
+        Mon, 17 Feb 2020 02:39:55 -0500
+Received: from mga06.intel.com ([134.134.136.31]:3856 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgBQHju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:39:50 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id db3c7991;
-        Mon, 17 Feb 2020 07:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :in-reply-to:references:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=5qFoYGABoqiUw27DDar5aMuqQ9k=; b=iNgHSC
-        bW+WUc4LtYyc9vK9HkrE99PNnHzmB04Dq8L+aqbpbkN2JphcTIvhS5OUlMta47Rz
-        M+ASa4Qyug6D/xvcf3JnDDiGp+dijBBkfZwyLBKhI7DqWzJxzSIMHA1TwMAoZBlg
-        pl0CgD+0h9iQDB0OTPu7XFC9A5AMoQnCKFlkFKG4PBOURxWLUr13eWVoRcoXh06z
-        zTRuednI0mNuTyLSi2EZMZy9wNithBzJ+nlqeodxMajxY1r3eEVksZgx+CPVoNvQ
-        L709DNy5/cIs+48oSYBI6u2Hjg8yzmNpHHH0lGYWNP++MhHjWsQGbSlV1nSxugcy
-        5ZG8O4GLB0Nx6Azw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c393d1c5 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 17 Feb 2020 07:37:19 +0000 (UTC)
-Received: by mail-oi1-f179.google.com with SMTP id c16so15842987oic.3;
-        Sun, 16 Feb 2020 23:39:47 -0800 (PST)
-X-Gm-Message-State: APjAAAVdh5Ro/P4TRMJV1SIXrL++1tvTeKhpUmKq/O9lXFLYQfG0mKTn
-        FZIaqG5TtbMwMSiePfNzKmIiu5Odk3GqIWhXGkQ=
-X-Google-Smtp-Source: APXvYqxLgJtUBmhY1BDRIeQurZQnFngB1coYo+s31QSe1Eer5HNMVsPo+veYVDCGNWwalrM49oKMi//xq4G0/vBuVLI=
-X-Received: by 2002:aca:815:: with SMTP id 21mr9444281oii.52.1581925186693;
- Sun, 16 Feb 2020 23:39:46 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a4a:dd10:0:0:0:0:0 with HTTP; Sun, 16 Feb 2020 23:39:45
- -0800 (PST)
-In-Reply-To: <20200217032458.kwatitz3pvxeb25w@gondor.apana.org.au>
-References: <20200206163844.GA432041@zx2c4.com> <20200217032458.kwatitz3pvxeb25w@gondor.apana.org.au>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 17 Feb 2020 08:39:45 +0100
-X-Gmail-Original-Message-ID: <CAHmME9q+YYia0H3upW7ikwSii_XegNNSBkVxP-1mxaHyEVmBxA@mail.gmail.com>
-Message-ID: <CAHmME9q+YYia0H3upW7ikwSii_XegNNSBkVxP-1mxaHyEVmBxA@mail.gmail.com>
-Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     eric.dumazet@gmail.com, cai@lca.pw, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        id S1726558AbgBQHjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:39:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 23:39:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
+   d="scan'208";a="235148738"
+Received: from zhouy1-mobl1.ccr.corp.intel.com ([10.249.169.88])
+  by orsmga003.jf.intel.com with ESMTP; 16 Feb 2020 23:39:49 -0800
+Message-ID: <6abe2d62a08d38d53c85b3892ed77dbcc543c8fc.camel@intel.com>
+Subject: Re: [PATCH] thermal: fix indentation in makefile
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Frank Lee <tiny.windzz@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 17 Feb 2020 15:39:48 +0800
+In-Reply-To: <CAEExFWte+2f0ys5pmUyo1Fcf+FxpPOTDD3bgiAyOu2wgJ2vy4Q@mail.gmail.com>
+References: <20191221173737.30906-1-tiny.windzz@gmail.com>
+         <19c1277f-f0b1-899d-6db0-5c7ff4fe7512@linaro.org>
+         <CAEExFWte+2f0ys5pmUyo1Fcf+FxpPOTDD3bgiAyOu2wgJ2vy4Q@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->> Hi Eric,
->>
->> On Tue, Feb 04, 2020 at 01:40:29PM -0500, Qian Cai wrote:
->>> -     list->qlen--;
->>> +     WRITE_ONCE(list->qlen, list->qlen - 1);
->>
->> Sorry I'm a bit late to the party here, but this immediately jumped out.
->> This generates worse code with a bigger race in some sense:
->>
->> list->qlen-- is:
->>
->>   0:   83 6f 10 01             subl   $0x1,0x10(%rdi)
->>
->> whereas WRITE_ONCE(list->qlen, list->qlen - 1) is:
->>
->>   0:   8b 47 10                mov    0x10(%rdi),%eax
->>   3:   83 e8 01                sub    $0x1,%eax
->>   6:   89 47 10                mov    %eax,0x10(%rdi)
->>
->> Are you sure that's what we want?
->
-> Fixing these KCSAN warnings is actively making the kernel worse.
->
-> Why are we still doing this?
->
-Not necessarily a big fan of this either, but just for the record here
-in case it helps, while you might complain about instruction size
-blowing up a bit, cycle-wise these wind up being about the same
-anyway. On x86, one instruction != one cycle.
+On Mon, 2019-12-23 at 01:38 +0800, Frank Lee wrote:
+> ：q
+> 
+> On Sun, Dec 22, 2019 at 2:57 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+> > 
+> > On 21/12/2019 18:37, Yangtao Li wrote:
+> > > To unify code style.
+> > > 
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  drivers/thermal/Makefile | 10 +++++-----
+> > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> > > index baeb70bf0568..ab9389bc42b2 100644
+> > > --- a/drivers/thermal/Makefile
+> > > +++ b/drivers/thermal/Makefile
+> > > @@ -5,7 +5,7 @@
+> > > 
+> > >  obj-$(CONFIG_THERMAL)                += thermal_sys.o
+> > >  thermal_sys-y                        += thermal_core.o
+> > > thermal_sysfs.o \
+> > > -                                     thermal_helpers.o
+> > > +                                thermal_helpers.o
+> > 
+> > Here a tabulation is replaced with spaces.
+> 
+> It won't align after using tab here, shouldn't modify it?
+
+I'd prefer using tab here. Other changes seem okay to me.
+
+thanks,
+rui
+> 
+> 
+> Yours,
+> Yangtao
+> 
+> > 
+> > >  # interface to/from other layers providing sensors
+> > >  thermal_sys-$(CONFIG_THERMAL_HWMON)          += thermal_hwmon.o
+> > > @@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL) +=
+> > > cpu_cooling.o
+> > >  thermal_sys-$(CONFIG_CLOCK_THERMAL)  += clock_cooling.o
+> > > 
+> > >  # devfreq cooling
+> > > -thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+> > > +thermal_sys-$(CONFIG_DEVFREQ_THERMAL)        +=
+> > > devfreq_cooling.o
+> > > 
+> > >  # platform thermal drivers
+> > >  obj-y                                += broadcom/
+> > > -obj-$(CONFIG_THERMAL_MMIO)           += thermal_mmio.o
+> > > +obj-$(CONFIG_THERMAL_MMIO)   += thermal_mmio.o
+> > >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
+> > >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
+> > >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
+> > > @@ -49,9 +49,9 @@ obj-$(CONFIG_TI_SOC_THERMAL)        += ti-soc-
+> > > thermal/
+> > >  obj-y                                += st/
+> > >  obj-$(CONFIG_QCOM_TSENS)     += qcom/
+> > >  obj-y                                += tegra/
+> > > -obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+> > > +obj-$(CONFIG_HISI_THERMAL)   += hisi_thermal.o
+> > >  obj-$(CONFIG_MTK_THERMAL)    += mtk_thermal.o
+> > >  obj-$(CONFIG_GENERIC_ADC_THERMAL)    += thermal-generic-adc.o
+> > >  obj-$(CONFIG_ZX2967_THERMAL) += zx2967_thermal.o
+> > >  obj-$(CONFIG_UNIPHIER_THERMAL)       += uniphier_thermal.o
+> > > -obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+> > > +obj-$(CONFIG_AMLOGIC_THERMAL)        += amlogic_thermal.o
+> > > 
+> > 
+> > 
+> > --
+> >  <http://www.linaro.org/> Linaro.org │ Open source software for ARM
+> > SoCs
+> > 
+> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> > <http://twitter.com/#!/linaroorg> Twitter |
+> > <http://www.linaro.org/linaro-blog/> Blog
+> > 
+
