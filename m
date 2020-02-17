@@ -2,110 +2,73 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D586C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E8C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A52A24693
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581964343;
-	bh=rvWTyaYeifjPqyUfCKPJ7kkPbaQPPWSrX34cC7WHYzA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wjO8T383WJ33ZQQppSRFWsjdly7f7E5zPAWU8F3uPcqkzqCUjV672+FlIOOU0loym
-	 jFmNmHzc5O0raR7J5tTSSMPh/o6QC+mn04SHq8nmuQCTCLN8HrboU5vCVeZp7RJpiw
-	 dRfO5vQtcqGkW3SvagrsXKDYT172v85beVjSCjoI=
+	by mail.kernel.org (Postfix) with ESMTP id 872C424689
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="NoyiUAVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgBQScW (ORCPT
+        id S1729249AbgBQScl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:32:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbgBQScV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:32:21 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E25724689;
-        Mon, 17 Feb 2020 18:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581964341;
-        bh=rvWTyaYeifjPqyUfCKPJ7kkPbaQPPWSrX34cC7WHYzA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=dAROZkYWdkfyGo9BVUpJRwP4FNQYeRsiSbak30ehQKGHbQu9GMuWxYsTZMLZsNWlL
-         PVkVBLV4PEA8jiiNczz5BY+PsNIDGdey+H/mx05ZCegrUkgx67Qqi85uF7Iqx1JqG8
-         aI9r9c3Z6PvNOmo6X4DLh5Lm5eHwXktW+DFnvDVQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CF02D352273C; Mon, 17 Feb 2020 10:32:20 -0800 (PST)
-Date:   Mon, 17 Feb 2020 10:32:20 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
- ->srcu_gp_seq load
-Message-ID: <20200217183220.GS2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
- <20200215002932.15976-4-paulmck@kernel.org>
- <20200217124507.GT14914@hirez.programming.kicks-ass.net>
+        Mon, 17 Feb 2020 13:32:41 -0500
+Received: from forward501j.mail.yandex.net ([5.45.198.251]:52494 "EHLO
+        forward501j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726707AbgBQScl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 13:32:41 -0500
+Received: from mxback2g.mail.yandex.net (mxback2g.mail.yandex.net [77.88.29.163])
+        by forward501j.mail.yandex.net (Yandex) with ESMTP id 8862D33800D9;
+        Mon, 17 Feb 2020 21:32:35 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback2g.mail.yandex.net (mxback/Yandex) with ESMTP id Hos6lzhXdw-WZnGPXCA;
+        Mon, 17 Feb 2020 21:32:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1581964355;
+        bh=ZXaLfkB4QnIWV6WwupheBTl3yVczZy/2HbFnDzWCBxQ=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=NoyiUAVGde3k3GLIoi3chnJ14yMXccIxA7mQaCHiyh4/LBRx7/rrFWtUTLjObkRGA
+         XSd+Ln9DWsYtzS00U4vptmuwT5UQoPgtNLm+hyBU/jS+94HwnKkczyVHifXOr8YLp9
+         NpcN5mdyHOK2G+aFF1/rL3x7wFr9/rCmzhBkla6U=
+Authentication-Results: mxback2g.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by myt6-09be74140f25.qloud-c.yandex.net with HTTP;
+        Mon, 17 Feb 2020 21:32:35 +0300
+From:   Evgeniy Polyakov <zbr@ioremap.net>
+Envelope-From: drustafa@yandex.ru
+To:     "Daniel Walker (danielwa)" <danielwa@cisco.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200217175209.GM24152@zorba>
+References: <20200212192901.6402-1-danielwa@cisco.com>
+         <20200216.184443.782357344949548902.davem@davemloft.net>
+         <20200217172551.GL24152@zorba>
+         <16818701581961475@iva7-8a22bc446c12.qloud-c.yandex.net> <20200217175209.GM24152@zorba>
+Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain messages
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217124507.GT14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Mon, 17 Feb 2020 21:32:35 +0300
+Message-Id: <17589131581964355@myt6-09be74140f25.qloud-c.yandex.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 01:45:07PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 14, 2020 at 04:29:32PM -0800, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > The load of the srcu_struct structure's ->srcu_gp_seq field in
-> > srcu_funnel_gp_start() is lockless, so this commit adds the requisite
-> > READ_ONCE().
-> > 
-> > This data race was reported by KCSAN.
-> 
-> But is there in actual fact a data-race? AFAICT this code was just fine.
 
-Now that you mention it, the lock is held at that point, isn't it?  So if
-that READ_ONCE() actually does anything, there is a bug somewhere else.
 
-Good catch, I will drop this patch, thank you!
+17.02.2020, 20:52, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
+>>     What about sysfs interface with one file per message type?
+>
+> You mean similar to the module parameters I've done, but thru sysfs ? It would
+> work for Cisco. I kind of like Kconfig because it also reduces kernel size for
+> messages you may never want to see.
 
-							Thanx, Paul
+Yup, single sysfs file per message type you've created as kernel module parameter binary switches.
 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  kernel/rcu/srcutree.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > index 119a373..90ab475 100644
-> > --- a/kernel/rcu/srcutree.c
-> > +++ b/kernel/rcu/srcutree.c
-> > @@ -678,7 +678,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
-> >  
-> >  	/* If grace period not already done and none in progress, start it. */
-> >  	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
-> > -	    rcu_seq_state(ssp->srcu_gp_seq) == SRCU_STATE_IDLE) {
-> > +	    rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_IDLE) {
-> >  		WARN_ON_ONCE(ULONG_CMP_GE(ssp->srcu_gp_seq, ssp->srcu_gp_seq_needed));
-> >  		srcu_gp_start(ssp);
-> >  		if (likely(srcu_init_done))
-> > -- 
-> > 2.9.5
-> > 
+David, is it ok for you?
