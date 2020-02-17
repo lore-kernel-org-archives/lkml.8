@@ -2,267 +2,149 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE5C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A5C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E3520801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B562920801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9cpGOUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgBQQPp (ORCPT
+        id S1729696AbgBQQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:15:45 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49197 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgBQQOq (ORCPT
+        Mon, 17 Feb 2020 11:15:48 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35254 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729417AbgBQQPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:14:46 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j3j2f-0003Cp-DZ; Mon, 17 Feb 2020 16:14:41 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH net-next v2 00/10] net: fix sysfs permssions when device changes network
-Date:   Mon, 17 Feb 2020 17:14:26 +0100
-Message-Id: <20200217161436.1748598-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 17 Feb 2020 11:15:46 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so19492692ljb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:15:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0TipqMdhS4pxSY1hXNLauRtrTPhbqoPJrasfWKPg4UA=;
+        b=X9cpGOUnC7I2syG97wbgPrFA0XREObGZFM3ywzOMlKsnnGr8hq6nFPRfsHsUT+52Vg
+         YqnSxdm7CifC6geCL8YczKeojwkw1whC57P7DdV3qySkkiG2lvhtgEBNhJPxrqwAsmYi
+         kRt8tKD+aiZZX8jY/v5dHWP2c44G3q2NeilXcU2vFveCwK5htriC6tBVD9Xs57X5Hw+D
+         zaaH5AfrZjOgDh3JAhguTdIYQMHXewcGKYqrJeftBnwsH3biOTvZ30SMqIlMFwJBJ/N+
+         hpOfq9Q6Vl5rH55EnxYqpiOqoehm2qxiKuYgTDH8K1RPj4WmVqysmKmtGiIMEybw+C6y
+         /2Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0TipqMdhS4pxSY1hXNLauRtrTPhbqoPJrasfWKPg4UA=;
+        b=HBkE7OJRePvHBJb6l5Y0XJBMprKBgRMdzlfHmCytUYqZ2M1Hbn5UUoA1R6b39SQlLg
+         gneA0Z5kMpFS0xj6C+5moEIyOlji6U8WwnOxn+s/AEdu5GforhMr9V+OhmLaWZ/pc6a3
+         3Anfn+Q8LVrhNw+bO7V3UMfW4nPHQQgibcTKByS2G3Y4a/QdctUANXzQ7M9FMXoT2pDc
+         eEy6N6iDRe0fF1VNy3h3dnoo9MHprZTcZ73bgA8TbEdB/AZAZ/0oACHQmPYOnAjISsNW
+         KegNIGZbjvWfAu0MfTZgk27190wx+p6uZmCHSpv3ZrIKiiTexkDBFZE5+9u8y/Aw8Un5
+         ciJw==
+X-Gm-Message-State: APjAAAW+M1mk0n3qhMkmLnlS6G5QMOdl0GwQNkehvksVJs7udrmQQ4I8
+        h19JKFLg2eW35JYAXuwgXmxukPlQwn/GpL8Nqvq+Vg==
+X-Google-Smtp-Source: APXvYqyxW5nhhU0QL+zmNwGJ49EdB0T0eePErUamWSBb9m3JbBjOMYFhwy5qIsdYpWiSh6W5IcQYngfSXV6IbjzNfIk=
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr10282795ljg.151.1581956144038;
+ Mon, 17 Feb 2020 08:15:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200217104402.11643-1-mgorman@techsingularity.net>
+ <CAKfTPtBfV1QGi2utnmnR21MapKw1g2mTFA_aRxOxXvpWTRX+wA@mail.gmail.com> <20200217151412.GK3466@techsingularity.net>
+In-Reply-To: <20200217151412.GK3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 17 Feb 2020 17:15:32 +0100
+Message-ID: <CAKfTPtDEFvYv3oOAzDHZE5BLE0AByvvHB+67yL=SfAQgEotbGw@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v3
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+On Mon, 17 Feb 2020 at 16:14, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Mon, Feb 17, 2020 at 02:49:11PM +0100, Vincent Guittot wrote:
+> > On Mon, 17 Feb 2020 at 11:44, Mel Gorman <mgorman@techsingularity.net> wrote:
+> > >
+> > > Changelog since V2:
+> > > o Rebase on top of Vincent's series again
+> > > o Fix a missed rcu_read_unlock
+> > > o Reduce overhead of tracepoint
+> > >
+> > > Changelog since V1:
+> > > o Rebase on top of Vincent's series and rework
+> > >
+> > > Note: The baseline for this series is tip/sched/core as of February
+> > >         12th rebased on top of v5.6-rc1. The series includes patches from
+> > >         Vincent as I needed to add a fix and build on top of it. Vincent's
+> > >         series on its own introduces performance regressions for *some*
+> > >         but not *all* machines so it's easily missed. This series overall
+> > >         is close to performance-neutral with some gains depending on the
+> > >         machine. However, the end result does less work on NUMA balancing
+> > >         and the fact that both the NUMA balancer and load balancer uses
+> > >         similar logic makes it much easier to understand.
+> > >
+> > > The NUMA balancer makes placement decisions on tasks that partially
+> > > take the load balancer into account and vice versa but there are
+> > > inconsistencies. This can result in placement decisions that override
+> > > each other leading to unnecessary migrations -- both task placement
+> > > and page placement. This series reconciles many of the decisions --
+> > > partially Vincent's work with some fixes and optimisations on top to
+> > > merge our two series.
+> > >
+> > > The first patch is unrelated. It's picked up by tip but was not present in
+> > > the tree at the time of the fork. I'm including it here because I tested
+> > > with it.
+> > >
+> > > The second and third patches are tracing only and was needed to get
+> > > sensible data out of ftrace with respect to task placement for NUMA
+> > > balancing. The NUMA balancer is *far* easier to analyse with the
+> > > patches and informed how the series should be developed.
+> > >
+> > > Patches 4-5 are Vincent's and use very similar code patterns and logic
+> > > between NUMA and load balancer. Patch 6 is a fix to Vincent's work that
+> > > is necessary to avoid serious imbalances being introduced by the NUMA
+> >
+> > Yes the test added in load_too_imbalanced() by patch 5 doesn't seem to
+> > be a good choice.
+>
+> But it *did* make sense intuitively!
 
-This is v2 with fixes based on Greg's and Rafael's review.
+Yes. In fact, one difference compared to your fix is that
+load_too_imbalance() is also called by task_numa_compare() whereas
+node_type only is only tested in task_numa_find_cpu() in your patch
 
-(I've tagged this with net-next since it's triggered by a bug for
- network device files but it also touches driver core aspects so it's
- not clear-cut. I can of course split this series into separate
- patchsets.) 
-We have been struggling with a bug surrounding the ownership of network
-device sysfs files when moving network devices between network
-namespaces owned by different user namespaces reported by multiple
-users.
+>
+> > I haven't remove it as it was done by your patch 6 but it might worth
+> > removing it directly if a new version is needed
+> >
+>
+> They could be folded together or part folded together but I did not see
+> much value in that. I felt that keeping them seperate both preserved the
+> development history and acted as a historical reference on why using a
+> spare CPU can be hazardous. I do not believe it is a bisection hazard
+> as performance is roughly equivalent before and after the series (so
+> far at least). LKP might trip up on it and if so, we'll simply ask for
+> confirmation that patch 6 fixes it.
 
-Currently, when moving network devices between network namespaces the
-ownership of the corresponding sysfs entries is not changed. This leads
-to problems when tools try to operate on the corresponding sysfs files.
+that's fine for me
 
-I also causes a bug when creating a network device in a network
-namespaces owned by a user namespace and moving that network device back
-to the host network namespaces. Because when a network device is created
-in a network namespaces it will be owned by the root user of the user
-namespace and all its associated sysfs files will also be owned by the
-root user of the corresponding user namespace.
-If such a network device has to be moved back to the host network
-namespace the permissions will still be set to the root user of the
-owning user namespaces of the originating network namespace. This means
-unprivileged users can e.g. re-trigger uevents for such incorrectly
-owned devices on the host or in other network namespaces. They can also
-modify the settings of the device itself through sysfs when they
-wouldn't be able to do the same through netlink. Both of these things
-are unwanted.
-
-For example, quite a few workloads will create network devices in the
-host network namespace. Other tools will then proceed to move such
-devices between network namespaces owner by other user namespaces. While
-the ownership of the device itself is updated in
-net/core/net-sysfs.c:dev_change_net_namespace() the corresponding sysfs
-entry for the device is not. Below you'll find that moving a network
-device (here a veth device) from a network namespace into another
-network namespaces owned by a different user namespace with a different
-id mapping. As you can see the permissions are wrong even though it is
-owned by the userns root user after it has been moved and can be
-interacted with through netlink: 
-
-drwxr-xr-x 5 nobody nobody    0 Jan 25 18:08 .
-drwxr-xr-x 9 nobody nobody    0 Jan 25 18:08 ..
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 addr_assign_type
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 addr_len
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 address
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 broadcast
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 carrier
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 carrier_changes
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 carrier_down_count
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 carrier_up_count
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 dev_id
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 dev_port
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 dormant
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 duplex
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 flags
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 gro_flush_timeout
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 ifalias
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 ifindex
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 iflink
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 link_mode
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 mtu
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 name_assign_type
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 netdev_group
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 operstate
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 phys_port_id
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 phys_port_name
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 phys_switch_id
-drwxr-xr-x 2 nobody nobody    0 Jan 25 18:09 power
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 proto_down
-drwxr-xr-x 4 nobody nobody    0 Jan 25 18:09 queues
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 speed
-drwxr-xr-x 2 nobody nobody    0 Jan 25 18:09 statistics
-lrwxrwxrwx 1 nobody nobody    0 Jan 25 18:08 subsystem -> ../../../../class/net
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:09 tx_queue_len
--r--r--r-- 1 nobody nobody 4096 Jan 25 18:09 type
--rw-r--r-- 1 nobody nobody 4096 Jan 25 18:08 uevent
-
-Constrast this with creating a device of the same type in the network
-namespace directly. In this case the device's sysfs permissions will be
-correctly updated.
-(Please also note, that in a lot of workloads this strategy of creating
- the network device directly in the network device to workaround this
- issue can not be used. Either because the network device is dedicated
- after it has been created or because it used by a process that is
- heavily sandboxed and couldn't create network devices itself.):
-
-drwxr-xr-x 5 root   root      0 Jan 25 18:12 .
-drwxr-xr-x 9 nobody nobody    0 Jan 25 18:08 ..
--r--r--r-- 1 root   root   4096 Jan 25 18:12 addr_assign_type
--r--r--r-- 1 root   root   4096 Jan 25 18:12 addr_len
--r--r--r-- 1 root   root   4096 Jan 25 18:12 address
--r--r--r-- 1 root   root   4096 Jan 25 18:12 broadcast
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 carrier
--r--r--r-- 1 root   root   4096 Jan 25 18:12 carrier_changes
--r--r--r-- 1 root   root   4096 Jan 25 18:12 carrier_down_count
--r--r--r-- 1 root   root   4096 Jan 25 18:12 carrier_up_count
--r--r--r-- 1 root   root   4096 Jan 25 18:12 dev_id
--r--r--r-- 1 root   root   4096 Jan 25 18:12 dev_port
--r--r--r-- 1 root   root   4096 Jan 25 18:12 dormant
--r--r--r-- 1 root   root   4096 Jan 25 18:12 duplex
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 flags
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 gro_flush_timeout
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 ifalias
--r--r--r-- 1 root   root   4096 Jan 25 18:12 ifindex
--r--r--r-- 1 root   root   4096 Jan 25 18:12 iflink
--r--r--r-- 1 root   root   4096 Jan 25 18:12 link_mode
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 mtu
--r--r--r-- 1 root   root   4096 Jan 25 18:12 name_assign_type
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 netdev_group
--r--r--r-- 1 root   root   4096 Jan 25 18:12 operstate
--r--r--r-- 1 root   root   4096 Jan 25 18:12 phys_port_id
--r--r--r-- 1 root   root   4096 Jan 25 18:12 phys_port_name
--r--r--r-- 1 root   root   4096 Jan 25 18:12 phys_switch_id
-drwxr-xr-x 2 root   root      0 Jan 25 18:12 power
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 proto_down
-drwxr-xr-x 4 root   root      0 Jan 25 18:12 queues
--r--r--r-- 1 root   root   4096 Jan 25 18:12 speed
-drwxr-xr-x 2 root   root      0 Jan 25 18:12 statistics
-lrwxrwxrwx 1 nobody nobody    0 Jan 25 18:12 subsystem -> ../../../../class/net
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 tx_queue_len
--r--r--r-- 1 root   root   4096 Jan 25 18:12 type
--rw-r--r-- 1 root   root   4096 Jan 25 18:12 uevent
-
-Now, when creating a network device in a network namespace owned by a
-user namespace and moving it to the host the permissions will be set to
-the id that the user namespace root user has been mapped to on the host
-leading to all sorts of permission issues mentioned above:
-
-458752
-drwxr-xr-x 5 458752 458752      0 Jan 25 18:12 .
-drwxr-xr-x 9 root   root        0 Jan 25 18:08 ..
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 addr_assign_type
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 addr_len
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 address
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 broadcast
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 carrier
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 carrier_changes
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 carrier_down_count
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 carrier_up_count
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 dev_id
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 dev_port
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 dormant
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 duplex
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 flags
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 gro_flush_timeout
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 ifalias
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 ifindex
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 iflink
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 link_mode
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 mtu
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 name_assign_type
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 netdev_group
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 operstate
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 phys_port_id
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 phys_port_name
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 phys_switch_id
-drwxr-xr-x 2 458752 458752      0 Jan 25 18:12 power
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 proto_down
-drwxr-xr-x 4 458752 458752      0 Jan 25 18:12 queues
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 speed
-drwxr-xr-x 2 458752 458752      0 Jan 25 18:12 statistics
-lrwxrwxrwx 1 root   root        0 Jan 25 18:12 subsystem -> ../../../../class/net
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 tx_queue_len
--r--r--r-- 1 458752 458752   4096 Jan 25 18:12 type
--rw-r--r-- 1 458752 458752   4096 Jan 25 18:12 uevent
-
-Fix this by changing the basic sysfs files associated with network
-devices when moving them between network namespaces. To this end we add
-some infrastructure to sysfs.
-
-The patchset takes care to only do this when the owning user namespaces
-changes and the kids differ. So there's only a performance overhead,
-when the owning user namespace of the network namespace is different
-__and__ the kid mappings for the root user are different for the two
-user namespaces:
-Assume we have a netdev eth0 which we create in netns1 owned by userns1.
-userns1 has an id mapping of 0 100000 100000. Now we move eth0 into
-netns2 which is owned by userns2 which also defines an id mapping of 0
-100000 100000. In this case sysfs doesn't need updating. The patch will
-handle this case and not do any needless work. Now assume eth0 is moved
-into netns3 which is owned by userns3 which defines an id mapping of 0
-123456 65536. In this case the root user in each namespace corresponds
-to different kid and sysfs needs updating.
-
-Thanks!
-Christian
-
-Christian Brauner (10):
-  sysfs: add sysfs_file_change_owner{_by_name}()
-  sysfs: add sysfs_link_change_owner()
-  sysfs: add sysfs_group_change_owner()
-  sysfs: add sysfs_groups_change_owner()
-  sysfs: add sysfs_change_owner()
-  device: add device_change_owner()
-  drivers/base/power: add dpm_sysfs_change_owner()
-  net-sysfs: add netdev_change_owner()
-  net-sysfs: add queue_change_owner()
-  net: fix sysfs permssions when device changes network namespace
-
- drivers/base/core.c        |  77 +++++++++++++++++
- drivers/base/power/power.h |   2 +
- drivers/base/power/sysfs.c |  40 +++++++++
- fs/sysfs/file.c            | 171 +++++++++++++++++++++++++++++++++++++
- fs/sysfs/group.c           | 129 ++++++++++++++++++++++++++++
- include/linux/device.h     |   1 +
- include/linux/sysfs.h      |  45 ++++++++++
- net/core/dev.c             |   9 +-
- net/core/net-sysfs.c       | 128 +++++++++++++++++++++++++++
- net/core/net-sysfs.h       |   2 +
- 10 files changed, 603 insertions(+), 1 deletion(-)
-
-
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
--- 
-2.25.0
-
+>
+> --
+> Mel Gorman
+> SUSE Labs
