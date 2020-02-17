@@ -2,190 +2,140 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCCEC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0FEC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50AD2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9877E20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:51:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpZUlzMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgBQItu (ORCPT
+        id S1728611AbgBQIvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:49:50 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18362 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728355AbgBQItu (ORCPT
+        Mon, 17 Feb 2020 03:51:35 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46878 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgBQIvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:49:50 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01H8nZFs135725
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:49:49 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6bukxa08-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 03:49:48 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Mon, 17 Feb 2020 08:49:46 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 08:49:42 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01H8mk9O48431508
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 08:48:46 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E48D6AE045;
-        Mon, 17 Feb 2020 08:49:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8A6FAE051;
-        Mon, 17 Feb 2020 08:49:41 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.20.186])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Feb 2020 08:49:41 +0000 (GMT)
-Subject: Re: [PATCH AUTOSEL 5.5 096/542] powerpc/powernv/ioda: Fix ref count
- for devices with their own PE
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-96-sashal@kernel.org>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Mon, 17 Feb 2020 09:49:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 03:51:35 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so18555728wrl.13;
+        Mon, 17 Feb 2020 00:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C5xv8SsbTaG0cDhTprdH9BYVte6zKum691BtN4GtW2Y=;
+        b=gpZUlzMJheFlYY1KBdQOn3ATc10V2sSG50fwF+2VMg8tAqQlKcoaJTZr82r2/NG5ex
+         0aQOOFwKvK3fZ/Kuf4HKf+f6lu9AEvVTJlyZbYEWtMBPclXCt15ubiHzcW/sL/d2N7hL
+         tQXcsmPQPL136Ju09GhWQwILxatcisAnrB+5GX6VzVUV/9iDo6nrjkGiXyCY6tQWJQxg
+         hXHJdcALf94tDf8om2LlKtxVQn1QcWIiDrcmxT/lEQqoJ4ugp7GZKjSTExPRtdOsxx72
+         jLMgRcL5T9HKNUmZyluhD9DJKBcmYHkMQs9GFp1rrEB1NJSWCBALBvywbc4cP71fIrLn
+         eEKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C5xv8SsbTaG0cDhTprdH9BYVte6zKum691BtN4GtW2Y=;
+        b=buUj+W9miV+z2btlO2OX3yVdwYpL8RYzZOuhODNObH2e7pLnxJy125YgX7dNmWs68+
+         rTmnFOdyCfDtW0cmx7Wf/oOSm1xDIUXFkwkr0Tz0O8uRcvzz0Jd8fdJnotNm7+wRyh5J
+         nemHWXhvOTBtUWXp7p/hkqur3ozBbytRzANkuLva6Wd/1khywMqupDPbXue4rw1omkA2
+         rZqhREkpbu0NJ42OPwEyA7lXf0aIxkElKCLac8p+TH1XP3MNPUS3bR9sqCuIOXWQh3bd
+         CNaNCjpNchRtoDKxBZsl2eEJi6EcAKsUGAEGv4kQjCVku1xzYTvFuoFIs8pM92KvjQ17
+         Cndw==
+X-Gm-Message-State: APjAAAVE3MqdrW0SHh/1mgV8xFIdW/ZhV8McZft+qJbBOfa5OXC2gy6X
+        Jfb4HPaacqmJh2Lzsux+cT0=
+X-Google-Smtp-Source: APXvYqy0WmpQraHfizMgbA3gjw0UnnZn6vscoesWRieuCn6d0R4UXALiZrGzc7fX2RLP1GZHkU3iMw==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr21775343wrl.117.1581929492932;
+        Mon, 17 Feb 2020 00:51:32 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id a13sm19720944wrp.93.2020.02.17.00.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 00:51:31 -0800 (PST)
+Date:   Mon, 17 Feb 2020 09:51:30 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V5 00/21] Tegra XUSB OTG support
+Message-ID: <20200217085130.GJ1339021@ulmo>
+References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214154854.6746-96-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021708-0016-0000-0000-000002E78497
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021708-0017-0000-0000-0000334A92CE
-Message-Id: <0867167a-73b8-0735-78ce-0d984f7a80b5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_04:2020-02-14,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- adultscore=0 suspectscore=0 mlxlogscore=761 lowpriorityscore=0
- priorityscore=1501 clxscore=1031 phishscore=0 mlxscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002170079
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zYo4Elh1vtcYNvbq"
+Content-Disposition: inline
+In-Reply-To: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--zYo4Elh1vtcYNvbq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le 14/02/2020 à 16:41, Sasha Levin a écrit :
-> From: Frederic Barrat <fbarrat@linux.ibm.com>
-> 
-> [ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
+On Mon, Feb 10, 2020 at 01:41:26PM +0530, Nagarjuna Kristam wrote:
+> This patch series adds OTG support on XUSB hardware used in Tegra210 and
+> Tegra186 SoCs.
+>=20
+> This patchset is composed with :
+>  - dt bindings of XUSB Pad Controller
+>  - dt bindings for XUSB device Driver
+>  - Tegra PHY driver for usb-role-switch and usb-phy
+>  - Tegra XUSB host mode driver to support OTG mode
+>  - Tegra XUSB device mode driver to use usb-phy and multi device mode
+>  - dts for XUSB pad controller
+>  - dts for xudc for Jetson TX1 and TX2
+>  - dts for Jetson-TK1
+>  - dts for Jetson-Nano
+>=20
+> Tegra Pad controller driver register for role switch updates for
+> OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+> USB ports.
+>=20
+> Host and Device mode drivers gets usb-phy from USB2's phy and registers
+> notifier for role changes to perform corresponding role tasks.
+>=20
+> Order of merging Patches:
+> Please merge DT changes first followed Tegra PHY driver changes and then
+> USB driver changes.
 
+Felipe, Greg, Kishon,
 
-Hi,
+Given the runtime dependencies between these various parts, I could pick
+these up into the Tegra tree if you provide an Acked-by.
 
-Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 doesn't really 
-need to go to stable (any of 4.19, 5.4 and 5.5). While it's probably 
-safe, the patch replaces a refcount leak by another one, which makes 
-sense as part of the full series merged in 5.6-rc1, but isn't terribly 
-useful standalone on the current stable branches.
+Thierry
 
-   Fred
+--zYo4Elh1vtcYNvbq
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5KVBIACgkQ3SOs138+
+s6GPJQ/8Dr1CPfELHw05VQk0p62qC/U3hkxpH56/8OSVsICja7BxolBa+2ptmTzw
+eB1ltsaiHPgYGvl53lyIlbFDofTaukVG9g52tFx4wJM3VKrGDUwj+7a//egwL9aT
+fj+QsOWrvHfLpxYfYiNGl9vhQgVhL3U25c0s0SBzBPxjdcLQbNz0erTiE64G9ZI7
+TSdqsijAXQflLfp02uS/jhqWUHHhkav0wf+NrYjyq+O30UBTUjuvNA2zXoee9c1P
+n45PMAk7hZ+PS5s2Q51KLcNcA83x52Yf8O5lD16GJgCOWNaGrJR+FQombCMr7Sfo
+p8VYNhNlNY+CDtt03YlMqgiJZ+lUx7HAArzPUwLRYyQtY1O9fjfxYQXRzLOhPhpV
+uRpBCQ2X75GmlRtVY8HHSk6sCwHGKQbUtysaWna48rsKbNou6vAIUPo62BXV/2xT
+QpnuSpAzZzmjnLGEkPyZiGSXZtqIQMrz8YIZXH0TER17o9DpuijLJLO2Gdv1gTZr
+CbNAv9WSsn1sNUWpH1B2aUvA2ZgRLpw0TJ+6c8rH5AKMn9/KO3fzmvLCN1jFPctz
+oJO2Ctm/pym37bpOVliZzDJleKwe8tLi9afv6+VLYaRZ7P8+F4aM7ijBHuwLHLPb
+i7CvOEpdpCu+WxEBihmzFm8AxpT7yc8rnVN/WAMQx5+w5Bbh9wA=
+=+r7V
+-----END PGP SIGNATURE-----
 
-> The pci_dn structure used to store a pointer to the struct pci_dev, so
-> taking a reference on the device was required. However, the pci_dev
-> pointer was later removed from the pci_dn structure, but the reference
-> was kept for the npu device.
-> See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
-> pcidev from pci_dn").
-> 
-> We don't need to take a reference on the device when assigning the PE
-> as the struct pnv_ioda_pe is cleaned up at the same time as
-> the (physical) device is released. Doing so prevents the device from
-> being released, which is a problem for opencapi devices, since we want
-> to be able to remove them through PCI hotplug.
-> 
-> Now the ugly part: nvlink npu devices are not meant to be
-> released. Because of the above, we've always leaked a reference and
-> simply removing it now is dangerous and would likely require more
-> work. There's currently no release device callback for nvlink devices
-> for example. So to be safe, this patch leaks a reference on the npu
-> device, but only for nvlink and not opencapi.
-> 
-> Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
->   1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 4374836b033b4..67b836f102402 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -1062,14 +1062,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
->   		return NULL;
->   	}
->   
-> -	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
-> -	 * pointer in the PE data structure, both should be destroyed at the
-> -	 * same time. However, this needs to be looked at more closely again
-> -	 * once we actually start removing things (Hotplug, SR-IOV, ...)
-> +	/* NOTE: We don't get a reference for the pointer in the PE
-> +	 * data structure, both the device and PE structures should be
-> +	 * destroyed at the same time. However, removing nvlink
-> +	 * devices will need some work.
->   	 *
->   	 * At some point we want to remove the PDN completely anyways
->   	 */
-> -	pci_dev_get(dev);
->   	pdn->pe_number = pe->pe_number;
->   	pe->flags = PNV_IODA_PE_DEV;
->   	pe->pdev = dev;
-> @@ -1084,7 +1083,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
->   		pnv_ioda_free_pe(pe);
->   		pdn->pe_number = IODA_INVALID_PE;
->   		pe->pdev = NULL;
-> -		pci_dev_put(dev);
->   		return NULL;
->   	}
->   
-> @@ -1205,6 +1203,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
->   	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
->   	struct pnv_phb *phb = hose->private_data;
->   
-> +	/*
-> +	 * Intentionally leak a reference on the npu device (for
-> +	 * nvlink only; this is not an opencapi path) to make sure it
-> +	 * never goes away, as it's been the case all along and some
-> +	 * work is needed otherwise.
-> +	 */
-> +	pci_dev_get(npu_pdev);
-> +
->   	/*
->   	 * Due to a hardware errata PE#0 on the NPU is reserved for
->   	 * error handling. This means we only have three PEs remaining
-> @@ -1228,7 +1234,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
->   			 */
->   			dev_info(&npu_pdev->dev,
->   				"Associating to existing PE %x\n", pe_num);
-> -			pci_dev_get(npu_pdev);
->   			npu_pdn = pci_get_pdn(npu_pdev);
->   			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
->   			npu_pdn->pe_number = pe_num;
-> 
-
+--zYo4Elh1vtcYNvbq--
