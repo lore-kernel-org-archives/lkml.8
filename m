@@ -2,136 +2,204 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B5FC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7796FC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E6320726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D61208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 01:27:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ma+QHFqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBQBXC (ORCPT
+        id S1726751AbgBQB1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 20:23:02 -0500
-Received: from mga09.intel.com ([134.134.136.24]:10394 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgBQBXC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 20:23:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 17:23:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,450,1574150400"; 
-   d="scan'208";a="348399488"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.238.4.8]) ([10.238.4.8])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Feb 2020 17:22:58 -0800
-Subject: Re: [PATCH v4] perf stat: Show percore counts in per CPU output
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200214080452.26402-1-yao.jin@linux.intel.com>
- <20200216225407.GB157041@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <d79a1bbe-bca5-0420-0480-1d508d2a038c@linux.intel.com>
-Date:   Mon, 17 Feb 2020 09:22:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 16 Feb 2020 20:27:46 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34790 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgBQB1q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 20:27:46 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c20so14780417qkm.1;
+        Sun, 16 Feb 2020 17:27:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pIJUz3o4BsZGq1UIMsmYwN7b8ilICIwNhuoVh3JXiCY=;
+        b=ma+QHFqFrc9AuZgbISiDDrvyIWMA/cPNT0roCMfoM/VrgPEp+1Ov/ODLR2agNyvKfy
+         Nw2Ec225uxFgP3HH/MUGjKxYM3g43Xij/EDtCxdqxSVnIBX91JCBhzcLnur3sFa2+uU7
+         XgJX6360S1TQV0GB9M1ClN7McbZGoBI1uYyuD33KTeLE677m40YuET4kUnQymfKQ6hMp
+         +QBrmBO5Sx2Rtn/kQxiiXoNxMgume4ktzsd5pwRfyqjpHU7X6PB1y/A/Fwz3GjACcnQz
+         lySvxqze4lmVOlx3AbQywsKK0McifSwhoIEZQNQ8pavKoLCB3chNMIHkq21bb8WwrqnU
+         Oe7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pIJUz3o4BsZGq1UIMsmYwN7b8ilICIwNhuoVh3JXiCY=;
+        b=LM6XSoUcd7D296u5mW/2qSYRwyC0dp1RpsA/4oFuhiPJ18txpfaU+X0HQAqB67C43/
+         QPg0S36NLl2udzOphoozpw8YR49i2Vh6C0GskKb93RYKl9aPbmR9g9Vvjp56F8NmCx9w
+         YK+MCn0hINjDq4sdoRVK3Jz5bpmvYpn3GmFUPAYEKz3nlOis3OCZgAUl/ahcO4lOlLUl
+         j3hkPFt5jNtGbw2piBDqkDwYQM/XL2zQ4YrPML4GMnrHwNbKQwCOqDTNqmwrg7H2jMhX
+         XkS50+KUkC6KLn9imQk+7Z4qNl07HKPOCl+y+8hJUrBQHdiRmm93IIrI4+l4hFr0LH/t
+         Y29w==
+X-Gm-Message-State: APjAAAVpRpSFbJcYW4r8U02WxgM0e0RE5AaOka459tvZ7XMWiJpL8Jbw
+        7njQ+LxpkxWP5ljKwe5KeXg=
+X-Google-Smtp-Source: APXvYqw7YymbkCgKPOWCbG0hZGa5MXni5FoRtswSMjOxxNhzwMV5+BoSOvrkB+SHh4c5J2cqqdFh+g==
+X-Received: by 2002:a37:a08f:: with SMTP id j137mr12017923qke.467.1581902863525;
+        Sun, 16 Feb 2020 17:27:43 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id z1sm8012011qtq.69.2020.02.16.17.27.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Feb 2020 17:27:42 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 302BD21CDA;
+        Sun, 16 Feb 2020 20:27:41 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 16 Feb 2020 20:27:41 -0500
+X-ME-Sender: <xms:COxJXmIw1-pyWWVY1hthefmj6_6_iPBYlGkxhIhRRwh_vpLslDSa_g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpuggvfhdrshhonecukfhppeeh
+    vddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihht
+    hidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrg
+    hilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:COxJXgCDxNHdNHdKHEAyXq2Wew6jvGP2y-nzEF49FK23VVFgpvk-hA>
+    <xmx:COxJXgHNggHU2Y2u3cwAjY6EK133nV7byMTZgNpqWy4tt4n4cQw7Lw>
+    <xmx:COxJXk4HacxfFi3KhCFnrdNHzGwnRjsr1PUSH3Ciy7osCyAhC5mt2w>
+    <xmx:DexJXj-dtYYk8r_9P9jDQkvJbzvAHPQ4XcO4KNnfLKdN9IdDVNv4d1Fs1ag>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0358F30606E9;
+        Sun, 16 Feb 2020 20:27:35 -0500 (EST)
+Date:   Mon, 17 Feb 2020 09:27:34 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [RFC 0/3] tools/memory-model: Add litmus tests for atomic APIs
+Message-ID: <20200217012734.GB69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200216120625.GF2935@paulmck-ThinkPad-P72>
+ <Pine.LNX.4.44L0.2002161113320.30459-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200216225407.GB157041@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2002161113320.30459-100000@netrider.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Feb 16, 2020 at 11:16:50AM -0500, Alan Stern wrote:
+> On Sun, 16 Feb 2020, Paul E. McKenney wrote:
+> 
+> > On Sun, Feb 16, 2020 at 01:43:45PM +0800, Boqun Feng wrote:
+> > > On Sat, Feb 15, 2020 at 07:25:50AM -0800, Paul E. McKenney wrote:
+> > > > On Fri, Feb 14, 2020 at 10:27:44AM -0500, Alan Stern wrote:
+> > > > > On Fri, 14 Feb 2020, Boqun Feng wrote:
+> > > > > 
+> > > > > > A recent discussion raises up the requirement for having test cases for
+> > > > > > atomic APIs:
+> > > > > > 
+> > > > > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > > > > > 
+> > > > > > , and since we already have a way to generate a test module from a
+> > > > > > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > > > > > tests for atomic APIs into memory-model.
+> > > > > 
+> > > > > It might be worth discussing this point a little more fully.  The 
+> > > > > set of tests in tools/memory-model/litmus-tests/ is deliberately rather 
+> > > > > limited.  Paul has a vastly more expansive set of litmus tests in a 
+> > > > > GitHub repository, and I am doubtful about how many new tests we want 
+> > > > > to keep in the kernel source.
+> > > > 
+> > > > Indeed, the current view is that the litmus tests in the kernel source
+> > > > tree are intended to provide examples of C-litmus-test-language features
+> > > > and functions, as opposed to exercising the full cross-product of
+> > > > Linux-kernel synchronization primitives.
+> > > > 
+> > > > For a semi-reasonable subset of that cross-product, as Alan says, please
+> > > > see https://github.com/paulmckrcu/litmus.
+> > > > 
+> > > > For a list of the Linux-kernel synchronization primitives currently
+> > > > supported by LKMM, please see tools/memory-model/linux-kernel.def.
+> > > > 
+> > > 
+> > > So how about I put those atomic API tests into a separate directory, say
+> > > Documentation/atomic/ ?
+> > > 
+> > > The problem I want to solve here is that people (usually who implements
+> > > the atomic APIs for new archs) may want some examples, which can help
+> > > them understand the API requirements and test the implementation. And
+> > > litmus tests are the perfect tool here (given that them can be
+> > > translated to test modules with klitmus). And I personally really think
+> > > this is something the LKMM group should maintain, that's why I put them
+> > > in the tools/memory-model/litmus-tests/. But I'm OK if we end up
+> > > deciding those should be put outside that directory.
+> > 
+> > Good point!
+> > 
+> > However, we should dicuss this with the proposed beneficiaries, namely
+> > the architecture maintainers.  Do they want it?  If so, where would
+> > they like it to be?  How should it be organized?
+> > 
 
+Paul,
 
-On 2/17/2020 6:54 AM, Jiri Olsa wrote:
-> On Fri, Feb 14, 2020 at 04:04:52PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>   CPU1               1,009,312      cpu/event=cpu-cycles,percore/
->>   CPU2               2,784,072      cpu/event=cpu-cycles,percore/
->>   CPU3               2,427,922      cpu/event=cpu-cycles,percore/
->>   CPU4               2,752,148      cpu/event=cpu-cycles,percore/
->>   CPU6               2,784,072      cpu/event=cpu-cycles,percore/
->>   CPU7               2,427,922      cpu/event=cpu-cycles,percore/
->>
->>          1.001416041 seconds time elapsed
->>
->>   v4:
->>   ---
->>   Ravi Bangoria reports an issue in v3. Once we offline a CPU,
->>   the output is not correct. The issue is we should use the cpu
->>   idx in print_percore_thread rather than using the cpu value.
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
+Well, I was simply motivated by the discuss on microblaze's atomic
+implementation (which I pasted the link in this cover letter):
 
-Thanks so much for ACK this patch. :)
+	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
 
-> btw, there's slight misalignment in -I output, but not due
-> to your change, it's there for some time now, and probably
-> in other agregation  outputs as well:
+, please see the last paragraph, Michal asking Peter for some tests. So
+I think there is at least some one wanting this ;-)
+
+> > In the meantime, I am more than happy to accept litmus tests into the
+> > github archive.
+> > 
+
+Thanks ;-)
+
+> > So how would you like to proceed?
+
+I think we are still at the discussion stage, so I'm happy to see
+suggestions on where to put the litmus tests and which litmus tests
+should be included.
+
 > 
-> 
->    $ sudo ./perf stat -e cpu/event=cpu-cycles/ -a -A  -I 1000
->    #           time CPU                    counts unit events
->         1.000224464 CPU0               7,251,151      cpu/event=cpu-cycles/
->         1.000224464 CPU1              21,614,946      cpu/event=cpu-cycles/
->         1.000224464 CPU2              30,812,097      cpu/event=cpu-cycles/
-> 
-> should be (extra space after CPUX):
-> 
->         1.000224464 CPU2               30,812,097      cpu/event=cpu-cycles/
-> 
-> I'll put it on my TODO, but if you're welcome to check on it ;-)
-> 
-> thanks,
-> jirka
+> I think it makes sense to put Boqun's tests under Documentation/ rather
+> than tools/.  After all, their point is to document the memory model's
+> requirements for operations on atomic_t's.  They aren't meant to be
+> examples or demos showing how to use herd or write litmus tests.
 > 
 
-I have a simple fix for this misalignment issue.
+Alan,
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc31fccc0057..95b29c9cba36 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -114,11 +114,11 @@ static void aggr_printout(struct perf_stat_config 
-*config,
-                         fprintf(config->output, "S%d-D%d-C%*d%s",
-                                 cpu_map__id_to_socket(id),
-                                 cpu_map__id_to_die(id),
--                               config->csv_output ? 0 : -5,
-+                               config->csv_output ? 0 : -3,
-                                 cpu_map__id_to_cpu(id), config->csv_sep);
-                 } else {
--                       fprintf(config->output, "CPU%*d%s ",
--                               config->csv_output ? 0 : -5,
-+                       fprintf(config->output, "CPU%*d%s",
-+                               config->csv_output ? 0 : -7,
-                                 evsel__cpus(evsel)->map[id],
-                                 config->csv_sep);
-                 }
+Got it. I will create the Documentation/atomic directory and put the
+litmus tests there in the next version.
 
-Following command lines are tested OK.
+Thank you both!
 
-perf stat -e cpu/event=cpu-cycles/ -I 1000
-perf stat -e cpu/event=cpu-cycles/ -a -I 1000
-perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
-perf stat -e cpu/event=cpu-cycles,percore/ -a -A -I 1000
-perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread 
--I 1000
+Regards,
+Boqun
 
-Could you help to look at that?
-
-Thanks
-Jin Yao
+> Alan
+> 
