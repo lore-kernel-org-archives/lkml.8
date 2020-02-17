@@ -2,218 +2,144 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998C8C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBE7C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384D720726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7696320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="BXeLJVeA"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iYhWWX8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBQGkL (ORCPT
+        id S1726776AbgBQGkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:40:11 -0500
-Received: from pb-smtp21.pobox.com ([173.228.157.53]:56447 "EHLO
-        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgBQGkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:40:10 -0500
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 23670B09F9;
-        Mon, 17 Feb 2020 01:40:07 -0500 (EST)
-        (envelope-from junio@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
-        :subject:date:message-id:mime-version:content-type
-        :content-transfer-encoding; s=sasl; bh=15Xm9thina60cCGiDQyk4NLRc
-        rE=; b=BXeLJVeAZSgTBexmevGrdE35SltV2kIb8LM+FpIk+b3HJ2RiG/4yg4R2P
-        WmciB6aHTQ94e+rSXwPbPPTMzfgRG1HLAgZkksueRo+9wTAkScxSLt+a6WbPiaz+
-        L5zeG8kYI1v0drc7ZPH74TTnfAMG35m8EwWTQ9Dpnrel1OmqfI=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
-        :subject:date:message-id:mime-version:content-type
-        :content-transfer-encoding; q=dns; s=sasl; b=f9RxcFjvJERh6eU4nz0
-        PaE94nucaMGLAQnrPaRd9FrLgMRkNSWh9yojcVPAy3g/nqflcuWtdJDWrnBoS6xP
-        PznD4I7tvV5QNjqTrVRm3QFkWvfJ7J+/6Psq1EuHYPuBFmFtN+1U8gtsczAmiJvC
-        fy/Z/oSGG+2LsbvNOAn2yUII=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id 0D958B09F8;
-        Mon, 17 Feb 2020 01:40:07 -0500 (EST)
-        (envelope-from junio@pobox.com)
-Received: from pobox.com (unknown [34.76.80.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 2AFD8B09F6;
-        Mon, 17 Feb 2020 01:40:04 -0500 (EST)
-        (envelope-from junio@pobox.com)
-From:   Junio C Hamano <gitster@pobox.com>
-To:     git@vger.kernel.org
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-Subject: [ANNOUNCE] Git v2.25.1
-Date:   Sun, 16 Feb 2020 22:40:01 -0800
-Message-ID: <xmqq36b9n2da.fsf@gitster-ct.c.googlers.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 17 Feb 2020 01:40:14 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:45100 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgBQGkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:40:13 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48LZ9M03Mtz9tyKy;
+        Mon, 17 Feb 2020 07:40:07 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=iYhWWX8E; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id M2lXqJqpekqG; Mon, 17 Feb 2020 07:40:06 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48LZ9L632Xz9tyKw;
+        Mon, 17 Feb 2020 07:40:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581921606; bh=RIChch1m0QYFDIHCh/Ft7iNcP75vzp/5ozhdlv2//6o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iYhWWX8EJBYGe6LckfXQdWNjahq1nPguw3X0/BbI4Epn1QxtXFvxtfyMFoYKdcWpt
+         FfB6j63LvHWwIANYeBWrIUsI1OujjBZWBb+21FZanZgdDxVTwG7i6znepTb7FEecrS
+         gFreQaaXtYVl3hWbI9pN3TJ+E1Js/RW3dgnYIQzE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 594738B79C;
+        Mon, 17 Feb 2020 07:40:06 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id hIToJ0uh2nON; Mon, 17 Feb 2020 07:40:06 +0100 (CET)
+Received: from [172.25.230.102] (unknown [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F15A8B755;
+        Mon, 17 Feb 2020 07:40:06 +0100 (CET)
+Subject: Re: [PATCH] powerpc/chrp: Fix enter_rtas() with CONFIG_VMAP_STACK
+To:     Michael Neuling <mikey@neuling.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <159ecb0ab021c07fd2f383d4a083a43d16d67b92.1581669187.git.christophe.leroy@c-s.fr>
+ <04cdd26307a1eaebeacc039b207db92e0b6820bb.camel@neuling.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <40126489-adf8-1b65-8974-25bca584bc9b@c-s.fr>
+Date:   Mon, 17 Feb 2020 07:40:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-X-Pobox-Relay-ID: 544F0F38-5150-11EA-A380-8D86F504CC47-77302942!pb-smtp21.pobox.com
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <04cdd26307a1eaebeacc039b207db92e0b6820bb.camel@neuling.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The latest maintenance release Git v2.25.1 is now available at
-the usual places.
 
-The tarballs are found at:
 
-    https://www.kernel.org/pub/software/scm/git/
+Le 16/02/2020 à 23:40, Michael Neuling a écrit :
+> On Fri, 2020-02-14 at 08:33 +0000, Christophe Leroy wrote:
+>> With CONFIG_VMAP_STACK, data MMU has to be enabled
+>> to read data on the stack.
+> 
+> Can you describe what goes wrong without this? Some oops message? rtas blows up?
+> Get corrupt data?
 
-The following public repositories all have a copy of the 'v2.25.1'
-tag and the 'maint' branch that the tag points at:
+Larry reported a machine check. Or in fact, he reported a Oops in 
+kprobe_handler(), that Oops being a bug in kprobe_handle() triggered by 
+this machine check.
 
-  url =3D https://kernel.googlesource.com/pub/scm/git/git
-  url =3D git://repo.or.cz/alt-git.git
-  url =3D https://github.com/gitster/git
+By converting a VM address to a phys-like address as if is was linear 
+mem, you get in the dark. Either there is some physical memory at that 
+address and you corrupt it. Or there is none and you get a machine check.
 
-----------------------------------------------------------------
+> 
+> Also can you say what you're actually doing (ie turning on MSR[DR])
 
-Git 2.25.1 Release Notes
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Euh ... I'm saying that data MMU has to be enabled, so I'm enabling it.
 
-Fixes since v2.25
------------------
+> 
+> 
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>   arch/powerpc/kernel/entry_32.S | 9 +++++++--
+>>   1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+>> index 0713daa651d9..bc056d906b51 100644
+>> --- a/arch/powerpc/kernel/entry_32.S
+>> +++ b/arch/powerpc/kernel/entry_32.S
+>> @@ -1354,12 +1354,17 @@ _GLOBAL(enter_rtas)
+>>   	mtspr	SPRN_SRR0,r8
+>>   	mtspr	SPRN_SRR1,r9
+>>   	RFI
+>> -1:	tophys(r9,r1)
+>> +1:	tophys_novmstack r9, r1
+>> +#ifdef CONFIG_VMAP_STACK
+>> +	li	r0, MSR_KERNEL & ~MSR_IR	/* can take DTLB miss */
+> 
+> You're potentially turning on more than MSR DR here. This should be clear in the
+> commit message.
 
- * "git commit" gives output similar to "git status" when there is
-   nothing to commit, but without honoring the advise.statusHints
-   configuration variable, which has been corrected.
+Am I ?
 
- * has_object_file() said "no" given an object registered to the
-   system via pretend_object_file(), making it inconsistent with
-   read_object_file(), causing lazy fetch to attempt fetching an
-   empty tree from promisor remotes.
+At the time of the RFI just above, SRR1 contains the value of r9 which 
+has been set 2 lines before to MSR_KERNEL & ~(MSR_IR|MSR_DR).
 
- * The code that tries to skip over the entries for the paths in a
-   single directory using the cache-tree was not careful enough
-   against corrupt index file.
+What should be clear in the commit message ?
 
- * Complete an update to tutorial that encourages "git switch" over
-   "git checkout" that was done only half-way.
+> 
+>> +	mtmsr	r0
+>> +	isync
+>> +#endif
+>>   	lwz	r8,INT_FRAME_SIZE+4(r9)	/* get return address */
+>>   	lwz	r9,8(r9)	/* original msr value */
+>>   	addi	r1,r1,INT_FRAME_SIZE
+>>   	li	r0,0
+>> -	tophys(r7, r2)
+>> +	tophys_novmstack r7, r2
+>>   	stw	r0, THREAD + RTAS_SP(r7)
+>>   	mtspr	SPRN_SRR0,r8
+>>   	mtspr	SPRN_SRR1,r9
 
- * Reduce unnecessary round-trip when running "ls-remote" over the
-   stateless RPC mechanism.
-
- * "git restore --staged" did not correctly update the cache-tree
-   structure, resulting in bogus trees to be written afterwards, which
-   has been corrected.
-
- * The code recently added to move to the entry beyond the ones in the
-   same directory in the index in the sparse-cone mode did not count
-   the number of entries to skip over incorrectly, which has been
-   corrected.
-
- * Work around test breakages caused by custom regex engine used in
-   libasan, when address sanitizer is used with more recent versions
-   of gcc and clang.
-
- * "git fetch --refmap=3D" option has got a better documentation.
-
- * Corner case bugs in "git clean" that stems from a (necessarily for
-   performance reasons) awkward calling convention in the directory
-   enumeration API has been corrected.
-
- * "git grep --no-index" should not get affected by the contents of
-   the .gitmodules file but when "--recurse-submodules" is given or
-   the "submodule.recurse" variable is set, it did.  Now these
-   settings are ignored in the "--no-index" mode.
-
- * Technical details of the bundle format has been documented.
-
- * Unhelpful warning messages during documentation build have been
-   squelched.
-
-Also contains various documentation updates, code clean-ups and minor fix=
-ups.
-
-----------------------------------------------------------------
-
-Changes since v2.25.0 are as follows:
-
-Denton Liu (2):
-      .mailmap: fix erroneous authorship for Johannes Schindelin
-      .mailmap: map Yi-Jyun Pan's email
-
-Derrick Stolee (3):
-      unpack-trees: correctly compute result count
-      clean: demonstrate a bug with pathspecs
-      fetch: document and test --refmap=3D""
-
-Elijah Newren (2):
-      string-list: note in docs that callers can specify sorting function
-      dir: treat_leading_path() and read_directory_recursive(), round 2
-
-Emily Shaffer (2):
-      unpack-trees: watch for out-of-range index position
-      submodule: add newline on invalid submodule error
-
-Heba Waly (2):
-      commit: honor advice.statusHints when rejecting an empty commit
-      doc/gitcore-tutorial: fix prose to match example command
-
-Jacques Bodin-Hullin (1):
-      parse-options: lose an unnecessary space in an error message
-
-Jeff King (7):
-      restore: invalidate cache-tree when removing entries with --staged
-      transport: don't flush when disconnecting stateless-rpc helper
-      dir: restructure in a way to avoid passing around a struct dirent
-      dir: point treat_leading_path() warning to the right place
-      Makefile: use compat regex with SANITIZE=3Daddress
-      t4018: drop "debugging" cat from hunk-header tests
-      t7800: don't rely on reuse_worktree_file()
-
-Johannes Berg (1):
-      pack-format: correct multi-pack-index description
-
-Johannes Schindelin (3):
-      msvc: accommodate for vcpkg's upgrade to OpenSSL v1.1.x
-      ci: ignore rubygems warning in the "Documentation" job
-      convert: fix typo
-
-Jonathan Tan (2):
-      sha1-file: remove OBJECT_INFO_SKIP_CACHED
-      t5616: make robust to delta base change
-
-Junio C Hamano (2):
-      .mailmap: fix GGG authoship screwup
-      Git 2.25.1
-
-Kyle Meyer (1):
-      submodule foreach: replace $path with $sm_path in example
-
-Martin =C3=85gren (2):
-      git-filter-branch.txt: wrap "maths" notation in backticks
-      diff-options.txt: avoid "regex" overload in example
-
-Masaya Suzuki (1):
-      doc: describe Git bundle format
-
-Philippe Blain (1):
-      grep: ignore --recurse-submodules if --no-index is given
-
-Ralf Thielow (1):
-      submodule.c: mark more strings for translation
-
-brian m. carlson (7):
-      run-command: avoid undefined behavior in exists_in_PATH
-      docs: use "currently" for the present time
-      doc: move author and committer information to git-commit(1)
-      docs: expand on possible and recommended user config options
-      doc: provide guidance on user.name format
-      doc: dissuade users from trying to ignore tracked files
-      docs: mention when increasing http.postBuffer is valuable
-
+Christophe
