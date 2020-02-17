@@ -2,136 +2,216 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D31AC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4917DC7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4820718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B3E20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnFhKVwJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bn2Ivfz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgBQIwm (ORCPT
+        id S1728569AbgBQIzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:52:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33803 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728217AbgBQIwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:52:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581929560;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9G4eC97MKUgP+cXhellYbHRQe5FYP3q5I9qDq+0E3so=;
-        b=fnFhKVwJfpsTU6aEnEURFeaGiI0axXg8LgEog+hYHm7UtB3PWcP9mKdABUMPCfzmukoxGk
-        3Wdmb19TV9pfe8EIxM3vGEgHvQjEGUku1LyOXGpVXUcDyYLcdqf/eVzroMucml0vx4hNpj
-        z4ZaBuW/YgQMFzMuCMt+jB5ao2mIAbs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-7BZlheS2N2SsK4ZwsBfASw-1; Mon, 17 Feb 2020 03:52:39 -0500
-X-MC-Unique: 7BZlheS2N2SsK4ZwsBfASw-1
-Received: by mail-wm1-f72.google.com with SMTP id y125so2368757wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 00:52:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9G4eC97MKUgP+cXhellYbHRQe5FYP3q5I9qDq+0E3so=;
-        b=iSUL7ySC/sYL2uMX2cFAZM5Wd1C7v45qNyONcicXhls+uYri0D0lOIy3yxmULy3x4a
-         KFRxyABeQ1A+Zmp0iyLkK0JfTvNY6Z7xwSYHN4YjiYm94J/QCFJsztWuqEJKUcfJJgPR
-         QgLQEu2zpUaUGYXstiGolb3Z/NUbCBtqYHTRCBMkdjUvbL2Sq6JVWoxpHOE4d1MXeVJ5
-         AYEZKrbC0nRYCuSJGhUk/mzfCniiTZU6PuRBx1vRZX4vB2L2MBpUnkjlOI6GDSZnb+iF
-         1Keyy9Cg+jghcqGjwxPIxc1VLyYLEtaz5SkIseWJpiuoegLsPOJhIo2MXAVZxxm8Ivu9
-         13Xg==
-X-Gm-Message-State: APjAAAV8rj8wt0scohpk4tqtkZjavMunKu4bDD+Rx0DktVKWofoEwcKR
-        Uh6l+NTiBrXEp6/j4oD20qt/j9xfPOk4HSnIKwWvsjZc+njbVbG7QU6QVjFZ6tpBjbKChg9VmN5
-        Ojxn4oLY9MLaXb92QOmN/1SVi
-X-Received: by 2002:a05:600c:2c01:: with SMTP id q1mr20672139wmg.179.1581929557588;
-        Mon, 17 Feb 2020 00:52:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyMpzIPVEU5r46mv5Dyf9+hTP7Dzsi4UbPKOlvpGkJxEH57K69N/xQw0jEso6nxioT5dTqnvg==
-X-Received: by 2002:a05:600c:2c01:: with SMTP id q1mr20672122wmg.179.1581929557376;
-        Mon, 17 Feb 2020 00:52:37 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id h13sm21908626wrw.54.2020.02.17.00.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 00:52:36 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: VMX: Add VMX_FEATURE_USR_WAIT_PAUSE
-In-Reply-To: <20200216104858.109955-1-xiaoyao.li@intel.com>
-References: <20200216104858.109955-1-xiaoyao.li@intel.com>
-Date:   Mon, 17 Feb 2020 09:52:36 +0100
-Message-ID: <87r1ytbnor.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
+        Mon, 17 Feb 2020 03:55:20 -0500
+Received: from mail-eopbgr50041.outbound.protection.outlook.com ([40.107.5.41]:56614
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728217AbgBQIzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:55:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A7nwjWKlegqtO7ecCuTx/gA3bkLH9QK3o8jqJKysBUKVk1+GmOkT3KNeT030KNUGEfdzABjg6ylI/3llAcvhRR097y+uq0Yl59VwackWt/gVqFtsqiJmdfJJi3dcU0SVIJPXMM10lgrBjznvgM+On0GjA5vRRjKSwm9S9f4cx6EXoWzBGWFfgYfWn/9TCSw+o7YgY0bz50hWAoV9Q0qy2eIoIf24MA1do18w54S7x8JZPoGGFJJEm3YhCI3Wz/QEWJPcwwXW+zam4vi5haUTo5bWW9mwwMfmnuxAH00gG90sZnPYNyySyWGc6EpqR1DQQySa+XtF9EYbhcSUYSpOcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQ7tGMSPobEIhwh6Usal09Dh2Tq0Ikkh7DfWkoYsfvw=;
+ b=X9bhDEBid/tUnVdNNg5RolLrYT05gBdXcNXTxYmPsaBbO/L/ZCAJfDQ2uUFQcxxuS+PvdJEKLUHWneZPXdFcq/4guciSlpBn5ceNDzEBqHgxyCeYoH+CwsWIkZrBrYAAs1Fp0Agh01cv+akJ67rxZNh733sYiJXBC9iZFUMSqwMMCCrXERcfuCX2auUMZItB4zRlsuOr3+83bE1oXASPaVPljABJwvmrh76xRilpFhvt/HOP9iGI4CnuH0ncRwV3SvcUFzcXKyJFq2RreI1dWirWndc/vV6yGtV1zd7QYyZngUjrPhMXchbJUnr/XkCYW/NOBkdli3VOmWhGbNRo/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQ7tGMSPobEIhwh6Usal09Dh2Tq0Ikkh7DfWkoYsfvw=;
+ b=bn2Ivfz3EsURTSoulMCqp09oQyNf9puLi8gY5FhjjEIhFK+cMKk06YjoAD+usOtnYv+LW+GBLMzFBD6uRQ5dHyql3eQOPakt8Wmrjc18qmOBNdQ9IPfuEUYlkBc/v2XNoI6dmsbD0UEO5z1nmNCIKv0L7/LLqdVTMvoJl4x1zFU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.bansal@nxp.com; 
+Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com (10.168.65.10) by
+ VI1PR0401MB2415.eurprd04.prod.outlook.com (10.169.134.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Mon, 17 Feb 2020 08:55:16 +0000
+Received: from VI1PR0401MB2496.eurprd04.prod.outlook.com
+ ([fe80::196a:28a9:bb9:2fae]) by VI1PR0401MB2496.eurprd04.prod.outlook.com
+ ([fe80::196a:28a9:bb9:2fae%9]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
+ 08:55:16 +0000
+From:   Pankaj Bansal <pankaj.bansal@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Varun Sethi <V.Sethi@nxp.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI/IORT: fix output id retrieval for platform devices
+Date:   Mon, 17 Feb 2020 19:45:04 +0530
+Message-Id: <20200217141504.4183-1-pankaj.bansal@nxp.com>
+X-Mailer: git-send-email 2.17.1
 Content-Type: text/plain
+X-ClientProxiedBy: BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12)
+ To VI1PR0401MB2496.eurprd04.prod.outlook.com (2603:10a6:800:56::10)
+MIME-Version: 1.0
+Received: from uefi-workstation.ap.freescale.net (92.120.1.69) by BM1PR01CA0096.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Mon, 17 Feb 2020 08:55:14 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [92.120.1.69]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0c2cf02e-7e34-46f6-a15e-08d7b3871bca
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2415:|VI1PR0401MB2415:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB24155332E265715CABEA91ADF1160@VI1PR0401MB2415.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0316567485
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(189003)(199004)(36756003)(1076003)(5660300002)(26005)(6666004)(16526019)(2906002)(6486002)(186003)(44832011)(81166006)(110136005)(8936002)(8676002)(956004)(2616005)(66476007)(66556008)(66946007)(86362001)(6506007)(81156014)(6512007)(52116002)(478600001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2415;H:VI1PR0401MB2496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AKjJaYuLdvavEbbk78aIBQTVxaTQwvY8qTIsR24V2C/fSXMafMyw1mEbUf2SUw9vuJmo4q1e7Ifl8dKvAB3rd1Wynvf/u6kQxWzbMmLvFda1nNTheBvbA2YEg8BO/CvNoDWUHl7ooVs8/AQTx5iRCBV8/p53vYigW99Cl+QDmZJh9zZ97oTwYkp4h3j/bor7IjLzFXUSX4oDxF2tkpR2sEkozEabhn4QO0pyM8DQefCBhG0tidI81ZcKURbg6yDaelyVB8USWusg7YItfSmCj6mFsVFrT8C6WPZe4Ogex7OSuu9MpjRLf9pXNqVUEZO3VTF7XZ45HQWO7Qh1kzIarpPPtG1WibowxwEtQn+wAFomcirv4ATT6lKQFj/DqYibPEbdmQojGp/Jny+DMsgoF4P1VQMHDgm7kyvdd1eVQFda1ZAwtMbFEeQHSta9shEp
+X-MS-Exchange-AntiSpam-MessageData: U+h/5Zq/9l9qaZLPw3KeXzRdXxQZItMcpFqAbnJohK/oO4FNwe6moPQ+5x9W4Hgutqa7uRiapz1R0jzooKZXH+XcJiBVANkChQ3ldBX53BtbRrGxu33DwEJP+xDL9/IfdBI45t/usaMdi4fdQ4k+1w==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c2cf02e-7e34-46f6-a15e-08d7b3871bca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 08:55:16.7104
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6QhP/dF7CTiF6hObrjebCzo8m75rS8FW+x6kPaXSXWM8JE+XIlTH9SYULayCKWqo/+SaawIvErdChuZdM0vHag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2415
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
+As per IORT spec if Single mapping flag is not defined for
+a node, the output id ought to to be retrieved using input
+id from an ID mapping.
 
-> Commit 159348784ff0 ("x86/vmx: Introduce VMX_FEATURES_*") missed
-> bit 26 (enable user wait and pause) of Secondary Processor-based
-> VM-Execution Controls.
->
-> Add VMX_FEATURE_USR_WAIT_PAUSE flag and use it to define
-> SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE to make them uniformly.
->
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/vmx.h         | 2 +-
->  arch/x86/include/asm/vmxfeatures.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index 2a85287b3685..8521af3fef27 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -72,7 +72,7 @@
->  #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
->  #define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
->  #define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
-> -#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
-> +#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	VMCS_CONTROL_BIT(USR_WAIT_PAUSE)
->  
->  #define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
->  #define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
-> diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
-> index a50e4a0de315..1408f526bd90 100644
-> --- a/arch/x86/include/asm/vmxfeatures.h
-> +++ b/arch/x86/include/asm/vmxfeatures.h
-> @@ -81,6 +81,7 @@
->  #define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* "ept_mode_based_exec" Enable separate EPT EXEC bits for supervisor vs. user */
->  #define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
->  #define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
-> +#define VMX_FEATURE_USR_WAIT_PAUSE	( 2*32+ 26) /* "" Enable TPAUSE, UMONITOR, UMWATI in guest */
+Current code of output id retrieval for platform devices
+ignored this case. fixed the same.
 
-"UMWAIT"
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+---
+ drivers/acpi/arm64/iort.c | 36 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
->  #define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
->  
->  #endif /* _ASM_X86_VMXFEATURES_H */
-
-With the typo fixed (likely upon commit),
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ed3d2d1a7ae9..00e562dadd2a 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -358,7 +358,9 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ 	/* Single mapping does not care for input id */
+ 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
+ 		if (type == ACPI_IORT_NODE_NAMED_COMPONENT ||
+-		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
++		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
++		    type == ACPI_IORT_NODE_SMMU_V3 ||
++		    type == ACPI_IORT_NODE_PMCG) {
+ 			*rid_out = map->output_base;
+ 			return 0;
+ 		}
+@@ -376,7 +378,8 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ }
+ 
+ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+-					       u32 *id_out, int index)
++					       u32 id_in, u32 *id_out,
++					       int index)
+ {
+ 	struct acpi_iort_node *parent;
+ 	struct acpi_iort_id_mapping *map;
+@@ -398,15 +401,8 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ 	parent = ACPI_ADD_PTR(struct acpi_iort_node, iort_table,
+ 			       map->output_reference);
+ 
+-	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
+-		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
+-		    node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
+-		    node->type == ACPI_IORT_NODE_SMMU_V3 ||
+-		    node->type == ACPI_IORT_NODE_PMCG) {
+-			*id_out = map->output_base;
+-			return parent;
+-		}
+-	}
++	if (!iort_id_map(map, node->type, id_in, id_out))
++		return parent;
+ 
+ 	return NULL;
+ }
+@@ -510,14 +506,14 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
+ }
+ 
+ static struct acpi_iort_node *iort_node_map_platform_id(
+-		struct acpi_iort_node *node, u32 *id_out, u8 type_mask,
+-		int index)
++		struct acpi_iort_node *node, u32 id_in, u32 *id_out,
++		u8 type_mask, int index)
+ {
+ 	struct acpi_iort_node *parent;
+ 	u32 id;
+ 
+ 	/* step 1: retrieve the initial dev id */
+-	parent = iort_node_get_id(node, &id, index);
++	parent = iort_node_get_id(node, id_in, &id, index);
+ 	if (!parent)
+ 		return NULL;
+ 
+@@ -592,7 +588,8 @@ u32 iort_msi_map_rid(struct device *dev, u32 req_id)
+ /**
+  * iort_pmsi_get_dev_id() - Get the device id for a device
+  * @dev: The device for which the mapping is to be done.
+- * @dev_id: The device ID found.
++ * @dev_id: On function entry the input id for device.
++ *          On successful function exit, the output device ID found.
+  *
+  * Returns: 0 for successful find a dev id, -ENODEV on error
+  */
+@@ -608,11 +605,11 @@ int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
+ 	index = iort_get_id_mapping_index(node);
+ 	/* if there is a valid index, go get the dev_id directly */
+ 	if (index >= 0) {
+-		if (iort_node_get_id(node, dev_id, index))
++		if (iort_node_get_id(node, *dev_id, dev_id, index))
+ 			return 0;
+ 	} else {
+ 		for (i = 0; i < node->mapping_count; i++) {
+-			if (iort_node_map_platform_id(node, dev_id,
++			if (iort_node_map_platform_id(node, *dev_id, dev_id,
+ 						      IORT_MSI_TYPE, i))
+ 				return 0;
+ 		}
+@@ -761,7 +758,7 @@ static struct irq_domain *iort_get_platform_device_domain(struct device *dev)
+ 
+ 	/* then find its msi parent node */
+ 	for (i = 0; i < node->mapping_count; i++) {
+-		msi_parent = iort_node_map_platform_id(node, NULL,
++		msi_parent = iort_node_map_platform_id(node, 0, NULL,
+ 						       IORT_MSI_TYPE, i);
+ 		if (msi_parent)
+ 			break;
+@@ -1038,7 +1035,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+ 			return NULL;
+ 
+ 		do {
+-			parent = iort_node_map_platform_id(node, &streamid,
++			parent = iort_node_map_platform_id(node, streamid,
++							   &streamid,
+ 							   IORT_IOMMU_TYPE,
+ 							   i++);
+ 
 -- 
-Vitaly
+2.17.1
 
