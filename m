@@ -2,49 +2,84 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D691CC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F99C34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BA120801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27EE20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgBQQLX convert rfc822-to-8bit (ORCPT
+        id S1729201AbgBQQMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:11:23 -0500
-Received: from l37-192-35-170.novotelecom.ru ([37.192.35.170]:51200 "EHLO
-        glpak.ru" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726866AbgBQQLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:11:23 -0500
-Received: from alex.glpak.ru (localhost [127.0.0.1])
-        by glpak.ru (Postfix) with ESMTP id 5D06CA80DE7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 23:02:40 +0700 (NOVT)
-X-Virus-Scanned: amavisd-new at glpak.ru
-Received: from glpak.ru ([127.0.0.1])
-        by alex.glpak.ru (glpak.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Nq7GGAcpn9sK for <linux-kernel@vger.kernel.org>;
-        Mon, 17 Feb 2020 23:02:40 +0700 (NOVT)
-Received: from [192.168.88.250] (unknown [185.248.13.181])
-        by glpak.ru (Postfix) with ESMTPA id 9D013A80B27
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 23:02:39 +0700 (NOVT)
-Content-Type: text/plain; charset="iso-8859-1"
+        Mon, 17 Feb 2020 11:12:20 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:22542 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgBQQMU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:12:20 -0500
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 18 Feb 2020
+ 00:12:41 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH] soc: amlogic: fix compile failure with MESON_SECURE_PM_DOMAINS & !MESON_SM
+Date:   Tue, 18 Feb 2020 00:12:13 +0800
+Message-ID: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: zionitld3@gmail.com
-To:     linux-kernel@vger.kernel.org
-From:   anna@glpak.ru
-Date:   Mon, 17 Feb 2020 08:04:34 -0800
-Reply-To: zionitld3@gmail.com
-X-Antivirus: Avast (VPS 200217-0, 02/17/2020), Outbound message
-X-Antivirus-Status: Clean
-Message-Id: <20200217160240.5D06CA80DE7@glpak.ru>
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, We from Zion Finance Group currently offers loans to customers at a low interest rate of 3%. This is an opportunity that you cannot miss. We have a few questions to ask; Do you have debts? Do you want to pay off your debts? Do you want to be financially equipped? If so, request a loan today from Zion Finance Group. Interested, customers are expected to contact zionitld3@gmail.com for more information. We wish to assist you with a loan. Greetings, Mr. Bernard.
+When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
+.../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
+.../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
+
+Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+
+Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domains controller")
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@kernel.org>
+Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+---
+ drivers/soc/amlogic/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+index 6cb06e7..321c5e2 100644
+--- a/drivers/soc/amlogic/Kconfig
++++ b/drivers/soc/amlogic/Kconfig
+@@ -50,7 +50,7 @@ config MESON_EE_PM_DOMAINS
+ 
+ config MESON_SECURE_PM_DOMAINS
+ 	bool "Amlogic Meson Secure Power Domains driver"
+-	depends on ARCH_MESON || COMPILE_TEST
++	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
+ 	depends on PM && OF
+ 	depends on HAVE_ARM_SMCCC
+ 	default ARCH_MESON
+-- 
+2.7.4
+
