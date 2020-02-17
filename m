@@ -2,87 +2,134 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3318C3402B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE47FC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB97B2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1422072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F37deIHi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bCExp6HC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgBQUi5 (ORCPT
+        id S1729047AbgBQUkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:38:57 -0500
-Received: from ozlabs.org ([203.11.71.1]:47431 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgBQUi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:38:57 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LwnB1r0Pz9sPK;
-        Tue, 18 Feb 2020 07:38:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581971934;
-        bh=pA92iNdyZcIOkbVA2MqEQvd2it+isei9K8/w5PhBupA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=F37deIHiABLzwsu5jkZ8FobLfNfxyoRC/FdwEa3WY7KYDSh6F9QVORpi6WvGWLEsN
-         1Y2xAnnqbZUMpy/iP/Cb1gqykkyv/TmgqbDw1GJLhTFc2jWiWPpsciADezVFtdhKeN
-         iwYABa4AobFgriV9a7XeSzYBJ4bpg9atOJ8s6b3T5BZokiHLkOk3zZ7bfcG1pYqSze
-         UAbpFyP1aNO8RHm02nk6NWRm0I1dMYmlB4P+nCcNmQ4FoAm9vWjjAHh9J1HmUKhF0A
-         ZPMZzOVlpZM9np5ll1eIacMT7KmhQnX9+JNrYHNiDxPm069qAbHuQGkaAUhV5y8jkx
-         HUTXT1S3eCIpQ==
-Date:   Tue, 18 Feb 2020 07:38:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the modules tree
-Message-ID: <20200218073843.26b45f1b@canb.auug.org.au>
+        Mon, 17 Feb 2020 15:40:18 -0500
+Received: from gateway36.websitewelcome.com ([192.185.184.18]:49153 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727300AbgBQUkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 15:40:17 -0500
+X-Greylist: delayed 1498 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Feb 2020 15:40:17 EST
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id B0EA54168ED98
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 13:08:18 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3mSsjK3ZzEfyq3mSsjSNKU; Mon, 17 Feb 2020 13:53:58 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=T8z5QYXnAQEN7lbfmiVGan9I1EcAx8pV7rR/RAUlDkQ=; b=bCExp6HCcpbj1gliJ3cAr/vt2B
+        LeZIB94qmGODnHArewPyJx+3rzrGP3HEZLWaq89OhIWOI2MdxZz2l90OQGWloaGbh3Bvu33CmKVcM
+        tVvRMQDGMEsNu2+HkitVtBPlBmmrOrK1xu1m3WbAP79F5R5KF0YzII9SNVThD8/zwNBLOR0EJxDA4
+        qHOAachIzWN8HTPXdUmd8lCzb1x9uxDv8W3BUKSSm38uar4GgOruEQaxCBQhrl46gW+aJkqFWyPyW
+        6UHJ43P4IyLW1kdQsjqtEN4s5R1l9pjPIPS4XIaIh6tUv++GOz5toBis7/k+3mH5RkP4IIMr7aVo2
+        kyZoCs8g==;
+Received: from [200.68.140.26] (port=23194 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j3mSr-000KUA-7N; Mon, 17 Feb 2020 13:53:57 -0600
+Date:   Mon, 17 Feb 2020 13:56:39 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net/mlx5/fs_counters: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200217195639.GA2097@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vTKsiv/yARRd_il/ac0PeX9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.26
+X-Source-L: No
+X-Exim-ID: 1j3mSr-000KUA-7N
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.26]:23194
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vTKsiv/yARRd_il/ac0PeX9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Hi all,
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Commit
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-  b99931f169fe ("kernel: module: Replace zero-length array with flexible-ar=
-ray member")
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-is missing a Signed-off-by from its committer.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
---=20
-Cheers,
-Stephen Rothwell
+This issue was found with the help of Coccinelle.
 
---Sig_/vTKsiv/yARRd_il/ac0PeX9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5K+dMACgkQAVBC80lX
-0GxZhQf/eNibpISjVhO6uq2zadaKvXrTAs7ze0Jv7KRm+g7y/xWgLjgF8ed1D4A9
-EfiQSKNsYpK3n3eFAkRyQyO6Z0L9Y6ZzoxlohruG8BZr9D4NzBCEn5/yEzjxbcLr
-pay2vUg2CDxsp5mzFlOLBVSLapSgT7V23Bp93VAaI9rqwE3YUaCYo+lEO+3swDH5
-XX3YfmzAsn2p4FX95bvy0tz5Fn/b+VtdmtoZcTBhseoGX88wLnSFc1PB4bCEeJSo
-Pw+vNhLtcTbzP+4ktsmIGHA1JgQbJgN1hJfG4nwk2wrspNwnH6moD2v7T2pTYeH0
-dFlDFhwksZ0kQtNPqZFX9XRE5PSXeQ==
-=RIWE
------END PGP SIGNATURE-----
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+index ab69effb056d..f43caefd07a1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+@@ -470,7 +470,7 @@ struct mlx5_fc_bulk {
+ 	u32 base_id;
+ 	int bulk_len;
+ 	unsigned long *bitmask;
+-	struct mlx5_fc fcs[0];
++	struct mlx5_fc fcs[];
+ };
+ 
+ static void mlx5_fc_init(struct mlx5_fc *counter, struct mlx5_fc_bulk *bulk,
+-- 
+2.25.0
 
---Sig_/vTKsiv/yARRd_il/ac0PeX9--
