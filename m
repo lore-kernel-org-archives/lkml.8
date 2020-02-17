@@ -2,225 +2,148 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3F8C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FFC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30FC206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854EF20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tvR9YJxT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XltBufQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgBQKhj (ORCPT
+        id S1729259AbgBQKhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:37:39 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54312 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgBQKhj (ORCPT
+        Mon, 17 Feb 2020 05:37:55 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43766 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgBQKhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:37:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id g1so16590572wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:37:37 -0800 (PST)
+        Mon, 17 Feb 2020 05:37:55 -0500
+Received: by mail-oi1-f194.google.com with SMTP id p125so16209610oif.10;
+        Mon, 17 Feb 2020 02:37:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x83o5K4H6p4Txvf+BbyKgySTjH0wJwSg0fvGXhsTofs=;
-        b=tvR9YJxTrg99hkhnZGl1sMuhy3QeyXAh6Bv8GcwN9v9nu0rL/mN6CohWX0bdidFO/9
-         guQV8ywdbzRosjv1bTxhkqTk9nHfQVdQnpzGKdEqBtv8ORjIlH69KJyHx0vBHcG3jpAW
-         eK4bj5CXtRb0Rj9mJq8RhAP6FKHC/zIoyzIgFz7GG6NIAZCZBM1GEB4Ti7gCJS5e//N2
-         ZKHocQsqFCYCcxywSt6UH22cm5O+whiyj3XPUVs/LCYQOk682HB+/hpsWbiWzhEyOdmn
-         gEvxN13qqTEfXz6nELHwPrMG62rdEgo3GAYuKEIOR8d9QPNZ9RH6p2NAt6z2O29rdhOT
-         j/2w==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=k8BSp0O0KfBeVprk778t84qb07TP/hfwso06rDN0yGc=;
+        b=XltBufQfP7wpwCaNj3e2sGKjeJdqeCFagWjLEArZeghTwlgQn7jnZ/rCVwGXc+spcI
+         GPND8ggd8u9g3YV/+UTlF28LLPC7SJXtT6k3e54xDfkWHJMcqJkzxpIAY0PeoIVvOjsD
+         3F42Be7kyt/JCWZ5oF/8cJofMIJwXPgLAfv4oNCixaLgbCjwq3t2HoGyFmtoSq3Ua4vJ
+         wN1BGhcyrqivi+J9AdRuHJNe3fEvUMBqLyK9u1PrgbOPH1z6ozTSZ7VJVkKNby57b8EM
+         5KrPb5MaPkfT5H336GfRnPEZx+r0nXv8Bd8Jr+kbJ6ZL7uAsTIIDpKpYXAp8xHRzzTsM
+         1O7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x83o5K4H6p4Txvf+BbyKgySTjH0wJwSg0fvGXhsTofs=;
-        b=YQhflHFMf624POpqegr739PUQX22iQoAmj4iPkqA2M/E600Sw1FQY8Is9o+LdY//Yc
-         2a+8FShMsozKtzIys6acodSdHVzcVsNg0PC6wQeKjZvTiFkcfJpC9QcJvx0fBV3jDkX6
-         BPTRc5mXNBFU7ObYv4KTOBhWd3B6WV91Qq3GI3sBwOYJGRCbcxlLoqBZKJ1QqqW3bQO8
-         sDnytfkde918HwGOxlyFBfa/oM9CR2aQmwMzFp1UPvBUQziEPI3ClfNGrKvUEzekggWh
-         C7ykS5YNZngO545AE3K7Z5SsvOdEmONTAf68FTWKBro/e/IrhcX6eQ3NJuqBasFBnUwU
-         /0UA==
-X-Gm-Message-State: APjAAAUm7pND2e+Dpf2h4VnuN19fo7H134ZFrUsjyI0DYiAZzv0p7hxB
-        XBqIHZYnK7JzUEEkS9d90B7ApA==
-X-Google-Smtp-Source: APXvYqxP5y0YSdC1YVMxY92WB7hnIFD3rx/SAWTNQpCjT0PW+oVaZHureZypI7UkkJClVDgwF1sa3w==
-X-Received: by 2002:a1c:4c5:: with SMTP id 188mr21335773wme.82.1581935856168;
-        Mon, 17 Feb 2020 02:37:36 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id v14sm368024wrm.28.2020.02.17.02.37.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 02:37:35 -0800 (PST)
-Date:   Mon, 17 Feb 2020 11:37:33 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     James Morse <james.morse@arm.com>
-Cc:     u-boot@lists.denx.de, nsaenzjulienne@suse.de,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: RPI4: fail too boot with an initrd
-Message-ID: <20200217103733.GA11379@Red>
-References: <20200214132748.GA23276@Red>
- <b726290c-1038-3771-5187-6ac370bc92c9@arm.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=k8BSp0O0KfBeVprk778t84qb07TP/hfwso06rDN0yGc=;
+        b=SMOzQqIfub+NHS5fSuiwWrv2J9pb6/DVYDBzt/tdR6BwmyIXMT9IzGueP8/sXujdfM
+         VdLDjCA9qeW6/ZEarb3SDudL+RPEdPAJF56mGfvRssNctkf03RjvoDu7xaGskc6fKx5j
+         BxGsUPZMjqjScG3gPwURqtxI5YUtTVPDW235B+SvsFBn08J5fRqagTlYyoRpOhPPX/oo
+         +1DxpUtCycBn58kEL8VV4VcOsXu2/Fbc7kuWLqGNBdHLri+D50VCJaedwC+MG4mQv3Bs
+         eT+CHn+9yO4JnLRliCvyYtP6rTpI8Eao9u1XODyccNc1PCo3B+YC5R8c7tOz5apiEngg
+         1oPQ==
+X-Gm-Message-State: APjAAAXRiisXytfZ6JhSuakkTnBqFjc+/wJlLUqXpxEzz012Xog0K09c
+        3BT6Cvab1Zsmx8wH4LH3JxYsGYvs912JpC5y0RRGwFj47xEbIQ==
+X-Google-Smtp-Source: APXvYqxDjBYcTjQcr5nocEiOj7Htq4tDWpJtbNMIsIoV6egKz/W1ZjwiadRqjn1/jSJ5/DdLuvCwUa09BsVcra6xkbo=
+X-Received: by 2002:aca:8d5:: with SMTP id 204mr9150053oii.141.1581935873942;
+ Mon, 17 Feb 2020 02:37:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b726290c-1038-3771-5187-6ac370bc92c9@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 17 Feb 2020 18:37:43 +0800
+Message-ID: <CANRm+Cx2ifbbQWk0yAm=W5Us69GybSdtO8uLYXx-qe9F=jNeeQ@mail.gmail.com>
+Subject: [PATCH v3 2/2] KVM: nVMX: Hold KVM's srcu lock when syncing vmcs12->shadow
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 06:15:27PM +0000, James Morse wrote:
-> Hi Corentin,
-> 
-> On 14/02/2020 13:27, LABBE Corentin wrote:
-> > Since the inclusion of the "enable network support in RPi4 config" serie on uboot, I
-> > have started to work on adding the rpi4 in kernelCI.
-> > But I fail to succeed in using a kernel/dtb/ramdisk downloaded via tftp.
-> > 
-> > Using booti I hit:
-> > [    0.000000] Linux version 5.6.0-rc1-next-20200212 (clabbe@build2-bionic-1804) (gcc version 7.4.1 20181213 [linaro-7.4-2019.02 revision 56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4] (Linaro    GCC 7.4-2019.02)) #66 SMP PREEMPT Wed Feb 12 10:14:20 UTC 2020
-> > [    0.000000] Machine model: Raspberry Pi 4 Model B
-> > [    0.000000] earlycon: uart0 at MMIO32 0x00000000fe215040 (options '')
-> > [    0.000000] printk: bootconsole [uart0] enabled
-> > [    0.000000] efi: Getting EFI parameters from FDT:
-> > [    0.000000] efi: UEFI not found.
-> 
-> So no EFI,
-> 
-> > [    0.000000] OF: reserved mem: failed to allocate memory for node 'linux,cma'
-> 
-> Out of memory.
-> 
-> > [    0.000000] cma: Failed to reserve 32 MiB
-> > [    0.000000] Kernel panic - not syncing: Failed to allocate page table page
-> 
-> Out of memory...
-> 
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-rc1-next-20200212 #66
-> > [    0.000000] Hardware name: Raspberry Pi 4 Model B (DT)
-> > [    0.000000] Call trace:
-> > [    0.000000]  dump_backtrace+0x0/0x1a0
-> > [    0.000000]  show_stack+0x14/0x20
-> > [    0.000000]  dump_stack+0xbc/0x104
-> > [    0.000000]  panic+0x16c/0x37c
-> > [    0.000000]  early_pgtable_alloc+0x30/0xa0
-> 
-> ... really early!
-> 
-> > [    0.000000]  __create_pgd_mapping+0x36c/0x588
-> > [    0.000000]  map_kernel_segment+0x70/0xa4
-> > [    0.000000]  paging_init+0xf4/0x528
-> > [    0.000000]  setup_arch+0x250/0x5d8
-> > [    0.000000]  start_kernel+0x90/0x6d8
-> > 
-> >  
-> > Since the same kernel boot with bootefi and that bootefi lack ramdisk address,
-> 
-> Booting with EFI will cause linux to use the EFI memory map.
-> 
-> Does your DT have a memory node? (or does it expect EFI to provide the information)
-> 
-> 
-> > I tried to add the address in the dtb via:
-> > fdt addr 0x02400000; fdt resize; fdt set /chosen linux,initrd-start 0x02700000; fdt set /chosen linux,initrd-end 0x10000000; bootefi 0x00080000 0x02400000
-> > But with that, I get:
-> > initrd not fully accessible via the linear mapping -- please check your bootloader ...
-> 
-> So this one is an EFI boot, but you can't find where to put the initramfs such that the
-> kernel agrees its in memory.
-> 
-> If you boot with 'efi=debug', linux will print the EFI memory map. Could you compare that
-> to where U-Boot thinks memory is?
-> 
-> (it sounds like your DT memory node is missing, and your EFI memory map is surprisingly small)
+From: wanpeng li <wanpengli@tencent.com>
 
-Hello
+For the duration of mapping eVMCS, it derefences ->memslots without holding
+->srcu or ->slots_lock when accessing hv assist page. This patch fixes it by
+moving nested_sync_vmcs12_to_shadow to prepare_guest_switch, where the SRCU
+is already taken.
 
-Thanks for your advices.
+It can be reproduced by running kvm's evmcs_test selftest.
 
-In the dtb of mainline linux:
-	/* Will be filled by the bootloader */
-	memory@0 {
-		device_type = "memory";
-		reg = <0 0 0>;
-	};
+  =============================
+  warning: suspicious rcu usage
+  5.6.0-rc1+ #53 tainted: g        w ioe
+  -----------------------------
+  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
 
-In uboot I have:
-static struct mm_region bcm2711_mem_map[] = {
-        {
-                .virt = 0x00000000UL,
-                .phys = 0x00000000UL,
-                .size = 0xfe000000UL,
-                .attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
-                         PTE_BLOCK_INNER_SHARE
-        }, {
-                .virt = 0xfc000000UL,
-                .phys = 0xfc000000UL,
-                .size = 0x03800000UL,
-                .attrs = PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-                         PTE_BLOCK_NON_SHARE |
-                         PTE_BLOCK_PXN | PTE_BLOCK_UXN
-        }, {
-                /* List terminator */
-                0,
-        }
-};
-But I dont know if uboot use that for filling the memory node.
+  other info that might help us debug this:
 
+   rcu_scheduler_active = 2, debug_locks = 1
+  1 lock held by evmcs_test/8507:
+   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at:
+kvm_vcpu_ioctl+0x85/0x680 [kvm]
 
-Booting the rpi4 with efi=debug give:
-EFI stub: Booting Linux Kernel...
-EFI stub: EFI_RNG_PROTOCOL unavailable, no randomness supplied
-EFI stub: Using DTB from configuration table
-EFI stub: Exiting boot services and installing virtual address map...
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd083]
-[    0.000000] Linux version 5.6.0-rc1-next-20200214 (clabbe@build2-bionic-1804) (gcc version 7.4.1 20181213 [linaro-7.4-2019.02 revision 56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4] (Linaro GCC 7.4-2019.02)) #70 SMP PREEMPT Fri Feb 14 10:54:54 UTC 2020
-[    0.000000] Machine model: Raspberry Pi 4 Model B
-[    0.000000] earlycon: uart0 at MMIO32 0x00000000fe215040 (options '')
-[    0.000000] printk: bootconsole [uart0] enabled
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi:   System Table: 0x000000003b365590
-[    0.000000] efi:   MemMap Address: 0x0000000038484040
-[    0.000000] efi:   MemMap Size: 0x00000410
-[    0.000000] efi:   MemMap Desc. Size: 0x00000028
-[    0.000000] efi:   MemMap Desc. Version: 0x00000001
-[    0.000000] efi: EFI v2.80 by Das U-Boot
-[    0.000000] efi:  SMBIOS=0x39f46000  MEMRESERVE=0x38487040 
-[    0.000000] efi: Processing EFI memory map:
-[    0.000000] efi:   0x000000000000-0x000000000fff [Reserved           |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000000001000-0x00000007ffff [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000000080000-0x000001b3ffff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000001b40000-0x000007efffff [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000007f00000-0x000007f08fff [Boot Data          |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000007f09000-0x0000381fffff [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038200000-0x0000383fffff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038400000-0x00003846ffff [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038470000-0x00003847ffff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038480000-0x000038483fff [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038484000-0x000038487fff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000038488000-0x000039f40fff [Loader Code        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f41000-0x000039f44fff [Reserved           |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f45000-0x000039f45fff [Boot Data          |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f46000-0x000039f46fff [Runtime Data       |RUN|  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f47000-0x000039f48fff [Boot Data          |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f49000-0x000039f4cfff [Reserved           |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f4d000-0x000039f4efff [Boot Data          |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f4f000-0x000039f52fff [Reserved           |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f53000-0x000039f53fff [Runtime Data       |RUN|  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f54000-0x000039f54fff [Reserved           |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000039f55000-0x00003b35ffff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x00003b360000-0x00003b36ffff [Runtime Code       |RUN|  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x00003b370000-0x00003b3fffff [Loader Data        |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x000040000000-0x0000fbffffff [Boot Data          |   |  |  |  |  |  |  |  |   |WB|  |  |  ]
-[    0.000000] efi:   0x0000fe100000-0x0000fe100fff [Memory Mapped I/O  |RUN|  |  |  |  |  |  |  |   |  |  |  |  ]
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] initrd not fully accessible via the linear mapping -- please check your bootloader ...
+  stack backtrace:
+  cpu: 6 pid: 8507 comm: evmcs_test tainted: g        w ioe     5.6.0-rc1+ #53
+  hardware name: dell inc. optiplex 7040/0jctf8, bios 1.4.9 09/12/2016
+  call trace:
+   dump_stack+0x68/0x9b
+   kvm_read_guest_cached+0x11d/0x150 [kvm]
+   kvm_hv_get_assist_page+0x33/0x40 [kvm]
+   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
+   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
+   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
+   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
+   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
+   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
+   kvm_vcpu_ioctl+0x370/0x680 [kvm]
+   ksys_ioctl+0x235/0x850
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x77/0x780
+   entry_syscall_64_after_hwframe+0x49/0xbe
 
-Regards
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * update Subject
+ * move the check above
+ * add the WARN_ON_ONCE
+
+ arch/x86/kvm/vmx/vmx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3be25ec..9a6797f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1175,6 +1175,10 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+                        vmx->guest_msrs[i].mask);
+
+     }
++
++    if (vmx->nested.need_vmcs12_to_shadow_sync)
++        nested_sync_vmcs12_to_shadow(vcpu);
++
+     if (vmx->guest_state_loaded)
+         return;
+
+@@ -6482,8 +6486,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+         vmcs_write32(PLE_WINDOW, vmx->ple_window);
+     }
+
+-    if (vmx->nested.need_vmcs12_to_shadow_sync)
+-        nested_sync_vmcs12_to_shadow(vcpu);
++    WARN_ON_ONCE(vmx->nested.need_vmcs12_to_shadow_sync);
+
+     if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
+         vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
+--
+2.7.4
