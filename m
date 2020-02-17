@@ -2,204 +2,193 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7938BC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83056C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4304220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C56420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l4StWRaH"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IEK1LKWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgBQPhh (ORCPT
+        id S1728950AbgBQPiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:37:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35808 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgBQPhg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:37:36 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b17so18956886wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 07:37:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sj0ZG4VD+UjkrUGw8YOU5MleYJNCBmlw9yndN/QBHts=;
-        b=l4StWRaHLrA5bn34nbio/qg29dHV8tKN5ynUuV7Tzxc74GviFT5BMwS8/u+QzyjAeh
-         b5gXPpEdQHT2vzzNSMUfQIVaDMxOPBxfObCcVyg/5acV7G9Wi/WM+8IKtdQLzPXJgCP4
-         V480jjaTelup5A1e18NoOj2JPcSsI/8fXVAZgch3TOaJprNv2uiFoaBEi7TqKYUxkDcI
-         SOZDyLQLB/c0vYaMcPV6L+w7lH8qIfGf6fDstKLixi7GEDkc8fteESBDrhlyNSnQQxq+
-         MnhL26xfJY1ba9GeIWuHyn/pc4YC6eHXy3Dx6fz1smKWAAW4XPIqsY6NctmFMpjzAPXi
-         4NJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sj0ZG4VD+UjkrUGw8YOU5MleYJNCBmlw9yndN/QBHts=;
-        b=YNS58W9HtG5yKWvgzfez9xrHGASY9FxQXrVYjVhJQA2GH1AxJPVRy5GdHVQMep74MM
-         xT0qLHCx88D8h/rl1uVnzrqY75d1jhquE9h+/zi6y5M8reD/E6RVuVwJXdUtlDJVtedN
-         YnujEsQxBt3yYY+RPHKgQoNGsP539b+u9AFFZoItDZ0M8WhbTte9ZwFCG+hJ1OQ0d6Ku
-         QJv7kHfoUhPciZPhY9AQFPaK07dFPUJtmFE6Zs2h0+ED2dWwM+mAYRrx8qirP8YfIiMS
-         Hk13GAw2gUyI/Of+v0nLFpjRE1rdha0Tm1sbXzbQEmOEUmDtqZuOp1qi5UDgMFWjWAOj
-         oQWQ==
-X-Gm-Message-State: APjAAAWCxvsboUsZnx755LmMGsK8wl3DKF4etIqXCI/4olNzmiOuvpmc
-        PFg1LAfzvdy9+nAv/Obx/RBcPQ==
-X-Google-Smtp-Source: APXvYqzkuwM6cQc8NV3hZdCoZrFyoyWpoLQEoqsWKj5+azYt+uiWp9Bv+SLW6qNptB00WTjjalqVQw==
-X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr23085737wmm.79.1581953853540;
-        Mon, 17 Feb 2020 07:37:33 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id g7sm1563737wrq.21.2020.02.17.07.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 07:37:33 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:37:32 +0000
-From:   Matthias Maennich <maennich@google.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     masahiroy@kernel.org, nico@fluxnic.net,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
-Subject: Re: [PATCH v4 2/3] kbuild: split adjust_autoksyms.sh in two parts
-Message-ID: <20200217153732.GB48466@google.com>
-References: <20200212202140.138092-1-qperret@google.com>
- <20200212202140.138092-3-qperret@google.com>
+        Mon, 17 Feb 2020 10:38:54 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9430 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728696AbgBQPix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:38:53 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Lp6t4sDYz9ty3C;
+        Mon, 17 Feb 2020 16:38:46 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=IEK1LKWB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zgOtZq0YlKoY; Mon, 17 Feb 2020 16:38:46 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Lp6t2ttbz9ty33;
+        Mon, 17 Feb 2020 16:38:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581953926; bh=fXPx9ihsgHYOvdrH2+HzdVzYQ7es1nv+E3dhpN0NoUM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IEK1LKWBWKmD9HJcmrzjQHvDev7aKGXkHeGs1V1/Zx+cNaLAQOVPL24E5keLiQODp
+         m4DVyNaNxv0L53bitnVmIcz4qoRbxjT1n2oWwngbTmPi5hrPJB15C0vkOYaZUB5yU6
+         20FyLjOl+elHaklo96p9rUKKk9f6+C7bDlKEn6ag=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50B5D8B7E4;
+        Mon, 17 Feb 2020 16:38:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IJi7jv_flxWj; Mon, 17 Feb 2020 16:38:51 +0100 (CET)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1A4B68B7C7;
+        Mon, 17 Feb 2020 16:38:51 +0100 (CET)
+Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
+ real mode
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
+ <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
+ <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
+ <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
+ <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+ <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
+Date:   Mon, 17 Feb 2020 16:38:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200212202140.138092-3-qperret@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 08:21:39PM +0000, Quentin Perret wrote:
->In order to prepare the ground for a build-time optimization, split
->adjust_autoksyms.sh into two scripts: one that generates autoksyms.h
->based on all currently available information (whitelist, and .mod
->files), and the other to inspect the diff between two versions of
->autoksyms.h and trigger appropriate rebuilds.
->
->Signed-off-by: Quentin Perret <qperret@google.com>
 
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Tested-by: Matthias Maennich <maennich@google.com>
 
-Cheers,
-Matthias
+Le 17/02/2020 à 11:27, Masami Hiramatsu a écrit :
+> On Mon, 17 Feb 2020 10:03:22 +0100
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>>
+>>
+>> Le 16/02/2020 à 13:34, Masami Hiramatsu a écrit :
+>>> On Sat, 15 Feb 2020 11:28:49 +0100
+>>> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>>>
+>>>> Hi,
+>>>>
+>>>> Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
+>>>>> Hi,
+>>>>>
+>>>>> On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
+>>>>> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>>>>>
+>>>>>> When a program check exception happens while MMU translation is
+>>>>>> disabled, following Oops happens in kprobe_handler() in the following
+>>>>>> test:
+>>>>>>
+>>>>>> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+>>>>>
+>>>>> Thanks for the report and patch. I'm not so sure about powerpc implementation
+>>>>> but at where the MMU translation is disabled, can the handler work correctly?
+>>>>> (And where did you put the probe on?)
+>>>>>
+>>>>> Your fix may fix this Oops, but if the handler needs special care, it is an
+>>>>> option to blacklist such place (if possible).
+>>>>
+>>>> I guess that's another story. Here we are not talking about a place
+>>>> where kprobe has been illegitimately activated, but a place where there
+>>>> is a valid trap, which generated a valid 'program check exception'. And
+>>>> kprobe was off at that time.
+>>>
+>>> Ah, I got it. It is not a kprobe breakpoint, but to check that correctly,
+>>> it has to know the address where the breakpoint happens. OK.
+>>>
+>>>>
+>>>> As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON,
+>>>> a debugger breakpoint, a perf breakpoint, etc...) calls
+>>>> kprobe_handler(), kprobe_handler() must be prepared to handle the case
+>>>> where the MMU translation is disabled, even if probes are not supposed
+>>>> to be set for functions running with MMU translation disabled.
+>>>
+>>> Can't we check the MMU is disabled there (as same as checking the exception
+>>> happened in user space or not)?
+>>>
+>>
+>> What do you mean by 'there' ? At the entry of kprobe_handler() ?
+>>
+>> That's what my patch does, it checks whether MMU is disabled or not. If
+>> it is, it converts the address to a virtual address.
+>>
+>> Do you mean kprobe_handler() should bail out early as it does when the
+>> trap happens in user mode ?
+> 
+> Yes, that is what I meant.
+> 
+>> Of course we can do that, I don't know
+>> enough about kprobe to know if kprobe_handler() should manage events
+>> that happened in real-mode or just ignore them. But I tested adding an
+>> event on a function that runs in real-mode, and it (now) works.
+>>
+>> So, what should we do really ?
+> 
+> I'm not sure how the powerpc kernel runs in real mode.
+> But clearly, at least kprobe event can not handle that case because
+> it tries to access memory by probe_kernel_read(). Unless that function
+> correctly handles the address translation, I want to prohibit kprobes
+> on such address.
+> 
+> So what I would like to see is, something like below.
+> 
+> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+> index 2d27ec4feee4..4771be152416 100644
+> --- a/arch/powerpc/kernel/kprobes.c
+> +++ b/arch/powerpc/kernel/kprobes.c
+> @@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
+>          unsigned int *addr = (unsigned int *)regs->nip;
+>          struct kprobe_ctlblk *kcb;
+>   
+> -       if (user_mode(regs))
+> +       if (user_mode(regs) || !(regs->msr & MSR_IR))
+>                  return 0;
+>   
+>          /*
+> 
+> 
 
->---
-> scripts/adjust_autoksyms.sh | 29 ++++--------------------
-> scripts/gen_autoksyms.sh    | 44 +++++++++++++++++++++++++++++++++++++
-> 2 files changed, 48 insertions(+), 25 deletions(-)
-> create mode 100755 scripts/gen_autoksyms.sh
->
->diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
->index 93f4d10e66e6..2b366d945ccb 100755
->--- a/scripts/adjust_autoksyms.sh
->+++ b/scripts/adjust_autoksyms.sh
->@@ -1,14 +1,13 @@
-> #!/bin/sh
-> # SPDX-License-Identifier: GPL-2.0-only
->
->-# Script to create/update include/generated/autoksyms.h and dependency files
->+# Script to update include/generated/autoksyms.h and dependency files
-> #
-> # Copyright:	(C) 2016  Linaro Limited
-> # Created by:	Nicolas Pitre, January 2016
-> #
->
->-# Create/update the include/generated/autoksyms.h file from the list
->-# of all module's needed symbols as recorded on the second line of *.mod files.
->+# Update the include/generated/autoksyms.h file.
-> #
-> # For each symbol being added or removed, the corresponding dependency
-> # file's timestamp is updated to force a rebuild of the affected source
->@@ -38,28 +37,8 @@ esac
-> # We need access to CONFIG_ symbols
-> . include/config/auto.conf
->
->-# Use 'eval' to expand the whitelist path and check if it is relative
->-eval ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
->-[ "${ksym_wl:0:1}" = "/" ] || ksym_wl="$abs_srctree/$ksym_wl"
->-
->-# Generate a new ksym list file with symbols needed by the current
->-# set of modules.
->-cat > "$new_ksyms_file" << EOT
->-/*
->- * Automatically generated file; DO NOT EDIT.
->- */
->-
->-EOT
->-sed 's/ko$/mod/' modules.order |
->-xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
->-cat - "$ksym_wl" |
->-sort -u |
->-sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
->-
->-# Special case for modversions (see modpost.c)
->-if [ -n "$CONFIG_MODVERSIONS" ]; then
->-	echo "#define __KSYM_module_layout 1" >> "$new_ksyms_file"
->-fi
->+# Generate a new symbol list file
->+$CONFIG_SHELL $srctree/scripts/gen_autoksyms.sh "$new_ksyms_file"
->
-> # Extract changes between old and new list and touch corresponding
-> # dependency files.
->diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
->new file mode 100755
->index 000000000000..2cea433616a8
->--- /dev/null
->+++ b/scripts/gen_autoksyms.sh
->@@ -0,0 +1,44 @@
->+#!/bin/sh
->+# SPDX-License-Identifier: GPL-2.0-only
->+
->+# Create an autoksyms.h header file from the list of all module's needed symbols
->+# as recorded on the second line of *.mod files and the user-provided symbol
->+# whitelist.
->+
->+set -e
->+
->+output_file="$1"
->+
->+# Use "make V=1" to debug this script.
->+case "$KBUILD_VERBOSE" in
->+*1*)
->+	set -x
->+	;;
->+esac
->+
->+# We need access to CONFIG_ symbols
->+. include/config/auto.conf
->+
->+# Use 'eval' to expand the whitelist path and check if it is relative
->+eval ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
->+[ "${ksym_wl:0:1}" = "/" ] || ksym_wl="$abs_srctree/$ksym_wl"
->+
->+# Generate a new ksym list file with symbols needed by the current
->+# set of modules.
->+cat > "$output_file" << EOT
->+/*
->+ * Automatically generated file; DO NOT EDIT.
->+ */
->+
->+EOT
->+
->+sed 's/ko$/mod/' modules.order |
->+xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
->+cat - "$ksym_wl" |
->+sort -u |
->+sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$output_file"
->+
->+# Special case for modversions (see modpost.c)
->+if [ -n "$CONFIG_MODVERSIONS" ]; then
->+	echo "#define __KSYM_module_layout 1" >> "$output_file"
->+fi
->-- 
->2.25.0.225.g125e21ebc7-goog
->
+With this instead change of my patch, I get an Oops everytime a kprobe 
+event occurs in real-mode.
+
+This is because kprobe_handler() is now saying 'this trap doesn't belong 
+to me' for a trap that has been installed by it.
+
+So the 'program check' exception handler doesn't find the owner of the 
+trap hence generate an Oops.
+
+Even if we don't want kprobe() to proceed with the event entirely 
+(allthough it works at least for simple events), I'd expect it to fail 
+gracefully.
+
+Christophe
