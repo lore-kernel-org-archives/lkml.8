@@ -6,86 +6,77 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CEC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE229C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55E320659
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BC220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgBQD20 (ORCPT
+        id S1727926AbgBQD33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:28:26 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44000 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgBQD20 (ORCPT
+        Sun, 16 Feb 2020 22:29:29 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48272 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgBQD33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:28:26 -0500
-Received: by mail-ed1-f66.google.com with SMTP id dc19so18936309edb.10
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 19:28:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Vf+s0xiHFIhPppg6jnzm8oEYQMOnPl6UhM4IxCWOkI=;
-        b=d8XrT/PpEFtLqQMcqbVC4lJ9iMsyJ7ucf6yJGe6TJZYc8NunbTG3jLZ0PnYSCF3x7s
-         eTba835O7ogTBjrMd18+M8JOcfw30Im4XquH5whRBJ5GSxO6PZOEugpK1N4HPpVkcoEa
-         zPIrDnZ/OfGpKOPC92ivZcfeSdhFpZawmWUIeSjYD/m1XG4QgLnxel9IASgz8T/TVxZQ
-         qhLnQ7cr8mDtYU4cNpQcgdhCQ5hXxXy4QGe/tcIcwrbI1xfU68usATYmDJh+2J2Be2MW
-         q9d6KUdKvyXzDXtPyjicN7sQtSzBrTGu1/eIxGYpYORkJVeoTO2xrivB+n5/uUgqNuBO
-         WxTg==
-X-Gm-Message-State: APjAAAUeSkw8HMoLYJdx2xlAyMFQ6QZi0jRKePnZ39ZcDwx2ltQUEVz7
-        KNIGwr9S05jfui/hJaoOvyx+5G8EqRs=
-X-Google-Smtp-Source: APXvYqz2rQdPnVbq6fNRmb0X38e3eVxbG/c+O8PeinhsztwIm01G1YZSi6vaghweWIE1g65NQD8l5A==
-X-Received: by 2002:a05:6402:1d28:: with SMTP id dh8mr12066144edb.383.1581910104172;
-        Sun, 16 Feb 2020 19:28:24 -0800 (PST)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
-        by smtp.gmail.com with ESMTPSA id qw15sm810379ejb.92.2020.02.16.19.28.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Feb 2020 19:28:23 -0800 (PST)
-Received: by mail-wm1-f48.google.com with SMTP id a6so16821310wme.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 19:28:21 -0800 (PST)
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr20681900wmg.16.1581910101671;
- Sun, 16 Feb 2020 19:28:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217021813.53266-1-samuel@sholland.org> <20200217021813.53266-2-samuel@sholland.org>
-In-Reply-To: <20200217021813.53266-2-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 11:28:11 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67PeKSpzRRQNvUy8PXtLMtv1=PZk99mmGgaL6nwMYMa+w@mail.gmail.com>
-Message-ID: <CAGb2v67PeKSpzRRQNvUy8PXtLMtv1=PZk99mmGgaL6nwMYMa+w@mail.gmail.com>
-Subject: Re: [PATCH 1/8] ASoC: sun50i-codec-analog: Fix duplicate use of ADC
- enable bits
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ondrej Jirman <megous@megous.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 16 Feb 2020 22:29:29 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D5A69157413F9;
+        Sun, 16 Feb 2020 19:29:28 -0800 (PST)
+Date:   Sun, 16 Feb 2020 19:29:28 -0800 (PST)
+Message-Id: <20200216.192928.1291469951934245769.davem@davemloft.net>
+To:     mkubecek@suse.cz
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] ethtool: fix application of verbose no_mask bitset
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200215005553.4D202E03D6@unicorn.suse.cz>
+References: <20200215005553.4D202E03D6@unicorn.suse.cz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Feb 2020 19:29:29 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:18 AM Samuel Holland <samuel@sholland.org> wrote:
->
-> The same enable bits are currently used for both the "Left/Right ADC"
-> and the "Left/Right ADC Mixer" widgets. This happens to work in practice
-> because the widgets are always enabled/disabled at the same time, but
-> each register bit should only be associated with a single widget.
->
-> To keep symmetry with the DAC widgets, keep the bits on the ADC widgets,
-> and remove them from the ADC Mixer widgets.
->
-> Fixes: 42371f327df0 ("ASoC: sunxi: Add new driver for Allwinner A64 codec's analog path controls")
-> Reported-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Sat, 15 Feb 2020 01:55:53 +0100 (CET)
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+> A bitset without mask in a _SET request means we want exactly the bits in
+> the bitset to be set. This works correctly for compact format but when
+> verbose format is parsed, ethnl_update_bitset32_verbose() only sets the
+> bits present in the request bitset but does not clear the rest. This can
+> cause incorrect results like
+> 
+>   lion:~ # ethtool eth0 | grep Wake
+>           Supports Wake-on: pumbg
+>           Wake-on: g
+>   lion:~ # ethtool -s eth0 wol u
+>   lion:~ # ethtool eth0 | grep Wake
+>           Supports Wake-on: pumbg
+>           Wake-on: ug
+> 
+> when the second ethtool command issues request
+> 
+> ETHTOOL_MSG_WOL_SET
+>     ETHTOOL_A_WOL_HEADER
+>         ETHTOOL_A_HEADER_DEV_NAME = "eth0"
+>     ETHTOOL_A_WOL_MODES
+>         ETHTOOL_A_BITSET_NOMASK
+>         ETHTOOL_A_BITSET_BITS
+>             ETHTOOL_A_BITSET_BITS_BIT
+>                 ETHTOOL_BITSET_BIT_INDEX = 1
+> 
+> Fix the logic by clearing the whole target bitmap before we start iterating
+> through the request bits.
+> 
+> Fixes: 10b518d4e6dd ("ethtool: netlink bitset handling")
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+
+Applied, thanks Michal.
