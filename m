@@ -2,162 +2,83 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6F5C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BC8C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 04:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5545821744
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581911955;
-	bh=o2FZuDF+s0lgyoH3wJzVZ5K7NvTZWMeJj/DeeTi4Y3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bm8jtOapKKZljZcHUCLK0foppMxubOYBZqRB8t7Wh94OMkjEbuH+wFrKd8rIv5lMd
-	 +1SNGHznEf/cJ4GXsE9XLOVciWtr80O9ByoPEpkoKjuIcSCuFsZUKvyn3FR6wLFXPv
-	 Iwxnh4Mnly0AUk2uX1AEUt6eS0kq8jdoDKfArsfY=
+	by mail.kernel.org (Postfix) with ESMTP id 2584F2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 04:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgBQD7O (ORCPT
+        id S1727953AbgBQD77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:59:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbgBQD7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:59:13 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E62542072C;
-        Mon, 17 Feb 2020 03:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581911952;
-        bh=o2FZuDF+s0lgyoH3wJzVZ5K7NvTZWMeJj/DeeTi4Y3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1NQroVDNjPZS+vQNS1YYNhBkwLMGowdfVeG0E2kk6it4e04DF3BAeL8tcgRLb1yFl
-         jFIxNhHD0f9wM4r34isWAUVl6rI7xqAqtRzbrWu9LVV1vL+o7u72U6AkuRTcujN2qT
-         6Y+Pf/0YRDCKa6EQ6dKVJKrI7Ujamzmk/KqQU61M=
-Date:   Mon, 17 Feb 2020 11:59:02 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, devicetree@vger.kernel.org, kernel@puri.sm,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: Re: [PATCH v1 02/12] arm64: dts: librem5-devkit: add the simcom 7100
- modem and audio
-Message-ID: <20200217035902.GC5395@dragon>
-References: <20200205143003.28408-1-martin.kepplinger@puri.sm>
- <20200205143003.28408-3-martin.kepplinger@puri.sm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205143003.28408-3-martin.kepplinger@puri.sm>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 16 Feb 2020 22:59:59 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48562 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgBQD77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:59:59 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D16A2158489B5;
+        Sun, 16 Feb 2020 19:59:57 -0800 (PST)
+Date:   Sun, 16 Feb 2020 19:59:57 -0800 (PST)
+Message-Id: <20200216.195957.2300038427552527679.davem@davemloft.net>
+To:     ilias.apalodimas@linaro.org
+Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
+        lorenzo@kernel.org, thomas.petazzoni@bootlin.com,
+        jaswinder.singh@linaro.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, hawk@kernel.org, kuba@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net-next] net: page_pool: API cleanup and comments
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200216.195300.260413184133485319.davem@davemloft.net>
+References: <20200216094056.8078-1-ilias.apalodimas@linaro.org>
+        <20200216.195300.260413184133485319.davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Feb 2020 19:59:58 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 03:29:53PM +0100, Martin Kepplinger wrote:
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-> 
-> Add the simcomm modem and the sai6 interface that connects it, as well
-> as the sgtl5000 audio codec.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-When you forward a patch from others, you need to add your SoB.
-
-
-> ---
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 9702db69d3ed..8162576e8f3d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -148,6 +148,51 @@
->  		regulator-always-on;
->  	};
->  
-> +	sim7100_codec: sound-wwan-codec {
-> +		compatible = "option,gtm601";
-> +		#sound-dai-cells = <0>;
-> +	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "sgtl5000";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,widgets =
-> +			"Microphone", "Microphone Jack",
-> +			"Headphone", "Headphone Jack",
-> +			"Speaker", "Speaker Ext",
-> +			"Line", "Line In Jack";
-> +		simple-audio-card,routing =
-> +			"MIC_IN", "Microphone Jack",
-> +			"Microphone Jack", "Mic Bias",
-> +			"LINE_IN", "Line In Jack",
-> +			"Headphone Jack", "HP_OUT",
-> +			"Speaker Ext", "LINE_OUT";
-
-Please have a newline between properties and child node.
-
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&sai2>;
-> +		};
-
-Also have a newline between nodes.
-
-Shawn
-
-> +		simple-audio-card,codec {
-> +			sound-dai = <&sgtl5000>;
-> +			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
-> +			frame-master;
-> +			bitclock-master;
-> +		};
-> +	};
-> +
-> +	sound-wwan {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "SIMCom SIM7100";
-> +		simple-audio-card,format = "dsp_a";
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&sai6>;
-> +		};
-> +		telephony_link_master: simple-audio-card,codec {
-> +			sound-dai = <&sim7100_codec>;
-> +			frame-master;
-> +			bitclock-master;
-> +		};
-> +	};
-> +
->  	vibrator {
->  		compatible = "gpio-vibrator";
->  		pinctrl-names = "default";
-> @@ -749,6 +794,16 @@
->  	status = "okay";
->  };
->  
-> +&sai6 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_sai6>;
-> +	assigned-clocks = <&clk IMX8MQ_CLK_SAI6>;
-> +	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-> +	assigned-clock-rates = <24576000>;
-> +	fsl,sai-synchronous-rx;
-> +	status = "okay";
-> +};
-> +
->  &uart1 { /* console */
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_uart1>;
-> -- 
-> 2.20.1
-> 
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogU3VuLCAxNiBG
+ZWIgMjAyMCAxOTo1MzowMCAtMDgwMCAoUFNUKQ0KDQo+IEZyb206IElsaWFzIEFwYWxvZGltYXMg
+PGlsaWFzLmFwYWxvZGltYXNAbGluYXJvLm9yZz4NCj4gRGF0ZTogU3VuLCAxNiBGZWIgMjAyMCAx
+MTo0MDo1NSArMDIwMA0KPiANCj4+IEZ1bmN0aW9ucyBzdGFydGluZyB3aXRoIF9fIHVzdWFsbHkg
+aW5kaWNhdGUgdGhvc2Ugd2hpY2ggYXJlIGV4cG9ydGVkLA0KPj4gYnV0IHNob3VsZCBub3QgYmUg
+Y2FsbGVkIGRpcmVjdGx5LiBVcGRhdGUgc29tZSBvZiB0aG9zZSBkZWNsYXJlZCBpbiB0aGUNCj4+
+IEFQSSBhbmQgbWFrZSBpdCBtb3JlIHJlYWRhYmxlLg0KPj4gDQo+PiBwYWdlX3Bvb2xfdW5tYXBf
+cGFnZSgpIGFuZCBwYWdlX3Bvb2xfcmVsZWFzZV9wYWdlKCkgd2VyZSBkb2luZw0KPj4gZXhhY3Rs
+eSB0aGUgc2FtZSB0aGluZy4gS2VlcCB0aGUgcGFnZV9wb29sX3JlbGVhc2VfcGFnZSgpIHZhcmlh
+bnQNCj4+IGFuZCBleHBvcnQgaXQgaW4gb3JkZXIgdG8gc2hvdyB1cCBvbiBwZXJmIGxvZ3MuDQo+
+PiBGaW5hbGx5IHJlbmFtZSBfX3BhZ2VfcG9vbF9wdXRfcGFnZSgpIHRvIHBhZ2VfcG9vbF9wdXRf
+cGFnZSgpIHNpbmNlIHdlDQo+PiBjYW4gbm93IGRpcmVjdGx5IGNhbGwgaXQgZnJvbSBkcml2ZXJz
+IGFuZCByZW5hbWUgdGhlIGV4aXN0aW5nDQo+PiBwYWdlX3Bvb2xfcHV0X3BhZ2UoKSB0byBwYWdl
+X3Bvb2xfcHV0X2Z1bGxfcGFnZSgpIHNpbmNlIHRoZXkgZG8gdGhlIHNhbWUNCj4+IHRoaW5nIGJ1
+dCB0aGUgbGF0dGVyIGlzIHRyeWluZyB0byBzeW5jIHRoZSBmdWxsIERNQSBhcmVhLg0KPj4gDQo+
+PiBBbHNvIHVwZGF0ZSBuZXRzZWMsIG12bmV0YSBhbmQgc3RtbWFjIGRyaXZlcnMgd2hpY2ggdXNl
+IHRob3NlIGZ1bmN0aW9ucy4NCj4+IA0KPj4gU3VnZ2VzdGVkLWJ5OiBKb25hdGhhbiBMZW1vbiA8
+am9uYXRoYW4ubGVtb25AZ21haWwuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogSWxpYXMgQXBhbG9k
+aW1hcyA8aWxpYXMuYXBhbG9kaW1hc0BsaW5hcm8ub3JnPg0KPiANCj4gQXBwbGllZCB0byBuZXQt
+bmV4dCwgdGhhbmtzLg0KDQpBY3R1YWxseSB0aGlzIGRvZXNuJ3QgY29tcGlsZSwgcGxlYXNlIHJl
+c3BpbjoNCg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvc29jaW9uZXh0L25ldHNlYy5jOiBJbiBmdW5j
+dGlvbiChbmV0c2VjX3VuaW5pdF9wa3RfZHJpbmeiOg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvc29j
+aW9uZXh0L25ldHNlYy5jOjEyMDE6NDogZXJyb3I6IHRvbyBmZXcgYXJndW1lbnRzIHRvIGZ1bmN0
+aW9uIKFwYWdlX3Bvb2xfcHV0X3BhZ2WiDQogICAgcGFnZV9wb29sX3B1dF9wYWdlKGRyaW5nLT5w
+YWdlX3Bvb2wsIHBhZ2UsIGZhbHNlKTsNCiAgICBefn5+fn5+fn5+fn5+fn5+fn4NCkluIGZpbGUg
+aW5jbHVkZWQgZnJvbSBkcml2ZXJzL25ldC9ldGhlcm5ldC9zb2Npb25leHQvbmV0c2VjLmM6MTc6
+DQouL2luY2x1ZGUvbmV0L3BhZ2VfcG9vbC5oOjE3Mjo2OiBub3RlOiBkZWNsYXJlZCBoZXJlDQog
+dm9pZCBwYWdlX3Bvb2xfcHV0X3BhZ2Uoc3RydWN0IHBhZ2VfcG9vbCAqcG9vbCwgc3RydWN0IHBh
+Z2UgKnBhZ2UsDQogICAgICBefn5+fn5+fn5+fn5+fn5+fn4NCg==
