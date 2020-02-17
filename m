@@ -2,287 +2,133 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDCC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADFAC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1442206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BEB206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wvu3TIE2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="UDRImApx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgBQKCB (ORCPT
+        id S1729086AbgBQKEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:02:01 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726397AbgBQKCB (ORCPT
+        Mon, 17 Feb 2020 05:04:42 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:24972 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728833AbgBQKEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:02:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581933719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TW3AX1zhEOAIb9+pffiOsDPYyvGlBL72llm3++vEal0=;
-        b=Wvu3TIE2xgJ0wUVJKXSJfvrcItNxAdxoZQvobNu27zSDTDggQszIQqDpeKUwPkTvOWK81K
-        Wq6lPc2AAEuM/+u0+1Gm9E3X0Vc5hgBkSxl74zscfEaEZof/aUMU2SaGrw5+01s1z/Km04
-        SpD/0zY9c2bYhhEd3FB4QIaNF621UTw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-fszoPHNCPVKZfqAXzMi6TQ-1; Mon, 17 Feb 2020 05:01:57 -0500
-X-MC-Unique: fszoPHNCPVKZfqAXzMi6TQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DF92800EB2;
-        Mon, 17 Feb 2020 10:01:55 +0000 (UTC)
-Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-195.ams2.redhat.com [10.36.116.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78FC810013A1;
-        Mon, 17 Feb 2020 10:01:52 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
- from a device path
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leif Lindholm <leif@nuviainc.com>,
-        Peter Jones <pjones@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Alexander Graf <agraf@csgraf.de>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20200216141104.21477-1-ardb@kernel.org>
- <20200216141104.21477-3-ardb@kernel.org>
- <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com>
- <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
-From:   Laszlo Ersek <lersek@redhat.com>
-Message-ID: <d69a5f7b-90da-651e-c800-f185702df8a8@redhat.com>
-Date:   Mon, 17 Feb 2020 11:01:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Mon, 17 Feb 2020 05:04:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581933879;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=WlFXLxvyuSdeLPVhHeNf/htnxgHvI08mk7X1kR98xrc=;
+        b=UDRImApxtyQPSHA+HEpIP/YcOGowSkqAeGIAYueMHugTgStfBO2GuyZYddLv3B5nQF
+        IuEJVml3jCalRJhafxM8QlN63t56K2ml/PFIYUos1By+BvsojGrUHF7sZn2YW3nlaW8X
+        6I+VZ1DIHlUfIPEb9dwfxj7EP6cXb75e3XuKAymwj8M0hWLvPvuCpRSXNQEQ3xsdlTp1
+        U4+9su0qU7hnF35/Hhx+iOdp9vTk78Jiekf88xht7UvJt8hSt4xFFZ96EjH1ZRGzoDE1
+        HqiUZ6o/7CSb1U4EYrFLzhc0+pF2bc1R52emI/HaR3s929SUgmAx+xH0fa0sVskEPnmM
+        X1BA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA0OXQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HA4aLrs
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 11:04:36 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] net: ethernet: dm9000: Handle -EPROBE_DEFER in dm9000_parse_dt()
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200216193943.81134-1-paul@crapouillou.net>
+Date:   Mon, 17 Feb 2020 11:04:35 +0100
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mathieu Malaterre <malat@debian.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1513E253-0E58-4088-84E2-E35F3067BB4B@goldelico.com>
+References: <20200216193943.81134-1-paul@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 10:23, Ard Biesheuvel wrote:
-> On Mon, 17 Feb 2020 at 10:15, Laszlo Ersek <lersek@redhat.com> wrote:
->>
->> On 02/16/20 15:11, Ard Biesheuvel wrote:
->>> There are currently two ways to specify the initrd to be passed to the
->>> Linux kernel when booting via the EFI stub:
->>> - it can be passed as a initrd= command line option when doing a pure PE
->>>   boot (as opposed to the EFI handover protocol that exists for x86)
->>> - otherwise, the bootloader or firmware can load the initrd into memory,
->>>   and pass the address and size via the bootparams struct (x86) or
->>>   device tree (ARM)
->>>
->>> In the first case, we are limited to loading from the same file system
->>> that the kernel was loaded from, and it is also problematic in a trusted
->>> boot context, given that we cannot easily protect the command line from
->>> tampering without either adding complicated white/blacklisting of boot
->>> arguments or locking down the command line altogether.
->>>
->>> In the second case, we force the bootloader to duplicate knowledge about
->>> the boot protocol which is already encoded in the stub, and which may be
->>> subject to change over time, e.g., bootparams struct definitions, memory
->>> allocation/alignment requirements for the placement of the initrd etc etc.
->>> In the ARM case, it also requires the bootloader to modify the hardware
->>> description provided by the firmware, as it is passed in the same file.
->>> On systems where the initrd is measured after loading, it creates a time
->>> window where the initrd contents might be manipulated in memory before
->>> handing over to the kernel.
->>>
->>> Address these concerns by adding support for loading the initrd into
->>> memory by invoking the EFI LoadFile2 protocol installed on a vendor
->>> GUIDed device path that specifically designates a Linux initrd.
->>> This addresses the above concerns, by putting the EFI stub in charge of
->>> placement in memory and of passing the base and size to the kernel proper
->>> (via whatever means it desires) while still leaving it up to the firmware
->>> or bootloader to obtain the file contents, potentially from other file
->>> systems than the one the kernel itself was loaded from. On platforms that
->>> implement measured boot, it permits the firmware to take the measurement
->>> right before the kernel actually consumes the contents.
->>>
->>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->>> ---
->>>  drivers/firmware/efi/libstub/arm-stub.c        | 15 +++-
->>>  drivers/firmware/efi/libstub/efi-stub-helper.c | 82 ++++++++++++++++++++
->>>  drivers/firmware/efi/libstub/efistub.h         |  4 +
->>>  drivers/firmware/efi/libstub/x86-stub.c        | 23 ++++++
->>>  include/linux/efi.h                            |  1 +
->>>  5 files changed, 122 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
->>> index 2edc673ea06c..4bae620b95b9 100644
->>> --- a/drivers/firmware/efi/libstub/arm-stub.c
->>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
->>> @@ -160,6 +160,7 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
->>>       enum efi_secureboot_mode secure_boot;
->>>       struct screen_info *si;
->>>       efi_properties_table_t *prop_tbl;
->>> +     unsigned long max_addr;
->>>
->>>       sys_table = sys_table_arg;
->>>
->>> @@ -258,10 +259,18 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
->>>       if (!fdt_addr)
->>>               pr_efi("Generating empty DTB\n");
->>>
->>> -     status = efi_load_initrd(image, &initrd_addr, &initrd_size, ULONG_MAX,
->>> -                              efi_get_max_initrd_addr(dram_base, *image_addr));
->>> +     max_addr = efi_get_max_initrd_addr(dram_base, *image_addr);
->>> +     status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size, max_addr);
->>> +     if (status == EFI_SUCCESS) {
->>> +             pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
->>> +     } else if (status == EFI_NOT_FOUND) {
->>> +             status = efi_load_initrd(image, &initrd_addr, &initrd_size,
->>> +                                      ULONG_MAX, max_addr);
->>> +             if (status == EFI_SUCCESS)
->>> +                     pr_efi("Loaded initrd from command line option\n");
->>> +     }
->>>       if (status != EFI_SUCCESS)
->>> -             pr_efi_err("Failed initrd from command line!\n");
->>> +             pr_efi_err("Failed to load initrd!\n");
->>>
->>>       efi_random_get_seed();
->>>
->>> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
->>> index 49008ac88b63..e37afe2c752e 100644
->>> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
->>> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
->>> @@ -299,3 +299,85 @@ void efi_char16_printk(efi_char16_t *str)
->>>       efi_call_proto(efi_table_attr(efi_system_table(), con_out),
->>>                      output_string, str);
->>>  }
->>> +
->>> +/*
->>> + * The LINUX_EFI_INITRD_MEDIA_GUID vendor media device path below provides a way
->>> + * for the firmware or bootloader to expose the initrd data directly to the stub
->>> + * via the trivial LoadFile2 protocol, which is defined in the UEFI spec, and is
->>> + * very easy to implement. It is a simple Linux initrd specific conduit between
->>> + * kernel and firmware, allowing us to put the EFI stub (being part of the
->>> + * kernel) in charge of where and when to load the initrd, while leaving it up
->>> + * to the firmware to decide whether it needs to expose its filesystem hierarchy
->>> + * via EFI protocols.
->>> + */
->>> +static const struct {
->>> +     struct efi_vendor_dev_path      vendor;
->>> +     struct efi_generic_dev_path     end;
->>> +} __packed initrd_dev_path = {
->>> +     {
->>> +             EFI_DEV_MEDIA,
->>> +             EFI_DEV_MEDIA_VENDOR,
->>> +             sizeof(struct efi_vendor_dev_path),
->>> +             LINUX_EFI_INITRD_MEDIA_GUID
->>> +     }, {
->>> +             EFI_DEV_END_PATH,
->>> +             EFI_DEV_END_ENTIRE,
->>> +             sizeof(struct efi_generic_dev_path)
->>> +     }
->>> +};
->>> +
->>> +/**
->>> + * efi_load_initrd_dev_path - load the initrd from the Linux initrd device path
->>> + * @load_addr:       pointer to store the address where the initrd was loaded
->>> + * @load_size:       pointer to store the size of the loaded initrd
->>> + * @max:     upper limit for the initrd memory allocation
->>> + * @return:  %EFI_SUCCESS if the initrd was loaded successfully, in which case
->>> + *           @load_addr and @load_size are assigned accordingly
->>> + *           %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
->>> + *           device path
->>> + *           %EFI_LOAD_ERROR in all other cases
->>
->> [*]
->>
->>> + */
->>> +efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
->>> +                                   unsigned long *load_size,
->>> +                                   unsigned long max)
->>> +{
->>> +     efi_guid_t lf2_proto_guid = EFI_LOAD_FILE2_PROTOCOL_GUID;
->>> +     efi_device_path_protocol_t *dp;
->>> +     efi_load_file2_protocol_t *lf2;
->>> +     unsigned long initrd_addr;
->>> +     unsigned long initrd_size;
->>> +     efi_handle_t handle;
->>> +     efi_status_t status;
->>> +
->>> +     if (!load_addr || !load_size)
->>> +             return EFI_INVALID_PARAMETER;
->>
->> Doesn't return EFI_LOAD_ERROR.
->>
->>> +
->>> +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
->>> +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
->>> +     if (status != EFI_SUCCESS)
->>> +             return status;
->>
->> Seems safe (the only plausible error could be EFI_NOT_FOUND).
->>
->>> +
->>> +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
->>> +                          (void **)&lf2);
->>> +     if (status != EFI_SUCCESS)
->>> +             return status;
->>
->> Interesting case; this should never fail... but note, if it does, it
->> returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
->> from the handle).
->>
->>> +
->>> +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
->>> +     if (status != EFI_BUFFER_TOO_SMALL)
->>> +             return EFI_LOAD_ERROR;
->>> +
->>> +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
->>> +     if (status != EFI_SUCCESS)
->>> +             return status;
->>
->> Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
->> could return EFI_OUT_OF_RESOURCES.
->>
-> 
-> Hmm, guess I was a bit sloppy with the return codes. The important
-> thing is that EFI_NOT_FOUND is only returned in the one specifically
-> defined case.
-> 
->> Looks OK to me otherwise.
->>
-> 
-> Thanks.
-> 
->> (... I'm a bit doubtful of passing and End node to LF2 rather than a
->> filepath node with "" for pathname, but it's an LF2 on our own vendor
->> path, so I guess we dictate what we accept.)
->>
-> 
-> It seems to me that the whole point of advancing the
-> pointer-to-pointer-to-device path protocol past the matched part of
-> the device path is to make it straight-forward for the caller to pass
-> the remainder into the protocol implementation. So if the matched part
-> fully defines the target, pointing to an end node is the only correct
-> thing to do imo, as the empty file did not appear in the device path
-> that was used to locate the protocol.
+Hi Paul,
 
-Fair enough.
+> Am 16.02.2020 um 20:39 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> The call to of_get_mac_address() can return -EPROBE_DEFER, for =
+instance
+> when the MAC address is read from a NVMEM driver that did not probe =
+yet.
 
-Thanks
-Laszlo
+a quick test on the CI20 board shows that it seems to work. Especially
+in this config, which would be broken otherwise:
+
+CONFIG_JZ4780_EFUSE=3Dm
+CONFIG_DM9000=3Dy
+
+The other way round is not expected to be a problem.
+
+It also serializes
+
+CONFIG_JZ4780_EFUSE=3Dm
+CONFIG_DM9000=3Dm
+
+properly.
+
+What I am not sure is if it handles
+
+CONFIG_JZ4780_EFUSE=3Dy
+CONFIG_DM9000=3Dy
+
+always correct.
+
+Is the EPROBE_DEFER mechanism also working for drivers
+fully compiled into the kernel (I may have been mislead
+since EPROBE_DEFER patches are almost always done to make
+drivers work as modules)?
+
+If not, it depends on luck to have the EFUSE driver probed
+successfully before DM9000.
+
+Anyways you can add my Tested-by: H. Nikolaus Schaller =
+<hns@goldelico.com>
+
+BR and thanks,
+Nikolaus
+
+>=20
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> drivers/net/ethernet/davicom/dm9000.c | 2 ++
+> 1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/davicom/dm9000.c =
+b/drivers/net/ethernet/davicom/dm9000.c
+> index 1ea3372775e6..e94ae9b94dbf 100644
+> --- a/drivers/net/ethernet/davicom/dm9000.c
+> +++ b/drivers/net/ethernet/davicom/dm9000.c
+> @@ -1405,6 +1405,8 @@ static struct dm9000_plat_data =
+*dm9000_parse_dt(struct device *dev)
+> 	mac_addr =3D of_get_mac_address(np);
+> 	if (!IS_ERR(mac_addr))
+> 		ether_addr_copy(pdata->dev_addr, mac_addr);
+> +	else if (PTR_ERR(mac_addr) =3D=3D -EPROBE_DEFER)
+> +		return ERR_CAST(mac_addr);
+>=20
+> 	return pdata;
+> }
+> --=20
+> 2.25.0
+>=20
 
