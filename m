@@ -2,210 +2,123 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF8DC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F4C34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0733F208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346F9208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yhzn7389"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgBQPMo (ORCPT
+        id S1729056AbgBQPMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:12:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59922 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgBQPL6 (ORCPT
+        Mon, 17 Feb 2020 10:12:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41898 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbgBQPMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:11:58 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3i3u-0007cV-BL; Mon, 17 Feb 2020 16:11:54 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E8CD71C2084;
-        Mon, 17 Feb 2020 16:11:53 +0100 (CET)
-Date:   Mon, 17 Feb 2020 15:11:53 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Move VCLOCK_TIMENS to vdso_clock_modes
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200207124403.656097274@linutronix.de>
-References: <20200207124403.656097274@linutronix.de>
+        Mon, 17 Feb 2020 10:12:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=f+3OGTXOU6Agins356Z5AqkAfZFQT+Vwt5LSeJBahwY=; b=Yhzn7389uoyG2+7V8Fg9PmlgDb
+        5bYbLZ/YhuQkPbtChlCW9wTPERlwg3vWvvg1jtDb+bt2j66rhlb4ufs7Gjri/eY031IdSgjJcal+f
+        qqsAVPoj1+HJlTuPgNagW5d8nfIatiUiKzzKoUpGKhnCLFhIUuB+QwR39vFKUXKIywH4yMXqAauBi
+        kle3ZaZDoDbvzy/N7U69zqKn0ZXGkpV2EinV+sTF0qKeFNMACG9rdpCqwRRet55sCmCJ+5TboAv7G
+        EBk0cuKHtDcYPh0NettgFQxFVGR+kJgX5GHYl3NmnXJaUHhueLo9wvyw/j9RH/dWZ+7yU59CmmH6b
+        r2OLORXA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3i4m-0004bd-1D; Mon, 17 Feb 2020 15:12:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 93254304D2C;
+        Mon, 17 Feb 2020 16:10:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 147682B910502; Mon, 17 Feb 2020 16:12:46 +0100 (CET)
+Date:   Mon, 17 Feb 2020 16:12:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH RESEND] lockdep: Pass lockdep expression to RCU lists
+Message-ID: <20200217151246.GS14897@hirez.programming.kicks-ass.net>
+References: <20200216074636.GB14025@workstation-portable>
 MIME-Version: 1.0
-Message-ID: <158195231367.13786.17363985589175447927.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200216074636.GB14025@workstation-portable>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Sun, Feb 16, 2020 at 01:16:36PM +0530, Amol Grover wrote:
+> Data is traversed using hlist_for_each_entry_rcu outside an
+> RCU read-side critical section but under the protection
+> of either lockdep_lock or with irqs disabled.
+> 
+> Hence, add corresponding lockdep expression to silence false-positive
+> lockdep warnings, and harden RCU lists. Also add macro for
+> corresponding lockdep expression.
+> 
+> Two things to note:
+> - RCU traversals protected under both, irqs disabled and
+> graph lock, have both the checks in the lockdep expression.
+> - RCU traversals under the protection of just disabled irqs
+> don't have a corresponding lockdep expression as it is implicitly
+> checked for.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  kernel/locking/lockdep.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 32282e7112d3..696ad5d4daed 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -85,6 +85,8 @@ module_param(lock_stat, int, 0644);
+>   * code to recurse back into the lockdep code...
+>   */
+>  static arch_spinlock_t lockdep_lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
+> +#define graph_lock_held() \
+> +	arch_spin_is_locked(&lockdep_lock)
+>  static struct task_struct *lockdep_selftest_task_struct;
+>  
+>  static int graph_lock(void)
+> @@ -1009,7 +1011,7 @@ static bool __check_data_structures(void)
+>  	/* Check the chain_key of all lock chains. */
+>  	for (i = 0; i < ARRAY_SIZE(chainhash_table); i++) {
+>  		head = chainhash_table + i;
+> -		hlist_for_each_entry_rcu(chain, head, entry) {
+> +		hlist_for_each_entry_rcu(chain, head, entry, graph_lock_held()) {
+>  			if (!check_lock_chain_key(chain))
+>  				return false;
+>  		}
 
-Commit-ID:     80bebf447de9fe2d7a0fe4dd795aa057e2293205
-Gitweb:        https://git.kernel.org/tip/80bebf447de9fe2d7a0fe4dd795aa057e2293205
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 07 Feb 2020 13:39:01 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Feb 2020 14:40:27 +01:00
+URGH.. this patch combines two horribles to create a horrific :/
 
-lib/vdso: Move VCLOCK_TIMENS to vdso_clock_modes
+ - spin_is_locked() is an abomination
+ - this RCU list stuff is just plain annoying
 
-Move the time namespace indicator clock mode to the other ones for
-consistency sake.
+I'm tempted to do something like:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lkml.kernel.org/r/20200207124403.656097274@linutronix.de
+#define STFU (true)
 
+	hlist_for_each_entry_rcu(chain, head, entry, STFU) {
 
----
- include/linux/clocksource.h |  3 +++
- include/vdso/datapage.h     |  2 --
- kernel/time/namespace.c     |  7 ++++---
- lib/vdso/gettimeofday.c     | 18 ++++++++++--------
- 4 files changed, 17 insertions(+), 13 deletions(-)
-
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 7fefe0b..02e3282 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -34,6 +34,9 @@ enum vdso_clock_mode {
- 	VDSO_ARCH_CLOCKMODES,
- #endif
- 	VDSO_CLOCKMODE_MAX,
-+
-+	/* Indicator for time namespace VDSO */
-+	VDSO_CLOCKMODE_TIMENS = INT_MAX
- };
- 
- /**
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index c5f347c..30c4cb0 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -21,8 +21,6 @@
- #define CS_RAW		1
- #define CS_BASES	(CS_RAW + 1)
- 
--#define VCLOCK_TIMENS	UINT_MAX
--
- /**
-  * struct vdso_timestamp - basetime per clock_id
-  * @sec:	seconds
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 1285850..e6ba064 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -8,6 +8,7 @@
- #include <linux/user_namespace.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
-+#include <linux/clocksource.h>
- #include <linux/seq_file.h>
- #include <linux/proc_ns.h>
- #include <linux/export.h>
-@@ -172,8 +173,8 @@ static struct timens_offset offset_from_ts(struct timespec64 off)
-  * for vdso_data->clock_mode is a non-issue. The task is spin waiting for the
-  * update to finish and for 'seq' to become even anyway.
-  *
-- * Timens page has vdso_data->clock_mode set to VCLOCK_TIMENS which enforces
-- * the time namespace handling path.
-+ * Timens page has vdso_data->clock_mode set to VDSO_CLOCKMODE_TIMENS which
-+ * enforces the time namespace handling path.
-  */
- static void timens_setup_vdso_data(struct vdso_data *vdata,
- 				   struct time_namespace *ns)
-@@ -183,7 +184,7 @@ static void timens_setup_vdso_data(struct vdso_data *vdata,
- 	struct timens_offset boottime = offset_from_ts(ns->offsets.boottime);
- 
- 	vdata->seq			= 1;
--	vdata->clock_mode		= VCLOCK_TIMENS;
-+	vdata->clock_mode		= VDSO_CLOCKMODE_TIMENS;
- 	offset[CLOCK_MONOTONIC]		= monotonic;
- 	offset[CLOCK_MONOTONIC_RAW]	= monotonic;
- 	offset[CLOCK_MONOTONIC_COARSE]	= monotonic;
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 00f8d1f..a76ac8d 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -116,10 +116,10 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 
- 	do {
- 		/*
--		 * Open coded to handle VCLOCK_TIMENS. Time namespace
-+		 * Open coded to handle VDSO_CLOCKMODE_TIMENS. Time namespace
- 		 * enabled tasks have a special VVAR page installed which
- 		 * has vd->seq set to 1 and vd->clock_mode set to
--		 * VCLOCK_TIMENS. For non time namespace affected tasks
-+		 * VDSO_CLOCKMODE_TIMENS. For non time namespace affected tasks
- 		 * this does not affect performance because if vd->seq is
- 		 * odd, i.e. a concurrent update is in progress the extra
- 		 * check for vd->clock_mode is just a few extra
-@@ -128,7 +128,7 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		 */
- 		while (unlikely((seq = READ_ONCE(vd->seq)) & 1)) {
- 			if (IS_ENABLED(CONFIG_TIME_NS) &&
--			    vd->clock_mode == VCLOCK_TIMENS)
-+			    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 				return do_hres_timens(vd, clk, ts);
- 			cpu_relax();
- 		}
-@@ -200,12 +200,12 @@ static __always_inline int do_coarse(const struct vdso_data *vd, clockid_t clk,
- 
- 	do {
- 		/*
--		 * Open coded to handle VCLOCK_TIMENS. See comment in
-+		 * Open coded to handle VDSO_CLOCK_TIMENS. See comment in
- 		 * do_hres().
- 		 */
- 		while ((seq = READ_ONCE(vd->seq)) & 1) {
- 			if (IS_ENABLED(CONFIG_TIME_NS) &&
--			    vd->clock_mode == VCLOCK_TIMENS)
-+			    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 				return do_coarse_timens(vd, clk, ts);
- 			cpu_relax();
- 		}
-@@ -292,7 +292,7 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
- 
- 	if (unlikely(tz != NULL)) {
- 		if (IS_ENABLED(CONFIG_TIME_NS) &&
--		    vd->clock_mode == VCLOCK_TIMENS)
-+		    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 			vd = __arch_get_timens_vdso_data();
- 
- 		tz->tz_minuteswest = vd[CS_HRES_COARSE].tz_minuteswest;
-@@ -308,7 +308,8 @@ static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time
- 	const struct vdso_data *vd = __arch_get_vdso_data();
- 	__kernel_old_time_t t;
- 
--	if (IS_ENABLED(CONFIG_TIME_NS) && vd->clock_mode == VCLOCK_TIMENS)
-+	if (IS_ENABLED(CONFIG_TIME_NS) &&
-+	    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 		vd = __arch_get_timens_vdso_data();
- 
- 	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-@@ -332,7 +333,8 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 	if (unlikely((u32) clock >= MAX_CLOCKS))
- 		return -1;
- 
--	if (IS_ENABLED(CONFIG_TIME_NS) && vd->clock_mode == VCLOCK_TIMENS)
-+	if (IS_ENABLED(CONFIG_TIME_NS) &&
-+	    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 		vd = __arch_get_timens_vdso_data();
- 
- 	/*
+Paul, are we going a little over-board with this stuff? Do we really
+have to annotate all of this?
