@@ -2,172 +2,167 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9BC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E992C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61F224689
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B6F20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iA6UYFah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgBQSdn (ORCPT
+        id S1729334AbgBQSgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:33:43 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:37422 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbgBQSdm (ORCPT
+        Mon, 17 Feb 2020 13:36:54 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37737 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727601AbgBQSgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:33:42 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3lDA-00EJGf-2W; Mon, 17 Feb 2020 18:33:40 +0000
-Date:   Mon, 17 Feb 2020 18:33:40 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-arch@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [RFC] regset ->get() API
-Message-ID: <20200217183340.GI23230@ZenIV.linux.org.uk>
+        Mon, 17 Feb 2020 13:36:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581964613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=iYn/WApkZknuw8/6G/scxzQls76dRRJn9vUap7y4zFM=;
+        b=iA6UYFahqLI60BfDIsXilgbE/aK625m5SaS2BWfSOk3Vuc68YH87+8a56bnjWyDlCSYg3y
+        kJAnClsdADzLoeS/VS/nQmkx+NLtcrWOEeYhu8nqOKrJYizk9PEfFyphJpOEefl+F+JEO8
+        3NswkJfdDnz91sshLRPRdIeCaZlxPHE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44--n7DHrG4OeeiK6e-41apXQ-1; Mon, 17 Feb 2020 13:36:45 -0500
+X-MC-Unique: -n7DHrG4OeeiK6e-41apXQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 999F8107ACC4;
+        Mon, 17 Feb 2020 18:36:44 +0000 (UTC)
+Received: from lithium.redhat.com (ovpn-204-63.brq.redhat.com [10.40.204.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BCB285735;
+        Mon, 17 Feb 2020 18:36:42 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     rcu@vger.kernel.org, ebiederm@xmission.com, paulmck@kernel.org,
+        viro@zeniv.linux.org.uk
+Subject: [PATCH v2] ipc: use a work queue to free_ipc
+Date:   Mon, 17 Feb 2020 19:36:27 +0100
+Message-Id: <20200217183627.4099690-1-gscrivan@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Looking at the regset guts, I really wonder if the interface
-is right.  What happens goes along the lines of
+it avoids blocking on synchronize_rcu() in kern_umount().
 
-ptrace(PTRACE_GETREGS, pid, whatever, buf)
-  arch_ptrace(task, PTRACE_GETREGS, whatever, buf)
-    copy_regset_to_user(task, task_user_regset_view(current),
-		REGSET_GENERAL, 0, sizeof(struct user_regs_struct), buf);
-     check access_ok(buf, sizeof(...)
-     genregs_get(task, regset, 0, sizeof(...), NULL, buf);
-and we hit
-static int genregs_get(struct task_struct *target,
-                       const struct user_regset *regset,
-                       unsigned int pos, unsigned int count,
-                       void *kbuf, void __user *ubuf)
+the code:
+
+\#define _GNU_SOURCE
+\#include <sched.h>
+\#include <error.h>
+\#include <errno.h>
+\#include <stdlib.h>
+int main()
 {
-        if (kbuf) {
-                unsigned long *k = kbuf;
-                while (count >= sizeof(*k)) {
-                        *k++ = getreg(target, pos);
-                        count -= sizeof(*k);
-                        pos += sizeof(*k);
-                }
-        } else {
-                unsigned long __user *u = ubuf;
-                while (count >= sizeof(*u)) {
-                        if (__put_user(getreg(target, pos), u++))
-                                return -EFAULT;
-                        count -= sizeof(*u);
-                        pos += sizeof(*u);
-                }
-        }
-
-        return 0;
-}
- 
-IOW, we call getreg() in a loop, with separate __put_user() for each
-value.  For one thing, it's going to be painful on any recent x86 -
-the cost of stac/clac on each of those is not going to be cheap.
-And we obviously can't extend stac/clac area over the entire loop
-there - getreg() is not trivial.
-
-For another, the calling conventions are too generic - the callers
-of ->get() always pass zero for pos, for example.  And this "pass
-kbuf and ubuf separately" wart does not make it any prettier.
-
-Other instances (e.g. powerpc gpr_get()) do not use __put_user() -
-they make a series of user_regset_copyout()/user_regset_copyout_zero()
-calls (4 in this case):
-static inline int user_regset_copyout(unsigned int *pos, unsigned int *count,
-                                      void **kbuf,
-                                      void __user **ubuf, const void *data,
-                                      const int start_pos, const int end_pos)
-{
-        if (*count == 0)
-                return 0;
-        BUG_ON(*pos < start_pos);
-        if (end_pos < 0 || *pos < end_pos) {
-                unsigned int copy = (end_pos < 0 ? *count
-                                     : min(*count, end_pos - *pos));
-                data += *pos - start_pos;
-                if (*kbuf) {
-                        memcpy(*kbuf, data, copy);
-                        *kbuf += copy;
-                } else if (__copy_to_user(*ubuf, data, copy))
-                        return -EFAULT;
-                else
-                        *ubuf += copy;
-                *pos += copy;
-                *count -= copy;
-        }
-        return 0;
+  int i;
+  for (i  =3D 0; i < 1000; i++)
+    if (unshare (CLONE_NEWIPC) < 0)
+      error (EXIT_FAILURE, errno, "unshare");
 }
 
-The caller obviously needs to check if the damn thing has failed, and the
-calling conventions are still over-generic (grep and you'll see).  The
-actual calls of __copy_to_user()/__clear_user() have destinations back-to-back.
-And while in case of ppc their number is not too large, for e.g.
-arch/arc/kernel/ptrace.c:genregs_get() we get 39 calls of those things -
-basically, back to the __put_user-inna-loop-and-thats-cuttin-me-own-throat
-situation we have on x86, only with more overhead per register.
+gets from:
 
-And too convoluted calling conventions come with the usual price - they
-are too easy to get wrong.  Example:
-arch/x86/math-emu/fpu_entry.c:fpregs_soft_get() is
-{
-        struct swregs_state *s387 = &target->thread.fpu.state.soft;
-        const void *space = s387->st_space;
-        int ret;
-        int offset = (S387->ftop & 7) * 10, other = 80 - offset;
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.06
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
 
-        RE_ENTRANT_CHECK_OFF;
+to:
 
-#ifdef PECULIAR_486
-        S387->cwd &= ~0xe080;
-        /* An 80486 sets nearly all of the reserved bits to 1. */
-        S387->cwd |= 0xffff0040;
-        S387->swd = sstatus_word() | 0xffff0000;
-        S387->twd |= 0xffff0000;
-        S387->fcs &= ~0xf8000000;
-        S387->fos |= 0xffff0000;
-#endif /* PECULIAR_486 */
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.02
+	Percent of CPU this job got: 96%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
 
-        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, s387, 0,
-                                  offsetof(struct swregs_state, st_space));
+Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
+---
+v2:
+- comment added in free_ipc_ns()
 
-OK, here we copy everything in s387 up to the beginning of s387->st_space.
-Fair enough.  Now pos is offsetof(struct swregs_state, st_space)), and...
-        /* Copy all registers in stack order. */
-        if (!ret)
-                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-                                          space + offset, 0, other);
-        if (!ret)
-                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-                                          space, 0, offset);
-We _intend_ to copy stack entries, top..7, then 0..top-1, out of
-s387->st_space.  What we actually do is different - pos is updated
-by each call, so the last two arguments in these calls are wrong.
-They should've been offsetof(struct swregs_state, st_space)) and
-offsetof(struct swregs_state, st_space)) + other in the first
-one and offsetof(struct swregs_state, st_space)) + other and
-offsetof(struct swregs_state, st_space)) + 80 in the second one.
+v1: https://lkml.org/lkml/2020/2/11/692
 
-It's not hard to fix, and nobody really uses !CONFIG_FPU setups
-on x86 anyway; the point is that this is really easy to get wrong.
+ include/linux/ipc_namespace.h |  2 ++
+ ipc/namespace.c               | 20 ++++++++++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-What I really wonder is whether it's actually worth bothering - the
-life would be much simpler if we *always* passed a kernel buffer to
-->get() instances and did all copyout at once.  Sure, it results in
-double copies, but... would that really cost more than all the complexity
-we have there?
+diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.=
+h
+index c309f43bde45..a06a78c67f19 100644
+--- a/include/linux/ipc_namespace.h
++++ b/include/linux/ipc_namespace.h
+@@ -68,6 +68,8 @@ struct ipc_namespace {
+ 	struct user_namespace *user_ns;
+ 	struct ucounts *ucounts;
+=20
++	struct llist_node mnt_llist;
++
+ 	struct ns_common ns;
+ } __randomize_layout;
+=20
+diff --git a/ipc/namespace.c b/ipc/namespace.c
+index b3ca1476ca51..7b9922244891 100644
+--- a/ipc/namespace.c
++++ b/ipc/namespace.c
+@@ -117,6 +117,10 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_=
+ids *ids,
+=20
+ static void free_ipc_ns(struct ipc_namespace *ns)
+ {
++	/* mq_put_mnt() waits for a grace period as kern_unmount()
++	 * uses synchronize_rcu().
++	 */
++	mq_put_mnt(ns);
+ 	sem_exit_ns(ns);
+ 	msg_exit_ns(ns);
+ 	shm_exit_ns(ns);
+@@ -127,6 +131,17 @@ static void free_ipc_ns(struct ipc_namespace *ns)
+ 	kfree(ns);
+ }
+=20
++static LLIST_HEAD(free_ipc_list);
++static void free_ipc(struct work_struct *unused)
++{
++	struct llist_node *node =3D llist_del_all(&free_ipc_list);
++	struct ipc_namespace *n, *t;
++
++	llist_for_each_entry_safe(n, t, node, mnt_llist)
++		free_ipc_ns(n);
++}
++static DECLARE_WORK(free_ipc_work, free_ipc);
++
+ /*
+  * put_ipc_ns - drop a reference to an ipc namespace.
+  * @ns: the namespace to put
+@@ -148,8 +163,9 @@ void put_ipc_ns(struct ipc_namespace *ns)
+ 	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
+ 		mq_clear_sbinfo(ns);
+ 		spin_unlock(&mq_lock);
+-		mq_put_mnt(ns);
+-		free_ipc_ns(ns);
++
++		if (llist_add(&ns->mnt_llist, &free_ipc_list))
++			schedule_work(&free_ipc_work);
+ 	}
+ }
+=20
+--=20
+2.24.1
 
-What are the typical amounts of data copied in such ptrace() calls
-and how hot they normally are?
