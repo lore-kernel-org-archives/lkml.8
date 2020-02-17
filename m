@@ -2,331 +2,177 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559C5C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92258C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F282067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6CC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgBQIYA (ORCPT
+        id S1728160AbgBQIYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:24:00 -0500
-Received: from mga18.intel.com ([134.134.136.126]:2288 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgBQIX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:23:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:23:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="229126117"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.167])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Feb 2020 00:23:55 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Wei Li <liwei391@huawei.com>, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Kim Phillips <kim.phillips@arm.com>
-Subject: [PATCH V2 5/5] perf auxtrace: Add auxtrace_record__read_finish()
-Date:   Mon, 17 Feb 2020 10:23:00 +0200
-Message-Id: <20200217082300.6301-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200214144823.GC30041@leoy-ThinkPad-X240s>
-References: <20200214144823.GC30041@leoy-ThinkPad-X240s>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Mon, 17 Feb 2020 03:24:41 -0500
+Received: from twhmllg4.macronix.com ([122.147.135.202]:27381 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBQIYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:24:40 -0500
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 01H8OYP2085135;
+        Mon, 17 Feb 2020 16:24:34 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 419D3A22114FEBE2AA04;
+        Mon, 17 Feb 2020 16:24:35 +0800 (CST)
+In-Reply-To: <20200109174713.71ea377b@xps13>
+References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>  <1572256527-5074-3-git-send-email-masonccyang@mxic.com.tw> <20200109174713.71ea377b@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, vigneshr@ti.com
+Subject: Re: [PATCH v2 2/4] mtd: rawnand: Add support Macronix Block Protection
+ function
+MIME-Version: 1.0
+X-KeepSent: 29F7BCDB:FE14909F-48258511:002D91A4;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF29F7BCDB.FE14909F-ON48258511.002D91A4-48258511.002E31F0@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 17 Feb 2020 16:24:34 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/02/17 PM 04:24:35,
+        Serialize complete at 2020/02/17 PM 04:24:35
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com 01H8OYP2085135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All ->read_finish() implementations are doing the same thing. Add a
-helper function so that they can share the same implementation.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-and-Tested-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
+Hi Miquel,
+
+> > +/*
+> > + * Macronix NAND supports Block Protection by Protectoin(PT) pin;
+> > + * active high at power-on which protects the entire chip even the 
+#WP is
+> > + * disabled. Lock/unlock protection area can be partition according 
+to
+> > + * protection bits, i.e. upper 1/2 locked, upper 1/4 locked and so 
+on.
+> > + */
+> > +static int mxic_nand_lock(struct nand_chip *chip, loff_t ofs, 
+uint64_t len)
+> > +{
+> > +   u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
+> > +   int ret;
+> > +
+> > +   feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
+> > +   nand_select_target(chip, 0);
+> > +   ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
+> > +            feature);
+> > +   nand_deselect_target(chip);
+> > +   if (ret)
+> > +      pr_err("%s all blocks failed\n", __func__);
+> > +
+> > +   return ret;
+> > +}
+> > +
+> > +static int mxic_nand_unlock(struct nand_chip *chip, loff_t ofs, 
+uint64_t len)
+> > +{
+> > +   u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
+> > +   int ret;
+> > +
+> > +   feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
+> > +   nand_select_target(chip, 0);
+> > +   ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
+> > +            feature);
+> > +   nand_deselect_target(chip);
+> > +   if (ret)
+> > +      pr_err("%s all blocks failed\n", __func__);
+> > +
+> > +   return ret;
+> >  }
+> > 
+> > +/*
+> > + * Macronix NAND AC series support Block Protection by SET_FEATURES
+> > + * to lock/unlock blocks.
+> > + */
+> >  static int macronix_nand_init(struct nand_chip *chip)
+> >  {
+> > +   bool blockprotected = false;
+> > +
+> >     if (nand_is_slc(chip))
+> >        chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
+> > 
+> > -   macronix_nand_fix_broken_get_timings(chip);
+> > +   if (macronix_nand_fix_broken_get_timings(chip))
+> > +      blockprotected = true;
+> 
+> I don't like this at all :)
+> 
+> Please create a helper which detects which part is broken/protected
+> then create helpers to act in this case.
+
+okay, will patch it to read default protected value (after power-on)
+for protection function detection.
+
+> 
+> If the list is absolutely identical, you can share the detection
+> helper. Otherwise, if you think the list can diverge, please only share
+> the list for now and create two detection helpers.
+> 
+> > +
+> >     macronix_nand_onfi_init(chip);
+> > 
+> > +   if (blockprotected) {
+> > +      bitmap_set(chip->parameters.set_feature_list,
+> > +            ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
+> > +      bitmap_set(chip->parameters.get_feature_list,
+> > +            ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
+> > +
+> > +      chip->_lock = mxic_nand_lock;
+> > +      chip->_unlock = mxic_nand_unlock;
+> > +   }
+> > +
+> >     return 0;
+> >  }
+> > 
+
+thanks for your time & comments.
+Mason 
 
 
-Changes in V2:
+CONFIDENTIALITY NOTE:
 
-	Change ptr->itr.cs_etm_pmu to ptr->itr.pmu
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
 
- tools/perf/arch/arm/util/cs-etm.c    | 21 ++-------------------
- tools/perf/arch/arm64/util/arm-spe.c | 20 ++------------------
- tools/perf/arch/x86/util/intel-bts.c | 20 ++------------------
- tools/perf/arch/x86/util/intel-pt.c  | 20 ++------------------
- tools/perf/util/auxtrace.c           | 22 +++++++++++++++++++++-
- tools/perf/util/auxtrace.h           |  6 ++++++
- 6 files changed, 35 insertions(+), 74 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 60141c3007a9..941f814820b8 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -858,24 +858,6 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- 	free(ptr);
- }
- 
--static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct cs_etm_recording *ptr =
--			container_of(itr, struct cs_etm_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(ptr->evlist,
--							     evsel, idx);
--		}
--	}
--
--	return -EINVAL;
--}
--
- struct auxtrace_record *cs_etm_record_init(int *err)
- {
- 	struct perf_pmu *cs_etm_pmu;
-@@ -895,6 +877,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	}
- 
- 	ptr->cs_etm_pmu			= cs_etm_pmu;
-+	ptr->itr.pmu			= cs_etm_pmu;
- 	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
- 	ptr->itr.recording_options	= cs_etm_recording_options;
- 	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
-@@ -904,7 +887,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
- 	ptr->itr.reference		= cs_etm_reference;
- 	ptr->itr.free			= cs_etm_recording_free;
--	ptr->itr.read_finish		= cs_etm_read_finish;
-+	ptr->itr.read_finish		= auxtrace_record__read_finish;
- 
- 	*err = 0;
- 	return &ptr->itr;
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 1d993c27242b..8d6821d9c3f6 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -158,23 +158,6 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
- 	free(sper);
- }
- 
--static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct arm_spe_recording *sper =
--			container_of(itr, struct arm_spe_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(sper->evlist, evsel) {
--		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(sper->evlist,
--							     evsel, idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu)
- {
-@@ -192,12 +175,13 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 	}
- 
- 	sper->arm_spe_pmu = arm_spe_pmu;
-+	sper->itr.pmu = arm_spe_pmu;
- 	sper->itr.recording_options = arm_spe_recording_options;
- 	sper->itr.info_priv_size = arm_spe_info_priv_size;
- 	sper->itr.info_fill = arm_spe_info_fill;
- 	sper->itr.free = arm_spe_recording_free;
- 	sper->itr.reference = arm_spe_reference;
--	sper->itr.read_finish = arm_spe_read_finish;
-+	sper->itr.read_finish = auxtrace_record__read_finish;
- 	sper->itr.alignment = 0;
- 
- 	*err = 0;
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index 39e363151ad7..26cee1052179 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -413,23 +413,6 @@ static int intel_bts_find_snapshot(struct auxtrace_record *itr, int idx,
- 	return err;
- }
- 
--static int intel_bts_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_bts_recording *btsr =
--			container_of(itr, struct intel_bts_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(btsr->evlist, evsel) {
--		if (evsel->core.attr.type == btsr->intel_bts_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(btsr->evlist,
--							     evsel, idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_bts_recording_init(int *err)
- {
- 	struct perf_pmu *intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-@@ -450,6 +433,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	}
- 
- 	btsr->intel_bts_pmu = intel_bts_pmu;
-+	btsr->itr.pmu = intel_bts_pmu;
- 	btsr->itr.recording_options = intel_bts_recording_options;
- 	btsr->itr.info_priv_size = intel_bts_info_priv_size;
- 	btsr->itr.info_fill = intel_bts_info_fill;
-@@ -459,7 +443,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	btsr->itr.find_snapshot = intel_bts_find_snapshot;
- 	btsr->itr.parse_snapshot_options = intel_bts_parse_snapshot_options;
- 	btsr->itr.reference = intel_bts_reference;
--	btsr->itr.read_finish = intel_bts_read_finish;
-+	btsr->itr.read_finish = auxtrace_record__read_finish;
- 	btsr->itr.alignment = sizeof(struct branch);
- 	return &btsr->itr;
- }
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 2f0a0832907f..acadaa10c65d 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -1170,23 +1170,6 @@ static u64 intel_pt_reference(struct auxtrace_record *itr __maybe_unused)
- 	return rdtsc();
- }
- 
--static int intel_pt_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_pt_recording *ptr =
--			container_of(itr, struct intel_pt_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->intel_pt_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(ptr->evlist, evsel,
--							     idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_pt_recording_init(int *err)
- {
- 	struct perf_pmu *intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-@@ -1207,6 +1190,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	}
- 
- 	ptr->intel_pt_pmu = intel_pt_pmu;
-+	ptr->itr.pmu = intel_pt_pmu;
- 	ptr->itr.recording_options = intel_pt_recording_options;
- 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
- 	ptr->itr.info_fill = intel_pt_info_fill;
-@@ -1216,7 +1200,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	ptr->itr.find_snapshot = intel_pt_find_snapshot;
- 	ptr->itr.parse_snapshot_options = intel_pt_parse_snapshot_options;
- 	ptr->itr.reference = intel_pt_reference;
--	ptr->itr.read_finish = intel_pt_read_finish;
-+	ptr->itr.read_finish = auxtrace_record__read_finish;
- 	/*
- 	 * Decoding starts at a PSB packet. Minimum PSB period is 2K so 4K
- 	 * should give at least 1 PSB per sample.
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index eb087e7df6f4..3571ce72ca28 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -629,8 +629,10 @@ int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts)
- {
--	if (itr)
-+	if (itr) {
-+		itr->evlist = evlist;
- 		return itr->recording_options(itr, evlist, opts);
-+	}
- 	return 0;
- }
- 
-@@ -664,6 +666,24 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 	return -EINVAL;
- }
- 
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
-+{
-+	struct evsel *evsel;
-+
-+	if (!itr->evlist || !itr->pmu)
-+		return -EINVAL;
-+
-+	evlist__for_each_entry(itr->evlist, evsel) {
-+		if (evsel->core.attr.type == itr->pmu->type) {
-+			if (evsel->disabled)
-+				return 0;
-+			return perf_evlist__enable_event_idx(itr->evlist, evsel,
-+							     idx);
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
- /*
-  * Event record size is 16-bit which results in a maximum size of about 64KiB.
-  * Allow about 4KiB for the rest of the sample record, to give a maximum
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 749d72cd9c7b..e58ef160b599 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -29,6 +29,7 @@ struct record_opts;
- struct perf_record_auxtrace_error;
- struct perf_record_auxtrace_info;
- struct events_stats;
-+struct perf_pmu;
- 
- enum auxtrace_error_type {
-        PERF_AUXTRACE_ERROR_ITRACE  = 1,
-@@ -322,6 +323,8 @@ struct auxtrace_mmap_params {
-  * @read_finish: called after reading from an auxtrace mmap
-  * @alignment: alignment (if any) for AUX area data
-  * @default_aux_sample_size: default sample size for --aux sample option
-+ * @pmu: associated pmu
-+ * @evlist: selected events list
-  */
- struct auxtrace_record {
- 	int (*recording_options)(struct auxtrace_record *itr,
-@@ -346,6 +349,8 @@ struct auxtrace_record {
- 	int (*read_finish)(struct auxtrace_record *itr, int idx);
- 	unsigned int alignment;
- 	unsigned int default_aux_sample_size;
-+	struct perf_pmu *pmu;
-+	struct evlist *evlist;
- };
- 
- /**
-@@ -537,6 +542,7 @@ int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
- 				   struct auxtrace_mmap *mm,
- 				   unsigned char *data, u64 *head, u64 *old);
- u64 auxtrace_record__reference(struct auxtrace_record *itr);
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx);
- 
- int auxtrace_index__auxtrace_event(struct list_head *head, union perf_event *event,
- 				   off_t file_offset);
--- 
-2.17.1
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
