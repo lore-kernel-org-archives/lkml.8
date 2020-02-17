@@ -2,76 +2,60 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF023C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BA3C3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C2C20726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500852086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBQClW (ORCPT
+        id S1726939AbgBQCmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 21:41:22 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:38262 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgBQClW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 21:41:22 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A94631A1E30;
-        Mon, 17 Feb 2020 03:41:20 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3EE1C1A1E64;
-        Mon, 17 Feb 2020 03:41:17 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B7FEC402A7;
-        Mon, 17 Feb 2020 10:41:12 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     dmitry.torokhov@gmail.com, swboyd@chromium.org, robin@protonic.nl,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] input: keyboard: snvs_pwrkey: Remove unused includes
-Date:   Mon, 17 Feb 2020 10:35:39 +0800
-Message-Id: <1581906939-26163-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 16 Feb 2020 21:42:08 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47902 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgBQCmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 21:42:07 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1712B153BB8DD;
+        Sun, 16 Feb 2020 18:42:07 -0800 (PST)
+Date:   Sun, 16 Feb 2020 18:42:06 -0800 (PST)
+Message-Id: <20200216.184206.1168397979817043530.davem@davemloft.net>
+To:     alexandre.belloni@bootlin.com
+Cc:     nicolas.ferre@microchip.com, harini.katakam@xilinx.com,
+        shubhrajyoti.datta@xilinx.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: macb: ensure interface is not suspended on
+ at91rm9200
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200212164538.383741-1-alexandre.belloni@bootlin.com>
+References: <20200212164538.383741-1-alexandre.belloni@bootlin.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Feb 2020 18:42:07 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is nothing in use from device.h/init.h/of_address.h, remove them.
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date: Wed, 12 Feb 2020 17:45:38 +0100
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/input/keyboard/snvs_pwrkey.c | 3 ---
- 1 file changed, 3 deletions(-)
+> Because of autosuspend, at91ether_start is called with clocks disabled.
+> Ensure that pm_runtime doesn't suspend the interface as soon as it is
+> opened as there is no pm_runtime support is the other relevant parts of the
+> platform support for at91rm9200.
+> 
+> Fixes: d54f89af6cc4 ("net: macb: Add pm runtime support")
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-index 2f5e3ab..9e1e855 100644
---- a/drivers/input/keyboard/snvs_pwrkey.c
-+++ b/drivers/input/keyboard/snvs_pwrkey.c
-@@ -3,9 +3,7 @@
- // Driver for the IMX SNVS ON/OFF Power Key
- // Copyright (C) 2015 Freescale Semiconductor, Inc. All Rights Reserved.
- 
--#include <linux/device.h>
- #include <linux/err.h>
--#include <linux/init.h>
- #include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -13,7 +11,6 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/pm_wakeirq.h>
- #include <linux/mfd/syscon.h>
--- 
-2.7.4
-
+Applied, thanks.
