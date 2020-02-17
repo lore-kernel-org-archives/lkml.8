@@ -2,103 +2,244 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36661C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A456C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E8A206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBAB206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAYDuPa2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UV1+NkWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgBQKmF (ORCPT
+        id S1729313AbgBQKmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:42:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34258 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgBQKmF (ORCPT
+        Mon, 17 Feb 2020 05:42:20 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15926 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729300AbgBQKmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:42:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n10so17127320wrm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:42:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xK9gSeKjuTrA7UchFgBVdfbmk8btUEWvMGPvHLQD5JM=;
-        b=QAYDuPa2ckyNKNs+uc/7kOYnDiCDyG5wPtjvhR59Myh+YznC8GYiN2AG06cTLVRObo
-         ROlADqWcNe98jyG2/zOJx0GmEUb7kEPIEArlZgxJWwNRv6pJs1YlzY3L+ke9BHkM2j7B
-         aeGz8B3EMSISeSPkbZNLZUTPgNCoEY5OjtpOX9CuwfzGD6qJdvOaxPi5UPWqYvGqaNar
-         O4UT3VEF0GINCmmv6ibsepv9zdV9oM0/spTfYAhPLEwt03h0sQN//Tqp5MDrjEBICiV2
-         dsGRIvt/baD8UMoaXtSA+m1K4rbKEYJv3mL7g6+jkeeZXV876uqoD2GDYmEfhrkqwPqN
-         Vvrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xK9gSeKjuTrA7UchFgBVdfbmk8btUEWvMGPvHLQD5JM=;
-        b=ovRRBBBc8OcHs+TuSFYPRkk8QQTu5N5JErmgbo+lj5b/oHLWpcA/JKYRaYNzjaRwJz
-         gDbaT+PZEf2IlONdB8QVI5R+NHviRunJ8Kozk0G0Q4n1h0TLT/M/7tdviqArmfrSC6oS
-         V/VXeX3TYj7YcRTXV4FmGTPvEcydeSHvi/eV7SAIRiMxW+i2nt3H6S77ch++qWInE5KR
-         8HRN9PxN0/h3xMsFMMvGWO6rTi/m2xDjpbYspQXkpoM3JVQguuYuByjaPBFmWNCiZgH4
-         HIzrgpnTZNHY6m3tk0oaKlLfLc4ifYpylNGTOVnYk5RDgSrr4i3aZFlM6ryb3hlDoUVF
-         uiIQ==
-X-Gm-Message-State: APjAAAWmXVnutWKoIygmb0EcQDvRMB/xXZO7vKCPbmyATmooCpAOZkks
-        9gunHb0sa1mpDp4b8bylGtzX5RLAtJI=
-X-Google-Smtp-Source: APXvYqwWfS50fnch4zgS7Kfh2jKt9qZFo/AadUs19hGjKsVCFf3nDddgafWbzS4NxIxJ7cdTWz6aCw==
-X-Received: by 2002:adf:ea85:: with SMTP id s5mr21086636wrm.75.1581936123145;
-        Mon, 17 Feb 2020 02:42:03 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id m3sm332833wrs.53.2020.02.17.02.42.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Feb 2020 02:42:02 -0800 (PST)
-Subject: Re: [PATCH] nvmem: imx: ocotp: add i.MX8MP support
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1579231433-14201-1-git-send-email-peng.fan@nxp.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <05b29ecf-3873-067c-c480-ed32c388333b@linaro.org>
-Date:   Mon, 17 Feb 2020 10:42:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 17 Feb 2020 05:42:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581936139; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=9eyK9s5QcOQNlzTcBcw9+PasjfwqMuF96kLGC5PXg0c=;
+ b=UV1+NkWgYH7OaS1Cg+CREukzgkuOl6AodKYVoawWrVUJRavDrjaAgWR7kIYXRkRTvKOP+ceC
+ X3laOSYkC76QVy5tA4W6hKW/zIXPA9drzaSz5TYcxdEs8E93wDEoaRbUaS8uwEhPaEs30poT
+ T9hG+wKl/QGf2G16z/vvcFOWW14=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a6dfe.7f32ddc08ea0-smtp-out-n03;
+ Mon, 17 Feb 2020 10:42:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0FD30C4479F; Mon, 17 Feb 2020 10:42:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: harigovi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7EABC43383;
+        Mon, 17 Feb 2020 10:42:03 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <1579231433-14201-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Feb 2020 16:12:03 +0530
+From:   harigovi@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
+In-Reply-To: <CAF6AEGv2Ymn+4uDXsO2-P+HR9dpOotB=NRMSEsBu8_uOCJ2vBQ@mail.gmail.com>
+References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
+ <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
+ <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
+ <CAOCk7NoCH9p9gOd7as=ty-EMeerAAhQtKZa8f2wZrDeV2LtGrw@mail.gmail.com>
+ <1d201377996e16ce25acb640867e1214@codeaurora.org>
+ <CAF6AEGu8265DWN-XABwR1N-124m1j=EkgeNDEWZ16TVpSCZSZw@mail.gmail.com>
+ <CAOCk7NrH6hWiHL29_DozXcXrXhkCaZ6LTCtJUrvqtXc=nQuLrg@mail.gmail.com>
+ <CAF6AEGvLOWKVCjjmqranEi9TKOpMM+BPK199wQ7f=Ez491uhcA@mail.gmail.com>
+ <CAOCk7NrifMkwartV4rj_v_V4=EHeSkmb28tdBUrxoPHVSX5G5Q@mail.gmail.com>
+ <CAF6AEGv2Ymn+4uDXsO2-P+HR9dpOotB=NRMSEsBu8_uOCJ2vBQ@mail.gmail.com>
+Message-ID: <500fec9adf6c8f8102d0e92535166007@codeaurora.org>
+X-Sender: harigovi@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-02-12 10:40, Rob Clark wrote:
+> On Tue, Feb 11, 2020 at 8:05 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> 
+> wrote:
+>> 
+>> On Tue, Feb 11, 2020 at 5:28 PM Rob Clark <robdclark@gmail.com> wrote:
+>> >
+>> > On Tue, Feb 11, 2020 at 7:59 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>> > >
+>> > > On Tue, Feb 11, 2020 at 8:44 AM Rob Clark <robdclark@gmail.com> wrote:
+>> > > >
+>> > > > On Mon, Feb 10, 2020 at 9:58 PM <harigovi@codeaurora.org> wrote:
+>> > > > >
+>> > > > > On 2020-02-07 19:40, Jeffrey Hugo wrote:
+>> > > > > > On Fri, Feb 7, 2020 at 5:38 AM <harigovi@codeaurora.org> wrote:
+>> > > > > >>
+>> > > > > >> On 2020-02-06 20:29, Jeffrey Hugo wrote:
+>> > > > > >> > On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org>
+>> > > > > >> > wrote:
+>> > > > > >> >>
+>> > > > > >> >> For a given byte clock, if VCO recalc value is exactly same as
+>> > > > > >> >> vco set rate value, vco_set_rate does not get called assuming
+>> > > > > >> >> VCO is already set to required value. But Due to GDSC toggle,
+>> > > > > >> >> VCO values are erased in the HW. To make sure VCO is programmed
+>> > > > > >> >> correctly, we forcefully call set_rate from vco_prepare.
+>> > > > > >> >
+>> > > > > >> > Is this specific to certain SoCs? I don't think I've observed this.
+>> > > > > >>
+>> > > > > >> As far as Qualcomm SOCs are concerned, since pll is analog and the
+>> > > > > >> value
+>> > > > > >> is directly read from hardware if we get recalc value same as set rate
+>> > > > > >> value, the vco_set_rate will not be invoked. We checked in our idp
+>> > > > > >> device which has the same SOC but it works there since the rates are
+>> > > > > >> different.
+>> > > > > >
+>> > > > > > This doesn't seem to be an answer to my question.  What Qualcomm SoCs
+>> > > > > > does this issue apply to?  Everything implementing the 10nm pll?  One
+>> > > > > > specific SoC?  I don't believe I've seen this on MSM8998, nor SDM845,
+>> > > > > > so I'm interested to know what is the actual impact here.  I don't see
+>> > > > > > an "IDP" SoC in the IP catalog, so I really have no idea what you are
+>> > > > > > referring to.
+>> > > > >
+>> > > > >
+>> > > > > This is not 10nm specific. It is applicable for other nms also.
+>> > > > > Its specific to the frequency being set. If vco_recalc returns the same
+>> > > > > value as being set by vco_set_rate,
+>> > > > > vco_set_rate will not be invoked second time onwards.
+>> > > > >
+>> > > > > For example: Lets take below devices:
+>> > > > >
+>> > > > > Cheza is based on SDM845 which is 10nm only.
+>> > > > > Clk frequency:206016
+>> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1236096000
+>> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1236095947
+>> > > > >
+>> > > > > Trogdor is based on sc7180 which is also 10nm.
+>> > > > > Clk frequency:69300
+>> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663200000
+>> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663200000
+>> > > > >
+>> > > > > In same trogdor device, we slightly changed the clock frequency and the
+>> > > > > values actually differ which will not cause any issue.
+>> > > > > Clk frequency:69310
+>> > > > > dsi_pll_10nm_vco_set_rate - DSI PLL0 rate=1663440000
+>> > > > > dsi_pll_10nm_vco_recalc_rate - DSI PLL0 returning vco rate = 1663439941
+>> > > >
+>> > > >
+>> > > > tbh, loosing state when power is off is kind of the behavior that I'd
+>> > > > expect.  It kinda makes me wonder if things are not getting powered
+>> > > > off all the way on some SoCs?
+>> > > >
+>> > > > jhugo, are you worried that this patch will cause problems on other
+>> > > > users of the 10nm pll?
+>> > >
+>> > > Essentially yes.  Conceptually it doesn't seem like this change should
+>> > > cause any harm, however -
+>> > >
+>> > > This sounds like we are trying to work around the clk framework, which
+>> > > seems wrong.  It feels like we should be able to set a clk flag for
+>> > > this and make the framework deal with it.
+>> > >
+>> > > Also, this fix is 10nm specific, yet this issue affects all
+>> > > implementations?  Seems like this should perhaps be in common code so
+>> > > that we don't need to play whack-a-mole by fixing every implementation
+>> > > piecemeal.
+>> > >
+>> > > Finally, the PLLs are notorious for not taking a configuration unless
+>> > > they are running.  I admit, I haven't looked at this patch in detail
+>> > > to determine if that is the case here, but there doesn't seem to be
+>> > > any indication from the commit test or a comment that doing so is
+>> > > actually valid in all cases.
+>> >
+>> > I'm not obviously seeing a clk-provider flag for this.. although I
+>> > won't claim to be a clk expert so maybe I'm looking for the wrong
+>> > thing..
+>> >
+>> > On a more practical level, I'd kinda like to get some sort of fix for
+>> > v5.6, as currently suspend/resume doesn't work (or at least the
+>> > display does not survive) on trogdor, which is a bit annoying.  It
+>> > sounds a bit like cheza was just getting lucky (because of rate
+>> > rounding?)  I'm not sure if it is the same situation on other sdm850
+>> > devices (yoga c630) or sdm835 devices (are they using the 10mm pll as
+>> > well?).
+>> 
+>> sdm835 is the first implementation of the 10nm PLL.  Pretty much
+>> everything after (including sdm845/850) also uses the 10nm PLL.
+>> 
+>> >  I will confess to not really testing s/r on the yoga c630,
+>> > although maybe someone else has (Bjorn?).
+>> >
+>> > Possibly this should be pushed up to the clk framework, although not
+>> > sure if it has a good way to realize the clk provider has lost power?
+>> > But that sounds like a better thing for v5.7 than v5.6-rc fixes.. ofc
+>> > if there is a better way that I'm not seeing, I'm all ears.
+>> 
+>> There is a suspend/resume sequence in the HPG where VCO isn't lost,
+>> but that assumes the GDSC isn't turned off.  If GDSC is turned off,
+>> then we need to go through the entire power-up sequence again.  Feels
+>> like this should be plumbed into runtime PM based on the
+>> suspend/resume usecase, but that's probably more complicated then this
+>> change.
+> 
+> since gdsc is modelled as genpd, that seems to (afaict) happen all
+> outside the scope of what the driver knows about.. (but I may be
+> overlooking something)
+> 
+>> Looking at the HPG for the power up sequence, it seems like we should
+>> be setting the bias in the middle of the dsi_pll_commit(), so the
+>> order of operations is slight off, however I somewhat doubt that will
+>> have a meaningful impact and it does seem like this change is in line
+>> with the spirit of the HPG.
+>> 
+>> It wasn't clear to me from the commit message what usecase triggered
+>> this.  You've made it clear that its suspend/resume (it would be good
+>> if that was mentioned) and that its impacting an actual target.  To
+>> me, the current description seemed more theoretical and didn't
+>> describe the impact that was being addressed.  Overall, it really
+>> didn't answer the "why should I care if I have this change" question.
+>> 
+>> Right now, I think my concerns are cosmetic, therefore I don't have
+>> reservations about it being picked up.  If you like:
+>> 
+>> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> 
+> 
+> hmm, yeah, I guess the commit msg didn't really make that clear.. at
+> any rate, I want to see a clean solution pursued in the long run, but
+> in the short term I also want to get things working (at least if it
+> doesn't break any other users).  So I don't want to land this patch at
+> the expense of follow-up for a cleaner solution.. but like I said, I
+> would like to get s/r working for now.  So I guess I'd like to see
+> some commitment from the display team to follow-up to improve this in
+> the next cycle.  And suggestions welcome about how the clk framework
+> could make this easier.
+> 
+> BR,
+> -R
+
+we had an initial discussion with the clock team, currently there is no 
+ready made clock provider flag to help in the above scenario.
+however we are planning to have further discussions for a cleaner fix, 
+can we open a new issue to track the discussions and design and close 
+the current one ?
 
 
-On 17/01/2020 03:28, Peng Fan wrote:
-> From: Peng Fan<peng.fan@nxp.com>
-> 
-> i.MX8MP has 96 banks with each bank 4 words. And it has different
-> ctrl register layout, so add new macros for that.
-> 
-> Signed-off-by: Peng Fan<peng.fan@nxp.com>
-> ---
-> 
-> dt-bindings doc has been posted by Anson Huang
-> 
->   drivers/nvmem/imx-ocotp.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
 
-Applied Thanks,
-
---srini
