@@ -2,94 +2,94 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD2EC7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91E2C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BC12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22DA20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgBQJSX (ORCPT
+        id S1728796AbgBQJUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:18:23 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728272AbgBQJSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:18:23 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8B5BF7C85E4B5CC973CB;
-        Mon, 17 Feb 2020 17:18:18 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
- 17:18:11 +0800
-Subject: Re: [PATCH v4 02/20] irqchip/gic-v3: Use SGIs without active state if
- offered
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-3-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <d8dc634f-bdd6-b2e6-a398-02b7e04efe67@huawei.com>
-Date:   Mon, 17 Feb 2020 17:18:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 17 Feb 2020 04:20:09 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50513 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgBQJUJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:20:09 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id BAC8320005;
+        Mon, 17 Feb 2020 09:20:06 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 10:20:06 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     UNGLinuxDriver@microchip.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mscc: fix in frame extraction
+Message-ID: <20200217092006.GA3634@piout.net>
+References: <20200217083133.20828-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214145736.18550-3-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217083133.20828-1-horatiu.vultur@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/2/14 22:57, Marc Zyngier wrote:
-> To allow the direct injection of SGIs into a guest, the GICv4.1
-> architecture has to sacrifice the Active state so that SGIs look
-> a lot like LPIs (they are injected by the same mechanism).
+On 17/02/2020 09:31:33+0100, Horatiu Vultur wrote:
+> Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
+> by reading chuncks of 4 bytes from a register.
 > 
-> In order not to break existing software, the architecture gives
-> offers guests OSs the choice: SGIs with or without an active
-> state. It is the hypervisors duty to honor the guest's choice.
+> In case the IFH and frames were read corretly it would try to read the next
+> frame. In case there are no more frames in the queue, it checks if there
+> were any previous errors and in that case clear the queue. But this check
+> will always succeed also when there are no errors. Because when extracting
+> the IFH the error is checked against 4(number of bytes read) and then the
+> error is set only if the extraction of the frame failed. So in a happy case
+> where there are no errors the err variable is still 4. So it could be
+> a case where after the check that there are no more frames in the queue, a
+> frame will arrive in the queue but because the error is not reseted, it
+> would try to flush the queue. So the frame will be lost.
 > 
-> For this, the architecture offers a discovery bit indicating whether
-> the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
-> bit indicating whether the guest wants Active-less SGIs or not
-> (controlled by GICD_CTLR.nASSGIreq).
+> The fix consist in resetting the error after reading the IFH.
 > 
-> A hypervisor not supporting GICv4.1 SGIs would leave nASSGIcap
-> clear, and a guest not knowing about GICv4.1 SGIs (or definitely
-> wanting an Active state) would leave nASSGIreq clear (both being
-> thankfully backward compatible with oler revisions of the GIC).
-older?
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
+> ---
+>  drivers/net/ethernet/mscc/ocelot_board.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Since Linux is perfectly happy without an active state on SGIs,
-> inform the hypervisor that we'll use that if offered.
+> diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+> index b38820849faa..1135a18019c7 100644
+> --- a/drivers/net/ethernet/mscc/ocelot_board.c
+> +++ b/drivers/net/ethernet/mscc/ocelot_board.c
+> @@ -114,6 +114,14 @@ static irqreturn_t ocelot_xtr_irq_handler(int irq, void *arg)
+>  		if (err != 4)
+>  			break;
+>  
+> +		/* At this point the IFH was read correctly, so it is safe to
+> +		 * presume that there is no error. The err needs to be reset
+> +		 * otherwise a frame could come in CPU queue between the while
+> +		 * condition and the check for error later on. And in that case
+> +		 * the new frame is just removed and not processed.
+> +		 */
+> +		err = 0;
+> +
+>  		ocelot_parse_ifh(ifh, &info);
+>  
+>  		ocelot_port = ocelot->ports[info.port];
+> -- 
+> 2.17.1
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Per the description of these two bits in the commit message,
-
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-
-Thanks
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
