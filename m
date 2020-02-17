@@ -2,125 +2,115 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24807C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A9C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE84A214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6427720801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gCgf3hT+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbq0K6gE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgBQPPu (ORCPT
+        id S1728660AbgBQPSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:15:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43576 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgBQPPu (ORCPT
+        Mon, 17 Feb 2020 10:18:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34226 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727300AbgBQPSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:15:50 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HFFTk5125091;
-        Mon, 17 Feb 2020 09:15:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581952529;
-        bh=sesL32PDsZi01y0X5NncQMWx/LULUnsHSmLX5Wya1Xc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gCgf3hT+IcPMAv4XKF0sDStZbR0mz80E4QENsSIj7d/a/S0T9abzOcR9XKl/l4VRP
-         2SmDJfX6EVy8ENek08jsvgB0YRJuZdn2JrQ2R1I74ByocsVYcggHmzoqhPB3jhe/ry
-         f8Pk6FCS1OW8+2L6kaPAZzzqZsr6mp6T8TUrhg6o=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01HFFTfv119247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Feb 2020 09:15:29 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 09:15:28 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 09:15:28 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HFFSIB067034;
-        Mon, 17 Feb 2020 09:15:28 -0600
-Subject: Re: [PATCH v2 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver
-To:     Faiz Abbas <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-3-faiz_abbas@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-Date:   Mon, 17 Feb 2020 09:10:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 10:18:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581952692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oApQbLrzVVhu1jd7qefxCRV4mfxdoYPT/JD7M+EYzVc=;
+        b=dbq0K6gEAly8RwjerJJ+KVI46yWYNYxXunO7P8ny0Mx9Q4j54/GryR/ArBupKALRRhx9ZN
+        vVkpom5lQ81lImPlXyCeiAmXxOyIuIojkgN9DoFO0LkAd/Ef8jE3nowRmWCLrG3+WgiKhO
+        uDln+i/6iREdSjuVO13Ptg0hc+0Bysk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-6_f05MjcO6e7fPTJl3sKMg-1; Mon, 17 Feb 2020 10:18:08 -0500
+X-MC-Unique: 6_f05MjcO6e7fPTJl3sKMg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84C2913E6;
+        Mon, 17 Feb 2020 15:18:07 +0000 (UTC)
+Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A85BD60BE1;
+        Mon, 17 Feb 2020 15:18:06 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 09:18:04 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+Message-ID: <20200217151804.yymflofpbiqjqnnz@treble>
+References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+ <1581706938.3.5@crapouillou.net>
+ <20200214203738.af3y4gskukctvvum@treble>
+ <1581734224.3.14@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200217142836.23702-3-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1581734224.3.14@crapouillou.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Faiz
+On Fri, Feb 14, 2020 at 11:37:04PM -0300, Paul Cercueil wrote:
+> > >  I don't like the idea that you change this driver's code just to
+> > > work around
+> > >  a bug in objtool, and I don't like the idea of working around a
+> > > future bug
+> > >  that shouldn't be introduced in the first place.
+> > 
+> > It's not an objtool bug.  It's a byproduct of the fact that GCC's
+> > undefined behavior is inscrutable, and there's no way to determine that
+> > it actually *wants* to jump to a random function.
+> > 
+> > And anyway, regardless of objtool, the patch is meant to make the code
+> > more robust.
+> > 
+> > Do you not agree that BUG (defined behavior) is more robust than
+> > unreachable (undefined behavior)?
+> 
+> It's a dead code path. That would be an undefined behaviour, if it was
+> taken, but it's not.
 
-On 2/17/20 8:28 AM, Faiz Abbas wrote:
-> CAN transceivers on some boards have a standby line which can be
-> toggled to enable/disable the transceiver. Model this as an optional
-> fixed xceiver regulator.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> Acked-by: Sriram Dash <sriram.dash@samsung.com>
-> ---
->   drivers/net/can/m_can/m_can_platform.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-> index 38ea5e600fb8..719468fab507 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -6,6 +6,7 @@
->   // Copyright (C) 2018-19 Texas Instruments Incorporated - http://www.ti.com/
->   
->   #include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
->   
->   #include "m_can.h"
->   
-> @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   {
->   	struct m_can_classdev *mcan_class;
->   	struct m_can_plat_priv *priv;
-> +	struct regulator *reg_xceiver;
->   	struct resource *res;
->   	void __iomem *addr;
->   	void __iomem *mram_addr;
-> @@ -111,6 +113,10 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   
->   	m_can_init_ram(mcan_class);
->   
-> +	reg_xceiver = devm_regulator_get_optional(&pdev->dev, "xceiver");
-> +	if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
+Given your confidence that humans don't introduce bugs, would you
+recommend that we
 
-Where is this regulator enabled?
+  s/BUG()/unreachable()/
 
-Shouldn't the regulator be managed by runtime PM as well?
+tree-wide?
 
-Dan
+Another option would be to remove the unreachable() statement, which
+would actually improve the generated code by making it more compact (16
+bytes of i-cache savings), on top of removing the "fallthrough to next
+function" nastiness.
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 96f04d121ebd..13c7d3351ed5 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -2158,7 +2158,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			break;
+ 
+ 		default:
+-			unreachable();
++			/* unreachable */
++			break;
+ 		}
+ 	}
+ 
 
