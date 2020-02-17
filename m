@@ -2,102 +2,455 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE1DC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F21C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0ECC20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581951413;
-	bh=KgSCGtBzqHI+FTyx0C6yKk5rUAxVmUucNzkOfxenYGE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UYk8lYCaKuckSKlGa5jWMccI7dUOrIEZEFP4abOxnw8Qsj6H52b1FIn19zD9it9h2
-	 xVphwk6f8ZTB13bnWOCfCoUUn5fMUgsgZ29v07StPwa31l8CYYYyvPnWQxYTzBE3E5
-	 JrlCWH5iPiBYTcURIlTbjiCFH7GbJ0+Tcl3eDY3o=
+	by mail.kernel.org (Postfix) with ESMTP id EF50C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 14:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dnNeR/Ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgBQO4w (ORCPT
+        id S1729313AbgBQO7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 09:56:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:36802 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgBQO4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 09:56:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E63430E;
-        Mon, 17 Feb 2020 06:56:51 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E733B3F703;
-        Mon, 17 Feb 2020 06:56:50 -0800 (PST)
-Date:   Mon, 17 Feb 2020 14:56:49 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mon, 17 Feb 2020 09:59:00 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:59614 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbgBQO7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 09:59:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581951537; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4KpH57OmEaM74fE/GE9lJz8xOL5Q2sw0bhdUdSXRS3E=;
+        b=dnNeR/YeX5Pl1zdeYyeqdLhafVw0QuxISP37lGeMrXw7BEsR3mcfu7Vi+EhXFErJ3hWbis
+        hXlPu3ix09ipFF6x2h7YT876jIh2hFEwRrqGiqxz6aSz5HyyOQG3ZXRhYn/Uh9kXTnrpvg
+        Uqzh0IJxO12fcJ1Y8gWfm59Fke3FizI=
+Date:   Mon, 17 Feb 2020 11:58:34 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v3 1/9] nvmem: add driver for JZ4780 efuse
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Mathieu Malaterre <malat@debian.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 03/34] arm64: dts: allwinner: a64: Fix the audio
- codec compatible
-Message-ID: <20200217145649.GF9304@sirena.org.uk>
-References: <20200217064250.15516-1-samuel@sholland.org>
- <20200217064250.15516-4-samuel@sholland.org>
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1581951514.3.4@crapouillou.net>
+In-Reply-To: <49fa7c7a-59c2-688e-6c6d-cfdd8bc3fd32@linaro.org>
+References: <cover.1581880851.git.hns@goldelico.com>
+        <40134efb901b83bb1b6bc64af0b312756459c31c.1581880851.git.hns@goldelico.com>
+        <49fa7c7a-59c2-688e-6c6d-cfdd8bc3fd32@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xaMk4Io5JJdpkLEb"
-Content-Disposition: inline
-In-Reply-To: <20200217064250.15516-4-samuel@sholland.org>
-X-Cookie: There was a phone call for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Srinivas,
 
---xaMk4Io5JJdpkLEb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Feb 17, 2020 at 12:42:19AM -0600, Samuel Holland wrote:
+Le lun., f=E9vr. 17, 2020 at 11:36, Srinivas Kandagatla=20
+<srinivas.kandagatla@linaro.org> a =E9crit :
+>=20
+>=20
+> On 16/02/2020 19:20, H. Nikolaus Schaller wrote:
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>=20
+>> This patch brings support for the JZ4780 efuse. Currently it only=20
+>> exposes
+>> a read only access to the entire 8K bits efuse memory and nvmem=20
+>> cells.
+>>=20
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan=20
+>> <prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> (Signed-off-by: Paul Cercueil <paul@crapouillou.net>)
+>> ---
+>>   drivers/nvmem/Kconfig        |  10 ++
+>>   drivers/nvmem/Makefile       |   2 +
+>>   drivers/nvmem/jz4780-efuse.c | 249=20
+>> +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 261 insertions(+)
+>>   create mode 100644 drivers/nvmem/jz4780-efuse.c
+>>=20
+>=20
+> This patch along with 2/9 should be merged into single patch.
+> Also please make sure you run checkpatch.pl before sending!
+>=20
+>> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+>> index 35efab1ba8d9..10f8e08f5e31 100644
+>> --- a/drivers/nvmem/Kconfig
+>> +++ b/drivers/nvmem/Kconfig
+>> @@ -55,6 +55,16 @@ config NVMEM_IMX_OCOTP_SCU
+>>   	  This is a driver for the SCU On-Chip OTP Controller (OCOTP)
+>>   	  available on i.MX8 SoCs.
+>>   =7F+config JZ4780_EFUSE
+>> +	tristate "JZ4780 EFUSE Memory Support"
+>> +	depends on MACH_JZ4780 || COMPILE_TEST
+>=20
+> what is that this driver depends on MACH_JZ4780 board?
+>=20
+>=20
+>> +	depends on HAS_IOMEM
+>> +	help
+>> +	  Say Y here to include support for JZ4780 efuse memory found on
+>> +	  all JZ4780 SoC based devices.
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called nvmem_jz4780_efuse.
+>> +
+>>   config NVMEM_LPC18XX_EEPROM
+>>   	tristate "NXP LPC18XX EEPROM Memory Support"
+>>   	depends on ARCH_LPC18XX || COMPILE_TEST
+>> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+>> index 6b466cd1427b..65a268d17807 100644
+>> --- a/drivers/nvmem/Makefile
+>> +++ b/drivers/nvmem/Makefile
+>> @@ -18,6 +18,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP)	+=3D nvmem-imx-ocotp.o
+>>   nvmem-imx-ocotp-y		:=3D imx-ocotp.o
+>>   obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)	+=3D nvmem-imx-ocotp-scu.o
+>>   nvmem-imx-ocotp-scu-y		:=3D imx-ocotp-scu.o
+>> +obj-$(CONFIG_JZ4780_EFUSE)		+=3D nvmem_jz4780_efuse.o
+>> +nvmem_jz4780_efuse-y		:=3D jz4780-efuse.o
+>>   obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+=3D nvmem_lpc18xx_eeprom.o
+>>   nvmem_lpc18xx_eeprom-y	:=3D lpc18xx_eeprom.o
+>>   obj-$(CONFIG_NVMEM_LPC18XX_OTP)	+=3D nvmem_lpc18xx_otp.o
+>> diff --git a/drivers/nvmem/jz4780-efuse.c=20
+>> b/drivers/nvmem/jz4780-efuse.c
+>> new file mode 100644
+>> index 000000000000..ac03e1900ef9
+>> --- /dev/null
+>> +++ b/drivers/nvmem/jz4780-efuse.c
+>> @@ -0,0 +1,249 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * JZ4780 EFUSE Memory Support driver
+>> + *
+>> + * Copyright (c) 2017 PrasannaKumar Muralidharan=20
+>> <prasannatsmkumar@gmail.com>
+>> + * Copyright (c) 2020 H. Nikolaus Schaller <hns@goldelico.com>
+>> + */
+>> +
+>> +/*
+>> + * Currently supports JZ4780 efuse which has 8K programmable bit.
+>> + * Efuse is separated into seven segments as below:
+>> + *
+>> + *=20
+>> -----------------------------------------------------------------------
+>> + * | 64 bit | 128 bit | 128 bit | 3520 bit | 8 bit | 2296 bit |=20
+>> 2048 bit |
+>> + *=20
+>> -----------------------------------------------------------------------
+>> + *
+>> + * The rom itself is accessed using a 9 bit address line and an 8=20
+>> word wide bus
+>> + * which reads/writes based on strobes. The strobe is configured in=20
+>> the config
+>> + * register and is based on number of cycles of the bus clock.
+>> + *
+>> + * Driver supports read only as the writes are done in the Factory.
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/nvmem-provider.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>=20
+>=20
+>> +#include <linux/regmap.h>
+>> +#include <linux/timer.h>
+> ?? why do we need these two headers in this patch
+>=20
+>=20
+>> +
+>> +#define JZ_EFUCTRL			(0x0)	/* Control Register */
+>> +#define JZ_EFUCFG			(0x4)	/* Configure Register*/
+>> +#define JZ_EFUSTATE			(0x8)	/* Status Register */
+>> +#define JZ_EFUDATA(n)			(0xC + (n)*4)
+>> +
+>> +#define JZ_EFUSE_START_ADDR		0x200
+>> +
+>> +#define JZ_EFUSE_EFUCTRL_CS		BIT(30)
+>> +#define JZ_EFUSE_EFUCTRL_ADDR_MASK	0x1FF
+>> +#define JZ_EFUSE_EFUCTRL_ADDR_SHIFT	21
+>> +#define JZ_EFUSE_EFUCTRL_LEN_MASK	0x1F
+>> +#define JZ_EFUSE_EFUCTRL_LEN_SHIFT	16
+>> +#define JZ_EFUSE_EFUCTRL_PG_EN		BIT(15)
+>> +#define JZ_EFUSE_EFUCTRL_WR_EN		BIT(1)
+>> +#define JZ_EFUSE_EFUCTRL_RD_EN		BIT(0)
+>> +
+>> +#define JZ_EFUSE_EFUCFG_INT_EN		BIT(31)
+>> +#define JZ_EFUSE_EFUCFG_RD_ADJ_MASK	0xF
+>=20
+> consider using GENMASK for these masks here.
+>=20
+>> +#define JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT	20
+>> +#define JZ_EFUSE_EFUCFG_RD_STR_MASK	0xF
+>> +#define JZ_EFUSE_EFUCFG_RD_STR_SHIFT	16
+>> +#define JZ_EFUSE_EFUCFG_WR_ADJ_MASK	0xF
+>> +#define JZ_EFUSE_EFUCFG_WR_ADJ_SHIFT	12
+>> +#define JZ_EFUSE_EFUCFG_WR_STR_MASK	0xFFF
+>> +#define JZ_EFUSE_EFUCFG_WR_STR_SHIFT	0
+>> +
+>> +#define JZ_EFUSE_EFUSTATE_WR_DONE	BIT(1)
+>> +#define JZ_EFUSE_EFUSTATE_RD_DONE	BIT(0)
+>> +
+>> +struct jz4780_efuse {
+>> +	struct device *dev;
+>> +	void __iomem *iomem;
+>> +	struct clk *clk;
+>> +	unsigned int rd_adj;
+>> +	unsigned int rd_strobe;
+>> +};
+>> +
+>> +/* We read 32 byte chunks to avoid complexity in the driver. */
+>> +static int jz4780_efuse_read_32bytes(struct jz4780_efuse *efuse,=20
+>> char *buf,
+>> +		unsigned int addr)
+>> +{
+>> +	unsigned int tmp =3D 0;
+>> +	int i =3D 0;
+>=20
+> unnecessary initialization of both variables.
+>=20
+>> +	int timeout =3D 1000;
+>> +	int size =3D 32;
+>=20
+> better to #define this STRIDE/CHUNK size. this driver seems to use=20
+> this value in multiple places.
+>=20
+>> +
+>> +	/* 1. Set config register */
+>> +	tmp =3D readl(efuse->iomem + JZ_EFUCFG);
+>> +	tmp &=3D ~((JZ_EFUSE_EFUCFG_RD_ADJ_MASK <<=20
+>> JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT)
+>> +	| (JZ_EFUSE_EFUCFG_RD_STR_MASK << JZ_EFUSE_EFUCFG_RD_STR_SHIFT));
+>> +	tmp |=3D (efuse->rd_adj << JZ_EFUSE_EFUCFG_RD_ADJ_SHIFT)
+>> +	| (efuse->rd_strobe << JZ_EFUSE_EFUCFG_RD_STR_SHIFT);
+>=20
+> very odd indenting.
+>=20
+>> +	writel(tmp, efuse->iomem + JZ_EFUCFG);
+>> +
+>> +	/*
+>> +	 * 2. Set control register to indicate what to read data address,
+>> +	 * read data numbers and read enable.
+>> +	 */
+>> +	tmp =3D readl(efuse->iomem + JZ_EFUCTRL);
+>> +	tmp &=3D ~(JZ_EFUSE_EFUCFG_RD_STR_SHIFT
+>> +		| (JZ_EFUSE_EFUCTRL_ADDR_MASK << JZ_EFUSE_EFUCTRL_ADDR_SHIFT)
+>> +		| JZ_EFUSE_EFUCTRL_PG_EN | JZ_EFUSE_EFUCTRL_WR_EN
+>> +		| JZ_EFUSE_EFUCTRL_WR_EN);
+>> +
+>> +	/* Need to select CS bit if address accesses upper 4Kbits memory */
+>> +	if (addr >=3D (JZ_EFUSE_START_ADDR + 512))
+>> +		tmp |=3D JZ_EFUSE_EFUCTRL_CS;
+>> +
+>> +	tmp |=3D (addr << JZ_EFUSE_EFUCTRL_ADDR_SHIFT)
+>> +		| ((size - 1) << JZ_EFUSE_EFUCTRL_LEN_SHIFT)
+>> +		| JZ_EFUSE_EFUCTRL_RD_EN;
+>> +	writel(tmp, efuse->iomem + JZ_EFUCTRL);
+>> +
+>> +	/*
+>> +	 * 3. Wait status register RD_DONE set to 1 or EFUSE interrupted,
+>> +	 * software can read EFUSE data buffer 0 - 8 registers.
+>> +	 */
+>> +	do {
+>> +		tmp =3D readl(efuse->iomem + JZ_EFUSTATE);
+>> +		usleep_range(1000, 2000);
+>> +		if (timeout--)
+>> +			break;
+>> +	} while (!(tmp & JZ_EFUSE_EFUSTATE_RD_DONE));
+>> +
+>> +	if (timeout <=3D 0) {
+>> +		dev_err(efuse->dev, "Timed out while reading\n");
+>> +		return -EAGAIN;
+>> +	}
+>> +
+>> +	for (i =3D 0; i < (size / 4); i++)
+>> +		*((unsigned int *)(buf + i * 4))
+>=20
+> make "unsigned int *buf32" a local variable and use it here, makes it=20
+> much readable code.
+>=20
+>> +			 =3D readl(efuse->iomem + JZ_EFUDATA(i));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/* main entry point */
+>> +static int jz4780_efuse_read(void *context, unsigned int offset,
+>> +					void *val, size_t bytes)
+>> +{
+>> +	struct jz4780_efuse *efuse =3D context;
+>> +	int ret;
+>> +
+>> +	while (bytes > 0) {
+>> +		unsigned int start =3D offset & ~(32 - 1);
+>> +		unsigned chunk =3D min(bytes, (start + 32 - offset));
+>> +
+>> +		if (start =3D=3D offset && chunk =3D=3D 32) {
+>> +			ret =3D jz4780_efuse_read_32bytes(efuse, val, start);
+>> +			if (ret < 0)
+>> +				return ret;
+>> +
+>> +		} else {
+>> +			char buf[32];
+>> +			ret =3D jz4780_efuse_read_32bytes(efuse, buf, start);
+>> +			if (ret < 0)
+>> +				return ret;
+>> +
+>> +			memcpy(val, &buf[offset - start], chunk);
+>> +		}
+>> +
+>> +		val +=3D chunk;
+>> +		offset +=3D chunk;
+>> +		bytes -=3D chunk;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct nvmem_config jz4780_efuse_nvmem_config =3D {
+>> +	.name =3D "jz4780-efuse",
+>> +	.read_only =3D true,
+>=20
+> this value comes from device tree bindings, do we still need  to=20
+> specify this here?
 
-> Cc: stable@kernel.org
-> Fixes: ec4a95409d5c ("arm64: dts: allwinner: a64: add nodes necessary for analog sound support")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+I think its semantic is different - devicetree specifies that you want=20
+the nvmem to be readonly, this one specifies that the driver cannot do=20
+read-write anyway.
 
->  		codec: codec@1c22e00 {
->  			#sound-dai-cells = <0>;
-> -			compatible = "allwinner,sun8i-a33-codec";
-> +			compatible = "allwinner,sun50i-a64-codec";
+With that said, there is no .reg_write, so .read_only will be enforced=20
+to 'true' anyway, so it can be removed.
 
-This is an incompatible change in the ABI, it's going to break unless
-it's applied at exactly the same time as the matching kernel update
-adding the new compatible string.  That's not suitable for stable, you
-need to keep the old compatible as a fallback.
+-Paul
 
---xaMk4Io5JJdpkLEb
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+>> +	.size =3D 1024,
+>> +	.word_size =3D 1,
+>> +	.stride =3D 1,
+>> +	.owner =3D THIS_MODULE,
+>> +	.reg_read =3D jz4780_efuse_read,
+>> +};
+>> +
+>> +static int jz4780_efuse_probe(struct platform_device *pdev)
+>> +{
+>> +	struct nvmem_device *nvmem;
+>> +	struct jz4780_efuse *efuse;
+>> +	struct resource *res;
+>> +	unsigned long clk_rate;
+>> +	struct device *dev =3D &pdev->dev;
+>> +
+>> +	efuse =3D devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
+>> +	if (!efuse)
+>> +		return -ENOMEM;
+>> +
+>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	efuse->iomem =3D devm_ioremap(&pdev->dev, res->start,=20
+>> resource_size(res));
+>> +	if (IS_ERR(efuse->iomem))
+>> +		return PTR_ERR(efuse->iomem);
+>> +
+>> +	efuse->clk =3D devm_clk_get(&pdev->dev, "bus_clk");
+>> +	if (IS_ERR(efuse->clk))
+>> +		return PTR_ERR(efuse->clk);
+>=20
+> Who is enabling this clk?
+>=20
+>=20
+>> +
+>> +	clk_rate =3D clk_get_rate(efuse->clk);
+>> +	/*
+>> +	 * rd_adj and rd_strobe are 4 bit values
+>> +	 * bus clk period * (rd_adj + 1) > 6.5ns
+>> +	 * bus clk period * (rd_adj + 5 + rd_strobe) > 35ns
+>> +	 */
+>> +	efuse->rd_adj =3D (((6500 * (clk_rate / 1000000)) / 1000000) + 1) -=20
+>> 1;
+>> +	efuse->rd_strobe =3D ((((35000 * (clk_rate / 1000000)) / 1000000) +=20
+>> 1)
+>> +						- 5 - efuse->rd_adj);
+>> +
+>> +	if ((efuse->rd_adj > 0x1F) || (efuse->rd_strobe > 0x1F)) {
+>> +		dev_err(&pdev->dev, "Cannot set clock configuration\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	efuse->dev =3D dev;
+>> +
+>> +	jz4780_efuse_nvmem_config.dev =3D &pdev->dev;
+>> +	jz4780_efuse_nvmem_config.priv =3D efuse;
+>> +
+>> +	nvmem =3D nvmem_register(&jz4780_efuse_nvmem_config);
+>=20
+> devm variant here?
+>=20
+>=20
+>> +	if (IS_ERR(nvmem))
+>> +		return PTR_ERR(nvmem);
+>> +
+>> +	platform_set_drvdata(pdev, nvmem);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int jz4780_efuse_remove(struct platform_device *pdev)
+>> +{
+>> +	struct nvmem_device *nvmem =3D platform_get_drvdata(pdev);
+>> +
+>> +	nvmem_unregister(nvmem);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id jz4780_efuse_match[] =3D {
+>> +	{ .compatible =3D "ingenic,jz4780-efuse" },
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, jz4780_efuse_match);
+>> +
+>> +static struct platform_driver jz4780_efuse_driver =3D {
+>> +	.probe  =3D jz4780_efuse_probe,
+>> +	.remove =3D jz4780_efuse_remove,
+>> +	.driver =3D {
+>> +		.name =3D "jz4780-efuse",
+>> +		.of_match_table =3D jz4780_efuse_match,
+>> +	},
+>> +};
+>> +module_platform_driver(jz4780_efuse_driver);
+>> +
+>> +MODULE_AUTHOR("PrasannaKumar Muralidharan=20
+>> <prasannatsmkumar@gmail.com>");
+>> +MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+>> +MODULE_DESCRIPTION("Ingenic JZ4780 efuse driver");
+>> +MODULE_LICENSE("GPL v2");
+>>=20
 
------BEGIN PGP SIGNATURE-----
+=
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5KqbAACgkQJNaLcl1U
-h9CYUAf/ZCOyWpSkn3x5uej3JtTUW/4RmXdnFa/ZOH/PjJuGXBCc7m4ZbP2jo5t2
-2XdicNuPW5JUz9kmdxNzfeyUOYprNoheZyy/5i1u8EM9Br/zyszZFkMoApsLKSdF
-qPUhK51OvntU8eb4DFQAswJFw6HmKfGImygfRHvHSax37e5srjBSosR5ZeJv7lQO
-ZyP3iUjWXb9b8P/akkgxhQRpGkugDsrqx4oXSzKCzsj3kMpw6rE7yWXS9rQSVoaw
-amPYSjsE4prqOnOlHfR0/y+dU6HJGHfWIWZqeNIEXK+gf1flqLmqxlpwCNnFCtn0
-8rreEBr8qPilxVdhA7LpTMvLOCE8Jw==
-=uWDR
------END PGP SIGNATURE-----
-
---xaMk4Io5JJdpkLEb--
