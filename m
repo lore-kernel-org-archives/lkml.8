@@ -2,87 +2,101 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DFC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E6C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491F227BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5CB20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581951732;
+	bh=i3w6j1ZUqa4zQcrNEJCoUxstV7rhZ/PlDo4HaCcOZYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=arjtNy0iGG8erLymW2FBHgamnHeW5ekbRV6Jg94CKaaiT2SvT9FELHXKS3Cpx7r9r
+	 VhmWxc3qZARzbkphrNNX/P8oOscV1cmpf32qNFg7gARX5RXVfmoUkrptavInVG7e3R
+	 woYAQxLP1JmQBhoOYDvkogdz5kpVg7/1HfyE3XyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgBQPBH (ORCPT
+        id S1729405AbgBQPCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:01:07 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10632 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729315AbgBQPBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:01:07 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A2B23B6A8D864C6AB5DD;
-        Mon, 17 Feb 2020 23:01:01 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
- 23:00:53 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH v2] KVM: VMX: Add 'else' to split mutually exclusive case
-Date:   Mon, 17 Feb 2020 23:02:30 +0800
-Message-ID: <1581951750-17854-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 17 Feb 2020 10:02:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:36896 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729315AbgBQPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:02:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CD3730E;
+        Mon, 17 Feb 2020 07:02:10 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FF8C3F703;
+        Mon, 17 Feb 2020 07:02:09 -0800 (PST)
+Date:   Mon, 17 Feb 2020 15:02:08 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect
+ SND_SOC_DAIFMT_DSP_B
+Message-ID: <20200217150208.GG9304@sirena.org.uk>
+References: <20200217064250.15516-1-samuel@sholland.org>
+ <20200217064250.15516-6-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xjyYRNSh/RebjC6o"
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-6-samuel@sholland.org>
+X-Cookie: There was a phone call for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
 
-Each if branch in handle_external_interrupt_irqoff() is mutually
-exclusive. Add 'else' to make it clear and also avoid some unnecessary
-check.
+--xjyYRNSh/RebjC6o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
-v1->v2:
-add braces to all if branches
----
- arch/x86/kvm/vmx/vmx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+On Mon, Feb 17, 2020 at 12:42:21AM -0600, Samuel Holland wrote:
+> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
+> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
+> connected to AIF2, as well as by comparing with the BSP driver.
+>=20
+> Remove the DSP_B option, as it is not supported by the hardware.
+>=20
+> Cc: stable@kernel.org
+> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9a6664886f2e..a13368b2719c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6176,15 +6176,13 @@ static void handle_exception_nmi_irqoff(struct vcpu_vmx *vmx)
- 	vmx->exit_intr_info = vmcs_read32(VM_EXIT_INTR_INFO);
- 
- 	/* if exit due to PF check for async PF */
--	if (is_page_fault(vmx->exit_intr_info))
-+	if (is_page_fault(vmx->exit_intr_info)) {
- 		vmx->vcpu.arch.apf.host_apf_reason = kvm_read_and_reset_pf_reason();
--
- 	/* Handle machine checks before interrupts are enabled */
--	if (is_machine_check(vmx->exit_intr_info))
-+	} else if (is_machine_check(vmx->exit_intr_info)) {
- 		kvm_machine_check();
--
- 	/* We need to handle NMIs before interrupts are enabled */
--	if (is_nmi(vmx->exit_intr_info)) {
-+	} else if (is_nmi(vmx->exit_intr_info)) {
- 		kvm_before_interrupt(&vmx->vcpu);
- 		asm("int $2");
- 		kvm_after_interrupt(&vmx->vcpu);
--- 
-2.19.1
+This can only break things for existing systems using stable, if they
+haven't noticed a problem with DSP B they'll certainly notice failing to
+set up the DAI at all without it.
 
+--xjyYRNSh/RebjC6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Kqu8ACgkQJNaLcl1U
+h9BrrQf8Cpji+kb3X7isTpniyau/SbCQwZlUb8Csww/ottxImXAngZtFxVJ223Tb
+sRxaUEFcUFbKuAx1BOMaW70RQ6qQskiNlrtvd2GxnKYNpGcSk6TsMHY185iiTu2s
+EeozYIThsqRXhDCrv0hRArGLf5kBFM1OaSm9idhJJgfY8gjO+aBsPJqz8mp0gxWN
+3jGVVLz7aNTaOxwTl6CcTvMm+7xj4f1tsYTkC7jYTysRVrf6rXkV9KBL7euDjMrg
+JTa3RdwK0VAKZus8KiAecYZfI5K+F8Kj8Stk4R9GtMpIbVDR4Sxy5giVnrY+XVoF
+hq2TJ94ZfIBzhexsmd+tDPsvUDHHtQ==
+=eNti
+-----END PGP SIGNATURE-----
+
+--xjyYRNSh/RebjC6o--
