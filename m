@@ -2,107 +2,103 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E36C34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD281C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF2C207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC84207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgBQRws (ORCPT
+        id S1729760AbgBQSA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:52:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33695 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgBQRws (ORCPT
+        Mon, 17 Feb 2020 13:00:57 -0500
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:54228 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729021AbgBQSA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:52:48 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3kZW-0003nw-Ux; Mon, 17 Feb 2020 18:52:43 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3D4D31C20B2;
-        Mon, 17 Feb 2020 18:52:42 +0100 (CET)
-Date:   Mon, 17 Feb 2020 17:52:41 -0000
-From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/syscalls: Add prototypes for C syscall callbacks
-Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200123152754.20149-1-b.thiel@posteo.de>
-References: <20200123152754.20149-1-b.thiel@posteo.de>
+        Mon, 17 Feb 2020 13:00:56 -0500
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us2.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 46ED71C0064;
+        Mon, 17 Feb 2020 18:00:55 +0000 (UTC)
+Received: from [10.17.20.62] (10.17.20.62) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 17 Feb
+ 2020 18:00:51 +0000
+Subject: Re: [PATCH 21/30] sfc: Add missing annotation for
+ efx_ef10_try_update_nic_stats_vf()
+To:     Jules Irenge <jbi.octave@gmail.com>, <linux-kernel@vger.kernel.org>
+CC:     <boqun.feng@gmail.com>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:SFC NETWORK DRIVER" <netdev@vger.kernel.org>
+References: <0/30> <20200214204741.94112-1-jbi.octave@gmail.com>
+ <20200214204741.94112-22-jbi.octave@gmail.com>
+From:   Martin Habets <mhabets@solarflare.com>
+Message-ID: <6971228b-4c53-8a1b-da79-2d4d09d74df5@solarflare.com>
+Date:   Mon, 17 Feb 2020 18:00:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158196196194.13786.17938311473984803785.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+In-Reply-To: <20200214204741.94112-22-jbi.octave@gmail.com>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Originating-IP: [10.17.20.62]
+X-ClientProxiedBy: ukex01.SolarFlarecom.com (10.17.10.4) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25236.003
+X-TM-AS-Result: No-11.404500-8.000000-10
+X-TMASE-MatchedRID: VPleTT1nwdSB3CLPGH9KvB3Pziq4eLUf69aS+7/zbj+qvcIF1TcLYGVE
+        KJgtC5DLryC/oblCXPfrxBilORr2+Hl5ZPifj+hJboe6sMfg+k87IFMOvFEK2Ehcmj54ab4UyJN
+        a6DYLgM2XUzspP39qoCexqzGrj/vqYlldA0POS1IaPMGCcVm9DvngX/aL8PCN7m+YaQMNZJYG1W
+        3alEv3RuLzNWBegCW2RYvisGWbbS+3sNbcHjySQd0H8LFZNFG7bkV4e2xSge74hGXV5kW37qNPs
+        DcOLNvpnnZpAu91WemLrYoDLnc9AjZFEgw6u+Np
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--11.404500-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25236.003
+X-MDID: 1581962456-9U7MNgMnzMsI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On 14/02/2020 20:47, Jules Irenge wrote:
+> Sparse reports a warning at  efx_ef10_try_update_nic_stats_vf()
+> 
+> warning: context imbalance in  efx_ef10_try_update_nic_stats_vf()
+> 	 - unexpected unlock
+> 
+> The root cause is the missing annotation at
+> efx_ef10_try_update_nic_stats_vf()
+> Add the missing __must_hold(&efx->stats_lock) annotattion
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-Commit-ID:     99ce3255fddf08fca9249488793c9b5c909ff0ab
-Gitweb:        https://git.kernel.org/tip/99ce3255fddf08fca9249488793c9b5c909ff0ab
-Author:        Benjamin Thiel <b.thiel@posteo.de>
-AuthorDate:    Thu, 23 Jan 2020 16:27:54 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 17 Feb 2020 18:22:25 +01:00
+Thanks
 
-x86/syscalls: Add prototypes for C syscall callbacks
+Acked-by: Martin Habets <mhabets@solarflare.com>
 
-.. in order to fix a couple of -Wmissing-prototypes warnings.
-
-No functional change.
-
- [ bp: Massage commit message and drop newlines. ]
-
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200123152754.20149-1-b.thiel@posteo.de
----
- arch/x86/entry/common.c        | 1 +
- arch/x86/include/asm/syscall.h | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 9747876..ec167d8 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -34,6 +34,7 @@
- #include <asm/fpu/api.h>
- #include <asm/nospec-branch.h>
- #include <asm/io_bitmap.h>
-+#include <asm/syscall.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index 8db3fdb..d20ffc5 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -168,6 +168,11 @@ static inline int syscall_get_arch(struct task_struct *task)
- 		task->thread_info.status & TS_COMPAT)
- 		? AUDIT_ARCH_I386 : AUDIT_ARCH_X86_64;
- }
-+
-+void do_syscall_64(unsigned long nr, struct pt_regs *regs);
-+void do_int80_syscall_32(struct pt_regs *regs);
-+long do_fast_syscall_32(struct pt_regs *regs);
-+
- #endif	/* CONFIG_X86_32 */
- 
- #endif	/* _ASM_X86_SYSCALL_H */
+> ---
+>  drivers/net/ethernet/sfc/ef10.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+> index 52113b7529d6..b1102c7e814d 100644
+> --- a/drivers/net/ethernet/sfc/ef10.c
+> +++ b/drivers/net/ethernet/sfc/ef10.c
+> @@ -1820,6 +1820,7 @@ static size_t efx_ef10_update_stats_pf(struct efx_nic *efx, u64 *full_stats,
+>  }
+>  
+>  static int efx_ef10_try_update_nic_stats_vf(struct efx_nic *efx)
+> +	__must_hold(&efx->stats_lock)
+>  {
+>  	MCDI_DECLARE_BUF(inbuf, MC_CMD_MAC_STATS_IN_LEN);
+>  	struct efx_ef10_nic_data *nic_data = efx->nic_data;
+> 
