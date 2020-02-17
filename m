@@ -2,72 +2,212 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49767C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DCAC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C49F206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EBC206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j1XtmPns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgBQJuO (ORCPT
+        id S1729044AbgBQJuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:50:14 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33473 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgBQJuN (ORCPT
+        Mon, 17 Feb 2020 04:50:19 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:37451 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729031AbgBQJuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:50:13 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j3d2W-00011U-4w; Mon, 17 Feb 2020 10:50:08 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j3d2V-0003AA-9Q; Mon, 17 Feb 2020 10:50:07 +0100
-Date:   Mon, 17 Feb 2020 10:50:07 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS pins
- mux
-Message-ID: <20200217095007.sn7hqbqoqcv75ic3@pengutronix.de>
-References: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
- <1581931886-12173-2-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581931886-12173-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 17 Feb 2020 04:50:18 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581933018; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Lsidu8FELVi8a6NsOyVTuf6+rfQ9wx+zb1HtCaHLJhI=; b=j1XtmPnsySiDobt7t+JDTt+CgaKCo78qsTTnp27NBVWMZaaQpS8fjGl61YEhOfGFlwYExFhy
+ L+wd6HI+DdW9EGioYwYQjyFPs1dTqSznGV5rXwm+7+xcGjlyXvi/3UQ2WT76MCdafLUWYqHe
+ rTia9noy6xr37NZz22ifwicnKRI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a61cb.7f8e92d6f8b8-smtp-out-n03;
+ Mon, 17 Feb 2020 09:50:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0F5CBC43383; Mon, 17 Feb 2020 09:50:03 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD7A7C4479F;
+        Mon, 17 Feb 2020 09:49:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD7A7C4479F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+Date:   Mon, 17 Feb 2020 15:19:33 +0530
+Message-Id: <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
+References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:31:21PM +0800, Anson Huang wrote:
-> Some of UART RTS/CTS pins' DCE/DTE mux function are missing,
-> add them.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Uwe Kleine-K枚nig <u.kleine-koenig@pengutronix.de>
+Convert QSPI bindings to DT schema format using json-schema.
 
-Huh, this is not how I wrote my name :-)
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+---
+ .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 ---------
+ .../bindings/spi/qcom,spi-qcom-qspi.yaml           | 89 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
 
-Best regards
-Uwe
-
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+deleted file mode 100644
+index 1d64b61..0000000
+--- a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-Qualcomm Quad Serial Peripheral Interface (QSPI)
+-
+-The QSPI controller allows SPI protocol communication in single, dual, or quad
+-wire transmission modes for read/write access to slaves such as NOR flash.
+-
+-Required properties:
+-- compatible:	An SoC specific identifier followed by "qcom,qspi-v1", such as
+-		"qcom,sdm845-qspi", "qcom,qspi-v1"
+-- reg:		Should contain the base register location and length.
+-- interrupts:	Interrupt number used by the controller.
+-- clocks:	Should contain the core and AHB clock.
+-- clock-names:	Should be "core" for core clock and "iface" for AHB clock.
+-
+-SPI slave nodes must be children of the SPI master node and can contain
+-properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
+-
+-Example:
+-
+-	qspi: spi@88df000 {
+-		compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+-		reg = <0x88df000 0x600>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-		clock-names = "iface", "core";
+-		clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+-			 <&gcc GCC_QSPI_CORE_CLK>;
+-
+-		flash@0 {
+-			compatible = "jedec,spi-nor";
+-			reg = <0>;
+-			spi-max-frequency = <25000000>;
+-			spi-tx-bus-width = <2>;
+-			spi-rx-bus-width = <2>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+new file mode 100644
+index 0000000..977070a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Quad Serial Peripheral Interface (QSPI)
++
++maintainers:
++ - Mukesh Savaliya <msavaliy@codeaurora.org>
++ - Akash Asthana <akashast@codeaurora.org>
++
++description: |
++ The QSPI controller allows SPI protocol communication in single, dual, or quad
++ wire transmission modes for read/write access to slaves such as NOR flash.
++
++allOf:
++  - $ref: /spi/spi-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: qcom,sdm845-qspi
++      - const: qcom,qspi-v1
++
++  reg:
++    description: Base register location and length.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: iface
++      - const: core
++
++  clocks:
++    items:
++      - description: AHB clock
++      - description: QSPI core clock.
++
++  "#address-cells":
++     const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-names
++  - clocks
++  - "#address-cells"
++  - "#size-cells"
++
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc: soc@0 {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        qspi: spi@88df000 {
++            compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
++            reg = <0 0x88df000 0 0x600>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++            interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++            clock-names = "iface", "core";
++            clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
++                <&gcc GCC_QSPI_CORE_CLK>;
++
++                flash@0 {
++                    compatible = "jedec,spi-nor";
++                    reg = <0>;
++                    spi-max-frequency = <25000000>;
++                    spi-tx-bus-width = <2>;
++                    spi-rx-bus-width = <2>;
++                };
++        };
++    };
++
++...
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
