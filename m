@@ -2,114 +2,75 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C707EC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9599C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC0A2064C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:09:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="kQNDEUGj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+basvKj"
+	by mail.kernel.org (Postfix) with ESMTP id B8B1720718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581919917;
+	bh=Emlzzc2erw8Gutp6n3O2iO9K4KcYC3JCWbweTckIHkA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xx93AbCoORYQy01qXGpPbTHiDgqjo99E6Z9FWtqNx5QGnyhp1GCXT4cp7p4FvZa+J
+	 37oir3qa/q23EaPwcj0vQvPDujtqTKK4sNtSvnolh2Ejsi5o8YqtfaUcv7j4gXFK90
+	 +1qbfrhmTOoZm+si4VEl66S3LxENXzk+NiBO4bww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgBQGJN (ORCPT
+        id S1726124AbgBQGL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:09:13 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:37913 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbgBQGJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:09:13 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 005A950C;
-        Mon, 17 Feb 2020 01:09:11 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 17 Feb 2020 01:09:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=lzWvnnSAvszDDjSboHP99evSnh
-        TQIWH2Dw0zyXVLRx8=; b=kQNDEUGjcAUwdSTl2keQT54cQ1ODJzIGlHSxA/34Cp
-        sKNpP+FB/E54+FnwfGuLHKupUyRRcXc7QcSww6/sNbnhBnodgrbuWXbWOaqtoxcx
-        IHQCkqQ0mOK25xpc912arh+bcrNMCYsr2Uzp78kUv0OfasrGtWJRDrQvAmMEJq/O
-        zAme+b3HAUgoTs4fP3Azlk6kN8GJjxSJ0NzKR5FGBHITdNY7xnHJEvybwY8lppd7
-        9JHsGbdAYHCx9GxFCdEL4oLz6plI/fkqQZazSNZVHBWLxIKEls4TO5DwuhCd47F8
-        elsEtld9/L936yvL+GqFj2RMSrVGz6kE1z2j0SmxzzUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lzWvnnSAvszDDjSbo
-        HP99evSnhTQIWH2Dw0zyXVLRx8=; b=b+basvKj3oT1MeXlur2bpnXvouWW/abcf
-        SfUGqCZQTgsxHZnGOxE7k9V01rxyp0Dx/1ZG+rBuZ87aHiWg7lsFPwY6qA36aW7C
-        jaWsXPOqtLE2Ja75WEcZqDyNnea0rIko8TTt3+s2aiIH0L1lwIs1hRAw6gEFpcd/
-        aE1Tez5qYX4/0p3e5skv46zo3/yY9hO9suG7cESNNfexTnygsirQN2IO5e+1kqDk
-        h9XNKIA9ICfd0fR8M7xamNh6vt2it3cSdRxw2UNt0zHQBXV5Z9fv5cb7JH550kUb
-        HiEJBojfemjbI5hAckeyC6vztn/tjGuFmrObLxP1/h8WrFB7ZPrlg==
-X-ME-Sender: <xms:BC5KXn5mVWAhFXWLE0c7lv3dRb13JkS2bnHb7Y6XwmRcFz0qsMvINQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeehgdeludcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
-    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
-    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:BC5KXkdfzAuz8-iTRIAC09RnaB260csLavkkCDQIdAEekDX1umrgBw>
-    <xmx:BC5KXrazGnIiNzrEgXp4rpeIoBSJupk5SGk7Z3QmU5z4YsvHnDRYcA>
-    <xmx:BC5KXmHf6K2lzpjyf47M3qMbAqZad8UDrq84XFyQwbCM0qhZs0z8Ww>
-    <xmx:By5KXkyTWgMMHDbZ3vAHUR-XdyhYduHZEtZQ30qCKR_3p7ot3NbbLQ>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B48E8328005A;
-        Mon, 17 Feb 2020 01:09:07 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH] drm/sun4i: dsi: Avoid hotplug race with DRM driver bind
-Date:   Mon, 17 Feb 2020 00:09:06 -0600
-Message-Id: <20200217060906.15152-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 17 Feb 2020 01:11:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgBQGLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:11:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D08B620679;
+        Mon, 17 Feb 2020 06:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581919915;
+        bh=Emlzzc2erw8Gutp6n3O2iO9K4KcYC3JCWbweTckIHkA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z8PMynEbAw8Omnzwsxph7oqrZ4NWZsnwH1B9VK4q4SVCSwPxVS7NcOUx05kEfPtK6
+         VZUx2OjvLIaGy2d1YOKH2J9cln6MrmVj3QR2doqIjGqIhpkOlt24GwnfXBn7hm5/U9
+         oNQ0CLBdKMScHL6BWAOT4fIvffoTUu0EPW6x1VaI=
+Date:   Mon, 17 Feb 2020 07:11:51 +0100
+From:   'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
+To:     "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
+        <Motai.Hirotaka@aj.mitsubishielectric.co.jp>,
+        "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
+        <Mori.Takahiro@ab.mitsubishielectric.co.jp>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] staging: exfat: remove DOSNAMEs.
+Message-ID: <20200217061151.GA58638@kroah.com>
+References: <20200214033140.72339-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+ <20200214161810.GA3964830@kroah.com>
+ <TY1PR01MB1578EA0B95FE3C29D0F9A64190160@TY1PR01MB1578.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1578EA0B95FE3C29D0F9A64190160@TY1PR01MB1578.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to make sure that the DRM driver is fully registered before
-allowing the panel to be attached. Otherwise, we may trigger a hotplug
-event before sun4i_framebuffer_init() sets up drm->mode_config.funcs,
-causing a NULL pointer dereference.
+On Mon, Feb 17, 2020 at 01:54:07AM +0000, Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp wrote:
+> > I think you might need to rebase again, this patch doesn't apply at all to my tree :(
+> 
+> Thanks for your comments.
+> I'll try to rebase with 'staging-next' branch.
+> Is this correct?
 
-Fixes: 1a2703bd7356 ("drm/sun4i: dsi: Allow binding the host without a panel")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
+Yes it is, thanks.
 
-This fixes a bug in my previous patch series, that I didn't catch until
-it was already merged.
-
----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 9aa78c73873c..9cc1bb69fcda 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -970,7 +970,7 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
- 
- 	if (IS_ERR(panel))
- 		return PTR_ERR(panel);
--	if (!dsi->drm)
-+	if (!dsi->drm || !dsi->drm->registered)
- 		return -EPROBE_DEFER;
- 
- 	dsi->panel = panel;
--- 
-2.24.1
-
+greg k-h
