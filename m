@@ -2,162 +2,265 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA75C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4CDC3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB80C22464
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581935262;
-	bh=kNO1qKrVAPwz29d+xMtZD0Np2dGwp7T8QGZKGJRjlK4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vjL+1U8wkmVJx0m7C/Lj++b4YmmHiDr8SJ5mLRmJ0BitixrCUWsJZzfrXdDDe2dWu
-	 bXB1g7uD/Fda3wqXIjx2FVZK/vBy5GdOwTogDE565jo7LXLU8FVtwZxPwKuwuxhECl
-	 o76q6cxm9L3ixf1uVl4GCWJ8CNj8hgrFzDVImv5I=
+	by mail.kernel.org (Postfix) with ESMTP id CA1B620725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DFxW2z4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgBQK1l (ORCPT
+        id S1729352AbgBQK1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:27:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgBQK1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:27:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F147020702;
-        Mon, 17 Feb 2020 10:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581935260;
-        bh=kNO1qKrVAPwz29d+xMtZD0Np2dGwp7T8QGZKGJRjlK4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EOKE7bV8II4d/UwdcdMfXKYf/Rt3ZweWcR1ndGd4cJzyyfeuaIiKKPvCii6gxtipC
-         fh/Ug97XBfCs9jCRnfOLMuUw1B9f/qKMY4XI5lfMi+hA2M04ZMGTQjpKVvdBu/OFpK
-         iqNojxITZFDjVausH+Hfg0220qwuXrSIAoZ/45V0=
-Date:   Mon, 17 Feb 2020 19:27:35 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-Message-Id: <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
-In-Reply-To: <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
-        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
-        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Feb 2020 05:27:45 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:4803 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729335AbgBQK1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:27:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581935264; x=1613471264;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=oZnJcj23ZgAKIikbswlN6tGEpYxRqIysLxZZhWCaknk=;
+  b=DFxW2z4UvYyK2WYwGvW+zWqTMYbzdf1HWrdTkyaYRMgNkLCSFNwFfz97
+   IKBy1/xw0QAJwykpLCg49LZ1hz7wQeYGXnx9zw4cktCMAh3RBXAnFlcwu
+   GYfhMq1kFLYodtcgYZF/3If04JXXYNCWHB9tpJpyDIIRm23Qch7rF05kW
+   M=;
+IronPort-SDR: GazxHAAmHUukeku1pj7SYzlT6iaU8QitX8fXT+jZrrLOabChlTSrfYQ19t85UQf3YqkvjujREx
+ 2c/TMU8m8D9w==
+X-IronPort-AV: E=Sophos;i="5.70,452,1574121600"; 
+   d="scan'208";a="18057870"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 17 Feb 2020 10:27:28 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id C7E50A2E1B;
+        Mon, 17 Feb 2020 10:27:25 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 17 Feb 2020 10:27:25 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 17 Feb 2020 10:27:15 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 06/14] mm/damon: Implement access pattern recording
+Date:   Mon, 17 Feb 2020 11:25:36 +0100
+Message-ID: <20200217102544.29012-7-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200217102544.29012-1-sjpark@amazon.com>
+References: <20200217102544.29012-1-sjpark@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D30UWB004.ant.amazon.com (10.43.161.51) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 10:03:22 +0100
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+From: SeongJae Park <sjpark@amazon.de>
 
-> 
-> 
-> Le 16/02/2020 à 13:34, Masami Hiramatsu a écrit :
-> > On Sat, 15 Feb 2020 11:28:49 +0100
-> > Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> > 
-> >> Hi,
-> >>
-> >> Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
-> >>> Hi,
-> >>>
-> >>> On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
-> >>> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> >>>
-> >>>> When a program check exception happens while MMU translation is
-> >>>> disabled, following Oops happens in kprobe_handler() in the following
-> >>>> test:
-> >>>>
-> >>>> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
-> >>>
-> >>> Thanks for the report and patch. I'm not so sure about powerpc implementation
-> >>> but at where the MMU translation is disabled, can the handler work correctly?
-> >>> (And where did you put the probe on?)
-> >>>
-> >>> Your fix may fix this Oops, but if the handler needs special care, it is an
-> >>> option to blacklist such place (if possible).
-> >>
-> >> I guess that's another story. Here we are not talking about a place
-> >> where kprobe has been illegitimately activated, but a place where there
-> >> is a valid trap, which generated a valid 'program check exception'. And
-> >> kprobe was off at that time.
-> > 
-> > Ah, I got it. It is not a kprobe breakpoint, but to check that correctly,
-> > it has to know the address where the breakpoint happens. OK.
-> > 
-> >>
-> >> As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON,
-> >> a debugger breakpoint, a perf breakpoint, etc...) calls
-> >> kprobe_handler(), kprobe_handler() must be prepared to handle the case
-> >> where the MMU translation is disabled, even if probes are not supposed
-> >> to be set for functions running with MMU translation disabled.
-> > 
-> > Can't we check the MMU is disabled there (as same as checking the exception
-> > happened in user space or not)?
-> > 
-> 
-> What do you mean by 'there' ? At the entry of kprobe_handler() ?
-> 
-> That's what my patch does, it checks whether MMU is disabled or not. If 
-> it is, it converts the address to a virtual address.
-> 
-> Do you mean kprobe_handler() should bail out early as it does when the 
-> trap happens in user mode ?
+This commit implements the recording feature of DAMON. If this feature
+is enabled, DAMON writes the monitored access patterns in its binary
+format into a file which specified by the user. This is already able to
+be implemented by each user using the callbacks.  However, as the
+recording is expected to be used widely, this commit implements the
+feature in the DAMON, for more convenience and efficiency.
 
-Yes, that is what I meant.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 124 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 121 insertions(+), 3 deletions(-)
 
-> Of course we can do that, I don't know 
-> enough about kprobe to know if kprobe_handler() should manage events 
-> that happened in real-mode or just ignore them. But I tested adding an 
-> event on a function that runs in real-mode, and it (now) works.
-> 
-> So, what should we do really ?
-
-I'm not sure how the powerpc kernel runs in real mode.
-But clearly, at least kprobe event can not handle that case because
-it tries to access memory by probe_kernel_read(). Unless that function
-correctly handles the address translation, I want to prohibit kprobes
-on such address.
-
-So what I would like to see is, something like below.
-
-diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
-index 2d27ec4feee4..4771be152416 100644
---- a/arch/powerpc/kernel/kprobes.c
-+++ b/arch/powerpc/kernel/kprobes.c
-@@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
-        unsigned int *addr = (unsigned int *)regs->nip;
-        struct kprobe_ctlblk *kcb;
+diff --git a/mm/damon.c b/mm/damon.c
+index 90f61e378a61..3d46bf5e353a 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -76,6 +76,11 @@ struct damon_ctx {
+ 	struct timespec64 last_aggregation;
+ 	struct timespec64 last_regions_update;
  
--       if (user_mode(regs))
-+       if (user_mode(regs) || !(regs->msr & MSR_IR))
-                return 0;
++	unsigned char *rbuf;
++	unsigned int rbuf_len;
++	unsigned int rbuf_offset;
++	char *rfile_path;
++
+ 	struct task_struct *kdamond;
+ 	bool kdamond_stop;
+ 	spinlock_t kdamond_lock;
+@@ -89,6 +94,8 @@ struct damon_ctx {
+ 	void (*aggregate_cb)(struct damon_ctx *context);
+ };
  
-        /*
-
-
-Thank you,
-
++#define MAX_RFILE_PATH_LEN	256
++
+ /* Get a random number in [l, r) */
+ #define damon_rand(ctx, l, r) (l + prandom_u32_state(&ctx->rndseed) % (r - l))
+ 
+@@ -550,16 +557,81 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
+ }
+ 
+ /*
+- * Reset the aggregated monitoring results
++ * Flush the content in the result buffer to the result file
++ */
++static void damon_flush_rbuffer(struct damon_ctx *ctx)
++{
++	ssize_t sz;
++	loff_t pos;
++	struct file *rfile;
++
++	while (ctx->rbuf_offset) {
++		pos = 0;
++		rfile = filp_open(ctx->rfile_path, O_CREAT | O_RDWR | O_APPEND,
++				0644);
++		if (IS_ERR(rfile)) {
++			pr_err("Cannot open the result file %s\n",
++					ctx->rfile_path);
++			return;
++		}
++
++		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
++		filp_close(rfile, NULL);
++
++		ctx->rbuf_offset -= sz;
++	}
++}
++
++/*
++ * Write a data into the result buffer
++ */
++static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
++{
++	if (!ctx->rbuf_len || !ctx->rbuf)
++		return;
++	if (ctx->rbuf_offset + size > ctx->rbuf_len)
++		damon_flush_rbuffer(ctx);
++
++	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
++	ctx->rbuf_offset += size;
++}
++
++/*
++ * Flush the aggregated monitoring results to the result buffer
++ *
++ * Stores current tracking results to the result buffer and reset 'nr_accesses'
++ * of each regions.  The format for the result buffer is as below:
++ *
++ *   <time> <number of tasks> <array of task infos>
++ *
++ *   task info: <pid> <number of regions> <array of region infos>
++ *   region info: <start address> <end address> <nr_accesses>
+  */
+ static void kdamond_flush_aggregated(struct damon_ctx *c)
+ {
+ 	struct damon_task *t;
+-	struct damon_region *r;
++	struct timespec64 now;
++	unsigned int nr;
++
++	ktime_get_coarse_ts64(&now);
++
++	damon_write_rbuf(c, &now, sizeof(struct timespec64));
++	nr = nr_damon_tasks(c);
++	damon_write_rbuf(c, &nr, sizeof(nr));
+ 
+ 	damon_for_each_task(c, t) {
+-		damon_for_each_region(r, t)
++		struct damon_region *r;
++
++		damon_write_rbuf(c, &t->pid, sizeof(t->pid));
++		nr = nr_damon_regions(t);
++		damon_write_rbuf(c, &nr, sizeof(nr));
++		damon_for_each_region(r, t) {
++			damon_write_rbuf(c, &r->vm_start, sizeof(r->vm_start));
++			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
++			damon_write_rbuf(c, &r->nr_accesses,
++					sizeof(r->nr_accesses));
+ 			r->nr_accesses = 0;
++		}
+ 	}
+ }
+ 
+@@ -834,6 +906,7 @@ static int kdamond_fn(void *data)
+ 
+ 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
+ 	}
++	damon_flush_rbuffer(ctx);
+ 	damon_for_each_task(ctx, t) {
+ 		damon_for_each_region_safe(r, next, t)
+ 			damon_destroy_region(r);
+@@ -912,6 +985,51 @@ static int damon_set_pids(struct damon_ctx *ctx,
+ 	return 0;
+ }
+ 
++/*
++ * Set attributes for the recording
++ *
++ * ctx		target kdamond context
++ * rbuf_len	length of the result buffer
++ * rfile_path	path to the monitor result files
++ *
++ * Setting 'rbuf_len' 0 disables recording.
++ *
++ * This function should not be called while the kdamond is running.
++ *
++ * Returns 0 on success, negative error code otherwise.
++ */
++static int damon_set_recording(struct damon_ctx *ctx,
++				unsigned int rbuf_len, char *rfile_path)
++{
++	size_t rfile_path_len;
++
++	if (rbuf_len > 4 * 1024 * 1024) {
++		pr_err("too long (>%d) result buffer length\n",
++				4 * 1024 * 1024);
++		return -EINVAL;
++	}
++	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
++	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
++		pr_err("too long (>%d) result file path %s\n",
++				MAX_RFILE_PATH_LEN, rfile_path);
++		return -EINVAL;
++	}
++	ctx->rbuf_len = rbuf_len;
++	kfree(ctx->rbuf);
++	kfree(ctx->rfile_path);
++	if (!rbuf_len)
++		return 0;
++
++	ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
++	if (!ctx->rbuf)
++		return -ENOMEM;
++	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
++	if (!ctx->rfile_path)
++		return -ENOMEM;
++	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
++	return 0;
++}
++
+ /*
+  * Set attributes for the monitoring
+  *
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
