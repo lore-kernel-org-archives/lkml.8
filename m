@@ -2,123 +2,152 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30EBC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1C7C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA8720725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnZsI0bb"
+	by mail.kernel.org (Postfix) with ESMTP id 7CBDE2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgBQIIx (ORCPT
+        id S1727994AbgBQII4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:08:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56625 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727469AbgBQIIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:08:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581926931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EtqkCjqdRXLuRh9VlLNSDW1ljo1S6L5c70FnhGzTNhM=;
-        b=OnZsI0bblNvbolzL7YFuQHX1bVDzFfhZLCjoJMhn2h04wBrc8aizDZRisYJbAnhTU2uBut
-        jss2u6/QrCseAPirZzvKyJfsmZ1ltLSmuhZI8Mmt0CGg5DZKSrFvDhfbKYdSefJGDEagFe
-        ujAyTeo7WPSO65GJq5qgyKF/ucBkg4M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-9Nx8pL2hOKaLfoXLO9UU9Q-1; Mon, 17 Feb 2020 03:08:48 -0500
-X-MC-Unique: 9Nx8pL2hOKaLfoXLO9UU9Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 562D0107ACC4;
-        Mon, 17 Feb 2020 08:08:45 +0000 (UTC)
-Received: from carbon (ovpn-200-41.brq.redhat.com [10.40.200.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6396C1001B09;
-        Mon, 17 Feb 2020 08:08:33 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 09:08:31 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
-        lorenzo@kernel.org, toke@redhat.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
+        Mon, 17 Feb 2020 03:08:56 -0500
+Received: from mga04.intel.com ([192.55.52.120]:21868 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727469AbgBQIIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:08:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:08:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
+   d="scan'208";a="268327753"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Feb 2020 00:08:53 -0800
+Received: from [10.125.252.180] (abudanko-mobl.ccr.corp.intel.com [10.125.252.180])
+        by linux.intel.com (Postfix) with ESMTP id 3FB5158060A;
+        Mon, 17 Feb 2020 00:08:47 -0800 (PST)
+Subject: [PATCH v7 05/12] drm/i915/perf: open access for CAP_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
-        brouer@redhat.com
-Subject: Re: [PATCH net-next v2] net: page_pool: API cleanup and comments
-Message-ID: <20200217090831.56de425e@carbon>
-In-Reply-To: <20200217074608.GA139819@apalos.home>
-References: <20200217062850.133121-1-ilias.apalodimas@linaro.org>
-        <20200217084133.1a67ae63@carbon>
-        <20200217074608.GA139819@apalos.home>
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <8b408c10-9bb0-4b08-8681-93c0f4a1132e@linux.intel.com>
+Date:   Mon, 17 Feb 2020 11:08:46 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 09:46:08 +0200
-Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
 
-> On Mon, Feb 17, 2020 at 08:41:33AM +0100, Jesper Dangaard Brouer wrote:
-> > On Mon, 17 Feb 2020 08:28:49 +0200
-> > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> >   
-> > > diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-> > > index cfbed00ba7ee..7c1f23930035 100644
-> > > --- a/include/net/page_pool.h
-> > > +++ b/include/net/page_pool.h
-> > > @@ -162,39 +162,33 @@ static inline void page_pool_use_xdp_mem(struct page_pool *pool,
-> > >  }
-> > >  #endif
-> > >  
-> > > -/* Never call this directly, use helpers below */
-> > > -void __page_pool_put_page(struct page_pool *pool, struct page *page,
-> > > -			  unsigned int dma_sync_size, bool allow_direct);
-> > > +void page_pool_release_page(struct page_pool *pool, struct page *page);
-> > >  
-> > > -static inline void page_pool_put_page(struct page_pool *pool,
-> > > -				      struct page *page, bool allow_direct)
-> > > +/* If the page refcnt == 1, this will try to recycle the page.
-> > > + * if PP_FLAG_DMA_SYNC_DEV is set, it will try to sync the DMA area for
-> > > + * the configured size min(dma_sync_size, pool->max_len).
-> > > + * If the page refcnt != page will be returned  
-> > 
-> > Is this last comment line fully formed?  
-> 
-> Yes, but that dosen't mena it makes sense!
-> Maybe i should switch the last sentence to sometning like:
-> "If the page refcnt != 1, page will be returned to memory subsystem" ?
+Open access to i915_perf monitoring for CAP_PERFMON privileged process.
+Providing the access under CAP_PERFMON capability singly, without the
+rest of CAP_SYS_ADMIN credentials, excludes chances to misuse the
+credentials and makes operation more secure.
 
-Yes, that sounds better.
+CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
 
+For backward compatibility reasons access to i915_events subsystem
+remains open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN
+usage for secure i915_events monitoring is discouraged with respect to
+CAP_PERFMON capability.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index 0f556d80ba36..a3f32bd0aa47 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -3378,10 +3378,10 @@ i915_perf_open_ioctl_locked(struct i915_perf *perf,
+ 	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
+ 	 * we check a dev.i915.perf_stream_paranoid sysctl option
+ 	 * to determine if it's ok to access system wide OA counters
+-	 * without CAP_SYS_ADMIN privileges.
++	 * without CAP_PERFMON or CAP_SYS_ADMIN privileges.
+ 	 */
+ 	if (privileged_op &&
+-	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	    i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to open i915 perf stream\n");
+ 		ret = -EACCES;
+ 		goto err_ctx;
+@@ -3574,9 +3574,8 @@ static int read_properties_unlocked(struct i915_perf *perf,
+ 			} else
+ 				oa_freq_hz = 0;
+ 
+-			if (oa_freq_hz > i915_oa_max_sample_rate &&
+-			    !capable(CAP_SYS_ADMIN)) {
+-				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
++			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
++				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_PERFMON or CAP_SYS_ADMIN privileges\n",
+ 					  i915_oa_max_sample_rate);
+ 				return -EACCES;
+ 			}
+@@ -3997,7 +3996,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
+ 		return -EACCES;
+ 	}
+@@ -4144,7 +4143,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
+ 		return -EACCES;
+ 	}
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.20.1
+
 
