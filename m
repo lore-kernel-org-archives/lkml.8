@@ -2,92 +2,111 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D924C761A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFCFC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0FF20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFA520725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjudUUl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgBQMDU (ORCPT
+        id S1729324AbgBQMFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:03:20 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:34277 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729000AbgBQMDU (ORCPT
+        Mon, 17 Feb 2020 07:05:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34319 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729144AbgBQMFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:03:20 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Feb 2020 17:31:47 +0530
-Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 17 Feb 2020 17:31:35 +0530
-Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
-        id B4E55216B6; Mon, 17 Feb 2020 17:31:34 +0530 (IST)
-From:   Mansur Alisha Shaik <mansur@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, mansur@codeaurora.org
-Subject: [PATCH] [PATCH] venus: core: remove CNOC voting while device suspend
-Date:   Mon, 17 Feb 2020 17:31:31 +0530
-Message-Id: <1581940891-2376-1-git-send-email-mansur@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Feb 2020 07:05:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so9034463pgi.1;
+        Mon, 17 Feb 2020 04:05:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E4kMIrPNCiyRmgWZhxYZuFBKw4V0voF4y3zqsgP+Bx8=;
+        b=AjudUUl8bP457vmLEn8jzTV/8BjAFYLhRqQXTc79xuDnZY1eo3TRrvzB2YGEMbvLT7
+         UIv4Hhl2OEVYIfYUWECPHSVBKs2rkqRl+v8qd0QPTlEUYCoMxs3BZXaCCV7htJir9cSY
+         P/kY0eSDVSH+iALQRmfCw3WMbZMGTo4mQC9tEB8sy7rhWRG3A+4265uZVtAFCkzD21Ah
+         9Aoi5xP2qvwE4XSzkGgH1fn6TcBfVX2C/aBtOVd7eDyB9rObsZM2boT3jLVEgvXN/Nbq
+         DIo9gfPWLL/Yh5BE6QnzQL4WTrwlJ/DOUhRyBuVqHwTaWEiDf9CJ4PA1Bug15bVIDudS
+         pCYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E4kMIrPNCiyRmgWZhxYZuFBKw4V0voF4y3zqsgP+Bx8=;
+        b=a2uglcqfdm/eigt+XRKtLz7M5tWe5RfHlKci6SQr4zEXEwC4uAkMLj68yAtP1psmGS
+         /2ypQWu8W5X1q41EmxwZZRrgLyxkuoC3IteQ0yvZx7Wslw/sbwgc3q7JHWj8AIGBIoMG
+         AGDA5c0F976GowPxrKZCX3VGU/TorpJuL2fcJph05ZdfaczMVTWbu8VyYB+AeHrYbBvQ
+         vn+DAhdpt4rTJiLTVcxdkvyvDOOqGAgMRZ6pa62kmspDlQGsKGi0sqtHEEi6+mWNbWwg
+         5GtTX5UUFnyeUmJ1hJrOK2WkUNsDhkBK1FJHk0RZGDHILch3CaLL1/eEm04/JTYIMkXn
+         6HOQ==
+X-Gm-Message-State: APjAAAW4/HO/39eJZkAOd7qo3WkSvUau8Du6ubmdmXfidXfqHGCEdTJA
+        QKJO/2cVgCBwWLwQtKN39g==
+X-Google-Smtp-Source: APXvYqyDFaAFJ2xtas+m18JCGS6zRjMUeJs00Ho6bHth9PbfxctixNvC0pC7ga6HGg9pYbnN4j/oyA==
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr19422318pjv.137.1581941134218;
+        Mon, 17 Feb 2020 04:05:34 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fe92:14b2:4950:fe83:57e])
+        by smtp.gmail.com with ESMTPSA id d2sm377070pjv.18.2020.02.17.04.05.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Feb 2020 04:05:33 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Mon, 17 Feb 2020 17:35:25 +0530
+To:     Sven Eckelmann <sven@narfation.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
+        davem@davemloft.net, b.a.t.m.a.n@lists.open-mesh.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] net: batman-adv: Use built-in RCU list checking
+Message-ID: <20200217120524.GA12888@madhuparna-HP-Notebook>
+References: <20200216144718.2841-1-madhuparnabhowmik10@gmail.com>
+ <1634394.jP7ydfi60B@sven-edge>
+ <20200216155243.GB4542@madhuparna-HP-Notebook>
+ <14125758.fD4hS3u3Vl@sven-edge>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14125758.fD4hS3u3Vl@sven-edge>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-video driver is voting for CNOC during probe and not clear
-while device suspend. Because of which XO shutdown is
-happing(BCM42: VALID: 0x1 VOTE_X: 0x0000 VOTE_Y: 0x0004).
+On Sun, Feb 16, 2020 at 05:17:36PM +0100, Sven Eckelmann wrote:
+> On Sunday, 16 February 2020 16:52:44 CET Madhuparna Bhowmik wrote:
+> [...]
+> > > I understand this part. I was asking how you've identified them. Did you use 
+> > > any tool for that? coccinelle, sparse, ...
+> > 
+> > Not really, I did it manually by inspecting each occurence.
+> 
+> In that case, I don't understand why you didn't convert the occurrences from 
+> hlist_for_each_entry_rcu to hlist_for_each_entry [1]. Because a manual
+> inspection should have noticed that there will always be the lock around
+> these ones.
+>
+Hi Sven,
+I have been working on similar issues (passing cond argument to
+list_for_each_entry_Rcu()). That's why may be I didn't notice that in
+this case rcu variant is not required.
+Thank you for taking a closer look and fixing it the right way.
 
-So, clearing CNOC voting while device suspend.
+Regards,
+Madhuparna
 
-Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
----
- drivers/media/platform/qcom/venus/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> KInd regards,
+> 	Sven
+> 
+> [1] https://www.kernel.org/doc/html/v5.6-rc1/RCU/whatisRCU.html#analogy-with-reader-writer-locking
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index e7995cb..153effe 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -244,10 +244,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
--	if (ret)
--		return ret;
--
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
- 		return ret;
-@@ -353,6 +349,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, 0);
-+	if (ret)
-+		return ret;
-+
- 	if (pm_ops->core_power)
- 		ret = pm_ops->core_power(dev, POWER_OFF);
- 
-@@ -371,6 +371,10 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 			return ret;
- 	}
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
-+	if (ret)
-+		return ret;
-+
- 	return hfi_core_resume(core, false);
- }
- 
--- 
-2.7.4
 
