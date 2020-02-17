@@ -2,171 +2,400 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A941EC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82409C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA4320718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CF220718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:16:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWGzk/4p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgBQIPR (ORCPT
+        id S1728075AbgBQIQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:15:17 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:51860 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbgBQIPR (ORCPT
+        Mon, 17 Feb 2020 03:16:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40853 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgBQIQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:15:17 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01H8F432028939, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01H8F432028939
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Feb 2020 16:15:04 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 17 Feb 2020 16:15:03 +0800
-Received: from localhost.localdomain (172.21.83.110) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 17 Feb 2020 16:15:03 +0800
-From:   <max.chou@realtek.com>
-To:     <marcel@holtmann.org>
-CC:     <johan.hedberg@gmail.com>, <linux-bluetooth@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <alex_lu@realsil.com.cn>,
-        <hildawu@realtek.com>, <kidman@realtek.com>
-Subject: [PATCH v2] Bluetooth: hci_h5: btrtl: Add support for RTL8822C
-Date:   Mon, 17 Feb 2020 16:14:55 +0800
-Message-ID: <20200217081455.30938-1-max.chou@realtek.com>
+        Mon, 17 Feb 2020 03:16:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so17312437wmi.5;
+        Mon, 17 Feb 2020 00:16:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9uLUugWy0nGXkKP5RPbYs3NqKOIPMtzei6MBCm1JqIQ=;
+        b=BWGzk/4pZB79fWtZ1VZDVDgV7HCqyjQ0X6+Fh/sIYpGEJrYGQ6SgkHuyptGK31QOGK
+         1r/uUWIrWFBlZXgS39XK7zaOmhN46d5J3OCiIBj5BTAf6SnbO3w5O9GyU2MR3yayzl4l
+         GM0g6LoR/ykQ6YobfZTGE2IXnrYiou/bkaqUBlT/62dNUP/o2TGzYxY96P/zwZdJCqxl
+         S9mmFogqoK5o0DzEXzTL+1gaugbtMWCs+aM8WunxVe2uv3wmb9O5c8kyLyzIqcyrPuUK
+         5XVqGWkMSuGiOx3V921aBywpPe7YzXNptFeQB/XTxWvkeAXX2A6g6Hj5mRUg2V/62e9O
+         qcWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9uLUugWy0nGXkKP5RPbYs3NqKOIPMtzei6MBCm1JqIQ=;
+        b=UrUfLvmPAyfIizbkMRk5ZawTc1x2YYkLbIT9XnlEr1u1GjBS4jNSd8zIQi3Jc0V/ZC
+         A6aRa7iV9V+oGpU1+WcJ2AwAbjIFksItEqVejb5IN/x8vlvoMOOiGGJQXOVCiLH8FvO7
+         YcmK1nXO5N3k1WMEf9QugCyt/KNyYPrTd6tChJgIIPy4yBpzLh7VvNTDJe4E3WSN6Nan
+         jjYJGa7D4JcRtVUR0hMPchjweOkk4wb33ibbmP7aq5WPMcaRYN4UM3gOsEvwFIE8lw8x
+         4YNkjqzO2VdrOtpJmEbQdsb7sbnURhPOdzFAIpAk0lPvIol+hEj2ForgycPuyVjM3UKm
+         uYWw==
+X-Gm-Message-State: APjAAAW/agfzSf4gYXPK070c2h912FTyCzxCGS+R/80LaCtdzt1iOnZV
+        pZ1bPClFJ1c2d22ghSBAxcw=
+X-Google-Smtp-Source: APXvYqzjCb4cE/OO6MkYUgMpwVYulYTKv4oChd0SeZsBJoeey/wkAq1qMTxsaEAU5xFs6vSSOG7/LA==
+X-Received: by 2002:a7b:c147:: with SMTP id z7mr20630621wmi.168.1581927372401;
+        Mon, 17 Feb 2020 00:16:12 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:3888:da00:b474:2167:8661:27cf])
+        by smtp.gmail.com with ESMTPSA id u4sm19453348wrt.37.2020.02.17.00.16.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 00:16:11 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Pat Gefre <pfg@sgi.com>, Christoph Hellwig <hch@lst.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] tty/serial: cleanup after ioc*_serial driver removal
+Date:   Mon, 17 Feb 2020 09:15:58 +0100
+Message-Id: <20200217081558.10266-1-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.21.83.110]
-X-ClientProxiedBy: RTEXMB03.realtek.com.tw (172.21.6.96) To
- RTEXMB03.realtek.com.tw (172.21.6.96)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Chou <max.chou@realtek.com>
+Commit 9c860e4cf708 ("tty/serial: remove the ioc3_serial driver") and
+commit a017ef17cfd8 ("tty/serial: remove the ioc4_serial driver") removed
+the ioc{3,4}_serial driver, but missed some files.
 
-Add new compatible and FW loading support for RTL8822C.
+Fortunately, ./scripts/get_maintainer.pl --self-test complains:
 
-Signed-off-by: Max Chou <max.chou@realtek.com>
+  warning: no file matches F: drivers/tty/serial/ioc?_serial.c
+
+The driver is gone, so remove the other obsolete files and maintainer
+entry as well.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
-Changes in v2:
-- Separate the code description for ACPI and OF
-- Note that forgiving my less experience, I can not find bt3wire.c from the
-upstream. I just find hci_h5.c can support Realtek Bluetooth controller,
-so I modify the code here for new chip support.
----
- drivers/bluetooth/Kconfig  |  2 +-
- drivers/bluetooth/btrtl.c  | 12 ++++++++++++
- drivers/bluetooth/hci_h5.c | 19 +++++++++++++++++++
- 3 files changed, 32 insertions(+), 1 deletion(-)
+Christoph, please ack. Tony, please pick this patch.
+applies cleanly on 5.6-rc2 and next-20200217
+only sanity-grep for filenames and make htmldocs, no compile testing
 
-diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-index f7aa2dc1ff85..052020b07e56 100644
---- a/drivers/bluetooth/Kconfig
-+++ b/drivers/bluetooth/Kconfig
-@@ -211,7 +211,7 @@ config BT_HCIUART_RTL
- 	depends on BT_HCIUART
- 	depends on BT_HCIUART_SERDEV
- 	depends on GPIOLIB
--	depends on ACPI
-+	depends on (ACPI || SERIAL_DEV_CTRL_TTYPORT)
- 	select BT_HCIUART_3WIRE
- 	select BT_RTL
- 	help
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 577cfa3329db..67f4bc21e7c5 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -136,6 +136,18 @@ static const struct id_table ic_id_table[] = {
- 	  .fw_name  = "rtl_bt/rtl8761a_fw.bin",
- 	  .cfg_name = "rtl_bt/rtl8761a_config" },
+ Documentation/ia64/index.rst  |   1 -
+ Documentation/ia64/serial.rst | 165 ----------------------------------
+ MAINTAINERS                   |   8 --
+ include/linux/ioc3.h          |  93 -------------------
+ 4 files changed, 267 deletions(-)
+ delete mode 100644 Documentation/ia64/serial.rst
+ delete mode 100644 include/linux/ioc3.h
+
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
+index 0436e1034115..171e68725eea 100644
+--- a/Documentation/ia64/index.rst
++++ b/Documentation/ia64/index.rst
+@@ -14,5 +14,4 @@ IA-64 Architecture
+    fsys
+    irq-redir
+    mca
+-   serial
+    xen
+diff --git a/Documentation/ia64/serial.rst b/Documentation/ia64/serial.rst
+deleted file mode 100644
+index 1de70c305a79..000000000000
+--- a/Documentation/ia64/serial.rst
++++ /dev/null
+@@ -1,165 +0,0 @@
+-==============
+-Serial Devices
+-==============
+-
+-Serial Device Naming
+-====================
+-
+-    As of 2.6.10, serial devices on ia64 are named based on the
+-    order of ACPI and PCI enumeration.  The first device in the
+-    ACPI namespace (if any) becomes /dev/ttyS0, the second becomes
+-    /dev/ttyS1, etc., and PCI devices are named sequentially
+-    starting after the ACPI devices.
+-
+-    Prior to 2.6.10, there were confusing exceptions to this:
+-
+-	- Firmware on some machines (mostly from HP) provides an HCDP
+-	  table[1] that tells the kernel about devices that can be used
+-	  as a serial console.  If the user specified "console=ttyS0"
+-	  or the EFI ConOut path contained only UART devices, the
+-	  kernel registered the device described by the HCDP as
+-	  /dev/ttyS0.
+-
+-	- If there was no HCDP, we assumed there were UARTs at the
+-	  legacy COM port addresses (I/O ports 0x3f8 and 0x2f8), so
+-	  the kernel registered those as /dev/ttyS0 and /dev/ttyS1.
+-
+-    Any additional ACPI or PCI devices were registered sequentially
+-    after /dev/ttyS0 as they were discovered.
+-
+-    With an HCDP, device names changed depending on EFI configuration
+-    and "console=" arguments.  Without an HCDP, device names didn't
+-    change, but we registered devices that might not really exist.
+-
+-    For example, an HP rx1600 with a single built-in serial port
+-    (described in the ACPI namespace) plus an MP[2] (a PCI device) has
+-    these ports:
+-
+-      ==========  ==========     ============    ============   =======
+-      Type        MMIO           pre-2.6.10      pre-2.6.10     2.6.10+
+-		  address
+-				 (EFI console    (EFI console
+-                                 on builtin)     on MP port)
+-      ==========  ==========     ============    ============   =======
+-      builtin     0xff5e0000        ttyS0           ttyS1         ttyS0
+-      MP UPS      0xf8031000        ttyS1           ttyS2         ttyS1
+-      MP Console  0xf8030000        ttyS2           ttyS0         ttyS2
+-      MP 2        0xf8030010        ttyS3           ttyS3         ttyS3
+-      MP 3        0xf8030038        ttyS4           ttyS4         ttyS4
+-      ==========  ==========     ============    ============   =======
+-
+-Console Selection
+-=================
+-
+-    EFI knows what your console devices are, but it doesn't tell the
+-    kernel quite enough to actually locate them.  The DIG64 HCDP
+-    table[1] does tell the kernel where potential serial console
+-    devices are, but not all firmware supplies it.  Also, EFI supports
+-    multiple simultaneous consoles and doesn't tell the kernel which
+-    should be the "primary" one.
+-
+-    So how do you tell Linux which console device to use?
+-
+-	- If your firmware supplies the HCDP, it is simplest to
+-	  configure EFI with a single device (either a UART or a VGA
+-	  card) as the console.  Then you don't need to tell Linux
+-	  anything; the kernel will automatically use the EFI console.
+-
+-	  (This works only in 2.6.6 or later; prior to that you had
+-	  to specify "console=ttyS0" to get a serial console.)
+-
+-	- Without an HCDP, Linux defaults to a VGA console unless you
+-	  specify a "console=" argument.
+-
+-    NOTE: Don't assume that a serial console device will be /dev/ttyS0.
+-    It might be ttyS1, ttyS2, etc.  Make sure you have the appropriate
+-    entries in /etc/inittab (for getty) and /etc/securetty (to allow
+-    root login).
+-
+-Early Serial Console
+-====================
+-
+-    The kernel can't start using a serial console until it knows where
+-    the device lives.  Normally this happens when the driver enumerates
+-    all the serial devices, which can happen a minute or more after the
+-    kernel starts booting.
+-
+-    2.6.10 and later kernels have an "early uart" driver that works
+-    very early in the boot process.  The kernel will automatically use
+-    this if the user supplies an argument like "console=uart,io,0x3f8",
+-    or if the EFI console path contains only a UART device and the
+-    firmware supplies an HCDP.
+-
+-Troubleshooting Serial Console Problems
+-=======================================
+-
+-    No kernel output after elilo prints "Uncompressing Linux... done":
+-
+-	- You specified "console=ttyS0" but Linux changed the device
+-	  to which ttyS0 refers.  Configure exactly one EFI console
+-	  device[3] and remove the "console=" option.
+-
+-	- The EFI console path contains both a VGA device and a UART.
+-	  EFI and elilo use both, but Linux defaults to VGA.  Remove
+-	  the VGA device from the EFI console path[3].
+-
+-	- Multiple UARTs selected as EFI console devices.  EFI and
+-	  elilo use all selected devices, but Linux uses only one.
+-	  Make sure only one UART is selected in the EFI console
+-	  path[3].
+-
+-	- You're connected to an HP MP port[2] but have a non-MP UART
+-	  selected as EFI console device.  EFI uses the MP as a
+-	  console device even when it isn't explicitly selected.
+-	  Either move the console cable to the non-MP UART, or change
+-	  the EFI console path[3] to the MP UART.
+-
+-    Long pause (60+ seconds) between "Uncompressing Linux... done" and
+-    start of kernel output:
+-
+-	- No early console because you used "console=ttyS<n>".  Remove
+-	  the "console=" option if your firmware supplies an HCDP.
+-
+-	- If you don't have an HCDP, the kernel doesn't know where
+-	  your console lives until the driver discovers serial
+-	  devices.  Use "console=uart,io,0x3f8" (or appropriate
+-	  address for your machine).
+-
+-    Kernel and init script output works fine, but no "login:" prompt:
+-
+-	- Add getty entry to /etc/inittab for console tty.  Look for
+-	  the "Adding console on ttyS<n>" message that tells you which
+-	  device is the console.
+-
+-    "login:" prompt, but can't login as root:
+-
+-	- Add entry to /etc/securetty for console tty.
+-
+-    No ACPI serial devices found in 2.6.17 or later:
+-
+-	- Turn on CONFIG_PNP and CONFIG_PNPACPI.  Prior to 2.6.17, ACPI
+-	  serial devices were discovered by 8250_acpi.  In 2.6.17,
+-	  8250_acpi was replaced by the combination of 8250_pnp and
+-	  CONFIG_PNPACPI.
+-
+-
+-
+-[1]
+-    http://www.dig64.org/specifications/agreement
+-    The table was originally defined as the "HCDP" for "Headless
+-    Console/Debug Port."  The current version is the "PCDP" for
+-    "Primary Console and Debug Port Devices."
+-
+-[2]
+-    The HP MP (management processor) is a PCI device that provides
+-    several UARTs.  One of the UARTs is often used as a console; the
+-    EFI Boot Manager identifies it as "Acpi(HWP0002,700)/Pci(...)/Uart".
+-    The external connection is usually a 25-pin connector, and a
+-    special dongle converts that to three 9-pin connectors, one of
+-    which is labelled "Console."
+-
+-[3]
+-    EFI console devices are configured using the EFI Boot Manager
+-    "Boot option maintenance" menu.  You may have to interrupt the
+-    boot sequence to use this menu, and you will have to reset the
+-    box after changing console configuration.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a0d86490c2c6..10463c6a9de6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15043,14 +15043,6 @@ M:	Dimitri Sivanich <sivanich@sgi.com>
+ S:	Maintained
+ F:	drivers/misc/sgi-gru/
  
-+	/* 8822C with UART interface */
-+	{ .match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_HCIREV |
-+			 IC_MATCH_FL_HCIBUS,
-+	  .lmp_subver = RTL_ROM_LMP_8822B,
-+	  .hci_rev = 0x000c,
-+	  .hci_ver = 0x0a,
-+	  .hci_bus = HCI_UART,
-+	  .config_needed = true,
-+	  .has_rom_version = true,
-+	  .fw_name  = "rtl_bt/rtl8822cs_fw.bin",
-+	  .cfg_name = "rtl_bt/rtl8822cs_config" },
-+
- 	/* 8822C with USB interface */
- 	{ IC_INFO(RTL_ROM_LMP_8822B, 0xc),
- 	  .config_needed = false,
-diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-index 0b14547482a7..4e4d58a73295 100644
---- a/drivers/bluetooth/hci_h5.c
-+++ b/drivers/bluetooth/hci_h5.c
-@@ -11,6 +11,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- #include <linux/serdev.h>
- #include <linux/skbuff.h>
- 
-@@ -786,6 +787,7 @@ static const struct hci_uart_proto h5p = {
- static int h5_serdev_probe(struct serdev_device *serdev)
- {
- 	const struct acpi_device_id *match;
-+	const void *data;
- 	struct device *dev = &serdev->dev;
- 	struct h5 *h5;
- 
-@@ -810,8 +812,15 @@ static int h5_serdev_probe(struct serdev_device *serdev)
- 		if (h5->vnd->acpi_gpio_map)
- 			devm_acpi_dev_add_driver_gpios(dev,
- 						       h5->vnd->acpi_gpio_map);
-+	} else {
-+		data = of_device_get_match_data(dev);
-+		if (!data)
-+			return -ENODEV;
-+
-+		h5->vnd = (const struct h5_vnd *)data;
- 	}
- 
-+
- 	h5->enable_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
- 	if (IS_ERR(h5->enable_gpio))
- 		return PTR_ERR(h5->enable_gpio);
-@@ -1003,6 +1012,15 @@ static const struct dev_pm_ops h5_serdev_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(h5_serdev_suspend, h5_serdev_resume)
- };
- 
-+static const struct of_device_id rtl_bluetooth_of_match[] = {
-+#ifdef CONFIG_BT_HCIUART_RTL
-+	{ .compatible = "realtek,rtl8822cs-bt",
-+	  .data = (const void *)&rtl_vnd },
-+#endif
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, rtl_bluetooth_of_match);
-+
- static struct serdev_device_driver h5_serdev_driver = {
- 	.probe = h5_serdev_probe,
- 	.remove = h5_serdev_remove,
-@@ -1010,6 +1028,7 @@ static struct serdev_device_driver h5_serdev_driver = {
- 		.name = "hci_uart_h5",
- 		.acpi_match_table = ACPI_PTR(h5_acpi_match),
- 		.pm = &h5_serdev_pm_ops,
-+		.of_match_table = rtl_bluetooth_of_match,
- 	},
- };
- 
+-SGI SN-IA64 (Altix) SERIAL CONSOLE DRIVER
+-M:	Pat Gefre <pfg@sgi.com>
+-L:	linux-ia64@vger.kernel.org
+-S:	Supported
+-F:	Documentation/ia64/serial.rst
+-F:	drivers/tty/serial/ioc?_serial.c
+-F:	include/linux/ioc?.h
+-
+ SGI XP/XPC/XPNET DRIVER
+ M:	Cliff Whickman <cpw@sgi.com>
+ M:	Robin Holt <robinmholt@gmail.com>
+diff --git a/include/linux/ioc3.h b/include/linux/ioc3.h
+deleted file mode 100644
+index 38b286e9a46c..000000000000
+--- a/include/linux/ioc3.h
++++ /dev/null
+@@ -1,93 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (c) 2005 Stanislaw Skowronek <skylark@linux-mips.org>
+- */
+-
+-#ifndef _LINUX_IOC3_H
+-#define _LINUX_IOC3_H
+-
+-#include <asm/sn/ioc3.h>
+-
+-#define IOC3_MAX_SUBMODULES	32
+-
+-#define IOC3_CLASS_NONE		0
+-#define IOC3_CLASS_BASE_IP27	1
+-#define IOC3_CLASS_BASE_IP30	2
+-#define IOC3_CLASS_MENET_123	3
+-#define IOC3_CLASS_MENET_4	4
+-#define IOC3_CLASS_CADDUO	5
+-#define IOC3_CLASS_SERIAL	6
+-
+-/* One of these per IOC3 */
+-struct ioc3_driver_data {
+-	struct list_head list;
+-	int id;				/* IOC3 sequence number */
+-	/* PCI mapping */
+-	unsigned long pma;		/* physical address */
+-	struct ioc3 __iomem *vma;	/* pointer to registers */
+-	struct pci_dev *pdev;		/* PCI device */
+-	/* IRQ stuff */
+-	int dual_irq;			/* set if separate IRQs are used */
+-	int irq_io, irq_eth;		/* IRQ numbers */
+-	/* GPIO magic */
+-	spinlock_t gpio_lock;
+-	unsigned int gpdr_shadow;
+-	/* NIC identifiers */
+-	char nic_part[32];
+-	char nic_serial[16];
+-	char nic_mac[6];
+-	/* submodule set */
+-	int class;
+-	void *data[IOC3_MAX_SUBMODULES];	/* for submodule use */
+-	int active[IOC3_MAX_SUBMODULES];	/* set if probe succeeds */
+-	/* is_ir_lock must be held while
+-	 * modifying sio_ie values, so
+-	 * we can be sure that sio_ie is
+-	 * not changing when we read it
+-	 * along with sio_ir.
+-	 */
+-	spinlock_t ir_lock;	/* SIO_IE[SC] mod lock */
+-};
+-
+-/* One per submodule */
+-struct ioc3_submodule {
+-	char *name;		/* descriptive submodule name */
+-	struct module *owner;	/* owning kernel module */
+-	int ethernet;		/* set for ethernet drivers */
+-	int (*probe) (struct ioc3_submodule *, struct ioc3_driver_data *);
+-	int (*remove) (struct ioc3_submodule *, struct ioc3_driver_data *);
+-	int id;			/* assigned by IOC3, index for the "data" array */
+-	/* IRQ stuff */
+-	unsigned int irq_mask;	/* IOC3 IRQ mask, leave clear for Ethernet */
+-	int reset_mask;		/* non-zero if you want the ioc3.c module to reset interrupts */
+-	int (*intr) (struct ioc3_submodule *, struct ioc3_driver_data *, unsigned int);
+-	/* private submodule data */
+-	void *data;		/* assigned by submodule */
+-};
+-
+-/**********************************
+- * Functions needed by submodules *
+- **********************************/
+-
+-#define IOC3_W_IES		0
+-#define IOC3_W_IEC		1
+-
+-/* registers a submodule for all existing and future IOC3 chips */
+-extern int ioc3_register_submodule(struct ioc3_submodule *);
+-/* unregisters a submodule */
+-extern void ioc3_unregister_submodule(struct ioc3_submodule *);
+-/* enables IRQs indicated by irq_mask for a specified IOC3 chip */
+-extern void ioc3_enable(struct ioc3_submodule *, struct ioc3_driver_data *, unsigned int);
+-/* ackowledges specified IRQs */
+-extern void ioc3_ack(struct ioc3_submodule *, struct ioc3_driver_data *, unsigned int);
+-/* disables IRQs indicated by irq_mask for a specified IOC3 chip */
+-extern void ioc3_disable(struct ioc3_submodule *, struct ioc3_driver_data *, unsigned int);
+-/* atomically sets GPCR bits */
+-extern void ioc3_gpcr_set(struct ioc3_driver_data *, unsigned int);
+-/* general ireg writer */
+-extern void ioc3_write_ireg(struct ioc3_driver_data *idd, uint32_t value, int reg);
+-
+-#endif
 -- 
 2.17.1
 
