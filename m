@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D94C34032
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CEC34033
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C78320801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09339207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="R39e78dJ"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VrgopT2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgBQXrF (ORCPT
+        id S1726449AbgBQXrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 18:47:05 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48787 "EHLO
+        Mon, 17 Feb 2020 18:47:09 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48808 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgBQXrE (ORCPT
+        with ESMTP id S1726166AbgBQXrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:47:04 -0500
+        Mon, 17 Feb 2020 18:47:05 -0500
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3C9AE886BF;
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B5564891AB;
         Tue, 18 Feb 2020 12:47:00 +1300 (NZDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
         s=mail181024; t=1581983220;
-        bh=LCdEDn9KJ4fwe8poCq2FY9dzyr8T+/O5ezxx8nHK8bk=;
+        bh=cMwWq/fB5TqLaO7gJKiv9RZZ9K3gkV2WtovJnrZdpXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=R39e78dJootCQTeSVSI1wDXS/baejRZdPkqj17MC5gc505Fp7INNxb62OLUo3bNQQ
-         MzWJ/dhAgeer545B+cyLS5BDpCo3gY2DkUZ69CHzYTb8q9GWTqx3jdqXR9HYDrJ15Q
-         v1jvAwXgDEj9Ei5LNuVBpik2u9JBLXUjez6PKEa9yWCuQU1YmMWdmt2NohkYe+wx0d
-         VLEctjnOfOqR8khXdbVybKMVX8Q1vvtCEyvx+KzRCs7BnLtFO6S+kyzTRt9VrZh0dI
-         1Qy++8crwWT8vEVjM2msz0l3JzZu4w0lQaoA6Qmu8Vnsk3vktThhtqrdklc23QPLfd
-         q1PwuNNf90Qfw==
+        b=VrgopT2S8vUgdhN/m2G1B3sDNdHrEA3jqzsldNwSZx0TM3sbjuq7drEPUWKUGX2uI
+         z6Tbyv/5/uvpg9FHHy2uA0RIdjnQjBMWSRE2fL/tA7mcTQ8Zd85H5rarhMB0NUHLLI
+         Ak/RzTeizRr/f1cA3bM8dNn/VbMAsvZ9b6ivehWpFtYuOhj6uRR65EOiPAy+UWncup
+         m9ZshVDCNXzwHGmxfr8hfqkIY2GJyxnkDtR38FVfU7H7rla7V52ooBlBvqYTenaDqf
+         WJI+u9Z1/Strwn8AFxVFje/AAK39xJGD8ljnnhqcd1QPgaf0wvs1Phc4lHO5mW1OjO
+         k2K4ID+QWgU6Q==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e4b25f30001>; Tue, 18 Feb 2020 12:46:59 +1300
+        id <B5e4b25f40000>; Tue, 18 Feb 2020 12:47:00 +1300
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 85E8713EED4;
+        by smtp (Postfix) with ESMTP id EE01513EED4;
         Tue, 18 Feb 2020 12:46:59 +1300 (NZDT)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 01FA428006C; Tue, 18 Feb 2020 12:47:00 +1300 (NZDT)
+        id 6A15F28006C; Tue, 18 Feb 2020 12:47:00 +1300 (NZDT)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
 To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
         mark.rutland@arm.com
 Cc:     logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 1/5] dt-bindings: hwmon: Document adt7475 binding
-Date:   Tue, 18 Feb 2020 12:46:53 +1300
-Message-Id: <20200217234657.9413-2-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 4/5] hwmon: (adt7475) Add attenuator bypass support
+Date:   Tue, 18 Feb 2020 12:46:56 +1300
+Message-Id: <20200217234657.9413-5-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
 References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
@@ -67,107 +67,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 
-Add binding for adi,adt7475 and variants.
-Remove from trivial-devices.
+Added support for reading DTS properties to set attenuators on
+device probe for the ADT7473, ADT7475, ADT7476, and ADT7490.
 
 Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- .../devicetree/bindings/hwmon/adt7475.yaml    | 57 +++++++++++++++++++
- .../devicetree/bindings/trivial-devices.yaml  |  8 ---
- 2 files changed, 57 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+ drivers/hwmon/adt7475.c | 61 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 58 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-new file mode 100644
-index 000000000000..2252499ea201
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/adt7475.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+index 01c2eeb02aa9..4a62d633a2f5 100644
+--- a/drivers/hwmon/adt7475.c
++++ b/drivers/hwmon/adt7475.c
+@@ -19,6 +19,7 @@
+ #include <linux/hwmon-vid.h>
+ #include <linux/err.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
+ #include <linux/util_macros.h>
+=20
+ /* Indexes for the sysfs hooks */
+@@ -193,6 +194,7 @@ struct adt7475_data {
+ 	unsigned long measure_updated;
+ 	bool valid;
+=20
++	u8 config2;
+ 	u8 config4;
+ 	u8 config5;
+ 	u8 has_voltage;
+@@ -1458,6 +1460,55 @@ static int adt7475_update_limits(struct i2c_client=
+ *client)
+ 	return 0;
+ }
+=20
++static int set_property_bit(const struct i2c_client *client, char *prope=
+rty,
++			  u8 *config, u8 bit_index)
++{
++	u32 prop_value =3D 0;
++	int ret =3D of_property_read_u32(client->dev.of_node, property,
++					&prop_value);
 +
-+title: ADT7475 hwmon sensor
++	if (!ret) {
++		if (prop_value)
++			*config |=3D (1 << bit_index);
++		else
++			*config &=3D ~(1 << bit_index);
++	}
 +
-+maintainers:
-+  - Jean Delvare <jdelvare@suse.com>
++	return ret;
++}
 +
-+description: |
-+  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and mu=
-ltiple
-+  PWN fan controllers.
++static int load_attenuators(const struct i2c_client *client, int chip,
++			    struct adt7475_data *data)
++{
++	int ret;
 +
-+  They support monitoring and controlling up to four fans (the ADT7490 c=
-an only
-+  control up to three). They support reading a single on chip temperatur=
-e
-+  sensor and two off chip temperature sensors (the ADT7490 additionally
-+  supports measuring up to three current external temperature sensors wi=
-th
-+  series resistance cancellation (SRC)).
++	if (chip =3D=3D adt7476 || chip =3D=3D adt7490) {
++		set_property_bit(client, "bypass-attenuator-in0",
++				 &data->config4, 4);
++		set_property_bit(client, "bypass-attenuator-in1",
++				 &data->config4, 5);
++		set_property_bit(client, "bypass-attenuator-in3",
++				 &data->config4, 6);
++		set_property_bit(client, "bypass-attenuator-in4",
++				 &data->config4, 7);
 +
-+  Datasheets:
-+  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
++		ret =3D i2c_smbus_write_byte_data(client, REG_CONFIG4,
++						data->config4);
++		if (ret < 0)
++			return ret;
++	} else if (chip =3D=3D adt7473 || chip =3D=3D adt7475) {
++		set_property_bit(client, "bypass-attenuator-in1",
++				 &data->config2, 5);
 +
-+  Description taken from onsemiconductors specification sheets, with min=
-or
-+  rephrasing.
++		ret =3D i2c_smbus_write_byte_data(client, REG_CONFIG2,
++						data->config2);
++		if (ret < 0)
++			return ret;
++	}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adt7473
-+      - adi,adt7475
-+      - adi,adt7476
-+      - adi,adt7490
++	return 0;
++}
 +
-+  reg:
-+    maxItems: 1
+ static int adt7475_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -1472,7 +1523,7 @@ static int adt7475_probe(struct i2c_client *client,
+ 	struct adt7475_data *data;
+ 	struct device *hwmon_dev;
+ 	int i, ret =3D 0, revision, group_num =3D 0;
+-	u8 config2, config3;
++	u8 config3;
+=20
+ 	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+ 	if (data =3D=3D NULL)
+@@ -1546,8 +1597,12 @@ static int adt7475_probe(struct i2c_client *client=
+,
+ 	}
+=20
+ 	/* Voltage attenuators can be bypassed, globally or individually */
+-	config2 =3D adt7475_read(REG_CONFIG2);
+-	if (config2 & CONFIG2_ATTN) {
++	data->config2 =3D adt7475_read(REG_CONFIG2);
++	ret =3D load_attenuators(client, chip, data);
++	if (ret)
++		dev_err(&client->dev, "Error configuring attenuator bypass\n");
 +
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells =3D <1>;
-+      #size-cells =3D <0>;
-+
-+      hwmon@2e {
-+        compatible =3D "adi,adt7476";
-+        reg =3D <0x2e>;
-+      };
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Doc=
-umentation/devicetree/bindings/trivial-devices.yaml
-index 978de7d37c66..57173ec41c30 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -34,14 +34,6 @@ properties:
-           - adi,adt7461
-             # +/-1C TDM Extended Temp Range I.C
-           - adt7461
--            # +/-1C TDM Extended Temp Range I.C
--          - adi,adt7473
--            # +/-1C TDM Extended Temp Range I.C
--          - adi,adt7475
--            # +/-1C TDM Extended Temp Range I.C
--          - adi,adt7476
--            # +/-1C TDM Extended Temp Range I.C
--          - adi,adt7490
-             # Three-Axis Digital Accelerometer
-           - adi,adxl345
-             # Three-Axis Digital Accelerometer (backward-compatibility v=
-alue "adi,adxl345" must be listed too)
++	if (data->config2 & CONFIG2_ATTN) {
+ 		data->bypass_attn =3D (0x3 << 3) | 0x3;
+ 	} else {
+ 		data->bypass_attn =3D ((data->config4 & CONFIG4_ATTN_IN10) >> 4) |
 --=20
 2.25.0
 
