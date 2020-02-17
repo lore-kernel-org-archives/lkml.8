@@ -2,73 +2,172 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E8C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9BC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872C424689
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="NoyiUAVG"
+	by mail.kernel.org (Postfix) with ESMTP id D61F224689
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgBQScl (ORCPT
+        id S1729312AbgBQSdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:32:41 -0500
-Received: from forward501j.mail.yandex.net ([5.45.198.251]:52494 "EHLO
-        forward501j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726707AbgBQScl (ORCPT
+        Mon, 17 Feb 2020 13:33:43 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37422 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbgBQSdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:32:41 -0500
-Received: from mxback2g.mail.yandex.net (mxback2g.mail.yandex.net [77.88.29.163])
-        by forward501j.mail.yandex.net (Yandex) with ESMTP id 8862D33800D9;
-        Mon, 17 Feb 2020 21:32:35 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback2g.mail.yandex.net (mxback/Yandex) with ESMTP id Hos6lzhXdw-WZnGPXCA;
-        Mon, 17 Feb 2020 21:32:35 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1581964355;
-        bh=ZXaLfkB4QnIWV6WwupheBTl3yVczZy/2HbFnDzWCBxQ=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=NoyiUAVGde3k3GLIoi3chnJ14yMXccIxA7mQaCHiyh4/LBRx7/rrFWtUTLjObkRGA
-         XSd+Ln9DWsYtzS00U4vptmuwT5UQoPgtNLm+hyBU/jS+94HwnKkczyVHifXOr8YLp9
-         NpcN5mdyHOK2G+aFF1/rL3x7wFr9/rCmzhBkla6U=
-Authentication-Results: mxback2g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt6-09be74140f25.qloud-c.yandex.net with HTTP;
-        Mon, 17 Feb 2020 21:32:35 +0300
-From:   Evgeniy Polyakov <zbr@ioremap.net>
-Envelope-From: drustafa@yandex.ru
-To:     "Daniel Walker (danielwa)" <danielwa@cisco.com>
-Cc:     David Miller <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200217175209.GM24152@zorba>
-References: <20200212192901.6402-1-danielwa@cisco.com>
-         <20200216.184443.782357344949548902.davem@davemloft.net>
-         <20200217172551.GL24152@zorba>
-         <16818701581961475@iva7-8a22bc446c12.qloud-c.yandex.net> <20200217175209.GM24152@zorba>
-Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain messages
+        Mon, 17 Feb 2020 13:33:42 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3lDA-00EJGf-2W; Mon, 17 Feb 2020 18:33:40 +0000
+Date:   Mon, 17 Feb 2020 18:33:40 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     linux-arch@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [RFC] regset ->get() API
+Message-ID: <20200217183340.GI23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Mon, 17 Feb 2020 21:32:35 +0300
-Message-Id: <17589131581964355@myt6-09be74140f25.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+	Looking at the regset guts, I really wonder if the interface
+is right.  What happens goes along the lines of
 
+ptrace(PTRACE_GETREGS, pid, whatever, buf)
+  arch_ptrace(task, PTRACE_GETREGS, whatever, buf)
+    copy_regset_to_user(task, task_user_regset_view(current),
+		REGSET_GENERAL, 0, sizeof(struct user_regs_struct), buf);
+     check access_ok(buf, sizeof(...)
+     genregs_get(task, regset, 0, sizeof(...), NULL, buf);
+and we hit
+static int genregs_get(struct task_struct *target,
+                       const struct user_regset *regset,
+                       unsigned int pos, unsigned int count,
+                       void *kbuf, void __user *ubuf)
+{
+        if (kbuf) {
+                unsigned long *k = kbuf;
+                while (count >= sizeof(*k)) {
+                        *k++ = getreg(target, pos);
+                        count -= sizeof(*k);
+                        pos += sizeof(*k);
+                }
+        } else {
+                unsigned long __user *u = ubuf;
+                while (count >= sizeof(*u)) {
+                        if (__put_user(getreg(target, pos), u++))
+                                return -EFAULT;
+                        count -= sizeof(*u);
+                        pos += sizeof(*u);
+                }
+        }
 
-17.02.2020, 20:52, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
->>     What about sysfs interface with one file per message type?
->
-> You mean similar to the module parameters I've done, but thru sysfs ? It would
-> work for Cisco. I kind of like Kconfig because it also reduces kernel size for
-> messages you may never want to see.
+        return 0;
+}
+ 
+IOW, we call getreg() in a loop, with separate __put_user() for each
+value.  For one thing, it's going to be painful on any recent x86 -
+the cost of stac/clac on each of those is not going to be cheap.
+And we obviously can't extend stac/clac area over the entire loop
+there - getreg() is not trivial.
 
-Yup, single sysfs file per message type you've created as kernel module parameter binary switches.
+For another, the calling conventions are too generic - the callers
+of ->get() always pass zero for pos, for example.  And this "pass
+kbuf and ubuf separately" wart does not make it any prettier.
 
-David, is it ok for you?
+Other instances (e.g. powerpc gpr_get()) do not use __put_user() -
+they make a series of user_regset_copyout()/user_regset_copyout_zero()
+calls (4 in this case):
+static inline int user_regset_copyout(unsigned int *pos, unsigned int *count,
+                                      void **kbuf,
+                                      void __user **ubuf, const void *data,
+                                      const int start_pos, const int end_pos)
+{
+        if (*count == 0)
+                return 0;
+        BUG_ON(*pos < start_pos);
+        if (end_pos < 0 || *pos < end_pos) {
+                unsigned int copy = (end_pos < 0 ? *count
+                                     : min(*count, end_pos - *pos));
+                data += *pos - start_pos;
+                if (*kbuf) {
+                        memcpy(*kbuf, data, copy);
+                        *kbuf += copy;
+                } else if (__copy_to_user(*ubuf, data, copy))
+                        return -EFAULT;
+                else
+                        *ubuf += copy;
+                *pos += copy;
+                *count -= copy;
+        }
+        return 0;
+}
+
+The caller obviously needs to check if the damn thing has failed, and the
+calling conventions are still over-generic (grep and you'll see).  The
+actual calls of __copy_to_user()/__clear_user() have destinations back-to-back.
+And while in case of ppc their number is not too large, for e.g.
+arch/arc/kernel/ptrace.c:genregs_get() we get 39 calls of those things -
+basically, back to the __put_user-inna-loop-and-thats-cuttin-me-own-throat
+situation we have on x86, only with more overhead per register.
+
+And too convoluted calling conventions come with the usual price - they
+are too easy to get wrong.  Example:
+arch/x86/math-emu/fpu_entry.c:fpregs_soft_get() is
+{
+        struct swregs_state *s387 = &target->thread.fpu.state.soft;
+        const void *space = s387->st_space;
+        int ret;
+        int offset = (S387->ftop & 7) * 10, other = 80 - offset;
+
+        RE_ENTRANT_CHECK_OFF;
+
+#ifdef PECULIAR_486
+        S387->cwd &= ~0xe080;
+        /* An 80486 sets nearly all of the reserved bits to 1. */
+        S387->cwd |= 0xffff0040;
+        S387->swd = sstatus_word() | 0xffff0000;
+        S387->twd |= 0xffff0000;
+        S387->fcs &= ~0xf8000000;
+        S387->fos |= 0xffff0000;
+#endif /* PECULIAR_486 */
+
+        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, s387, 0,
+                                  offsetof(struct swregs_state, st_space));
+
+OK, here we copy everything in s387 up to the beginning of s387->st_space.
+Fair enough.  Now pos is offsetof(struct swregs_state, st_space)), and...
+        /* Copy all registers in stack order. */
+        if (!ret)
+                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+                                          space + offset, 0, other);
+        if (!ret)
+                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+                                          space, 0, offset);
+We _intend_ to copy stack entries, top..7, then 0..top-1, out of
+s387->st_space.  What we actually do is different - pos is updated
+by each call, so the last two arguments in these calls are wrong.
+They should've been offsetof(struct swregs_state, st_space)) and
+offsetof(struct swregs_state, st_space)) + other in the first
+one and offsetof(struct swregs_state, st_space)) + other and
+offsetof(struct swregs_state, st_space)) + 80 in the second one.
+
+It's not hard to fix, and nobody really uses !CONFIG_FPU setups
+on x86 anyway; the point is that this is really easy to get wrong.
+
+What I really wonder is whether it's actually worth bothering - the
+life would be much simpler if we *always* passed a kernel buffer to
+->get() instances and did all copyout at once.  Sure, it results in
+double copies, but... would that really cost more than all the complexity
+we have there?
+
+What are the typical amounts of data copied in such ptrace() calls
+and how hot they normally are?
