@@ -2,95 +2,161 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A32C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC502C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7987C214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581951956;
-	bh=TRXzS1/3PZIMdCqxv0UFvbQGi3roNuI+NYhk587bOns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GAfCpKzD0S7mE+AjMgxb9czoyS/t19YG9TPGaUyx0b7SuIIBxnxIzuYktyycP4q3V
-	 i02IMfXt88JPJ1D6eRT8AlHjNtt7KO4rfgu56QbzIV2fn0DQppMO/9nHzoq4s6mLSx
-	 MrRTR2qimu50bqXvwpx1oBe5Nj3Dm277ESws9PX4=
+	by mail.kernel.org (Postfix) with ESMTP id CEE5220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgBQPFz (ORCPT
+        id S1729403AbgBQPGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:05:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:36996 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgBQPFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:05:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76B05106F;
-        Mon, 17 Feb 2020 07:05:54 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEE463F703;
-        Mon, 17 Feb 2020 07:05:53 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:05:52 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 07/34] ASoC: sun8i-codec: Remove extraneous widgets
-Message-ID: <20200217150552.GI9304@sirena.org.uk>
-References: <20200217064250.15516-8-samuel@sholland.org>
+        Mon, 17 Feb 2020 10:06:20 -0500
+Received: from outbound-smtp39.blacknight.com ([46.22.139.222]:60222 "EHLO
+        outbound-smtp39.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729365AbgBQPGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 10:06:20 -0500
+Received: from mail.blacknight.com (unknown [81.17.254.17])
+        by outbound-smtp39.blacknight.com (Postfix) with ESMTPS id 929DF1115
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 15:06:16 +0000 (GMT)
+Received: (qmail 13384 invoked from network); 17 Feb 2020 15:06:16 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 17 Feb 2020 15:06:16 -0000
+Date:   Mon, 17 Feb 2020 15:06:15 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/13] sched/numa: Use similar logic to the load balancer
+ for moving between domains with spare capacity
+Message-ID: <20200217150615.GJ3466@techsingularity.net>
+References: <20200217104402.11643-1-mgorman@techsingularity.net>
+ <20200217132019.6684-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e5GLnnZ8mDMEwH4V"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200217064250.15516-8-samuel@sholland.org>
-X-Cookie: There was a phone call for you.
+In-Reply-To: <20200217132019.6684-1-hdanton@sina.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 09:20:19PM +0800, Hillf Danton wrote:
+> 
+> On Mon, 17 Feb 2020 10:43:55 +0000 Mel Gorman wrote:
+> > 
+> > The standard load balancer generally tries to keep the number of running
+> > tasks or idle CPUs balanced between NUMA domains. The NUMA balancer allows
+> > tasks to move if there is spare capacity but this causes a conflict and
+> > utilisation between NUMA nodes gets badly skewed. This patch uses similar
+> > logic between the NUMA balancer and load balancer when deciding if a task
+> > migrating to its preferred node can use an idle CPU.
+> > 
+> > Signed-off-by: Mel Gorman <mgorman@suse.com>
+> > ---
+> >  kernel/sched/fair.c | 76 +++++++++++++++++++++++++++++++----------------------
+> >  1 file changed, 45 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 52e74b53d6e7..ae7870f71457 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -1520,6 +1520,7 @@ struct task_numa_env {
+> >  
+> >  static unsigned long cpu_load(struct rq *rq);
+> >  static unsigned long cpu_util(int cpu);
+> > +static inline long adjust_numa_imbalance(int imbalance, int src_nr_running);
+> >  
+> >  static inline enum
+> >  numa_type numa_classify(unsigned int imbalance_pct,
+> > @@ -1594,11 +1595,6 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+> >  	long orig_src_load, orig_dst_load;
+> >  	long src_capacity, dst_capacity;
+> >  
+> > -
+> > -	/* If dst node has spare capacity, there is no real load imbalance */
+> > -	if (env->dst_stats.node_type == node_has_spare)
+> > -		return false;
+> > -
+>
+> The current logic is: move if dst node has spare capacity,
+> 
 
---e5GLnnZ8mDMEwH4V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+THe load balancer takes either idle CPUs or running tasks into account
+depending on SD flags. Unless this check is removed, the CPU usage
+across nodes becomes imbalanced, the load balancer takes action and
+testing indicates that performance degrades severely. The impact is
+illustrated in the leader of the patch series as well as the effect of
+this patch in isolation.
 
-On Mon, Feb 17, 2020 at 12:42:23AM -0600, Samuel Holland wrote:
-> This driver is for the digital part of the codec, which has no
-> microphone input. These widgets look like they were copied from
-> sun4i-codec. Since they do not belong here, remove them.
->=20
-> Cc: stable@kernel.org
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
+> >  	/*
+> >  	 * The load is corrected for the CPU capacity available on each node.
+> >  	 *
+> > @@ -1757,19 +1753,37 @@ static void task_numa_compare(struct task_numa_env *env,
+> >  static void task_numa_find_cpu(struct task_numa_env *env,
+> >  				long taskimp, long groupimp)
+> >  {
+> > -	long src_load, dst_load, load;
+> >  	bool maymove = false;
+> >  	int cpu;
+> >  
+> > -	load = task_h_load(env->p);
+> > -	dst_load = env->dst_stats.load + load;
+> > -	src_load = env->src_stats.load - load;
+> > -
+> >  	/*
+> > -	 * If the improvement from just moving env->p direction is better
+> > -	 * than swapping tasks around, check if a move is possible.
+> > +	 * If dst node has spare capacity, then check if there is an
+> > +	 * imbalance that would be overruled by the load balancer.
+> >  	 */
+> > -	maymove = !load_too_imbalanced(src_load, dst_load, env);
+> > +	if (env->dst_stats.node_type == node_has_spare) {
+> 
+> so maymove should be true here.
+> 
 
-This is a cleanup, why send it to stable?
+Performance suffers on numerous workloads that way.
 
---e5GLnnZ8mDMEwH4V
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +		unsigned int imbalance;
+> > +		int src_running, dst_running;
+> > +
+> > +		/* Would movement cause an imbalance? */
+> > +		src_running = env->src_stats.nr_running - 1;
+> > +		dst_running = env->dst_stats.nr_running + 1;
+> > +		imbalance = max(0, dst_running - src_running);
+> > +		imbalance = adjust_numa_imbalance(imbalance, src_running);
+> > +
+> The imbalance could be ignored if src domain is idle enough, and no move
+> could be expected.
+> 
 
------BEGIN PGP SIGNATURE-----
+Again, it hits corner cases. While there is scope for allowing some
+degree of imbalance, it needs to be a separate patch on top of this.
+It's something I intend to examine but only once this series is out of
+the way because the NUMA and load balancer do need to be using similar
+logic first or it gets a bit fragile.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Kq88ACgkQJNaLcl1U
-h9AO/wf+MRxer75LjO64950mSzyZv03H08zeydq4EqDjAfmEz4SKcz7U2c4saLDV
-rnK6SSDhIk+37PQH7f3K1vOkeS2vbdZ4jLlfv37BZM8W4Gjvmskw55ALcWYyEJUT
-NLbZapLoOL+r6G0jTNchN/Y9RxH02zUZjpaCkAu8pYQJ4H9uj4Tmo2ma08gsKe6Z
-5hJJGjVeiJMF7vekIeY6qzV44uWDXL2fEkP41L05NPQBA3bPzo0E35uJEz+q2aZC
-6M7cH9ezGYL4AtEJIFqzZnIUcQxVZkLHG/zpMqY4bxC1xFmNihLDzqi7HKQtGOEF
-NTKdQfX3VCJwv2632jbbdyiKMpeIUg==
-=zg40
------END PGP SIGNATURE-----
+With this patch, and the series in general, it does mean that some tasks
+fail to migrate to a CPU local to the memory being accessed even though
+there are CPUs available but having the NUMA balancer and load balancer
+override each other is not free either.
 
---e5GLnnZ8mDMEwH4V--
+Thanks.
+
+-- 
+Mel Gorman
+SUSE Labs
