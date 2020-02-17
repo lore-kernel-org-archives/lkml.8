@@ -2,187 +2,287 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1007C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDCC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F272206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1442206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UD0aZZwO";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="IaFtapNo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wvu3TIE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgBQKBs (ORCPT
+        id S1729078AbgBQKCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:01:48 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:22344 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgBQKBr (ORCPT
+        Mon, 17 Feb 2020 05:02:01 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31794 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726397AbgBQKCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:01:47 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01H9v07K012051;
-        Mon, 17 Feb 2020 02:01:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=NuwKRN4OmdJZGjIO2uVXLEr9jFygoWVGQrxrz8GCASw=;
- b=UD0aZZwOYjqeDCinRQgHaqQT6iSuYMHleFevOXQU/W//LGPPstQohpyZ2xxhavezEiDV
- gw9wBcgrK7RBlKtkCtxfUSStSbApGQu6nq+bnGl2nKKxmn8viA5iYTTxSnNjUX16sUp7
- zWTOurIALXZz0gvHhWdT7ox9JSlTGE3Gk1CPQhp7Y1H6ud+JgoudXbN8gbOenxQgWj4m
- rRYhXUIG3bc/cC+P8p2lypA8hK7jwQ03BfelvcRPBG/msa2+Iqp01cqgOpYGSokqBr/P
- bfCjTHSEiESaMtFXhUukszBEwBM5+aLloyg2wwC+NqRPau8Kgao8tg4ONMJ81qcURII0 Ig== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2y6h1sxhxu-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 17 Feb 2020 02:01:09 -0800
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 17 Feb
- 2020 02:01:07 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 17 Feb
- 2020 02:01:07 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.175)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Mon, 17 Feb 2020 02:01:06 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q5Vz/sGmuG/xzSs/K/0vfwMe9IneG004UfvHxOELR6z7b2BDwcnGgrItu+7R9bTA9MBjbqALo36tfjRsulhc3rljsyaZMzU2hZilFbUbh/Kt3gsXc3Zjj8qpz9PvAESNGrQaDh2x2T1AN4/k2wI9/MqHgc4X891p01DCU/+4RhHpTcdbHDYxYS6ox9CYy2x0cRBm35ubA0MjpnqUS3ddgD7PR5PUdRuemAi+wXd9VszwebKhbeQGw+nuy76eYZe7woHP5jmTGjGF/qEvejf7FkjHTzteoJKIhWcx0VZcFNsCYSid0rmYiaLsh3G4ApaupQFRY5/BfZ8L0WKfBu1CDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NuwKRN4OmdJZGjIO2uVXLEr9jFygoWVGQrxrz8GCASw=;
- b=f2NapgGTQGNiFOSVgYE3MjYtReDjhd4cLXsrIUXIziSr8UkbfxXCyWmDnS5abNkNoe2rda7U5Zsq/A2rr0bZbVSfydjluHO1PBoGnBAX+C0pAr3tabycvpg3pP2nzoTVO+3djf5hf9vnfuVzqy/2dXxNgu0k4S6DPiJB9G4aR2eSTaCx1TXKXc/mJy+SSv2jXZ6TEoXRAekArXIHPKLrVwWbV/2UvR/vbktQtGrJ34FtvaeVA9q/nnrzH9ctstIglzclIIcEmb9vR6ak1P/CDgGhdTjaG+HNMfVIxi1yqjRc5R6ib9qfbcUQUoVsthJLL5s9Z32on9IRIZZeZTUifA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NuwKRN4OmdJZGjIO2uVXLEr9jFygoWVGQrxrz8GCASw=;
- b=IaFtapNoVVAdNmyMymJPBXAki2lSLLWd+PyvtlPFgkwuuhGGgO+2KIWVPaW7nNxBjZFi5L4suwK3JVDCdyOj+8DZ3BLzl/zLN4RNuPLbLXhvUg5CidQogLcDtNyzqFZP0qnW/xknOHGspScK8Av5f08+X4tnC0j4wEygdTqiKSA=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB3040.namprd18.prod.outlook.com (20.179.84.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.29; Mon, 17 Feb 2020 10:01:04 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2729.032; Mon, 17 Feb 2020
- 10:01:04 +0000
-Date:   Mon, 17 Feb 2020 11:00:57 +0100
-From:   Robert Richter <rrichter@marvell.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        <linux-i2c@vger.kernel.org>,
-        "Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Jean Delvare <jdelvare@suse.com>,
-        George Cherian <gcherian@marvell.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] i2c: convert SMBus alert setup function to return an
- ERRPTR
-Message-ID: <20200217100056.di54osv76xlcnhdj@rric.localdomain>
-References: <20200210172929.6001-1-wsa+renesas@sang-engineering.com>
- <20200210172929.6001-2-wsa+renesas@sang-engineering.com>
- <20200217075837.2agub5deqdpet3ce@rric.localdomain>
- <20200217081758.GA2814@ninjato>
- <64a14944-ed27-9f4f-6d1b-e31508c92692@lucaceresoli.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64a14944-ed27-9f4f-6d1b-e31508c92692@lucaceresoli.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR0701CA0076.eurprd07.prod.outlook.com
- (2603:10a6:3:64::20) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
+        Mon, 17 Feb 2020 05:02:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581933719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TW3AX1zhEOAIb9+pffiOsDPYyvGlBL72llm3++vEal0=;
+        b=Wvu3TIE2xgJ0wUVJKXSJfvrcItNxAdxoZQvobNu27zSDTDggQszIQqDpeKUwPkTvOWK81K
+        Wq6lPc2AAEuM/+u0+1Gm9E3X0Vc5hgBkSxl74zscfEaEZof/aUMU2SaGrw5+01s1z/Km04
+        SpD/0zY9c2bYhhEd3FB4QIaNF621UTw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-fszoPHNCPVKZfqAXzMi6TQ-1; Mon, 17 Feb 2020 05:01:57 -0500
+X-MC-Unique: fszoPHNCPVKZfqAXzMi6TQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DF92800EB2;
+        Mon, 17 Feb 2020 10:01:55 +0000 (UTC)
+Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-195.ams2.redhat.com [10.36.116.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78FC810013A1;
+        Mon, 17 Feb 2020 10:01:52 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
+ from a device path
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leif Lindholm <leif@nuviainc.com>,
+        Peter Jones <pjones@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Alexander Graf <agraf@csgraf.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Lukas Wunner <lukas@wunner.de>
+References: <20200216141104.21477-1-ardb@kernel.org>
+ <20200216141104.21477-3-ardb@kernel.org>
+ <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com>
+ <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+From:   Laszlo Ersek <lersek@redhat.com>
+Message-ID: <d69a5f7b-90da-651e-c800-f185702df8a8@redhat.com>
+Date:   Mon, 17 Feb 2020 11:01:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Received: from rric.localdomain (31.208.96.227) by HE1PR0701CA0076.eurprd07.prod.outlook.com (2603:10a6:3:64::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.8 via Frontend Transport; Mon, 17 Feb 2020 10:01:02 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2fae5329-6107-49be-03a6-08d7b3904cd0
-X-MS-TrafficTypeDiagnostic: MN2PR18MB3040:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR18MB3040290F1BB8A9D4BA66F37FD9160@MN2PR18MB3040.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0316567485
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(199004)(189003)(7696005)(86362001)(52116002)(6916009)(54906003)(316002)(956004)(1076003)(53546011)(6506007)(5660300002)(478600001)(186003)(16526019)(2906002)(15650500001)(81166006)(8936002)(66556008)(81156014)(66946007)(66476007)(9686003)(6666004)(55016002)(8676002)(4326008)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3040;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9ozb8iYjEnmbHPTJoZDonWC6LyYEus7zYYjOc+2pUYSM2qe9I06kAOSsarmdqy76aykWuPahrkvJfvrsC+XVR0bWIFH3aVPES86SKtg6r6NVv/X4M9KSpc/DRFTM6J0IxiOUPq33udjI6kpdt2ceaUuyZJl8Psh7PsvtCy/ZA4+F9tM4Vf5qtxNY8cFTPN/MXQrkZH1ORZ2CBKclxCOj1V39ZQpwvcn7JS/FqseNhFZuTOevhxeeghWHncuLswefL8RXleYqnzo0l7WRF4XgQN8adoYX6n9N+9AaIyrVGAm9VxG0EQ+qkFQIRc546p+aRQg+yBr5lFGO/r1gsGXT5Il8vPAhJIXSx3EKpwSsVAuH2kPmm28gqWNR7BPUWVTofVxn8E911lHtuBgePtCxAzUURRmabwLDv8AFYhBQ1mf3FRrtUcly5naWfuH5zrHr
-X-MS-Exchange-AntiSpam-MessageData: LV9zAUn7e0ZfFzGDKt4sv4KTsQtnWRYkzKT1z5nmcAzhKS7wxUxrd2zqKqwCPwGxGu4rMh8jl0rr0/SBNPhbQ+9vxnYMQk3mjExiBChtvpzIXT8cRUDUt+sz28RUACWtvQKzAlRtzkUqBxY6TP1/HQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fae5329-6107-49be-03a6-08d7b3904cd0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:01:04.5415
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EKhZNtobrcmxXaj7fM9ezUE8NptNzhuAUDkvHlieL8dharlzCzg++IRezB6OvmBavG9dpW8nyeNetLmH7wzwsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3040
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_05:2020-02-14,2020-02-17 signatures=0
+In-Reply-To: <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.02.20 10:14:52, Luca Ceresoli wrote:
-> Hi,
+On 02/17/20 10:23, Ard Biesheuvel wrote:
+> On Mon, 17 Feb 2020 at 10:15, Laszlo Ersek <lersek@redhat.com> wrote:
+>>
+>> On 02/16/20 15:11, Ard Biesheuvel wrote:
+>>> There are currently two ways to specify the initrd to be passed to the
+>>> Linux kernel when booting via the EFI stub:
+>>> - it can be passed as a initrd= command line option when doing a pure PE
+>>>   boot (as opposed to the EFI handover protocol that exists for x86)
+>>> - otherwise, the bootloader or firmware can load the initrd into memory,
+>>>   and pass the address and size via the bootparams struct (x86) or
+>>>   device tree (ARM)
+>>>
+>>> In the first case, we are limited to loading from the same file system
+>>> that the kernel was loaded from, and it is also problematic in a trusted
+>>> boot context, given that we cannot easily protect the command line from
+>>> tampering without either adding complicated white/blacklisting of boot
+>>> arguments or locking down the command line altogether.
+>>>
+>>> In the second case, we force the bootloader to duplicate knowledge about
+>>> the boot protocol which is already encoded in the stub, and which may be
+>>> subject to change over time, e.g., bootparams struct definitions, memory
+>>> allocation/alignment requirements for the placement of the initrd etc etc.
+>>> In the ARM case, it also requires the bootloader to modify the hardware
+>>> description provided by the firmware, as it is passed in the same file.
+>>> On systems where the initrd is measured after loading, it creates a time
+>>> window where the initrd contents might be manipulated in memory before
+>>> handing over to the kernel.
+>>>
+>>> Address these concerns by adding support for loading the initrd into
+>>> memory by invoking the EFI LoadFile2 protocol installed on a vendor
+>>> GUIDed device path that specifically designates a Linux initrd.
+>>> This addresses the above concerns, by putting the EFI stub in charge of
+>>> placement in memory and of passing the base and size to the kernel proper
+>>> (via whatever means it desires) while still leaving it up to the firmware
+>>> or bootloader to obtain the file contents, potentially from other file
+>>> systems than the one the kernel itself was loaded from. On platforms that
+>>> implement measured boot, it permits the firmware to take the measurement
+>>> right before the kernel actually consumes the contents.
+>>>
+>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>>> ---
+>>>  drivers/firmware/efi/libstub/arm-stub.c        | 15 +++-
+>>>  drivers/firmware/efi/libstub/efi-stub-helper.c | 82 ++++++++++++++++++++
+>>>  drivers/firmware/efi/libstub/efistub.h         |  4 +
+>>>  drivers/firmware/efi/libstub/x86-stub.c        | 23 ++++++
+>>>  include/linux/efi.h                            |  1 +
+>>>  5 files changed, 122 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+>>> index 2edc673ea06c..4bae620b95b9 100644
+>>> --- a/drivers/firmware/efi/libstub/arm-stub.c
+>>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
+>>> @@ -160,6 +160,7 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+>>>       enum efi_secureboot_mode secure_boot;
+>>>       struct screen_info *si;
+>>>       efi_properties_table_t *prop_tbl;
+>>> +     unsigned long max_addr;
+>>>
+>>>       sys_table = sys_table_arg;
+>>>
+>>> @@ -258,10 +259,18 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
+>>>       if (!fdt_addr)
+>>>               pr_efi("Generating empty DTB\n");
+>>>
+>>> -     status = efi_load_initrd(image, &initrd_addr, &initrd_size, ULONG_MAX,
+>>> -                              efi_get_max_initrd_addr(dram_base, *image_addr));
+>>> +     max_addr = efi_get_max_initrd_addr(dram_base, *image_addr);
+>>> +     status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size, max_addr);
+>>> +     if (status == EFI_SUCCESS) {
+>>> +             pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
+>>> +     } else if (status == EFI_NOT_FOUND) {
+>>> +             status = efi_load_initrd(image, &initrd_addr, &initrd_size,
+>>> +                                      ULONG_MAX, max_addr);
+>>> +             if (status == EFI_SUCCESS)
+>>> +                     pr_efi("Loaded initrd from command line option\n");
+>>> +     }
+>>>       if (status != EFI_SUCCESS)
+>>> -             pr_efi_err("Failed initrd from command line!\n");
+>>> +             pr_efi_err("Failed to load initrd!\n");
+>>>
+>>>       efi_random_get_seed();
+>>>
+>>> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>> index 49008ac88b63..e37afe2c752e 100644
+>>> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>>> @@ -299,3 +299,85 @@ void efi_char16_printk(efi_char16_t *str)
+>>>       efi_call_proto(efi_table_attr(efi_system_table(), con_out),
+>>>                      output_string, str);
+>>>  }
+>>> +
+>>> +/*
+>>> + * The LINUX_EFI_INITRD_MEDIA_GUID vendor media device path below provides a way
+>>> + * for the firmware or bootloader to expose the initrd data directly to the stub
+>>> + * via the trivial LoadFile2 protocol, which is defined in the UEFI spec, and is
+>>> + * very easy to implement. It is a simple Linux initrd specific conduit between
+>>> + * kernel and firmware, allowing us to put the EFI stub (being part of the
+>>> + * kernel) in charge of where and when to load the initrd, while leaving it up
+>>> + * to the firmware to decide whether it needs to expose its filesystem hierarchy
+>>> + * via EFI protocols.
+>>> + */
+>>> +static const struct {
+>>> +     struct efi_vendor_dev_path      vendor;
+>>> +     struct efi_generic_dev_path     end;
+>>> +} __packed initrd_dev_path = {
+>>> +     {
+>>> +             EFI_DEV_MEDIA,
+>>> +             EFI_DEV_MEDIA_VENDOR,
+>>> +             sizeof(struct efi_vendor_dev_path),
+>>> +             LINUX_EFI_INITRD_MEDIA_GUID
+>>> +     }, {
+>>> +             EFI_DEV_END_PATH,
+>>> +             EFI_DEV_END_ENTIRE,
+>>> +             sizeof(struct efi_generic_dev_path)
+>>> +     }
+>>> +};
+>>> +
+>>> +/**
+>>> + * efi_load_initrd_dev_path - load the initrd from the Linux initrd device path
+>>> + * @load_addr:       pointer to store the address where the initrd was loaded
+>>> + * @load_size:       pointer to store the size of the loaded initrd
+>>> + * @max:     upper limit for the initrd memory allocation
+>>> + * @return:  %EFI_SUCCESS if the initrd was loaded successfully, in which case
+>>> + *           @load_addr and @load_size are assigned accordingly
+>>> + *           %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
+>>> + *           device path
+>>> + *           %EFI_LOAD_ERROR in all other cases
+>>
+>> [*]
+>>
+>>> + */
+>>> +efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
+>>> +                                   unsigned long *load_size,
+>>> +                                   unsigned long max)
+>>> +{
+>>> +     efi_guid_t lf2_proto_guid = EFI_LOAD_FILE2_PROTOCOL_GUID;
+>>> +     efi_device_path_protocol_t *dp;
+>>> +     efi_load_file2_protocol_t *lf2;
+>>> +     unsigned long initrd_addr;
+>>> +     unsigned long initrd_size;
+>>> +     efi_handle_t handle;
+>>> +     efi_status_t status;
+>>> +
+>>> +     if (!load_addr || !load_size)
+>>> +             return EFI_INVALID_PARAMETER;
+>>
+>> Doesn't return EFI_LOAD_ERROR.
+>>
+>>> +
+>>> +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
+>>> +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
+>>> +     if (status != EFI_SUCCESS)
+>>> +             return status;
+>>
+>> Seems safe (the only plausible error could be EFI_NOT_FOUND).
+>>
+>>> +
+>>> +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
+>>> +                          (void **)&lf2);
+>>> +     if (status != EFI_SUCCESS)
+>>> +             return status;
+>>
+>> Interesting case; this should never fail... but note, if it does, it
+>> returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
+>> from the handle).
+>>
+>>> +
+>>> +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
+>>> +     if (status != EFI_BUFFER_TOO_SMALL)
+>>> +             return EFI_LOAD_ERROR;
+>>> +
+>>> +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
+>>> +     if (status != EFI_SUCCESS)
+>>> +             return status;
+>>
+>> Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
+>> could return EFI_OUT_OF_RESOURCES.
+>>
 > 
-> On 17/02/20 09:17, Wolfram Sang wrote:
-> > 
-> >>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >>
-> >>> -struct i2c_client *i2c_setup_smbus_alert(struct i2c_adapter *adapter,
-> >>> +struct i2c_client *i2c_install_smbus_alert(struct i2c_adapter *adapter,
-> >>>  					 struct i2c_smbus_alert_setup *setup);
-> >>
-> >> This function naming is a bit odd. It creates a struct i2c_client.
-> >> Then, there is also i2c_new_client_device() and i2c_new_device(). For
-> >> i2c_new_client_device() there are no users at all outside of
-> >> i2c-core-base.c (except for Falcon NIC), it is only a wrapper.
-> > 
-> > i2c_new_device (and friends) returned NULL on error. I am currently
-> > converting all i2c_new_* functions to return an ERRPTR. So,
-> > i2c_new_client_device is the new function, i2c_new_device is deprecated.
-> > If you check v5.6-rc1, you will find many more users. Similarily,
-> > i2c_new_dummy is deprecated (and removed already), i2c_new_dummy_device
-> > is the new thing.
-> > 
-> >> So how about reducing the interface to those both only to:?
-> >>
-> >>  i2c_new_device()
-> >>  i2c_new_device_smbus()
-> > 
-> > Given the above, it would be:
-> > 
-> > 	i2c_new_client_device()
-> > 	i2c_new_smbus_device()
-> > 
-> > Yet, I think this is too vague. Maybe
-> > 
-> > 	i2c_new_smbus_alert_device()
+> Hmm, guess I was a bit sloppy with the return codes. The important
+> thing is that EFI_NOT_FOUND is only returned in the one specifically
+> defined case.
 > 
-> I always found the function naming a bit messy in the linux i2c
-> implementation. Among the names proposed in this thread,
-> i2c_new_smbus_alert_device() is the only one that makes sense to me for
-> the new function: it is not vague, and it is coherent with other names
-> of recently introduced functions (i2c_new_*_device()). Of course the
-> "alert device" is not a real device, but it looks like it is as it has
-> its own "slave" address. So I vote for this name...
+>> Looks OK to me otherwise.
+>>
+> 
+> Thanks.
+> 
+>> (... I'm a bit doubtful of passing and End node to LF2 rather than a
+>> filepath node with "" for pathname, but it's an LF2 on our own vendor
+>> path, so I guess we dictate what we accept.)
+>>
+> 
+> It seems to me that the whole point of advancing the
+> pointer-to-pointer-to-device path protocol past the matched part of
+> the device path is to make it straight-forward for the caller to pass
+> the remainder into the protocol implementation. So if the matched part
+> fully defines the target, pointing to an end node is the only correct
+> thing to do imo, as the empty file did not appear in the device path
+> that was used to locate the protocol.
 
-Yes, better fix the naming now that the i/f is new. As all these
-function create a i2c_client struct, the whole set of functions could
-be also named i2c_client_create*() with specialized functions such as
-i2c_client_create_smbus() or so. It will be clear it is a subset.
+Fair enough.
 
-Anyway, it's just a function name, but while reading the code it was
-not obvious to me that i2c_install_smbus_alert() is actually a subset
-of i2c_new_client_device(). That said, I like the i2c_client_create*()
-variants.
+Thanks
+Laszlo
 
--Robert
