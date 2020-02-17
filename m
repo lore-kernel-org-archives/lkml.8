@@ -2,133 +2,123 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A6AC34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4F4C34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFF120836
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C5724658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581967340;
+	bh=e5ynq68K7XvQCy1SpM5+Di9nf0iC5AyuVQV2dGoHBPk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W39X7BBRtEceiv8FwGbvubW76v/A6ZRNJZk58BLKQOgylM1iSzYn9yZVFkPv4shFE
+	 jTnHYAmoyQelHrsyyFU0DUH0HAoJ6tgeUp91WdC+pFgL3DBdvN/CjyRWurc/9BqI1v
+	 8XAuaOJmvWPAwAT/aiy1wden9B9mwx2vlGQpkG/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgBQTTW (ORCPT
+        id S1728476AbgBQTWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:19:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34631 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729716AbgBQTSv (ORCPT
+        Mon, 17 Feb 2020 14:22:19 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35653 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgBQTWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:18:51 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3luo-0006BS-De; Mon, 17 Feb 2020 20:18:46 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 02DA91C20B9;
-        Mon, 17 Feb 2020 20:18:46 +0100 (CET)
-Date:   Mon, 17 Feb 2020 19:18:45 -0000
-From:   "tip-bot2 for Alexander Popov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timer: Improve the comment describing schedule_timeout()
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200117225900.16340-1-alex.popov@linux.com>
-References: <20200117225900.16340-1-alex.popov@linux.com>
+        Mon, 17 Feb 2020 14:22:18 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w12so21111904wrt.2;
+        Mon, 17 Feb 2020 11:22:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dQu0c/96h+gGpCGNJWP56GTqSBWJTi+tOW85OAlEpGo=;
+        b=PksRAbLi1ZtOjbgdvz6tprUvq0f6OpowU9ojiYRPaIU7F5N0YwIds7pS0W5SpRcfQJ
+         C51PXqT4fNTOL72d9EnFQYOTWTesf/7xskdHY0Toi1rTWHnu6BGc687KUXSIxf0sJvtI
+         SczJccJToC7TrkDTj6nU2r6s3/nysU1G/R92bJYF/QcgfaktpM3zA4CEsahoGrGu9erA
+         kLmtuJRGiGJhmtNbTb9wqnE6QNZ+ROF99DKndBgk2RkyMTcjAN8vHBd/++IVUApNcpa3
+         UBQskXwgulPfvGSd+V+xc0XiaLf/tnSF8+nC8F+yKB7/krGzfApDFcCKzL7XIDEnQFR7
+         Bwbw==
+X-Gm-Message-State: APjAAAUvJsaEX6f3ao6fcD4Qw71mJviL4lMt/pSDchNOHU+ShfnQ87VH
+        mAo/wu/p4yzakguWHhVMa8//WJr+PqNNRnXtPCU=
+X-Google-Smtp-Source: APXvYqzje049VqM8Uvs3YZgtldZLuL23bcp8xq730hDgZyw6hmDMsr2PamxYJgibsaPwTngrk4GnMvr+nAJ2rKs0gHw=
+X-Received: by 2002:a05:6000:c4:: with SMTP id q4mr22678321wrx.332.1581967335660;
+ Mon, 17 Feb 2020 11:22:15 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158196712575.13786.9130197359091225757.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200107133501.327117-1-namhyung@kernel.org> <20200107133501.327117-5-namhyung@kernel.org>
+ <20200108215235.GA12995@krava> <CAM9d7cifgLKbu5KM+QF6ZK9DGbN=8g1oj+vzU3HcTfrUQHP5jg@mail.gmail.com>
+ <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
+ <20200121094246.GA707582@krava> <20200217154604.GE19953@kernel.org>
+In-Reply-To: <20200217154604.GE19953@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 17 Feb 2020 11:22:04 -0800
+Message-ID: <CAM9d7ciaNNJFxVPeCHkwkshDccbdYc2MMzM7+-eD_AVBnRM-aQ@mail.gmail.com>
+Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+Hi Arnaldo,
 
-Commit-ID:     6e317c32fd39a13e4854a27958d5e35d15d196be
-Gitweb:        https://git.kernel.org/tip/6e317c32fd39a13e4854a27958d5e35d15d196be
-Author:        Alexander Popov <alex.popov@linux.com>
-AuthorDate:    Sat, 18 Jan 2020 01:59:00 +03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Feb 2020 20:12:19 +01:00
+On Mon, Feb 17, 2020 at 7:46 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Jan 21, 2020 at 10:42:46AM +0100, Jiri Olsa escreveu:
+> > On Mon, Jan 20, 2020 at 10:57:47PM +0900, Namhyung Kim wrote:
+> > > So I tried this but then realized that it's hard to get the perf_env later
+> > > when it needs to convert a cgroup id to name (ie. in sort_entry.se_snprintf).
+> > > I also checked maybe I can resolve it when a hist entry is added,
+> > > but it doesn't have the pointer there too.
+>
+> > looks like there might be a path for standard report where hists
+> > are part of evsel object:
+> >
+> >   'struct hist_entry' via ->hists to  'struct hists'
+> >   hists_to_evsel(hists) to 'struct evsel'
+> >   'struct evsel' via ->evlist to 'struct evlist'
+> >   and there you have evlist->env ;-)
+>
+> Hey, recently I did work that ended up adding a 'struct maps' to 'struct
+> map_symbol' and then hist_entry::ms has it, enough?
+>
+> i.e.:
+>
+> hist_entry::ms->maps->machine
+>
+>   he->ms->maps->machine
 
-timer: Improve the comment describing schedule_timeout()
+Yep, that's enough for my use.
 
-When working commit 6dcd5d7a7a29c1e, a mistake was noticed by Linus:
-schedule_timeout() was called without setting the task state to anything
-particular.
+>
+> > however I was wondering if we could add 'machine' pointer
+> > to the hist object, that would make that simpler ;-)
+>
+> Directly from one of its hist_entries? As above?
 
-It calls the scheduler, but doesn't delay anything, because the task stays
-runnable. That happens because sched_submit_work() does nothing for tasks
-in TASK_RUNNING state.
+Right, any path from hist_entry to perf_env would be ok.
 
-That turned out to be the intended behavior. Adding a WARN() is not useful
-as the task could be woken up right after setting the state and before
-reaching schedule_timeout().
+>
+> > not sure about the way.. would be nice if that'd work for
+> > both evsel hists and standalone ones like in c2c
+>
+> > but maybe just some init helper that sets the pointer early on
+> > might do the job
+>
+> Sorry for the delay in answering, was travelling/vacations, now taming a
+> huge mailbox :-\
 
-Improve the comment about schedule_timeout() and describe that more
-explicitly.
+No problem, I'll send the next version soon.
 
-Signed-off-by: Alexander Popov <alex.popov@linux.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200117225900.16340-1-alex.popov@linux.com
-
-
----
- kernel/time/timer.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4820823..cb34fac 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1828,21 +1828,23 @@ static void process_timeout(struct timer_list *t)
-  * schedule_timeout - sleep until timeout
-  * @timeout: timeout value in jiffies
-  *
-- * Make the current task sleep until @timeout jiffies have
-- * elapsed. The routine will return immediately unless
-- * the current task state has been set (see set_current_state()).
-+ * Make the current task sleep until @timeout jiffies have elapsed.
-+ * The function behavior depends on the current task state
-+ * (see also set_current_state() description):
-  *
-- * You can set the task state as follows -
-+ * %TASK_RUNNING - the scheduler is called, but the task does not sleep
-+ * at all. That happens because sched_submit_work() does nothing for
-+ * tasks in %TASK_RUNNING state.
-  *
-  * %TASK_UNINTERRUPTIBLE - at least @timeout jiffies are guaranteed to
-  * pass before the routine returns unless the current task is explicitly
-- * woken up, (e.g. by wake_up_process())".
-+ * woken up, (e.g. by wake_up_process()).
-  *
-  * %TASK_INTERRUPTIBLE - the routine may return early if a signal is
-  * delivered to the current task or the current task is explicitly woken
-  * up.
-  *
-- * The current task state is guaranteed to be TASK_RUNNING when this
-+ * The current task state is guaranteed to be %TASK_RUNNING when this
-  * routine returns.
-  *
-  * Specifying a @timeout value of %MAX_SCHEDULE_TIMEOUT will schedule
-@@ -1850,7 +1852,7 @@ static void process_timeout(struct timer_list *t)
-  * value will be %MAX_SCHEDULE_TIMEOUT.
-  *
-  * Returns 0 when the timer has expired otherwise the remaining time in
-- * jiffies will be returned.  In all cases the return value is guaranteed
-+ * jiffies will be returned. In all cases the return value is guaranteed
-  * to be non-negative.
-  */
- signed long __sched schedule_timeout(signed long timeout)
+Thanks
+Namhyung
