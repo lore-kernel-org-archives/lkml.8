@@ -2,215 +2,138 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C72C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3415EC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DAD20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE6D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geapOaJ3"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zEu5MUQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgBQKK4 (ORCPT
+        id S1729161AbgBQKLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:10:56 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38328 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgBQKK4 (ORCPT
+        Mon, 17 Feb 2020 05:11:18 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40100 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729002AbgBQKLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:10:56 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so17755152wmj.3;
-        Mon, 17 Feb 2020 02:10:54 -0800 (PST)
+        Mon, 17 Feb 2020 05:11:17 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n18so18154117ljo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:11:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LX7y+Gxv8oRaIJU3vImQ/7NA8JiuiTJW0+co3xKxx/0=;
-        b=geapOaJ3nlK45RXQfVL6jtxxGxfiUuiHwgoQnBqh9LjYQcIr9ClD07903OVC+6S0Q1
-         ok9btbORdf4NCHrcrIwr2AU4X07DvYjVl5Lf1/pC9n8VBNStrQ9g6NMOMuEwMfb2gbTV
-         rA7oT58WNAfuyrT4+zoA1Z2snRT3nd+/QcKcq8zzM82HEioDDcBvp9iY5w2gP5WFhs8Z
-         4o8cxwvIeiOaFqQjN+Dm01wrzKs867P1nct7MI6cWInhcJ8JTBSrUvFjS4XgRXLZ3HGt
-         ZZ6ACCPPvdANTB+h7sfaIuqXHDQpTAq47NIQuew84Orrs7KdbU17VjqPUUjLCUHGZg2p
-         yvLA==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A7RKQ4ZTCrIf6WU3LWe0K/rriT2SokS7Kl7BJW+LdTU=;
+        b=zEu5MUQlYw63tCjUwdW8VAq2ypF/TDByOzDs29nJi6lY8niYv18kH3ZiYcVpedxtJt
+         8ELQSR3Gut612KekflotI0fQxcJbKvKebO+5fxvy6HKX7WCbp4Z5YDuhsDAppe0KCOK0
+         2TX5BbsUirQve1UmFY8aDI/qeuqhOamt+BpuWOxtujqCjU6odQGGI5PMGcJZE3XWGBN+
+         F4ULFY9yunWDtm9q5hSpxQIQjEnBvfrb7akkICBNChm79+ixtjdnAlHz6Clx1n/xh8tF
+         MUf4zMqv0wsxHY2jMecinInGzlv/PSf2aKon6Swl7JFwfeF7OYwshRMZ+gQEhNm5P9Ek
+         d05Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LX7y+Gxv8oRaIJU3vImQ/7NA8JiuiTJW0+co3xKxx/0=;
-        b=tdK1uNqvWAVvZ+PeEH6uPhgZyzc49ZDF263Vl6mK0Qa09wUgxGMFWy2kxlYZyl1qFJ
-         AMxEaDMtxfO8Vc+qWRgjpYdIr3b1F3XK9Bgm7Ki0MVKFMvpuEOKlzQc8QxQaIJ/1fOGC
-         TPDo8UC51fY6onM6NlNtDU+M+rUOme+boso4FsdsMPkVKCBhdaSMtDv9gFf5AMUPvVQb
-         19AGZAppVkhl2TKss0XTrI3AUe3H9XqOVl2hWFa1vZU4CLtgnsrcG6mHYVG30GRqJjqR
-         w/biqyl2wyIUe0JHim2Ro84X+gQCHelaQAH822a3yfqCsxtnd2xQYNL0hnvpqWFLQGtm
-         ZX2A==
-X-Gm-Message-State: APjAAAXYCQHjj+8T06YTb3B/6pPnXQROH8I2Tnq4yTEZsvvjlR7uFuh1
-        5WEtcD7bPxJhhYIODuXv0X8=
-X-Google-Smtp-Source: APXvYqyAHskOIWqEMbSGfBOftJ8ieYOll9XUwpzj3attdAluofPcpc1g45hkJBbhGCXMJD+vXXkO8Q==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr22602924wmf.133.1581934253295;
-        Mon, 17 Feb 2020 02:10:53 -0800 (PST)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id x11sm19796428wmg.46.2020.02.17.02.10.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 02:10:52 -0800 (PST)
-Subject: Re: [PATCH 1/2] ARM: dts: mediatek: rename scpsys nodes to
- power-controller
-To:     matthias.bgg@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200212144145.25407-1-matthias.bgg@kernel.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <66df71d2-9295-b0ee-1a43-c13d49ebeaa9@gmail.com>
-Date:   Mon, 17 Feb 2020 11:10:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A7RKQ4ZTCrIf6WU3LWe0K/rriT2SokS7Kl7BJW+LdTU=;
+        b=FwQYV7fj8QEorvmOC0sjBPFcKNu++uOAZPSb/aiFcGvWhbSALijnOYjzlZub5jjtWq
+         R5KaruuAtQdNs0+Vuq7AJrJE8LZnOlzvEt2mmScICALV4j5V1GEtHxcOivtaGylg/yM+
+         KJj3gBFWJM6TZc8RAAtwD6Ux/SMCgqKgezomvn1fv1gsvZU1Xb5dk+hgeuYlbshSIt7c
+         OCT/NehQ5drMH1j6o+WUASYE0KRPkT6AyozqbWxJd/JJywLOnQOoQtgDTVMPtYOsjRIl
+         jQT/ArlF/NWytP3sRI59AtqAH6g+cNCa/DaYPjatfsOwVdQV6o+A7S7AsSSARCHR8kQk
+         InJw==
+X-Gm-Message-State: APjAAAXbICihtZy9vturmVp/j0rW4/n9EL+Ks8mV5hvVgpMK0MtPX+mU
+        8e+/hjFNmMZFa2gAwkoYnlIneA==
+X-Google-Smtp-Source: APXvYqwXQ5Fdcz23uGi65PcZ1865HLJNfZsVs0bsnqI/YKhJEznIeMRmjQNYnXM/cnAlOQRoalBn2A==
+X-Received: by 2002:a2e:9d11:: with SMTP id t17mr9871632lji.169.1581934275777;
+        Mon, 17 Feb 2020 02:11:15 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id u16sm40913lfi.36.2020.02.17.02.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 02:11:14 -0800 (PST)
+Date:   Mon, 17 Feb 2020 11:11:14 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Message-ID: <20200217101114.GO3013231@oden.dyn.berto.se>
+References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212144145.25407-1-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
+Thanks for your feedback.
 
-On 12/02/2020 15:41, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <matthias.bgg@gmail.com>
+On 2020-02-17 09:01:18 +0100, Geert Uytterhoeven wrote:
+> Hi Niklas,
 > 
-> The nodes with name scpsys actually implement a power-controller.
-> Rename the nodes to match the bindings description.
+> On Sun, Feb 16, 2020 at 2:09 PM Niklas Söderlund
+> <niklas.soderlund+renesas@ragnatech.se> wrote:
+> > Add an entry to make myself a maintainer of the Renesas R-Car thermal
+> > drivers.
+> >
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 > 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Thanks for your patch!
+> 
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14206,6 +14206,15 @@ F:     Documentation/devicetree/bindings/i2c/renesas,iic.txt
+> >  F:     drivers/i2c/busses/i2c-rcar.c
+> >  F:     drivers/i2c/busses/i2c-sh_mobile.c
+> >
+> > +RENESAS R-CAR THERMAL DRIVERS
+> > +M:     Niklas Söderlund <niklas.soderlund@ragnatech.se>
+> 
+> +renesas@???
 
-For the record, both applied to v5.6-next/dts[32,64]
+I have not used the +renesas@ for my other entry in MAINTAINERS for 
+R-Car VIN and wish them to be the same. I have do not mind if that is 
+with or without the +renesas tag.
 
-> ---
+@Shimoda-san: What would you and Renesas prefer I use?
+
 > 
->  arch/arm/boot/dts/mt2701.dtsi | 2 +-
->  arch/arm/boot/dts/mt7623.dtsi | 2 +-
->  arch/arm/boot/dts/mt7629.dtsi | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> > +L:     linux-renesas-soc@vger.kernel.org
+> > +S:     Supported
+> > +F:     Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> > +F:     Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> > +F:     drivers/thermal/rcar_gen3_thermal.c
+> > +F:     drivers/thermal/rcar_thermal.c
+> > +
+> >  RENESAS RIIC DRIVER
+> >  M:     Chris Brandt <chris.brandt@renesas.com>
+> >  S:     Supported
 > 
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 51e1305c6471..2093b38d6e6d 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -148,7 +148,7 @@ syscfg_pctl_a: syscfg@10005000 {
->  		reg = <0 0x10005000 0 0x1000>;
->  	};
->  
-> -	scpsys: scpsys@10006000 {
-> +	scpsys: power-controller@10006000 {
->  		compatible = "mediatek,mt2701-scpsys", "syscon";
->  		#power-domain-cells = <1>;
->  		reg = <0 0x10006000 0 0x1000>;
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index a79f0b6c3429..f76b4a3c34b9 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -268,7 +268,7 @@ syscfg_pctl_a: syscfg@10005000 {
->  		reg = <0 0x10005000 0 0x1000>;
->  	};
->  
-> -	scpsys: scpsys@10006000 {
-> +	scpsys: power-controller@10006000 {
->  		compatible = "mediatek,mt7623-scpsys",
->  			     "mediatek,mt2701-scpsys",
->  			     "syscon";
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 867b88103b9d..60787632e4a1 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -90,7 +90,7 @@ pericfg: syscon@10002000 {
->  			#clock-cells = <1>;
->  		};
->  
-> -		scpsys: scpsys@10006000 {
-> +		scpsys: power-controller@10006000 {
->  			compatible = "mediatek,mt7629-scpsys",
->  				     "mediatek,mt7622-scpsys";
->  			#power-domain-cells = <1>;
+> Gr{oetje,eeting}s,
 > 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Regards,
+Niklas Söderlund
