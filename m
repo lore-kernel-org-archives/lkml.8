@@ -2,336 +2,121 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC33CC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D43CC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B05020726
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C21207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581920641;
+	bh=/x16WuB9ipweEdbRODxI3vPb27s/qMR9LxZj9eSXNFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FB0jQgPqke+ObLT9xh//LAzdJnuu2Hc8yc/KuI+PyKriMWMHZFHAXiw4zwNWMcnn5
+	 EOgpuyfGt6ZI3p7NEkFwzXHM/G5dQkEnWTKkg/tV/2bwzL/QPLvUqdBGJfWv4UhnX7
+	 C5K6gqrMb7rkQCk8WuQeNG6Gtwng+Y6/K+3dugy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgBQGVy (ORCPT
+        id S1726420AbgBQGYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:21:54 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10625 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725835AbgBQGVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:21:53 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B80EE3605D358AAF3B7C;
-        Mon, 17 Feb 2020 14:21:48 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Feb
- 2020 14:21:45 +0800
-Subject: Re: [PATCH] f2fs: fix inconsistent comments
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20190927102305.11587-1-yuchao0@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <65ad1ac6-726c-b974-bcfc-ce09965ff497@huawei.com>
-Date:   Mon, 17 Feb 2020 14:21:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 17 Feb 2020 01:24:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgBQGX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:23:59 -0500
+Received: from hump (unknown [87.71.56.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A24120718;
+        Mon, 17 Feb 2020 06:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581920638;
+        bh=/x16WuB9ipweEdbRODxI3vPb27s/qMR9LxZj9eSXNFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mJdZTvPNP7YeXjSuzPzV/mVObPxfKwGHjQ8p+ZHMpTmRtHHC4KJ+V+9rVhTjyc//R
+         yxkqqla61U/GzHYInQ60SIgL3AIru2SOxlhJ63F/uuX7uFtPbBAVrgP2PtOiwMtu2+
+         8lDq6YKKg11ilpAZTu8jTZrVhQnL/nAs55Me23Y8=
+Date:   Mon, 17 Feb 2020 08:23:44 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 00/13] mm: remove __ARCH_HAS_5LEVEL_HACK
+Message-ID: <20200217062344.GA4729@hump>
+References: <20200216081843.28670-1-rppt@kernel.org>
+ <20200216082230.GV25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190927102305.11587-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200216082230.GV25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
-
-I can still see many inconsistent comments in f2fs code, would you consider to
-merge this patch to fix them?
-
-Thanks,
-
-On 2019/9/27 18:23, Chao Yu wrote:
-> Lack of maintenance on comments may mislead developers, fix them.
+On Sun, Feb 16, 2020 at 08:22:30AM +0000, Russell King - ARM Linux admin wrote:
+> On Sun, Feb 16, 2020 at 10:18:30AM +0200, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > Hi,
+> > 
+> > These patches convert several architectures to use page table folding and
+> > remove __ARCH_HAS_5LEVEL_HACK along with include/asm-generic/5level-fixup.h.
+> > 
+> > The changes are mostly about mechanical replacement of pgd accessors with p4d
+> > ones and the addition of higher levels to page table traversals.
+> > 
+> > All the patches were sent separately to the respective arch lists and
+> > maintainers hence the "v2" prefix.
 > 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/checkpoint.c | 18 ++++--------------
->  fs/f2fs/data.c       | 19 ++++++-------------
->  fs/f2fs/f2fs.h       |  2 +-
->  fs/f2fs/file.c       |  1 -
->  fs/f2fs/gc.c         |  5 ++++-
->  fs/f2fs/inode.c      |  2 +-
->  fs/f2fs/namei.c      |  2 +-
->  fs/f2fs/node.c       |  6 +-----
->  fs/f2fs/shrinker.c   |  2 +-
->  fs/f2fs/super.c      |  4 ++--
->  fs/f2fs/xattr.c      |  1 -
->  11 files changed, 21 insertions(+), 41 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index a0eef95b9e0e..c9f68b7e2663 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -50,9 +50,6 @@ struct page *f2fs_grab_meta_page(struct f2fs_sb_info *sbi, pgoff_t index)
->  	return page;
->  }
->  
-> -/*
-> - * We guarantee no failure on the returned page.
-> - */
->  static struct page *__get_meta_page(struct f2fs_sb_info *sbi, pgoff_t index,
->  							bool is_meta)
->  {
-> @@ -206,7 +203,7 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
->  }
->  
->  /*
-> - * Readahead CP/NAT/SIT/SSA pages
-> + * Readahead CP/NAT/SIT/SSA/POR pages
->   */
->  int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
->  							int type, bool sync)
-> @@ -898,7 +895,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
->  		return -ENOMEM;
->  	/*
->  	 * Finding out valid cp block involves read both
-> -	 * sets( cp pack1 and cp pack 2)
-> +	 * sets( cp pack 1 and cp pack 2)
->  	 */
->  	cp_start_blk_no = le32_to_cpu(fsb->cp_blkaddr);
->  	cp1 = validate_checkpoint(sbi, cp_start_blk_no, &cp1_version);
-> @@ -1387,10 +1384,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
->  					!f2fs_cp_error(sbi));
->  
-> -	/*
-> -	 * modify checkpoint
-> -	 * version number is already updated
-> -	 */
-> +	/* start to update checkpoint, cp ver is already updated previously */
->  	ckpt->elapsed_time = cpu_to_le64(get_mtime(sbi, true));
->  	ckpt->free_segment_count = cpu_to_le32(free_segments(sbi));
->  	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
-> @@ -1543,9 +1537,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	return unlikely(f2fs_cp_error(sbi)) ? -EIO : 0;
->  }
->  
-> -/*
-> - * We guarantee that this checkpoint procedure will not fail.
-> - */
->  int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  {
->  	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
-> @@ -1613,7 +1604,6 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  
->  	f2fs_flush_sit_entries(sbi, cpc);
->  
-> -	/* unlock all the fs_lock[] in do_checkpoint() */
->  	err = do_checkpoint(sbi, cpc);
->  	if (err)
->  		f2fs_release_discard_addrs(sbi);
-> @@ -1626,7 +1616,7 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	if (cpc->reason & CP_RECOVERY)
->  		f2fs_notice(sbi, "checkpoint: version = %llx", ckpt_ver);
->  
-> -	/* do checkpoint periodically */
-> +	/* update CP_TIME to trigger checkpoint periodically */
->  	f2fs_update_time(sbi, CP_TIME);
->  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
->  out:
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 5755e897a5f0..87a6d34db34a 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -234,9 +234,6 @@ static void f2fs_write_end_io(struct bio *bio)
->  	bio_put(bio);
->  }
->  
-> -/*
-> - * Return true, if pre_bio's bdev is same as its target device.
-> - */
->  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
->  				block_t blk_addr, struct bio *bio)
->  {
-> @@ -273,6 +270,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
->  	return 0;
->  }
->  
-> +/*
-> + * Return true, if pre_bio's bdev is same as its target device.
-> + */
->  static bool __same_bdev(struct f2fs_sb_info *sbi,
->  				block_t blk_addr, struct bio *bio)
->  {
-> @@ -280,9 +280,6 @@ static bool __same_bdev(struct f2fs_sb_info *sbi,
->  	return bio->bi_disk == b->bd_disk && bio->bi_partno == b->bd_partno;
->  }
->  
-> -/*
-> - * Low-level block read/write IO operations.
-> - */
->  static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
->  {
->  	struct f2fs_sb_info *sbi = fio->sbi;
-> @@ -1142,13 +1139,9 @@ void __do_map_lock(struct f2fs_sb_info *sbi, int flag, bool lock)
->  }
->  
->  /*
-> - * f2fs_map_blocks() now supported readahead/bmap/rw direct_IO with
-> - * f2fs_map_blocks structure.
-> - * If original data blocks are allocated, then give them to blockdev.
-> - * Otherwise,
-> - *     a. preallocate requested block addresses
-> - *     b. do not use extent cache for better performance
-> - *     c. give the block addresses to blockdev
-> + * f2fs_map_blocks() tries to find or build mapping relationship which
-> + * maps continuous logical blocks to physical blocks, and return such
-> + * info via f2fs_map_blocks structure.
->   */
->  int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
->  						int create, int flag)
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index f078cd20dab8..aa2e6ddccdbf 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -2291,9 +2291,9 @@ static inline block_t datablock_addr(struct inode *inode,
->  
->  	raw_node = F2FS_NODE(node_page);
->  
-> -	/* from GC path only */
->  	if (is_inode) {
->  		if (!inode)
-> +			/* from GC path only */
->  			base = offset_in_addr(&raw_node->i);
->  		else if (f2fs_has_extra_attr(inode))
->  			base = get_extra_isize(inode);
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 29bc0a542759..6ddb2f1964a9 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -89,7 +89,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  		goto out_sem;
->  	}
->  
-> -	/* fill the page */
->  	f2fs_wait_on_page_writeback(page, DATA, false, true);
->  
->  	/* wait for GCed page writeback via META_MAPPING */
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index 5877bd729689..9f6df84eb9e2 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -192,7 +192,10 @@ static void select_policy(struct f2fs_sb_info *sbi, int gc_type,
->  		p->ofs_unit = sbi->segs_per_sec;
->  	}
->  
-> -	/* we need to check every dirty segments in the FG_GC case */
-> +	/*
-> +	 * adjust candidates range, should select all dirty segments for
-> +	 * foreground GC and urgent GC cases.
-> +	 */
->  	if (gc_type != FG_GC &&
->  			(sbi->gc_mode != GC_URGENT) &&
->  			p->max_search > sbi->max_victim_search)
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index 8547b6f7921b..540280cee614 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -718,7 +718,7 @@ void f2fs_evict_inode(struct inode *inode)
->  	else
->  		f2fs_inode_synced(inode);
->  
-> -	/* ino == 0, if f2fs_new_inode() was failed t*/
-> +	/* for the case f2fs_new_inode() was failed, .i_ino is zero, skip it */
->  	if (inode->i_ino)
->  		invalidate_mapping_pages(NODE_MAPPING(sbi), inode->i_ino,
->  							inode->i_ino);
-> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-> index 4faf06e8bf89..c19ffcf1d987 100644
-> --- a/fs/f2fs/namei.c
-> +++ b/fs/f2fs/namei.c
-> @@ -167,7 +167,7 @@ static inline int is_extension_exist(const unsigned char *s, const char *sub)
->  }
->  
->  /*
-> - * Set multimedia files as cold files for hot/cold data separation
-> + * Set file's temperature for hot/cold data separation
->   */
->  static inline void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
->  		const unsigned char *name)
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 8b66bc4c004b..d35e7f953c13 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -510,9 +510,6 @@ int f2fs_try_to_free_nats(struct f2fs_sb_info *sbi, int nr_shrink)
->  	return nr - nr_shrink;
->  }
->  
-> -/*
-> - * This function always returns success
-> - */
->  int f2fs_get_node_info(struct f2fs_sb_info *sbi, nid_t nid,
->  						struct node_info *ni)
->  {
-> @@ -716,8 +713,7 @@ static int get_node_path(struct inode *inode, long block,
->  /*
->   * Caller should call f2fs_put_dnode(dn).
->   * Also, it should grab and release a rwsem by calling f2fs_lock_op() and
-> - * f2fs_unlock_op() only if ro is not set RDONLY_NODE.
-> - * In the case of RDONLY_NODE, we don't need to care about mutex.
-> + * f2fs_unlock_op() only if mode is set with ALLOC_NODE.
->   */
->  int f2fs_get_dnode_of_data(struct dnode_of_data *dn, pgoff_t index, int mode)
->  {
-> diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-> index a467aca29cfe..d66de5999a26 100644
-> --- a/fs/f2fs/shrinker.c
-> +++ b/fs/f2fs/shrinker.c
-> @@ -58,7 +58,7 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
->  		/* count extent cache entries */
->  		count += __count_extent_cache(sbi);
->  
-> -		/* shrink clean nat cache entries */
-> +		/* count clean nat cache entries */
->  		count += __count_nat_entries(sbi);
->  
->  		/* count free nids cache entries */
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 1443cee15863..ce012b6a9eb0 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -1552,7 +1552,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
->  out_unlock:
->  	mutex_unlock(&sbi->gc_mutex);
->  restore_flag:
-> -	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
-> +	sbi->sb->s_flags = s_flags;	/* Restore SB_RDONLY status */
->  	return err;
->  }
->  
-> @@ -3477,7 +3477,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->  			f2fs_err(sbi, "Cannot turn on quotas: error %d", err);
->  	}
->  #endif
-> -	/* if there are nt orphan nodes free them */
-> +	/* if there are any orphan inodes, free them */
->  	err = f2fs_recover_orphan_inodes(sbi);
->  	if (err)
->  		goto free_meta;
-> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-> index 181900af2576..66a04143768f 100644
-> --- a/fs/f2fs/xattr.c
-> +++ b/fs/f2fs/xattr.c
-> @@ -746,7 +746,6 @@ int f2fs_setxattr(struct inode *inode, int index, const char *name,
->  	f2fs_balance_fs(sbi, true);
->  
->  	f2fs_lock_op(sbi);
-> -	/* protect xattr_ver */
->  	down_write(&F2FS_I(inode)->i_sem);
->  	down_write(&F2FS_I(inode)->i_xattr_sem);
->  	err = __f2fs_setxattr(inode, index, name, value, size, ipage, flags);
-> 
+> You fail to explain why this change which adds 488 additional lines of
+> code is desirable.
+
+Right, I should have been more explicit about it.
+
+As Christophe mentioned in his reply, removing 'HACK' and 'fixup' is an
+improvement.
+Another thing is that when all architectures behave the same it opens
+opportunities for cleaning up repeating definitions of page table
+manipulation primitives.
+
+ 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
+
+-- 
+Sincerely yours,
+Mike.
