@@ -2,90 +2,67 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC84DC7619C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3279C7619D
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8643A2072C
+	by mail.kernel.org (Postfix) with ESMTP id D480420725
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgBQFEN (ORCPT
+        id S1726267AbgBQFEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 00:04:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:57472 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 00:04:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:57484 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgBQFEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 00:04:12 -0500
+        id S1725280AbgBQFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 00:04:14 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 904FD1FB;
-        Sun, 16 Feb 2020 21:04:11 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B30E3101E;
+        Sun, 16 Feb 2020 21:04:13 -0800 (PST)
 Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.16.95])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B81EC3F703;
-        Sun, 16 Feb 2020 21:04:08 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0AD3C3F703;
+        Sun, 16 Feb 2020 21:04:11 -0800 (PST)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 0/5] mm/vma: Use available wrappers when possible
-Date:   Mon, 17 Feb 2020 10:33:48 +0530
-Message-Id: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH 1/5] mm/vma: Add missing VMA flag readable name for VM_SYNC
+Date:   Mon, 17 Feb 2020 10:33:49 +0530
+Message-Id: <1581915833-21984-2-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
+References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apart from adding a VMA flag readable name for trace purpose, this series
-does some open encoding replacements with availabe VMA specific wrappers.
-This skips VM_HUGETLB check in vma_migratable() as its already being done
-with another patch (https://patchwork.kernel.org/patch/11347831/) which
-is yet to be merged.
+This just adds the missing readable name for VM_SYNC.
 
-This series applies on 5.6-rc2. This has been build tested on multiple
-platforms, though boot and runtime testing was limited to arm64 and x86.
-
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: linux-kernel@vger.kernel.org
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: linux-mips@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-sh@vger.kernel.org
-Cc: kvm-ppc@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm@kvack.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ include/trace/events/mmflags.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Anshuman Khandual (5):
-  mm/vma: Add missing VMA flag readable name for VM_SYNC
-  mm/vma: Make vma_is_accessible() available for general use
-  mm/vma: Replace all remaining open encodings with is_vm_hugetlb_page()
-  mm/vma: Replace all remaining open encodings with vma_set_anonymous()
-  mm/vma: Replace all remaining open encodings with vma_is_anonymous()
-
- arch/csky/mm/fault.c              | 2 +-
- arch/m68k/mm/fault.c              | 2 +-
- arch/mips/mm/fault.c              | 2 +-
- arch/powerpc/kvm/e500_mmu_host.c  | 2 +-
- arch/powerpc/mm/fault.c           | 2 +-
- arch/sh/mm/fault.c                | 2 +-
- arch/x86/mm/fault.c               | 2 +-
- drivers/misc/mic/scif/scif_mmap.c | 2 +-
- fs/binfmt_elf.c                   | 2 +-
- include/asm-generic/tlb.h         | 2 +-
- include/linux/mm.h                | 5 +++++
- include/trace/events/mmflags.h    | 1 +
- kernel/events/core.c              | 3 ++-
- kernel/sched/fair.c               | 2 +-
- mm/gup.c                          | 5 +++--
- mm/memory.c                       | 5 -----
- mm/mempolicy.c                    | 3 +--
- 17 files changed, 23 insertions(+), 21 deletions(-)
-
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index a1675d43777e..5fb752034386 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -154,6 +154,7 @@ IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
+ 	{VM_ACCOUNT,			"account"	},		\
+ 	{VM_NORESERVE,			"noreserve"	},		\
+ 	{VM_HUGETLB,			"hugetlb"	},		\
++	{VM_SYNC,			"sync"		},		\
+ 	__VM_ARCH_SPECIFIC_1				,		\
+ 	{VM_WIPEONFORK,			"wipeonfork"	},		\
+ 	{VM_DONTDUMP,			"dontdump"	},		\
 -- 
 2.20.1
 
