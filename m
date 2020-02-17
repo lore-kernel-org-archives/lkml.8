@@ -2,155 +2,293 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E05C3B185
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817EBC7619F
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AE520725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5890820725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nCFlOJzz"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kSHe2PDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgBQK5j (ORCPT
+        id S1728544AbgBQK5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:57:39 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:41383 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgBQK5i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:57:38 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200217105736epoutp01185bad2d883e4844526e5c57d3067236~0K18NN0-22561625616epoutp01N
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 10:57:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200217105736epoutp01185bad2d883e4844526e5c57d3067236~0K18NN0-22561625616epoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581937056;
-        bh=flRtUgtOzt68ZWflEOBlwHLR4yZjl2aD182nmWPyiNA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=nCFlOJzzo0Uo8IbnzLKEnypte/MjNxDwiDaqU5pGJRqw4uV5JkdDeQOJYSDczm02V
-         h8gcjNOopu5wRjrgspBPGBkGsfURarkDUq05PF7hBn7NFlKSdihjx/Zn/0sNAfsEzB
-         uqiTHkRZiUFr7kZova2QnQrBHL9G9etU2M2//3Jw=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200217105736epcas1p308c95d5c7ec8f4afabeb7b902171302a~0K175UpZl1995819958epcas1p3T;
-        Mon, 17 Feb 2020 10:57:36 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48LgtP5Jf4zMqYlp; Mon, 17 Feb
-        2020 10:57:33 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A9.46.51241.D917A4E5; Mon, 17 Feb 2020 19:57:33 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200217105732epcas1p2b8704ad2ac31f5b8b5a4f43269cf375e~0K141yoaY0732807328epcas1p2b;
-        Mon, 17 Feb 2020 10:57:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200217105732epsmtrp258f683d8089c70f8239c75e68c75caa9~0K141MgsD1221912219epsmtrp2n;
-        Mon, 17 Feb 2020 10:57:32 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-e1-5e4a719d0543
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D5.57.06569.C917A4E5; Mon, 17 Feb 2020 19:57:32 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200217105732epsmtip23bebebc408c21e415324393fd0d96343~0K14p3m8I1552715527epsmtip2I;
-        Mon, 17 Feb 2020 10:57:32 +0000 (GMT)
-Subject: Re: [PATCH] extcon: Remove unneeded extern keyword from
- extcon-provider.h
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <28e13524-7879-e40a-1585-cba1dca4cda7@samsung.com>
-Date:   Mon, 17 Feb 2020 20:05:40 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 17 Feb 2020 05:57:41 -0500
+Received: from mail-bn8nam11on2056.outbound.protection.outlook.com ([40.107.236.56]:23521
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728483AbgBQK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:57:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGVQK8PGVE5J/8YYCgpEoTHw5yxcTdWiTHhWYIJIcSVOfPFH1xo/2MV3JdVcwE7hVMqKAb4ot5/sR4ILafF1PWeG1Nn3NoDdYtQ9ELjPc/njR0tmfXfgb1PsjmUbTnTgkT3mFelqHSqA4LaECKwvsJ81sAzpfpfY2rMoclUqW3td9rEgplCpXvlR2Uh+eNlk9vtL9YdfSEsWvuc0b4IzFPuZd4fHHH5wKmC9lkbgLzqh2a/K6sBu9eOhsfI1Yz84t6azzk3YkQxULlid4oSI440/JU20uGXEHBSvLJwvh+nt4C5AjeYgy3pp/jI4953KMA7cNNQ2Gd8mw82Dk+E2Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tk3yVsQBsnFHfK+lPLe1x0LU3dcCu+pYoqlAKp4CdoE=;
+ b=e9wghSQH7ajJ/l3dbJhig3i2yc/reDWNFyn1rFpT9L1rgzPZ73XvFV5USTi/0wq+qRgjhtmiQ2CNLdDfIxlRZW0eqKmgdULwJY0P474UBOL6jgfIdEzt3PVaO+CsiN5FW+TUVfBx/N1GaYq6LdocIoGInbv0sgNp6+CWglBf4O6FNBng0vKoGu1cnhUeHQDGhiAR5EexPk2sZEfMcX6Mvg8Bwshkm/lsa+hM4ceyavg9wOA7oY1xAa6I6CcVEbGkYOoLc1MW+eO2u1ETLx5j/1kd2LmKBY4wlPT8atG3kVQKimlYgMyAZnBYRAk1xQiFq8JzD1XPxU0nUZy8a45xTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tk3yVsQBsnFHfK+lPLe1x0LU3dcCu+pYoqlAKp4CdoE=;
+ b=kSHe2PDaNUzZt0kJto399I1cYU6ugUIikCsu1UUaqMMmWFTOE2PQcj/EM33YkpCih+xDbVlJ1WjfZigwcRb2oVRLBVYXf9C/Hzelf3JrrKFGPvQA7uJiZl08XNmpXvD5bjjEz93jhsDzE36rXULj8TnfJElCJHgwDxnkpDBL9X4=
+Received: from CH2PR02CA0030.namprd02.prod.outlook.com (2603:10b6:610:4e::40)
+ by DM5PR02MB3862.namprd02.prod.outlook.com (2603:10b6:4:b1::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.29; Mon, 17 Feb
+ 2020 10:57:35 +0000
+Received: from BL2NAM02FT012.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by CH2PR02CA0030.outlook.office365.com
+ (2603:10b6:610:4e::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend
+ Transport; Mon, 17 Feb 2020 10:57:35 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT012.mail.protection.outlook.com (10.152.77.27) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Mon, 17 Feb 2020 10:57:35 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3e5m-0007sK-MC; Mon, 17 Feb 2020 02:57:34 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3e5h-0000pT-J6; Mon, 17 Feb 2020 02:57:29 -0800
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HAvMlE025973;
+        Mon, 17 Feb 2020 02:57:22 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3e5a-0000oP-1A; Mon, 17 Feb 2020 02:57:22 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     bgolaszewski@baylibre.com, michal.simek@xilinx.com,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        git@xilinx.com
+Subject: [PATCH 1/2] gpio: xilinx: Add clock adaptation support
+Date:   Mon, 17 Feb 2020 16:27:18 +0530
+Message-Id: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39850400004)(189003)(199004)(44832011)(9786002)(5660300002)(6666004)(8936002)(81166006)(6636002)(336012)(8676002)(356004)(81156014)(426003)(2906002)(186003)(26005)(36756003)(478600001)(7696005)(70586007)(316002)(2616005)(107886003)(4326008)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB3862;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <20200217104516.GA94720@kroah.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOzvjOFqTp83ya4naJiQ11J10bQ2t6MZm/lgrooy0aT2puLd2
-        diMNul9USiyLSJLCjFIUScStSJbsxkKlppYYhaagRVYkllBEOztK/nu+97ud95zDUupyRsPm
-        21zEaRMtPBNKtzyO1sVWHUjL0nlqlhku9HbThpM3GxlD14NrjOHd8TvMWtrYVFfCGL1V9cHG
-        suY6ZBxrWmSiMwtS8oiYQ5xaYjPbc/Jtuan8lm3Z67P1STohVkg2rOS1NtFKUvkN6abYTfkW
-        /0pee1C0uP2SSZQkPn51itPudhFtnl1ypfLEkWNxJDviJNEquW25cWa7dZWg063Q+wv3FuT1
-        nfeoHLWhhz5O1KFjqJ4tRSEs4EQYHv0SXIpCWTW+h6DkRTulBD8QPB94olKCnwgqejvoqZaa
-        sSuMkmhFMFD/gZITavwNwcvOGJnn4u1QPVwWLHM4joJPT/sCzRQ2wcjwGZXMDI4B70gvI3MY
-        XgI9E4OoFLEsh1fDn7JVskzjSLjbUB0YPw/vAF/LKSQzh+eA7+pQYGQIjodP/S9VyvgI6Bu6
-        PsmLwTN6LeAG8FsGfK9vM4qBDdB56/Mkz4XPz5uDFdbA2NfWSf0w1PqeMEpzMYJmb0eQkkgA
-        760KlXxQCkdD44N4RV4C939XIWXxbPg6fi5ILgHMQfEZtVKyFLr636sUXgA3z5Yw5YivnGan
-        cpqFymkWKv8vu4HoOjSfOCRrLpEEh376YzehwG+MSb6Hnr1Kb0OYRfwsbiRjc5Y6SDwoFVrb
-        ELAUH85tiUjLUnM5YmERcdqznW4LkdqQ3n/bFyjNPLPd/7dtrmxBvyIhIcGQKCTpBYGP4AZ2
-        RWepca7oIgWEOIhzqk/FhmiOoRbL/Ddgtq9bc2Lr2rQaV/XtwgztzIsVdO36jH02Ka5k0NGf
-        VPwrLpx4yg9rzo3X96TufpiyPzHzeocnrOtIYfvp9KNFE+4U6tK45nLYLNfyR0B8R3ZGmkcH
-        vXbTUMNjd/fS5a3dp/ZEdS/c/9dS3aNyZvbkz/jObGziZqcf54w8LeWJQgzllMR/jB8BgqMD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSvO6cQq84g+dP1Cwm3rjCYtG8eD2b
-        xeVdc9gsbjeuYHNg8di0qpPNY//cNewefVtWMXp83iQXwBLFZZOSmpNZllqkb5fAlXGrdztT
-        wUquikc/VjE2MK7h6GLk5JAQMJFY8nk6WxcjF4eQwG5GiSV/njJCJCQlpl08ytzFyAFkC0sc
-        PlwMUfOWUWL2gVdgNcICIRKLnvexg9giAhoSL4/eYgGxmQX8JN682QY1dDOjxOKV58GK2AS0
-        JPa/uMEGYvMLKEpc/fGYEWQBr4CdxJ8+K5Awi4CqxMa1i5hBbFGBMImdSx4zgdi8AoISJ2c+
-        AZvPKaAv8fLBWSaIXeoSf+ZdYoawxSVuPZkPFZeX2P52DvMERuFZSNpnIWmZhaRlFpKWBYws
-        qxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgqNES2sH44kT8YcYBTgYlXh4HUI844RY
-        E8uKK3MPMUpwMCuJ8HqLe8UJ8aYkVlalFuXHF5XmpBYfYpTmYFES55XPPxYpJJCeWJKanZpa
-        kFoEk2Xi4JRqYGxv3n+ltuyM77yYBZVscndtGxYt28ud8GL/XZUp5077iB6VWx4tu8hq2/ag
-        43NLRezCOt9+KbV1DzquPO2ln1P+s81GPy5fbpom1LjW6UndmV/KlpxzahkMSt5aeJ8oyfUp
-        WOYasvrcgmX8fcvCapbNydPlOVPw5NS1vwxs+7Ikff9dvvLkZ4QSS3FGoqEWc1FxIgB2z8c0
-        jgIAAA==
-X-CMS-MailID: 20200217105732epcas1p2b8704ad2ac31f5b8b5a4f43269cf375e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd
-References: <CGME20200217103927epcas1p2f0cf3c28dbc78d991ef8f4895e4717dd@epcas1p2.samsung.com>
-        <20200217104728.29330-1-cw00.choi@samsung.com>
-        <20200217104516.GA94720@kroah.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 239b1cfe-89c4-4fab-7d3e-08d7b3983233
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3862:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB3862003C847D0EBCF2CCB420AF160@DM5PR02MB3862.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0316567485
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wURzcLxoZCinmwUdbhx1C0EQ0UEgaCQPyG2VA75C/PpN6FapsDF/pge4Od/ML1MNybPKEJkdsLvTWrXBfMjygK4fZZ8SoO2XvvgA5YYWujZEtzQeIJv1g+6jEe9yZumzAS6xnpLOBQIfkah8jJiuM+xb8iEstabvrBgLfCg9PfDiaCJbuHPKT1r7fGj3BNLkctmiOr/2bwBU9VLPyCpNR6vQMxX0Jk5C8f+Eu5tN9NapvC0kO9DtstTCYWtM8qB7ogFMUzKKpLoS7dPUmYJC1f3tdA5Ozg7s2wOrRa8BjlonZfZIjIuEdj4AfnPcZFKfWoStZIbqvR+uo9wMUM6jnULwYJeVewK20/B1PxQBzJF6OIv7nSUnzh93SWGF9lrIgfUUdOvEPkqHoA5wGH41jNqVAyx+6bGbd+KTPzTaMUxTmi8sGaHRYmGN0ss/8gh4
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:57:35.2448
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 239b1cfe-89c4-4fab-7d3e-08d7b3983233
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3862
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 7:45 PM, Greg KH wrote:
-> On Mon, Feb 17, 2020 at 07:47:28PM +0900, Chanwoo Choi wrote:
->> The commit tb7365587f513 ("extcon: Remove unneeded extern keyword
->> from extcon.h") removes the unneeded extern keyword from extcon header
->> file. But, The commit tb7365587f513 has missed that deletes 'extern'
->> keyword from extcon-provider.h. So that it deletes extern keyword
->> from extcon-provider.h.
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->> Dear Greg,
->>
->> When I removed the unneeded extern keyword from extcon hearder file for
->> v5.6-rc1, although I should remove 'extern' keyword on both extcon.h
->> and extcon-provider.h, I only removed them from extcon.h. It was my mistake.
->>
->> So that I send this patch for v5.6-rc3 release.
->> Could you review and apply it to char-misc git repository directly?
-> 
-> Sure, but it's not really a bugfix, I'll queue it up for 5.7-rc1, ok?
+Add support of clock adaptation for AXI GPIO driver.
 
-Right. It is not bugfix. Just This patch is related to patch[1]
-which was merged to v5.6-rc1.
-[1] commit tb7365587f513 ("extcon: Remove unneeded extern keyword
-from extcon.h")
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+---
+ drivers/gpio/gpio-xilinx.c | 105 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 103 insertions(+), 2 deletions(-)
 
-If you think that it is not needed to be merged for v5.6-rc3,
-I think that it is better to apply it to extcon-next branch
-for v5.7-rc1.
-
-
+diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+index a9748b5198e6..26753ae58295 100644
+--- a/drivers/gpio/gpio-xilinx.c
++++ b/drivers/gpio/gpio-xilinx.c
+@@ -14,6 +14,8 @@
+ #include <linux/io.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/slab.h>
++#include <linux/pm_runtime.h>
++#include <linux/clk.h>
+ 
+ /* Register Offset Definitions */
+ #define XGPIO_DATA_OFFSET   (0x0)	/* Data register  */
+@@ -38,6 +40,7 @@
+  * @gpio_state: GPIO state shadow register
+  * @gpio_dir: GPIO direction shadow register
+  * @gpio_lock: Lock used for synchronization
++ * @clk: clock resource for this driver
+  */
+ struct xgpio_instance {
+ 	struct gpio_chip gc;
+@@ -45,7 +48,8 @@ struct xgpio_instance {
+ 	unsigned int gpio_width[2];
+ 	u32 gpio_state[2];
+ 	u32 gpio_dir[2];
+-	spinlock_t gpio_lock[2];
++	spinlock_t gpio_lock[2];	/* For serializing operations */
++	struct clk *clk;
+ };
+ 
+ static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+@@ -255,6 +259,70 @@ static void xgpio_save_regs(struct xgpio_instance *chip)
+ 		       chip->gpio_dir[1]);
+ }
+ 
++static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret = pm_runtime_get_sync(chip->parent);
++
++	/*
++	 * If the device is already active pm_runtime_get() will return 1 on
++	 * success, but gpio_request still needs to return 0.
++	 */
++	return ret < 0 ? ret : 0;
++}
++
++static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
++{
++	pm_runtime_put(chip->parent);
++}
++
++static int __maybe_unused xgpio_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	int irq = platform_get_irq(pdev, 0);
++	struct irq_data *data = irq_get_irq_data(irq);
++
++	if (!irqd_is_wakeup_set(data))
++		return pm_runtime_force_suspend(dev);
++
++	return 0;
++}
++
++static int __maybe_unused xgpio_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	int irq = platform_get_irq(pdev, 0);
++	struct irq_data *data = irq_get_irq_data(irq);
++
++	if (!irqd_is_wakeup_set(data))
++		return pm_runtime_force_resume(dev);
++
++	return 0;
++}
++
++static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct xgpio_instance *gpio = platform_get_drvdata(pdev);
++
++	clk_disable(gpio->clk);
++
++	return 0;
++}
++
++static int __maybe_unused xgpio_runtime_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct xgpio_instance *gpio = platform_get_drvdata(pdev);
++
++	return clk_enable(gpio->clk);
++}
++
++static const struct dev_pm_ops xgpio_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
++	SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
++			   xgpio_runtime_resume, NULL)
++};
++
+ /**
+  * xgpio_of_probe - Probe method for the GPIO device.
+  * @pdev: pointer to the platform device
+@@ -323,6 +391,8 @@ static int xgpio_probe(struct platform_device *pdev)
+ 	chip->gc.direction_output = xgpio_dir_out;
+ 	chip->gc.get = xgpio_get;
+ 	chip->gc.set = xgpio_set;
++	chip->gc.request = xgpio_request;
++	chip->gc.free = xgpio_free;
+ 	chip->gc.set_multiple = xgpio_set_multiple;
+ 
+ 	chip->gc.label = dev_name(&pdev->dev);
+@@ -333,15 +403,45 @@ static int xgpio_probe(struct platform_device *pdev)
+ 		return PTR_ERR(chip->regs);
+ 	}
+ 
++	chip->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
++	if (IS_ERR(chip->clk)) {
++		if (PTR_ERR(chip->clk) != -ENOENT) {
++			if (PTR_ERR(chip->clk) != -EPROBE_DEFER)
++				dev_err(&pdev->dev, "Input clock not found\n");
++			return PTR_ERR(chip->clk);
++		}
++		/*
++		 * Clock framework support is optional, continue on
++		 * anyways if we don't find a matching clock.
++		 */
++		chip->clk = NULL;
++	}
++	status = clk_prepare_enable(chip->clk);
++	if (status < 0) {
++		dev_err(&pdev->dev, "Failed to prepare clk\n");
++		return status;
++	}
++	pm_runtime_enable(&pdev->dev);
++	status = pm_runtime_get_sync(&pdev->dev);
++	if (status < 0)
++		goto err_unprepare_clk;
++
+ 	xgpio_save_regs(chip);
+ 
+ 	status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+ 	if (status) {
+ 		dev_err(&pdev->dev, "failed to add GPIO chip\n");
+-		return status;
++		goto err_pm_put;
+ 	}
+ 
++	pm_runtime_put(&pdev->dev);
+ 	return 0;
++err_pm_put:
++	pm_runtime_put(&pdev->dev);
++err_unprepare_clk:
++	pm_runtime_disable(&pdev->dev);
++	clk_unprepare(chip->clk);
++	return status;
+ }
+ 
+ static const struct of_device_id xgpio_of_match[] = {
+@@ -356,6 +456,7 @@ static struct platform_driver xgpio_plat_driver = {
+ 	.driver		= {
+ 			.name = "gpio-xilinx",
+ 			.of_match_table	= xgpio_of_match,
++			.pm = &xgpio_dev_pm_ops,
+ 	},
+ };
+ 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.7.4
+
