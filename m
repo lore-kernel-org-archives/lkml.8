@@ -2,134 +2,99 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304BC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E4C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21605206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BEA206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgBQHjz (ORCPT
+        id S1726729AbgBQHlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:39:55 -0500
-Received: from mga06.intel.com ([134.134.136.31]:3856 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgBQHjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:39:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Feb 2020 23:39:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="235148738"
-Received: from zhouy1-mobl1.ccr.corp.intel.com ([10.249.169.88])
-  by orsmga003.jf.intel.com with ESMTP; 16 Feb 2020 23:39:49 -0800
-Message-ID: <6abe2d62a08d38d53c85b3892ed77dbcc543c8fc.camel@intel.com>
-Subject: Re: [PATCH] thermal: fix indentation in makefile
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Frank Lee <tiny.windzz@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 17 Feb 2020 15:39:48 +0800
-In-Reply-To: <CAEExFWte+2f0ys5pmUyo1Fcf+FxpPOTDD3bgiAyOu2wgJ2vy4Q@mail.gmail.com>
-References: <20191221173737.30906-1-tiny.windzz@gmail.com>
-         <19c1277f-f0b1-899d-6db0-5c7ff4fe7512@linaro.org>
-         <CAEExFWte+2f0ys5pmUyo1Fcf+FxpPOTDD3bgiAyOu2wgJ2vy4Q@mail.gmail.com>
+        Mon, 17 Feb 2020 02:41:40 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52811 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgBQHlk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:41:40 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost.discworld.emantor.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <r.czerwinski@pengutronix.de>)
+        id 1j3b2B-0007Cj-4F; Mon, 17 Feb 2020 08:41:39 +0100
+Message-ID: <d7298ea03ab71c414aabc7cac13a7a7511e00ceb.camel@pengutronix.de>
+Subject: Re: [PATCH] ARM: imx: build v7_cpu_resume() unconditionally
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     s.hauer@pengutronix.de, shawnguo@kernel.org
+Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        Lucas Stach <l.stach@pengutronix.de>
+Date:   Mon, 17 Feb 2020 08:41:37 +0100
+In-Reply-To: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
+References: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
+Organization: Pengutronix e.K.
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.34.3 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: r.czerwinski@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-23 at 01:38 +0800, Frank Lee wrote:
-> ：q
-> 
-> On Sun, Dec 22, 2019 at 2:57 AM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
-> > 
-> > On 21/12/2019 18:37, Yangtao Li wrote:
-> > > To unify code style.
-> > > 
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  drivers/thermal/Makefile | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> > > index baeb70bf0568..ab9389bc42b2 100644
-> > > --- a/drivers/thermal/Makefile
-> > > +++ b/drivers/thermal/Makefile
-> > > @@ -5,7 +5,7 @@
-> > > 
-> > >  obj-$(CONFIG_THERMAL)                += thermal_sys.o
-> > >  thermal_sys-y                        += thermal_core.o
-> > > thermal_sysfs.o \
-> > > -                                     thermal_helpers.o
-> > > +                                thermal_helpers.o
-> > 
-> > Here a tabulation is replaced with spaces.
-> 
-> It won't align after using tab here, shouldn't modify it?
+Hi Shawn,
 
-I'd prefer using tab here. Other changes seem okay to me.
+On Thu, 2020-01-16 at 15:18 +0100, Rouven Czerwinski wrote:
+> From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> 
+> This function is not only needed by the platform suspend code, but is
+> also
+> reused as the CPU resume function when the ARM cores can be powered
+> down
+> completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
+> 
+> Providing the static inline stub whenever CONFIG_SUSPEND is disabled
+> means
+> that those platforms will hang on resume from cpuidle if suspend is
+> disabled.
+> 
+> So there are two problems:
+> 
+>   - The static inline stub masks the linker error
+>   - The function is not available where needed
+> 
+> Fix both by just building the function unconditionally, when
+> CONFIG_SOC_IMX6 is enabled. The actual code is three instructions
+> long,
+> so it's arguably ok to just leave it in for all i.MX6 kernel
+> configurations.
+> 
+> Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for
+> i.mx6sx")
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+> ---
+>  arch/arm/mach-imx/Makefile       |  2 ++
+>  arch/arm/mach-imx/common.h       |  4 ++--
+>  arch/arm/mach-imx/resume-imx6.S  | 24 ++++++++++++++++++++++++
+>  arch/arm/mach-imx/suspend-imx6.S | 14 --------------
+>  4 files changed, 28 insertions(+), 16 deletions(-)
+>  create mode 100644 arch/arm/mach-imx/resume-imx6.S
 
-thanks,
-rui
-> 
-> 
-> Yours,
-> Yangtao
-> 
-> > 
-> > >  # interface to/from other layers providing sensors
-> > >  thermal_sys-$(CONFIG_THERMAL_HWMON)          += thermal_hwmon.o
-> > > @@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL) +=
-> > > cpu_cooling.o
-> > >  thermal_sys-$(CONFIG_CLOCK_THERMAL)  += clock_cooling.o
-> > > 
-> > >  # devfreq cooling
-> > > -thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-> > > +thermal_sys-$(CONFIG_DEVFREQ_THERMAL)        +=
-> > > devfreq_cooling.o
-> > > 
-> > >  # platform thermal drivers
-> > >  obj-y                                += broadcom/
-> > > -obj-$(CONFIG_THERMAL_MMIO)           += thermal_mmio.o
-> > > +obj-$(CONFIG_THERMAL_MMIO)   += thermal_mmio.o
-> > >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
-> > >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
-> > >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
-> > > @@ -49,9 +49,9 @@ obj-$(CONFIG_TI_SOC_THERMAL)        += ti-soc-
-> > > thermal/
-> > >  obj-y                                += st/
-> > >  obj-$(CONFIG_QCOM_TSENS)     += qcom/
-> > >  obj-y                                += tegra/
-> > > -obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
-> > > +obj-$(CONFIG_HISI_THERMAL)   += hisi_thermal.o
-> > >  obj-$(CONFIG_MTK_THERMAL)    += mtk_thermal.o
-> > >  obj-$(CONFIG_GENERIC_ADC_THERMAL)    += thermal-generic-adc.o
-> > >  obj-$(CONFIG_ZX2967_THERMAL) += zx2967_thermal.o
-> > >  obj-$(CONFIG_UNIPHIER_THERMAL)       += uniphier_thermal.o
-> > > -obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
-> > > +obj-$(CONFIG_AMLOGIC_THERMAL)        += amlogic_thermal.o
-> > > 
-> > 
-> > 
-> > --
-> >  <http://www.linaro.org/> Linaro.org │ Open source software for ARM
-> > SoCs
-> > 
-> > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> > <http://twitter.com/#!/linaroorg> Twitter |
-> > <http://www.linaro.org/linaro-blog/> Blog
-> > 
+Gentle ping.
+
+Can be found on patchwork: https://patchwork.kernel.org/patch/11337147/
+
+Thanks,
+Rouven Czerwinski
 
