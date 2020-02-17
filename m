@@ -4,131 +4,177 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CC1C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EF5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A59B20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37E220725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBQIHp (ORCPT
+        id S1727533AbgBQIIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:07:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:29037 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgBQIHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:07:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:07:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
-   d="scan'208";a="314705824"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 17 Feb 2020 00:07:44 -0800
-Received: from [10.125.252.180] (abudanko-mobl.ccr.corp.intel.com [10.125.252.180])
-        by linux.intel.com (Postfix) with ESMTP id 27D7258052E;
-        Mon, 17 Feb 2020 00:07:37 -0800 (PST)
-Subject: [PATCH v7 03/12] perf/core: open access to probes for CAP_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Helge Deller <deller@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        oprofile-list@lists.sf.net,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <3364fa26-b5d1-1808-aaee-c057f26e0eb4@linux.intel.com>
-Date:   Mon, 17 Feb 2020 11:07:37 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 17 Feb 2020 03:08:07 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726996AbgBQIIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:08:07 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 54AC2452F8F2324C5EA2;
+        Mon, 17 Feb 2020 16:08:00 +0800 (CST)
+Received: from [127.0.0.1] (10.65.95.32) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
+ 16:07:51 +0800
+Subject: Re: [PATCH] Perf stat: Fix the ratio comments of cache miss-events
+To:     Lin Feng <linf@wangsu.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <ak@linux.intel.com>,
+        <liuqi115@hisilicon.com>
+References: <20200213085540.14998-1-linf@wangsu.com>
+CC:     <linux-kernel@vger.kernel.org>
+From:   Qi Liu <liuqi115@huawei.com>
+Message-ID: <fd881a26-a6e3-5582-6a77-9dd97e5b6f2a@huawei.com>
+Date:   Mon, 17 Feb 2020 16:07:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200213085540.14998-1-linf@wangsu.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.95.32]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Open access to monitoring via kprobes and uprobes and eBPF tracing for
-CAP_PERFMON privileged process. Providing the access under CAP_PERFMON
-capability singly, without the rest of CAP_SYS_ADMIN credentials,
-excludes chances to misuse the credentials and makes operation more
-secure.
+This modification seems fine for me, thanks for your work!
 
-perf kprobes and uprobes are used by ftrace and eBPF. perf probe uses
-ftrace to define new kprobe events, and those events are treated as
-tracepoint events. eBPF defines new probes via perf_event_open interface
-and then the probes are used in eBPF tracing.
-
-CAP_PERFMON implements the principal of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and only
-for the time that such privileges are actually required)
-
-For backward compatibility reasons access to perf_events subsystem
-remains open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN
-usage for secure perf_events monitoring is discouraged with respect to
-CAP_PERFMON capability.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 46464367c47a..4564caa2c527 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9107,7 +9107,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
- 	if (event->attr.type != perf_kprobe.type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/*
-@@ -9167,7 +9167,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
- 	if (event->attr.type != perf_uprobe.type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/*
--- 
-2.20.1
-
+On 2020/2/13 16:55, Lin Feng wrote:
+> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+> iTLB cache and LL-cache, while the comments for them seem a bit
+> misleading. Take L1-dcache for example, its miss ratio
+> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+> accesses/references" seems better.
+> 
+>  285,132,521 cache-misses            #   53.696 % of all cache refs     [83.34%]
+>  531,015,219 cache-references                                           [83.20%]
+>  220,465,183 LLC-load-misses         #   72.33% of all LL-cache miss    [83.44%]
+>                                                                   ^^^^
+>  304,787,745 LLC-loads                                                  [66.60%]
+> 
+> There is an old patch here https://lkml.org/lkml/2019/11/16/37, but
+> seems not upstreamed yet. This patch follows suggestions by Arnaldo.
+> But one difference is using "refs" to follow the convention because
+> there is comment also for cache-misses event which uses
+> "of all cache refs".
+> The comments of L1-icache, dTLB cache, iTLB cache and LL-cache are
+> fixed in the same way.
+> 
+> P.S. Liu and Andi if you don't mind this patch adds your Reviewed-by
+> and Signed-off-by, thanks.
+> 
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
+> Signed-off-by: Lin Feng <linf@wangsu.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 2c41d47f6f83..070e9749e934 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -506,7 +506,7 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+>  
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache refs", ratio);
+>  }
+>  
+>  static void print_l1_icache_misses(struct perf_stat_config *config,
+> @@ -527,7 +527,7 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache refs", ratio);
+>  }
+>  
+>  static void print_dtlb_cache_misses(struct perf_stat_config *config,
+> @@ -547,7 +547,7 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache refs", ratio);
+>  }
+>  
+>  static void print_itlb_cache_misses(struct perf_stat_config *config,
+> @@ -567,7 +567,7 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache refs", ratio);
+>  }
+>  
+>  static void print_ll_cache_misses(struct perf_stat_config *config,
+> @@ -587,7 +587,7 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache refs", ratio);
+>  }
+>  
+>  /*
+> @@ -872,7 +872,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
+>  			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache refs", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
+> @@ -882,7 +882,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
+>  			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL, "of all L1-icache refs", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
+> @@ -892,7 +892,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
+>  			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache refs", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
+> @@ -902,7 +902,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
+>  			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache refs", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
+> @@ -912,7 +912,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
+>  			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL, "of all LL-cache refs", 0);
+>  	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+>  		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
+>  
+> 
 
