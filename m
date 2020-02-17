@@ -2,118 +2,97 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5158AC761A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141C0C761A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234DE20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD05420725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D4GGp8mF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aSDyPP06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgBQMRp (ORCPT
+        id S1728428AbgBQMTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:17:45 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50068 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbgBQMRo (ORCPT
+        Mon, 17 Feb 2020 07:19:25 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:24830 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgBQMTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:17:44 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01HCHSkP023037;
-        Mon, 17 Feb 2020 06:17:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581941848;
-        bh=E3VkN1ikCKZ9GbsHBrahfc8EY2iLwLFkjGpj5EcTql0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=D4GGp8mF7bV47mlTNJMdLLIl1wbz/lr0QD3RiX/mG5Xqp87SEnZZ3HVsa4jbOT0TR
-         Gq2ffGcqDH2Fz9bV2fUlQx8D79l5WRdVLibFb3I5N8QITj1whA3yqFhEsTkt7GB+RT
-         GXt/ghJOEHG3cxLpeUWDESHxuXb49eVhc6hKCXXs=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01HCHSRi121007
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Feb 2020 06:17:28 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 17
- Feb 2020 06:17:28 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 17 Feb 2020 06:17:28 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01HCHNV2078195;
-        Mon, 17 Feb 2020 06:17:24 -0600
-Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Mark Brown <broonie@kernel.org>,
-        "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-CC:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, <dan.carpenter@oracle.com>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>,
-        <dinguyen@kernel.org>, <tien.fong.chee@intel.com>
-References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
- <20200214121145.GF4827@sirena.org.uk>
- <4712cdc4-34cd-990b-3d53-3d394ae1250b@linux.intel.com>
- <20200217115213.GA9304@sirena.org.uk>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <f5f868e5-a977-7487-9395-a76dd5e7c963@ti.com>
-Date:   Mon, 17 Feb 2020 17:48:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 17 Feb 2020 07:19:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581941963;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=gi6Z2pwzRYEGvxwcjbLCS6+ym8OFZt57PA8B2Zkd+uM=;
+        b=aSDyPP06m+lbobm6lcuF3nR2jl3p9KJQ6NfgxhuJCAwb8YzeNhDyYK+m6N9LUG4LNH
+        3HNUo30ozzIHNNzCJkFTLm0yu5SDO02dQ1qAqJlgxgJbUqPiAut37ZNe6UF0xCH+IYJq
+        t285SVv5Br78PEn1hSqRM4F0oqF7LDjp/nPHcqwn5nMZAoBHjzp3+gfcL3ZAEdGGj5Ns
+        U4Fyyzej2xsPIeITQ3HS9n8YajlP+CjjkpjyQfSCz1yMDS5e64GSBHL35AnjccyxvOkn
+        TGmQpU8NElzJ9nh085Kc1iqThcv6zlFO48j3NbvI6M9aoqueEICKRie2VxpN5ejnDHfy
+        8UeQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HCJ7Mm4
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 13:19:07 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
+Date:   Mon, 17 Feb 2020 13:19:06 +0100
+Message-Id: <cf2554c724a8ddc5a3e3485228f3ab750980d4b4.1581941945.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200217115213.GA9304@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vadivel,
+If the gpios are probed after this driver (e.g. if they
+come from an i2c expander) there is no need to print an
+error message.
 
-On 17/02/20 5:22 pm, Mark Brown wrote:
-> On Mon, Feb 17, 2020 at 05:28:38PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> On 14/2/2020 8:11 PM, Mark Brown wrote:
-> 
->>> Given that this is a new driver I'd be very surprised if it broke other
->>> users?  I can imagine it might not work for them and it would definitely
->>> be much better to get their review but it shouldn't be any worse than
->>> the current lack of support.
-> 
->> *[Vignesh]*  The legacy driver under drivers/mtd/spi-nor will be removed as
->> we cannot
->> support both SPI NOR and SPI NAND with single driver if its under
->> spi-nor. New driver should be functionally equivalent to existing one.
->> So I suggest you test this driver on legcay SoCFPGA products.
-> 
-> You're not actually removing the driver here, you're adding another
-> driver for the same thing.
-> 
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/extcon/extcon-palmas.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-I agree with Mark here.
-
-I realized that you are using same CONFIG option as the old one to build
-this driver. This causes new driver to fail to probe as old driver would
-bind to the node instead (both drivers will be built into the kernel and
-both drivers have same compatible).
-
-So, you should remove the old driver. Could you also include patches
-removing old driver? New driver and bindings are anyways backward
-compatible with existing one
-
+diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+index edc5016f46f1..701d7c9584fa 100644
+--- a/drivers/extcon/extcon-palmas.c
++++ b/drivers/extcon/extcon-palmas.c
+@@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
+ 
+ 	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
+ 							GPIOD_IN);
+-	if (IS_ERR(palmas_usb->id_gpiod)) {
++	if (PTR_ERR(palmas_usb->id_gpiod) != -EPROBE_DEFER) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(palmas_usb->id_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get id gpio\n");
+ 		return PTR_ERR(palmas_usb->id_gpiod);
+ 	}
+ 
+ 	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
+ 							GPIOD_IN);
+-	if (IS_ERR(palmas_usb->vbus_gpiod)) {
++	if (PTR_ERR(palmas_usb->vbus_gpiod) != -EPROBE_DEFER) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+ 		return PTR_ERR(palmas_usb->vbus_gpiod);
+ 	}
 -- 
-Regards
-Vignesh
+2.23.0
+
