@@ -2,160 +2,138 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB972C3402A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0F0C3402A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09B02070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917542070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2pROceb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HgN+9rsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgBQVlH (ORCPT
+        id S1730033AbgBQVlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:41:07 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54029 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbgBQVlE (ORCPT
+        Mon, 17 Feb 2020 16:41:45 -0500
+Received: from gateway33.websitewelcome.com ([192.185.145.216]:25011 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729910AbgBQVlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:41:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s10so763333wmh.3;
-        Mon, 17 Feb 2020 13:41:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8ARFrFQV0qlOU9GqIKhHr+/9GQBmGgiD3Q14CXHt7ws=;
-        b=P2pROcebCz0VgM4B3LjbRdt53mGMZJ/572Gmh4gxcuOtve3Ct3epgxq7xh7KTreJtW
-         /V5E7sOGSWIZHly56Cxa1xz+BNNowmsdbc8FIlN4ky5yLPFBEs898w+025l6/4Tk0Twx
-         5SUJCnMdposybv9NE9NZhh5Uz/vi5MGeWuOLVvYHL+Mqxh8m5mkDotvyg8b2d7DBnYsx
-         hVEeBmtkxilP+P2U09JxFSHlz9BY5v1ITvVps8CePC3jXN8okjttoOSP9WndTPQRgPDV
-         q4JO5deQGtiZ1Ne83CEt8J+P+DvA05DLbQyGTAqbpzAysRQCBzR9Id5atMGYT0C36u57
-         tQpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8ARFrFQV0qlOU9GqIKhHr+/9GQBmGgiD3Q14CXHt7ws=;
-        b=VDtdk2Fs8eKaQX9uy0mXdWXIq7LBfGKSbHeb0BTMRUO+bIgWDrNz9wff29lr5h0wJY
-         uSsEpQ6JhCiyRNhadtvjJUsepuWpTBc+uJg6sPyYm67zd4z098uwrRVdx8UvprhMJ7xZ
-         xlqEHP8o4ePyFV77VAahLggegjaczc02VAexjZv1B5OyJouTYK8kCgKlDYQKEq4QoopX
-         Ew6PWtnmoTcduvCkEq2T0fLTKUUkA9NNfXqQh+Azv7772TT5NsH7gata2RxEXwLcQE1o
-         J+OetXcqOkHWq5YTJZ6Qz8KFMawRgX1vgbNlUSqaYVI0xIFJdDbjt0eL8PIf+vuv0jzB
-         98AA==
-X-Gm-Message-State: APjAAAX9e3GoHVgwHIxgHrsrC2djZRhUFlK46SM8M1rYokxChtOSMaj2
-        1a5/sz6haZOqqtAdQbgycTcIrmZCuzk=
-X-Google-Smtp-Source: APXvYqx/0EaWmdS7wPEFj0nevtLwqqPVhFUkYYkYkfo7PcJf/rCTyqMxBRSRGx5iAmbPndkQ5E9t1g==
-X-Received: by 2002:a1c:7fd7:: with SMTP id a206mr900534wmd.171.1581975662156;
-        Mon, 17 Feb 2020 13:41:02 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:41c6:31a6:d880:888? (p200300EA8F29600041C631A6D8800888.dip0.t-ipconnect.de. [2003:ea:8f29:6000:41c6:31a6:d880:888])
-        by smtp.googlemail.com with ESMTPSA id t187sm916530wmt.25.2020.02.17.13.41.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 13:41:01 -0800 (PST)
-Subject: [PATCH net-next 2/3] r8169: use new helper tcp_v6_gso_csum_prep
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     David Miller <davem@davemloft.net>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guo-Fu Tseng <cooldavid@cooldavid.org>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Timur Tabi <timur@kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-References: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com>
-Message-ID: <02ea88e7-1a79-f779-d58c-bb1dced0b3b4@gmail.com>
-Date:   Mon, 17 Feb 2020 22:40:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 17 Feb 2020 16:41:44 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 4CDAE26E836
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 15:41:43 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3o99jw7fHAGTX3o99j7GZG; Mon, 17 Feb 2020 15:41:43 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8exBLdInKXUzJxq+ZuAOxKExTTscVDb1+bUsC6sGG8g=; b=HgN+9rsp3fFCj0fJUhjufn2/l7
+        VUbRynRSy0CAxMQY1KjfA6V0LtIYanqWDAcf8yWC0eCA4k6KrY0nHZXuU/xZc13RL7fkTFbpblB9Z
+        oaw0tEO4v2iCjRJSKPg7FVGlJmBpyn54igDPdhEvFipu6bdIypiYf2GXKs6TVHrC6ONCP579pTBsD
+        k6d1SyEurDwqrzaiQ1aIEJb6Ekg+EqhR2woGKuNkFF0iOLmuHVv8PsANnufrSfgeIw47Z2AM++650
+        z398+1TN/CWW5k09Ld5ZremaZw19BRvbwk+wOE0VJUTDklJDkNpaX6tXERWgdq/NvwlKLQ1s2lOvv
+        y6pqb2rA==;
+Received: from [200.68.140.26] (port=12036 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j3o97-001HA1-II; Mon, 17 Feb 2020 15:41:41 -0600
+Date:   Mon, 17 Feb 2020 15:44:23 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] netfilter: ebtables: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200217214423.GA15008@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.26
+X-Source-L: No
+X-Exim-ID: 1j3o97-001HA1-II
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.26]:12036
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 22
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the code by using new helper tcp_v6_gso_csum_prep.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/ethernet/realtek/r8169_main.c | 26 ++---------------------
- 1 file changed, 2 insertions(+), 24 deletions(-)
+ net/bridge/netfilter/ebtables.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 5a9143b50..75ba10069 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4108,29 +4108,6 @@ static bool rtl_test_hw_pad_bug(struct rtl8169_private *tp, struct sk_buff *skb)
- 	return skb->len < ETH_ZLEN && tp->mac_version == RTL_GIGA_MAC_VER_34;
- }
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index e1256e03a9a8..78db58c7aec2 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1561,7 +1561,7 @@ struct compat_ebt_entry_mwt {
+ 		compat_uptr_t ptr;
+ 	} u;
+ 	compat_uint_t match_size;
+-	compat_uint_t data[0] __attribute__ ((aligned (__alignof__(struct compat_ebt_replace))));
++	compat_uint_t data[] __aligned(__alignof__(struct compat_ebt_replace));
+ };
  
--/* msdn_giant_send_check()
-- * According to the document of microsoft, the TCP Pseudo Header excludes the
-- * packet length for IPv6 TCP large packets.
-- */
--static int msdn_giant_send_check(struct sk_buff *skb)
--{
--	const struct ipv6hdr *ipv6h;
--	struct tcphdr *th;
--	int ret;
--
--	ret = skb_cow_head(skb, 0);
--	if (ret)
--		return ret;
--
--	ipv6h = ipv6_hdr(skb);
--	th = tcp_hdr(skb);
--
--	th->check = 0;
--	th->check = ~tcp_v6_check(0, &ipv6h->saddr, &ipv6h->daddr, 0);
--
--	return ret;
--}
--
- static void rtl8169_tso_csum_v1(struct sk_buff *skb, u32 *opts)
- {
- 	u32 mss = skb_shinfo(skb)->gso_size;
-@@ -4163,9 +4140,10 @@ static bool rtl8169_tso_csum_v2(struct rtl8169_private *tp,
- 			break;
- 
- 		case htons(ETH_P_IPV6):
--			if (msdn_giant_send_check(skb))
-+			if (skb_cow_head(skb, 0))
- 				return false;
- 
-+			tcp_v6_gso_csum_prep(skb, false);
- 			opts[0] |= TD1_GTSENV6;
- 			break;
- 
+ /* account for possible padding between match_size and ->data */
 -- 
 2.25.0
-
 
