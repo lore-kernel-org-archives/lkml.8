@@ -2,121 +2,70 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D43CC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E97C7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C21207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAFA20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581920641;
-	bh=/x16WuB9ipweEdbRODxI3vPb27s/qMR9LxZj9eSXNFE=;
+	s=default; t=1581920840;
+	bh=KgSYnzHHJzBCjBaAI6KjAC2O3NBeCAluTBC1sa9/DX0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FB0jQgPqke+ObLT9xh//LAzdJnuu2Hc8yc/KuI+PyKriMWMHZFHAXiw4zwNWMcnn5
-	 EOgpuyfGt6ZI3p7NEkFwzXHM/G5dQkEnWTKkg/tV/2bwzL/QPLvUqdBGJfWv4UhnX7
-	 C5K6gqrMb7rkQCk8WuQeNG6Gtwng+Y6/K+3dugy0=
+	b=LKGuMj5D5E72F9LhnfAqUfcRdWWlK5p5HR25MorCEnS6otJaYbbVFqTLn8Ll5JNGB
+	 0+4K0U3NMQf/yKrO85aIS9S4eorVXoXt3STcTKQjitIHH/p5Jl55+123P++iluO2Ng
+	 ky/dvxH3N3z0O0qvxysL1/GtHZ9Dcu8eckg8wZuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgBQGYA (ORCPT
+        id S1726267AbgBQG1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:24:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 01:27:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgBQGX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:23:59 -0500
-Received: from hump (unknown [87.71.56.52])
+        id S1725873AbgBQG1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:27:18 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A24120718;
-        Mon, 17 Feb 2020 06:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2620020718;
+        Mon, 17 Feb 2020 06:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581920638;
-        bh=/x16WuB9ipweEdbRODxI3vPb27s/qMR9LxZj9eSXNFE=;
+        s=default; t=1581920837;
+        bh=KgSYnzHHJzBCjBaAI6KjAC2O3NBeCAluTBC1sa9/DX0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mJdZTvPNP7YeXjSuzPzV/mVObPxfKwGHjQ8p+ZHMpTmRtHHC4KJ+V+9rVhTjyc//R
-         yxkqqla61U/GzHYInQ60SIgL3AIru2SOxlhJ63F/uuX7uFtPbBAVrgP2PtOiwMtu2+
-         8lDq6YKKg11ilpAZTu8jTZrVhQnL/nAs55Me23Y8=
-Date:   Mon, 17 Feb 2020 08:23:44 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 00/13] mm: remove __ARCH_HAS_5LEVEL_HACK
-Message-ID: <20200217062344.GA4729@hump>
-References: <20200216081843.28670-1-rppt@kernel.org>
- <20200216082230.GV25745@shell.armlinux.org.uk>
+        b=PyNf3OKGIP3comcBUhBg7VuYttapVBhZIdyvpXPQlmUeM3XqGTU+2bAEDvKa5nQi0
+         FhVogDlMiFnSMS5R0YM2DJL49HQLAzZP+EK5uJzpKmF0nQClSpvrCazz/QP3C32Pbo
+         teGAKSwrBpZvFHxzKLDQuufnw4QeRFgWeS5qDg10=
+Date:   Mon, 17 Feb 2020 14:27:11 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        abel.vesa@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
+        jun.li@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] clk: imx: Include clk-provider.h instead of clk.h for
+ i.MX8M SoCs clock driver
+Message-ID: <20200217062647.GA6862@dragon>
+References: <1581490943-17920-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200216082230.GV25745@shell.armlinux.org.uk>
+In-Reply-To: <1581490943-17920-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 08:22:30AM +0000, Russell King - ARM Linux admin wrote:
-> On Sun, Feb 16, 2020 at 10:18:30AM +0200, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Hi,
-> > 
-> > These patches convert several architectures to use page table folding and
-> > remove __ARCH_HAS_5LEVEL_HACK along with include/asm-generic/5level-fixup.h.
-> > 
-> > The changes are mostly about mechanical replacement of pgd accessors with p4d
-> > ones and the addition of higher levels to page table traversals.
-> > 
-> > All the patches were sent separately to the respective arch lists and
-> > maintainers hence the "v2" prefix.
+On Wed, Feb 12, 2020 at 03:02:23PM +0800, Anson Huang wrote:
+> The i.MX8M SoCs clock driver are provider, NOT consumer, so clk-provider.h
+> should be used instead of clk.h.
 > 
-> You fail to explain why this change which adds 488 additional lines of
-> code is desirable.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Right, I should have been more explicit about it.
-
-As Christophe mentioned in his reply, removing 'HACK' and 'fixup' is an
-improvement.
-Another thing is that when all architectures behave the same it opens
-opportunities for cleaning up repeating definitions of page table
-manipulation primitives.
-
- 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-
--- 
-Sincerely yours,
-Mike.
+Applied, thanks.
