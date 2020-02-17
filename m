@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE9EC34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1153FC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83552208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DF1208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgBQTTC (ORCPT
+        id S1729800AbgBQTSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:19:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34661 "EHLO
+        Mon, 17 Feb 2020 14:18:54 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34649 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbgBQTSz (ORCPT
+        with ESMTP id S1729756AbgBQTSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:18:55 -0500
+        Mon, 17 Feb 2020 14:18:52 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3lup-0006CB-Oe; Mon, 17 Feb 2020 20:18:47 +0100
+        id 1j3lur-0006DH-6h; Mon, 17 Feb 2020 20:18:49 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 45C391C20B9;
-        Mon, 17 Feb 2020 20:18:47 +0100 (CET)
-Date:   Mon, 17 Feb 2020 19:18:46 -0000
-From:   "tip-bot2 for Christophe Leroy" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D060F1C20B8;
+        Mon, 17 Feb 2020 20:18:48 +0100 (CET)
+Date:   Mon, 17 Feb 2020 19:18:48 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Allow architectures to override the ns
- shift operation
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: timers/core] lib/vdso: Avoid highres update if clocksource is
+ not VDSO capable
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3Cb3d449de856982ed060a71e6ace8eeca4654e685=2E15803?=
- =?utf-8?q?99657=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
-References: =?utf-8?q?=3Cb3d449de856982ed060a71e6ace8eeca4654e685=2E158039?=
- =?utf-8?q?9657=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
+In-Reply-To: <20200207124403.563379423@linutronix.de>
+References: <20200207124403.563379423@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158196712693.13786.10367464987977325422.tip-bot2@tip-bot2>
+Message-ID: <158196712861.13786.9777024048543338540.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,96 +57,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     8345228ccf31f94e3ff7ec5458ac7cc13cb323fa
-Gitweb:        https://git.kernel.org/tip/8345228ccf31f94e3ff7ec5458ac7cc13cb323fa
-Author:        Christophe Leroy <christophe.leroy@c-s.fr>
-AuthorDate:    Fri, 07 Feb 2020 13:39:03 +01:00
+Commit-ID:     c7a18100bdffdff440c7291db6e80863fab0461e
+Gitweb:        https://git.kernel.org/tip/c7a18100bdffdff440c7291db6e80863fab0461e
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 07 Feb 2020 13:39:00 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Feb 2020 20:12:18 +01:00
+CommitterDate: Mon, 17 Feb 2020 20:12:17 +01:00
 
-lib/vdso: Allow architectures to override the ns shift operation
+lib/vdso: Avoid highres update if clocksource is not VDSO capable
 
-On powerpc/32, GCC (8.1) generates pretty bad code for the ns >>= vd->shift
-operation taking into account that the shift is always <= 32 and the upper
-part of the result is likely to be zero. GCC makes reversed assumptions
-considering the shift to be likely >= 32 and the upper part to be like not
-zero.
+If the current clocksource is not VDSO capable there is no point in
+updating the high resolution parts of the VDSO data.
 
-unsigned long long shift(unsigned long long x, unsigned char s)
-{
-	return x >> s;
-}
+Replace the architecture specific check with a check for a VDSO capable
+clocksource and skip the update if there is none.
 
-results in:
-
-00000018 <shift>:
-  18:	35 25 ff e0 	addic.  r9,r5,-32
-  1c:	41 80 00 10 	blt     2c <shift+0x14>
-  20:	7c 64 4c 30 	srw     r4,r3,r9
-  24:	38 60 00 00 	li      r3,0
-  28:	4e 80 00 20 	blr
-  2c:	54 69 08 3c 	rlwinm  r9,r3,1,0,30
-  30:	21 45 00 1f 	subfic  r10,r5,31
-  34:	7c 84 2c 30 	srw     r4,r4,r5
-  38:	7d 29 50 30 	slw     r9,r9,r10
-  3c:	7c 63 2c 30 	srw     r3,r3,r5
-  40:	7d 24 23 78 	or      r4,r9,r4
-  44:	4e 80 00 20 	blr
-
-Even when forcing the shift to be smaller than 32 with an &= 31, it still
-considers the shift as likely >= 32.
-
-Move the default shift implementation into an inline which can be redefined
-in architecture code via a macro.
-
-[ tglx: Made the shift argument u32 and removed the __arch prefix ]
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lore.kernel.org/r/b3d449de856982ed060a71e6ace8eeca4654e685.1580399657.git.christophe.leroy@c-s.fr
-Link: https://lkml.kernel.org/r/20200207124403.857649978@linutronix.de
-
+Link: https://lkml.kernel.org/r/20200207124403.563379423@linutronix.de
 
 
 ---
- lib/vdso/gettimeofday.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/vdso/vsyscall.h | 7 -------
+ include/asm-generic/vdso/vsyscall.h  | 7 -------
+ kernel/time/vsyscall.c               | 6 +++---
+ 3 files changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 8eb6d1e..b95aef9 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -39,6 +39,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
- }
- #endif
+diff --git a/arch/arm/include/asm/vdso/vsyscall.h b/arch/arm/include/asm/vdso/vsyscall.h
+index 002f9ed..47e41ae 100644
+--- a/arch/arm/include/asm/vdso/vsyscall.h
++++ b/arch/arm/include/asm/vdso/vsyscall.h
+@@ -22,13 +22,6 @@ struct vdso_data *__arm_get_k_vdso_data(void)
+ #define __arch_get_k_vdso_data __arm_get_k_vdso_data
  
-+#ifndef vdso_shift_ns
-+static __always_inline u64 vdso_shift_ns(u64 ns, u32 shift)
-+{
-+	return ns >> shift;
-+}
-+#endif
-+
- #ifndef __arch_vdso_hres_capable
- static inline bool __arch_vdso_hres_capable(void)
+ static __always_inline
+-bool __arm_update_vdso_data(void)
+-{
+-	return cntvct_ok;
+-}
+-#define __arch_update_vdso_data __arm_update_vdso_data
+-
+-static __always_inline
+ void __arm_sync_vdso_data(struct vdso_data *vdata)
  {
-@@ -80,7 +87,7 @@ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 		ns = vdso_ts->nsec;
- 		last = vd->cycle_last;
- 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
--		ns >>= vd->shift;
-+		ns = vdso_shift_ns(ns, vd->shift);
- 		sec = vdso_ts->sec;
- 	} while (unlikely(vdso_read_retry(vd, seq)));
+ 	flush_dcache_page(virt_to_page(vdata));
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index 4a28797..c835607 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -11,13 +11,6 @@ static __always_inline struct vdso_data *__arch_get_k_vdso_data(void)
+ }
+ #endif /* __arch_get_k_vdso_data */
  
-@@ -148,7 +155,7 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		ns = vdso_ts->nsec;
- 		last = vd->cycle_last;
- 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
--		ns >>= vd->shift;
-+		ns = vdso_shift_ns(ns, vd->shift);
- 		sec = vdso_ts->sec;
- 	} while (unlikely(vdso_read_retry(vd, seq)));
+-#ifndef __arch_update_vdso_data
+-static __always_inline bool __arch_update_vdso_data(void)
+-{
+-	return true;
+-}
+-#endif /* __arch_update_vdso_data */
+-
+ #ifndef __arch_update_vsyscall
+ static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
+ 						   struct timekeeper *tk)
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index d31a5ef..54ce6eb 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -105,10 +105,10 @@ void update_vsyscall(struct timekeeper *tk)
+ 	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
  
+ 	/*
+-	 * Architectures can opt out of updating the high resolution part
+-	 * of the VDSO.
++	 * If the current clocksource is not VDSO capable, then spare the
++	 * update of the high reolution parts.
+ 	 */
+-	if (__arch_update_vdso_data())
++	if (clock_mode != VDSO_CLOCKMODE_NONE)
+ 		update_vdso_data(vdata, tk);
+ 
+ 	__arch_update_vsyscall(vdata, tk);
