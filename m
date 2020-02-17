@@ -2,38 +2,53 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F55DC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C8CC34027
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43850222D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06A220725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 18:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hhh1t6HV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgBQSnr (ORCPT
+        id S1729698AbgBQSqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 13:43:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33478 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgBQSnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 13:43:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1065CAAC6;
-        Mon, 17 Feb 2020 18:43:45 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8EF44DA7A0; Mon, 17 Feb 2020 19:43:28 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fix for 5.6-rc2
-Date:   Mon, 17 Feb 2020 19:43:26 +0100
-Message-Id: <cover.1581962653.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 17 Feb 2020 13:46:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47986 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgBQSqQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 13:46:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=TLN+MN9liFnLDsYo+PJ3gSWsvtLSIjBwcyOIhgoJ5VY=; b=hhh1t6HVNLsDCWt3MkQiEYSzre
+        hHWiRXNO+r8JdlNSSEGh0o8YrYXOSkS/gp9xDglMuFey74aPYgYuHG2Vw32WCqs2XINOBkEXUc04e
+        dNydvDlRbJXB9yrmAe6jgu25QNAScILW2omvBwbsW7wNsX82P1Rb3XgznMqiit9sLnMo/btfjrCD5
+        A5pPkGiNWrR7m/KYbChbtfL6nu/34I8dw1/vNm8C4jceWxh/XiSYSIlAOHr3sqBJeyStdcRlWY7zP
+        tRI1xVRaDxQsHjcT3MBSmGrHTevUmS7161Li+DqQn7IbfCuzGT/OQ03Av7NFbi9rxgQk8+/SE8kyH
+        Zp44q6kg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3lPM-0005Cb-8w; Mon, 17 Feb 2020 18:46:16 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v6 14/16] fuse: Convert from readpages to readahead
+Date:   Mon, 17 Feb 2020 10:46:06 -0800
+Message-Id: <20200217184613.19668-26-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200217184613.19668-1-willy@infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,30 +56,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-this is fix for sleeping in a locked section bug reported by Dave Jones,
-caused by a patch dependence in development and pulled branches. I
-picked the existing patch over the fixup that Filipe sent, as it's a
-bit more generic fix. I've verified it with a specific test case, some rsync
-stress and one round of fstests. Please pull, thanks.
+Use the new readahead operation in fuse.  Switching away from the
+read_cache_pages() helper gets rid of an implicit call to put_page(),
+so we can get rid of the get_page() call in fuse_readpages_fill().
 
-----------------------------------------------------------------
-The following changes since commit 1b9867eb6120db85f8dca8ff42789d9ec9ee16a5:
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/fuse/file.c | 46 +++++++++++++++++++---------------------------
+ 1 file changed, 19 insertions(+), 27 deletions(-)
 
-  btrfs: sysfs, move device id directories to UUID/devinfo (2020-02-12 18:28:22 +0100)
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 9d67b830fb7a..f64f98708b5e 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -923,9 +923,8 @@ struct fuse_fill_data {
+ 	unsigned int max_pages;
+ };
+ 
+-static int fuse_readpages_fill(void *_data, struct page *page)
++static int fuse_readpages_fill(struct fuse_fill_data *data, struct page *page)
+ {
+-	struct fuse_fill_data *data = _data;
+ 	struct fuse_io_args *ia = data->ia;
+ 	struct fuse_args_pages *ap = &ia->ap;
+ 	struct inode *inode = data->inode;
+@@ -941,10 +940,8 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+ 					fc->max_pages);
+ 		fuse_send_readpages(ia, data->file);
+ 		data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
+-		if (!ia) {
+-			unlock_page(page);
++		if (!ia)
+ 			return -ENOMEM;
+-		}
+ 		ap = &ia->ap;
+ 	}
+ 
+@@ -954,7 +951,6 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+ 		return -EIO;
+ 	}
+ 
+-	get_page(page);
+ 	ap->pages[ap->num_pages] = page;
+ 	ap->descs[ap->num_pages].length = PAGE_SIZE;
+ 	ap->num_pages++;
+@@ -962,37 +958,33 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+ 	return 0;
+ }
+ 
+-static int fuse_readpages(struct file *file, struct address_space *mapping,
+-			  struct list_head *pages, unsigned nr_pages)
++static void fuse_readahead(struct readahead_control *rac)
+ {
+-	struct inode *inode = mapping->host;
++	struct inode *inode = rac->mapping->host;
+ 	struct fuse_conn *fc = get_fuse_conn(inode);
+ 	struct fuse_fill_data data;
+-	int err;
++	struct page *page;
+ 
+-	err = -EIO;
+ 	if (is_bad_inode(inode))
+-		goto out;
++		return;
+ 
+-	data.file = file;
++	data.file = rac->file;
+ 	data.inode = inode;
+-	data.nr_pages = nr_pages;
+-	data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
+-;
++	data.nr_pages = readahead_count(rac);
++	data.max_pages = min_t(unsigned int, data.nr_pages, fc->max_pages);
+ 	data.ia = fuse_io_alloc(NULL, data.max_pages);
+-	err = -ENOMEM;
+ 	if (!data.ia)
+-		goto out;
++		return;
+ 
+-	err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
+-	if (!err) {
+-		if (data.ia->ap.num_pages)
+-			fuse_send_readpages(data.ia, file);
+-		else
+-			fuse_io_free(data.ia);
++	readahead_for_each(rac, page) {
++		if (fuse_readpages_fill(&data, page) != 0)
++			return;
+ 	}
+-out:
+-	return err;
++
++	if (data.ia->ap.num_pages)
++		fuse_send_readpages(data.ia, rac->file);
++	else
++		fuse_io_free(data.ia);
+ }
+ 
+ static ssize_t fuse_cache_read_iter(struct kiocb *iocb, struct iov_iter *to)
+@@ -3373,10 +3365,10 @@ static const struct file_operations fuse_file_operations = {
+ 
+ static const struct address_space_operations fuse_file_aops  = {
+ 	.readpage	= fuse_readpage,
++	.readahead	= fuse_readahead,
+ 	.writepage	= fuse_writepage,
+ 	.writepages	= fuse_writepages,
+ 	.launder_page	= fuse_launder_page,
+-	.readpages	= fuse_readpages,
+ 	.set_page_dirty	= __set_page_dirty_nobuffers,
+ 	.bmap		= fuse_bmap,
+ 	.direct_IO	= fuse_direct_IO,
+-- 
+2.25.0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc1-tag
-
-for you to fetch changes up to 52e29e331070cd7d52a64cbf1b0958212a340e28:
-
-  btrfs: don't set path->leave_spinning for truncate (2020-02-17 16:23:06 +0100)
-
-----------------------------------------------------------------
-Josef Bacik (1):
-      btrfs: don't set path->leave_spinning for truncate
-
- fs/btrfs/inode.c | 2 --
- 1 file changed, 2 deletions(-)
