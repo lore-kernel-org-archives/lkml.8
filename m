@@ -2,132 +2,122 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECD8C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C082FC3402D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5C42070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970F32070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qncHur2V"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="KF+57Z91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgBQW1y (ORCPT
+        id S1726091AbgBQWbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:27:54 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52671 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgBQW1x (ORCPT
+        Mon, 17 Feb 2020 17:31:16 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33673 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgBQWbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:27:53 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so857596wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:27:52 -0800 (PST)
+        Mon, 17 Feb 2020 17:31:16 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so20638048lji.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:31:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=odUhprWTj2SIxZaotcEpBmMSjl3dLxe80k3GV6bzUKo=;
-        b=qncHur2VT+EFjnyOKkJKHIXSNrYe8zyPGYYXag0cfevD4Azo6yd61BKjXK1i7snMvp
-         KMtygGJyD12L/qhrJ7hgF2hY9Tjj5ChccDwmudEftrCkVKcrdw0DCPp78XyZJvY6zlRk
-         ybOECHlbAPzm7dlQ1NW1oHiv6fMorPbaJE2UtI092ovC5N4gDw7xj3SumYjSneSmXJPC
-         mjzGfX1FXozyQ1Fk2XQEanWZsEBUaRr8wzHPJ0pcG0O1Tar0GObK3neTzGco7DDCyiBM
-         gzoG649g6dY5ejZiF27fMHD1slxjYHtv5MBATwOkpXeB0rsXdP22EDSjqPB82NlDv1B6
-         qVag==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=juI3iyWfnRJJM93b6hL4nBUlEynDiqxQtkuCLJ6MlQc=;
+        b=KF+57Z91ExlwgBnswQNveUKQZV1enKonyvw5Gy/RBrBb47hkKuZ3nC1fMqqidCIHYg
+         e66EGlvZ5FBwZ/ApaAPeONX0RuWKvO1KsFedec3Qfq1A0nNbpKizDzIAbeJ1n91WadG3
+         PRi8VNYPuIMIk+EeMRbf11pQjR29oNVN//tz3H5gBmhscnkq1TSuG7xDHA3N1GPV0Lh9
+         VM1f4heqYShgAMnBHP2RhpQgdtmFYk/mLZKazmyVA5icPN8dMxa5nSUpa8TgMyYpJD7r
+         x8IFopCViLQOaiUfkdsopH+YR00hBSkmc+WDABDiqibn6GN2U2JSpWlidjrEzwWnpbpD
+         20rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=odUhprWTj2SIxZaotcEpBmMSjl3dLxe80k3GV6bzUKo=;
-        b=Byr/7g3p5TblTOAoHKQOHsC9Q59vtkgMj9oykwzAOHFGUkm32me6S/rIG/1LH5VET3
-         +wLGR7qhLYUvcJjnk8odou0lIG6lM2xwKjBSzALxakmRxBAQpfS10JL9MY8tzilZM6T0
-         /Ped9SxP3lZupeBprWChkqKyKOm0W8RJm8gMT4z4/MQXfz35kLjBZnHa6bE1CtTHH20+
-         prTTbwba+wBkXN0ihKUt4fWL4JlB6HG7hMG6uzFKHxVqcgDvSmoei09hzLw9beLtao0U
-         Gqk14+jcb4qkSF42Sc7LySN1zD529DtDTtmyBzKK6xJcXmmYIhXbiAXlvGkQt2Wa8SLW
-         lZ0g==
-X-Gm-Message-State: APjAAAVaCov9AwwvVXwK73o0GBghNfOYwLVH3iV0sjPz1xdp19WYNaPa
-        KAwMisEEbDIxJndXLBoXCh0Ma0aRAwE=
-X-Google-Smtp-Source: APXvYqzDc5qYX/cvw8jmRGIVJWG0PmK5upV3PKWK6REKJ01heXI/twVZ/Yp3xgo2wjOprdcgfyQF3w==
-X-Received: by 2002:a1c:4d03:: with SMTP id o3mr1029334wmh.164.1581978471558;
-        Mon, 17 Feb 2020 14:27:51 -0800 (PST)
-Received: from kwango.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id g2sm2896120wrw.76.2020.02.17.14.27.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=juI3iyWfnRJJM93b6hL4nBUlEynDiqxQtkuCLJ6MlQc=;
+        b=TkZTY8O6H313h4itSg7MUafukm++jbf0YegqA8ZkF9Xy9G1fpQcuwrd1XXiegPcc0b
+         SWbmp8199la0/IvPpP9PHEXZBkhhQt7Xap1aGQzTc2CfMKltyXJasEibZd+93z3yPrOH
+         +lNCWH4dSE4zkX4/eVMNooYtaZNDPiA4vINsxP760xhy3sjXlSUa0aThCkPhTS3S3QJk
+         jOFcPqw+bv2dfZioTtz6bZ75XxhYYnOrJaes0Hyo5AOhWDZ3Ygfchn0iOrQ+XqXMt7cd
+         R/VJQQJLDQLopUl7t5+Jnsih/GtPHbTYKLpPUbljSIsmNZgUAH0F4gA9+lJi2AsRZ0tr
+         YQ9Q==
+X-Gm-Message-State: APjAAAU8UXt902kHxdbydQMa71JK8bOX4T1vwJ8BpfDgOwpZ5CtvlSrf
+        XUH8ogmJVP3/OQZU9VGifMXkRQ==
+X-Google-Smtp-Source: APXvYqyIaUTaKLQ0YEWHzqJn8cP00A+jet2TyIAkRU1NbzczVnqY5BGR41baozXGlQnK41bdTEwcxw==
+X-Received: by 2002:a05:651c:3c4:: with SMTP id f4mr10653268ljp.5.1581978674013;
+        Mon, 17 Feb 2020 14:31:14 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id v26sm1341203ljh.90.2020.02.17.14.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 14:27:50 -0800 (PST)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>
-Subject: [PATCH] vsprintf: don't obfuscate NULL and error pointers
-Date:   Mon, 17 Feb 2020 23:28:03 +0100
-Message-Id: <20200217222803.6723-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 17 Feb 2020 14:31:13 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 5FB12100F89; Tue, 18 Feb 2020 01:31:38 +0300 (+03)
+Date:   Tue, 18 Feb 2020 01:31:38 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] fork: annotate a data race in vm_area_dup()
+Message-ID: <20200217223138.doaph66iwprbwhw5@box>
+References: <1581712403-27243-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581712403-27243-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't see what security concern is addressed by obfuscating NULL
-and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-of sites where %p is used (over 10000) and the fact that NULL pointers
-aren't uncommon, it probably wouldn't take long for an attacker to
-find the hash that corresponds to 0.  Although harder, the same goes
-for most common error values, such as -1, -2, -11, -14, etc.
+On Fri, Feb 14, 2020 at 03:33:23PM -0500, Qian Cai wrote:
+> struct vm_area_struct could be accessed concurrently as noticed by
+> KCSAN,
+> 
+>  write to 0xffff9cf8bba08ad8 of 8 bytes by task 14263 on cpu 35:
+>   vma_interval_tree_insert+0x101/0x150:
+>   rb_insert_augmented_cached at include/linux/rbtree_augmented.h:58
+>   (inlined by) vma_interval_tree_insert at mm/interval_tree.c:23
+>   __vma_link_file+0x6e/0xe0
+>   __vma_link_file at mm/mmap.c:629
+>   vma_link+0xa2/0x120
+>   mmap_region+0x753/0xb90
+>   do_mmap+0x45c/0x710
+>   vm_mmap_pgoff+0xc0/0x130
+>   ksys_mmap_pgoff+0x1d1/0x300
+>   __x64_sys_mmap+0x33/0x40
+>   do_syscall_64+0x91/0xc44
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+>  read to 0xffff9cf8bba08a80 of 200 bytes by task 14262 on cpu 122:
+>   vm_area_dup+0x6a/0xe0
+>   vm_area_dup at kernel/fork.c:362
+>   __split_vma+0x72/0x2a0
+>   __split_vma at mm/mmap.c:2661
+>   split_vma+0x5a/0x80
+>   mprotect_fixup+0x368/0x3f0
+>   do_mprotect_pkey+0x263/0x420
+>   __x64_sys_mprotect+0x51/0x70
+>   do_syscall_64+0x91/0xc44
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The write is holding mmap_sem while changing vm_area_struct.shared.rb.
+> Even though the read is lockless while making a copy, the clone will
+> have its own shared.rb reinitialized. Thus, mark it as an intentional
+> data race using the data_race() macro.
 
-The NULL part actually fixes a regression: NULL pointers weren't
-obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-dereferencing invalid pointers") which went into 5.2.  I'm tacking
-the IS_ERR() part on here because error pointers won't leak kernel
-addresses and printing them as pointers shouldn't be any different
-from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-debugging based on existing pr_debug and friends excruciating.
+I'm confused. AFAICS both sides hold mmap_sem on write:
 
-Note that the "always print 0's for %pK when kptr_restrict == 2"
-behaviour which goes way back is left as is.
+ - vm_mmap_pgoff() takes mmap_sem for the write on the write side
 
-Example output with the patch applied:
+ - do_mprotect_pkey() takes mmap_sem for the write on the read side
 
-                            ptr         error-ptr              NULL
-%p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-%pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-%px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-%pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-%pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
 
-Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
----
- lib/vsprintf.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+What do I miss?
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..f0f0522cd5a7 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
- 	unsigned long hashval;
- 	int ret;
- 
-+	/*
-+	 * Print the real pointer value for NULL and error pointers,
-+	 * as they are not actual addresses.
-+	 */
-+	if (IS_ERR_OR_NULL(ptr))
-+		return pointer_string(buf, end, ptr, spec);
-+
- 	/* When debugging early boot use non-cryptographically secure hash. */
- 	if (unlikely(debug_boot_weak_hash)) {
- 		hashval = hash_long((unsigned long)ptr, 32);
 -- 
-2.19.2
-
+ Kirill A. Shutemov
