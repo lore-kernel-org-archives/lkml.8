@@ -2,319 +2,68 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20970C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C9CC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F9A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F97206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581917858;
-	bh=unfmFnitAn3ULD2EiZ9N5afDChhssTAoUZn608gzigw=;
+	s=default; t=1581918789;
+	bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z34ZYUvtikyxB4gjtu0beert8OqpYe4VMQBk8pp+hoQW/vSmDPxSlz6oBNcDr00C4
-	 J+CQj1it8TtMZgQQfvbtgjXBvUUJPM7Ni89vSW5oUai3kKYyhs9BrjjOHf7PaHC5mA
-	 e22TyAEEdeh9k76PlS7Sb9V5/JbvhH9dwOo7HQ/g=
+	b=iCn+Rg+vgye+29BBsTR1s4lEaxqZJf+Kz9DBDwFiRtBz3BX1mVlv1jUoqaXcg47Vc
+	 rtTFPUqoyIZl09PBnjcn99Vn5rYdALZAUt9OEbZGys3OeuMZ9KA20Gp0F6pdMMoNeC
+	 2lXVl3s1vLZ6krKJDo4wOja0N2UxLu5ulteYK2sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgBQFhh (ORCPT
+        id S1726026AbgBQFwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 00:37:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 00:52:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgBQFhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 00:37:37 -0500
+        id S1725835AbgBQFwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 00:52:54 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF3C62070B;
-        Mon, 17 Feb 2020 05:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCEAA206F4;
+        Mon, 17 Feb 2020 05:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581917856;
-        bh=unfmFnitAn3ULD2EiZ9N5afDChhssTAoUZn608gzigw=;
+        s=default; t=1581918773;
+        bh=3XZW45+oxiEd21pjOWOS/xVC/P/jx/HU3Cb4pITE3fw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J5EONw1cBr5rl5H1taTsc5vQitbgVa2Gywgq7gT/8dbdJ25u4IWX/PxtAptcByMXH
-         vYa931VwzU/rjiZoY5KGad+IfMtWeZbPIlrE6A/riidRx0upJpnx/NAg+fB7DDCl4u
-         z3xu46ORR+Ra2yP4cLWrQewxMmB06IWLC6NKR3aU=
-Date:   Mon, 17 Feb 2020 13:37:30 +0800
+        b=JqETqfL1YBqAvtHF2RyHkOTqG5cmAmPwE4k5mGeoZTCzh7dkTO64l6Ji1Vb7Vjgaw
+         cW9NWvgHNKBqOABc7ypk7UGIeKFonKSY95I1ug/KaPQc/oyChxB559B3aAkqtzqXpi
+         6fAWeyngRMt5SOm3kvRFJ9GXX5eepwXlmifhDhx0=
+Date:   Mon, 17 Feb 2020 13:52:47 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: defconfig: enable additional drivers needed
- by NXP QorIQ boards
-Message-ID: <20200217053730.GB6042@dragon>
-References: <1581382559-18520-1-git-send-email-leoyang.li@nxp.com>
- <1581382559-18520-2-git-send-email-leoyang.li@nxp.com>
+To:     Yangbo Lu <yangbo.lu@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: support external trigger timestamp
+ fifo of PTP timer
+Message-ID: <20200217055246.GD6042@dragon>
+References: <20200211045758.8231-1-yangbo.lu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581382559-18520-2-git-send-email-leoyang.li@nxp.com>
+In-Reply-To: <20200211045758.8231-1-yangbo.lu@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:55:59PM -0600, Li Yang wrote:
-> This enables the following SoC device drivers for NXP/FSL QorIQ SoCs:
-> CONFIG_QORIQ_CPUFREQ=y
-> CONFIG_NET_SWITCHDEV=y
-> CONFIG_MSCC_OCELOT_SWITCH=y
-> CONFIG_CAN=m
-> CONFIG_CAN_FLEXCAN=m
-> CONFIG_FSL_MC_BUS=y
-> CONFIG_MTD_NAND_FSL_IFC=y
-> CONFIG_FSL_ENETC=y
-> CONFIG_FSL_ENETC_VF=y
-> CONFIG_SPI_FSL_LPSPI=y
-> CONFIG_SPI_FSL_QUADSPI=y
-> CONFIG_SPI_FSL_DSPI=y
-> CONFIG_GPIO_MPC8XXX=y
-> CONFIG_ARM_SBSA_WATCHDOG=y
-> CONFIG_DRM_MALI_DISPLAY=m
-> CONFIG_FSL_MC_DPIO=y
-> CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=m
-> CONFIG_FSL_DPAA=y
-> CONFIG_FSL_FMAN=y
-> CONFIG_FSL_DPAA_ETH=y
-> CONFIG_FSL_DPAA2_ETH=y
+On Tue, Feb 11, 2020 at 12:57:58PM +0800, Yangbo Lu wrote:
+> There is an external trigger timestamp fifo for PTP timer
+> of LS1028A. Add property fsl,extts-fifo for that.
 > 
-> And the drivers for on-board devices for the upstreamed QorIQ reference
-> boards:
-> CONFIG_MTD_CFI=y
-> CONFIG_MTD_CFI_ADV_OPTIONS=y
-> CONFIG_MTD_CFI_INTELEXT=y
-> CONFIG_MTD_CFI_AMDSTD=y
-> CONFIG_MTD_CFI_STAA=y
-> CONFIG_MTD_PHYSMAP=y
-> CONFIG_MTD_PHYSMAP_OF=y
-> CONFIG_MTD_DATAFLASH=y
-> CONFIG_MTD_SST25L=y
-> CONFIG_EEPROM_AT24=m
-> CONFIG_RTC_DRV_DS1307=y
-> CONFIG_RTC_DRV_PCF85363=y
-> CONFIG_RTC_DRV_PCF2127=y
-> CONFIG_E1000=y
-> CONFIG_AQUANTIA_PHY=y
-> CONFIG_MICROSEMI_PHY=y
-> CONFIG_VITESSE_PHY=y
-> CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
-> CONFIG_MUX_MMIO=y
-> 
-> The following two options are implied by new options and removed from
-> defconfig:
-> CONFIG_CLK_QORIQ=y
-> CONFIG_MEMORY=y
-> 
-> Signed-off-by: Li Yang <leoyang.li@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-This is too much change in a single patch. It should be split properly
-to make review and merge easier, considering arm-soc folks are cautious
-to those 'y' options.
-
-Shawn
-
-> ---
->  arch/arm64/configs/defconfig | 42 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 618001ef5c81..0732d5aaf2cb 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -90,6 +90,7 @@ CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
->  CONFIG_ARM_QCOM_CPUFREQ_HW=y
->  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
->  CONFIG_ARM_TEGRA186_CPUFREQ=y
-> +CONFIG_QORIQ_CPUFREQ=y
->  CONFIG_ARM_SCPI_PROTOCOL=y
->  CONFIG_RASPBERRYPI_FIRMWARE=y
->  CONFIG_INTEL_STRATIX10_SERVICE=y
-> @@ -157,10 +158,13 @@ CONFIG_BRIDGE_VLAN_FILTERING=y
->  CONFIG_VLAN_8021Q=m
->  CONFIG_VLAN_8021Q_GVRP=y
->  CONFIG_VLAN_8021Q_MVRP=y
-> +CONFIG_NET_SWITCHDEV=y
->  CONFIG_QRTR=m
->  CONFIG_QRTR_SMD=m
->  CONFIG_QRTR_TUN=m
->  CONFIG_BPF_JIT=y
-> +CONFIG_CAN=m
-> +CONFIG_CAN_FLEXCAN=m
->  CONFIG_BT=m
->  CONFIG_BT_HIDP=m
->  # CONFIG_BT_HS is not set
-> @@ -207,11 +211,22 @@ CONFIG_FW_LOADER_USER_HELPER=y
->  CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
->  CONFIG_HISILICON_LPC=y
->  CONFIG_SIMPLE_PM_BUS=y
-> +CONFIG_FSL_MC_BUS=y
->  CONFIG_MTD=y
->  CONFIG_MTD_BLOCK=y
-> +CONFIG_MTD_CFI=y
-> +CONFIG_MTD_CFI_ADV_OPTIONS=y
-> +CONFIG_MTD_CFI_INTELEXT=y
-> +CONFIG_MTD_CFI_AMDSTD=y
-> +CONFIG_MTD_CFI_STAA=y
-> +CONFIG_MTD_PHYSMAP=y
-> +CONFIG_MTD_PHYSMAP_OF=y
-> +CONFIG_MTD_DATAFLASH=y
-> +CONFIG_MTD_SST25L=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_DENALI_DT=y
->  CONFIG_MTD_NAND_MARVELL=y
-> +CONFIG_MTD_NAND_FSL_IFC=y
->  CONFIG_MTD_NAND_QCOM=y
->  CONFIG_MTD_SPI_NOR=y
->  CONFIG_SPI_CADENCE_QUADSPI=y
-> @@ -220,6 +235,7 @@ CONFIG_BLK_DEV_NBD=m
->  CONFIG_VIRTIO_BLK=y
->  CONFIG_BLK_DEV_NVME=m
->  CONFIG_SRAM=y
-> +CONFIG_EEPROM_AT24=m
->  CONFIG_EEPROM_AT25=m
->  # CONFIG_SCSI_PROC_FS is not set
->  CONFIG_BLK_DEV_SD=y
-> @@ -261,12 +277,18 @@ CONFIG_BNX2X=m
->  CONFIG_MACB=y
->  CONFIG_THUNDER_NIC_PF=y
->  CONFIG_FEC=y
-> +CONFIG_FSL_FMAN=y
-> +CONFIG_FSL_DPAA_ETH=y
-> +CONFIG_FSL_DPAA2_ETH=y
-> +CONFIG_FSL_ENETC=y
-> +CONFIG_FSL_ENETC_VF=y
->  CONFIG_HIX5HD2_GMAC=y
->  CONFIG_HNS_DSAF=y
->  CONFIG_HNS_ENET=y
->  CONFIG_HNS3=y
->  CONFIG_HNS3_HCLGE=y
->  CONFIG_HNS3_ENET=y
-> +CONFIG_E1000=y
->  CONFIG_E1000E=y
->  CONFIG_IGB=y
->  CONFIG_IGBVF=y
-> @@ -276,6 +298,7 @@ CONFIG_SKY2=y
->  CONFIG_MLX4_EN=m
->  CONFIG_MLX5_CORE=m
->  CONFIG_MLX5_CORE_EN=y
-> +CONFIG_MSCC_OCELOT_SWITCH=y
->  CONFIG_QCOM_EMAC=m
->  CONFIG_RAVB=y
->  CONFIG_SMC91X=y
-> @@ -284,13 +307,17 @@ CONFIG_SNI_AVE=y
->  CONFIG_SNI_NETSEC=y
->  CONFIG_STMMAC_ETH=m
->  CONFIG_MDIO_BUS_MUX_MMIOREG=y
-> +CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
-> +CONFIG_AQUANTIA_PHY=y
->  CONFIG_MARVELL_PHY=m
->  CONFIG_MARVELL_10G_PHY=m
->  CONFIG_MESON_GXL_PHY=m
->  CONFIG_MICREL_PHY=y
-> +CONFIG_MICROSEMI_PHY=y
->  CONFIG_AT803X_PHY=y
->  CONFIG_REALTEK_PHY=m
->  CONFIG_ROCKCHIP_PHY=y
-> +CONFIG_VITESSE_PHY=y
->  CONFIG_USB_PEGASUS=m
->  CONFIG_USB_RTL8150=m
->  CONFIG_USB_RTL8152=m
-> @@ -388,8 +415,11 @@ CONFIG_SPI=y
->  CONFIG_SPI_ARMADA_3700=y
->  CONFIG_SPI_BCM2835=m
->  CONFIG_SPI_BCM2835AUX=m
-> +CONFIG_SPI_FSL_LPSPI=y
-> +CONFIG_SPI_FSL_QUADSPI=y
->  CONFIG_SPI_NXP_FLEXSPI=y
->  CONFIG_SPI_IMX=m
-> +CONFIG_SPI_FSL_DSPI=y
->  CONFIG_SPI_MESON_SPICC=m
->  CONFIG_SPI_MESON_SPIFC=m
->  CONFIG_SPI_ORION=y
-> @@ -424,6 +454,7 @@ CONFIG_PINCTRL_SM8150=y
->  CONFIG_GPIO_ALTERA=m
->  CONFIG_GPIO_DWAPB=y
->  CONFIG_GPIO_MB86S7X=y
-> +CONFIG_GPIO_MPC8XXX=y
->  CONFIG_GPIO_PL061=y
->  CONFIG_GPIO_RCAR=y
->  CONFIG_GPIO_UNIPHIER=y
-> @@ -466,6 +497,7 @@ CONFIG_QCOM_SPMI_TEMP_ALARM=m
->  CONFIG_UNIPHIER_THERMAL=y
->  CONFIG_WATCHDOG=y
->  CONFIG_ARM_SP805_WATCHDOG=y
-> +CONFIG_ARM_SBSA_WATCHDOG=y
->  CONFIG_S3C2410_WATCHDOG=y
->  CONFIG_DW_WATCHDOG=y
->  CONFIG_SUNXI_WATCHDOG=m
-> @@ -531,6 +563,7 @@ CONFIG_VIDEO_RENESAS_FCP=m
->  CONFIG_VIDEO_RENESAS_VSP1=m
->  CONFIG_DRM=m
->  CONFIG_DRM_I2C_NXP_TDA998X=m
-> +CONFIG_DRM_MALI_DISPLAY=m
->  CONFIG_DRM_NOUVEAU=m
->  CONFIG_DRM_EXYNOS=m
->  CONFIG_DRM_EXYNOS5433_DECON=y
-> @@ -664,11 +697,14 @@ CONFIG_LEDS_TRIGGER_PANIC=y
->  CONFIG_EDAC=y
->  CONFIG_EDAC_GHES=y
->  CONFIG_RTC_CLASS=y
-> +CONFIG_RTC_DRV_DS1307=y
->  CONFIG_RTC_DRV_MAX77686=y
->  CONFIG_RTC_DRV_RK808=m
-> +CONFIG_RTC_DRV_PCF85363=y
->  CONFIG_RTC_DRV_RX8581=m
->  CONFIG_RTC_DRV_S5M=y
->  CONFIG_RTC_DRV_DS3232=y
-> +CONFIG_RTC_DRV_PCF2127=y
->  CONFIG_RTC_DRV_EFI=y
->  CONFIG_RTC_DRV_CROS_EC=y
->  CONFIG_RTC_DRV_S3C=y
-> @@ -709,7 +745,6 @@ CONFIG_COMMON_CLK_RK808=y
->  CONFIG_COMMON_CLK_SCPI=y
->  CONFIG_COMMON_CLK_CS2000_CP=y
->  CONFIG_COMMON_CLK_S2MPS11=y
-> -CONFIG_CLK_QORIQ=y
->  CONFIG_COMMON_CLK_PWM=y
->  CONFIG_CLK_RASPBERRYPI=m
->  CONFIG_CLK_IMX8MM=y
-> @@ -753,6 +788,8 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
->  CONFIG_RPMSG_QCOM_SMD=y
->  CONFIG_OWL_PM_DOMAINS=y
->  CONFIG_RASPBERRYPI_POWER=y
-> +CONFIG_FSL_DPAA=y
-> +CONFIG_FSL_MC_DPIO=y
->  CONFIG_IMX_SCU_SOC=y
->  CONFIG_QCOM_AOSS_QMP=y
->  CONFIG_QCOM_GENI_SE=y
-> @@ -785,7 +822,6 @@ CONFIG_ARCH_K3_J721E_SOC=y
->  CONFIG_TI_SCI_PM_DOMAINS=y
->  CONFIG_EXTCON_USB_GPIO=y
->  CONFIG_EXTCON_USBC_CROS_EC=y
-> -CONFIG_MEMORY=y
->  CONFIG_IIO=y
->  CONFIG_EXYNOS_ADC=y
->  CONFIG_QCOM_SPMI_ADC5=m
-> @@ -849,6 +885,7 @@ CONFIG_FPGA_REGION=m
->  CONFIG_OF_FPGA_REGION=m
->  CONFIG_TEE=y
->  CONFIG_OPTEE=y
-> +CONFIG_MUX_MMIO=y
->  CONFIG_EXT2_FS=y
->  CONFIG_EXT3_FS=y
->  CONFIG_EXT4_FS_POSIX_ACL=y
-> @@ -880,6 +917,7 @@ CONFIG_CRYPTO_ANSI_CPRNG=y
->  CONFIG_CRYPTO_USER_API_RNG=m
->  CONFIG_CRYPTO_DEV_SUN8I_CE=m
->  CONFIG_CRYPTO_DEV_FSL_CAAM=m
-> +CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=m
->  CONFIG_CRYPTO_DEV_QCOM_RNG=m
->  CONFIG_CRYPTO_DEV_HISI_ZIP=m
->  CONFIG_CMA_SIZE_MBYTES=32
-> -- 
-> 2.17.1
-> 
+Applied, thanks.
