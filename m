@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096F6C34026
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A6AC34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D07208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFF120836
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgBQTTT (ORCPT
+        id S1729956AbgBQTTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:19:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34640 "EHLO
+        Mon, 17 Feb 2020 14:19:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34631 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgBQTSv (ORCPT
+        with ESMTP id S1729716AbgBQTSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Feb 2020 14:18:51 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3luq-0006CE-7u; Mon, 17 Feb 2020 20:18:48 +0100
+        id 1j3luo-0006BS-De; Mon, 17 Feb 2020 20:18:46 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DCBE41C20B8;
-        Mon, 17 Feb 2020 20:18:47 +0100 (CET)
-Date:   Mon, 17 Feb 2020 19:18:47 -0000
-From:   "tip-bot2 for Christophe Leroy" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 02DA91C20B9;
+        Mon, 17 Feb 2020 20:18:46 +0100 (CET)
+Date:   Mon, 17 Feb 2020 19:18:45 -0000
+From:   "tip-bot2 for Alexander Popov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Allow fixed clock mode
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200207124403.748756829@linutronix.de>
-References: <20200207124403.748756829@linutronix.de>
+Subject: [tip: timers/core] timer: Improve the comment describing schedule_timeout()
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200117225900.16340-1-alex.popov@linux.com>
+References: <20200117225900.16340-1-alex.popov@linux.com>
 MIME-Version: 1.0
-Message-ID: <158196712757.13786.8896334064344185928.tip-bot2@tip-bot2>
+Message-ID: <158196712575.13786.9130197359091225757.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,69 +56,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     ae12e08539de6717502c2f9f83bd60df939b5c08
-Gitweb:        https://git.kernel.org/tip/ae12e08539de6717502c2f9f83bd60df939b5c08
-Author:        Christophe Leroy <christophe.leroy@c-s.fr>
-AuthorDate:    Fri, 07 Feb 2020 13:39:02 +01:00
+Commit-ID:     6e317c32fd39a13e4854a27958d5e35d15d196be
+Gitweb:        https://git.kernel.org/tip/6e317c32fd39a13e4854a27958d5e35d15d196be
+Author:        Alexander Popov <alex.popov@linux.com>
+AuthorDate:    Sat, 18 Jan 2020 01:59:00 +03:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Feb 2020 20:12:18 +01:00
+CommitterDate: Mon, 17 Feb 2020 20:12:19 +01:00
 
-lib/vdso: Allow fixed clock mode
+timer: Improve the comment describing schedule_timeout()
 
-Some architectures have a fixed clocksource which is known at compile time
-and cannot be replaced or disabled at runtime, e.g. timebase on
-PowerPC. For such cases the clock mode check in the VDSO code is pointless.
+When working commit 6dcd5d7a7a29c1e, a mistake was noticed by Linus:
+schedule_timeout() was called without setting the task state to anything
+particular.
 
-Move the check for a VDSO capable clocksource into an inline function and
-allow architectures to redefine it via a macro.
+It calls the scheduler, but doesn't delay anything, because the task stays
+runnable. That happens because sched_submit_work() does nothing for tasks
+in TASK_RUNNING state.
 
-[ tglx: Removed the #ifdef mess ]
+That turned out to be the intended behavior. Adding a WARN() is not useful
+as the task could be woken up right after setting the state and before
+reaching schedule_timeout().
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Improve the comment about schedule_timeout() and describe that more
+explicitly.
+
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lkml.kernel.org/r/20200207124403.748756829@linutronix.de
-
+Link: https://lkml.kernel.org/r/20200117225900.16340-1-alex.popov@linux.com
 
 
 ---
- lib/vdso/gettimeofday.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ kernel/time/timer.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index a76ac8d..8eb6d1e 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -46,6 +46,13 @@ static inline bool __arch_vdso_hres_capable(void)
- }
- #endif
- 
-+#ifndef vdso_clocksource_ok
-+static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
-+{
-+	return vd->clock_mode != VDSO_CLOCKMODE_NONE;
-+}
-+#endif
-+
- #ifdef CONFIG_TIME_NS
- static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 			  struct __kernel_timespec *ts)
-@@ -66,7 +73,7 @@ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 	do {
- 		seq = vdso_read_begin(vd);
- 
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
- 
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
-@@ -134,7 +141,7 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		}
- 		smp_rmb();
- 
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
- 
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4820823..cb34fac 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1828,21 +1828,23 @@ static void process_timeout(struct timer_list *t)
+  * schedule_timeout - sleep until timeout
+  * @timeout: timeout value in jiffies
+  *
+- * Make the current task sleep until @timeout jiffies have
+- * elapsed. The routine will return immediately unless
+- * the current task state has been set (see set_current_state()).
++ * Make the current task sleep until @timeout jiffies have elapsed.
++ * The function behavior depends on the current task state
++ * (see also set_current_state() description):
+  *
+- * You can set the task state as follows -
++ * %TASK_RUNNING - the scheduler is called, but the task does not sleep
++ * at all. That happens because sched_submit_work() does nothing for
++ * tasks in %TASK_RUNNING state.
+  *
+  * %TASK_UNINTERRUPTIBLE - at least @timeout jiffies are guaranteed to
+  * pass before the routine returns unless the current task is explicitly
+- * woken up, (e.g. by wake_up_process())".
++ * woken up, (e.g. by wake_up_process()).
+  *
+  * %TASK_INTERRUPTIBLE - the routine may return early if a signal is
+  * delivered to the current task or the current task is explicitly woken
+  * up.
+  *
+- * The current task state is guaranteed to be TASK_RUNNING when this
++ * The current task state is guaranteed to be %TASK_RUNNING when this
+  * routine returns.
+  *
+  * Specifying a @timeout value of %MAX_SCHEDULE_TIMEOUT will schedule
+@@ -1850,7 +1852,7 @@ static void process_timeout(struct timer_list *t)
+  * value will be %MAX_SCHEDULE_TIMEOUT.
+  *
+  * Returns 0 when the timer has expired otherwise the remaining time in
+- * jiffies will be returned.  In all cases the return value is guaranteed
++ * jiffies will be returned. In all cases the return value is guaranteed
+  * to be non-negative.
+  */
+ signed long __sched schedule_timeout(signed long timeout)
