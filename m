@@ -2,237 +2,171 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C37C34020
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B02C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C032070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnAWHY35"
+	by mail.kernel.org (Postfix) with ESMTP id 11D312070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgBQNQB (ORCPT
+        id S1729361AbgBQNQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:16:01 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35679 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgBQNQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:16:00 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r16so16042430otd.2;
-        Mon, 17 Feb 2020 05:15:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9L+xGkQdZskmDmVK8EKNQvHsZDgIYop6ATmqu+ddc+g=;
-        b=PnAWHY350QaNmKuFFhoAVSzIc0h+RgcosNi5BhzC9J4EQxoQ32bI0zgLSQ0LqCstEv
-         s7oXUDto8+QWTqDt3XkRgZADOZXW6ve8obI1GWcqEojb6/iDltqh+1DPSewPQsnHYWZQ
-         MKYThuoqE74f16QHhxQFti9QJ21eS3/8DLlo6zIa0BAEwIKrwX+9E47TNuOUgEsQnrh8
-         /sq20etq+JIqTua/AtmEJMBjdHcS/mrnfnVj3uL7VLQcQscuI2iX+UihnIeT2xSJ5520
-         JwuTBC8LP+DP0WLH+ol3khD2KiUnOXwKUKADjFF1o+ceogfrZZT3Bz8aKHbEU0EbdpFM
-         zPUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9L+xGkQdZskmDmVK8EKNQvHsZDgIYop6ATmqu+ddc+g=;
-        b=MaN/Td2JEH4x6A2AMqmRNwgaZAb17NN0KPhiA3JcaAMFKSUh9mIgT2bgI1ntv/NUIG
-         eL3JeqlEC6At4uTIlIqpnk92iExMj984gFSTD8VAk9qQmE9QqvGA3+mewPZdHmDT+PuS
-         r4H/xQz4IpOE5Dys7/+0QdJHTAaIzdC0uTiEnMfetq3oL/YDB9S2fxrXYtjK7LTOpd8k
-         MvMPfbs8rZ3SfiEdxgEBbZvFk750gOgpYxT7fz8dQb0CJn6kqkfE/tgQD+03VVNoAuhU
-         LCZaYJlNecZ6VplTmDmc/WykuzYwAQDbQJDckXzQ3FcgSDeoY3Rr/z1Et+cIOeYcnhM+
-         pxHw==
-X-Gm-Message-State: APjAAAWmCSRcr/HJyO1yKpwXCqyYm7ykvmqlCO/0G40ryp3P4dKdp8oj
-        /H6ELFC6cycPdeQJJMRWbl3BJsjwbrvPH0Hkatw=
-X-Google-Smtp-Source: APXvYqz+LmHgmc5fI/HHeeGukyXH2hP16gHVdtW8CTvtEdHY+pJIsV7t/B9I2jzRptznDsmHLuyCUZo/NGcFMOrWSkk=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr11658462otl.118.1581945359278;
- Mon, 17 Feb 2020 05:15:59 -0800 (PST)
+        Mon, 17 Feb 2020 08:16:03 -0500
+Received: from mga06.intel.com ([134.134.136.31]:31132 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728844AbgBQNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 08:14:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 05:14:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,452,1574150400"; 
+   d="scan'208";a="314777002"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 17 Feb 2020 05:14:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id CFDDB5BA; Mon, 17 Feb 2020 15:14:46 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 08/19] platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
+Date:   Mon, 17 Feb 2020 16:14:35 +0300
+Message-Id: <20200217131446.32818-9-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
- <871rqtbcve.fsf@vitty.brq.redhat.com>
-In-Reply-To: <871rqtbcve.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 17 Feb 2020 21:15:48 +0800
-Message-ID: <CANRm+Cz_gskKwa0SU0PUhtacj3Ovm_MmBASDJHOECsnYz=jxkg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for
- both pv tlb and pv ipis
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 at 20:46, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Nick Desaulniers Reported:
-> >
-> >   When building with:
-> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> >   The following warning is observed:
-> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> >   vector)
-> >               ^
-> >   Debugging with:
-> >   https://github.com/ClangBuiltLinux/frame-larger-than
-> >   via:
-> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
-> >     kvm_send_ipi_mask_allbutself
-> >   points to the stack allocated `struct cpumask newmask` in
-> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> >   8192, making a single instance of a `struct cpumask` 1024 B.
-> >
-> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
-> > both pv tlb and pv ipis..
-> >
-> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * remove '!alloc' check
-> >  * use new pv check helpers
-> >
-> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
-> >  1 file changed, 21 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 76ea8c4..377b224 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
-> >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
-> >  }
-> >
-> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
-> > +
-> >  #ifdef CONFIG_SMP
-> >
-> >  static bool pv_ipi_supported(void)
-> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
-> > cpumask *mask, int vector)
-> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
-> > int vector)
-> >  {
-> >      unsigned int this_cpu = smp_processor_id();
-> > -    struct cpumask new_mask;
-> > +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >      const struct cpumask *local_mask;
-> >
-> > -    cpumask_copy(&new_mask, mask);
-> > -    cpumask_clear_cpu(this_cpu, &new_mask);
-> > -    local_mask = &new_mask;
-> > +    cpumask_copy(new_mask, mask);
-> > +    cpumask_clear_cpu(this_cpu, new_mask);
-> > +    local_mask = new_mask;
-> >      __send_ipi_mask(local_mask, vector);
-> >  }
-> >
-> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
-> >      update_intr_gate(X86_TRAP_PF, async_page_fault);
-> >  }
-> >
-> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
-> >
-> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-> >              const struct flush_tlb_info *info)
-> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
-> > cpumask *cpumask,
-> >      u8 state;
-> >      int cpu;
-> >      struct kvm_steal_time *src;
-> > -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
-> > +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >
-> >      cpumask_copy(flushmask, cpumask);
-> >      /*
-> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
-> >      if (pv_tlb_flush_supported()) {
-> >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-> >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> > +        pr_info("KVM setup pv remote TLB flush\n");
->
-> Nit: to be consistent with __send_ipi_mask() the message should be
-> somthing like
->
-> "KVM: switch to using PV TLB flush"
+Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
+support those in this driver add a new function that can be called to
+unregister the SCU IPC when it is not needed anymore.
 
-There is a lot of native ops we replace by pv ops in kvm.c, I use "KVM
-setup xxx" there, like pv ipis, pv tlb flush, pv sched yield, should
-we keep consistent as before?
+We also add a managed version of the intel_scu_ipc_register() that takes
+care of calling intel_scu_ipc_unregister() automatically when the driver
+is unbound.
 
-    Wanpeng
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/include/asm/intel_scu_ipc.h | 10 +++++
+ drivers/platform/x86/intel_scu_ipc.c | 62 ++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
->
-> >      }
-> >
-> >      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
-> >  }
-> >  arch_initcall(activate_jump_labels);
-> >
-> > -static __init int kvm_setup_pv_tlb_flush(void)
-> > +static __init int kvm_alloc_cpumask(void)
-> >  {
-> >      int cpu;
-> > +    bool alloc = false;
-> >
-> >      if (!kvm_para_available() || nopv)
-> >          return 0;
-> >
-> > -    if (pv_tlb_flush_supported()) {
-> > +    if (pv_tlb_flush_supported())
-> > +        alloc = true;
-> > +
-> > +#if defined(CONFIG_SMP)
-> > +    if (pv_ipi_supported())
-> > +        alloc = true;
-> > +#endif
-> > +
-> > +    if (alloc)
-> >          for_each_possible_cpu(cpu) {
-> > -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-> > +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
-> >                  GFP_KERNEL, cpu_to_node(cpu));
-> >          }
-> > -        pr_info("KVM setup pv remote TLB flush\n");
-> > -    }
-> >
-> >      return 0;
-> >  }
-> > -arch_initcall(kvm_setup_pv_tlb_flush);
-> > +arch_initcall(kvm_alloc_cpumask);
-> >
-> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
-> >
-> > --
-> > 2.7.4
-> >
->
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
-> --
-> Vitaly
->
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index 27041fe999e9..2463ff5cad5b 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -25,6 +25,16 @@ __intel_scu_ipc_register(struct device *parent,
+ #define intel_scu_ipc_register(parent, pdata)  \
+ 	__intel_scu_ipc_register(parent, pdata, THIS_MODULE)
+ 
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu);
++
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_pdata *pdata,
++			      struct module *owner);
++
++#define devm_intel_scu_ipc_register(parent, pdata)  \
++	__devm_intel_scu_ipc_register(parent, pdata, THIS_MODULE)
++
+ struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
+ void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
+ struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev);
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index a2f05b4dd2b9..896c65727a29 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -637,6 +637,68 @@ __intel_scu_ipc_register(struct device *parent,
+ }
+ EXPORT_SYMBOL_GPL(__intel_scu_ipc_register);
+ 
++/**
++ * intel_scu_ipc_unregister() - Unregister SCU IPC
++ * @scu: SCU IPC handle
++ *
++ * This unregisters the SCU IPC device and releases the acquired
++ * resources once the refcount goes to zero.
++ */
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu)
++{
++	mutex_lock(&ipclock);
++	if (!WARN_ON(!ipcdev)) {
++		ipcdev = NULL;
++		device_unregister(&scu->dev);
++	}
++	mutex_unlock(&ipclock);
++}
++EXPORT_SYMBOL_GPL(intel_scu_ipc_unregister);
++
++static void devm_intel_scu_ipc_unregister(struct device *dev, void *res)
++{
++	struct intel_scu_ipc_devres *dr = res;
++	struct intel_scu_ipc_dev *scu = dr->scu;
++
++	intel_scu_ipc_unregister(scu);
++}
++
++/**
++ * __devm_intel_scu_ipc_register() - Register managed SCU IPC device
++ * @parent: Parent device
++ * @pdata: Platform specific data
++ * @owner: Module registering the SCU IPC device
++ *
++ * Call this function to register managed SCU IPC mechanism under
++ * @parent. Returns pointer to the new SCU IPC device or ERR_PTR() in
++ * case of failure. The caller may use the returned instance if it needs
++ * to do SCU IPC calls itself.
++ */
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_pdata *pdata,
++			      struct module *owner)
++{
++	struct intel_scu_ipc_devres *dr;
++	struct intel_scu_ipc_dev *scu;
++
++	dr = devres_alloc(devm_intel_scu_ipc_unregister, sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return NULL;
++
++	scu = __intel_scu_ipc_register(parent, pdata, owner);
++	if (IS_ERR(scu)) {
++		devres_free(dr);
++		return scu;
++	}
++
++	dr->scu = scu;
++	devres_add(parent, dr);
++
++	return scu;
++}
++EXPORT_SYMBOL_GPL(__devm_intel_scu_ipc_register);
++
+ static int __init intel_scu_ipc_init(void)
+ {
+ 	return class_register(&intel_scu_ipc_class);
+-- 
+2.25.0
+
