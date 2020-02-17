@@ -2,79 +2,107 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB208C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2EC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C979B20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C592070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgBQLTi (ORCPT
+        id S1728725AbgBQLUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:19:38 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:48734 "EHLO inva021.nxp.com"
+        Mon, 17 Feb 2020 06:20:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:34300 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729536AbgBQLTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:19:33 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 048F6202B8A;
-        Mon, 17 Feb 2020 12:19:32 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E662202B98;
-        Mon, 17 Feb 2020 12:19:26 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 39124402E5;
-        Mon, 17 Feb 2020 19:19:19 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 RESEND 4/7] ARM: dts: imx6sx-sabreauto: Use new pin names with DCE/DTE for UART pins
-Date:   Mon, 17 Feb 2020 19:13:38 +0800
-Message-Id: <1581938021-16259-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
-References: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
+        id S1727983AbgBQLUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:20:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEF2830E;
+        Mon, 17 Feb 2020 03:20:39 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F03D3F6CF;
+        Mon, 17 Feb 2020 03:20:38 -0800 (PST)
+Date:   Mon, 17 Feb 2020 11:20:36 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] sched/rt: allow pulling unfitting task
+Message-ID: <20200217112034.54yoockxvfe3fw6y@e107158-lin.cambridge.arm.com>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-3-qais.yousef@arm.com>
+ <20200217091042.GB28029@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200217091042.GB28029@codeaurora.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new pin names containing DCE/DTE for UART RX/TX/RTS/CTS pins, this
-is to distinguish the DCE/DTE functions.
+On 02/17/20 14:40, Pavan Kondeti wrote:
+> Hi Qais,
+> 
+> On Fri, Feb 14, 2020 at 04:39:48PM +0000, Qais Yousef wrote:
+> > When implemented RT Capacity Awareness; the logic was done such that if
+> > a task was running on a fitting CPU, then it was sticky and we would try
+> > our best to keep it there.
+> > 
+> > But as Steve suggested, to adhere to the strict priority rules of RT
+> > class; allow pulling an RT task to unfitting CPU to ensure it gets a
+> > chance to run ASAP. When doing so, mark the queue as overloaded to give
+> > the system a chance to push the task to a better fitting CPU when a
+> > chance arises.
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > ---
+> >  kernel/sched/rt.c | 16 +++++++++++++---
+> >  1 file changed, 13 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> > index 4043abe45459..0c8bac134d3a 100644
+> > --- a/kernel/sched/rt.c
+> > +++ b/kernel/sched/rt.c
+> > @@ -1646,10 +1646,20 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+> >  
+> >  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+> >  {
+> > -	if (!task_running(rq, p) &&
+> > -	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+> > -	    rt_task_fits_capacity(p, cpu))
+> > +	if (!task_running(rq, p) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
+> > +
+> > +		/*
+> > +		 * If the CPU doesn't fit the task, allow pulling but mark the
+> > +		 * rq as overloaded so that we can push it again to a more
+> > +		 * suitable CPU ASAP.
+> > +		 */
+> > +		if (!rt_task_fits_capacity(p, cpu)) {
+> > +			rt_set_overload(rq);
+> > +			rq->rt.overloaded = 1;
+> > +		}
+> > +
+> 
+> Here rq is source rq from which the task is being pulled. I can't understand
+> how marking overload condition on source_rq help. Because overload condition
+> gets cleared in the task dequeue path. i.e dec_rt_tasks->dec_rt_migration->
+> update_rt_migration().
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-No change.
----
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Err yes indeed I rushed this patch. Let me try again.
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 315044c..8259244 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -229,8 +229,8 @@
- 
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
--			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
--			MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX		0x1b0b1
- 		>;
- 	};
- 
--- 
-2.7.4
+Thanks
 
+--
+Qais Yousef
