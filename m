@@ -2,160 +2,205 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF38FC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0803BC3B1BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4342067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD18A20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jJfN4Chd"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=biamp.com header.i=@biamp.com header.b="RQKtv1AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgBQAiD (ORCPT
+        id S1726328AbgBQAog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 19:38:03 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:26321 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgBQAiB (ORCPT
+        Sun, 16 Feb 2020 19:44:36 -0500
+Received: from outbound-ip8b.ess.barracuda.com ([209.222.82.190]:39908 "EHLO
+        outbound-ip8b.ess.barracuda.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726177AbgBQAog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 19:38:01 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200217003757epoutp010d546461a715f30b2ba96fbdb3114f03~0CY7F30CA1513215132epoutp01W
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 00:37:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200217003757epoutp010d546461a715f30b2ba96fbdb3114f03~0CY7F30CA1513215132epoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581899877;
-        bh=NfSYzOZrDfPikqsu0krg/aS0e7+5iK66tJfBtsMoaE8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=jJfN4ChdjRrsQilTSUCykap0gRguEDe5JTvdGOeXE9Vodn+Aj1BIdnL4r4P6+zm51
-         jjR9cMEulmLRI2OH5reA0Al5pV5tY50BsTgIxHBoUE77ysxIbRcfmmgM5H8mbfPpo8
-         /5jCUJka1bL4wpggP7Lb2I348rh5+qkum9tBfkGA=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200217003757epcas1p41ac1f5e16d9c11a5b02df864d3e8506b~0CY6nxvOC0792707927epcas1p4D;
-        Mon, 17 Feb 2020 00:37:57 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48LQ7S2lN4zMqYkr; Mon, 17 Feb
-        2020 00:37:56 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A4.4C.48019.460E94E5; Mon, 17 Feb 2020 09:37:56 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200217003756epcas1p30946199dd3cc6ba1055699f48105f038~0CY5XJDYY1356213562epcas1p3L;
-        Mon, 17 Feb 2020 00:37:56 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200217003756epsmtrp2a4db0fae17c50f7c926b490537764ce1~0CY5WYIXq2536725367epsmtrp2n;
-        Mon, 17 Feb 2020 00:37:56 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-65-5e49e064d749
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.52.06569.360E94E5; Mon, 17 Feb 2020 09:37:56 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200217003755epsmtip2302aae121c4563c094cb538c3ce752e7~0CY5MSbND2197021970epsmtip2d;
-        Mon, 17 Feb 2020 00:37:55 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?windows-1257?Q?'Valdis_Kl=E7tnieks'?= <valdis.kletnieks@vt.edu>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <hch@lst.de>,
-        <sj1557.seo@samsung.com>, <pali.rohar@gmail.com>, <arnd@arndb.de>,
-        <viro@zeniv.linux.org.uk>, "'Namjae Jeon'" <linkinjeon@gmail.com>,
-        "'Sasha Levin'" <sashal@kernel.org>
-In-Reply-To: <89603.1581722921@turing-police>
-Subject: RE: [PATCH] exfat: tighten down num_fats check
-Date:   Mon, 17 Feb 2020 09:37:55 +0900
-Message-ID: <001b01d5e52a$7f029340$7d07b9c0$@samsung.com>
+        Sun, 16 Feb 2020 19:44:36 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2107.outbound.protection.outlook.com [104.47.58.107]) by mx10.us-east-2b.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Mon, 17 Feb 2020 00:44:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ko1N6MDNJtsBPUmMAEg4StBPcm/qMpD/WpIw2cQPKYgniPuzA0QCtuvSTX9pBGDEXxU/kl3nQ22QA8sf2VJmvOQ469YHbeI7qclKPwUTZloep9pM2uuo8jbTBlz4CLCM32gE8138MhOcp2wpA0fMZ5xdP/uBVjbRD9cqmJnm4VU2NONqltPuE51zLAdLrKqfsfG16pf/DV2Y2Z4ucZDQzOQk8FUTAeIYdDBOBl25K8N8DUlm1GCcp07wY+W4PnpQTV+qG+tTBgLpjgqx7whkTdB1wWjCxEG4gadGhUVtrHSVgSHoP5O9vEOIhPu7NJZptSkaxzSsY8B/3bgBIVNBSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1/wHtIBKCX6ReK45gmqk1RTYj390NvdRaDD8u1KDsA=;
+ b=kZfv/sWR8MLORA3R0UG/zO+Kqq48TB7GYrxWtHRUVHp4PywZyXeug3U7rbrfMki9b/hC1uytwVeU1ANiTIQSkOI8/S9Y1u9pYOttDmviKT6BTi0goBtEF/cYWF/IgsDJ9ADjlULUCDn15023s2yAh4H9fHzQPiT0sYqkUfvFSc88YkRpc0EkCJNQsbXWkxgQ8Eq8QxgkDdpi/0/SMWpsuTS96l0oYDiGfm2Wk3kj8hM0LoLJMdJtdL1lcYOLO4UggeYgyy3efQVRy9XFQOKL1Uzh2dnZtwBoVmZkOgsgKR2wDuBE+WR9W7V5R8Hd9gxddD0HHdeduRnS1N4+yhTPhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=biamp.com; dmarc=pass action=none header.from=biamp.com;
+ dkim=pass header.d=biamp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=biamp.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1/wHtIBKCX6ReK45gmqk1RTYj390NvdRaDD8u1KDsA=;
+ b=RQKtv1AKSMftc0zPSJjbljulZN2UKpTRaIA84+wn3tum+DaGeTciG81vwaegFgRmwI/qqZF9Av0EXRfTnthszJOwTeWBdtF5idmd6gSKWBFPi7zkyJpIB4VXbK6gueKhvQMIdZ4yC25w2pGCVJDTWARSYkZ0xx8qvn594wnPEBA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Shreyas.Joshi@biamp.com; 
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com (20.179.149.225) by
+ MN2PR17MB3421.namprd17.prod.outlook.com (52.135.39.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.23; Mon, 17 Feb 2020 00:44:27 +0000
+Received: from MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::90ed:ec6c:666d:4607]) by MN2PR17MB3197.namprd17.prod.outlook.com
+ ([fe80::90ed:ec6c:666d:4607%4]) with mapi id 15.20.2729.031; Mon, 17 Feb 2020
+ 00:44:26 +0000
+Date:   Sun, 16 Feb 2020 16:44:16 -0800
+From:   Shreyas Joshi <shreyas.joshi@biamp.com>
+To:     lee.jones@linaro.org, Support.Opensource@diasemi.com,
+        shreyasjoshi15@gmail.com, Adam.Thomson.Opensource@diasemi.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH V5] mfd: da9062: add support for interrupt polarity defined
+ in device tree
+Message-ID: <20200217004416.lhbl7rzvaf5q4fbz@shreyas_biamp.biamp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: SYYP282CA0009.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:b4::19) To MN2PR17MB3197.namprd17.prod.outlook.com
+ (2603:10b6:208:136::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="windows-1257"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQEsiKNbA3f6Ud8ZBzvjODngDpGbQQJ4Yw3zqV1wpoA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRmVeSWpSXmKPExsWy7bCmvm7KA884gzVtYhZ/Jx1jt2hevJ7N
-        YuXqo0wW1+/eYrbYs/cki8XlXXPYLCae/s1ksWnNNTaLLf+OsFpcev+BxeL83+OsDtwev39N
-        YvTYOesuu8emVZ1sHvvnrmH32H2zgc2jb8sqRo/Pm+Q8Dm1/w+ax6clbpgDOqBybjNTElNQi
-        hdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKBzlRTKEnNKgUIBicXF
-        Svp2NkX5pSWpChn5xSW2SqkFKTkFhgYFesWJucWleel6yfm5VoYGBkamQJUJORnzfzewFLzg
-        quh7VN/AuI2ji5GTQ0LAROL154tMXYxcHEICOxgl2ldvYIZwPjFKXDp6C8r5xiix/PZrNpiW
-        KatXs0Ak9jJKHDy8hBXCecko8fB2EzNIFZuArsS/P/vBOkQEXCXmtjUzghQxCyxgknhy4xZ7
-        FyMHBydQ0c6jMSA1wgLmErvm7GABsVkEVCVOf77NBFLCK2ApceJVGUiYV0BQ4uTMJ2AlzAIG
-        EgfOLGWEsOUltr+dwwxxnILEz6fLWEFaRQSsJD5/CIcoEZGY3dkG9oyEwDp2ibc3LjCD1EgI
-        uEgcXSkD0Sos8er4FnYIW0ri87u9bBAl1RIf90NN72CUePHdFsI2lri5fgMrhK0osfP3XKhr
-        +CTefe1hhWjllehoE4IoUZXou3SYCcKWluhq/8A+gVFpFpK/ZiH5axaSv2YheWABI8sqRrHU
-        guLc9NRiwwIT5KjexAhOyFoWOxj3nPM5xCjAwajEw/si0DNOiDWxrLgy9xCjBAezkgjvYUW3
-        OCHelMTKqtSi/Pii0pzU4kOMpsBgn8gsJZqcD8wWeSXxhqZGxsbGFiZm5mamxkrivA8jNeOE
-        BNITS1KzU1MLUotg+pg4OKUaGH3CLn63lBZdduKz+ofY9hhn1YJTMw9e+rbucVn8o507Mpxy
-        4udb8S849ONKcJB5gzTrze+L1sR2r2rMyph3UOrGjnd5TqfUF+399CP1fdFu+9thDKayE3pE
-        je/mHiqL5LyQW8XJuGf3v8t5WeITCjetf1y+yO5j1JZ88wf/d82a092081Jmf4YSS3FGoqEW
-        c1FxIgD7myRf3gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSvG7KA884g281Fn8nHWO3aF68ns1i
-        5eqjTBbX795ittiz9ySLxeVdc9gsJp7+zWSxac01Nost/46wWlx6/4HF4vzf46wO3B6/f01i
-        9Ng56y67x6ZVnWwe++euYffYfbOBzaNvyypGj8+b5DwObX/D5rHpyVumAM4oLpuU1JzMstQi
-        fbsEroz5vxtYCl5wVfQ9qm9g3MbRxcjJISFgIjFl9WqWLkYuDiGB3YwSzxpus0MkpCWOnTjD
-        3MXIAWQLSxw+XAxR85xR4uXnp2wgNWwCuhL//uwHs0UEXCXmtjUzghQxC6xhklj45z0TSEJI
-        oE5iU+MDJpBBnEANO4/GgISFBcwlds3ZwQJiswioSpz+fBushFfAUuLEqzKQMK+AoMTJmU/A
-        SpgFjCQmdUJMZBaQl9j+dg4zxJkKEj+fLmMFaRURsJL4/CEcokREYnZnG/MERuFZSCbNQjJp
-        FpJJs5C0LGBkWcUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERyVWlo7GE+ciD/EKMDB
-        qMTD6xDiGSfEmlhWXJl7iFGCg1lJhPewolucEG9KYmVValF+fFFpTmrxIUZpDhYlcV75/GOR
-        QgLpiSWp2ampBalFMFkmDk6pBsZ5V+dm6n8TLPB4+qS/4+bhe73MfX9ZGq6/4lzyz00vesY7
-        WwvXa3Y7Lsdd+WXz+NKW3QtOL5u3st94Q0JWstju09fU4p4eW3Xgi+2LZ8dy2UrWzdwkkXpn
-        1v2jO90qLR21T/KytPVX/F4hdVxke4j0zYaI9rsrPbOMH0Ue49X/+n3PWc6dOZc7lFiKMxIN
-        tZiLihMBaGKNbcYCAAA=
-X-CMS-MailID: 20200217003756epcas1p30946199dd3cc6ba1055699f48105f038
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200214232853epcas1p241e47cdc4e0b9b5c603cc6eaa6182360
-References: <CGME20200214232853epcas1p241e47cdc4e0b9b5c603cc6eaa6182360@epcas1p2.samsung.com>
-        <89603.1581722921@turing-police>
+Received: from shreyas_biamp.biamp.com (203.54.172.54) by SYYP282CA0009.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:b4::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Mon, 17 Feb 2020 00:44:24 +0000
+X-Originating-IP: [203.54.172.54]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 550b0598-60ce-4faa-ff6d-08d7b34289f4
+X-MS-TrafficTypeDiagnostic: MN2PR17MB3421:
+X-Microsoft-Antispam-PRVS: <MN2PR17MB3421B227E2EFB29DCD4168FCFC160@MN2PR17MB3421.namprd17.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0316567485
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(39840400004)(376002)(136003)(366004)(189003)(199004)(7696005)(52116002)(478600001)(2906002)(5660300002)(66556008)(316002)(81156014)(8676002)(81166006)(86362001)(8936002)(55016002)(26005)(66476007)(44832011)(186003)(4326008)(1076003)(66946007)(956004)(16526019)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR17MB3421;H:MN2PR17MB3197.namprd17.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: biamp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YzpVwr3P3icaTc1PnL3pVNyZohwJ8oIubetMgBkIwcdg+QKOaFPZAowmY/8Wr4VT+hxSpYTu3rlo7Tv2WwSmgB+IwGhDnkwnUcXzynTtcmFMuC2gle7JoOZDkM/UcMeUB4tm/4zRblRMoGX0G4ljIDafnFbI6G2Lz0Vw+A7s0rlWaTL7fn9c6WeOw1AoEcPqHexlV/1tZ+LdeQbAoYt9g6d47Imonfp0T4utuVt1cjq/DyrgoFe8OANoIZpJfjzKorxmWCQuHAjCgLaZIpRcvloKLtbnU3OLCOg3qiiyxRrKUG5X8Iazb0fufxLaBwd9WVv5o63EKajM5wSQzSgL7Wh0M4881N5gYwDKIvl4+QJNUdPhPzQNe5JRvzZ4xiE0VMTP64FU2WdkHJ9RHLuaVh+fd8qtlCiAU+kExs1q9qY8iFXebRkMFAoTvT59K2dc
+X-MS-Exchange-AntiSpam-MessageData: HryX9wEbgqd+mEUopW3PjSmD+IaGJCBgiIqL2bQBPAqzyMaSl2eozzzWAOValOKTpvY5aI+F8y8gWVdks+N+gDePEWMlhs6L/OrwrRprmfZq01IdAVG+xrJ17tBM3w77/NqAfG2v6mCPxJOvi3sFOA==
+X-OriginatorOrg: biamp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 550b0598-60ce-4faa-ff6d-08d7b34289f4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 00:44:26.6828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 341ac572-066c-46f6-bf06-b2d0c7ddf1be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /eBq3K+oefhM0fk+oa8dXi8NDz1gMsbuAAzv1kuOLRasf/J/Qu0CdlYpYvtj3dD5UbpjV4FfO4cP4gk1jbgEQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3421
+X-BESS-ID: 1581900270-893019-15164-49924-1
+X-BESS-VER: 2019.1_20200214.2117
+X-BESS-Apparent-Source-IP: 104.47.58.107
+X-BESS-Outbound-Spam-Score: 1.50
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.222310 [from 
+        cloudscan11-192.us-east-2a.ess.aws.cudaops.com]
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------
+        0.00 MSGID_FROM_MTA_HEADER  META: Message-Id was added by a relay 
+        1.50 MSGID_FROM_MTA_HEADER_2 META: Message-Id was added by a relay 
+        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+X-BESS-Outbound-Spam-Status: SCORE=1.50 using account:ESS74049 scores of KILL_LEVEL=7.0 tests=MSGID_FROM_MTA_HEADER, MSGID_FROM_MTA_HEADER_2, BSF_BESS_OUTBOUND
+X-BESS-BRTS-Status: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Change the test for num_fats from != 0 to a check for specifically 1.
-> 
-> Although it's theoretically possible that num_fats == 2 for a TexFAT
-> volume (or an implementation that doesn't do the full TexFAT but does
-> support 2 FAT tables), the rest of the code doesn't currently DTRT if it's
-> 2 (in particular, not handling the case of ActiveFat pointing at the
-> second FAT area), so we'll disallow that as well, as well as dealing with
-> corrupted images that have a trash non-zero value.
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> 
-> --- a/fs/exfat/super.c	2020-02-14 17:45:02.262274632 -0500
-> +++ b/fs/exfat/super.c	2020-02-14 17:46:37.200343723 -0500
-> @@ -450,7 +450,7 @@ static int __exfat_fill_super(struct sup
->  	}
-> 
->  	p_bpb = (struct pbr64 *)p_pbr;
-> -	if (!p_bpb->bsx.num_fats) {
-> +	if (p_bpb->bsx.num_fats  != 1) {
->  		exfat_msg(sb, KERN_ERR, "bogus number of FAT structure");
-Could you please update error message for the reason why num_fats is allowed
-only 1?
->  		ret = -EINVAL;
->  		goto free_bh;
-Let's remove exfat_mirror_bh(), FAT2_start_sector variable and the below
-related codes together.
+The da9062 interrupt handler cannot necessarily be low active.
+Add a function to configure the interrupt type based on what is defined in the device tree.
+The allowable interrupt type is either low or high level trigger.
 
-sbi->FAT2_start_sector = p_bpb->bsx.num_fats == 1 ?
-                sbi->FAT1_start_sector :
-                        sbi->FAT1_start_sector + sbi->num_FAT_sectors;
+Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+---
+ drivers/mfd/da9062-core.c | 43 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-Thanks for your patch!
-> 
-> 
-> 
-> 
-
+diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+index 419c73533401..cd3c4c80699e 100644
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -21,6 +21,9 @@
+ #define	DA9062_REG_EVENT_B_OFFSET	1
+ #define	DA9062_REG_EVENT_C_OFFSET	2
+ 
++#define	DA9062_IRQ_LOW	0
++#define	DA9062_IRQ_HIGH	1
++
+ static struct regmap_irq da9061_irqs[] = {
+ 	/* EVENT A */
+ 	[DA9061_IRQ_ONKEY] = {
+@@ -369,6 +372,33 @@ static int da9062_get_device_type(struct da9062 *chip)
+ 	return ret;
+ }
+ 
++static u32 da9062_configure_irq_type(struct da9062 *chip, int irq, u32 *trigger)
++{
++	u32 irq_type = 0;
++	struct irq_data *irq_data = irq_get_irq_data(irq);
++
++	if (!irq_data) {
++		dev_err(chip->dev, "Invalid IRQ: %d\n", irq);
++		return -EINVAL;
++	}
++	*trigger = irqd_get_trigger_type(irq_data);
++
++	switch (*trigger) {
++	case IRQ_TYPE_LEVEL_HIGH:
++		irq_type = DA9062_IRQ_HIGH;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		irq_type = DA9062_IRQ_LOW;
++		break;
++	default:
++		dev_warn(chip->dev, "Unsupported IRQ type: %d\n", *trigger);
++		return -EINVAL;
++	}
++	return regmap_update_bits(chip->regmap, DA9062AA_CONFIG_A,
++			DA9062AA_IRQ_TYPE_MASK,
++			irq_type << DA9062AA_IRQ_TYPE_SHIFT);
++}
++
+ static const struct regmap_range da9061_aa_readable_ranges[] = {
+ 	regmap_reg_range(DA9062AA_PAGE_CON, DA9062AA_STATUS_B),
+ 	regmap_reg_range(DA9062AA_STATUS_D, DA9062AA_EVENT_C),
+@@ -417,6 +447,7 @@ static const struct regmap_range da9061_aa_writeable_ranges[] = {
+ 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
+ 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
+ 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
++	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_B),
+ 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
+ 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
+ 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
+@@ -596,6 +627,7 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+ 	const struct regmap_irq_chip *irq_chip;
+ 	const struct regmap_config *config;
+ 	int cell_num;
++	u32 trigger_type = 0;
+ 	int ret;
+ 
+ 	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
+@@ -654,10 +686,15 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+ 	if (ret)
+ 		return ret;
+ 
++	ret = da9062_configure_irq_type(chip, i2c->irq, &trigger_type);
++	if (ret < 0) {
++		dev_err(chip->dev, "Failed to configure IRQ type\n");
++		return ret;
++	}
++
+ 	ret = regmap_add_irq_chip(chip->regmap, i2c->irq,
+-			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
+-			-1, irq_chip,
+-			&chip->regmap_irq);
++			trigger_type | IRQF_SHARED | IRQF_ONESHOT,
++			-1, irq_chip, &chip->regmap_irq);
+ 	if (ret) {
+ 		dev_err(chip->dev, "Failed to request IRQ %d: %d\n",
+ 			i2c->irq, ret);
+-- 
+2.20.1
 
