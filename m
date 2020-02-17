@@ -6,85 +6,80 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B3BC7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C76C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3934C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7A920725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgBQIXJ (ORCPT
+        id S1728178AbgBQIXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:23:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:58892 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgBQIXI (ORCPT
+        Mon, 17 Feb 2020 03:23:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43345 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBQIXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:23:08 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j3bg9-0005ux-16; Mon, 17 Feb 2020 09:22:57 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 91A8C100617; Mon, 17 Feb 2020 09:22:56 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        kbuild test robot <lkp@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, vishal.l.verma@intel.com,
-        hch@lst.de, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 5/6] x86/NUMA: Provide a range-to-target_node lookup facility
-In-Reply-To: <158188326978.894464.217282995221175417.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com> <158188326978.894464.217282995221175417.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Mon, 17 Feb 2020 09:22:56 +0100
-Message-ID: <87y2t1pqqn.fsf@nanos.tec.linutronix.de>
+        Mon, 17 Feb 2020 03:23:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so19625181edb.10;
+        Mon, 17 Feb 2020 00:23:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RCvgYdsJcfvOF7DNGv6F0fWsfl3RWpjn9MSCG6l5nng=;
+        b=iHGs99C61VciBC7Q1bnkmUshocl09Ah31eAiy17q0VDfNuLxv5gHgBgCpvNUzSJdbe
+         /bwvf4RsuXbmdyP2Dub8qv6kTKkNC7qfwovDnxMOP539tZ7SLcE29XUCO46kGWIuRzFc
+         0T/1F8BKfSEeUTiYslf1S02VAbODT8eh6gY+oQ/bNNHWcq2pIV1Ew04Jlv2jo2YCBWTH
+         8K88Xbsux/mJChBYYdvyY0slynBbj16uL5ds6N4rrIBaTq2hMJQ6DZM5sFhCdHxKdYUS
+         +16X2eOZpCsRPSBXshHEQEeU+B5cILL4wCS1zKcrNK5yjIu6zot120gPegoI0NjmyT8L
+         +cbg==
+X-Gm-Message-State: APjAAAXpVXizhxlaiKhu/djTD+UHV+GhRz0XaHjN8eclwOphA2d6CNAU
+        uIkWWkLSOuOGvOAsWAdP0hrNSH/ewsg=
+X-Google-Smtp-Source: APXvYqwyxVAi/FOSdsitAeFh5J21SXf6PLt2xOG/z3I2loykIQ26tf2+KQibZcw0Oik0GzvI35gMeg==
+X-Received: by 2002:aa7:db16:: with SMTP id t22mr7907777eds.54.1581927823116;
+        Mon, 17 Feb 2020 00:23:43 -0800 (PST)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
+        by smtp.gmail.com with ESMTPSA id d9sm452818edp.97.2020.02.17.00.23.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 00:23:42 -0800 (PST)
+Received: by mail-wr1-f50.google.com with SMTP id k11so18470415wrd.9;
+        Mon, 17 Feb 2020 00:23:42 -0800 (PST)
+X-Received: by 2002:a5d:6805:: with SMTP id w5mr21282613wru.64.1581927822372;
+ Mon, 17 Feb 2020 00:23:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-7-samuel@sholland.org>
+In-Reply-To: <20200217064250.15516-7-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 17 Feb 2020 16:23:31 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65pow6ufaz=6f8rWMXkmknLL2toYgUj-wM9sqns9Xy-ow@mail.gmail.com>
+Message-ID: <CAGb2v65pow6ufaz=6f8rWMXkmknLL2toYgUj-wM9sqns9Xy-ow@mail.gmail.com>
+Subject: Re: [RFC PATCH 06/34] ASoC: sun8i-codec: Fix setting DAI data format
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> Use the correct mask for this two-bit field. This fixes setting the DAI
+> data format to RIGHT_J or DSP_A.
+>
+> Cc: stable@kernel.org
+> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-> The DEV_DAX_KMEM facility is a generic mechanism to allow device-dax
-> instances, fronting performance-differentiated-memory like pmem, to be
-> added to the System RAM pool. The NUMA node for that hot-added memory is
-> derived from the device-dax instance's 'target_node' attribute.
->
-> Recall that the 'target_node' is the ACPI-PXM-to-node translation for
-> memory when it comes online whereas the 'numa_node' attribute of the
-> device represents the closest online cpu node.
->
-> Presently useful target_node information from the ACPI SRAT is discarded
-> with the expectation that "Reserved" memory will never be onlined. Now,
-> DEV_DAX_KMEM violates that assumption, there is a need to retain the
-> translation. Move, rather than discard, numa_memblk data to a secondary
-> array that memory_add_physaddr_to_target_node() may consider at a later
-> point in time.
->
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: <x86@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
