@@ -2,239 +2,87 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5700DC34030
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E61C3402F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DBD20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581981999;
-	bh=SUHUIqPehpsKC2p2nm1j8n3CMYFBYTGDwlnziZP/idM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=B8T0Qf+So/7ENyaFvtq1K0x7VteLxmMYQh6YKxeOwbgJjkKRNItH1mDgGLz4DelS2
-	 k99kV04x1sTJFNo7SzgmpHai2eeFUqny7ADD41AQEtVUEw5AQw7rumstRM6MS6EbXK
-	 twHSjP6iphiYTUjlffAyzdkmNu/cb3YiT+WnBdWE=
+	by mail.kernel.org (Postfix) with ESMTP id 2489520801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 23:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgBQX0i (ORCPT
+        id S1726155AbgBQX3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 18:26:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgBQX0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 18:26:37 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 241BB207FD;
-        Mon, 17 Feb 2020 23:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581981996;
-        bh=SUHUIqPehpsKC2p2nm1j8n3CMYFBYTGDwlnziZP/idM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=nWEkPg92zKH1GOOt7LNxCJgqbfPStO4sfhRxOozAlbzQI3dmbDTc3/+GeAJgWWrml
-         QmmD4I6B+BvG4ikCZd+VxgA1qaC6dVjX/974S0ou+Rw0PtxUDIeuHyRF12L3ZLGdZU
-         cXonvaQtYH5A5PHHMYCMRqawd4H/LEEFgZ5UXp94=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F37DD35227A8; Mon, 17 Feb 2020 15:26:35 -0800 (PST)
-Date:   Mon, 17 Feb 2020 15:26:35 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH V2 4/7] rcu: don't use negative ->rcu_read_lock_nesting
-Message-ID: <20200217232635.GC17570@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191102124559.1135-1-laijs@linux.alibaba.com>
- <20191102124559.1135-5-laijs@linux.alibaba.com>
+        Mon, 17 Feb 2020 18:29:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34977 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgBQX3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 18:29:50 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j3ppQ-0001U1-Uu; Tue, 18 Feb 2020 00:29:29 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 4D4DA100292; Tue, 18 Feb 2020 00:29:27 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@openvz.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers <containers@lists.linux-foundation.org>,
+        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
+        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
+Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
+In-Reply-To: <20200217230331.he6p5bs766zp6smx@wittgenstein>
+Date:   Tue, 18 Feb 2020 00:29:27 +0100
+Message-ID: <874kvossh4.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191102124559.1135-5-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 12:45:56PM +0000, Lai Jiangshan wrote:
-> Negative ->rcu_read_lock_nesting was introduced to prevent
-> scheduler deadlock. But now with the help of deferred qs
-> mechanism, we can defer qs rather than persevere in reporting qs
-> and deadlock. So negative ->rcu_read_lock_nesting is useless now
-> and rcu_read_unlock() can be simplified.
-> 
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+Christian Brauner <christian.brauner@ubuntu.com> writes:
+> On Mon, Feb 17, 2020 at 10:47:53PM +0100, Michael Kerrisk (man-pages) wrote:
+>> Actually, I think the alternative you propose just here is better. I
+>> imagine there are times when one will want to create multiple
+>> namespaces with a single call to clone3(), including a time namespace.
+>> I think this should be allowed by the API. And, otherwise, clone3()
+>> becomes something of a second-class citizen for creating namespaces.
+>> (I don't really get the "less invasive" argument. Implementing this is
+>> just a piece of kernel to code to make user-space's life a bit simpler
+>> and more consistent.)
+>
+> I don't particularly mind either way. If there's actual users that need
+> to set it at clone3() time then we can extend it. So I'd like to hear
+> what Adrian, Dmitry, and Thomas think since they are well-versed how
+> this will be used in the wild. I'm weary of exposing a whole new uapi
+> struct and extending clone3() without any real use-case but I'm happy to
+> if there is!
 
-I have queued this for further review and testing, thank you!
+I really have no clue. I merily helped getting this in shape without
+creating havoc for timekeeping and VDSO. I have to punt to the container
+wizards.
 
-There were a few adjustments, so please see the updated patch below.
+Thanks,
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 756b5aea6df6d769a346d4b55cc66707b2d607a9
-Author: Lai Jiangshan <laijs@linux.alibaba.com>
-Date:   Sat Feb 15 15:23:26 2020 -0800
-
-    rcu: Don't use negative nesting depth in __rcu_read_unlock()
-    
-    Now that RCU flavors have been consolidated, an RCU-preempt
-    rcu_read_unlock() in an interrupt or softirq handler cannot possibly
-    end the RCU read-side critical section.  Consider the old vulnerability
-    involving rcu_read_unlock() being invoked within such a handler that
-    interrupted an __rcu_read_unlock_special(), in which a wakeup might be
-    invoked with a scheduler lock held.  Because rcu_read_unlock_special()
-    no longer does wakeups in such situations, it is no longer necessary
-    for __rcu_read_unlock() to set the nesting level negative.
-    
-    This commit therfore removes this recursion-protection code from
-    __rcu_read_unlock().
-    
-    Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-    [ paulmck: Let rcu_exp_handler() continue to call rcu_report_exp_rdp(). ]
-    [ paulmck: Adjust other checks given no more negative nesting. ]
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index c2b04da..72952ed 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -639,6 +639,7 @@ static void wait_rcu_exp_gp(struct work_struct *wp)
-  */
- static void rcu_exp_handler(void *unused)
- {
-+	int depth = rcu_preempt_depth();
- 	unsigned long flags;
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 	struct rcu_node *rnp = rdp->mynode;
-@@ -649,7 +650,7 @@ static void rcu_exp_handler(void *unused)
- 	 * critical section.  If also enabled or idle, immediately
- 	 * report the quiescent state, otherwise defer.
- 	 */
--	if (!rcu_preempt_depth()) {
-+	if (!depth) {
- 		if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
- 		    rcu_dynticks_curr_cpu_in_eqs()) {
- 			rcu_report_exp_rdp(rdp);
-@@ -673,7 +674,7 @@ static void rcu_exp_handler(void *unused)
- 	 * can have caused this quiescent state to already have been
- 	 * reported, so we really do need to check ->expmask.
- 	 */
--	if (rcu_preempt_depth() > 0) {
-+	if (depth > 0) {
- 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 		if (rnp->expmask & rdp->grpmask) {
- 			rdp->exp_deferred_qs = true;
-@@ -683,30 +684,8 @@ static void rcu_exp_handler(void *unused)
- 		return;
- 	}
- 
--	/*
--	 * The final and least likely case is where the interrupted
--	 * code was just about to or just finished exiting the RCU-preempt
--	 * read-side critical section, and no, we can't tell which.
--	 * So either way, set ->deferred_qs to flag later code that
--	 * a quiescent state is required.
--	 *
--	 * If the CPU is fully enabled (or if some buggy RCU-preempt
--	 * read-side critical section is being used from idle), just
--	 * invoke rcu_preempt_deferred_qs() to immediately report the
--	 * quiescent state.  We cannot use rcu_read_unlock_special()
--	 * because we are in an interrupt handler, which will cause that
--	 * function to take an early exit without doing anything.
--	 *
--	 * Otherwise, force a context switch after the CPU enables everything.
--	 */
--	rdp->exp_deferred_qs = true;
--	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
--	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
--		rcu_preempt_deferred_qs(t);
--	} else {
--		set_tsk_need_resched(t);
--		set_preempt_need_resched();
--	}
-+	// Finally, negative nesting depth should not happen.
-+	WARN_ON_ONCE(1);
- }
- 
- /* PREEMPTION=y, so no PREEMPTION=n expedited grace period to clean up after. */
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index be3d100..571b7c9 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -345,9 +345,7 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
- 	return READ_ONCE(rnp->gp_tasks) != NULL;
- }
- 
--/* Bias and limit values for ->rcu_read_lock_nesting. */
--#define RCU_NEST_BIAS INT_MAX
--#define RCU_NEST_NMAX (-INT_MAX / 2)
-+/* limit value for ->rcu_read_lock_nesting. */
- #define RCU_NEST_PMAX (INT_MAX / 2)
- 
- static void rcu_preempt_read_enter(void)
-@@ -355,9 +353,9 @@ static void rcu_preempt_read_enter(void)
- 	current->rcu_read_lock_nesting++;
- }
- 
--static void rcu_preempt_read_exit(void)
-+static int rcu_preempt_read_exit(void)
- {
--	current->rcu_read_lock_nesting--;
-+	return --current->rcu_read_lock_nesting;
- }
- 
- static void rcu_preempt_depth_set(int val)
-@@ -390,21 +388,15 @@ void __rcu_read_unlock(void)
- {
- 	struct task_struct *t = current;
- 
--	if (rcu_preempt_depth() != 1) {
--		rcu_preempt_read_exit();
--	} else {
-+	if (rcu_preempt_read_exit() == 0) {
- 		barrier();  /* critical section before exit code. */
--		rcu_preempt_depth_set(-RCU_NEST_BIAS);
--		barrier();  /* assign before ->rcu_read_unlock_special load */
- 		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
- 			rcu_read_unlock_special(t);
--		barrier();  /* ->rcu_read_unlock_special load before assign */
--		rcu_preempt_depth_set(0);
- 	}
- 	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
- 		int rrln = rcu_preempt_depth();
- 
--		WARN_ON_ONCE(rrln < 0 && rrln > RCU_NEST_NMAX);
-+		WARN_ON_ONCE(rrln < 0 || rrln > RCU_NEST_PMAX);
- 	}
- }
- EXPORT_SYMBOL_GPL(__rcu_read_unlock);
-@@ -556,7 +548,7 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
- {
- 	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
- 		READ_ONCE(t->rcu_read_unlock_special.s)) &&
--	       rcu_preempt_depth() <= 0;
-+	       rcu_preempt_depth() == 0;
- }
- 
- /*
-@@ -692,7 +684,7 @@ static void rcu_flavor_sched_clock_irq(int user)
- 	} else if (rcu_preempt_need_deferred_qs(t)) {
- 		rcu_preempt_deferred_qs(t); /* Report deferred QS. */
- 		return;
--	} else if (!rcu_preempt_depth()) {
-+	} else if (!WARN_ON_ONCE(rcu_preempt_depth())) {
- 		rcu_qs(); /* Report immediate QS. */
- 		return;
- 	}
+        tglx
