@@ -2,113 +2,83 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B4CC7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3B8C7619C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBF624649
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C2RLmbDd"
+	by mail.kernel.org (Postfix) with ESMTP id A6B712086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 02:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgBQCAt (ORCPT
+        id S1726591AbgBQCLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 21:00:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44663 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgBQCAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 21:00:49 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48LRz31XH1z9sP7;
-        Mon, 17 Feb 2020 13:00:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581904847;
-        bh=BD3CVoBvvToP7p9M+qnDvxZwxrPMfBiQ40P737FK+R0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C2RLmbDdjy64zyQXEi3kVnA4Eg2tdLpfHAXGYcikrrhCR9wwuF/skfGrs9GwvJpnj
-         H79YCZSpum2U4s9k6SWlqKXgBfvqW+N8u97DvnK0fUbAAG1+kUGQJdt89e415y0hcM
-         o6/x7enk1g6iZcx2DgQ1iWCErXVtLsXnePkk3RE9+KLmu32IpPUT9mqatX7BtgZtZc
-         EyUONuQNPya7bTHeqHHazalHFhxkvXZf9o48IHO0QRYywDx3qGzLDoDha4hs80W1R3
-         Gj1GsaNBFaTccLk12EFXX9kGyVcUkQXn7iZgo5t7XvCTgvT8sNDah7op8pnmNVXINb
-         C0fcBK0hQWkeA==
-Date:   Mon, 17 Feb 2020 13:00:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200217130046.4c042590@canb.auug.org.au>
+        Sun, 16 Feb 2020 21:11:46 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10624 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbgBQCLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 21:11:46 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BB6A29D15348A178E034;
+        Mon, 17 Feb 2020 10:11:24 +0800 (CST)
+Received: from [127.0.0.1] (10.133.205.80) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Feb 2020
+ 10:11:23 +0800
+Subject: Re: [PATCH for 4.19-stable] padata: fix null pointer deref of
+ pd->pinst
+To:     Sasha Levin <sashal@kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200214182821.337706-1-daniel.m.jordan@oracle.com>
+ <20200215150118.B22262084E@mail.kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <5E49F64A.2070904@huawei.com>
+Date:   Mon, 17 Feb 2020 10:11:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xGnHHwAOcQg/yGRlWW5yS2.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200215150118.B22262084E@mail.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.205.80]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xGnHHwAOcQg/yGRlWW5yS2.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
 
-[Also earlier reported by Randy Dunlap]
+On 2020/2/15 23:01, Sasha Levin wrote:
+> Hi,
+>
+> [This is an automated email]
+>
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: dc34710a7aba ("padata: Remove broken queue flushing").
+>
+> The bot has tested the following trees: v5.5.3, v5.4.19, v4.19.103.
+>
+> v5.5.3: Build failed! Errors:
+>      kernel/padata.c:460:4: error: ‘struct parallel_data’ has no member named ‘pinst’
+>
+> v5.4.19: Build failed! Errors:
+>      kernel/padata.c:460:4: error: ‘struct parallel_data’ has no member named ‘pinst’
+>
+> v4.19.103: Build OK!
+>
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+>
+> How should we proceed with this patch?
+The commit bbefa1dd6a6d ("crypto: pcrypt - Avoid deadlock by using 
+per-instance padata queues") that merged
+on linux-5.4.y and linux-5.5.y changes struct parallel_data, so this 
+patch it's only needed on linux-4.19.y.
+>
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
 
-In file included from mm/migrate.c:39:
-include/linux/hugetlb_cgroup.h:146:21: warning: 'struct file_region' declar=
-ed inside parameter list will not be visible outside of this definition or =
-declaration
-  146 |              struct file_region *rg,
-      |                     ^~~~~~~~~~~
-include/linux/hugetlb_cgroup.h:145:63: warning: 'struct resv_map' declared =
-inside parameter list will not be visible outside of this definition or dec=
-laration
-  145 | static inline void hugetlb_cgroup_uncharge_file_region(struct resv_=
-map *resv,
-      |                                                               ^~~~~=
-~~~
-include/linux/hugetlb_cgroup.h:233:59: warning: 'struct resv_map' declared =
-inside parameter list will not be visible outside of this definition or dec=
-laration
-  233 | static inline void hugetlb_cgroup_uncharge_counter(struct resv_map =
-*resv,
-      |                                                           ^~~~~~~~
-
-Introduced by commits
-
-  0b42cb2e47b6 ("hugetlb_cgroup: add reservation accounting for private map=
-pings")
-  881818698361 ("hugetlb_cgroup: add accounting for shared mappings")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xGnHHwAOcQg/yGRlWW5yS2.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5J884ACgkQAVBC80lX
-0GwBFQgAkpukfhtP6i55Zh8+aplTtAf8K6TLlawkke/4Vi/c0AVUlUA+kGG1M7yS
-rn2pqMo2M95bKf10XmtdAKRsqAyvb+KSpTsmGmvD/gjhFnwuRCxfczd4E3pOAz9G
-YzJvsepPhn2ykZJFuWnfHEUxVo8FonWeFknXz6b3a+kv+E123kpWFoCtULqR1OYu
-HmiRHdmn1uaRZm1UdQb3cHktCi8dyfSoRZLiY9QBhOay2oioOxppnaFU1Mzah3mB
-L4MLQzUJQejWpGME1+jlL4vFSjWGxBNI0sm9/QwDAKhyXqYq72c2DakXpKOs+UTg
-1/pM+xDa8nMOpGmQf5L4/UJuY3CYmQ==
-=3Wf8
------END PGP SIGNATURE-----
-
---Sig_/xGnHHwAOcQg/yGRlWW5yS2.--
