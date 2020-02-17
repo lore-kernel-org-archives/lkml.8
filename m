@@ -2,51 +2,100 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C829EC33FA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2C1C761A6
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC142206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA69206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epRTAwIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgBQNIc (ORCPT
+        id S1728671AbgBQNMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:08:32 -0500
-Received: from verein.lst.de ([213.95.11.211]:33694 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgBQNIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:08:32 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0815468B05; Mon, 17 Feb 2020 14:08:29 +0100 (CET)
-Date:   Mon, 17 Feb 2020 14:08:28 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Anatoly Pugachev <matorola@gmail.com>, Pat Gefre <pfg@sgi.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-doc@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tty/serial: cleanup after ioc*_serial driver removal
-Message-ID: <20200217130828.GB26781@lst.de>
-References: <20200217081558.10266-1-lukas.bulwahn@gmail.com> <CADxRZqwGBi=4A224mG0cPgONdNitnvi3LFD_KQckxdYSXzgBGg@mail.gmail.com> <alpine.DEB.2.21.2002170950390.11007@felia>
+        Mon, 17 Feb 2020 08:12:51 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37669 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgBQNMv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 08:12:51 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l2so9820726otp.4;
+        Mon, 17 Feb 2020 05:12:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xyDoQXaxUnAhbcSh1pD7Fmld76RkwiIErcec174JinM=;
+        b=epRTAwIzLUTlnb+/jUX+cHtyDo7U5ekQ1QXhi8Dtx2GLxvNAwcaB7Uv0VQQxmV8ja6
+         mvbMtUMfKzn4o+a4bPe1hysnGfVg6UhfoSwKe3Eqdlpguw6o9rj5F1pDx6axSDir0hPH
+         K4pFMtOcfzc/jC3kHlze9t+Jjs7+cnWF2ffzOwB0QWAuqlFCO4PUYBv7qwBATZKyUPXO
+         DXTjXcVefk6VfasXOhLb03ByM+xyTTGfZssbYOvv3CzB+Q7LkP/pRDymT/Kmak6B6JSL
+         /jkwuwwuaeoLbuHX84scx9G2dtMYtKUs2IBeP7uMGj/Hfmqi9Z8267U5dxnaqj2t+lxe
+         CbwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xyDoQXaxUnAhbcSh1pD7Fmld76RkwiIErcec174JinM=;
+        b=nuwdCIudEnmFNCczJvbMp3NS9/rwxvTEvjKKRLpw/wDjnb4/KhBAO2spBL6Ne3zFwr
+         LC92RlR5wG7RzMbYVNRzNuT8lcfejT04LRyzlLhOHjhUSqM8rqFyGsup0lOYa2ersfqr
+         i/L8xSNmNUSn/T4K4EBe37kje2sPrI5mRyXrLH6u9OiH3p3RzZEd3j52OoOkPe0+p/ki
+         CjSb0zApnCdjHLm6zLjz8dcPsE4zkBpkkfnlF6Ga1EwSi1Vg9JzNsmWZyIGWVCyMmx0t
+         a+3hdWEQ+fjXH+QeBii1OUreZ5FfwCHToH4mCunV8vMzbh5JZ+TDrfQa9truYElv1mT6
+         jIQw==
+X-Gm-Message-State: APjAAAVy+OmHB72glnTHBdeIRzoWypxDq8FXP+RWsKTxVmoqll+knZK3
+        yeQQOuSWwtDLYnSW2ffQrJkHW8xS1XaW7RbEpLt60Q6JIkI=
+X-Google-Smtp-Source: APXvYqzfL7ZMeN9pKFsyZ9L4G9+Gn2ozS60R8nAHEorU6lGOmN4Eg5nc99nLnEbP0RSwoAMKoOvY7SshdPTjhs4leoQ=
+X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr11661299otn.56.1581945170431;
+ Mon, 17 Feb 2020 05:12:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2002170950390.11007@felia>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <CANRm+Cz6Es1TLFdGxz_65i-4osE6=67J=noqWC6n09TeXSJ5SA@mail.gmail.com>
+ <8fd7a83a-6fde-652f-0a2e-ec7b90c13616@redhat.com>
+In-Reply-To: <8fd7a83a-6fde-652f-0a2e-ec7b90c13616@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 17 Feb 2020 21:12:39 +0800
+Message-ID: <CANRm+CxZRCs6h_mffFQsX6N7KFJFFhSADR4vn1J-1OopU+UEAA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: X86: Less kvmclock sync induced vmexits after
+ VM boots
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:09:45AM +0100, Lukas Bulwahn wrote:
-> The description is about situations on very outdated kernel versions, so 
-> the whole page needs a general update.
+On Mon, 17 Feb 2020 at 19:23, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 17/02/20 11:36, Wanpeng Li wrote:
+> >
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index fb5d64e..d0ba2d4 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -9390,8 +9390,9 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+> >      if (!kvmclock_periodic_sync)
+> >          return;
+> >
+> > -    schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> > -                    KVMCLOCK_SYNC_PERIOD);
+> > +    if (kvm->created_vcpus == 1)
+> > +        schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+> > +                        KVMCLOCK_SYNC_PERIOD);
+>
+> This is called with kvm->lock not held, so you can have
+> kvm->created_vcpus == 2 by the time you get here.  You can test instead
+> "if (vcpu->vcpu_idx == 0)".
 
-While the file doesn't seem all that useful, I think removing or updating
-it should probably be a separate patch.
+Agreed.
+
+    Wanpeng
