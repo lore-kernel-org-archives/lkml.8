@@ -2,122 +2,158 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30E6C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDC8C3402C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC752070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CB02064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 21:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="wPWkMsYN"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="h9VOpNkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgBQVtX (ORCPT
+        id S1730009AbgBQVyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 16:49:23 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:35448 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgBQVtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 16:49:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1581976159;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HxZSzSgpbXsT6HT2RI88A1vCpV9h+fEuqtwQGza/Ass=;
-        b=wPWkMsYN/FfBSnf2qck8cq91ZnB+jbl0GQGwNhfhrbavGwKb6VFGNPCdKUPxnFwPuXSbfC
-        bFQf9kuzteF3CdlPefNA4zSNuIXK16uklWxGwOtIgSc/LRGhSAqw2zLHqN6yOPTSIGVOzL
-        W2NeHJKMBIHR/+OF3dscYAfm5YN+Als=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Antonio Quartulli <a@unstable.cc>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] batman-adv: Replace zero-length array with flexible-array member
-Date:   Mon, 17 Feb 2020 22:49:15 +0100
-Message-ID: <10763787.LixBgDfVEo@sven-edge>
-In-Reply-To: <20200217214300.GA14129@embeddedor>
-References: <20200217214300.GA14129@embeddedor>
+        Mon, 17 Feb 2020 16:54:53 -0500
+Received: from mout.gmx.net ([212.227.17.20]:39223 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729204AbgBQVyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:54:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1581976488;
+        bh=B2nziXmh6lJFW+2WLt9Q+OF3D2Vko/3vLipflS6cozk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=h9VOpNkvlqksAGy17eMY5Ye/eONQ3Njxs1RN522zlVBVDiqt/qVrI4MmxPWnddkFA
+         GU2BxR2UNdQfiBSwM6YfhmnpIBHfZKweYZXke8zRf/CNfjM2c+bPvH40eXYdzeKBrF
+         4NDmkOFwvks8ZA1rX4E9q/muywfE0kTxTYAsgyh8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1McYCb-1jblWX1bGX-00czH1; Mon, 17
+ Feb 2020 22:54:48 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH v2 1/1] efi/libstub: describe memory functions
+Date:   Mon, 17 Feb 2020 22:54:43 +0100
+Message-Id: <20200217215443.3004-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2172108.OD1FaJJAUc"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nR3PnHiek6o8c3O7s6+4afR8vKohCSVQm4b5XrVdRC44EGBd6dP
+ 1PEMinRHB5i1s1Yd2OKUNlgchGPlMTTbLcoXKLr//rkYJahjcHfZHlsuXQNr+RLdxHLrsey
+ VsFwRFhyWa+qDzE3cz+mZr7mrE5OcWTHNAnz9DLI4baDsdKFbe9sniT5fmmSuzu5Uajnli4
+ 0JPZvGZX+lXILeEePcKRQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EGjEc0owDlk=:OBlls5d8rs5WFyk3p7MfoU
+ AY29vZEEomFTaAQgvv74wgYnYbMFKnlMbn63CeTKPb2bLOwERkdQz9oAVAB7YYMFBLYk9S/5g
+ 5POtLRn1WBpZVvm4Lno+IDGV0WltODiQqvXP7NM/5KBHSfwjXBI8PHGnIsUbC8qJqCgzN5DWv
+ MZUSJxZXIUueqYqVUhZsYho/3DFiJr9ORmfDx2JrHya0Ppwfqp+lJSg1leSQHwDUVKJ0veJiS
+ XmxMdLwdnlvGqOztKS2d7RifZmPuuaNSMTVMO3Y192dnYEbyfcrswmFmQmNKC+QfuCgirjTQq
+ 6XGAlugPZis5DDSWVAoAKNv6ElH7hPciQJyl0BAQcwtJ1IkVJK/aqNuf9wK+IyS3mJ1mBeBWg
+ +mUaos8Hb31VhPqUEtTQiZWO33koFLOSyOgCGCb1k8kwPT+boxsFzAEYUhq9Anj3k2yPxh06h
+ 3QNG8b4SomRX4paHCWqmWtQa8lKatUbatlntiXIcx1wyo9KvFErgsS8/ME9elReaez+fTvjkz
+ mKW1M73Hdd9oFqMh68mrHRjxkvalnfWidlSErn1YZFFpO5D7kxvNoiBr22cij6mTugo/kqoGV
+ HV4AXKqHED5HHxOWeYAJp4KWQxDJryDN+HHEJ+lxElm8JWHeWX47TunCHR5doL1r2Iw0iJrBc
+ Ss0KD/nPcZe12sA/fDpWDhESurjfSQh99SsEjjMiyZCEicE+p3mRMVhouAe86Z2USBB26axCd
+ Db7CAdVT1OajB7WY7Ffkzvwn26DOhSKDrbjMTTpIFQ0pjm5i9zaHsTeYL/nKB4oix1uV2o8eI
+ ZjxKDMrSf7uhrPVnRKqzSLiDZ1+OVh4Md+lSdiZHLRI3I73wGrwiwXHUteQw3zQI2X6l3NkVB
+ QqdHpLhyDHYVumPtDOiPqa1VeV1HteYbCnEkgZ8Bsuz8qbP9TnHRiugXdRcXwci29R+zt1ch3
+ 5dzjYeDqlbvwFZdLbNjPDGnYymE09dSdgZrymd+qgkWGAdyOEXfkFuaOuVSWBu0jVrYTclNSg
+ p8PnkzN4aSBNJR6//u197i0DBJ9v73DQ7JqclB7aIS01RY+BuAS3YhHbeZIkLbjpntIg0x8Sh
+ 1sFbJe8c4P85hLNd2qHwYNofUADWBShf7yRTVYIWJP5+qjlkUotyTAz2Z1VA/EqbSfY3AKRhZ
+ aSRL3MpfjbWhiNzHUg4hJ93X6q9kn3dfTVKlJmNEZaQtrPVFjxqQF9TsmJXNPbzJ+lIqTcGMP
+ jMXJ7oW3TjURrf3E8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2172108.OD1FaJJAUc
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Provide descriptions of:
 
-On Monday, 17 February 2020 22:43:00 CET Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  net/batman-adv/distributed-arp-table.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+* efi_get_memory_map()
+* efi_low_alloc_above()
+* efi_free()
 
-Applied
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+v2:
+	point out how efi_free() is rounding up the memory size
+=2D--
+ drivers/firmware/efi/libstub/mem.c | 36 ++++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
-Thanks, 
-	Sven
---nextPart2172108.OD1FaJJAUc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
+stub/mem.c
+index c25fd9174b74..49116b9b0801 100644
+=2D-- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -16,6 +16,15 @@ static inline bool mmap_has_headroom(unsigned long buff=
+_size,
+ 	return slack / desc_size >=3D EFI_MMAP_NR_SLACK_SLOTS;
+ }
 
------BEGIN PGP SIGNATURE-----
++/**
++ * efi_get_memory_map() - get memory map
++ * @map		on return pointer to memory map
++ *
++ * Retrieve the UEFI memory map. The allocated memory leaves room for
++ * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
++ *
++ * Return:	status code
++ */
+ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
+ {
+ 	efi_memory_desc_t *m =3D NULL;
+@@ -109,8 +118,20 @@ efi_status_t efi_allocate_pages(unsigned long size, u=
+nsigned long *addr,
+ 	}
+ 	return EFI_SUCCESS;
+ }
+-/*
+- * Allocate at the lowest possible address that is not below 'min'.
++/**
++ * efi_low_alloc_above() - allocate pages at or above given address
++ * @size:	size of the memory area to allocate
++ * @align:	minimum alignment of the allocated memory area. It should
++ *		a power of two.
++ * @addr:	on exit the address of the allocated memory
++ * @min:	minimum address to used for the memory allocation
++ *
++ * Allocate at the lowest possible address that is not below 'min' as
++ * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' =
+but at
++ * least EFI_ALLOC_ALIGN. The first allocated page will not below the add=
+ress
++ * given by 'min'.
++ *
++ * Return:	status code
+  */
+ efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
+ 				 unsigned long *addr, unsigned long min)
+@@ -187,6 +208,17 @@ efi_status_t efi_low_alloc_above(unsigned long size, =
+unsigned long align,
+ 	return status;
+ }
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl5LClsACgkQXYcKB8Em
-e0YrWBAApZLl9hFI3pEEU4sF0ogqQdIrgfXgwknMtOlHbt9PZLa7AdKhuvt3Srmf
-2mPK88fPeI5Nm0ucK4auCSB6kMbivoWqhF/oI/I/IFPPjEm6HUCfquoCAKT+R+qH
-nlXa4TMfuG2MNq+++dhNOMfyrGNG37hO9mx1+l+8G3J41XWU/bvGw6318hwDeqJx
-zW8z5cJus0+FsICVvWhDHIZhVa/O8B6AJ3aC4RcLznmn/FlJdyt9W+7rI0JAWHll
-ca4gehUbHxLHB1u9CZrPW9b15O0HFcd0UF1HgpVuhlFwE3/QUp/cGCJvw8g5cee1
-YQEb2ZIyqDcElta5JmEgAqvIpmd3G+fTu6RZWiEkdyB4eeOgW0slvPj2nU0m8wlj
-TuxAzi1HllHWnvrMQ9O6OHAiOFHVan+hFc1jjmI0rAk5iKxvguzMVjYHSmSNNSe6
-Wb/AOceIjeRbIZlz3159+qubPC5/bO/1R1m4CldKqONh0NsqqntqEQG/1HTCpZiF
-69ttiD11tkerFlwcw04FulD/Qy99XP7nAfbroT4hf3WtlEDJ/xCdZzrZrV36C/KC
-Upc2AmZSj2gIjGC4cP3bpEz269xMyy7/IaVtzlI/J5vFIFdq7ivMVKoJOIT8qIDd
-FOxy3eWR1ZYe9sYgBzTpnvdUDqItHwvIIXSr+b6zytxy0oQ2g0k=
-=8qWS
------END PGP SIGNATURE-----
-
---nextPart2172108.OD1FaJJAUc--
-
-
++/**
++ * efi_free() - free memory pages
++ * @size	size of the memory area to free in bytes
++ * @addr	start of the memory area to free (must be EFI_PAGE_SIZE
++ *		aligned)
++ *
++ * 'size' is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
++ * architecture specific multiple of EFI_PAGE_SIZE. So this function shou=
+ld
++ * only be used to return pages allocated with efi_allocate_pages() or
++ * efi_low_alloc_above().
++ */
+ void efi_free(unsigned long size, unsigned long addr)
+ {
+ 	unsigned long nr_pages;
+=2D-
+2.25.0
 
