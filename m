@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A4C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EE1C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B7922B48
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127AF22B48
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="CfA7MMRT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="D2lB239x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgBQPo4 (ORCPT
+        id S1729402AbgBQPo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:44:56 -0500
-Received: from www149.your-server.de ([78.47.15.70]:59824 "EHLO
+        Mon, 17 Feb 2020 10:44:59 -0500
+Received: from www149.your-server.de ([78.47.15.70]:59968 "EHLO
         www149.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgBQPoz (ORCPT
+        with ESMTP id S1726528AbgBQPo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:44:55 -0500
+        Mon, 17 Feb 2020 10:44:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hanno.de;
          s=default1911; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
         MIME-Version:Date:Message-ID:References:To:From:Subject:Sender:Reply-To:Cc:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wcHYCgvIc1V4L4eqgKkfizJKSrtKfmAWPhFBpvyI6bQ=; b=CfA7MMRTU9iH7WaHpY+SpuuLuS
-        wTXycQngxf33BvZiH7nz/WRHkiRUmkZEaSSOzK3Vg82OuD0KXbwIMIono5wT4BCW3bDLmCzcnIWn6
-        Hw8gmHBlnkak3TwCNcC8bJrVwGhNqakK0nhRHer79drJ0t/2tRGH5Bt3GyzGdO5zOt1x2mM0GYYst
-        qE72AZnmmqGYewTYW1oj/KDOj7mvQdOuO+m7FrCXxBXlIbah6fLIShjejJFIiYNVmb8vtAxfNe2l6
-        4HGb7wkdGdZT+ovAJbFGOf4coUJ58T4Mb+gG8zy67Gc93LU8YVi/f/NshVFmKVKhHIct4gDsp+R8f
-        f3MstsZQ==;
+        bh=P5DWN49D92TYsuLESpqd7fS0a6DhOWs1cg95OmyVKFk=; b=D2lB239xIof0jQmbs+GSHfSNbe
+        CMoDIL7ln0iQ7lJIMnWDjDJmJlzg8vxPAO8N1/n6EqKTVSx1FRDIB9SF5OSc3lFkpPIb3XVMywhIk
+        2J6E9UFfXCDohvAIJdetYWPzVAAdrZlaVrsNVB0YunW94QPcZdLFyLjOR8fITnEP8W1YsRGFNj0sc
+        DdO/Y3OJRNQxo9P7UvID3Ty9gR8ttOXTto6cDLlsFLmLNdz0wgucfiNd4yUmmcVK5pg+9BToxclTF
+        HrdOY63IXqFjuVYPbhucOAn0L6r1UwTtJ7yB3UL0EEmFSraFoiRwtRnlDbQMvhGbuQnIdH8quq5S1
+        Zr3xR+bQ==;
 Received: from sslproxy06.your-server.de ([78.46.172.3])
         by www149.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <abos@hanno.de>)
-        id 1j3iJJ-0004sF-OY; Mon, 17 Feb 2020 16:27:49 +0100
+        id 1j3iHS-0004ld-Q4; Mon, 17 Feb 2020 16:25:54 +0100
 Received: from [62.96.7.134] (helo=[10.1.0.41])
         by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <abos@hanno.de>)
-        id 1j3iJJ-000GeY-Jh; Mon, 17 Feb 2020 16:27:49 +0100
-Subject: [PATCH 3/3] HID: hid-bigbenff: fix race condition for scheduled work
- during removal
+        id 1j3iHS-00080q-MV; Mon, 17 Feb 2020 16:25:54 +0100
+Subject: [PATCH 1/3] HID: hid-bigbenff: fix general protection fault caused by
+ double kfree
 From:   Hanno Zulla <abos@hanno.de>
 To:     Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
- <798ec119-ce24-e1e3-17c9-b6018b04d75f@hanno.de>
- <1c355bbe-c0fb-395c-9050-346f87eb324c@hanno.de>
-Message-ID: <782af9b1-b648-bd21-b0f0-b0db22b8c0b7@hanno.de>
-Date:   Mon, 17 Feb 2020 16:27:49 +0100
+Message-ID: <798ec119-ce24-e1e3-17c9-b6018b04d75f@hanno.de>
+Date:   Mon, 17 Feb 2020 16:25:54 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1c355bbe-c0fb-395c-9050-346f87eb324c@hanno.de>
+In-Reply-To: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Authenticated-Sender: abos@hanno.de
 X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
@@ -70,56 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HID: hid-bigbenff: fix race condition for scheduled work during removal
+HID: hid-bigbenff: fix general protection fault caused by double kfree
 
-It's possible that there is scheduled work left while the device is
-already being removed, which can cause a kernel crash. Adding a flag
-will avoid this.
+The struct *bigben was allocated via devm_kzalloc() and then used as a
+parameter in input_ff_create_memless(). This caused a double kfree
+during removal of the device, since both the managed resource API and
+ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
 
 Signed-off-by: Hanno Zulla <kontakt@hanno.de>
 ---
- drivers/hid/hid-bigbenff.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hid/hid-bigbenff.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index f8c552b64a89..db6da21ade06 100644
+index 3f6abd190df4..f7e85bacb688 100644
 --- a/drivers/hid/hid-bigbenff.c
 +++ b/drivers/hid/hid-bigbenff.c
-@@ -174,6 +174,7 @@ static __u8 pid0902_rdesc_fixed[] = {
- struct bigben_device {
- 	struct hid_device *hid;
- 	struct hid_report *report;
-+	bool removed;
- 	u8 led_state;         /* LED1 = 1 .. LED4 = 8 */
- 	u8 right_motor_on;    /* right motor off/on 0/1 */
- 	u8 left_motor_force;  /* left motor force 0-255 */
-@@ -190,6 +191,9 @@ static void bigben_worker(struct work_struct *work)
- 		struct bigben_device, worker);
- 	struct hid_field *report_field = bigben->report->field[0];
- 
-+	if (bigben->removed)
-+		return;
-+
- 	if (bigben->work_led) {
- 		bigben->work_led = false;
- 		report_field->value[0] = 0x01; /* 1 = led message */
-@@ -304,6 +308,7 @@ static void bigben_remove(struct hid_device *hid)
+@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
+ static int hid_bigben_play_effect(struct input_dev *dev, void *data,
+ 			 struct ff_effect *effect)
  {
- 	struct bigben_device *bigben = hid_get_drvdata(hid);
+-	struct bigben_device *bigben = data;
++	struct hid_device *hid = input_get_drvdata(dev);
++	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 	u8 right_motor_on;
+ 	u8 left_motor_force;
  
-+	bigben->removed = true;
- 	cancel_work_sync(&bigben->worker);
- 	hid_hw_stop(hid);
- }
-@@ -324,6 +329,7 @@ static int bigben_probe(struct hid_device *hid,
- 		return -ENOMEM;
- 	hid_set_drvdata(hid, bigben);
- 	bigben->hid = hid;
-+	bigben->removed = false;
++	if (!bigben) {
++		hid_err(hid, "no device data\n");
++		return 0;
++	}
++
+ 	if (effect->type != FF_RUMBLE)
+ 		return 0;
  
- 	error = hid_parse(hid);
- 	if (error) {
+@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
+ 
+ 	INIT_WORK(&bigben->worker, bigben_worker);
+ 
+-	error = input_ff_create_memless(hidinput->input, bigben,
++	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+ 		return error;
 -- 
 2.20.1
-
 
