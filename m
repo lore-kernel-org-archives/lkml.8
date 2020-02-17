@@ -2,99 +2,176 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A510C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0C9C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B0220725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE0920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:03:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kEoIwQrR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gwBz/Fcx"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="LhaTpr8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgBQQBp (ORCPT
+        id S1729579AbgBQQDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:01:45 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49511 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727277AbgBQQBp (ORCPT
+        Mon, 17 Feb 2020 11:03:10 -0500
+Received: from mail.efficios.com ([167.114.26.124]:44718 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgBQQDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:01:45 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8FA4B2179E;
-        Mon, 17 Feb 2020 11:01:44 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 17 Feb 2020 11:01:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ap/jh6jGtnEzAujoXqg69OFP1ZP
-        hCws9obqlHAORC3M=; b=kEoIwQrR3Lg3OdII04EzTAoylc0o/mqTamA6J8QmFv0
-        k+BQGieCNhLAyzkxztUyVE5g/udh97lPxWUCmdC3fXDWM9OIM9wipufEEgNrJ1Fq
-        DPEK0ET29xbRzr9QDODHIzsPBGshVD7rBxZF5lELO1/gUIULswvk62ImFo1Gu4eh
-        AFvizQmzSYMQ7knWG1KRU+zlo6uDnjUa6y79GLnn0wPCfNqi49eRIwIoFRgb+fE8
-        kEoe/dUSkd6kqECLmy2ooshYZlWl+TcQyv6bOw38GFxOwtA3csC88S+363YqQldX
-        8Dj09u9Er0zWtM965QrU2m25NqGZLdAn0EnZ5ZIcrHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ap/jh6
-        jGtnEzAujoXqg69OFP1ZPhCws9obqlHAORC3M=; b=gwBz/Fcx2c7rqixfbEqD1h
-        DSYyF2g8dCFGaaSjyRYKw5+yigSwQjN7c0zU4aCdx4NSPDBoOyx17Dl3d2SbWIKB
-        NxVTD4CJ02ABYaOjduQ9CjxwVOCSHEIaEObHnARw7CWCf3eS+ZRTYgxC7oaZRM7Z
-        k/51vJb+d2QHhsWttsuOXHATqB+h+3Gs9Or67c7rDhDoaV7D9HcOdZAptoaSGDDp
-        z74v+t0n1fFuWMMs9n6XaeAreA0M0La0qGVmRLVSg1Mm/eF8ZekSh9rdYawspkiQ
-        3pYlCmq2eVd+ZwcQlxVbI6WENnZWKnVtHkXqGGopzxSsTN22AV/F9lbBkLgzGUXw
-        ==
-X-ME-Sender: <xms:6LhKXt2V2sUJj6qsHIuBdSLBpP16cFD5jJKEA_fPYgiHQ3P54GpYOA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeigdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
-    gheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:6LhKXtw__0urKwpc6nE-ToR_7h6r0xpCluAOi8BW3wI7vjXAH8v-zQ>
-    <xmx:6LhKXtMZP1Vm4e4KjE9oSkg9ZgFcf1-IimTPpW-hNLg8WkgSaopwGQ>
-    <xmx:6LhKXi6vltXkeiz1BbK3DHde5Tss300mKKp95T0oiyZCyOXvbVj_pA>
-    <xmx:6LhKXueagtzKAFPqK2mIsgLc_Qn8W9ipgmWiWl_1j8qa5FRhgY12jw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 04C723060D1A;
-        Mon, 17 Feb 2020 11:01:43 -0500 (EST)
-Date:   Mon, 17 Feb 2020 17:01:41 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Sunny Pranay <mpranay2017@gmail.com>
-Cc:     abbotti@mev.co.uk, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: comedi: drivers: fixed errors warning coding
- style issue
-Message-ID: <20200217160141.GB1484698@kroah.com>
-References: <20200216081518.3516-1-mpranay2017@gmail.com>
- <20200216122156.GA21307@kroah.com>
- <CAD=0X6XpJ0yfodr6YzexbKZm_n0GgKE=heNhXZrBDoEt-8u53A@mail.gmail.com>
+        Mon, 17 Feb 2020 11:03:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 5D610246CD6;
+        Mon, 17 Feb 2020 11:03:08 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id e0lvVQGs2aMn; Mon, 17 Feb 2020 11:03:08 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 050D6246CD2;
+        Mon, 17 Feb 2020 11:03:08 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 050D6246CD2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1581955388;
+        bh=ItetYfhyUN3Od1AdIKdi+P2SdF7YtthR2OI+B/myaSg=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=LhaTpr8BYveOuIvueX4LsWIFOh7NNIGwzdgqHJlB/zVleyL1Yq+WK2EQ0hGrvkNCr
+         GsHA058KjlCcv4mLuUpNiJbLhWT0gGVdKz0LLQ03k6iIYp1xAAQpEQQ3n3b1Zveed0
+         x6GEbP9PqmxWxcpjngKkESyuehj2aPHE6626f1BKIB9LGTOYnG2sLx81Yci1g23HsM
+         iUeS/S8MQ39/JoDFKW4x64yqmiRgMCSxdc5kotXu5C3oN3GnV4WtmuDAruGuPZqC7a
+         v1JHihpoewGyMKQoaChVdOu9jujOmCoUk1d71pct0a5U9jpfYTRWzoWA9Xlu2bLbPt
+         uh9KJV1vXVuVQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id TFmX5MCKtcDj; Mon, 17 Feb 2020 11:03:07 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id E3762246D23;
+        Mon, 17 Feb 2020 11:03:07 -0500 (EST)
+Date:   Mon, 17 Feb 2020 11:03:07 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        cgroups@vger.kernel.org
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <1317969050.4131.1581955387909.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=0X6XpJ0yfodr6YzexbKZm_n0GgKE=heNhXZrBDoEt-8u53A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: cpuset: offlined CPUs removed from affinity masks
+Thread-Index: LCpgHYsKGbsNKD4rV33Ft2KJ/GZob0k9f2Q3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 06:16:56PM +0530, Sunny Pranay wrote:
-> > Before the patch were created there were few warnings indicating the
-> statements were bigger than 80 characters and some of them were not
-> properly commented like having extra space. So I created a patch for that
-> reducing comments to below 80 characters and maintained proper spacing.
-> That was I meant by fixed coding style issue.
+Hi,
+
+Adding Tejun and the cgroups mailing list in CC for this cpuset regression I
+reported last month.
+
+Thanks,
+
+Mathieu
+
+----- On Jan 16, 2020, at 12:41 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> Hi,
 > 
-> > My original name is M Pranay
+> I noticed the following regression with CONFIG_CPUSET=y. Note that
+> I am not using cpusets at all (only using the root cpuset I'm given
+> at boot), it's just configured in. I am currently working on a 5.2.5
+> kernel. I am simply combining use of taskset(1) (setting the affinity
+> mask of a process) and cpu hotplug. The result is that with
+> CONFIG_CPUSET=y, setting the affinity mask including an offline CPU number
+> don't keep that CPU in the affinity mask, and it is never put back when the
+> CPU comes back online. CONFIG_CPUSET=n behaves as expected, and puts back
+> the CPU into the affinity mask reported to user-space when it comes back
+> online.
+> 
+> 
+> * With CONFIG_CPUSET=y (unexpected behavior):
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu1/online
+> 
+> % taskset 0x7 ./loop &
+> % taskset -p $!
+> pid 1341's current affinity mask: 5
+> 
+> # echo 1 > /sys/devices/system/cpu/cpu1/online
+> 
+> taskset -p $!
+> pid 1341's current affinity mask: 5
+> 
+> kill $!
+> 
+> 
+> * With CONFIG_CPUSET=n (expected behavior):
+> 
+> (Offlining CPU, then start task)
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu1/online
+> 
+> % taskset 0x7 ./loop &
+> % taskset -p $!
+> pid 1358's current affinity mask: 5
+> 
+> # echo 1 > /sys/devices/system/cpu/cpu1/online
+> 
+> taskset -p $!
+> pid 1358's current affinity mask: 7
+> 
+> kill $!
+> 
+> 
+> Test system lscpu output:
+> 
+> Architecture:        x86_64
+> CPU op-mode(s):      32-bit, 64-bit
+> Byte Order:          Little Endian
+> CPU(s):              32
+> On-line CPU(s) list: 0-31
+> Thread(s) per core:  2
+> Core(s) per socket:  8
+> Socket(s):           2
+> NUMA node(s):        2
+> Vendor ID:           GenuineIntel
+> CPU family:          6
+> Model:               60
+> Model name:          Intel Core Processor (Haswell, no TSX, IBRS)
+> Stepping:            1
+> CPU MHz:             2399.996
+> BogoMIPS:            4799.99
+> Hypervisor vendor:   KVM
+> Virtualization type: full
+> L1d cache:           32K
+> L1i cache:           32K
+> L2 cache:            4096K
+> NUMA node0 CPU(s):   0-7,16-23
+> NUMA node1 CPU(s):   8-15,24-31
+> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
+> cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc
+> rep_good nopl cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1
+> sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand
+> hypervisor lahf_lm abm cpuid_fault invpcid_single pti ibrs ibpb fsgsbase bmi1
+> avx2 smep bmi2 erms invpcid xsaveopt
+> 
+> 
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
 
-Ok, then please fix this by properly saying all of this in the changelog
-text when you resubmit the patch.
-
-thanks,
-
-greg k-h
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
