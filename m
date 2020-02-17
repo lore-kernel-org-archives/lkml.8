@@ -2,146 +2,137 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB9C7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB6C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6F820725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83DD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qz2MyJl4"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="djcsP0XH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgBQJKb (ORCPT
+        id S1728774AbgBQJLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:10:31 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58170 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728731AbgBQJKa (ORCPT
+        Mon, 17 Feb 2020 04:11:00 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42694 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728272AbgBQJK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:10:30 -0500
-X-UUID: b5e20060268d4751b5e8a790b37fab16-20200217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=9HE6ijD/iKnj2zbwehdoMouoW6uxc6gif4/hSLPq9IQ=;
-        b=qz2MyJl4+KZT4tNFu0h/uXUFT3l+fEOgkjSbXpOkpOyev3+rHjFdgMnimrC8VWkZJS+fWSfzqBOfgdQ088ELq2b3SNYT8IWyMjCZx0Bi7+NacuipWP5hQAGm8Atwm/lSzt933de5z/4L3JvG+e2L0mImXqhy0GnGt8Lv6dQUwQ8=;
-X-UUID: b5e20060268d4751b5e8a790b37fab16-20200217
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 471284930; Mon, 17 Feb 2020 17:10:22 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 17 Feb 2020 17:09:26 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Feb 2020 17:09:57 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v1 1/3] arm64: dts: mt8183: Add gce setting in display node
-Date:   Mon, 17 Feb 2020 17:10:18 +0800
-Message-ID: <20200217091020.16144-1-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 17 Feb 2020 04:10:59 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581930659; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=LflFX77MpWqHjBMkjGqMItAeXxvmu1fDKmf5K/EJeow=; b=djcsP0XHymByAeW4UDSojfOLZ0cAifWh76edniaHXzBcTiKYWY/ENVrf7pdiXxpcJtHOKZqG
+ 7xdwghXuGxlsLntCmxnwvXBxVMHMq3GCg5BFOeOqYLl+lcURfk3Sw6wYVN1/qRv8Np7hvSID
+ fGjNq9w7Unh9enpWHh28YSBWmDU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4a589c.7fabdec96538-smtp-out-n01;
+ Mon, 17 Feb 2020 09:10:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5A4A0C447A3; Mon, 17 Feb 2020 09:10:50 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34576C447A0;
+        Mon, 17 Feb 2020 09:10:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34576C447A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Mon, 17 Feb 2020 14:40:42 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] sched/rt: allow pulling unfitting task
+Message-ID: <20200217091042.GB28029@codeaurora.org>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-3-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214163949.27850-3-qais.yousef@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gb3JkZXIgdG8gdXNlIEdDRSBmdW5jdGlvbiwgd2UgbmVlZCBhZGQgc29tZSBpbmZvcm1hdGlv
-bg0KaW50byBkaXNwbGF5IG5vZGUgKG1ib3hlcywgbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcsIG1l
-ZGlhdGVrLGdjZS1ldmVudHMpLg0KDQpTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8YmliYnku
-aHNpZWhAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+DQoNCi0tLQ0KVGhpcyBwYXRjaCBkZXBlbmRzIG9uIHB0YWNo
-Og0KW1JFU0VORCx2NiwwMi8xN10gYXJtNjQ6IGR0czogYWRkIGRpc3BsYXkgbm9kZXMgZm9yIG10
-ODE4Mw0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTMxNjI3Ny8NCi0tLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCAxNiArKysrKysrKysr
-KysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpDQppbmRleCBiZTQ0MjhjOTJmMzUuLjhiNTIyYjAz
-OWEzNyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0
-c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kNCkBAIC05
-LDYgKzksNyBAQA0KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9h
-cm0tZ2ljLmg+DQogI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ly
-cS5oPg0KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaD4NCisjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvZ2NlL210ODE4My1nY2UuaD4NCiAjaW5jbHVkZSAibXQ4MTgzLXBp
-bmZ1bmMuaCINCiANCiAvIHsNCkBAIC02NjQsNiArNjY1LDkgQEANCiAJCQlyZWcgPSA8MCAweDE0
-MDAwMDAwIDAgMHgxMDAwPjsNCiAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BP
-V0VSX0RPTUFJTl9ESVNQPjsNCiAJCQkjY2xvY2stY2VsbHMgPSA8MT47DQorCQkJbWJveGVzID0g
-PCZnY2UgMCBDTURRX1RIUl9QUklPX0hJR0hFU1Q+LA0KKwkJCQkgPCZnY2UgMSBDTURRX1RIUl9Q
-UklPX0hJR0hFU1Q+Ow0KKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lT
-XzE0MDBYWFhYIDAgMHgxMDAwPjsNCiAJCX07DQogDQogCQlvdmwwOiBvdmxAMTQwMDgwMDAgew0K
-QEAgLTY3Miw2ICs2NzYsNyBAQA0KIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjUgSVJRX1RZ
-UEVfTEVWRUxfTE9XPjsNCiAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VS
-X0RPTUFJTl9ESVNQPjsNCiAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09WTDA+Ow0K
-KwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4ODAw
-MCAweDEwMDA+Ow0KIAkJfTsNCiANCiAJCW92bF8ybDA6IG92bEAxNDAwOTAwMCB7DQpAQCAtNjgw
-LDYgKzY4NSw3IEBADQogCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyNiBJUlFfVFlQRV9MRVZF
-TF9MT1c+Ow0KIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlO
-X0RJU1A+Ow0KIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfT1ZMMF8yTD47DQorCQkJ
-bWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHg5MDAwIDB4
-MTAwMD47DQogCQl9Ow0KIA0KIAkJb3ZsXzJsMTogb3ZsQDE0MDBhMDAwIHsNCkBAIC02ODgsNiAr
-Njk0LDcgQEANCiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI3IElSUV9UWVBFX0xFVkVMX0xP
-Vz47DQogCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
-UD47DQogCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwxXzJMPjsNCisJCQltZWRp
-YXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAweGEwMDAgMHgxMDAw
-PjsNCiAJCX07DQogDQogCQlyZG1hMDogcmRtYUAxNDAwYjAwMCB7DQpAQCAtNjk3LDYgKzcwNCw3
-IEBADQogCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
-UD47DQogCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BMD47DQogCQkJbWVkaWF0
-ZWsscmRtYV9maWZvX3NpemUgPSA8NTEyMD47DQorCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcg
-PSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHhiMDAwIDB4MTAwMD47DQogCQl9Ow0KIA0KIAkJcmRt
-YTE6IHJkbWFAMTQwMGMwMDAgew0KQEAgLTcwNiw2ICs3MTQsNyBAQA0KIAkJCXBvd2VyLWRvbWFp
-bnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KIAkJCWNsb2NrcyA9IDwm
-bW1zeXMgQ0xLX01NX0RJU1BfUkRNQTE+Ow0KIAkJCW1lZGlhdGVrLHJkbWFfZmlmb19zaXplID0g
-PDIwNDg+Ow0KKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBY
-WFhYIDB4YzAwMCAweDEwMDA+Ow0KIAkJfTsNCiANCiAJCWNvbG9yMDogY29sb3JAMTQwMGUwMDAg
-ew0KQEAgLTcxNSw2ICs3MjQsNyBAQA0KIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzEgSVJR
-X1RZUEVfTEVWRUxfTE9XPjsNCiAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BP
-V0VSX0RPTUFJTl9ESVNQPjsNCiAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0NPTE9S
-MD47DQorCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFgg
-MHhlMDAwIDB4MTAwMD47DQogCQl9Ow0KIA0KIAkJY2NvcnIwOiBjY29yckAxNDAwZjAwMCB7DQpA
-QCAtNzIzLDYgKzczMyw3IEBADQogCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzMiBJUlFfVFlQ
-RV9MRVZFTF9MT1c+Ow0KIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJf
-RE9NQUlOX0RJU1A+Ow0KIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQ0NPUlIwPjsN
-CisJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAwWFhYWCAweGYw
-MDAgMHgxMDAwPjsNCiAJCX07DQogDQogCQlhYWwwOiBhYWxAMTQwMTAwMDAgew0KQEAgLTczMiw2
-ICs3NDMsNyBAQA0KIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMzMgSVJRX1RZUEVfTEVWRUxf
-TE9XPjsNCiAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9E
-SVNQPjsNCiAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0FBTDA+Ow0KKwkJCW1lZGlh
-dGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDAgMHgxMDAwPjsNCiAJ
-CX07DQogDQogCQlnYW1tYTA6IGdhbW1hQDE0MDExMDAwIHsNCkBAIC03NDEsNiArNzUzLDcgQEAN
-CiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjM0IElSUV9UWVBFX0xFVkVMX0xPVz47DQogCQkJ
-cG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQogCQkJ
-Y2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9HQU1NQTA+Ow0KKwkJCW1lZGlhdGVrLGdjZS1j
-bGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDB4MTAwMCAweDEwMDA+Ow0KIAkJfTsN
-CiANCiAJCWRpdGhlcjA6IGRpdGhlckAxNDAxMjAwMCB7DQpAQCAtNzQ5LDYgKzc2Miw3IEBADQog
-CQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzNSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KIAkJCXBv
-d2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KIAkJCWNs
-b2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfRElUSEVSMD47DQorCQkJbWVkaWF0ZWssZ2NlLWNs
-aWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMVhYWFggMHgyMDAwIDB4MTAwMD47DQogCQl9Ow0K
-IA0KIAkJbXV0ZXg6IG11dGV4QDE0MDE2MDAwIHsNCkBAIC03NTYsNiArNzcwLDggQEANCiAJCQly
-ZWcgPSA8MCAweDE0MDE2MDAwIDAgMHgxMDAwPjsNCiAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MjE3IElSUV9UWVBFX0xFVkVMX0xPVz47DQogCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1U
-ODE4M19QT1dFUl9ET01BSU5fRElTUD47DQorCQkJbWVkaWF0ZWssZ2NlLWV2ZW50cyA9IDxDTURR
-X0VWRU5UX01VVEVYX1NUUkVBTV9ET05FMD4sDQorCQkJCQkgICAgICA8Q01EUV9FVkVOVF9NVVRF
-WF9TVFJFQU1fRE9ORTE+Ow0KIAkJfTsNCiANCiAJCXNtaV9jb21tb246IHNtaUAxNDAxOTAwMCB7
-DQotLSANCjIuMTguMA0K
+Hi Qais,
 
+On Fri, Feb 14, 2020 at 04:39:48PM +0000, Qais Yousef wrote:
+> When implemented RT Capacity Awareness; the logic was done such that if
+> a task was running on a fitting CPU, then it was sticky and we would try
+> our best to keep it there.
+> 
+> But as Steve suggested, to adhere to the strict priority rules of RT
+> class; allow pulling an RT task to unfitting CPU to ensure it gets a
+> chance to run ASAP. When doing so, mark the queue as overloaded to give
+> the system a chance to push the task to a better fitting CPU when a
+> chance arises.
+> 
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> ---
+>  kernel/sched/rt.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 4043abe45459..0c8bac134d3a 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1646,10 +1646,20 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+>  
+>  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+>  {
+> -	if (!task_running(rq, p) &&
+> -	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+> -	    rt_task_fits_capacity(p, cpu))
+> +	if (!task_running(rq, p) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
+> +
+> +		/*
+> +		 * If the CPU doesn't fit the task, allow pulling but mark the
+> +		 * rq as overloaded so that we can push it again to a more
+> +		 * suitable CPU ASAP.
+> +		 */
+> +		if (!rt_task_fits_capacity(p, cpu)) {
+> +			rt_set_overload(rq);
+> +			rq->rt.overloaded = 1;
+> +		}
+> +
+
+Here rq is source rq from which the task is being pulled. I can't understand
+how marking overload condition on source_rq help. Because overload condition
+gets cleared in the task dequeue path. i.e dec_rt_tasks->dec_rt_migration->
+update_rt_migration().
+
+Also, the overload condition with nr_running=1 may not work as expected unless
+we track this overload condition (due to unfit) separately. Because a task
+can be pushed only when it is NOT running. So a task running on silver will
+continue to run there until it wakes up next time or another high prio task
+gets queued here (due to affinity).
+
+btw, Are you testing this path by disabling RT_PUSH_IPI feature? I ask this
+because, This feature gets turned on by default in our b.L platforms and
+RT task migrations happens by the busy CPU pushing the tasks. Or are there
+any cases where we can run into pick_rt_task() even when RT_PUSH_IPI is
+enabled?
+
+Thanks,
+Pavan
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
