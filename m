@@ -6,85 +6,85 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68748C7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B3BC7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A432067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3934C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgBQIWs (ORCPT
+        id S1728167AbgBQIXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:22:48 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42400 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgBQIWs (ORCPT
+        Mon, 17 Feb 2020 03:23:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:58892 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBQIXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:22:48 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so19641396edv.9;
-        Mon, 17 Feb 2020 00:22:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TGqR9iwqEEPoAOlQ581BXw8F7VHSOXMBtuvI7O8A+Jo=;
-        b=jwxTxTeDDtPNK1DUAGO8rR6/vXCkqfzIBW+w2rqUkBhdgvOszem8iLG0A2+aqLMT/k
-         ZYIvkqYRrSslF3j2y9Fw6HshXE6Ms/T3B7yV8Esr1Xjs8IbFd3SYxf9MWlkJBaHo628+
-         2DNCFpF3THVLfz8tx3xLwOpnVbMLUQjLxh+swwIbFhgXd7yH65VjEi+1MNzL4DY+ZXra
-         jTGE4ZP4+QJevTqNnrvwRl5G3Zgfkmrr3IdzjFRDG+4YL7QDqNJrv/syrwx4GjcuHRZK
-         mb5x73eFwxkTf+3htipOf+afkiiYeuRzm/0MI8NM8vqV41sIwg0vUC67IyhKBVfm8/KS
-         lMAQ==
-X-Gm-Message-State: APjAAAVDo5f3xkq4YzxTGXPn1kBk2HEt9bpc5K7kvJEoWi2j7w3ZW+G1
-        paz2tAMMr4qbnQn4r2DkNfNUAak/g+Q=
-X-Google-Smtp-Source: APXvYqxZVTgBoYbx5aYxovaXJqQpIrZdWW34I4Vji6sRLS9nh+REkw7isNLypMqq05p95PabIpeCeQ==
-X-Received: by 2002:a50:fb02:: with SMTP id d2mr13061346edq.270.1581927764571;
-        Mon, 17 Feb 2020 00:22:44 -0800 (PST)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
-        by smtp.gmail.com with ESMTPSA id k12sm448894edq.27.2020.02.17.00.22.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 00:22:43 -0800 (PST)
-Received: by mail-wr1-f52.google.com with SMTP id w12so18486334wrt.2;
-        Mon, 17 Feb 2020 00:22:43 -0800 (PST)
-X-Received: by 2002:a5d:4a04:: with SMTP id m4mr20971822wrq.104.1581927763057;
- Mon, 17 Feb 2020 00:22:43 -0800 (PST)
+        Mon, 17 Feb 2020 03:23:08 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j3bg9-0005ux-16; Mon, 17 Feb 2020 09:22:57 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 91A8C100617; Mon, 17 Feb 2020 09:22:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        kbuild test robot <lkp@intel.com>,
+        Ingo Molnar <mingo@kernel.org>, vishal.l.verma@intel.com,
+        hch@lst.de, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 5/6] x86/NUMA: Provide a range-to-target_node lookup facility
+In-Reply-To: <158188326978.894464.217282995221175417.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158188324272.894464.5941332130956525504.stgit@dwillia2-desk3.amr.corp.intel.com> <158188326978.894464.217282995221175417.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 17 Feb 2020 09:22:56 +0100
+Message-ID: <87y2t1pqqn.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-9-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-9-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 16:22:32 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67TfTN6_wRgbLswEr_ShvL7Zb2-tgj7bS7oA6UfLvc0GA@mail.gmail.com>
-Message-ID: <CAGb2v67TfTN6_wRgbLswEr_ShvL7Zb2-tgj7bS7oA6UfLvc0GA@mail.gmail.com>
-Subject: Re: [RFC PATCH 08/34] ASoC: sun8i-codec: Fix direction of AIF1 outputs
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> The naming convention for AIFs in this codec is to call the "DAC" the
-> path from the AIF into the codec, and the ADC the path from the codec
-> back to the AIF, regardless of if there is any analog path involved.
->
-> The output from AIF 1 used for capture should be declared as such.
->
-> Cc: stable@kernel.org
-> Fixes: eda85d1fee05 ("ASoC: sun8i-codec: Add ADC support for a33")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+Dan Williams <dan.j.williams@intel.com> writes:
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+> The DEV_DAX_KMEM facility is a generic mechanism to allow device-dax
+> instances, fronting performance-differentiated-memory like pmem, to be
+> added to the System RAM pool. The NUMA node for that hot-added memory is
+> derived from the device-dax instance's 'target_node' attribute.
+>
+> Recall that the 'target_node' is the ACPI-PXM-to-node translation for
+> memory when it comes online whereas the 'numa_node' attribute of the
+> device represents the closest online cpu node.
+>
+> Presently useful target_node information from the ACPI SRAT is discarded
+> with the expectation that "Reserved" memory will never be onlined. Now,
+> DEV_DAX_KMEM violates that assumption, there is a need to retain the
+> translation. Move, rather than discard, numa_memblk data to a secondary
+> array that memory_add_physaddr_to_target_node() may consider at a later
+> point in time.
+>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
