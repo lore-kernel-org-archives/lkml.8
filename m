@@ -2,94 +2,116 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF0C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E192C761A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58FE20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3A920725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgBQL4U (ORCPT
+        id S1729324AbgBQL6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:56:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:34590 "EHLO foss.arm.com"
+        Mon, 17 Feb 2020 06:58:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38340 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbgBQL4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:56:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B821B30E;
-        Mon, 17 Feb 2020 03:56:19 -0800 (PST)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CEE03F703;
-        Mon, 17 Feb 2020 03:56:15 -0800 (PST)
-Subject: Re: [PATCH 4/5] mm/vma: Replace all remaining open encodings with
- vma_set_anonymous()
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>
-References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
- <1581915833-21984-5-git-send-email-anshuman.khandual@arm.com>
- <20200217102727.cmd74il6nxfgzvkh@box>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f2d61f6c-c5e4-1cb9-f6c1-2f78b696fe2e@arm.com>
-Date:   Mon, 17 Feb 2020 17:26:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728773AbgBQL6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:58:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7594CAAC2;
+        Mon, 17 Feb 2020 11:58:15 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 11:58:10 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     ?????? <yun.wang@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Michal Koutn? <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
+ locality info
+Message-ID: <20200217115810.GA3420@suse.de>
+References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
+ <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
+ <20200214151048.GL14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200217102727.cmd74il6nxfgzvkh@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214151048.GL14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/17/2020 03:57 PM, Kirill A. Shutemov wrote:
-> On Mon, Feb 17, 2020 at 10:33:52AM +0530, Anshuman Khandual wrote:
->> This replaces all remaining open encodings with vma_set_anonymous().
->>
->> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
->> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Kate Stewart <kstewart@linuxfoundation.org>
->> Cc: Allison Randal <allison@lohutok.net>
->> Cc: Richard Fontana <rfontana@redhat.com>
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  drivers/misc/mic/scif/scif_mmap.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/misc/mic/scif/scif_mmap.c b/drivers/misc/mic/scif/scif_mmap.c
->> index a151d416f39c..1f0dec5df994 100644
->> --- a/drivers/misc/mic/scif/scif_mmap.c
->> +++ b/drivers/misc/mic/scif/scif_mmap.c
->> @@ -580,7 +580,7 @@ static void scif_munmap(struct vm_area_struct *vma)
->>  	 * The kernel probably zeroes these out but we still want
->>  	 * to clean up our own mess just in case.
->>  	 */
->> -	vma->vm_ops = NULL;
->> +	vma_set_anonymous(vma);
->>  	vma->vm_private_data = NULL;
->>  	kref_put(&vmapvt->ref, vma_pvt_release);
->>  	scif_delete_vma(ep, vma);
+On Fri, Feb 14, 2020 at 04:10:48PM +0100, Peter Zijlstra wrote:
+> On Fri, Feb 07, 2020 at 11:35:30AM +0800, ?????? wrote:
+> > By monitoring the increments, we will be able to locate the per-cgroup
+> > workload which NUMA Balancing can't helpwith (usually caused by wrong
+> > CPU and memory node bindings), then we got chance to fix that in time.
+> > 
+> > Cc: Mel Gorman <mgorman@suse.de>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Michal Koutný <mkoutny@suse.com>
+> > Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
 > 
-> This is misleading. The VMA doesn't become anonymous here. This is undo of
-> the previously overwritten vm_ops. I think we should leave it opencodded.
+> So here:
+> 
+>   https://lkml.kernel.org/r/20191127101932.GN28938@suse.de
+> 
+> Mel argues that the information exposed is fairly implementation
+> specific and hard to use without understanding how NUMA balancing works.
+> 
+> By exposing it to userspace, we tie ourselves to these particulars. We
+> can no longer change these NUMA balancing details if we wanted to, due
+> to UAPI concerns.
+> 
+> Mel, I suspect you still feel that way, right?
+> 
 
-I was bit unsure about it as well, thanks for the clarification. Will drop it.
+Yes, I still think it would be a struggle to interpret the data
+meaningfully without very specific knowledge of the implementation. If
+the scan rate was constant, it would be easier but that would make NUMA
+balancing worse overall. Similarly, the stat might get very difficult to
+interpret when NUMA balancing is failing because of a load imbalance,
+pages are shared and being interleaved or NUMA groups span multiple
+active nodes.
+
+For example, the series that reconciles NUMA and CPU balancers may look
+worse in these stats even though the overall performance may be better.
+
+> In the document (patch 2/2) you write:
+> 
+> > +However, there are no hardware counters for per-task local/remote accessing
+> > +info, we don't know how many remote page accesses have occurred for a
+> > +particular task.
+> 
+> We can of course 'fix' that by adding a tracepoint.
+> 
+> Mel, would you feel better by having a tracepoint in task_numa_fault() ?
+> 
+
+A bit, although interpreting the data would still be difficult and the
+tracepoint would have to include information about the cgroup. While
+I've never tried, this seems like the type of thing that would be suited
+to a BPF script that probes task_numa_fault and extract the information
+it needs.
+
+-- 
+Mel Gorman
+SUSE Labs
