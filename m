@@ -2,121 +2,125 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E30C3B185
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD46C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1E020725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4562207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="pTR/tzq9"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PcW8jZ7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgBQK1I (ORCPT
+        id S1729306AbgBQK1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:27:08 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33781 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgBQK1F (ORCPT
+        Mon, 17 Feb 2020 05:27:32 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:39925 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729151AbgBQK1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:27:05 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so18234406lji.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:27:04 -0800 (PST)
+        Mon, 17 Feb 2020 05:27:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZVl3yBWWm7MyQqJEcWXXzI1xt9p90ifeGv9DuPBNzAg=;
-        b=pTR/tzq9m4PXx63b4TbTT6GWij0RLB4OJW9RvLUcWxI+tPq1LkgXzr414lQ6RNWJgS
-         nb46suJtnt6XZcqKcVLGHopyrTNoC8KIXwASX7pHOIb8r+i7cGxE/grweun6/ZNlmXIk
-         vgWhkzP7QlpVi/K3ZFTyrvhaUltEs906sU/6RvnNgxgVn4ganVg53mcd7y9geThqocag
-         qGQTR/RBoGQTjXeaKkk6NobmH4sjudZsh/JlJjKxk/uBLiKWmo/5hZBIz2DwN15uUtfM
-         dUPNoRV9dnigmvy63DE+Y8Fg07St2R8izgj1Jl2F582qcuRxr57Eif0X7V1oAmewYYrc
-         NveQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZVl3yBWWm7MyQqJEcWXXzI1xt9p90ifeGv9DuPBNzAg=;
-        b=kckLvkShDkz8FPiWLZ07BwWjTDgetRE0Kuh5HNQS3arBs5ZcLWCvDaXsqOYnEo5isV
-         /LSnYaL4dsX9sIHTyVvHLXdviLFU8wkOPpHt4+u6XUhqgxy/XbBJ0WCAE7aKZKxHravr
-         oeTDiUYcU4JVaKMB2GEsfMmeJxjiXt1JCHvLKiTX1It0bhYzU7uincnaEmpzg5nT3mxk
-         A318wc3hVoedktqwlS7b1e2joFXwGR4WuNRur9VJL0wzuUa6jjxf/JjZ82Q1UcihprRc
-         vZG3N2p2N/y+6YElIe0RDidv35QK0P6Aa6w2N2boe1wSqPWmLJs0dUkEt5GEQPofZVYa
-         nEEA==
-X-Gm-Message-State: APjAAAXH5Rb++BX81/m/6Mfck62npsgn6DXtbj6n1WlGpNtNXlW6OXpx
-        NnDiMlamHlfS55SHYN6XEpxTLA==
-X-Google-Smtp-Source: APXvYqy/hXXiB9yxXp02xHbKZSUay4iWke71ToKoCypS+ZInT1oZHxH8Fgns9tAwgIOlH7ZCC6nlpg==
-X-Received: by 2002:a2e:9d3:: with SMTP id 202mr9648045ljj.60.1581935223504;
-        Mon, 17 Feb 2020 02:27:03 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id m24sm113416ljb.81.2020.02.17.02.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 02:27:02 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 8820B100F93; Mon, 17 Feb 2020 13:27:27 +0300 (+03)
-Date:   Mon, 17 Feb 2020 13:27:27 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>
-Subject: Re: [PATCH 4/5] mm/vma: Replace all remaining open encodings with
- vma_set_anonymous()
-Message-ID: <20200217102727.cmd74il6nxfgzvkh@box>
-References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
- <1581915833-21984-5-git-send-email-anshuman.khandual@arm.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581935251; x=1613471251;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=noSLYb1CP/9HIx9FUVJwc4ZRGLjE8MhCwuZnuaCR6MU=;
+  b=PcW8jZ7wwV6c3vlBjB3stHTnMKn95169ZeMdqPRAnrB+VC7puQKFfBdU
+   Yi6SGYApSgg/gmVNzt93jQa+0jqUFxprnjqz1lXsfjALWY4ne1duS/ocw
+   el2aKCS9NYOsKE6TCS458ArJXF1vpiudmRiiN2dOfIlL1lvPUsL1YZmuM
+   Y=;
+IronPort-SDR: sTRa+7B9JfDyukr3WOLLnr9UI7EJR8Bgv7YWdTMMr0A8NzioSXgbBIHCBq6xL5+Jl5Nqg1ViH2
+ mtnDEN7ORsGQ==
+X-IronPort-AV: E=Sophos;i="5.70,452,1574121600"; 
+   d="scan'208";a="17477633"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Feb 2020 10:27:16 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 8D46DA33CA;
+        Mon, 17 Feb 2020 10:27:13 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 17 Feb 2020 10:27:13 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 17 Feb 2020 10:27:03 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 05/14] mm/damon: Implement callbacks
+Date:   Mon, 17 Feb 2020 11:25:35 +0100
+Message-ID: <20200217102544.29012-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200217102544.29012-1-sjpark@amazon.com>
+References: <20200217102544.29012-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581915833-21984-5-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D30UWB004.ant.amazon.com (10.43.161.51) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:33:52AM +0530, Anshuman Khandual wrote:
-> This replaces all remaining open encodings with vma_set_anonymous().
-> 
-> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Richard Fontana <rfontana@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/misc/mic/scif/scif_mmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/mic/scif/scif_mmap.c b/drivers/misc/mic/scif/scif_mmap.c
-> index a151d416f39c..1f0dec5df994 100644
-> --- a/drivers/misc/mic/scif/scif_mmap.c
-> +++ b/drivers/misc/mic/scif/scif_mmap.c
-> @@ -580,7 +580,7 @@ static void scif_munmap(struct vm_area_struct *vma)
->  	 * The kernel probably zeroes these out but we still want
->  	 * to clean up our own mess just in case.
->  	 */
-> -	vma->vm_ops = NULL;
-> +	vma_set_anonymous(vma);
->  	vma->vm_private_data = NULL;
->  	kref_put(&vmapvt->ref, vma_pvt_release);
->  	scif_delete_vma(ep, vma);
+From: SeongJae Park <sjpark@amazon.de>
 
-This is misleading. The VMA doesn't become anonymous here. This is undo of
-the previously overwritten vm_ops. I think we should leave it opencodded.
+This commit implements callbacks for DAMON.  Using this, DAMON users can
+install their callbacks for each step of the access monitoring so that
+they can do something interesting with the monitored access pattrns
+online.  For example, callbacks can report the monitored patterns to
+users or do some access pattern based memory management such as
+proactive reclamations or access pattern based THP promotions/demotions
+decision makings.
 
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/mm/damon.c b/mm/damon.c
+index 56725faca51f..90f61e378a61 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -83,6 +83,10 @@ struct damon_ctx {
+ 	struct rnd_state rndseed;
+ 
+ 	struct list_head tasks_list;	/* 'damon_task' objects */
++
++	/* callbacks */
++	void (*sample_cb)(struct damon_ctx *context);
++	void (*aggregate_cb)(struct damon_ctx *context);
+ };
+ 
+ /* Get a random number in [l, r) */
+@@ -814,9 +818,13 @@ static int kdamond_fn(void *data)
+ 			}
+ 			mmput(mm);
+ 		}
++		if (ctx->sample_cb)
++			ctx->sample_cb(ctx);
+ 
+ 		if (kdamond_aggregate_interval_passed(ctx)) {
+ 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
++			if (ctx->aggregate_cb)
++				ctx->aggregate_cb(ctx);
+ 			kdamond_flush_aggregated(ctx);
+ 			kdamond_split_regions(ctx);
+ 		}
 -- 
- Kirill A. Shutemov
+2.17.1
+
