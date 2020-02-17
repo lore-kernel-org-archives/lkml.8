@@ -2,144 +2,65 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3063DC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8710C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C4720718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="WQfZxMMR"
+	by mail.kernel.org (Postfix) with ESMTP id 85FB720718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgBQJDZ (ORCPT
+        id S1728686AbgBQJEd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:03:25 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:19320 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbgBQJDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:03:25 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48LdLZ49gmz9v1WW;
-        Mon, 17 Feb 2020 10:03:18 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=WQfZxMMR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id TNmFgMAQgiDf; Mon, 17 Feb 2020 10:03:18 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48LdLZ2cPzz9v1WS;
-        Mon, 17 Feb 2020 10:03:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581930198; bh=KojM6T89T5lJkXgtiN49huPDHZvGUWiBtyDFVCX7aps=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WQfZxMMRFnD2XeNPwW0+oQfyZsVQ6sbwSLbc+cS7LvoRLNf/6QXg8SaXm3jB5A5Wd
-         POqn73bE6R8/F4vjlM1awcMRWfyOmPm0ybgRDSH5P7MHop3AwzgfJYuH2uE7Oeb4s1
-         vK6pGuTLBMdBN1Y3uEcCGe2HgK3BpCoGq/x7+2WA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CB7B18B755;
-        Mon, 17 Feb 2020 10:03:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YNxAztCy48Gr; Mon, 17 Feb 2020 10:03:22 +0100 (CET)
-Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 882EC8B7A6;
-        Mon, 17 Feb 2020 10:03:22 +0100 (CET)
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
- <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
- <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
- <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
-Date:   Mon, 17 Feb 2020 10:03:22 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 17 Feb 2020 04:04:33 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47779 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgBQJEc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 04:04:32 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C25D3FF805;
+        Mon, 17 Feb 2020 09:04:30 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 10:04:30 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH] mtd: spinand: toshiba: Support for new Kioxia Serial
+ NAND
+Message-ID: <20200217100430.420142a3@xps13>
+In-Reply-To: <1581907305-3606-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+References: <1581907305-3606-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Yoshio,
 
+Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com> wrote on Mon, 17 Feb
+2020 11:41:45 +0900:
 
-Le 16/02/2020 à 13:34, Masami Hiramatsu a écrit :
-> On Sat, 15 Feb 2020 11:28:49 +0100
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> From: Yoshio Furuyama <tmcmc-mb-yfuruyama7@ml.toshiba.co.jp>
 > 
->> Hi,
->>
->> Le 14/02/2020 à 14:54, Masami Hiramatsu a écrit :
->>> Hi,
->>>
->>> On Fri, 14 Feb 2020 12:47:49 +0000 (UTC)
->>> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>>
->>>> When a program check exception happens while MMU translation is
->>>> disabled, following Oops happens in kprobe_handler() in the following
->>>> test:
->>>>
->>>> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
->>>
->>> Thanks for the report and patch. I'm not so sure about powerpc implementation
->>> but at where the MMU translation is disabled, can the handler work correctly?
->>> (And where did you put the probe on?)
->>>
->>> Your fix may fix this Oops, but if the handler needs special care, it is an
->>> option to blacklist such place (if possible).
->>
->> I guess that's another story. Here we are not talking about a place
->> where kprobe has been illegitimately activated, but a place where there
->> is a valid trap, which generated a valid 'program check exception'. And
->> kprobe was off at that time.
-> 
-> Ah, I got it. It is not a kprobe breakpoint, but to check that correctly,
-> it has to know the address where the breakpoint happens. OK.
-> 
->>
->> As any 'program check exception' due to a trap (ie a BUG_ON, a WARN_ON,
->> a debugger breakpoint, a perf breakpoint, etc...) calls
->> kprobe_handler(), kprobe_handler() must be prepared to handle the case
->> where the MMU translation is disabled, even if probes are not supposed
->> to be set for functions running with MMU translation disabled.
-> 
-> Can't we check the MMU is disabled there (as same as checking the exception
-> happened in user space or not)?
-> 
+> Add support for new Kioxia products.
+> The new Kioxia products support program load x4 command, and have HOLD_D bit
+> which is equivalent to QE bit.
+> Also, generalize prefix names of structures and functions.
 
-What do you mean by 'there' ? At the entry of kprobe_handler() ?
+Would you mind splitting this patch?
 
-That's what my patch does, it checks whether MMU is disabled or not. If 
-it is, it converts the address to a virtual address.
+1/ Rename the current functions (and explain why)
+2/ Add new Kioxia parts support.
 
-Do you mean kprobe_handler() should bail out early as it does when the 
-trap happens in user mode ? Of course we can do that, I don't know 
-enough about kprobe to know if kprobe_handler() should manage events 
-that happened in real-mode or just ignore them. But I tested adding an 
-event on a function that runs in real-mode, and it (now) works.
-
-So, what should we do really ?
-
-Christophe
+Thanks,
+Miquèl
