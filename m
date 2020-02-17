@@ -2,92 +2,102 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDFC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA52DC34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB7820801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7F220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgBQQFF (ORCPT
+        id S1729667AbgBQQFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:05:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47920 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgBQQFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:05:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3B57DAC7C;
-        Mon, 17 Feb 2020 16:05:03 +0000 (UTC)
-Subject: Re: Linux 5.6-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Josef Bacik <josef@toxicpanda.com>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        David Sterba <dsterba@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
- <20200217020840.GA24821@codemonkey.org.uk>
- <CAHk-=wg5AkQk-9By-QeyT+5H_t6DLZD=25uOz-ujnV8oEv1Y5Q@mail.gmail.com>
- <8025e1bf-4834-83c6-d12c-4e817f875776@toxicpanda.com>
- <CAHk-=wiG+wjLjuDDNiqfL3iLW25yqsMK_gNEWomyMH=8kxOLwQ@mail.gmail.com>
-From:   Filipe Manana <fdmanana@suse.com>
-Message-ID: <ee0fa89a-a138-efea-7c04-799bbd9ba17c@suse.com>
-Date:   Mon, 17 Feb 2020 16:04:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 11:05:11 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:59565 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgBQQFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:05:11 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mow06-1joHJD2KlS-00qT1W; Mon, 17 Feb 2020 17:05:09 +0100
+Received: by mail-qt1-f178.google.com with SMTP id d9so12334823qte.12;
+        Mon, 17 Feb 2020 08:05:09 -0800 (PST)
+X-Gm-Message-State: APjAAAUoQQwJMf2dXaaZYP93Gx2Ancv6n/rct8kYpzn8ZcHu/7IvS++x
+        tv3G4cxeX7TujOwecoAtRCGlxuo5Oh7uOMbN4XQ=
+X-Google-Smtp-Source: APXvYqxR24d1UtkEhBOIjI9aHRGcs1xpyahscZCl+fB1o0U8N/KlSf87IhKTr7k/p9r//9AkSP/9yAzwmpTx4NajwIA=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr13631805qte.204.1581955508158;
+ Mon, 17 Feb 2020 08:05:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiG+wjLjuDDNiqfL3iLW25yqsMK_gNEWomyMH=8kxOLwQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200206165755.GB3894455@kroah.com> <20200211184130.GA11908@Mani-XPS-13-9360>
+ <20200211192055.GA1962867@kroah.com> <20200213152013.GB15010@mani>
+ <20200213153418.GA3623121@kroah.com> <20200213154809.GA26953@mani>
+ <20200213155302.GA3635465@kroah.com> <20200217052743.GA4809@Mani-XPS-13-9360>
+ <20200217115930.GA218071@kroah.com> <20200217130419.GA13993@Mani-XPS-13-9360> <20200217141503.GA1110972@kroah.com>
+In-Reply-To: <20200217141503.GA1110972@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Feb 2020 17:04:52 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
+Message-ID: <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI controllers
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        smohanad@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GvetXQ1OAzDvj5SppjdPFV439MHs3fEPj9TeHxR24yoiKphxOX2
+ uHGdyqyI5bLLcHmRqNGAxXX6RzeVtYJiMbT8YhKNpxrtMUlRyLL5OmM6vrzFcbNURakv59l
+ 9krdacVpdGMz/w1+Aixbvu1bRVk9ObqstejLWHqvfAgkZF6irhJLQIkzr8l1Mrv3hUYZt2P
+ 74X5aymaVfF8LGIWUgKgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n1DQm7201AY=:N5S/ucW8WbB14HphQWJRNn
+ jvfBvMZbFdh4xbiOqjuvMVRAA//XwYwTO3l4uflqGdn4Q3ZSQD8bZcO2wTHPLdac2QRnYEXut
+ k44OvEEjS3c6aq0eWAd8tiBVWFpMNyl1OY/shQVpWMG7mmz8nomTZ/XzItexzEArhpzuwAaWA
+ n9oXoKYbRDP3KmkCDZ1R/jK3I/lhz+UXCtWKiMKELSoLurAm+qnd7TuUjyPKbeuhTaM0Zj2O8
+ mi2Mv3u4GHTAIKulNBQjsHWhJ1rjgwyi7nVN5NOvQbYn15ruQVriMwGILqrOZwRPNBrkuaPaQ
+ WpRxeEGBFGvZm44OJmJq7BTfsfIYv+pYYCe3uL14sIn3IRPW3TV6KdtM73M+Zj2dx6OfWrRWU
+ fDmN0vKzYM41lxIHkJA6oXune3WR8HzuemmaBWTwS9uoVoTOCcPGy21nVveWJo/D8KG772Jc6
+ 39q8I7W2z30Da0i/EnACNGgt5GBeRu6RUODxXbV8+vQ7wVx6c+wwGw124rHZIj04Th+HxkfuE
+ r2loZgHtofv5BQWWSs+z6+XqU/aYuan/98Wd9Z/zQeAc43cDzlcTY0okjbvtSgT0gHasV/2o2
+ iAAWA26cYM38fKD3ew/6CYTLFhBOMrhoG6mUQdGilUE4Vgf93704/P1lXeE9SMRCm99rFB4w3
+ imB7KKYpaclouM+xua1PLBYUZq9yc7j5DhiwnB9KSANffZkNOOlF+nAr8g0zUA1bxKbLw//1A
+ 5FtX4G8S0jaOKUXDKFrgqsZA0pQD//aGEs1Brl7vPSy/wUKP77dE+KqfHdHRyXPCVeeA/Gqma
+ vG0Kbn6p3LOt3HlkusN22cpPjH7l7YqFY45fIW2k2X+a5hcZYE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 3:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Mon, Feb 17, 2020 at 06:34:19PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
+> > ```
+> > struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
+> > {
+> > ...
+> > dev->parent = mhi_cntrl->dev;
+> > ...
+> > ```
+> >
+> > Hence, having the parent dev pointer really helps.
+>
+> Yes, saving the parent device is fine, but you should be doing your own
+> dma calls using _your_ device, not the parents.  Only mess with the
+> parent pointer if you need to do something "normal" for a parent.
 
+The MHI device is not involved in DMA at all, as it is not a DMA master,
+and has no knowledge of the memory management or whether there
+is any DMA at all. I think it is the right abstraction for an MHI driver to
+pass kernel pointers into the subsystem interfaces, which then get
+mapped by the bus driver that owns the DMA master.
 
-On 17/02/20 05:08, Linus Torvalds wrote:
-> On Sun, Feb 16, 2020 at 7:02 PM Josef Bacik <josef@toxicpanda.com> wrote:
->>
->> I assume Filipe wrote this based on my patch here
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/josef/btrfs-next.git/commit/?id=c821555d2b9733d8f483c9e79481c7209e1c1fb0
->>
->> which makes it so we can allocate safely in this context, but that patch hasn't
->> made it's way to you yet.  Do you want it now?  It was prep for a much less safe
->> patchset, but is fine by itself.  Thanks,
-> 
-> I assume it's either that, or revert 28553fa992cb and do it differently..
-> 
-> I'll leave that whole decision to the btrfs people who actually know
-> the code and the situations and what the alternative would look
-> like...
+This is similar to how e.g. USB drivers pass data into the USB core
+interfaces, which then get the HCI driver to map/unmap it into the
+DMA masters.
 
-So what happened was that the patch was developed against the
-integration branch, where we don't use search paths in spinning mode
-anymore - this was done by Josef's patch, which itself is not a bug fix
-but it's necessary for another bug fix that is only on the integration
-branch.
-
-On 5.6-rcX and any other other older kernels we have the search using
-spinning locks, that's why we run into this problem.
-
-The solution can be either adding Josef's patch or changing the order in
-which my patch unlocks the file range - to do it after the patch is
-freed (which releases any spin locks it might be holding).
-
-I've just sent a patch for that:
-https://patchwork.kernel.org/patch/11386723/
-
-I'm fine with either solution.
-
-Thanks.
-
-> 
->                Linus
-> 
+      Arnd
