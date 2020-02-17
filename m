@@ -2,552 +2,590 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49794C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1701C761A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD7F20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD9C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkEvJbcF"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="B13gf55M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBQKZu (ORCPT
+        id S1729211AbgBQK0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:25:50 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36695 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729045AbgBQKZt (ORCPT
+        Mon, 17 Feb 2020 05:26:18 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37517 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgBQK0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:25:49 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so19046554wru.3;
-        Mon, 17 Feb 2020 02:25:46 -0800 (PST)
+        Mon, 17 Feb 2020 05:26:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xKpY8mBsb4DZiVnkdK49Rd7rQ38E0SdhLsVbID5qXKM=;
-        b=MkEvJbcFFuW1k20lAomU9TXjMXq8kkREah3pBi4iw2dF98LX+6CFtNAUxiEMaqztXS
-         x1yjhbZ8k0Qde+GOXJkpuKw0GVtfzwrJr/t6Lu4D03fCnNTgQa3ZE475GqoVnZcpZKBn
-         y5iQUaYyh+HHqLUdRWfqmM4Y9v9+msSioM88auJERD5RWe2VITrTwkI1wYtu9f3+Fani
-         lIOkiP73RJT+Y9L+VajDSfWYl2zJ/FFe5EjOjZMB/vCpimrsVriUCjaXISVYtZlPjh6O
-         nhPp1dpah2YxcBaMnj6eTmJx8liG3wz1PV7vn8xIAukP2Lk3JM+QpXSoTuybwc+tq/L5
-         sawA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=xKpY8mBsb4DZiVnkdK49Rd7rQ38E0SdhLsVbID5qXKM=;
-        b=jI83GouYMApu9LrtCdGZQiqimO9qHCSACHkicuW++i+bBGYLWoiI2IeCUdfabReD2N
-         G4goT6W7t2qivFW+VxOc3NdGQeFiN1HAYKf2Oyt1kJ1RxmW5jFUDAoqJHFAZSbUkqYYk
-         zPZh8+7Ldl4ECivSJnBrNV+4UOJXHYWhKCZVUg1pnlAsJbaevn5HFCrzGepoqLKGWED8
-         IjR+uTn8bb835grw95OZc6UROFznG01h1+bKIZFw7iO61XUySe/OeMBsUmlqTCYI9fNF
-         cTtizWPrXUAUp050A+jOumD3/iy6+YcbKGaPxvdSqEapvvTS8Xxf0rera4BVASWAHZwI
-         RTrg==
-X-Gm-Message-State: APjAAAXx+REiCxhjo/yEY0qJPPvDAMGU/XjsUkEXFKZhT7zeu0DDUyRs
-        feBRFOICimOm0k6PjsXJrt8=
-X-Google-Smtp-Source: APXvYqwaNyBPEQ9VLygH0iNyvYfCl/535hFDzMMKNeQdFM0iUxtoKc3ZTF/61/aYHyr/b0HDRnGXMg==
-X-Received: by 2002:a5d:614a:: with SMTP id y10mr22329065wrt.73.1581935145251;
-        Mon, 17 Feb 2020 02:25:45 -0800 (PST)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id p26sm20281wmc.24.2020.02.17.02.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 02:25:44 -0800 (PST)
-Subject: Re: [PATCH v1 1/2] pinctrl: make MediaTek pinctrl v2 driver ready for
- buidling kernel module
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        sean.wang@kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kuohong.wang@mediatek.com
-References: <1581574105-1160-1-git-send-email-light.hsieh@mediatek.com>
- <1581574624.1827.4.camel@mtkswgap22>
- <b35c33a9-0d58-c98d-05eb-241efdc0c9af@gmail.com>
- <1581678137.724.9.camel@mtkswgap22>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <9d677385-6dee-8f52-8e23-d8a215708fbf@gmail.com>
-Date:   Mon, 17 Feb 2020 11:25:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581935175; x=1613471175;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=933eVuvQS+wwXuRostN3P+VtYYyrjq7wzLBvWIjxh/w=;
+  b=B13gf55Ms2LRpfM++x7G04iryznaPX0tM01m8LcqMr8MFfnzcNqLW0gn
+   G7Rl9kUz/INpRwMnJJckE53a5jOMQbLv20rrzdEOOlQBFmqzy0dk/yO7v
+   BTAV6BH7RVzVv/Dy/qZrn2JnehFiTxflBugCbP6rfekbrtnXE6eyXi5LY
+   I=;
+IronPort-SDR: YfDXr5oB/uta6CPEetflBc5LEfRnD2rdtDKwDiPRAXiGBhvcbMB3jITVgnnCl84FcO3TtriZff
+ eybPR+2ft0aQ==
+X-IronPort-AV: E=Sophos;i="5.70,452,1574121600"; 
+   d="scan'208";a="26833501"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Feb 2020 10:26:13 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 54B4CA24B4;
+        Mon, 17 Feb 2020 10:26:10 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 17 Feb 2020 10:26:10 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 17 Feb 2020 10:26:00 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 00/14] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 17 Feb 2020 11:25:30 +0100
+Message-ID: <20200217102544.29012-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1581678137.724.9.camel@mtkswgap22>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D30UWB004.ant.amazon.com (10.43.161.51) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
+
+Introduction
+============
+
+Memory management decisions can be improved if finer data access information is
+available.  However, because such finer information usually comes with higher
+overhead, most systems including Linux forgives the potential improvement and
+rely on only coarse information or some light-weight heuristics.  The
+pseudo-LRU and the aggressive THP promotions are such examples.
+
+A number of experimental data access pattern awared memory management
+optimizations (refer to 'Appendix A' for more details) say the sacrifices are
+huge.  However, none of those has successfully adopted to Linux kernel mainly
+due to the absence of a scalable and efficient data access monitoring
+mechanism.  Refer to 'Appendix B' to see the limitations of existing memory
+monitoring mechanisms.
+
+DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
+enough to be used for the DRAM level memory management (a straightforward
+DAMON-based optimization achieved up to 2.55x speedup), 2) light-weight enough
+to be applied online (compared to a straightforward access monitoring scheme,
+DAMON is up to 94.242.42x lighter) and 3) keeps predefined upper-bound overhead
+regardless of the size of target workloads (thus scalable).  Refer to 'Appendix
+C' if you interested in how it is possible.
+
+DAMON has mainly designed for the kernel's memory management mechanisms.
+However, because it is implemented as a standalone kernel module and provides
+several interfaces, it can be used by a wide range of users including kernel
+space programs, user space programs, programmers, and administrators.  DAMON
+is now supporting the monitoring only, but it will also provide simple and
+convenient data access pattern awared memory managements by itself.  Refer to
+'Appendix D' for more detailed expected usages of DAMON.
 
 
-On 14/02/2020 12:02, Light Hsieh wrote:
-> On Fri, 2020-02-14 at 11:37 +0100, Matthias Brugger wrote:
->>
->> On 13/02/2020 07:17, Light Hsieh wrote:
->>> Dear Reviewers:
->>>
->>> Google plan to make platform driver as kernel module in future Android
->>> kernel.
->>> This patch series prepare to make platforms that use MediaTek pinctrl
->>> paris driver (pinctrl-paris.c, pinctrl-mtk-common-v2.c, and mtk-eint.c)
->>> compatible for building either kernel module or built-in.
->>>
->>> Please give your comments.
->>>
->>
->> I think I didn't explain myself good enough.
->> These should be three patches:
->>
->> 1. change mtk-eint driver + Kconfig to be loadable as a module
->> 2. change pinctrl-paris + Kconfig to be loadable as a module
->> 3. change mt6765.
->>
->> Please make sure that every patch compiles and does not break the system. This
->> will later help to use git-bisect to hunt down bugs in the kernel.
->>
->> Regards,
->> Matthias
->>
-> 
-> Actually, I don't understand the necessity of splitting into 2 or 3
-> patches.
-> 
+Frequently Asked Questions
+==========================
 
-Basically because smaller logical changes per patch makes it easier to review
-and understand what is done and why.
+Q: Why DAMON is not integrated with perf?
+A: From the perspective of perf like profilers, DAMON can be thought of as a
+data source in kernel, like the tracepoints, the pressure stall information
+(psi), or the idle page tracking.  Thus, it is easy to integrate DAMON with the
+profilers.  However, this patchset doesn't provide a fancy perf integration
+because current step of DAMON development is focused on its core logic only.
+That said, DAMON already provides two interfaces for user space programs, which
+based on debugfs and tracepoint, respectively.  Using the tracepoint interface,
+you can use DAMON with perf.  This patchset also provides a debugfs interface
+based user space tool for DAMON.  It can be used to record, visualize, and
+analyze data access patterns of target processes in a convenient way.
 
-> 1. mtk-eint cannot be built as loadable module when pinctrl-paris and
-> pinctrl-mtk-common-v2 is not built as loadable module.
-> 
-> 2. pinctrl-paris and pinctrl-mtk-common-v2 cannot be built as loadable
-> module when pinctrl-mtk6765 is not built as loadable module
-> 
+Q: Why a new module, instead of extending perf or other tools?
+A: First, DAMON aims to be used by other programs including the kernel.
+Therefore, having dependency to specific tools like perf is not desirable.
+Second, because it need to be lightweight as much as possible so that it can be
+used online, any unnecessary overhead such as kernel - user space context
+switching cost should be avoided.  These are the two most biggest reasons why
+DAMON is implemented in the kernel space.  The idle page tracking subsystem
+would be the kernel module that most seems similar to DAMON.  However, its own
+interface is not compatible with DAMON.  Also, the internal implementation of
+it has no common part to be reused by DAMON.
 
-Correct, but think about it that you want to backport these patches and add
-support for a new SoC, in this case you don't need to add mt6765 support to your
-downstream kernel.
+Q: Can 'perf mem' provide the data required for DAMON?
+A: On the systems supporting 'perf mem', yes.  DAMON is using the PTE Accessed
+bits in low level.  Other H/W or S/W features that can be used for the purpose
+could be used.  However, as explained with above question, DAMON need to be
+implemented in the kernel space.
 
-Same if you want to be able to built moore as a module in the future. You will
-only need to rely on patch 1.
-But I won't argue with you, patch 1+2 can be put together if you insist. :)
 
-But I think patch 3 should be independent for sure.
+Evaluations
+===========
 
-Regards,
-Matthias
+A prototype of DAMON has evaluated on an Intel Xeon E7-8837 machine using 20
+benchmarks that picked from SPEC CPU 2006, NAS, Tensorflow Benchmark,
+SPLASH-2X, and PARSEC 3 benchmark suite.  Nonethless, this section provides
+only summary of the results.  For more detail, please refer to the slides used
+for the introduction of DAMON at the Linux Plumbers Conference 2019[1] or the
+MIDDLEWARE'19 industrial track paper[2].
 
-> 3. besides, if pinctrl-mtk675 and any other MediaTek platform pinctrl
-> driver that use mtk-eint, pinctrl-paris, and pinctrl-mtk-common-v2 are
-> built-in, mtk-eint, pinctrl-paris, and pinctrl-mtk-common-v2 cannot be
-> built as loadable module.
-> 
-> The rationale can be learned from the description of change made to
-> Kconfig and Makefile.
-> 
-> So, just applying patch 1 and patch 2 of your proposal does not make
-> sense.
-> 
-> BR.
-> 
-> Light
-> 
-> 
-> 
->>> Light
->>>
->>> On Thu, 2020-02-13 at 14:08 +0800, light.hsieh@mediatek.com wrote:
->>>> From: Light Hsieh <light.hsieh@mediatek.com>
->>>>
->>>> Google plan to make platform driver as kernel module for future
->>>> Andriod kernel. This patch make platforms that use pinctrl-paris.c
->>>> of MediaTek pinctrl v2 ready for building kernel module.
->>>>
->>>> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
->>>> ---
->>>>  drivers/pinctrl/mediatek/mtk-eint.c              |  9 +++++++++
->>>>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++++
->>>>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 ++++++++++++++++++++++++
->>>>  drivers/pinctrl/mediatek/pinctrl-paris.c         |  5 +++++
->>>>  drivers/pinctrl/pinconf-generic.c                |  1 +
->>>>  5 files changed, 43 insertions(+)
->>>>
->>>> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
->>>> index 7e526bcf..99703a8 100644
->>>> --- a/drivers/pinctrl/mediatek/mtk-eint.c
->>>> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
->>>> @@ -9,6 +9,7 @@
->>>>   *
->>>>   */
->>>>  
->>>> +#include <linux/module.h>
->>>>  #include <linux/delay.h>
->>>>  #include <linux/err.h>
->>>>  #include <linux/gpio/driver.h>
->>>> @@ -379,6 +380,7 @@ int mtk_eint_do_suspend(struct mtk_eint *eint)
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_suspend);
->>>>  
->>>>  int mtk_eint_do_resume(struct mtk_eint *eint)
->>>>  {
->>>> @@ -386,6 +388,7 @@ int mtk_eint_do_resume(struct mtk_eint *eint)
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_resume);
->>>>  
->>>>  int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->>>>  			  unsigned int debounce)
->>>> @@ -440,6 +443,7 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_eint_set_debounce);
->>>>  
->>>>  int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->>>>  {
->>>> @@ -451,6 +455,7 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->>>>  
->>>>  	return irq;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
->>>>  
->>>>  int mtk_eint_do_init(struct mtk_eint *eint)
->>>>  {
->>>> @@ -495,3 +500,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_init);
->>>> +
->>>> +MODULE_LICENSE("GPL v2");
->>>> +MODULE_DESCRIPTION("MediaTek EINT Driver");
->>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
->>>> index 905dae8c..2c59d39 100644
->>>> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
->>>> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
->>>> @@ -6,6 +6,7 @@
->>>>   *
->>>>   */
->>>>  
->>>> +#include <linux/module.h>
->>>>  #include "pinctrl-mtk-mt6765.h"
->>>>  #include "pinctrl-paris.h"
->>>>  
->>>> @@ -1103,3 +1104,6 @@ static int __init mt6765_pinctrl_init(void)
->>>>  	return platform_driver_register(&mt6765_pinctrl_driver);
->>>>  }
->>>>  arch_initcall(mt6765_pinctrl_init);
->>>> +
->>>> +MODULE_LICENSE("GPL v2");
->>>> +MODULE_DESCRIPTION("MediaTek MT6765 Pinctrl Driver");
->>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
->>>> index 1da9425..cdf2d69 100644
->>>> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
->>>> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
->>>> @@ -6,6 +6,7 @@
->>>>   *
->>>>   */
->>>>  
->>>> +#include <linux/module.h>
->>>>  #include <dt-bindings/pinctrl/mt65xx.h>
->>>>  #include <linux/device.h>
->>>>  #include <linux/err.h>
->>>> @@ -206,6 +207,7 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_hw_set_value);
->>>>  
->>>>  int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->>>>  		     int field, int *value)
->>>> @@ -225,6 +227,7 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_hw_get_value);
->>>>  
->>>>  static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
->>>>  {
->>>> @@ -363,6 +366,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
->>>>  
->>>>  	return mtk_eint_do_init(hw->eint);
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_build_eint);
->>>>  
->>>>  /* Revision 0 */
->>>>  int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
->>>> @@ -382,6 +386,7 @@ int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set);
->>>>  
->>>>  int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->>>>  				 const struct mtk_pin_desc *desc, int *res)
->>>> @@ -404,6 +409,7 @@ int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get);
->>>>  
->>>>  int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->>>>  			 const struct mtk_pin_desc *desc, bool pullup)
->>>> @@ -423,6 +429,7 @@ int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set);
->>>>  
->>>>  int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->>>>  			 const struct mtk_pin_desc *desc, bool pullup, int *res)
->>>> @@ -442,6 +449,7 @@ int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get);
->>>>  
->>>>  /* Revision 1 */
->>>>  int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
->>>> @@ -456,6 +464,7 @@ int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set_rev1);
->>>>  
->>>>  int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->>>>  				      const struct mtk_pin_desc *desc, int *res)
->>>> @@ -473,6 +482,7 @@ int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get_rev1);
->>>>  
->>>>  int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->>>>  			      const struct mtk_pin_desc *desc, bool pullup)
->>>> @@ -492,6 +502,7 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
->>>>  
->>>>  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->>>>  			      const struct mtk_pin_desc *desc, bool pullup,
->>>> @@ -517,6 +528,7 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_gev1);
->>>>  
->>>>  /* Combo for the following pull register type:
->>>>   * 1. PU + PD
->>>> @@ -717,6 +729,7 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
->>>>  out:
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_combo);
->>>>  
->>>>  int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->>>>  			      const struct mtk_pin_desc *desc,
->>>> @@ -737,6 +750,7 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->>>>  out:
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get_combo);
->>>>  
->>>>  /* Revision 0 */
->>>>  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->>>> @@ -766,6 +780,7 @@ int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set);
->>>>  
->>>>  int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->>>>  			  const struct mtk_pin_desc *desc, int *val)
->>>> @@ -790,6 +805,7 @@ int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get);
->>>>  
->>>>  /* Revision 1 */
->>>>  int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->>>> @@ -811,6 +827,7 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_rev1);
->>>>  
->>>>  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->>>>  			       const struct mtk_pin_desc *desc, int *val)
->>>> @@ -828,18 +845,21 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_rev1);
->>>>  
->>>>  int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
->>>>  			       const struct mtk_pin_desc *desc, u32 arg)
->>>>  {
->>>>  	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_raw);
->>>>  
->>>>  int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
->>>>  			       const struct mtk_pin_desc *desc, int *val)
->>>>  {
->>>>  	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_raw);
->>>>  
->>>>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->>>>  			     const struct mtk_pin_desc *desc, bool pullup,
->>>> @@ -880,6 +900,7 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_set);
->>>>  
->>>>  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->>>>  			     const struct mtk_pin_desc *desc, bool pullup,
->>>> @@ -922,6 +943,7 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_get);
->>>>  
->>>>  int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->>>>  			      const struct mtk_pin_desc *desc, u32 arg)
->>>> @@ -948,6 +970,7 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return err;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_set);
->>>>  
->>>>  int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->>>>  			      const struct mtk_pin_desc *desc, u32 *val)
->>>> @@ -971,3 +994,4 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get);
->>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
->>>> index 83bf29c..af97794 100644
->>>> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
->>>> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
->>>> @@ -9,6 +9,7 @@
->>>>   *	   Hongzhou.Yang <hongzhou.yang@mediatek.com>
->>>>   */
->>>>  
->>>> +#include <linux/module.h>
->>>>  #include <linux/gpio/driver.h>
->>>>  #include <dt-bindings/pinctrl/mt65xx.h>
->>>>  #include "pinctrl-paris.h"
->>>> @@ -1037,3 +1038,7 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->>>>  	.suspend_noirq = mtk_paris_pinctrl_suspend,
->>>>  	.resume_noirq = mtk_paris_pinctrl_resume,
->>>>  };
->>>> +EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe);
->>>> +
->>>> +MODULE_LICENSE("GPL v2");
->>>> +MODULE_DESCRIPTION("MediaTek Pinctrl Common Driver V2 Paris");
->>>> diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
->>>> index 9eb8630..dfef471 100644
->>>> --- a/drivers/pinctrl/pinconf-generic.c
->>>> +++ b/drivers/pinctrl/pinconf-generic.c
->>>> @@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
->>>>  	kfree(cfg);
->>>>  	return ret;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
->>>>  
->>>>  int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
->>>>  		struct device_node *np, struct pinctrl_map **map,
->>>
->>> _______________________________________________
->>> Linux-mediatek mailing list
->>> Linux-mediatek@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>>
-> 
+
+Quality
+-------
+
+We first traced and visualized the data access pattern of each workload.  We
+were able to confirm that the visualized results are reasonably accurate by
+manually comparing those with the source code of the workloads.
+
+To see the usefulness of the monitoring, we optimized 9 memory intensive
+workloads among them for memory pressure situations using the DAMON outputs.
+In detail, we identified frequently accessed memory regions in each workload
+based on the DAMON results and protected them with ``mlock()`` system calls.
+The optimized versions consistently show speedup (2.55x in best case, 1.65x in
+average) under memory pressure.
+
+
+Overhead
+--------
+
+We also measured the overhead of DAMON.  It was not only under the upperbound
+we set, but was much lower (0.6 percent of the bound in best case, 13.288
+percent of the bound in average).  This reduction of the overhead is mainly
+resulted from its core mechanism called adaptive regions adjustment.  Refer to
+'Appendix D' for more detail about the mechanism.  We also compared the
+overhead of DAMON with that of a straightforward periodic access check-based
+monitoring.  DAMON's overhead was smaller than it by 94,242.42x in best case,
+3,159.61x in average.
+
+
+References
+==========
+
+Prototypes of DAMON have introduced by an LPC kernel summit track talk[1] and
+two academic papers[2,3].  Please refer to those for more detailed information,
+especially the evaluations.
+
+[1] SeongJae Park, Tracing Data Access Pattern with Bounded Overhead and
+    Best-effort Accuracy. In The Linux Kernel Summit, September 2019.
+    https://linuxplumbersconf.org/event/4/contributions/548/
+[2] SeongJae Park, Yunjae Lee, Heon Y. Yeom, Profiling Dynamic Data Access
+    Patterns with Controlled Overhead and Quality. In 20th ACM/IFIP
+    International Middleware Conference Industry, December 2019.
+    https://dl.acm.org/doi/10.1145/3366626.3368125
+[3] SeongJae Park, Yunjae Lee, Yunhee Kim, Heon Y. Yeom, Profiling Dynamic Data
+    Access Patterns with Bounded Overhead and Accuracy. In IEEE International
+    Workshop on Foundations and Applications of Self- Systems (FAS 2019), June
+    2019.
+
+
+Sequence Of Patches
+===================
+
+The patches are organized in the following sequence.  The first patch
+introduces DAMON module, it's data structures, and data structure related
+common functions.  Following three patches (2nd to 4th) implement the core
+logics of DAMON, namely regions based sampling, adaptive regions adjustment,
+and dynamic memory mapping chage adoption, one by one.
+
+Following five patches are for low level users of DAMON.  The 5th patch
+implements callbacks for each of monitoring steps so that users can do whatever
+they want with the access patterns.  The 6th one implements recording of access
+patterns in DAMON for better convenience and efficiency.  Each of next three
+patches (7th to 9th) respectively adds a programmable interface for other
+kernel code, a debugfs interface for privileged people and/or programs in user
+space, and a tracepoint for other tracepoints supporting tracers such as perf.
+
+Two patches for high level users of DAMON follows.  To provide a minimal
+reference to the debugfs interface and for high level use/tests of the DAMON,
+the next patch (10th) implements an user space tool.  The 11th patch adds a
+document for administrators of DAMON.
+
+Next two patches are for tests.  The 12th and 13th patches provide unit tests
+(based on kunit) and user space tests (based on kselftest) respectively.
+
+Finally, the last patch (14th) updates the MAINTAINERS file.
+
+The patches are based on the v5.5.  You can also clone the complete git
+tree:
+
+    $ git clone git://github.com/sjp38/linux -b damon/patches/v5
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damon/patches/v5
+
+
+Patch History
+=============
+
+Changes from v4
+(https://lore.kernel.org/linux-mm/20200210144812.26845-1-sjpark@amazon.com/)
+ - Add 'Reviewed-by' for the kunit tests patch (Brendan Higgins)
+ - Make the unit tests to depedn on 'DAMON=y' (Randy Dunlap and kbuild bot)
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Fix m68k module build issue
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Add selftests
+ - Seperate patches for low level users from core logics for better reading
+ - Clean up debugfs interface
+
+Changes from v3
+(https://lore.kernel.org/linux-mm/20200204062312.19913-1-sj38.park@gmail.com/)
+ - Fix i386 build issue
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Increase the default size of the monitoring result buffer to 1 MiB
+ - Fix misc bugs in debugfs interface
+
+Changes from v2
+(https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/)
+ - Move MAINTAINERS changes to last commit (Brendan Higgins)
+ - Add descriptions for kunittest: why not only entire mappings and what the 4
+   input sets are trying to test (Brendan Higgins)
+ - Remove 'kdamond_need_stop()' test (Brendan Higgins)
+ - Discuss about the 'perf mem' and DAMON (Peter Zijlstra)
+ - Make CV clearly say what it actually does (Peter Zijlstra)
+ - Answer why new module (Qian Cai)
+ - Diable DAMON by default (Randy Dunlap)
+ - Change the interface: Seperate recording attributes
+   (attrs, record, rules) and allow multiple kdamond instances
+ - Implement kernel API interface
+
+Changes from v1
+(https://lore.kernel.org/linux-mm/20200120162757.32375-1-sjpark@amazon.com/)
+ - Rebase on v5.5
+ - Add a tracepoint for integration with other tracers (Kirill A. Shutemov)
+ - document: Add more description for the user space tool (Brendan Higgins)
+ - unittest: Improve readability (Brendan Higgins)
+ - unittest: Use consistent name and helpers function (Brendan Higgins)
+ - Update PG_Young to avoid reclaim logic interference (Yunjae Lee)
+
+Changes from RFC
+(https://lore.kernel.org/linux-mm/20200110131522.29964-1-sjpark@amazon.com/)
+ - Specify an ambiguous plan of access pattern based mm optimizations
+ - Support loadable module build
+ - Cleanup code
+
+SeongJae Park (14):
+  mm: Introduce Data Access MONitor (DAMON)
+  mm/damon: Implement region based sampling
+  mm/damon: Adaptively adjust regions
+  mm/damon: Apply dynamic memory mapping changes
+  mm/damon: Implement callbacks
+  mm/damon: Implement access pattern recording
+  mm/damon: Implement kernel space API
+  mm/damon: Add debugfs interface
+  mm/damon: Add a tracepoint for result writing
+  tools: Add a minimal user-space tool for DAMON
+  Documentation/admin-guide/mm: Add a document for DAMON
+  mm/damon: Add kunit tests
+  mm/damon: Add user selftests
+  MAINTAINERS: Update for DAMON
+
+ .../admin-guide/mm/data_access_monitor.rst    |  414 +++++
+ Documentation/admin-guide/mm/index.rst        |    1 +
+ MAINTAINERS                                   |   12 +
+ include/linux/damon.h                         |   71 +
+ include/trace/events/damon.h                  |   32 +
+ mm/Kconfig                                    |   23 +
+ mm/Makefile                                   |    1 +
+ mm/damon-test.h                               |  604 +++++++
+ mm/damon.c                                    | 1424 +++++++++++++++++
+ mm/page_ext.c                                 |    1 +
+ tools/damon/.gitignore                        |    1 +
+ tools/damon/_dist.py                          |   35 +
+ tools/damon/bin2txt.py                        |   64 +
+ tools/damon/damo                              |   37 +
+ tools/damon/heats.py                          |  358 +++++
+ tools/damon/nr_regions.py                     |   88 +
+ tools/damon/record.py                         |  219 +++
+ tools/damon/report.py                         |   45 +
+ tools/damon/wss.py                            |   94 ++
+ tools/testing/selftests/damon/Makefile        |    7 +
+ .../selftests/damon/_chk_dependency.sh        |   28 +
+ tools/testing/selftests/damon/_chk_record.py  |   89 ++
+ .../testing/selftests/damon/debugfs_attrs.sh  |  107 ++
+ .../testing/selftests/damon/debugfs_record.sh |   50 +
+ 24 files changed, 3805 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+ create mode 100644 include/linux/damon.h
+ create mode 100644 include/trace/events/damon.h
+ create mode 100644 mm/damon-test.h
+ create mode 100644 mm/damon.c
+ create mode 100644 tools/damon/.gitignore
+ create mode 100644 tools/damon/_dist.py
+ create mode 100644 tools/damon/bin2txt.py
+ create mode 100755 tools/damon/damo
+ create mode 100644 tools/damon/heats.py
+ create mode 100644 tools/damon/nr_regions.py
+ create mode 100644 tools/damon/record.py
+ create mode 100644 tools/damon/report.py
+ create mode 100644 tools/damon/wss.py
+ create mode 100644 tools/testing/selftests/damon/Makefile
+ create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
+ create mode 100644 tools/testing/selftests/damon/_chk_record.py
+ create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
+ create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
+
+
+base-commit: d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
+-- 
+2.17.1
+
+================================= >8 ========================================
+
+Appendix A: Related Works
+=========================
+
+There are a number of researches[1,2,3,4,5,6] optimizing memory management
+mechanisms based on the actual memory access patterns that shows impressive
+results.  However, most of those has no deep consideration about the monitoring
+of the accesses itself.  Some of those focused on the overhead of the
+monitoring, but does not consider the accuracy scalability[6] or has additional
+dependencies[7].  Indeed, one recent research[5] about the proactive
+reclamation has also proposed[8] to the kernel community but the monitoring
+overhead was considered a main problem.
+
+[1] Subramanya R Dulloor, Amitabha Roy, Zheguang Zhao, Narayanan Sundaram,
+    Nadathur Satish, Rajesh Sankaran, Jeff Jackson, and Karsten Schwan. 2016.
+    Data tiering in heterogeneous memory systems. In Proceedings of the 11th
+    European Conference on Computer Systems (EuroSys). ACM, 15.
+[2] Youngjin Kwon, Hangchen Yu, Simon Peter, Christopher J Rossbach, and Emmett
+    Witchel. 2016. Coordinated and efficient huge page management with ingens.
+    In 12th USENIX Symposium on Operating Systems Design and Implementation
+    (OSDI).  705–721.
+[3] Harald Servat, Antonio J Peña, Germán Llort, Estanislao Mercadal,
+    HansChristian Hoppe, and Jesús Labarta. 2017. Automating the application
+    data placement in hybrid memory systems. In 2017 IEEE International
+    Conference on Cluster Computing (CLUSTER). IEEE, 126–136.
+[4] Vlad Nitu, Boris Teabe, Alain Tchana, Canturk Isci, and Daniel Hagimont.
+    2018. Welcome to zombieland: practical and energy-efficient memory
+    disaggregation in a datacenter. In Proceedings of the 13th European
+    Conference on Computer Systems (EuroSys). ACM, 16.
+[5] Andres Lagar-Cavilla, Junwhan Ahn, Suleiman Souhlal, Neha Agarwal, Radoslaw
+    Burny, Shakeel Butt, Jichuan Chang, Ashwin Chaugule, Nan Deng, Junaid
+    Shahid, Greg Thelen, Kamil Adam Yurtsever, Yu Zhao, and Parthasarathy
+    Ranganathan.  2019. Software-Defined Far Memory in Warehouse-Scale
+    Computers.  In Proceedings of the 24th International Conference on
+    Architectural Support for Programming Languages and Operating Systems
+    (ASPLOS).  ACM, New York, NY, USA, 317–330.
+    DOI:https://doi.org/10.1145/3297858.3304053
+[6] Carl Waldspurger, Trausti Saemundsson, Irfan Ahmad, and Nohhyun Park.
+    2017. Cache Modeling and Optimization using Miniature Simulations. In 2017
+    USENIX Annual Technical Conference (ATC). USENIX Association, Santa
+    Clara, CA, 487–498.
+    https://www.usenix.org/conference/atc17/technical-sessions/
+[7] Haojie Wang, Jidong Zhai, Xiongchao Tang, Bowen Yu, Xiaosong Ma, and
+    Wenguang Chen. 2018. Spindle: Informed Memory Access Monitoring. In 2018
+    USENIX Annual Technical Conference (ATC). USENIX Association, Boston, MA,
+    561–574.  https://www.usenix.org/conference/atc18/presentation/wang-haojie
+[8] Jonathan Corbet. 2019. Proactively reclaiming idle memory. (2019).
+    https://lwn.net/Articles/787611/.
+
+
+Appendix B: Limitations of Other Access Monitoring Techniques
+=============================================================
+
+The memory access instrumentation techniques which are applied to
+many tools such as Intel PIN is essential for correctness required cases such
+as memory access bug detections or cache level optimizations.  However, those
+usually incur exceptionally high overhead which is unacceptable.
+
+Periodic access checks based on access counting features (e.g., PTE Accessed
+bits or PG_Idle flags) can reduce the overhead.  It sacrifies some of the
+quality but it's still ok to many of this domain.  However, the overhead
+arbitrarily increase as the size of the target workload grows.  Miniature-like
+static region based sampling can set the upperbound of the overhead, but it
+will now decrease the quality of the output as the size of the workload grows.
+
+DAMON is another solution that overcomes the limitations.  It is 1) accurate
+enough for this domain, 2) light-weight so that it can be applied online, and
+3) allow users to set the upper-bound of the overhead, regardless of the size
+of target workloads.  It is implemented as a simple and small kernel module to
+support various users in both of the user space and the kernel space.  Refer to
+'Evaluations' section below for detailed performance of DAMON.
+
+For the goals, DAMON utilizes its two core mechanisms, which allows lightweight
+overhead and high quality of output, repectively.  To show how DAMON promises
+those, refer to 'Mechanisms of DAMON' section below.
+
+
+Appendix C: Mechanisms of DAMON
+===============================
+
+
+Basic Access Check
+------------------
+
+DAMON basically reports what pages are how frequently accessed.  The report is
+passed to users in binary format via a ``result file`` which users can set it's
+path.  Note that the frequency is not an absolute number of accesses, but a
+relative frequency among the pages of the target workloads.
+
+Users can also control the resolution of the reports by setting two time
+intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
+DAMON checks access to each page per ``sampling interval``, aggregates the
+results (counts the number of the accesses to each page), and reports the
+aggregated results per ``aggregation interval``.  For the access check of each
+page, DAMON uses the Accessed bits of PTEs.
+
+This is thus similar to the previously mentioned periodic access checks based
+mechanisms, which overhead is increasing as the size of the target process
+grows.
+
+
+Region Based Sampling
+---------------------
+
+To avoid the unbounded increase of the overhead, DAMON groups a number of
+adjacent pages that assumed to have same access frequencies into a region.  As
+long as the assumption (pages in a region have same access frequencies) is
+kept, only one page in the region is required to be checked.  Thus, for each
+``sampling interval``, DAMON randomly picks one page in each region and clears
+its Accessed bit.  After one more ``sampling interval``, DAMON reads the
+Accessed bit of the page and increases the access frequency of the region if
+the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
+by setting the number of regions.  DAMON allows users to set the minimal and
+maximum number of regions for the trade-off.
+
+Except the assumption, this is almost same with the above-mentioned
+miniature-like static region based sampling.  In other words, this scheme
+cannot preserve the quality of the output if the assumption is not guaranteed.
+
+
+Adaptive Regions Adjustment
+---------------------------
+
+At the beginning of the monitoring, DAMON constructs the initial regions by
+evenly splitting the memory mapped address space of the process into the
+user-specified minimal number of regions.  In this initial state, the
+assumption is normally not kept and thus the quality could be low.  To keep the
+assumption as much as possible, DAMON adaptively merges and splits each region.
+For each ``aggregation interval``, it compares the access frequencies of
+adjacent regions and merges those if the frequency difference is small.  Then,
+after it reports and clears the aggregated access frequency of each region, it
+splits each region into two regions if the total number of regions is smaller
+than the half of the user-specified maximum number of regions.
+
+In this way, DAMON provides its best-effort quality and minimal overhead while
+keeping the bounds users set for their trade-off.
+
+
+Applying Dynamic Memory Mappings
+--------------------------------
+
+Only a number of small parts in the super-huge virtual address space of the
+processes is mapped to physical memory and accessed.  Thus, tracking the
+unmapped address regions is just wasteful.  However, tracking every memory
+mapping change might incur an overhead.  For the reason, DAMON applies the
+dynamic memory mapping changes to the tracking regions only for each of an
+user-specified time interval (``regions update interval``).
+
+
+Appendix D: Expected Use-cases
+==============================
+
+A straightforward usecase of DAMON would be the program behavior analysis.
+With the DAMON output, users can confirm whether the program is running as
+intended or not.  This will be useful for debuggings and tests of design
+points.
+
+The monitored results can also be useful for counting the dynamic working set
+size of workloads.  For the administration of memory overcommitted systems or
+selection of the environments (e.g., containers providing different amount of
+memory) for your workloads, this will be useful.
+
+If you are a programmer, you can optimize your program by managing the memory
+based on the actual data access pattern.  For example, you can identify the
+dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
+data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
+reclaim cold data.  Even though your program is guaranteed to not encounter
+memory pressure, you can still improve the performance by applying the DAMON
+outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
+optimizations would be possible.  Our evaluations of DAMON includes a
+straightforward optimization using the ``mlock()``.  Please refer to the below
+Evaluation section for more detail.
+
+As DAMON incurs very low overhead, such optimizations can be applied not only
+offline, but also online.  Also, there is no reason to limit such optimizations
+to the user space.  Several parts of the kernel's memory management mechanisms
+could be also optimized using DAMON. The reclamation, the THP (de)promotion
+decisions, and the compaction would be such a candidates.  DAMON will continue
+its development to be highly optimized for the online/in-kernel uses.
+
+
+A Future Plan: Data Access Monitoring-based Operation Schemes
+-------------------------------------------------------------
+
+As described in the above section, DAMON could be helpful for actual access
+based memory management optimizations.  Nevertheless, users who want to do such
+optimizations should run DAMON, read the traced data (either online or
+offline), analyze it, plan a new memory management scheme, and apply the new
+scheme by themselves.  It must be easier than the past, but could still require
+some level of efforts.  In its next development stage, DAMON will reduce some
+of such efforts by allowing users to specify some access based memory
+management rules for their specific processes.
+
+Because this is just a plan, the specific interface is not fixed yet, but for
+example, users will be allowed to write their desired memory management rules
+to a special file in a DAMON specific format.  The rules will be something like
+'if a memory region of size in a range is keeping a range of hotness for more
+than a duration, apply specific memory management rule using madvise() or
+mlock() to the region'.  For example, we can imagine rules like below:
+
+    # format is: <min/max size> <min/max frequency (0-99)> <duration> <action>
+
+    # if a region of a size keeps a very high access frequency for more than
+    # 100ms, lock the region in the main memory (call mlock()). But, if the
+    # region is larger than 500 MiB, skip it. The exception might be helpful
+    # if the system has only, say, 600 MiB of DRAM, a region of size larger
+    # than 600 MiB cannot be locked in the DRAM at all.
+    na 500M 90 99 100ms mlock
+
+    # if a region keeps a high access frequency for more than 100ms, put the
+    # region on the head of the LRU list (call madvise() with MADV_WILLNEED).
+    na na 80 90 100ms madv_willneed
+
+    # if a region keeps a low access frequency for more than 100ms, put the
+    # region on the tail of the LRU list (call madvise() with MADV_COLD).
+    na na 10 20 100ms madv_cold
+
+    # if a region keeps a very low access frequency for more than 100ms, swap
+    # out the region immediately (call madvise() with MADV_PAGEOUT).
+    na na 0 10 100ms madv_pageout
+
+    # if a region of a size bigger than 2MB keeps a very high access frequency
+    # for more than 100ms, let the region to use huge pages (call madvise()
+    # with MADV_HUGEPAGE).
+    2M na 90 99 100ms madv_hugepage
+
+    # If a regions of a size bigger than > 2MB keeps no high access frequency
+    # for more than 100ms, avoid the region from using huge pages (call
+    # madvise() with MADV_NOHUGEPAGE).
+    2M na 0 25 100ms madv_nohugepage
+
+An RFC patchset for this is already available:
+https://lore.kernel.org/linux-mm/20200210150921.32482-1-sjpark@amazon.com/
