@@ -2,87 +2,68 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C53DC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AF9C7619D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 699F020718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADFE20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GxMEtP+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgBQIT7 (ORCPT
+        id S1728087AbgBQIUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:19:59 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:32995 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgBQIT6 (ORCPT
+        Mon, 17 Feb 2020 03:20:01 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:6024 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726932AbgBQIT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:19:58 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r21so19685824edq.0;
-        Mon, 17 Feb 2020 00:19:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ATnQLLigNnNp+3vrMMUywd96YC/sdkp/YQzir+b0HgQ=;
-        b=G242rs+PDBmmgooaB2XqYB1dGRNvDnJOs03wZzB8y9bJpR4Cd3LDMuZ9k4DvNLEdd7
-         Ey3bwblhwnKeQmCkNetL1kpwSHZdLfCqfb3Qo4XlsMmgmHsUPEjfptPqMvhxJx8Z5eYj
-         bd51hx63y1M63ZQIH6mJTneVZqI4tyqxLm6t9dfaj6IbHkqpDTdRC41PxoI/Uh5GEuN7
-         pb8JfGGphWNyvyVGJ7A+PiSCd/rHpqpmy5+8DnLyhx65laWvajKWBqhh9v2rQUf57zXL
-         cDRCrP+Pmfff6goRcRReCSQzs53NHQG3Mo/k0tyIqeQRSQDM+VtNSzM8dmUV6KOjLvyB
-         /mkg==
-X-Gm-Message-State: APjAAAXbwIYYq/LfvuIHxr7xi6isa/UG63vXKjeThAHlW0zUeV/IH+Vr
-        4zSH20qodyrY57Ct6NM4yaoHPmv/8kY=
-X-Google-Smtp-Source: APXvYqxslzR90ipQN6pVb+aQ+bJiil+U8VHigr94WA1ReDW3LRyk/OLB84bRFXvmlID7e+zGSSsnHA==
-X-Received: by 2002:a05:6402:1764:: with SMTP id da4mr13492458edb.24.1581927595038;
-        Mon, 17 Feb 2020 00:19:55 -0800 (PST)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
-        by smtp.gmail.com with ESMTPSA id m7sm445260edq.37.2020.02.17.00.19.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
-Received: by mail-wm1-f45.google.com with SMTP id s144so6786815wme.1;
-        Mon, 17 Feb 2020 00:19:54 -0800 (PST)
-X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr21454590wmd.77.1581927594021;
- Mon, 17 Feb 2020 00:19:54 -0800 (PST)
+        Mon, 17 Feb 2020 03:19:59 -0500
+X-UUID: ff7f0e148cd24634a7b15f226d40318f-20200217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From; bh=CNjl2hI20d68vxiX1u56Xsi7CnowTCfuliL82LhhtjI=;
+        b=GxMEtP+yMSdYfaEG+zQl7drojz7GwZx6v5XDzZta5sC2zPXw0IXexSNaBSRXusjMZ7EtspKGhyT6fo39F9a/H7LqFGif3XXJdtS/VIapnAhbLM8B4Leq4hfeptFuIVuA8Wyt25RNiq+hciLOP02XjIxjYwm2AfXJq9lTbJczNUM=;
+X-UUID: ff7f0e148cd24634a7b15f226d40318f-20200217
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 449462894; Mon, 17 Feb 2020 16:19:47 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Feb 2020 16:18:14 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Feb 2020 16:19:20 +0800
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     <yong.liang@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/1] Add watchdog device node
+Date:   Mon, 17 Feb 2020 16:19:21 +0800
+Message-ID: <20200217081922.22544-1-yong.liang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <Add watchdog device node>
+References: <Add watchdog device node>
 MIME-Version: 1.0
-References: <20200217064250.15516-1-samuel@sholland.org> <20200217064250.15516-6-samuel@sholland.org>
-In-Reply-To: <20200217064250.15516-6-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 17 Feb 2020 16:19:43 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
-Message-ID: <CAGb2v64p9QEhni1sAQWA9eOtGYDcc2_VnUd92sUxK7M_doHZJA@mail.gmail.com>
-Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect SND_SOC_DAIFMT_DSP_B
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: AA4A247E4141285BF863CB3E3630B1908C7C738F9C63F62CDE6CC0D77BA2CC8E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 2:43 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
-> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
-> connected to AIF2, as well as by comparing with the BSP driver.
->
-> Remove the DSP_B option, as it is not supported by the hardware.
->
-> Cc: stable@kernel.org
-> Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkIHdhdGNo
+ZG9nIGRldmljZSBub2RlDQoNCnlvbmcubGlhbmcgKDEpOg0KICBhbXI2NDogZHRzOiBtb2RpZnkg
+bXQ4MTgzLmR0c2kNCg0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kg
+fCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQoNCi0tIA0KMi4x
+OC4wDQo=
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
