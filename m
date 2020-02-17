@@ -2,93 +2,111 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D00C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88881C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75FD2072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C8F2064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TT35hLrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgBQRGh (ORCPT
+        id S1729221AbgBQRHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:06:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729021AbgBQRGh (ORCPT
+        Mon, 17 Feb 2020 12:07:01 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39288 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbgBQRHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:06:37 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH4trX120726
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:06:36 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1gmn9g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 12:06:36 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 17 Feb 2020 17:06:34 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 17:06:30 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HH5Y3G44106064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 17:05:34 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FFDA11C04A;
-        Mon, 17 Feb 2020 17:06:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E201A11C054;
-        Mon, 17 Feb 2020 17:06:28 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.204])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 17 Feb 2020 17:06:28 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 18:06:27 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: make 'install' not depend on vmlinux
-References: <20200216144829.27023-1-masahiroy@kernel.org>
+        Mon, 17 Feb 2020 12:07:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V2b0d1gUR930/id42O1ijC2yJQ/z2WLsY4dFHF7zz9k=; b=TT35hLrOxBVLzCKJph9tBQ4I9
+        9qjfMI6ImhwTUvtKySaL+IoXUyRExCX181Kyao7+OvlCpIn2KUte7mEJImazIdbuL+X8RVggxkA+1
+        SOBF21/nbzYN1UA93A3m9qzdLRIFxHB1Mbupvuo4laKp4GBQOe6wrXt4HkagkEGw/bVaY965HSLme
+        +CyU8K5lRCjuHpoKdkcbfTJgLhHqhU7pedP0CP4XkvZiFTUNCfz73R0FxYffyaLKHtP5ZqBQvU1XI
+        gdg2bNamdlh/MIRODoV4PQoWU0SQUEDDd3cZodhzPyxQP2cK8ASvh3lMf0Elalxf8WaeeVT3wDuML
+        SHaRTJEVw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:49118)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j3jrF-00021x-7A; Mon, 17 Feb 2020 17:06:57 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j3jrE-0006T8-Ig; Mon, 17 Feb 2020 17:06:56 +0000
+Date:   Mon, 17 Feb 2020 17:06:56 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
+Message-ID: <20200217170656.GY25745@shell.armlinux.org.uk>
+References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
+ <20200217165644.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200216144829.27023-1-masahiroy@kernel.org>
-X-TM-AS-GCONF: 00
-x-cbid: 20021717-4275-0000-0000-000003A2DAEF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021717-4276-0000-0000-000038B6E000
-Message-Id: <your-ad-here.call-01581959187-ext-6215@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_11:2020-02-17,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
- impostorscore=0 malwarescore=0 phishscore=0 suspectscore=1 mlxlogscore=937
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002170139
+In-Reply-To: <20200217165644.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 11:48:29PM +0900, Masahiro Yamada wrote:
-> For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-> install" not depend on vmlinux"), the install targets should never
-> trigger the rebuild of the kernel.
+On Mon, Feb 17, 2020 at 04:56:44PM +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Feb 17, 2020 at 11:43:48AM +0100, Alexandre Belloni wrote:
+> > at91ether_init was handling the phy mode and speed but since the switch to
+> > phylink, the NCFGR register got overwritten by macb_mac_config().
 > 
-> The variable, CONFIGURE, is not set by anyone. Remove it as well.
+> I don't think this actually explains anything - or at least I can't
+> make sense of it with respect to your patch.
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-Applied, thanks
+> You claim that the NCFGR register gets overwritten in macb_mac_config(),
+> but I see that the NCFGR register is read-modify-write in there,
+> whereas your new implementation below doesn't bother reading the
+> present value.
+> 
+> I think the issue you're referring to is the clearing of the PAE bit,
+> which is also the RM9200_RMII for at91rm9200?
+> 
+> Next, there's some duplication of code introduced here - it seems
+> that the tail end of macb_mac_link_down() and at91ether_mac_link_down()
+> are identical, as are the tail end of macb_mac_link_up() and
+> at91ether_mac_link_up().
+> 
+> > Add new phylink callbacks to handle emac and at91rm9200 properly.
+> > 
+> > Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> 
+> I posted a heads-up message last week about updates to phylink that
+> I'll be submitting soon (most of the prerequisits have now been sent
+> for review) which touch every phylink_mac_ops-using piece of code in
+> the tree.  Unfortunately, this patch introduces a new instance that
+> likely isn't going to get my attention, so it's going to create a
+> subtle merge conflict between net-next and net trees unless we work
+> out some way to deal with it.
+> 
+> I'm just mentioning that so that some thought can be applied now
+> rather than when it actually happens - especially as I've no way to
+> test the changes that will be necessary for this driver.
 
+I'm going to post these changes shortly, but not for davem to merge
+yet - it would be a good idea if people can test the changes first.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
