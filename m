@@ -2,129 +2,233 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD5C7619B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B515C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACA120725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 05:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0752064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgvk7ken"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCdLG92Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgBQF5n (ORCPT
+        id S1726294AbgBQGH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 00:57:43 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54302 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgBQF5m (ORCPT
+        Mon, 17 Feb 2020 01:07:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45481 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725935AbgBQGH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 00:57:42 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g1so15824033wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 21:57:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZXuMKcZyj/idpOZmGXYQMfUcYkxlliPEMPEeNplqlRo=;
-        b=jgvk7ken0jTTqqtTNtyefWsUXW4+4AkbkUxler3NbAYhbYQEw06uZfZ+o0P/Qx74NW
-         eWx0lLZOQrFNzNlaVcxoVzNIjFdBWKL3h/bq8/DeM9OmdSrRfFIA/oj/DnSSxWio70Xs
-         UUd74XVKYM463TiTXCtv2Y9LCPcLVgoQSgIX4fl+5dXzIWDV8AEFN3MTqzBwvG+83X4I
-         bg23iGsdVN32JhgL1jXnAQnMdaRpy/nqE+If/bXn2zyyZ5VqQeizgiJnQLr/M4Bij6bq
-         IsNhPgOvH2Moend9O5ivriLrjm6DsxtLkNSHsvAcfSrrtQjx653WJENd4yyKiOBdqx8j
-         AMUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZXuMKcZyj/idpOZmGXYQMfUcYkxlliPEMPEeNplqlRo=;
-        b=YMo0JR6XdhrJ8SI1Z/TdNu9MjJJtRntHzSqvWsOl/SLittc6PSXPTIlFouffEecKCI
-         uat9S2khXHr9Bcx/7S50LPH3T4bT7bZsX1y+fFSdCAAIYxtiVDD2X9sKFZXhEm0STZfY
-         /5uKdeml6PTaEFSnIQn+7K0sB1P+jdsn45uK6yypeqKELZC9cNB2vd1MoCezH7p70Q0h
-         Q9Q1lx3yir+q7ftTF4QYv6e3eSC9QegVV/YHQblj6QtKHJXoaHDphh5oH2h9aIo/x+Ey
-         stANuxNRv7pMaWEq5fPau0LzsqgEGJvr5KFPkjIu47+FWECG6QUOWRoworb7/yFFVfWS
-         unnQ==
-X-Gm-Message-State: APjAAAWFBpHXwd+8wQJWp75cpNKMntAxZX7yBnLWh1f6oX/s3sgKlxxp
-        d+r5rv+EPkvo9htpiITYwZAfzA==
-X-Google-Smtp-Source: APXvYqy4DcCMx4ZQzKPPXY+K/mHB0y/EkYkOwcFNUZ1+4YuKE84Oq5iaB6C9hx1gKGozChYFngBdJw==
-X-Received: by 2002:a1c:740a:: with SMTP id p10mr20128249wmc.65.1581919059979;
-        Sun, 16 Feb 2020 21:57:39 -0800 (PST)
-Received: from apalos.home (ppp-2-87-54-32.home.otenet.gr. [2.87.54.32])
-        by smtp.gmail.com with ESMTPSA id v22sm18366526wml.11.2020.02.16.21.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2020 21:57:39 -0800 (PST)
-Date:   Mon, 17 Feb 2020 07:57:36 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
-        lorenzo@kernel.org, thomas.petazzoni@bootlin.com,
-        jaswinder.singh@linaro.org, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com,
-        mcoquelin.stm32@gmail.com, hawk@kernel.org, kuba@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next] net: page_pool: API cleanup and comments
-Message-ID: <20200217055736.GA15371@apalos.home>
-References: <20200216094056.8078-1-ilias.apalodimas@linaro.org>
- <20200216.195300.260413184133485319.davem@davemloft.net>
- <20200216.195957.2300038427552527679.davem@davemloft.net>
+        Mon, 17 Feb 2020 01:07:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581919677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C/cqI+LSxY34TQ3+ihtn4jspo5SVW6zxs0OHLcGP5gA=;
+        b=eCdLG92YnqReiEKXsigYGDouOnBcdMbIvkcsprkjE5Nw13WgQbuV0UM95yXUwcfVfUX+RE
+        qSpKGAb8pRBvQrZ9l0tCI1jUvO9PP9k01udRT7bSOYzzLAhpT0lmR79NPKd6YHlvs40Aam
+        P6hFPPgx4pAop2rjP70EusSeGM0dWls=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-9Hm3h3wJNHmQEKu_SaHKxQ-1; Mon, 17 Feb 2020 01:07:56 -0500
+X-MC-Unique: 9Hm3h3wJNHmQEKu_SaHKxQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31A19107ACC9;
+        Mon, 17 Feb 2020 06:07:53 +0000 (UTC)
+Received: from [10.72.12.250] (ovpn-12-250.pek2.redhat.com [10.72.12.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EA9C87B12;
+        Mon, 17 Feb 2020 06:07:36 +0000 (UTC)
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200212125108.GS4271@mellanox.com>
+ <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+ <20200213134128.GV4271@mellanox.com>
+ <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
+ <20200213150542.GW4271@mellanox.com>
+ <20200213103714-mutt-send-email-mst@kernel.org>
+ <20200213155154.GX4271@mellanox.com>
+ <20200213105425-mutt-send-email-mst@kernel.org>
+ <20200213162407.GZ4271@mellanox.com>
+ <5625f971-0455-6463-2c0a-cbca6a1f8271@redhat.com>
+ <20200214140446.GD4271@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <312c3a04-4cc5-650c-48bc-ffbc7c765c22@redhat.com>
+Date:   Mon, 17 Feb 2020 14:07:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200216.195957.2300038427552527679.davem@davemloft.net>
+In-Reply-To: <20200214140446.GD4271@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 07:59:57PM -0800, David Miller wrote:
-> From: David Miller <davem@davemloft.net>
-> Date: Sun, 16 Feb 2020 19:53:00 -0800 (PST)
-> 
-> > From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> > Date: Sun, 16 Feb 2020 11:40:55 +0200
-> > 
-> >> Functions starting with __ usually indicate those which are exported,
-> >> but should not be called directly. Update some of those declared in the
-> >> API and make it more readable.
-> >> 
-> >> page_pool_unmap_page() and page_pool_release_page() were doing
-> >> exactly the same thing. Keep the page_pool_release_page() variant
-> >> and export it in order to show up on perf logs.
-> >> Finally rename __page_pool_put_page() to page_pool_put_page() since we
-> >> can now directly call it from drivers and rename the existing
-> >> page_pool_put_page() to page_pool_put_full_page() since they do the same
-> >> thing but the latter is trying to sync the full DMA area.
-> >> 
-> >> Also update netsec, mvneta and stmmac drivers which use those functions.
-> >> 
-> >> Suggested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-> >> Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> > 
-> > Applied to net-next, thanks.
-> 
-> Actually this doesn't compile, please respin:
 
-Ooops :(
-I was compiling for armv7, stmmac and mvneta are included but netsec isn't. 
-Sorry for the noise, i'll send a v2
+On 2020/2/14 =E4=B8=8B=E5=8D=8810:04, Jason Gunthorpe wrote:
+> On Fri, Feb 14, 2020 at 12:05:32PM +0800, Jason Wang wrote:
+>
+>>> The standard driver model is a 'bus' driver provides the HW access
+>>> (think PCI level things), and a 'hw driver' attaches to the bus
+>>> device,
+>> This is not true, kernel had already had plenty virtual bus where virt=
+ual
+>> devices and drivers could be attached, besides mdev and virtio, you ca=
+n see
+>> vop, rpmsg, visorbus etc.
+> Sure, but those are not connecting HW into the kernel..
 
-> 
-> drivers/net/ethernet/socionext/netsec.c: In function ‘netsec_uninit_pkt_dring’:
-> drivers/net/ethernet/socionext/netsec.c:1201:4: error: too few arguments to function ‘page_pool_put_page’
->     page_pool_put_page(dring->page_pool, page, false);
->     ^~~~~~~~~~~~~~~~~~
-> In file included from drivers/net/ethernet/socionext/netsec.c:17:
-> ./include/net/page_pool.h:172:6: note: declared here
->  void page_pool_put_page(struct page_pool *pool, struct page *page,
->       ^~~~~~~~~~~~~~~~~~
+
+Well the virtual devices are normally implemented via a real HW driver.=20
+E.g for virio bus, its transport driver could be driver of real hardware=20
+(e.g PCI).
+
+
+>  =20
+>>> and instantiates a 'subsystem device' (think netdev, rdma,
+>>> etc) using some per-subsystem XXX_register().
+>>
+>> Well, if you go through virtio spec, we support ~20 types of different
+>> devices. Classes like netdev and rdma are correct since they have a cl=
+ear
+>> set of semantics their own. But grouping network and scsi into a singl=
+e
+>> class looks wrong, that's the work of a virtual bus.
+> rdma also has about 20 different types of things it supports on top of
+> the generic ib_device.
+>
+> The central point in RDMA is the 'struct ib_device' which is a device
+> class. You can discover all RDMA devices by looking in /sys/class/infin=
+iband/
+>
+> It has an internal bus like thing (which probably should have been an
+> actual bus, but this was done 15 years ago) which allows other
+> subsystems to have drivers to match and bind their own drivers to the
+> struct ib_device.
+
+
+Right.
+
+
+>
+> So you'd have a chain like:
+>
+> struct pci_device -> struct ib_device -> [ib client bus thing] -> struc=
+t net_device
+
+
+So for vDPA we want to have:
+
+kernel datapath:
+
+struct pci_device -> struct vDPA device -> [ vDPA bus] -> struct=20
+virtio_device -> [virtio bus] -> struct net_device
+
+userspace datapath:
+
+struct pci_device -> struct vDPA device -> [ vDPA bus] -> struct=20
+vhost_device -> UAPI -> userspace driver
+
+
+>
+> And the various char devs are created by clients connecting to the
+> ib_device and creating char devs on their own classes.
+>
+> Since ib_devices are multi-queue we can have all 20 devices running
+> concurrently and there are various schemes to manage when the various
+> things are created.
+>
+>>> The 'hw driver' pulls in
+>>> functions from the 'subsystem' using a combination of callbacks and
+>>> library-style calls so there is no code duplication.
+>> The point is we want vDPA devices to be used by different subsystems, =
+not
+>> only vhost, but also netdev, blk, crypto (every subsystem that can use
+>> virtio devices). That's why we introduce vDPA bus and introduce differ=
+ent
+>> drivers on top.
+> See the other mail, it seems struct virtio_device serves this purpose
+> already, confused why a struct vdpa_device and another bus is being
+> introduced
+>
+>> There're several examples that a bus is needed on top.
+>>
+>> A good example is Mellanox TmFIFO driver which is a platform device dr=
+iver
+>> but register itself as a virtio device in order to be used by virito-c=
+onsole
+>> driver on the virtio bus.
+> How is that another bus? The platform bus is the HW bus, the TmFIFO is
+> the HW driver, and virtio_device is the subsystem.
+>
+> This seems reasonable/normal so far..
+
+
+Yes, that's reasonable. This example is to answer the question why bus=20
+is used instead of class here.
+
+
+>
+>> But it's a pity that the device can not be used by userspace driver du=
+e to
+>> the limitation of virito bus which is designed for kernel driver. That=
+'s why
+>> vDPA bus is introduced which abstract the common requirements of both =
+kernel
+>> and userspace drivers which allow the a single HW driver to be used by
+>> kernel drivers (and the subsystems on top) and userspace drivers.
+> Ah! Maybe this is the source of all this strangeness - the userspace
+> driver is something parallel to the struct virtio_device instead of
+> being a consumer of it??
+
+
+userspace driver is not parallel to virtio_device. The vhost_device is=20
+parallel to virtio_device actually.
+
+
+>   That certianly would mess up the driver model
+> quite a lot.
+>
+> Then you want to add another bus to switch between vhost and struct
+> virtio_device? But only for vdpa?
+
+
+Still, vhost works on top of vDPA bus directly (see the reply above).
+
+
+>
+> But as you point out something like TmFIFO is left hanging. Seems like
+> the wrong abstraction point..
+
+
+You know, even refactoring virtio-bus is not for free, TmFIFO driver=20
+needs changes anyhow.
 
 Thanks
-/Ilias
+
+
+>
+> Jason
+>
+
