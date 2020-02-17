@@ -2,212 +2,137 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C828C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1702DC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C776214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2039214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGmxuWOc"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ScagvJcT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tsNqGrim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBQQcL (ORCPT
+        id S1729110AbgBQQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:32:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32146 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728884AbgBQQcJ (ORCPT
+        Mon, 17 Feb 2020 11:33:21 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60705 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728540AbgBQQdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:32:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581957127;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6DgjkXbrR+aTgzwFOwaNUb/pGw0eTRC9dHf2eJzgmD4=;
-        b=MGmxuWOcsqMKJVPUrVb4LEV0S476PvQRPOMfpe4AY7XMauSURQgMeG1C/t9Dtyj2fBUdZg
-        /eD791wU57UfPU4SUMKFGIInR5Ab+p7Cw49vBto/Aht7KQRNe9E5+beXwko6/Kw10mcwfQ
-        I5bma4IzGEyg4G/0may3QRGTHqRuRfM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-3lXvF2PbN4qGo6V5SohVJg-1; Mon, 17 Feb 2020 11:32:05 -0500
-X-MC-Unique: 3lXvF2PbN4qGo6V5SohVJg-1
-Received: by mail-wm1-f70.google.com with SMTP id f207so7211574wme.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:32:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6DgjkXbrR+aTgzwFOwaNUb/pGw0eTRC9dHf2eJzgmD4=;
-        b=s8rDmwyNDABDgUC8+i9U5HgsraC1Pi8EAHNESUUoxJc3X+bJhb3vf8As1GMQbdNhqi
-         7jxjSdCwVez9Gg7af9AVnaUioIyd1C/cK4oOVqWUlQUv8VbpdUyH3c6s21x9EdjzqvWf
-         V3Hn2gIG6bG0mCtEf52CkwA3RLE1Er0PY9Mmz7U4+BF63QqZ9jgLqtxRKKHipmigHc8P
-         usU+KrZuizLxByAHL/+DkhDX/2/7Co11gv75ehMzHLDKzX1Gx1L89yaHJ2K4wjvjnKUL
-         +9moqXElYfPIrmS5lL9cnUtCdEJCclyc41kjy0FtZfhV4RwjNlomxdTo55rwAz2KqB2A
-         fcHw==
-X-Gm-Message-State: APjAAAWao2ZO6RgHviBg18Cqg/67yCOH4VBQzgSDa9z5yZqSfZw2cUhG
-        78wjrZ7LMrepUVA1SIfijl4IKPRYCkl7uG72eJgHd/dmKuCPQiRL3RbkNZnV6E1Epm/HIVjai0a
-        9P27xZtCzmmxXxhGpdiWyssYr
-X-Received: by 2002:adf:806c:: with SMTP id 99mr22067829wrk.328.1581957124418;
-        Mon, 17 Feb 2020 08:32:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzIkRaqPRA5fxC/o142XfHpQPvCWt4G7Lm0VpbLP9NAmGgM9VPdSXcXhEE/8ug60zSKhzy02w==
-X-Received: by 2002:adf:806c:: with SMTP id 99mr22067803wrk.328.1581957124159;
-        Mon, 17 Feb 2020 08:32:04 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
-        by smtp.gmail.com with ESMTPSA id c141sm1087609wme.41.2020.02.17.08.32.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 08:32:03 -0800 (PST)
-Subject: Re: [PATCH] kvm/emulate: fix a -Werror=cast-function-type
-To:     Qian Cai <cai@lca.pw>, Jim Mattson <jmattson@google.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1581695768-6123-1-git-send-email-cai@lca.pw>
- <20200214165923.GA20690@linux.intel.com> <1581700124.7365.70.camel@lca.pw>
- <CALMp9eTRn-46oKg5a9h79EZOvHGwT=8ZZN15Zmy5NUYsd+r8wQ@mail.gmail.com>
- <1581707646.7365.72.camel@lca.pw>
- <28680b99-d043-ee02-dab3-b5ce8c2e625b@redhat.com>
- <1581950844.7365.82.camel@lca.pw>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <030ced86-5ef0-0a2e-7c66-dbfb1416b8b5@redhat.com>
-Date:   Mon, 17 Feb 2020 17:32:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 17 Feb 2020 11:33:21 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0AC4E21E56;
+        Mon, 17 Feb 2020 11:33:20 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 17 Feb 2020 11:33:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=z7SIQMe8gxZXCrF92WQcQrgLZ/B
+        hMiFjzfj9KMJK7K8=; b=ScagvJcTAO5ftJfd77H/HvKvdchvc5G/uNs0OFLeXX3
+        Hl6I/72aZ3hRXj3+Mjt6QLLAZYMYm4H410ta3bzm8g84FurpbgBFYPkgmMkPsQx6
+        +kO9bT49mqFQNA+ZhjQQ0+kmhaGO1Uv/0h1Njh4/8cijpS7wbpl/PV0WcyP8zQnO
+        FbOqPsrveENvSj3OkGTvDSsCSND102g/gtgMtIoBI6QFNiJlFGjvD+qFN8qvLo0w
+        9MMY8hBGqrA/quApuirtuNYLKfriTzfAvgUqu8mqdskJxdI1Y7mXuHm+Fxkr+KWF
+        DqD/xt7SpYQIsXqXpKwT+Q0++QzVnAn9FwBrwRSWGAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=z7SIQM
+        e8gxZXCrF92WQcQrgLZ/BhMiFjzfj9KMJK7K8=; b=tsNqGrim9eK5GK6DHc31Rp
+        80sI+Lm1vmy5lQCJP7lP2QDxl9aW7bNuToRAL+vibgCUJw4IMSOIjccd+BJ5N7eR
+        Nov8TWbHO6fP/tfnXOKyTvGyDPCDFoxxVHDJaEYI6UpFX7qqw+/+BbfyrDWwERHa
+        V+WU9GgNWcvDv0G+MeXlhfx3KF0GSK0ZBgHbbAlzlUEbK2R9tOzhnzKasawRU/Pb
+        kAfN6vVY1gbXdHbxFt7juuaCBUlgn4JP4HYXn6qHcgN2yvffdOcm4Vh9ePh0lw2H
+        T6Lz+lwqz0ODM+PkmZnj2kOEkxQAtSCThXUAoRsn1QE1Hc2qKyZq0tPeBrB00sRg
+        ==
+X-ME-Sender: <xms:T8BKXlJeFXJW3U8KrGxcR1dZd8RyGuDKlblmsLUdVqKtI8XMUQmkkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeigdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
+    gheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:T8BKXmgygXB-ttKX6K324l7-Bl35Ly36BrmB_XoPm-HIOCdYM4Fmhg>
+    <xmx:T8BKXqLoT3WIL0JYjbdxZilmAVYTCBXqraykwTwNUNj5vBKjtNSGZw>
+    <xmx:T8BKXrgqoNM7Ubv8GgFD_9tawuu_7_DOt1tiRXeXx8k5my4XhW3Z4w>
+    <xmx:UMBKXtMIbkh9VRXeVebbccsamgv6ARJd1lupumxNkvh70qQ1KiY1Dw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 76E253060C21;
+        Mon, 17 Feb 2020 11:33:19 -0500 (EST)
+Date:   Mon, 17 Feb 2020 17:33:18 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] efi: READ_ONCE rng seed size before munmap
+Message-ID: <20200217163318.GF1502885@kroah.com>
+References: <20200217123354.21140-1-Jason@zx2c4.com>
+ <CAKv+Gu83dOKGbYU1t3_KZevB_rn-ktoropFrjASjsv3DozrV1A@mail.gmail.com>
+ <20200217155402.GB1461852@kroah.com>
+ <CAKv+Gu_uQvONH=vAcckPEn+HWOOsiQdt_Dsscw2Y3KEUObafxA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1581950844.7365.82.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_uQvONH=vAcckPEn+HWOOsiQdt_Dsscw2Y3KEUObafxA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/02/20 15:47, Qian Cai wrote:
-> On Fri, 2020-02-14 at 20:33 +0100, Paolo Bonzini wrote:
->> On 14/02/20 20:14, Qian Cai wrote:
->>>> It seems misguided to define a local variable just to get an implicit
->>>> cast from (void *) to (fastop_t). Sean's first suggestion gives you
->>>> the same implicit cast without the local variable. The second
->>>> suggestion makes both casts explicit.
->>>
->>> OK, I'll do a v2 using the first suggestion which looks simpler once it passed
->>> compilations.
->>>
->>
->> Another interesting possibility is to use an unnamed union of a
->> (*execute) function pointer and a (*fastop) function pointer.
->>
+On Mon, Feb 17, 2020 at 05:09:00PM +0100, Ard Biesheuvel wrote:
+> On Mon, 17 Feb 2020 at 16:54, Greg KH <greg@kroah.com> wrote:
+> >
+> > On Mon, Feb 17, 2020 at 04:23:03PM +0100, Ard Biesheuvel wrote:
+> > > On Mon, 17 Feb 2020 at 13:34, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > > >
+> > > > This function is consistent with using size instead of seed->size
+> > > > (except for one place that this patch fixes), but it reads seed->size
+> > > > without using READ_ONCE, which means the compiler might still do
+> > > > something unwanted. So, this commit simply adds the READ_ONCE
+> > > > wrapper.
+> > > >
+> > > > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> > > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > > Cc: stable@vger.kernel.org
+> > >
+> > > Thanks Jason
+> > >
+> > > I've queued this in efi/urgent with a fixes: tag rather than a cc:
+> > > stable, since it only applies clean to v5.4 and later.
+> >
+> > Why do that?  That just makes it harder for me to know to pick it up for
+> > 5.4 and newer.
+> >
+> > > We'll need a
+> > > backport to 4.14 and 4.19 as well, which has a trivial conflict
+> > > (s/add_bootloader_randomness/add_device_randomness/) but we'll need to
+> > > wait for this patch to hit Linus's tree first.
+> >
+> > Ok, if you are going to send it on to me for stable, that's fine, but
+> > usually you can just wait for the rejection notices for older kernels
+> > before having to worry about this.  In other words, you are doing more
+> > work than you have to here :)
+> >
 > 
-> This?
-
-Yes, perfect.  Can you send it with Signed-off-by and all that?
-
-Thanks,
-
-Paolo
-
-> diff --git a/arch/x86/include/asm/kvm_emulate.h
-> b/arch/x86/include/asm/kvm_emulate.h
-> index 03946eb3e2b9..2a8f2bd2e5cf 100644
-> --- a/arch/x86/include/asm/kvm_emulate.h
-> +++ b/arch/x86/include/asm/kvm_emulate.h
-> @@ -292,6 +292,14 @@ enum x86emul_mode {
->  #define X86EMUL_SMM_MASK             (1 << 6)
->  #define X86EMUL_SMM_INSIDE_NMI_MASK  (1 << 7)
->  
-> +/*
-> + * fastop functions are declared as taking a never-defined fastop parameter,
-> + * so they can't be called from C directly.
-> + */
-> +struct fastop;
-> +
-> +typedef void (*fastop_t)(struct fastop *);
-> +
->  struct x86_emulate_ctxt {
->  	const struct x86_emulate_ops *ops;
->  
-> @@ -324,7 +332,10 @@ struct x86_emulate_ctxt {
->  	struct operand src;
->  	struct operand src2;
->  	struct operand dst;
-> -	int (*execute)(struct x86_emulate_ctxt *ctxt);
-> +	union {
-> +		int (*execute)(struct x86_emulate_ctxt *ctxt);
-> +		fastop_t fop;
-> +	};
->  	int (*check_perm)(struct x86_emulate_ctxt *ctxt);
->  	/*
->  	 * The following six fields are cleared together,
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index ddbc61984227..dd19fb3539e0 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -191,25 +191,6 @@
->  #define NR_FASTOP (ilog2(sizeof(ulong)) + 1)
->  #define FASTOP_SIZE 8
->  
-> -/*
-> - * fastop functions have a special calling convention:
-> - *
-> - * dst:    rax        (in/out)
-> - * src:    rdx        (in/out)
-> - * src2:   rcx        (in)
-> - * flags:  rflags     (in/out)
-> - * ex:     rsi        (in:fastop pointer, out:zero if exception)
-> - *
-> - * Moreover, they are all exactly FASTOP_SIZE bytes long, so functions for
-> - * different operand sizes can be reached by calculation, rather than a jump
-> - * table (which would be bigger than the code).
-> - *
-> - * fastop functions are declared as taking a never-defined fastop parameter,
-> - * so they can't be called from C directly.
-> - */
-> -
-> -struct fastop;
-> -
->  struct opcode {
->  	u64 flags : 56;
->  	u64 intercept : 8;
-> @@ -311,8 +292,19 @@ static void invalidate_registers(struct x86_emulate_ctxt
-> *ctxt)
->  #define ON64(x)
->  #endif
->  
-> -typedef void (*fastop_t)(struct fastop *);
-> -
-> +/*
-> + * fastop functions have a special calling convention:
-> + *
-> + * dst:    rax        (in/out)
-> + * src:    rdx        (in/out)
-> + * src2:   rcx        (in)
-> + * flags:  rflags     (in/out)
-> + * ex:     rsi        (in:fastop pointer, out:zero if exception)
-> + *
-> + * Moreover, they are all exactly FASTOP_SIZE bytes long, so functions for
-> + * different operand sizes can be reached by calculation, rather than a jump
-> + * table (which would be bigger than the code).
-> + */
->  static int fastop(struct x86_emulate_ctxt *ctxt, fastop_t fop);
->  
->  #define __FOP_FUNC(name) \
-> @@ -5683,7 +5675,7 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
->  
->  	if (ctxt->execute) {
->  		if (ctxt->d & Fastop)
-> -			rc = fastop(ctxt, (fastop_t)ctxt->execute);
-> +			rc = fastop(ctxt, ctxt->fop);
->  		else
->  			rc = ctxt->execute(ctxt);
->  		if (rc != X86EMUL_CONTINUE)
+> So just
 > 
+> Cc: <stable@vger.kernel.org>
+> 
+> without any context is your preferred method?
 
+If you can provide a "Fixes:" tag showing what commit it does fix,
+that's even better as that way I _know_ to try to apply it to older
+kernels and if it fails, you will get an email saying it failed.  With
+just a cc: stable, I do a "best guess" and don't work very hard if older
+kernels do not apply as I don't know if it is relevant or not.
+
+thanks,
+
+greg k-h
