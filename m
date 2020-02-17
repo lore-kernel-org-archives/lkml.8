@@ -4,764 +4,425 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0F7C35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8109C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5529220717
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB8C20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 03:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgBQDbO (ORCPT
+        id S1727811AbgBQDcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 22:31:14 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:48766 "EHLO loongson.cn"
+        Sun, 16 Feb 2020 22:32:14 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51872 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726498AbgBQDbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 22:31:13 -0500
-Received: from centos7-x86.loongson.cn (unknown [10.40.46.81])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax1unxCEpeCGoQAA--.0S2;
-        Mon, 17 Feb 2020 11:30:57 +0800 (CST)
-From:   bibo <maobibo@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Loongson64: add header files with pathname
-Date:   Mon, 17 Feb 2020 11:30:57 +0800
-Message-Id: <1581910257-11647-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Ax1unxCEpeCGoQAA--.0S2
-X-Coremail-Antispam: 1UD129KBjvAXoWftF48ZryDCFWrtw15uF1kAFb_yoW5GFWDuo
-        Z2yFn7Kr48XFWUJF15WF15Aa18WFnaqr4Fy34fJ3yDJF9Iy3srJ3409w12qF15CF1xt3sx
-        GrWrurW8Xr1Iyaykn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-        AaLaJ3UjIYCTnIWjp_UUUYn7k0a2IF6w4kM7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0
-        x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj4
-        1l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0
-        I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
-        xK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-        64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r
-        1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgVHqDUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        id S1726498AbgBQDcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Feb 2020 22:32:14 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A8CF1A8145B0796C49BD;
+        Mon, 17 Feb 2020 11:32:11 +0800 (CST)
+Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Feb
+ 2020 11:32:01 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2] erofs: convert workstn to XArray
+Date:   Mon, 17 Feb 2020 11:30:42 +0800
+Message-ID: <20200217033042.137855-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.160.196.180]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently some header files are referenced with pathname prefix,
-like irq.h which is located at both these two pathes:
-  arch/mips/include/asm/mach-generic/
-  arch/mips/include/asm/mach-xxx/
-C code reference these header files without pathname such as
-there is header file with the same filename in another different
-path. We encounter problem if arch/mips/kvm/irq.h file is locally
-reference.
+XArray has friendly apis and it will replace the old radix
+tree in the near future.
 
-Now header files specified with platform are moved to directory
-arch/mips/xxx/include/mach directory, and which is referenced with
-<mach/yyy.h> method.
+This convert makes use of __xa_cmpxchg when inserting on
+a just inserted item by other thread. In detail, instead
+of totally looking up again as what we did for the old
+radix tree, it will try to legitimize the current in-tree
+item in the XArray therefore more effective.
 
-Signed-off-by: bibo <maobibo@loongson.cn>
+In addition, naming is rather a challenge for non-English
+speaker like me. The basic idea of workstn is to provide
+a runtime sparse array with items arranged in the physical
+block number order. Such items (was called workgroup) can be
+used to record compress clusters or for later new features.
+
+However, both workgroup and workstn seem not good names from
+whatever point of view, so I'd like to rename them as pslot
+and managed_pslots to stand for physical slots. This patch
+handles the second as a part of the radix root convert.
+
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- arch/mips/Kconfig                                                 | 5 +++++
- arch/mips/Makefile                                                | 2 ++
- arch/mips/include/asm/addrspace.h                                 | 4 ++++
- arch/mips/include/asm/cache.h                                     | 4 ++++
- arch/mips/include/asm/cpu-features.h                              | 4 ++++
- arch/mips/include/asm/fixmap.h                                    | 4 ++++
- arch/mips/include/asm/i8259.h                                     | 4 ++++
- arch/mips/include/asm/io.h                                        | 5 +++++
- arch/mips/include/asm/irq.h                                       | 4 ++++
- arch/mips/include/asm/mc146818rtc.h                               | 4 ++++
- arch/mips/include/asm/mmzone.h                                    | 4 ++++
- arch/mips/include/asm/page.h                                      | 4 ++++
- arch/mips/include/asm/topology.h                                  | 4 ++++
- arch/mips/include/asm/war.h                                       | 4 ++++
- arch/mips/kernel/head.S                                           | 4 ++++
- arch/mips/loongson64/Platform                                     | 2 +-
- arch/mips/loongson64/env.c                                        | 6 +++---
- .../asm/mach-loongson64 => loongson64/include/mach}/boot_param.h  | 0
- .../include/mach}/cpu-feature-overrides.h                         | 0
- arch/mips/loongson64/include/mach/ioremap.h                       | 2 ++
- .../asm/mach-loongson64 => loongson64/include/mach}/irq.h         | 4 ++--
- .../include/mach}/kernel-entry-init.h                             | 0
- arch/mips/loongson64/include/mach/kmalloc.h                       | 2 ++
- .../asm/mach-loongson64 => loongson64/include/mach}/loongson.h    | 2 +-
- .../mach-loongson64 => loongson64/include/mach}/loongson_hwmon.h  | 0
- .../mach-loongson64 => loongson64/include/mach}/loongson_regs.h   | 0
- arch/mips/loongson64/include/mach/mangle-port.h                   | 2 ++
- .../asm/mach-loongson64 => loongson64/include/mach}/mc146818rtc.h | 0
- .../asm/mach-loongson64 => loongson64/include/mach}/mmzone.h      | 2 +-
- .../asm/mach-loongson64 => loongson64/include/mach}/pci.h         | 0
- .../asm/mach-loongson64 => loongson64/include/mach}/spaces.h      | 0
- .../asm/mach-loongson64 => loongson64/include/mach}/topology.h    | 0
- arch/mips/loongson64/include/mach/war.h                           | 2 ++
- .../asm/mach-loongson64 => loongson64/include/mach}/workarounds.h | 0
- arch/mips/loongson64/init.c                                       | 2 +-
- arch/mips/loongson64/irq.c                                        | 5 +++++
- arch/mips/loongson64/numa.c                                       | 2 +-
- arch/mips/loongson64/pci.c                                        | 6 +++---
- arch/mips/loongson64/platform.c                                   | 6 +++---
- arch/mips/loongson64/pm.c                                         | 2 +-
- arch/mips/loongson64/reset.c                                      | 4 ++--
- arch/mips/loongson64/setup.c                                      | 2 +-
- arch/mips/loongson64/smp.c                                        | 6 +++---
- arch/mips/loongson64/time.c                                       | 2 +-
- arch/mips/oprofile/op_model_loongson3.c                           | 4 ++--
- arch/mips/pci/fixup-loongson3.c                                   | 2 +-
- arch/mips/pci/ops-loongson3.c                                     | 2 +-
- drivers/gpio/gpio-loongson.c                                      | 4 ++++
- drivers/platform/mips/cpu_hwmon.c                                 | 8 ++++----
- 49 files changed, 109 insertions(+), 32 deletions(-)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/boot_param.h (100%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/cpu-feature-overrides.h (100%)
- create mode 100644 arch/mips/loongson64/include/mach/ioremap.h
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/irq.h (96%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/kernel-entry-init.h (100%)
- create mode 100644 arch/mips/loongson64/include/mach/kmalloc.h
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/loongson.h (99%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/loongson_hwmon.h (100%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/loongson_regs.h (100%)
- create mode 100644 arch/mips/loongson64/include/mach/mangle-port.h
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/mc146818rtc.h (100%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/mmzone.h (96%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/pci.h (100%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/spaces.h (100%)
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/topology.h (100%)
- create mode 100644 arch/mips/loongson64/include/mach/war.h
- rename arch/mips/{include/asm/mach-loongson64 => loongson64/include/mach}/workarounds.h (100%)
+changes since v1:
+ - update the comment above "struct xarray managed_pslots";
+ - get rid of "comparison to NULL" style in v1;
+ - stress tested without strange behaviors;
+   https://lore.kernel.org/r/20200206135631.1491-1-hsiangkao@aol.com
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 08b6f34..91946e4 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -489,6 +489,7 @@ config MACH_LOONGSON64
- 	select LOONGSON_MC146818
- 	select ZONE_DMA32
- 	select NUMA
-+	select HAVE_ARCH_HEAD_FILES
- 	help
- 	  This enables the support of Loongson-2/3 family of machines.
+ fs/erofs/internal.h |  8 ++---
+ fs/erofs/super.c    |  2 +-
+ fs/erofs/utils.c    | 85 ++++++++++++++++-----------------------------
+ fs/erofs/zdata.c    | 65 ++++++++++++++++------------------
+ 4 files changed, 64 insertions(+), 96 deletions(-)
+
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index c4c6dcdc89ad..b70f52c80852 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -52,8 +52,8 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
  
-@@ -1112,6 +1113,10 @@ config SCHED_OMIT_FRAME_POINTER
- 	bool
- 	default y
+-	/* the dedicated workstation for compression */
+-	struct radix_tree_root workstn_tree;
++	/* managed XArray arranged in physical block number */
++	struct xarray managed_pslots;
  
-+config HAVE_ARCH_HEAD_FILES
-+	bool
-+	default n
-+
- #
- # Select some configuration options automatically based on user selections.
- #
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index e1c44ae..b73c8f6 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -263,7 +263,9 @@ load-y					= $(CONFIG_PHYSICAL_START)
- endif
+ 	/* threshold for decompression synchronously */
+ 	unsigned int max_sync_decompress_pages;
+@@ -402,8 +402,8 @@ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+ int erofs_workgroup_put(struct erofs_workgroup *grp);
+ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 					     pgoff_t index);
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp);
+ void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 057e6d7b5b7f..b514c67e5fc2 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -425,7 +425,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 		sb->s_flags &= ~SB_POSIXACL;
  
- entry-y				= $(shell $(objtree)/arch/mips/tools/elf-entry vmlinux)
-+ifndef CONFIG_HAVE_ARCH_HEAD_FILES
- cflags-y			+= -I$(srctree)/arch/mips/include/asm/mach-generic
-+endif
- drivers-$(CONFIG_PCI)		+= arch/mips/pci/
- 
- #
-diff --git a/arch/mips/include/asm/addrspace.h b/arch/mips/include/asm/addrspace.h
-index 59a48c6..9640a54 100644
---- a/arch/mips/include/asm/addrspace.h
-+++ b/arch/mips/include/asm/addrspace.h
-@@ -10,7 +10,11 @@
- #ifndef _ASM_ADDRSPACE_H
- #define _ASM_ADDRSPACE_H
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/spaces.h>
-+#else
- #include <spaces.h>
-+#endif
- 
- /*
-  *  Configure language
-diff --git a/arch/mips/include/asm/cache.h b/arch/mips/include/asm/cache.h
-index 8b14c27..3e21ef936 100644
---- a/arch/mips/include/asm/cache.h
-+++ b/arch/mips/include/asm/cache.h
-@@ -9,7 +9,11 @@
- #ifndef _ASM_CACHE_H
- #define _ASM_CACHE_H
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/kmalloc.h>
-+#else
- #include <kmalloc.h>
-+#endif
- 
- #define L1_CACHE_SHIFT		CONFIG_MIPS_L1_CACHE_SHIFT
- #define L1_CACHE_BYTES		(1 << L1_CACHE_SHIFT)
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index de44c92..d13b09b 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -12,7 +12,11 @@
- #include <asm/cpu.h>
- #include <asm/cpu-info.h>
- #include <asm/isa-rev.h>
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/cpu-feature-overrides.h>
-+#else
- #include <cpu-feature-overrides.h>
-+#endif
- 
- #define __ase(ase)			(cpu_data[0].ases & (ase))
- #define __isa(isa)			(cpu_data[0].isa_level & (isa))
-diff --git a/arch/mips/include/asm/fixmap.h b/arch/mips/include/asm/fixmap.h
-index 1784d43..8b034c4 100644
---- a/arch/mips/include/asm/fixmap.h
-+++ b/arch/mips/include/asm/fixmap.h
-@@ -14,7 +14,11 @@
- #define _ASM_FIXMAP_H
- 
- #include <asm/page.h>
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/spaces.h>
-+#else
- #include <spaces.h>
-+#endif
- #ifdef CONFIG_HIGHMEM
- #include <linux/threads.h>
- #include <asm/kmap_types.h>
-diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
-index 97a5e41..78639a7 100644
---- a/arch/mips/include/asm/i8259.h
-+++ b/arch/mips/include/asm/i8259.h
-@@ -14,7 +14,11 @@
- #include <linux/spinlock.h>
- 
- #include <asm/io.h>
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/irq.h>
-+#else
- #include <irq.h>
-+#endif
- 
- /* i8259A PIC registers */
- #define PIC_MASTER_CMD		0x20
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 3f6ce74..899076a 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -31,8 +31,13 @@
- #include <asm/processor.h>
- #include <asm/string.h>
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/ioremap.h>
-+#include <mach/mangle-port.h>
-+#else
- #include <ioremap.h>
- #include <mangle-port.h>
-+#endif
- 
- /*
-  * Raw operations are never swapped in software.  OTOH values that raw
-diff --git a/arch/mips/include/asm/irq.h b/arch/mips/include/asm/irq.h
-index c5d3517..883f49d 100644
---- a/arch/mips/include/asm/irq.h
-+++ b/arch/mips/include/asm/irq.h
-@@ -15,7 +15,11 @@
- 
- #include <asm/mipsmtregs.h>
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/irq.h>
-+#else
- #include <irq.h>
-+#endif
- 
- #define IRQ_STACK_SIZE			THREAD_SIZE
- #define IRQ_STACK_START			(IRQ_STACK_SIZE - 16)
-diff --git a/arch/mips/include/asm/mc146818rtc.h b/arch/mips/include/asm/mc146818rtc.h
-index 68b4da6..5f5d878 100644
---- a/arch/mips/include/asm/mc146818rtc.h
-+++ b/arch/mips/include/asm/mc146818rtc.h
-@@ -11,6 +11,10 @@
- #ifndef _ASM_MC146818RTC_H
- #define _ASM_MC146818RTC_H
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/mc146818rtc.h>
-+#else
- #include <mc146818rtc.h>
-+#endif
- 
- #endif /* _ASM_MC146818RTC_H */
-diff --git a/arch/mips/include/asm/mmzone.h b/arch/mips/include/asm/mmzone.h
-index b826b84..7f5ca0a 100644
---- a/arch/mips/include/asm/mmzone.h
-+++ b/arch/mips/include/asm/mmzone.h
-@@ -9,8 +9,12 @@
- #include <asm/page.h>
- 
- #ifdef CONFIG_NEED_MULTIPLE_NODES
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/mmzone.h>
-+#else
- # include <mmzone.h>
+ #ifdef CONFIG_EROFS_FS_ZIP
+-	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++	xa_init(&sbi->managed_pslots);
  #endif
-+#endif
  
- #ifndef pa_to_nid
- #define pa_to_nid(addr) 0
-diff --git a/arch/mips/include/asm/page.h b/arch/mips/include/asm/page.h
-index 0ba4ce6..73cfa6a 100644
---- a/arch/mips/include/asm/page.h
-+++ b/arch/mips/include/asm/page.h
-@@ -9,7 +9,11 @@
- #ifndef _ASM_PAGE_H
- #define _ASM_PAGE_H
+ 	/* get the root inode */
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index fddc5059c930..56ab5b3f73b0 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -37,9 +37,6 @@ void *erofs_get_pcpubuf(unsigned int pagenr)
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
  
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/spaces.h>
-+#else
- #include <spaces.h>
-+#endif
- #include <linux/const.h>
- #include <linux/kernel.h>
- #include <asm/mipsregs.h>
-diff --git a/arch/mips/include/asm/topology.h b/arch/mips/include/asm/topology.h
-index 0673d2d..764a73f 100644
---- a/arch/mips/include/asm/topology.h
-+++ b/arch/mips/include/asm/topology.h
-@@ -8,7 +8,11 @@
- #ifndef __ASM_TOPOLOGY_H
- #define __ASM_TOPOLOGY_H
+-#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
+-#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
+-
+ static int erofs_workgroup_get(struct erofs_workgroup *grp)
+ {
+ 	int o;
+@@ -66,7 +63,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
  
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/topology.h>
-+#else
- #include <topology.h>
-+#endif
- #include <linux/smp.h>
+ repeat:
+ 	rcu_read_lock();
+-	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	grp = xa_load(&sbi->managed_pslots, index);
+ 	if (grp) {
+ 		if (erofs_workgroup_get(grp)) {
+ 			/* prefer to relax rcu read side */
+@@ -80,43 +77,36 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 	return grp;
+ }
  
- #ifdef CONFIG_SMP
-diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
-index 1eedd59..1baebc3 100644
---- a/arch/mips/include/asm/war.h
-+++ b/arch/mips/include/asm/war.h
-@@ -9,7 +9,11 @@
- #ifndef _ASM_WAR_H
- #define _ASM_WAR_H
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/war.h>
-+#else
- #include <war.h>
-+#endif
- 
- /*
-  * Work around certain R4000 CPU errata (as implemented by GCC):
-diff --git a/arch/mips/kernel/head.S b/arch/mips/kernel/head.S
-index 351d40f..2973a4c 100644
---- a/arch/mips/kernel/head.S
-+++ b/arch/mips/kernel/head.S
-@@ -24,7 +24,11 @@
- #include <asm/mipsregs.h>
- #include <asm/stackframe.h>
- 
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/kernel-entry-init.h>
-+#else
- #include <kernel-entry-init.h>
-+#endif
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp)
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp)
+ {
+ 	struct erofs_sb_info *sbi;
+-	int err;
+-
+-	/* grp shouldn't be broken or used before */
+-	if (atomic_read(&grp->refcount) != 1) {
+-		DBG_BUGON(1);
+-		return -EINVAL;
+-	}
+-
+-	err = radix_tree_preload(GFP_NOFS);
+-	if (err)
+-		return err;
+-
+-	sbi = EROFS_SB(sb);
+-	xa_lock(&sbi->workstn_tree);
++	struct erofs_workgroup *pre;
  
  	/*
- 	 * For the moment disable interrupts, mark the kernel mode and
-diff --git a/arch/mips/loongson64/Platform b/arch/mips/loongson64/Platform
-index d5eb94c..aa0e112 100644
---- a/arch/mips/loongson64/Platform
-+++ b/arch/mips/loongson64/Platform
-@@ -56,5 +56,5 @@ cflags-y += $(call cc-option,-mno-loongson-mmi)
- #
+-	 * Bump up reference count before making this workgroup
+-	 * visible to other users in order to avoid potential UAF
+-	 * without serialized by workstn_lock.
++	 * Bump up a reference count before making this visible
++	 * to others for the XArray in order to avoid potential
++	 * UAF without serialized by xa_lock.
+ 	 */
+-	__erofs_workgroup_get(grp);
++	atomic_inc(&grp->refcount);
  
- platform-$(CONFIG_MACH_LOONGSON64) += loongson64/
--cflags-$(CONFIG_MACH_LOONGSON64) += -I$(srctree)/arch/mips/include/asm/mach-loongson64 -mno-branch-likely
-+cflags-$(CONFIG_MACH_LOONGSON64) += -I$(srctree)/arch/mips/loongson64/include -mno-branch-likely
- load-$(CONFIG_CPU_LOONGSON64) += 0xffffffff80200000
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 0daeb7b..abec737 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -15,9 +15,9 @@
-  */
- #include <linux/export.h>
- #include <asm/bootinfo.h>
--#include <loongson.h>
--#include <boot_param.h>
--#include <workarounds.h>
-+#include <mach/loongson.h>
-+#include <mach/boot_param.h>
-+#include <mach/workarounds.h>
+-	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
+-	if (err)
+-		/*
+-		 * it's safe to decrease since the workgroup isn't visible
+-		 * and refcount >= 2 (cannot be freezed).
+-		 */
+-		__erofs_workgroup_put(grp);
+-
+-	xa_unlock(&sbi->workstn_tree);
+-	radix_tree_preload_end();
+-	return err;
++	sbi = EROFS_SB(sb);
++repeat:
++	xa_lock(&sbi->managed_pslots);
++	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
++			   NULL, grp, GFP_NOFS);
++	if (pre) {
++		/* try to legitimize the current in-tree one */
++		if (erofs_workgroup_get(pre)) {
++			xa_unlock(&sbi->managed_pslots);
++			cond_resched();
++			goto repeat;
++		}
++		atomic_dec(&grp->refcount);
++		grp = pre;
++	}
++	xa_unlock(&sbi->managed_pslots);
++	return grp;
+ }
  
- u32 cpu_clock_freq;
- EXPORT_SYMBOL(cpu_clock_freq);
-diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/loongson64/include/mach/boot_param.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/boot_param.h
-rename to arch/mips/loongson64/include/mach/boot_param.h
-diff --git a/arch/mips/include/asm/mach-loongson64/cpu-feature-overrides.h b/arch/mips/loongson64/include/mach/cpu-feature-overrides.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/cpu-feature-overrides.h
-rename to arch/mips/loongson64/include/mach/cpu-feature-overrides.h
-diff --git a/arch/mips/loongson64/include/mach/ioremap.h b/arch/mips/loongson64/include/mach/ioremap.h
-new file mode 100644
-index 0000000..2369393
---- /dev/null
-+++ b/arch/mips/loongson64/include/mach/ioremap.h
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <asm/mach-generic/ioremap.h>
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/loongson64/include/mach/irq.h
-similarity index 96%
-rename from arch/mips/include/asm/mach-loongson64/irq.h
-rename to arch/mips/loongson64/include/mach/irq.h
-index 73a8991..8641e6c 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/loongson64/include/mach/irq.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_MACH_LOONGSON64_IRQ_H_
- #define __ASM_MACH_LOONGSON64_IRQ_H_
+ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
+@@ -155,7 +145,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
  
--#include <boot_param.h>
-+#include <mach/boot_param.h>
+ 	/*
+ 	 * Note that all cached pages should be unattached
+-	 * before deleted from the radix tree. Otherwise some
++	 * before deleted from the XArray. Otherwise some
+ 	 * cached pages could be still attached to the orphan
+ 	 * old workgroup when the new one is available in the tree.
+ 	 */
+@@ -169,7 +159,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 	 * however in order to avoid some race conditions, add a
+ 	 * DBG_BUGON to observe this in advance.
+ 	 */
+-	DBG_BUGON(radix_tree_delete(&sbi->workstn_tree, grp->index) != grp);
++	DBG_BUGON(xa_erase(&sbi->managed_pslots, grp->index) != grp);
  
- /* cpu core interrupt numbers */
- #define MIPS_CPU_IRQ_BASE 56
-@@ -36,5 +36,5 @@
- extern void fixup_irqs(void);
- extern void loongson3_ipi_interrupt(struct pt_regs *regs);
- 
--#include_next <irq.h>
-+#include <asm/mach-generic/irq.h>
- #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
-diff --git a/arch/mips/include/asm/mach-loongson64/kernel-entry-init.h b/arch/mips/loongson64/include/mach/kernel-entry-init.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/kernel-entry-init.h
-rename to arch/mips/loongson64/include/mach/kernel-entry-init.h
-diff --git a/arch/mips/loongson64/include/mach/kmalloc.h b/arch/mips/loongson64/include/mach/kmalloc.h
-new file mode 100644
-index 0000000..4f056db
---- /dev/null
-+++ b/arch/mips/loongson64/include/mach/kmalloc.h
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <asm/mach-generic/kmalloc.h>
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson.h b/arch/mips/loongson64/include/mach/loongson.h
-similarity index 99%
-rename from arch/mips/include/asm/mach-loongson64/loongson.h
-rename to arch/mips/loongson64/include/mach/loongson.h
-index a8fce11..fb3f172 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson.h
-+++ b/arch/mips/loongson64/include/mach/loongson.h
-@@ -10,7 +10,7 @@
- #include <linux/io.h>
- #include <linux/init.h>
- #include <linux/irq.h>
--#include <boot_param.h>
-+#include <mach/boot_param.h>
- 
- 
- /* machine-specific reboot/halt operation */
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson_hwmon.h b/arch/mips/loongson64/include/mach/loongson_hwmon.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/loongson_hwmon.h
-rename to arch/mips/loongson64/include/mach/loongson_hwmon.h
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson_regs.h b/arch/mips/loongson64/include/mach/loongson_regs.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/loongson_regs.h
-rename to arch/mips/loongson64/include/mach/loongson_regs.h
-diff --git a/arch/mips/loongson64/include/mach/mangle-port.h b/arch/mips/loongson64/include/mach/mangle-port.h
-new file mode 100644
-index 0000000..b9736e3
---- /dev/null
-+++ b/arch/mips/loongson64/include/mach/mangle-port.h
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <asm/mach-generic/mangle-port.h>
-diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h b/arch/mips/loongson64/include/mach/mc146818rtc.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/mc146818rtc.h
-rename to arch/mips/loongson64/include/mach/mc146818rtc.h
-diff --git a/arch/mips/include/asm/mach-loongson64/mmzone.h b/arch/mips/loongson64/include/mach/mmzone.h
-similarity index 96%
-rename from arch/mips/include/asm/mach-loongson64/mmzone.h
-rename to arch/mips/loongson64/include/mach/mmzone.h
-index 3a25dbd..57f7375 100644
---- a/arch/mips/include/asm/mach-loongson64/mmzone.h
-+++ b/arch/mips/loongson64/include/mach/mmzone.h
-@@ -9,7 +9,7 @@
- #ifndef _ASM_MACH_LOONGSON64_MMZONE_H
- #define _ASM_MACH_LOONGSON64_MMZONE_H
- 
--#include <boot_param.h>
-+#include <mach/boot_param.h>
- #define NODE_ADDRSPACE_SHIFT 44
- #define NODE0_ADDRSPACE_OFFSET 0x000000000000UL
- #define NODE1_ADDRSPACE_OFFSET 0x100000000000UL
-diff --git a/arch/mips/include/asm/mach-loongson64/pci.h b/arch/mips/loongson64/include/mach/pci.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/pci.h
-rename to arch/mips/loongson64/include/mach/pci.h
-diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/loongson64/include/mach/spaces.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/spaces.h
-rename to arch/mips/loongson64/include/mach/spaces.h
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/loongson64/include/mach/topology.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/topology.h
-rename to arch/mips/loongson64/include/mach/topology.h
-diff --git a/arch/mips/loongson64/include/mach/war.h b/arch/mips/loongson64/include/mach/war.h
-new file mode 100644
-index 0000000..5b0422a
---- /dev/null
-+++ b/arch/mips/loongson64/include/mach/war.h
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <asm/mach-generic/war.h>
-diff --git a/arch/mips/include/asm/mach-loongson64/workarounds.h b/arch/mips/loongson64/include/mach/workarounds.h
-similarity index 100%
-rename from arch/mips/include/asm/mach-loongson64/workarounds.h
-rename to arch/mips/loongson64/include/mach/workarounds.h
-diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-index 5ac1a0f..6df4e14 100644
---- a/arch/mips/loongson64/init.c
-+++ b/arch/mips/loongson64/init.c
-@@ -11,7 +11,7 @@
- #include <asm/cacheflush.h>
- #include <asm/fw/fw.h>
- 
--#include <loongson.h>
-+#include <mach/loongson.h>
- 
- static void __init mips_nmi_setup(void)
+ 	/*
+ 	 * If managed cache is on, last refcount should indicate
+@@ -182,22 +172,11 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 					      unsigned long nr_shrink)
  {
-diff --git a/arch/mips/loongson64/irq.c b/arch/mips/loongson64/irq.c
-index 79ad797..64c344c 100644
---- a/arch/mips/loongson64/irq.c
-+++ b/arch/mips/loongson64/irq.c
-@@ -1,6 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/loongson.h>
-+#include <mach/irq.h>
-+#else
- #include <loongson.h>
- #include <irq.h>
-+#endif
- #include <linux/interrupt.h>
- #include <linux/init.h>
+-	pgoff_t first_index = 0;
+-	void *batch[PAGEVEC_SIZE];
++	struct erofs_workgroup *grp;
+ 	unsigned int freed = 0;
++	unsigned long index;
  
-diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-index e5b40c5..719f3ce 100644
---- a/arch/mips/loongson64/numa.c
-+++ b/arch/mips/loongson64/numa.c
-@@ -24,7 +24,7 @@
- #include <asm/mc146818-time.h>
- #include <asm/time.h>
- #include <asm/wbflush.h>
--#include <boot_param.h>
-+#include <mach/boot_param.h>
+-	int i, found;
+-repeat:
+-	xa_lock(&sbi->workstn_tree);
+-
+-	found = radix_tree_gang_lookup(&sbi->workstn_tree,
+-				       batch, first_index, PAGEVEC_SIZE);
+-
+-	for (i = 0; i < found; ++i) {
+-		struct erofs_workgroup *grp = batch[i];
+-
+-		first_index = grp->index + 1;
+-
++	xa_for_each(&sbi->managed_pslots, index, grp) {
+ 		/* try to shrink each valid workgroup */
+ 		if (!erofs_try_to_release_workgroup(sbi, grp))
+ 			continue;
+@@ -206,10 +185,6 @@ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 		if (!--nr_shrink)
+ 			break;
+ 	}
+-	xa_unlock(&sbi->workstn_tree);
+-
+-	if (i && nr_shrink)
+-		goto repeat;
+ 	return freed;
+ }
  
- static struct pglist_data prealloc__node_data[MAX_NUMNODES];
- unsigned char __node_distances[MAX_NUMNODES][MAX_NUMNODES];
-diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
-index e84ae20..7011d88 100644
---- a/arch/mips/loongson64/pci.c
-+++ b/arch/mips/loongson64/pci.c
-@@ -5,9 +5,9 @@
-  */
- #include <linux/pci.h>
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 80e47f07d946..0d77a166068f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -67,16 +67,6 @@ static void z_erofs_pcluster_init_once(void *ptr)
+ 		pcl->compressed_pages[i] = NULL;
+ }
  
--#include <pci.h>
--#include <loongson.h>
--#include <boot_param.h>
-+#include <mach/pci.h>
-+#include <mach/loongson.h>
-+#include <mach/boot_param.h>
- 
- static struct resource loongson_pci_mem_resource = {
- 	.name	= "pci memory space",
-diff --git a/arch/mips/loongson64/platform.c b/arch/mips/loongson64/platform.c
-index 9674ae1..2cd8b9b 100644
---- a/arch/mips/loongson64/platform.c
-+++ b/arch/mips/loongson64/platform.c
-@@ -10,9 +10,9 @@
- #include <linux/slab.h>
- #include <linux/platform_device.h>
- #include <asm/bootinfo.h>
--#include <boot_param.h>
--#include <loongson_hwmon.h>
--#include <workarounds.h>
-+#include <mach/boot_param.h>
-+#include <mach/loongson_hwmon.h>
-+#include <mach/workarounds.h>
- 
- static int __init loongson3_platform_init(void)
+-static void z_erofs_pcluster_init_always(struct z_erofs_pcluster *pcl)
+-{
+-	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
+-
+-	atomic_set(&pcl->obj.refcount, 1);
+-
+-	DBG_BUGON(cl->nr_pages);
+-	DBG_BUGON(cl->vcnt);
+-}
+-
+ int __init z_erofs_init_zip_subsystem(void)
  {
-diff --git a/arch/mips/loongson64/pm.c b/arch/mips/loongson64/pm.c
-index 7c8556f..b05c6dd 100644
---- a/arch/mips/loongson64/pm.c
-+++ b/arch/mips/loongson64/pm.c
-@@ -12,7 +12,7 @@
- #include <asm/i8259.h>
- #include <asm/mipsregs.h>
- 
--#include <loongson.h>
-+#include <mach/loongson.h>
- 
- static unsigned int __maybe_unused cached_master_mask;	/* i8259A */
- static unsigned int __maybe_unused cached_slave_mask;
-diff --git a/arch/mips/loongson64/reset.c b/arch/mips/loongson64/reset.c
-index 88b3bd5..374ea50 100644
---- a/arch/mips/loongson64/reset.c
-+++ b/arch/mips/loongson64/reset.c
-@@ -12,8 +12,8 @@
- #include <asm/idle.h>
- #include <asm/reboot.h>
- 
--#include <loongson.h>
--#include <boot_param.h>
-+#include <mach/loongson.h>
-+#include <mach/boot_param.h>
- 
- static inline void loongson_reboot(void)
+ 	pcluster_cachep = kmem_cache_create("erofs_compress",
+@@ -341,26 +331,19 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 				     struct inode *inode,
+ 				     struct erofs_map_blocks *map)
  {
-diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
-index 4fd27f4..6fb9f9f 100644
---- a/arch/mips/loongson64/setup.c
-+++ b/arch/mips/loongson64/setup.c
-@@ -9,7 +9,7 @@
- #include <asm/wbflush.h>
- #include <asm/bootinfo.h>
+-	struct erofs_workgroup *grp;
+-	struct z_erofs_pcluster *pcl;
++	struct z_erofs_pcluster *pcl = clt->pcl;
+ 	struct z_erofs_collection *cl;
+ 	unsigned int length;
  
--#include <loongson.h>
-+#include <mach/loongson.h>
+-	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
+-	if (!grp)
+-		return -ENOENT;
+-
+-	pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	/* to avoid unexpected loop formed by corrupted images */
+ 	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
  
- static void wbflush_loongson(void)
+ 	cl = z_erofs_primarycollection(pcl);
+ 	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -368,7 +351,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	if (length & Z_EROFS_PCLUSTER_FULL_LENGTH) {
+ 		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
+ 			DBG_BUGON(1);
+-			erofs_workgroup_put(grp);
+ 			return -EFSCORRUPTED;
+ 		}
+ 	} else {
+@@ -391,7 +373,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		clt->tailpcl = NULL;
+-	clt->pcl = pcl;
+ 	clt->cl = cl;
+ 	return 0;
+ }
+@@ -402,14 +383,14 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
  {
-diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-index de8e074..573c9d4 100644
---- a/arch/mips/loongson64/smp.c
-+++ b/arch/mips/loongson64/smp.c
-@@ -17,9 +17,9 @@
- #include <asm/clock.h>
- #include <asm/tlbflush.h>
- #include <asm/cacheflush.h>
--#include <loongson.h>
--#include <loongson_regs.h>
--#include <workarounds.h>
-+#include <mach/loongson.h>
-+#include <mach/loongson_regs.h>
-+#include <mach/workarounds.h>
+ 	struct z_erofs_pcluster *pcl;
+ 	struct z_erofs_collection *cl;
+-	int err;
++	struct erofs_workgroup *grp;
  
- #include "smp.h"
+ 	/* no available workgroup, let's allocate one */
+ 	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
+ 	if (!pcl)
+ 		return -ENOMEM;
  
-diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
-index 1245f22..4f8fdf8 100644
---- a/arch/mips/loongson64/time.c
-+++ b/arch/mips/loongson64/time.c
-@@ -10,7 +10,7 @@
- #include <asm/time.h>
- #include <asm/hpet.h>
+-	z_erofs_pcluster_init_always(pcl);
++	atomic_set(&pcl->obj.refcount, 1);
+ 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
  
--#include <loongson.h>
-+#include <mach/loongson.h>
+ 	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
+@@ -429,20 +410,27 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
  
- void __init plat_time_init(void)
+ 	cl = z_erofs_primarycollection(pcl);
++
++	/* must be cleaned before freeing to slab */
++	DBG_BUGON(cl->nr_pages);
++	DBG_BUGON(cl->vcnt);
++
+ 	cl->pageofs = map->m_la & ~PAGE_MASK;
+ 
+ 	/*
+ 	 * lock all primary followed works before visible to others
+ 	 * and mutex_trylock *never* fails for a new pcluster.
+ 	 */
+-	mutex_trylock(&cl->lock);
++	DBG_BUGON(!mutex_trylock(&cl->lock));
+ 
+-	err = erofs_register_workgroup(inode->i_sb, &pcl->obj);
+-	if (err) {
++	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
++	if (grp != &pcl->obj) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
+ 		mutex_unlock(&cl->lock);
+ 		kmem_cache_free(pcluster_cachep, pcl);
+-		return -EAGAIN;
++		return -EEXIST;
+ 	}
++
+ 	/* used to check tail merging loop due to corrupted images */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		clt->tailpcl = pcl;
+@@ -456,6 +444,7 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 				   struct inode *inode,
+ 				   struct erofs_map_blocks *map)
  {
-diff --git a/arch/mips/oprofile/op_model_loongson3.c b/arch/mips/oprofile/op_model_loongson3.c
-index 436b1fc..9ca6432 100644
---- a/arch/mips/oprofile/op_model_loongson3.c
-+++ b/arch/mips/oprofile/op_model_loongson3.c
-@@ -12,8 +12,8 @@
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
- #include <linux/uaccess.h>
--#include <irq.h>
--#include <loongson.h>
-+#include <mach/irq.h>
-+#include <mach/loongson.h>
- #include "op_impl.h"
++	struct erofs_workgroup *grp;
+ 	int ret;
  
- #define LOONGSON3_PERFCNT_OVERFLOW	(1ULL << 63)
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-index 8a741c2..6c63c30 100644
---- a/arch/mips/pci/fixup-loongson3.c
-+++ b/arch/mips/pci/fixup-loongson3.c
-@@ -24,7 +24,7 @@
-  */
+ 	DBG_BUGON(clt->cl);
+@@ -469,21 +458,25 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 		return -EINVAL;
+ 	}
  
- #include <linux/pci.h>
--#include <boot_param.h>
-+#include <mach/boot_param.h>
+-repeat:
+-	ret = z_erofs_lookup_collection(clt, inode, map);
+-	if (ret == -ENOENT) {
++	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
++	if (grp) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	} else {
+ 		ret = z_erofs_register_collection(clt, inode, map);
  
- static void print_fixup_info(const struct pci_dev *pdev)
- {
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-index 2f6ad36..f40b805 100644
---- a/arch/mips/pci/ops-loongson3.c
-+++ b/arch/mips/pci/ops-loongson3.c
-@@ -5,7 +5,7 @@
+-		/* someone registered at the same time, give another try */
+-		if (ret == -EAGAIN) {
+-			cond_resched();
+-			goto repeat;
+-		}
++		if (!ret)
++			goto out;
++		if (ret != -EEXIST)
++			return ret;
+ 	}
  
- #include <asm/mips-boards/bonito64.h>
+-	if (ret)
++	ret = z_erofs_lookup_collection(clt, inode, map);
++	if (ret) {
++		erofs_workgroup_put(&clt->pcl->obj);
+ 		return ret;
++	}
  
--#include <loongson.h>
-+#include <mach/loongson.h>
- 
- #define PCI_ACCESS_READ  0
- #define PCI_ACCESS_WRITE 1
-diff --git a/drivers/gpio/gpio-loongson.c b/drivers/gpio/gpio-loongson.c
-index a421458..42dbdc9 100644
---- a/drivers/gpio/gpio-loongson.c
-+++ b/drivers/gpio/gpio-loongson.c
-@@ -17,7 +17,11 @@
- #include <linux/platform_device.h>
- #include <linux/bitops.h>
- #include <asm/types.h>
-+#ifdef CONFIG_HAVE_ARCH_HEAD_FILES
-+#include <mach/loongson.h>
-+#else
- #include <loongson.h>
-+#endif
- 
- #define STLS2F_N_GPIO		4
- #define STLS3A_N_GPIO		16
-diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-index 0d27cb7..4bb71af 100644
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -6,10 +6,10 @@
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- 
--#include <loongson.h>
--#include <boot_param.h>
--#include <loongson_hwmon.h>
--#include <loongson_regs.h>
-+#include <mach/loongson.h>
-+#include <mach/boot_param.h>
-+#include <mach/loongson_hwmon.h>
-+#include <mach/loongson_regs.h>
- 
- static int csr_temp_enable = 0;
++out:
+ 	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  clt->cl->pagevec, clt->cl->vcnt);
  
 -- 
-1.8.3.1
+2.17.1
 
