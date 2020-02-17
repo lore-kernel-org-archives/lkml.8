@@ -2,86 +2,87 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D0AC35242
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D2C35242
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DE520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581925944;
-	bh=WkTrSJpzAK3eiaSApQ9z6T6eUIIFo891pxQZAK31cBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bVX8ziAHInwOj1DgpVO9EDxBcgmMeiB4g/n568SHtOe5h8KNDMvM8tMxAmI0cE+3Z
-	 B7YYCNXqOOl9os/rZi7dR3FBeCmhXlSfOvF9NcAe9i4Dd7Y1HfQVUAz+v90pfJyau+
-	 8FtgAjBqo0CxnisKKzFI1cmQwxjdIi4Yj/GYJmI8=
+	by mail.kernel.org (Postfix) with ESMTP id AB6F22064C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 07:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgBQHwX (ORCPT
+        id S1726609AbgBQHx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 02:52:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgBQHwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 02:52:23 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00BE2064C;
-        Mon, 17 Feb 2020 07:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581925942;
-        bh=WkTrSJpzAK3eiaSApQ9z6T6eUIIFo891pxQZAK31cBY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VcpjNiN2GgZYOCVS48zBx/z1afRs4VsiAcjYT/+MFfF1vstYBh6FJzghxoWOs0vBN
-         GuohSp2aqk6a/FTZuXyGIi6lan16aZv86HePDpEDVdUzESEj+IH5+4NP/3z1RzL/A4
-         tLaez1DV3cWF43bgLYpSKfrwHClwlEAKcQ4jVbIM=
-Date:   Mon, 17 Feb 2020 15:52:16 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Cc:     s.hauer@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] ARM: imx: build v7_cpu_resume() unconditionally
-Message-ID: <20200217075216.GL7973@dragon>
-References: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
+        Mon, 17 Feb 2020 02:53:56 -0500
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:60426 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgBQHx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 02:53:56 -0500
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j3bE0-00077C-Qf; Mon, 17 Feb 2020 07:53:53 +0000
+Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
+        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j3bDy-0000Vm-LO; Mon, 17 Feb 2020 07:53:52 +0000
+Subject: Re: [PATCH] um: vector: Avoid NULL ptr deference if transport is
+ unset
+To:     Sjoerd Simons <sjoerd.simons@collabora.co.uk>,
+        linux-um@lists.infradead.org
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org
+References: <20200216213624.800463-1-sjoerd.simons@collabora.co.uk>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+Message-ID: <74c04f11-4b67-d1a7-7d05-197a229b245c@cambridgegreys.com>
+Date:   Mon, 17 Feb 2020 07:53:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200216213624.800463-1-sjoerd.simons@collabora.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 03:18:49PM +0100, Rouven Czerwinski wrote:
-> From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+On 16/02/2020 21:36, Sjoerd Simons wrote:
+> When the transport option of a vec isn't set strncmp ends up being
+> called on a NULL pointer. Better not do that.
 > 
-> This function is not only needed by the platform suspend code, but is also
-> reused as the CPU resume function when the ARM cores can be powered down
-> completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 > 
-> Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
-> that those platforms will hang on resume from cpuidle if suspend is disabled.
+> ---
 > 
-> So there are two problems:
+>   arch/um/drivers/vector_kern.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
->   - The static inline stub masks the linker error
->   - The function is not available where needed
+> diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
+> index 0ff86391f77d..ca90666c0b61 100644
+> --- a/arch/um/drivers/vector_kern.c
+> +++ b/arch/um/drivers/vector_kern.c
+> @@ -198,6 +198,9 @@ static int get_transport_options(struct arglist *def)
+>   	long parsed;
+>   	int result = 0;
+>   
+> +	if (transport == NULL)
+> +		return -EINVAL;
+> +
+>   	if (vector != NULL) {
+>   		if (kstrtoul(vector, 10, &parsed) == 0) {
+>   			if (parsed == 0) {
 > 
-> Fix both by just building the function unconditionally, when
-> CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
-> so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
-> 
-> Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-Applied, thanks.
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
