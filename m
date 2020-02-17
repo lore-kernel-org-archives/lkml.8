@@ -7,63 +7,79 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDB7C7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3226AC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C06207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0199A20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 06:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581921239;
-	bh=a7iT+Xd2qH1d2AgAUtQiwnF35749MAcOj1fuF4ST5zo=;
+	s=default; t=1581921385;
+	bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rlseIW8pj8l4GsvstUamcNLlysxqdAbxE3viEaOgYYczhg3bJSqXnVLxISZpB1oiZ
-	 amOr4nS7lnnXlf4e1gFv0k209zEE9d85Nb3iowNycJM6yq7zlV/XCs3SzdHqKIEaDm
-	 jk+DWHaAqeZx6ocT/EF8C4+65CjgNDCMvcGoNOZ8=
+	b=LmhB7TgXhYY5ZFWbz6Ma6ZJ/bMTL56i/0L6uVAt/p2LyePSKMKPje4vujKdIa3S3s
+	 KJ1585EwyhrgQKoR7y+0bA8/Wgfuo7PSPECq1Qm3NRgE8ExdVrQu8OQUzYHO4WcfIi
+	 vszc90xlFhyjeweZKYvOTV/q7Twhnu1tmAqboAXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgBQGd6 (ORCPT
+        id S1726327AbgBQGgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 01:33:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39766 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 01:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgBQGd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 01:33:58 -0500
+        id S1725855AbgBQGgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 01:36:23 -0500
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36A582072C;
-        Mon, 17 Feb 2020 06:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1729B20702;
+        Mon, 17 Feb 2020 06:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581921237;
-        bh=a7iT+Xd2qH1d2AgAUtQiwnF35749MAcOj1fuF4ST5zo=;
+        s=default; t=1581921383;
+        bh=BMMe9is2DgAIgri+7WZ9a4B8Sjfj9h9YXhUEhAstKsg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aqx0kYY4CK305vVZwVOYcUG5rzzHy/izY/p3oH+YF9jsZJVgo0EGvK5f3IWVvUMQo
-         gvJw84LRXWA0kVSWekS7TM3SG4aCc/UIQw7eec/iGs7wlArHqMUualEk56xZyfclGS
-         9FB2KWQC5ECuhIcF/zM6b9nStWKRhgKOqhnN7h4U=
-Date:   Mon, 17 Feb 2020 14:33:51 +0800
+        b=RTmpKC/hl12WkzSFTmeztlSc0NpSAbIB5OnqD67xudkgJeHI41q9afz61Ah05tBxK
+         4P1SSZKEIknhn63/MKcLnB8RzdcjwrNYu+M6UkOLeXdpjjxqzRuWeo1Wa9KpnEt8F3
+         +2KkkLItfPTZtk4oZrUyKiqA9VpMXgNjFh+bprlA=
+Date:   Mon, 17 Feb 2020 14:36:17 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, abel.vesa@nxp.com,
-        peng.fan@nxp.com, chen.fang@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH] clk: imx7ulp: Include clk-provider.h instead of clk.h
-Message-ID: <20200217063351.GB6952@dragon>
-References: <1581498584-14674-1-git-send-email-Anson.Huang@nxp.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible
+ properties
+Message-ID: <20200217063616.GC6952@dragon>
+References: <20200212104629.20272-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581498584-14674-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200212104629.20272-1-johan@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 05:09:43PM +0800, Anson Huang wrote:
-> The i.MX7ULP clock driver is provider, NOT consumer, so clk-provider.h
-> should be used instead of clk.h.
+On Wed, Feb 12, 2020 at 11:46:29AM +0100, Johan Hovold wrote:
+> The sram-node compatible properties have mistakingly combined the
+> model-specific string with the generic "mtd-ram" string.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+> "cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+> not present in any binding.
+> 
+> The physmap driver will however bind to platform devices that specify
+> "mtd-ram".
+> 
+> Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+> Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+> Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
 Applied, thanks.
