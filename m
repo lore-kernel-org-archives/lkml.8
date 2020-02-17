@@ -2,301 +2,198 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7CBC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DE2C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7635920702
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63DD20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I2w1Ccsr"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YfjZdZKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgBQK07 (ORCPT
+        id S1729279AbgBQK1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:26:59 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25570 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729100AbgBQK06 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:26:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581935217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kvztgHHdXJpn4KfypwkzWXcDhEJB7aBlhb6kVJm8K3M=;
-        b=I2w1Ccsr2FlSih/GaPUnGT3aYC9YGazIuj4m4fSEObqVr6kcI0jQ7zCk+gzj5a96n+LBfw
-        786KULRsgnkQkXkxytDf94BTo2TJekBmRBtaMuHDM1ynf8K6x4EMGAVx/kWWYO/vl50TPQ
-        tnRmQ3C0RtlejqRDefMfcQgOR8bIlQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-jB-rg9oTM0ucKan7Xs5aiw-1; Mon, 17 Feb 2020 05:26:55 -0500
-X-MC-Unique: jB-rg9oTM0ucKan7Xs5aiw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB147DBBC;
-        Mon, 17 Feb 2020 10:26:52 +0000 (UTC)
-Received: from lacos-laptop-7.usersys.redhat.com (ovpn-116-195.ams2.redhat.com [10.36.116.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 943D6867F9;
-        Mon, 17 Feb 2020 10:26:49 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] efi/libstub: Add support for loading the initrd
- from a device path
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leif Lindholm <leif@nuviainc.com>,
-        Peter Jones <pjones@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Alexander Graf <agraf@csgraf.de>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20200216141104.21477-1-ardb@kernel.org>
- <20200216141104.21477-3-ardb@kernel.org>
- <4e427366-4141-e360-b1da-c5cb37f8092b@redhat.com>
- <CAKv+Gu8h17EdfEW_DDE9S_drLTJ3e3pVzJG29uij5DoGGMXpxA@mail.gmail.com>
- <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
-From:   Laszlo Ersek <lersek@redhat.com>
-Message-ID: <b4eb9c01-b395-15de-cb4e-f1d4a539d9f7@redhat.com>
-Date:   Mon, 17 Feb 2020 11:26:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 17 Feb 2020 05:27:03 -0500
+Received: from mail-bn7nam10on2041.outbound.protection.outlook.com ([40.107.92.41]:6258
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729266AbgBQK1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:27:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lV/q8tLky8O/GpNfdQCqkSzEgvoz1+PN7zGjZhfcG2FuYtmvfSFNbu21W8e9SwJcy2Ry04EdklUi8/1wKmXs3f7mdsXrPjVNVU2889P+9kX0/c1f3BWRhsp2rz0YVhzf8kXMxFqP1gE4KliRYisL4E6W5w64hbNVFXLFmRYSQbyHPvnVqpe49srvKDTrHmsuXdhBys9hR0+NS3U7HBiYiIgKA3GI54+AMWcX0CAGEYzHJjof288FHUc1lCy4XplGtfGgnidr11kT3D0lWZIQAbyR9Pe6RlznpslTkR5eyIxiTr/tDhhkhr1E267yyUKBZ0rM4dicyEosOXSGhiJMaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ejiPFd1Q8s8XZ1RtNIDxLSdWKvHnL0I5ACJ8w0vYY0=;
+ b=TTy6/IKeTZVnhvg6psJdcK7qpufBOnyDy9Flb2aekUxnuJi2e6+9D35x3C8m0SENYB2ptdlCnD9rD7kbWgMCT2KyUEAt4Pt3aSyuNgqd8Sdb9hVTg8Y5k0h1RQUYvP20SbbL5y8LPDdwSwrXRiiDjatHm9SUYBHuGdGK2oJ96AcZAoPITFKElPTQzeZoVBxsYam8IUewRP/akodUCJfxfW3c+DiCmuknnlFn2kR5hLQAnq5EqcuBMgzPsJ6Qe2xxggZV2CAK6zEloeLLp9sQDH0IEtmUCLhSoRNwVGtNWXtAbM8T2DobNO3bKRaTnMg7pfV9vJpIPPoxVPVvRDKrRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ejiPFd1Q8s8XZ1RtNIDxLSdWKvHnL0I5ACJ8w0vYY0=;
+ b=YfjZdZKklX57jF+wJNn9pLXdzc/Jm6CQdR6ufZBKhJzf349Jyu3RnFhXPcZWjd2OFd3X/zvwLyMwfVyLBAsFDTCtUFQkl15Kl1vX+b1oWgeH5ilQoU4vidjfYVc1O2LWBx2C4e1Ofbed08XqI9WaxYrRQRnD5Tjut64+GuTkSDg=
+Received: from CY4PR02CA0042.namprd02.prod.outlook.com (2603:10b6:903:117::28)
+ by BYAPR02MB5894.namprd02.prod.outlook.com (2603:10b6:a03:121::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Mon, 17 Feb
+ 2020 10:26:59 +0000
+Received: from SN1NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by CY4PR02CA0042.outlook.office365.com
+ (2603:10b6:903:117::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+ Transport; Mon, 17 Feb 2020 10:26:59 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT016.mail.protection.outlook.com (10.152.72.113) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Mon, 17 Feb 2020 10:26:59 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1j3dcA-0007nT-R0; Mon, 17 Feb 2020 02:26:58 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <kalyani.akula@xilinx.com>)
+        id 1j3dc5-0002oV-Np; Mon, 17 Feb 2020 02:26:53 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HAQlr0014398;
+        Mon, 17 Feb 2020 02:26:47 -0800
+Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <kalyania@xilinx.com>)
+        id 1j3dby-0002nK-S7; Mon, 17 Feb 2020 02:26:47 -0800
+Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
+        id 16AF58133F; Mon, 17 Feb 2020 15:56:46 +0530 (IST)
+From:   Kalyani Akula <kalyani.akula@xilinx.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kalyani Akula <kalyania@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        git-dev@xilinx.com,
+        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Michal Simek <michals@xilinx.com>,
+        Kalyani Akula <kalyani.akula@xilinx.com>
+Subject: [PATCH V7 0/4] Add Xilinx's ZynqMP AES-GCM driver support
+Date:   Mon, 17 Feb 2020 15:56:40 +0530
+Message-Id: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
+X-Mailer: git-send-email 1.9.5
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(189003)(199004)(966005)(36756003)(6266002)(478600001)(2906002)(70206006)(356004)(4326008)(107886003)(8676002)(8936002)(54906003)(44832011)(316002)(70586007)(336012)(81166006)(186003)(81156014)(42186006)(2616005)(426003)(5660300002)(26005)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5894;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <CAKv+Gu8LEBFiXOXWv6nbKFpKvT8whaLr3-DkcHSNzW3BRTi8iQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 380d2705-d802-43b3-c873-08d7b393ebd1
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5894:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB589453090FE7EFA8E027F62EAF160@BYAPR02MB5894.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-Forefront-PRVS: 0316567485
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kOACV/rN9vdbmVSp0X7LJ+ZcHwn4IYvIFrJ0uDdfwLbubAxHX9bRpTN1jgMP6nGp5lA18H7Kod8nxU/wnjLjT6fIdrtRHzicD00bGASkvFADoZdsGcTMURp3CvWNgI3EeuxSB+xlt2Wi1rkTg0pex4pMeWlKmMIG9HX+tG7LKlc2KVQBZqmX0SuLcJqKiYb2jaDzeIJwCujTfVP1MkuF9Ug997Lu0lA32wn20FAfoSpLqlBMfxEE0a0QqPU1ncg5kQlasHqHSGHIXS4XR2mhodYmNGbNTrfhvc3kr4gD+0tiNhSe7DVSP3P6yX5j/Wu0b+i2YwNztAylspXxG1t910ASwciiAZUgIsfDxqJmaKha7ZAvZ9UPFz9HJGW2iuD7U5fqxk3EzJOx8zJFIEBpZWopkj5gIXSbmYWjms22WfT0Ed2MD7NucjYa9ghvqKMyEAO30jtnvMu4UyE0bGFvinul8CoiL/eZdo8QbWZnYnq2wp0AgCwky0ua5FuT1FFCtu4jQiPyzZyLUctI64ibpg==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:26:59.2701
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 380d2705-d802-43b3-c873-08d7b393ebd1
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5894
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 11:22, Ard Biesheuvel wrote:
-> On Mon, 17 Feb 2020 at 10:23, Ard Biesheuvel <ardb@kernel.org> wrote:
->>
->> On Mon, 17 Feb 2020 at 10:15, Laszlo Ersek <lersek@redhat.com> wrote:
->>>
->>> On 02/16/20 15:11, Ard Biesheuvel wrote:
->>>> There are currently two ways to specify the initrd to be passed to the
->>>> Linux kernel when booting via the EFI stub:
->>>> - it can be passed as a initrd= command line option when doing a pure PE
->>>>   boot (as opposed to the EFI handover protocol that exists for x86)
->>>> - otherwise, the bootloader or firmware can load the initrd into memory,
->>>>   and pass the address and size via the bootparams struct (x86) or
->>>>   device tree (ARM)
->>>>
->>>> In the first case, we are limited to loading from the same file system
->>>> that the kernel was loaded from, and it is also problematic in a trusted
->>>> boot context, given that we cannot easily protect the command line from
->>>> tampering without either adding complicated white/blacklisting of boot
->>>> arguments or locking down the command line altogether.
->>>>
->>>> In the second case, we force the bootloader to duplicate knowledge about
->>>> the boot protocol which is already encoded in the stub, and which may be
->>>> subject to change over time, e.g., bootparams struct definitions, memory
->>>> allocation/alignment requirements for the placement of the initrd etc etc.
->>>> In the ARM case, it also requires the bootloader to modify the hardware
->>>> description provided by the firmware, as it is passed in the same file.
->>>> On systems where the initrd is measured after loading, it creates a time
->>>> window where the initrd contents might be manipulated in memory before
->>>> handing over to the kernel.
->>>>
->>>> Address these concerns by adding support for loading the initrd into
->>>> memory by invoking the EFI LoadFile2 protocol installed on a vendor
->>>> GUIDed device path that specifically designates a Linux initrd.
->>>> This addresses the above concerns, by putting the EFI stub in charge of
->>>> placement in memory and of passing the base and size to the kernel proper
->>>> (via whatever means it desires) while still leaving it up to the firmware
->>>> or bootloader to obtain the file contents, potentially from other file
->>>> systems than the one the kernel itself was loaded from. On platforms that
->>>> implement measured boot, it permits the firmware to take the measurement
->>>> right before the kernel actually consumes the contents.
->>>>
->>>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->>>> ---
->>>>  drivers/firmware/efi/libstub/arm-stub.c        | 15 +++-
->>>>  drivers/firmware/efi/libstub/efi-stub-helper.c | 82 ++++++++++++++++++++
->>>>  drivers/firmware/efi/libstub/efistub.h         |  4 +
->>>>  drivers/firmware/efi/libstub/x86-stub.c        | 23 ++++++
->>>>  include/linux/efi.h                            |  1 +
->>>>  5 files changed, 122 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
->>>> index 2edc673ea06c..4bae620b95b9 100644
->>>> --- a/drivers/firmware/efi/libstub/arm-stub.c
->>>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
->>>> @@ -160,6 +160,7 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
->>>>       enum efi_secureboot_mode secure_boot;
->>>>       struct screen_info *si;
->>>>       efi_properties_table_t *prop_tbl;
->>>> +     unsigned long max_addr;
->>>>
->>>>       sys_table = sys_table_arg;
->>>>
->>>> @@ -258,10 +259,18 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table_arg,
->>>>       if (!fdt_addr)
->>>>               pr_efi("Generating empty DTB\n");
->>>>
->>>> -     status = efi_load_initrd(image, &initrd_addr, &initrd_size, ULONG_MAX,
->>>> -                              efi_get_max_initrd_addr(dram_base, *image_addr));
->>>> +     max_addr = efi_get_max_initrd_addr(dram_base, *image_addr);
->>>> +     status = efi_load_initrd_dev_path(&initrd_addr, &initrd_size, max_addr);
->>>> +     if (status == EFI_SUCCESS) {
->>>> +             pr_efi("Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path\n");
->>>> +     } else if (status == EFI_NOT_FOUND) {
->>>> +             status = efi_load_initrd(image, &initrd_addr, &initrd_size,
->>>> +                                      ULONG_MAX, max_addr);
->>>> +             if (status == EFI_SUCCESS)
->>>> +                     pr_efi("Loaded initrd from command line option\n");
->>>> +     }
->>>>       if (status != EFI_SUCCESS)
->>>> -             pr_efi_err("Failed initrd from command line!\n");
->>>> +             pr_efi_err("Failed to load initrd!\n");
->>>>
->>>>       efi_random_get_seed();
->>>>
->>>> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
->>>> index 49008ac88b63..e37afe2c752e 100644
->>>> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
->>>> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
->>>> @@ -299,3 +299,85 @@ void efi_char16_printk(efi_char16_t *str)
->>>>       efi_call_proto(efi_table_attr(efi_system_table(), con_out),
->>>>                      output_string, str);
->>>>  }
->>>> +
->>>> +/*
->>>> + * The LINUX_EFI_INITRD_MEDIA_GUID vendor media device path below provides a way
->>>> + * for the firmware or bootloader to expose the initrd data directly to the stub
->>>> + * via the trivial LoadFile2 protocol, which is defined in the UEFI spec, and is
->>>> + * very easy to implement. It is a simple Linux initrd specific conduit between
->>>> + * kernel and firmware, allowing us to put the EFI stub (being part of the
->>>> + * kernel) in charge of where and when to load the initrd, while leaving it up
->>>> + * to the firmware to decide whether it needs to expose its filesystem hierarchy
->>>> + * via EFI protocols.
->>>> + */
->>>> +static const struct {
->>>> +     struct efi_vendor_dev_path      vendor;
->>>> +     struct efi_generic_dev_path     end;
->>>> +} __packed initrd_dev_path = {
->>>> +     {
->>>> +             EFI_DEV_MEDIA,
->>>> +             EFI_DEV_MEDIA_VENDOR,
->>>> +             sizeof(struct efi_vendor_dev_path),
->>>> +             LINUX_EFI_INITRD_MEDIA_GUID
->>>> +     }, {
->>>> +             EFI_DEV_END_PATH,
->>>> +             EFI_DEV_END_ENTIRE,
->>>> +             sizeof(struct efi_generic_dev_path)
->>>> +     }
->>>> +};
->>>> +
->>>> +/**
->>>> + * efi_load_initrd_dev_path - load the initrd from the Linux initrd device path
->>>> + * @load_addr:       pointer to store the address where the initrd was loaded
->>>> + * @load_size:       pointer to store the size of the loaded initrd
->>>> + * @max:     upper limit for the initrd memory allocation
->>>> + * @return:  %EFI_SUCCESS if the initrd was loaded successfully, in which case
->>>> + *           @load_addr and @load_size are assigned accordingly
->>>> + *           %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
->>>> + *           device path
->>>> + *           %EFI_LOAD_ERROR in all other cases
->>>
->>> [*]
->>>
->>>> + */
->>>> +efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
->>>> +                                   unsigned long *load_size,
->>>> +                                   unsigned long max)
->>>> +{
->>>> +     efi_guid_t lf2_proto_guid = EFI_LOAD_FILE2_PROTOCOL_GUID;
->>>> +     efi_device_path_protocol_t *dp;
->>>> +     efi_load_file2_protocol_t *lf2;
->>>> +     unsigned long initrd_addr;
->>>> +     unsigned long initrd_size;
->>>> +     efi_handle_t handle;
->>>> +     efi_status_t status;
->>>> +
->>>> +     if (!load_addr || !load_size)
->>>> +             return EFI_INVALID_PARAMETER;
->>>
->>> Doesn't return EFI_LOAD_ERROR.
->>>
->>>> +
->>>> +     dp = (efi_device_path_protocol_t *)&initrd_dev_path;
->>>> +     status = efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle);
->>>> +     if (status != EFI_SUCCESS)
->>>> +             return status;
->>>
->>> Seems safe (the only plausible error could be EFI_NOT_FOUND).
->>>
->>>> +
->>>> +     status = efi_bs_call(handle_protocol, handle, &lf2_proto_guid,
->>>> +                          (void **)&lf2);
->>>> +     if (status != EFI_SUCCESS)
->>>> +             return status;
->>>
->>> Interesting case; this should never fail... but note, if it does, it
->>> returns EFI_UNSUPPORTED, not EFI_NOT_FOUND (if the protocol is missing
->>> from the handle).
->>>
->>>> +
->>>> +     status = efi_call_proto(lf2, load_file, dp, false, &initrd_size, NULL);
->>>> +     if (status != EFI_BUFFER_TOO_SMALL)
->>>> +             return EFI_LOAD_ERROR;
->>>> +
->>>> +     status = efi_allocate_pages(initrd_size, &initrd_addr, max);
->>>> +     if (status != EFI_SUCCESS)
->>>> +             return status;
->>>
->>> Not sure about the efi_allocate_pages() wrapper (?); the UEFI service
->>> could return EFI_OUT_OF_RESOURCES.
->>>
->>
->> Hmm, guess I was a bit sloppy with the return codes. The important
->> thing is that EFI_NOT_FOUND is only returned in the one specifically
->> defined case.
->>
-> 
-> For the record [in case no respin+resend is needed for other reasons],
-> I intend to update the comment block as below, and keep the code as
-> is:
-> 
-> 
->   * @load_addr: pointer to store the address where the initrd was loaded
->   * @load_size: pointer to store the size of the loaded initrd
->   * @max:       upper limit for the initrd memory allocation
-> - * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in
-> which case
-> - *             @load_addr and @load_size are assigned accordingly
-> - *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
-> - *             device path
-> + * @return:    %EFI_SUCCESS if the initrd was loaded successfully, in which
-> + *             case @load_addr and @load_size are assigned accordingly
-> + *             %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
-> + *             device path
-> + *             %EFI_INVALID_PARAMETER if load_addr == NULL or load_size == NULL
-> + *             %EFI_OUT_OF_RESOURCES if memory allocation failed
->   *             %EFI_LOAD_ERROR in all other cases
-> 
+This patch set adds support for
+- dt-binding docs for Xilinx ZynqMP AES driver
+- Adds device tree node for ZynqMP AES driver
+- Adds communication layer support for aes in zynqmp.c
+- Adds Xilinx ZynqMP driver for AES Algorithm
 
-Right, I agree that updating the comments suffices for consistency; the
-code is not wrong, only the comments and the code don't match.
+NOTE: This patchset is based on Michal's branch
+https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=arm/drivers
+because of possible merge conflict for 1/4 patch with below commit
+commit 461011b1e1ab ("drivers: firmware: xilinx: Add support for feature check")
 
-So with that
+V7 Changes:
+- Rebased this patchset on Cryptodev-2.6 tree and fixed compilation
+ issue seen. The issue is seen due to the below
+ commit af5034e8e4a5("crypto: remove propagation of CRYPTO_TFM_RES_* flags")
 
-Acked-by: Laszlo Ersek <lersek@redhat.com>
+V6 Changes:
+- Updated SPDX-License-Identifier in xlnx,zynqmp-aes.yaml.
+
+V5 Changes :
+- Moved arm64: zynqmp: Add Xilinx AES node from 2/4 to 4/4.
+- Moved crypto: Add Xilinx AES driver patch from 4/4 to 3/4.
+- Moved dt-bindings patch from 1/4 to 2/4
+- Moved firmware: xilinx: Add ZynqMP aes API for AES patch from 3/4 to 1/4
+- Converted dt-bindings from .txt to .yaml format.
+- Corrected typo in the subject.
+- Updated zynqmp-aes node to correct location.
+- Replaced ARCH_ZYNQMP with ZYNQMP_FIRMWARE in Kconfig
+- Removed extra new lines and added wherever necessary. 
+- Updated Signed-off-by sequence.
+- Ran checkpatch for all patches in the series.
+
+V4 Changes :
+- Addressed review comments.
+
+V3 Changes :
+- Added software fallback in cases where Hardware doesn't have
+  the capability to handle the request.
+- Removed use of global variable for storing the driver data.
+- Enabled CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y and executed all
+  the kernel selftests. Also covered tests with tcrypt module.
+
+V2 Changes :
+- Converted RFC PATCH to PATCH
+- Removed ALG_SET_KEY_TYPE that was added to support keytype
+  attribute. Taken using setkey interface.
+- Removed deprecated BLKCIPHER in Kconfig
+- Erased Key/IV from the buffer.
+- Renamed zynqmp-aes driver to zynqmp-aes-gcm.
+- Addressed few other review comments
 
 
-Thanks!
-Laszlo
+Kalyani Akula (4):
+  firmware: xilinx: Add ZynqMP aes API for AES functionality
+  dt-bindings: crypto: Add bindings for ZynqMP AES-GCM driver
+  crypto: Add Xilinx AES driver
+  arm64: zynqmp: Add Xilinx AES node.
+
+ .../bindings/crypto/xlnx,zynqmp-aes.yaml           |  37 ++
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   4 +
+ drivers/crypto/Kconfig                             |  12 +
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/xilinx/Makefile                     |   2 +
+ drivers/crypto/xilinx/zynqmp-aes-gcm.c             | 457 +++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c                   |  25 ++
+ include/linux/firmware/xlnx-zynqmp.h               |   2 +
+ 8 files changed, 540 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml
+ create mode 100644 drivers/crypto/xilinx/Makefile
+ create mode 100644 drivers/crypto/xilinx/zynqmp-aes-gcm.c
+
+-- 
+1.9.5
 
