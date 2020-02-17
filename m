@@ -2,72 +2,109 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B52C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DB3C34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135C7206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FC8206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgBQPyI (ORCPT
+        id S1729595AbgBQPyI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 17 Feb 2020 10:54:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60092 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729541AbgBQPyH (ORCPT
+Received: from skedge04.snt-world.com ([91.208.41.69]:35036 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729555AbgBQPyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:54:07 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j3iig-0000cX-MB; Mon, 17 Feb 2020 16:54:02 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 48519103A00; Mon, 17 Feb 2020 16:54:02 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Jan Kratochvil <jan.kratochvil@redhat.com>,
-        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v2 0/4] x86: fix get_nr_restart_syscall()
-In-Reply-To: <CALCETrWJ8PLbxvX6yuP7Q3kz_=dZinacUd-3-OqUkZNSMCE34g@mail.gmail.com>
-References: <20191126110659.GA14042@redhat.com> <20191203141239.GA30688@redhat.com> <20191218151904.GA3127@redhat.com> <CAHk-=whNhwFigBDSnyrfJYxr-uAe6PHiWTcHcZzPW+vZ3eWAXw@mail.gmail.com> <CALCETrWJ8PLbxvX6yuP7Q3kz_=dZinacUd-3-OqUkZNSMCE34g@mail.gmail.com>
-Date:   Mon, 17 Feb 2020 16:54:02 +0100
-Message-ID: <87v9o5nrad.fsf@nanos.tec.linutronix.de>
+        Mon, 17 Feb 2020 10:54:08 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id DCB4B67A885;
+        Mon, 17 Feb 2020 16:54:02 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 17 Feb
+ 2020 16:54:02 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.005; Mon, 17 Feb 2020 16:54:02 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "Richard Weinberger" <richard@nod.at>
+Subject: [PATCH v2 2/3] mtd: spinand: Explicitly use MTD_OPS_RAW to write the
+ bad block marker to OOB
+Thread-Topic: [PATCH v2 2/3] mtd: spinand: Explicitly use MTD_OPS_RAW to write
+ the bad block marker to OOB
+Thread-Index: AQHV5ap5q7QUxB5UN0aFtKTOSCCO3Q==
+Date:   Mon, 17 Feb 2020 15:54:02 +0000
+Message-ID: <20200217155213.5594-3-frieder.schrempf@kontron.de>
+References: <20200217155213.5594-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20200217155213.5594-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: DCB4B67A885.AFDEC
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: bbrezillon@kernel.org, git-commits@allycomm.com,
+        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        richard@nod.at
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-> On Wed, Dec 18, 2019 at 12:02 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> On Wed, Dec 18, 2019 at 7:19 AM Oleg Nesterov <oleg@redhat.com> wrote:
->> >
->> > Andy, Linus, do you have any objections?
->>
->> It's ok by me, no objections. I still don't love your "hide the bit in
->> thread flags over return to user space", and would still prefer it in
->> the restart block, but I don't care _that_ deeply.
->>
->
-> I'd rather stick it in restart_block.  I'd also like to see the kernel
-> *verify* that the variant of restart_syscall() that's invoked is the
-> same as the variant that should be invoked.  In my mind, very few
-> syscalls say "I can't believe there are no major bugs in here" like
-> restart_syscall(), and being conservative is nice.
+When writing the bad block marker to the OOB area the access mode
+should be set to MTD_OPS_RAW as it is done for reading the marker.
+Currently this only works because req.mode is initialized to
+MTD_OPS_PLACE_OOB (0) and spinand_write_to_cache_op() checks for
+req.mode != MTD_OPS_AUTO_OOB.
 
-Just mopping up my backlog. What happened to this?
+Fix this by explicitly setting req.mode to MTD_OPS_RAW.
+
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+Changes in v2:
+ * Add Boris' R-b tag
+---
+ drivers/mtd/nand/spi/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index de36cd7a5d7e..a94287884453 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -609,6 +609,7 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ 		.ooboffs = 0,
+ 		.ooblen = sizeof(marker),
+ 		.oobbuf.out = marker,
++		.mode = MTD_OPS_RAW,
+ 	};
+ 	int ret;
+ 
+-- 
+2.17.1
