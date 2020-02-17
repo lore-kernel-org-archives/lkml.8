@@ -2,95 +2,109 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E04CC7619D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574C5C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F127620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Rg1DywqL"
+	by mail.kernel.org (Postfix) with ESMTP id 34EE020718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBQIzr (ORCPT
+        id S1728641AbgBQI5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:55:47 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:23678 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbgBQIzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:55:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581929745;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=eH23xUz7bTdqA4S1ozloDBOylhj7VC8PtsgSktH+a/w=;
-        b=Rg1DywqLaTkF5MjthtqqPkFas5Z4ZTN6aErgcIQpEApfugfp5BzRd0CBjhBfudEF63
-        Usy4Nul+mFTxWPXQDKHIDR023lxxPZg5qBuJdeFPXdkUvx1rqP88Mygv/yF24+4cFTmZ
-        R0UZ5J5P4HkPJCya9oeiVh/ieRYRfAtA9ekAMErpAmGQrTRyY3rYLdkmWRHYd3xy55q+
-        GvPO/Rr3LvtVLSUr/3Ek3AmwZkr1LqIlsn9fsOKppA+6rMbXLvj6eDhrFuBsKDkld00x
-        wm8DD8UMuK1nsE+8Y/2IrN/ytjM8ul67D6NCE362aD0iPER17bupDgT1SnF1oRzTe3/d
-        /nMA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXL8GTnsvhg="
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1H8tgLO9
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 17 Feb 2020 09:55:42 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
-Date:   Mon, 17 Feb 2020 09:55:42 +0100
-Message-Id: <f65ad0ef2866e7d5b6743e13579c1efe8c572b4f.1581929741.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 17 Feb 2020 03:57:20 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24856 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728627AbgBQI5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:57:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:57:19 -0800
+X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
+   d="scan'208";a="228351206"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.218]) ([10.249.168.218])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 Feb 2020 00:57:15 -0800
+Subject: Re: [PATCH] KVM: VMX: Add VMX_FEATURE_USR_WAIT_PAUSE
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200216104858.109955-1-xiaoyao.li@intel.com>
+ <87r1ytbnor.fsf@vitty.brq.redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <bb0302e1-c946-2695-8468-d08c3b146b76@intel.com>
+Date:   Mon, 17 Feb 2020 16:57:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87r1ytbnor.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the gpios are probed after this driver (e.g. if they
-come from an i2c expander) there is no need to print an
-error message.
+On 2/17/2020 4:52 PM, Vitaly Kuznetsov wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> 
+>> Commit 159348784ff0 ("x86/vmx: Introduce VMX_FEATURES_*") missed
+>> bit 26 (enable user wait and pause) of Secondary Processor-based
+>> VM-Execution Controls.
+>>
+>> Add VMX_FEATURE_USR_WAIT_PAUSE flag and use it to define
+>> SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE to make them uniformly.
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/include/asm/vmx.h         | 2 +-
+>>   arch/x86/include/asm/vmxfeatures.h | 1 +
+>>   2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+>> index 2a85287b3685..8521af3fef27 100644
+>> --- a/arch/x86/include/asm/vmx.h
+>> +++ b/arch/x86/include/asm/vmx.h
+>> @@ -72,7 +72,7 @@
+>>   #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
+>>   #define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
+>>   #define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
+>> -#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
+>> +#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	VMCS_CONTROL_BIT(USR_WAIT_PAUSE)
+>>   
+>>   #define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
+>>   #define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
+>> diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
+>> index a50e4a0de315..1408f526bd90 100644
+>> --- a/arch/x86/include/asm/vmxfeatures.h
+>> +++ b/arch/x86/include/asm/vmxfeatures.h
+>> @@ -81,6 +81,7 @@
+>>   #define VMX_FEATURE_MODE_BASED_EPT_EXEC	( 2*32+ 22) /* "ept_mode_based_exec" Enable separate EPT EXEC bits for supervisor vs. user */
+>>   #define VMX_FEATURE_PT_USE_GPA		( 2*32+ 24) /* "" Processor Trace logs GPAs */
+>>   #define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
+>> +#define VMX_FEATURE_USR_WAIT_PAUSE	( 2*32+ 26) /* "" Enable TPAUSE, UMONITOR, UMWATI in guest */
+> 
+> "UMWAIT"
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/extcon/extcon-palmas.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+What an uncareful typo. Thanks!
 
-diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-index edc5016f46f1..9c6254c0531c 100644
---- a/drivers/extcon/extcon-palmas.c
-+++ b/drivers/extcon/extcon-palmas.c
-@@ -206,14 +206,16 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
- 							GPIOD_IN);
- 	if (IS_ERR(palmas_usb->id_gpiod)) {
--		dev_err(&pdev->dev, "failed to get id gpio\n");
-+		if (PTR_ERR(palmas_usb->id_gpiod) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to get id gpio\n");
- 		return PTR_ERR(palmas_usb->id_gpiod);
- 	}
- 
- 	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
- 							GPIOD_IN);
- 	if (IS_ERR(palmas_usb->vbus_gpiod)) {
--		dev_err(&pdev->dev, "failed to get vbus gpio\n");
-+		if (PTR_ERR(palmas_usb->vbus_gpiod) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to get vbus gpio\n");
- 		return PTR_ERR(palmas_usb->vbus_gpiod);
- 	}
- 
--- 
-2.23.0
+>>   #define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
+>>   
+>>   #endif /* _ASM_X86_VMXFEATURES_H */
+> 
+> With the typo fixed (likely upon commit),
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
 
