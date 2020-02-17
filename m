@@ -2,152 +2,94 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25956C34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BFAC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0251D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CDB206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="w5VjHmzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgBQNxL (ORCPT
+        id S1728778AbgBQNx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:53:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:36092 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbgBQNxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:53:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC24430E;
-        Mon, 17 Feb 2020 05:53:10 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C5903F703;
-        Mon, 17 Feb 2020 05:53:09 -0800 (PST)
-Date:   Mon, 17 Feb 2020 13:53:07 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
-Message-ID: <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-4-qais.yousef@arm.com>
- <20200217092329.GC28029@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200217092329.GC28029@codeaurora.org>
-User-Agent: NeoMutt/20171215
+        Mon, 17 Feb 2020 08:53:27 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52982 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbgBQNx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 08:53:26 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so17235079wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:53:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=PI0LvpGjO/OZvCQU1PxswC2EPMei884/nsAkhdkaeP8=;
+        b=w5VjHmzvIVp/HsTMrnc9z5s2CtLUjUztbi2kHK96i4oWzwnIcHTP+GtIBtBQuzpl9Z
+         cHu9MWaFp5qHlb8kvQ4/DWJEH5/ae4IjXLtSOQ4d3aWf6XlAHs7VZCA/X1WGMKrxRIke
+         C/2tHs+TtOyiPtB6ebp9jT2B4ob1Qzc16UUd75HXx5cW5XhDZ5F/y+0lieIgjHAYu6tT
+         bGoFdaetxAV2vCp7/kz3sVG+/nurOi1uhP2inSsg76f5uw7QT0Aoy+iDHkbOGMi6dpgS
+         7dmtKchlMlSX2v0/4oS5hqVVSNLwOYUsHlLB0R8Pp6lVxQpiEVTTl9UNhE0eyZbWVYRE
+         dbew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PI0LvpGjO/OZvCQU1PxswC2EPMei884/nsAkhdkaeP8=;
+        b=dkqiNjrOsFx6HJQAIZnl3sGyKC6tySeMuET4pC49pGWNScfo4jzJelDhMAxRuQVyWG
+         WbqnuyqOG6gd+ivH17SJ96yLAY9zTyqlEXlYk0WAuGgwSZY/Myka5yU7Ak8J6RcPbTT2
+         3kGY0C1XmyzxXaUToMhc4QqxuyAGQZ7Cm3myV3+nZioNlwcWd9IQz79rZccTaFJmm1Rj
+         vvgQuTqT1H7cslDv581pQ1TpYkcQxHzg+MA6M6kZRf/ibuHBptqQHqFNfk4wwM3gbixX
+         XV6QRW7NJtSgC1F6NUyuUuqa/zPZZBUeG2omKb2iXLxqKc+Da9YyWUgCLaVwA8gQ32p4
+         wLTA==
+X-Gm-Message-State: APjAAAWlrOZRXSlxGqjKmCSiqEz1qBGpb+Z8wdhJIQJJ50RhRfgYVwld
+        wAdtyGSJ1B49bdRExiTvZKabbA==
+X-Google-Smtp-Source: APXvYqyFEEWXOUljD2Qt5ltg3BSPgA/LaJUjjNfVWfAHFDf2JNWYuLuHTbsUCcGPvL1qQzYV+3TzoA==
+X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr22664934wmi.89.1581947605445;
+        Mon, 17 Feb 2020 05:53:25 -0800 (PST)
+Received: from khouloud-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id o4sm1131010wrx.25.2020.02.17.05.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 05:53:25 -0800 (PST)
+From:   Khouloud Touil <ktouil@baylibre.com>
+To:     srinivas.kandagatla@linaro.org, bgolaszewski@baylibre.com
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        geert@linux-m68k.org, baylibre-upstreaming@groups.io,
+        Khouloud Touil <ktouil@baylibre.com>
+Subject: [PATCH] nvmem: release the write-protect pin
+Date:   Mon, 17 Feb 2020 14:52:45 +0100
+Message-Id: <20200217135245.29195-1-ktouil@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 14:53, Pavan Kondeti wrote:
-> Hi Qais,
-> 
-> On Fri, Feb 14, 2020 at 04:39:49PM +0000, Qais Yousef wrote:
-> 
-> [...]
-> 
-> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > index 0c8bac134d3a..5ea235f2cfe8 100644
-> > --- a/kernel/sched/rt.c
-> > +++ b/kernel/sched/rt.c
-> > @@ -1430,7 +1430,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
-> >  {
-> >  	struct task_struct *curr;
-> >  	struct rq *rq;
-> > -	bool test;
-> > +	bool test, fit;
-> >  
-> >  	/* For anything but wake ups, just return the task_cpu */
-> >  	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
-> > @@ -1471,16 +1471,32 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
-> >  	       unlikely(rt_task(curr)) &&
-> >  	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
-> >  
-> > -	if (test || !rt_task_fits_capacity(p, cpu)) {
-> > +	fit = rt_task_fits_capacity(p, cpu);
-> > +
-> > +	if (test || !fit) {
-> >  		int target = find_lowest_rq(p);
-> >  
-> > -		/*
-> > -		 * Don't bother moving it if the destination CPU is
-> > -		 * not running a lower priority task.
-> > -		 */
-> > -		if (target != -1 &&
-> > -		    p->prio < cpu_rq(target)->rt.highest_prio.curr)
-> > -			cpu = target;
-> > +		if (target != -1) {
-> > +			/*
-> > +			 * Don't bother moving it if the destination CPU is
-> > +			 * not running a lower priority task.
-> > +			 */
-> > +			if (p->prio < cpu_rq(target)->rt.highest_prio.curr) {
-> > +
-> > +				cpu = target;
-> > +
-> > +			} else if (p->prio == cpu_rq(target)->rt.highest_prio.curr) {
-> > +
-> > +				/*
-> > +				 * If the priority is the same and the new CPU
-> > +				 * is a better fit, then move, otherwise don't
-> > +				 * bother here either.
-> > +				 */
-> > +				fit = rt_task_fits_capacity(p, target);
-> > +				if (fit)
-> > +					cpu = target;
-> > +			}
-> > +		}
-> 
-> I understand that we are opting for the migration when priorities are tied but
-> the task can fit on the new task. But there is no guarantee that this task
-> stay there. Because any CPU that drops RT prio can pull the task. Then why
-> not leave it to the balancer?
+Implement the auto-release of the write-protect pin that when the
+registration fails, it's auto-released.
 
-This patch does help in the 2 RT task test case. Without it I can see a big
-delay for the task to migrate from a little CPU to a big one, although the big
-is free.
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Reported-by: geert@linux-m68k.org
+Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+---
+ drivers/nvmem/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Maybe my test is too short (1 second). The delay I've seen is 0.5-0.7s..
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index ef326f243f36..5f1988498d75 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -72,6 +72,7 @@ static void nvmem_release(struct device *dev)
+ 	struct nvmem_device *nvmem = to_nvmem_device(dev);
+ 
+ 	ida_simple_remove(&nvmem_ida, nvmem->id);
++	gpiod_put(nvmem->wp_gpio);
+ 	kfree(nvmem);
+ }
+ 
+-- 
+2.17.1
 
-https://imgur.com/a/qKJk4w4
-
-Maybe I missed the real root cause. Let me dig more.
-
-> 
-> I notice a case where tasks would migrate for no reason (happens without this
-> patch also). Assuming BIG cores are busy with other RT tasks. Now this RT
-> task can go to *any* little CPU. There is no bias towards its previous CPU.
-> I don't know if it makes any difference but I see RT task placement is too
-> keen on reducing the migrations unless it is absolutely needed.
-
-In find_lowest_rq() there's a check if the task_cpu(p) is in the lowest_mask
-and prefer it if it is.
-
-But yeah I see it happening too
-
-https://imgur.com/a/FYqLIko
-
-Tasks on CPU 0 and 3 swap. Note that my tasks are periodic but the plots don't
-show that.
-
-I shouldn't have changed something to affect this bias. Do you think it's
-something I introduced?
-
-It's something maybe worth digging into though. I'll try to have a look.
-
-Thanks
-
---
-Qais Yousef
