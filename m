@@ -2,102 +2,147 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA52DC34024
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C522C34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7F220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B92F20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:07:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIvzAmLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgBQQFL (ORCPT
+        id S1729093AbgBQQHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:05:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:59565 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgBQQFL (ORCPT
+        Mon, 17 Feb 2020 11:07:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48107 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgBQQHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:05:11 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mow06-1joHJD2KlS-00qT1W; Mon, 17 Feb 2020 17:05:09 +0100
-Received: by mail-qt1-f178.google.com with SMTP id d9so12334823qte.12;
-        Mon, 17 Feb 2020 08:05:09 -0800 (PST)
-X-Gm-Message-State: APjAAAUoQQwJMf2dXaaZYP93Gx2Ancv6n/rct8kYpzn8ZcHu/7IvS++x
-        tv3G4cxeX7TujOwecoAtRCGlxuo5Oh7uOMbN4XQ=
-X-Google-Smtp-Source: APXvYqxR24d1UtkEhBOIjI9aHRGcs1xpyahscZCl+fB1o0U8N/KlSf87IhKTr7k/p9r//9AkSP/9yAzwmpTx4NajwIA=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr13631805qte.204.1581955508158;
- Mon, 17 Feb 2020 08:05:08 -0800 (PST)
+        Mon, 17 Feb 2020 11:07:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581955670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kbx9I3JxwrUQZkW+ffvblVzm+qjbx3whOPslU+AU5xI=;
+        b=WIvzAmLzC8bZFgCKNVqpG1nYchkIwwuvZQMKHYEmyJ0NWgKc4p+AgdAiDp0FjRmYm8LCKX
+        vH4kIUi+J4Tf+xZXNNHs3tz1+6xwSKY6sUOwX+rSr9dSHrUuEBBbSNz3KUNu3dIXbwSjcM
+        lQH10KivcHs62QCPZnqOjP0F53ivb6c=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-pL5prqWANX6AmsPpPcw9jw-1; Mon, 17 Feb 2020 11:07:42 -0500
+X-MC-Unique: pL5prqWANX6AmsPpPcw9jw-1
+Received: by mail-qv1-f71.google.com with SMTP id z9so10539649qvo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 08:07:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kbx9I3JxwrUQZkW+ffvblVzm+qjbx3whOPslU+AU5xI=;
+        b=dFUHzSS5P0Dxt/U7w9iwmKmnmbyAjDDrs1wnth6aon9P2X5ERQ0LPKzw2t+hblznGY
+         AS0/KHF5GnvrMwMlgwHnhGwqE7bdvmDl5oRY/j9uuoRKOS2sQpu1sDznLO2rkFAkkbj4
+         ZLN4HzZANOh5YC6W8sjyxIahooeWQPxg3qi8qHU/xD5N/FzrQLsyRDH0IYjOAJBhzJkx
+         Qi5HkYnwefCKR6vPDO5SLWQpXHyzl8v0o645X+yvy/T7aJt6jkDhehNfBlywvtofdJar
+         hyzP2zaiWHM6J7LbSzMlUSUX85Oe2wYKhkmNLEO499AxKrpUo1XzJP5mBbJjoOtVaHR2
+         c3gg==
+X-Gm-Message-State: APjAAAUIthw7M/ibRUIertfhrELg6Kj68a9tSwIMujbSZiy1Tj3rqsw0
+        3MKWyxKwptFW0gCBzWQGeDrgXlYochDBt1rZPnGuU1Puy1SaYh1sMHq57O88uYDAxwBDCA5mgJA
+        Wq7wpuqItjqTSu4mfk5ydJfOF
+X-Received: by 2002:a05:620a:247:: with SMTP id q7mr14627040qkn.199.1581955661923;
+        Mon, 17 Feb 2020 08:07:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx2VRNMX8abWk3f0ggJhIMzMa5PLM2pRAIizOOJFe1xnKGfAwZMSeV2nnkRkbwQMMhdEA/y6A==
+X-Received: by 2002:a05:620a:247:: with SMTP id q7mr14627018qkn.199.1581955661687;
+        Mon, 17 Feb 2020 08:07:41 -0800 (PST)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id z6sm436668qka.34.2020.02.17.08.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 08:07:41 -0800 (PST)
+Date:   Mon, 17 Feb 2020 11:07:39 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: Re: [RFC PATCH] userfaultfd: Address race after fault.
+Message-ID: <20200217160739.GB1309280@xz-x1>
+References: <20200214225849.108108-1-bgeffon@google.com>
+ <20200214231954.GA29849@redhat.com>
+ <CADyq12w3tBO5NfZ33R__B3jvF=ed7ys+o4horGwyUO3bNevObg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200206165755.GB3894455@kroah.com> <20200211184130.GA11908@Mani-XPS-13-9360>
- <20200211192055.GA1962867@kroah.com> <20200213152013.GB15010@mani>
- <20200213153418.GA3623121@kroah.com> <20200213154809.GA26953@mani>
- <20200213155302.GA3635465@kroah.com> <20200217052743.GA4809@Mani-XPS-13-9360>
- <20200217115930.GA218071@kroah.com> <20200217130419.GA13993@Mani-XPS-13-9360> <20200217141503.GA1110972@kroah.com>
-In-Reply-To: <20200217141503.GA1110972@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 17 Feb 2020 17:04:52 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
-Message-ID: <CAK8P3a28cZzOD7NfjBR=g6fADGgqwE7PFgOJrh6fph3QmDhKGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI controllers
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        smohanad@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:GvetXQ1OAzDvj5SppjdPFV439MHs3fEPj9TeHxR24yoiKphxOX2
- uHGdyqyI5bLLcHmRqNGAxXX6RzeVtYJiMbT8YhKNpxrtMUlRyLL5OmM6vrzFcbNURakv59l
- 9krdacVpdGMz/w1+Aixbvu1bRVk9ObqstejLWHqvfAgkZF6irhJLQIkzr8l1Mrv3hUYZt2P
- 74X5aymaVfF8LGIWUgKgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n1DQm7201AY=:N5S/ucW8WbB14HphQWJRNn
- jvfBvMZbFdh4xbiOqjuvMVRAA//XwYwTO3l4uflqGdn4Q3ZSQD8bZcO2wTHPLdac2QRnYEXut
- k44OvEEjS3c6aq0eWAd8tiBVWFpMNyl1OY/shQVpWMG7mmz8nomTZ/XzItexzEArhpzuwAaWA
- n9oXoKYbRDP3KmkCDZ1R/jK3I/lhz+UXCtWKiMKELSoLurAm+qnd7TuUjyPKbeuhTaM0Zj2O8
- mi2Mv3u4GHTAIKulNBQjsHWhJ1rjgwyi7nVN5NOvQbYn15ruQVriMwGILqrOZwRPNBrkuaPaQ
- WpRxeEGBFGvZm44OJmJq7BTfsfIYv+pYYCe3uL14sIn3IRPW3TV6KdtM73M+Zj2dx6OfWrRWU
- fDmN0vKzYM41lxIHkJA6oXune3WR8HzuemmaBWTwS9uoVoTOCcPGy21nVveWJo/D8KG772Jc6
- 39q8I7W2z30Da0i/EnACNGgt5GBeRu6RUODxXbV8+vQ7wVx6c+wwGw124rHZIj04Th+HxkfuE
- r2loZgHtofv5BQWWSs+z6+XqU/aYuan/98Wd9Z/zQeAc43cDzlcTY0okjbvtSgT0gHasV/2o2
- iAAWA26cYM38fKD3ew/6CYTLFhBOMrhoG6mUQdGilUE4Vgf93704/P1lXeE9SMRCm99rFB4w3
- imB7KKYpaclouM+xua1PLBYUZq9yc7j5DhiwnB9KSANffZkNOOlF+nAr8g0zUA1bxKbLw//1A
- 5FtX4G8S0jaOKUXDKFrgqsZA0pQD//aGEs1Brl7vPSy/wUKP77dE+KqfHdHRyXPCVeeA/Gqma
- vG0Kbn6p3LOt3HlkusN22cpPjH7l7YqFY45fIW2k2X+a5hcZYE=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CADyq12w3tBO5NfZ33R__B3jvF=ed7ys+o4horGwyUO3bNevObg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 3:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Mon, Feb 17, 2020 at 06:34:19PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Feb 17, 2020 at 12:59:30PM +0100, Greg KH wrote:
-> > ```
-> > struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-> > {
-> > ...
-> > dev->parent = mhi_cntrl->dev;
-> > ...
-> > ```
+On Sat, Feb 15, 2020 at 09:29:46AM -0500, Brian Geffon wrote:
+> Hi Andrea,
+> Thanks for the quick reply. That's great to hear that Peter has been
+> working on those improvements. I didn't try the entire patchset but I
+> did confirm that patch 13, not surprisingly, also resolves that issue
+> on at least on x86:
+>   https://lkml.org/lkml/2019/9/26/179
+> 
+> Given that seems pretty low risk and it definitely resolves a pretty
+> big issue for the non-cooperative userfaultfd case, any chance it
+> could be landed ahead of the rest of the series?
+
+Thanks Andrea & Brian!  Yes it would be great if the series (or some
+of the patches) could be moved forward.  Please just let me know if
+there's still anything I can do from my side.
+
+Thanks,
+
+> 
+> Thanks,
+> Brian
+> 
+> On Fri, Feb 14, 2020 at 6:20 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
 > >
-> > Hence, having the parent dev pointer really helps.
->
-> Yes, saving the parent device is fine, but you should be doing your own
-> dma calls using _your_ device, not the parents.  Only mess with the
-> parent pointer if you need to do something "normal" for a parent.
+> > Hello,
+> >
+> > this and other enhancements have already implemented by Peter (CC'ed)
+> > and in the right way, by altering the retry logic in the page fault
+> > code. This is a requirement for other kind of usages too, notably the
+> > UFFD_WRITEPROTECT ioctl after which multiple consecutive faults can
+> > happen and must be handled.
+> >
+> > IIRC Kirill asked at last LSF-MM uffd-wp talk if there's any
+> > particular reason the fault couldn't be retried currently. I had no
+> > sure answer other than there's apparently no strong reason why
+> > VM_FAULT_RETRY is only allowed 1 time currently, so there should be no
+> > issue in lifting that artificial restriction.
+> >
+> > I'm running with this patchset applied in my systems since Nov with no
+> > regression at all. I got sidetracked by various other issues, so
+> > unfortunately I didn' post a proper reviewed-by on the last submit yet
+> > (pending), but I did at least test it and it was rock solid so far.
+> >
+> > https://lore.kernel.org/lkml/20190926093904.5090-1-peterx@redhat.com/
+> >
+> > Can you test and verify it too if it solves your use case?
+> >
+> > Also note the complete uffd-WP support submit also from Peter:
+> >
+> > https://lore.kernel.org/lkml/20190620022008.19172-1-peterx@redhat.com/
+> >
+> > https://github.com/xzpeter/linux/tree/uffd-wp-merged
+> >
+> > Thanks,
+> > Andrea
+> >
+> 
 
-The MHI device is not involved in DMA at all, as it is not a DMA master,
-and has no knowledge of the memory management or whether there
-is any DMA at all. I think it is the right abstraction for an MHI driver to
-pass kernel pointers into the subsystem interfaces, which then get
-mapped by the bus driver that owns the DMA master.
+-- 
+Peter Xu
 
-This is similar to how e.g. USB drivers pass data into the USB core
-interfaces, which then get the HCI driver to map/unmap it into the
-DMA masters.
-
-      Arnd
