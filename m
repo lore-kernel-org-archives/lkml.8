@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3564DC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DB2C34024
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDCA24658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC3C24658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgBQPMB (ORCPT
+        id S1729464AbgBQPMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:12:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59937 "EHLO
+        Mon, 17 Feb 2020 10:12:03 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59943 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbgBQPL7 (ORCPT
+        with ESMTP id S1728054AbgBQPMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:11:59 -0500
+        Mon, 17 Feb 2020 10:12:01 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j3i3w-0007e4-88; Mon, 17 Feb 2020 16:11:56 +0100
+        id 1j3i3x-0007ek-6K; Mon, 17 Feb 2020 16:11:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E29341C2084;
-        Mon, 17 Feb 2020 16:11:55 +0100 (CET)
-Date:   Mon, 17 Feb 2020 15:11:55 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DD3021C2084;
+        Mon, 17 Feb 2020 16:11:56 +0100 (CET)
+Date:   Mon, 17 Feb 2020 15:11:56 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] mips: vdso: Use generic VDSO clock mode storage
+Subject: [tip: timers/core] clocksource: Add common vdso clock mode storage
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200207124403.244684017@linutronix.de>
-References: <20200207124403.244684017@linutronix.de>
+In-Reply-To: <20200207124403.028046322@linutronix.de>
+References: <20200207124403.028046322@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158195231568.13786.10069136434505009340.tip-bot2@tip-bot2>
+Message-ID: <158195231666.13786.8394117502019581056.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,170 +56,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     2ad415f5e62c4ad93cdd01e44bc935b991e6b03a
-Gitweb:        https://git.kernel.org/tip/2ad415f5e62c4ad93cdd01e44bc935b991e6b03a
+Commit-ID:     5d51bee725cc1497352d6b0b604e42a90c680540
+Gitweb:        https://git.kernel.org/tip/5d51bee725cc1497352d6b0b604e42a90c680540
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 07 Feb 2020 13:38:57 +01:00
+AuthorDate:    Fri, 07 Feb 2020 13:38:55 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 17 Feb 2020 14:40:24 +01:00
+CommitterDate: Mon, 17 Feb 2020 14:40:23 +01:00
 
-mips: vdso: Use generic VDSO clock mode storage
+clocksource: Add common vdso clock mode storage
 
-Switch to the generic VDSO clock mode storage.
+All architectures which use the generic VDSO code have their own storage
+for the VDSO clock mode. That's pointless and just requires duplicate code.
+
+Provide generic storage for it. The new Kconfig symbol is intermediate and
+will be removed once all architectures are converted over.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lkml.kernel.org/r/20200207124403.244684017@linutronix.de
-
+Link: https://lkml.kernel.org/r/20200207124403.028046322@linutronix.de
 
 ---
- arch/mips/Kconfig                         |  2 +-
- arch/mips/include/asm/clocksource.h       | 18 ++---------------
- arch/mips/include/asm/vdso/gettimeofday.h | 24 +++++-----------------
- arch/mips/include/asm/vdso/vsyscall.h     |  9 +--------
- arch/mips/kernel/csrc-r4k.c               |  2 +-
- drivers/clocksource/mips-gic-timer.c      |  8 +++----
- 6 files changed, 15 insertions(+), 48 deletions(-)
+ include/linux/clocksource.h | 12 +++++++++++-
+ kernel/time/clocksource.c   |  9 +++++++++
+ kernel/time/vsyscall.c      | 10 ++++++++--
+ lib/vdso/Kconfig            |  3 +++
+ lib/vdso/gettimeofday.c     | 13 +++++++++++--
+ 5 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797d7f1..23b5c05 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -4,7 +4,6 @@ config MIPS
- 	default y
- 	select ARCH_32BIT_OFF_T if !64BIT
- 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
--	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
-@@ -38,6 +37,7 @@ config MIPS
- 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
-+	select GENERIC_VDSO_CLOCK_MODE
- 	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
- 	select HANDLE_DOMAIN_IRQ
- 	select HAVE_ARCH_COMPILER_H
-diff --git a/arch/mips/include/asm/clocksource.h b/arch/mips/include/asm/clocksource.h
-index cab9ae9..738a202 100644
---- a/arch/mips/include/asm/clocksource.h
-+++ b/arch/mips/include/asm/clocksource.h
-@@ -3,23 +3,11 @@
-  * Copyright (C) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-  */
--
- #ifndef __ASM_CLOCKSOURCE_H
- #define __ASM_CLOCKSOURCE_H
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 2c4574b..6d5ed1b 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -23,10 +23,19 @@
+ struct clocksource;
+ struct module;
  
--#include <linux/types.h>
--
--/* VDSO clocksources. */
--#define VDSO_CLOCK_NONE		0	/* No suitable clocksource. */
--#define VDSO_CLOCK_R4K		1	/* Use the coprocessor 0 count. */
--#define VDSO_CLOCK_GIC		2	/* Use the GIC. */
--
--/**
-- * struct arch_clocksource_data - Architecture-specific clocksource information.
-- * @vdso_clock_mode: Method the VDSO should use to access the clocksource.
-- */
--struct arch_clocksource_data {
--	u8 vdso_clock_mode;
--};
-+#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMDOE_R4K,	\
-+	VDSO_CLOCKMODE_GIC
+-#ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
++#if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
++    defined(CONFIG_GENERIC_VDSO_CLOCK_MODE)
+ #include <asm/clocksource.h>
+ #endif
  
- #endif /* __ASM_CLOCKSOURCE_H */
-diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
-index a9f846b..810d225 100644
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -175,28 +175,16 @@ static __always_inline u64 read_gic_count(const struct vdso_data *data)
++enum vdso_clock_mode {
++	VDSO_CLOCKMODE_NONE,
++#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
++	VDSO_ARCH_CLOCKMODES,
++#endif
++	VDSO_CLOCKMODE_MAX,
++};
++
+ /**
+  * struct clocksource - hardware abstraction for a free running counter
+  *	Provides mostly state-free accessors to the underlying hardware.
+@@ -97,6 +106,7 @@ struct clocksource {
+ 	const char		*name;
+ 	struct list_head	list;
+ 	int			rating;
++	enum vdso_clock_mode	vdso_clock_mode;
+ 	unsigned long		flags;
  
- static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
+ 	int			(*enable)(struct clocksource *cs);
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 428beb6..7cb09c4 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -928,6 +928,15 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
+ 
+ 	clocksource_arch_init(cs);
+ 
++#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
++	if (cs->vdso_clock_mode < 0 ||
++	    cs->vdso_clock_mode >= VDSO_CLOCKMODE_MAX) {
++		pr_warn("clocksource %s registered with invalid VDSO mode %d. Disabling VDSO support.\n",
++			cs->name, cs->vdso_clock_mode);
++		cs->vdso_clock_mode = VDSO_CLOCKMODE_NONE;
++	}
++#endif
++
+ 	/* Initialize mult/shift and max_idle_ns */
+ 	__clocksource_update_freq_scale(cs, scale, freq);
+ 
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index 9577c89..f9a5178 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -71,13 +71,19 @@ void update_vsyscall(struct timekeeper *tk)
  {
--#ifdef CONFIG_CLKSRC_MIPS_GIC
--	const struct vdso_data *data = get_vdso_data();
--#endif
--	u64 cycle_now;
--
--	switch (clock_mode) {
- #ifdef CONFIG_CSRC_R4K
--	case VDSO_CLOCK_R4K:
--		cycle_now = read_r4k_count();
--		break;
-+	if (clock_mode == VDSO_CLOCKMODE_R4K)
-+		return read_r4k_count();
- #endif
- #ifdef CONFIG_CLKSRC_MIPS_GIC
--	case VDSO_CLOCK_GIC:
--		cycle_now = read_gic_count(data);
--		break;
-+	if (clock_mode == VDSO_CLOCKMODE_GIC)
-+		return read_gic_count(get_vdso_data());
- #endif
--	default:
--		cycle_now = __VDSO_USE_SYSCALL;
--		break;
--	}
--
--	return cycle_now;
-+	/* Keep GCC happy */
-+	return U64_MAX;
- }
+ 	struct vdso_data *vdata = __arch_get_k_vdso_data();
+ 	struct vdso_timestamp *vdso_ts;
++	s32 clock_mode;
+ 	u64 nsec;
  
- static inline bool mips_vdso_hres_capable(void)
-diff --git a/arch/mips/include/asm/vdso/vsyscall.h b/arch/mips/include/asm/vdso/vsyscall.h
-index 00d41b9..47168aa 100644
---- a/arch/mips/include/asm/vdso/vsyscall.h
-+++ b/arch/mips/include/asm/vdso/vsyscall.h
-@@ -19,15 +19,6 @@ struct vdso_data *__mips_get_k_vdso_data(void)
- }
- #define __arch_get_k_vdso_data __mips_get_k_vdso_data
+ 	/* copy vsyscall data */
+ 	vdso_write_begin(vdata);
  
--static __always_inline
--int __mips_get_clock_mode(struct timekeeper *tk)
--{
--	u32 clock_mode = tk->tkr_mono.clock->archdata.vdso_clock_mode;
--
--	return clock_mode;
--}
--#define __arch_get_clock_mode __mips_get_clock_mode
--
- /* The asm-generic header needs to be included after the definitions above */
- #include <asm-generic/vdso/vsyscall.h>
+-	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
+-	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
++#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
++	clock_mode = tk->tkr_mono.clock->vdso_clock_mode;
++#else
++	clock_mode = __arch_get_clock_mode(tk);
++#endif
++	vdata[CS_HRES_COARSE].clock_mode	= clock_mode;
++	vdata[CS_RAW].clock_mode		= clock_mode;
  
-diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
-index eed099f..437dda6 100644
---- a/arch/mips/kernel/csrc-r4k.c
-+++ b/arch/mips/kernel/csrc-r4k.c
-@@ -78,7 +78,7 @@ int __init init_r4k_clocksource(void)
- 	 * by the VDSO (HWREna is configured by configure_hwrena()).
- 	 */
- 	if (cpu_has_mips_r2_r6 && rdhwr_count_usable())
--		clocksource_mips.archdata.vdso_clock_mode = VDSO_CLOCK_R4K;
-+		clocksource_mips.vdso_clock_mode = VDSO_CLOCKMODE_R4K;
+ 	/* CLOCK_REALTIME also required for time() */
+ 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
+index d883ac2..d9f43c8 100644
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -30,4 +30,7 @@ config GENERIC_VDSO_TIME_NS
+ 	  Selected by architectures which support time namespaces in the
+ 	  VDSO
  
- 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
++config GENERIC_VDSO_CLOCK_MODE
++	bool
++
+ endif
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 5804e4e..3f2d8b8 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -7,6 +7,7 @@
+ #include <linux/time.h>
+ #include <linux/kernel.h>
+ #include <linux/hrtimer_defs.h>
++#include <linux/clocksource.h>
+ #include <vdso/datapage.h>
+ #include <vdso/helpers.h>
  
-diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
-index 37671a5..8b5f8ae 100644
---- a/drivers/clocksource/mips-gic-timer.c
-+++ b/drivers/clocksource/mips-gic-timer.c
-@@ -155,10 +155,10 @@ static u64 gic_hpt_read(struct clocksource *cs)
- }
+@@ -64,10 +65,14 @@ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
  
- static struct clocksource gic_clocksource = {
--	.name		= "GIC",
--	.read		= gic_hpt_read,
--	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
--	.archdata	= { .vdso_clock_mode = VDSO_CLOCK_GIC },
-+	.name			= "GIC",
-+	.read			= gic_hpt_read,
-+	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
-+	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
- };
+ 	do {
+ 		seq = vdso_read_begin(vd);
++		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
++		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++			return -1;
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (unlikely((s64)cycles < 0))
++		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
++		    unlikely((s64)cycles < 0))
+ 			return -1;
  
- static int __init __gic_clocksource_init(void)
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+@@ -132,10 +137,14 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 		}
+ 		smp_rmb();
+ 
++		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
++		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++			return -1;
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (unlikely((s64)cycles < 0))
++		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
++		    unlikely((s64)cycles < 0))
+ 			return -1;
+ 
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
