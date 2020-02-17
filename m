@@ -2,171 +2,244 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D07C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CCAC34021
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7F020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E1E227BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 15:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBQPLr convert rfc822-to-8bit (ORCPT
+        id S1728924AbgBQPL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 10:11:47 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46670 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgBQPLr (ORCPT
+        Mon, 17 Feb 2020 10:11:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59928 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728054AbgBQPL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:11:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g64so16342174otb.13;
-        Mon, 17 Feb 2020 07:11:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qYxmdX29YG/UHJJMk5zm+QwT+5Rwjs67+eLlDKSKlyA=;
-        b=T7NCFb0JFNodBKg9BIxyfN3Bh8+qs0SUOwJj050pFIg7C3HGwy7gXV7PFL3WQ5OBmW
-         6DjqGGihLKPkYMpKtnigEWO+pafBmo8zMZQNgaJ+rePCrtP/iZJPdlpF5Zo3l/Cp4WOV
-         3gXqgFhJWOYhlj0kaZEywzSbm7LvXomu3KDUHNVsCsn2UUvH52/tiwVb9rbvcOmra7Te
-         9psbnk/KX83xzEW2eur3WTV8fC9AmiQ36tRMEGETXa8UBPOi+0ilmUKoiYEjo8/aYpf+
-         QlDVA47TJa8pjEHjEwMThuf0rtmdwy6Hi1THBTl8A7gzVFkF18dEYadpRIcmKJ2bTrLv
-         q+6Q==
-X-Gm-Message-State: APjAAAVmjlX/dEtnWsiZ430C+NcwpowqUNUhrzr2hwP7qZTIpGgg+WcG
-        jez0MIe0jWc4DqSd45MZ93s1pKZo5Osi0rTAp94=
-X-Google-Smtp-Source: APXvYqxSZHc5RwRSQVBTkVl6ulYXJeWISH1t7KfDBpAV5RYWaXG9c2NoeJ3If5p7QepcD8irCbCNrQTmrjGoASq3g6o=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr12668875otm.297.1581952306334;
- Mon, 17 Feb 2020 07:11:46 -0800 (PST)
+        Mon, 17 Feb 2020 10:11:57 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j3i3v-0007dH-85; Mon, 17 Feb 2020 16:11:55 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E0ACD1C2084;
+        Mon, 17 Feb 2020 16:11:54 +0100 (CET)
+Date:   Mon, 17 Feb 2020 15:11:54 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] lib/vdso: Cleanup clock mode storage leftovers
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200207124403.470699892@linutronix.de>
+References: <20200207124403.470699892@linutronix.de>
 MIME-Version: 1.0
-References: <20200107092922.18408-1-ktouil@baylibre.com> <20200107092922.18408-3-ktouil@baylibre.com>
- <CAMuHMdVv+FRnf6fvjEeu50W5PB-Gh2V8Th1h__vt6guMwk2xNQ@mail.gmail.com> <CAMRc=Mf0-gQJH8Se4sFBCkRNE=b4ww=SWges-7GPD2jsivrv1Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf0-gQJH8Se4sFBCkRNE=b4ww=SWges-7GPD2jsivrv1Q@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Feb 2020 16:11:35 +0100
-Message-ID: <CAMuHMdWrJ9LmDqBQYvNVs7yY78Po0sTGc=MUu9+tau2frJ9Ytw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] nvmem: add support for the write-protect pin
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Khouloud Touil <ktouil@baylibre.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Message-ID: <158195231467.13786.11066774270603361508.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+The following commit has been merged into the timers/core branch of tip:
 
-On Mon, Feb 17, 2020 at 3:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> czw., 30 sty 2020 o 09:06 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
-> > On Tue, Jan 7, 2020 at 10:30 AM Khouloud Touil <ktouil@baylibre.com> wrote:
-> > > The write-protect pin handling looks like a standard property that
-> > > could benefit other users if available in the core nvmem framework.
-> > >
-> > > Instead of modifying all the memory drivers to check this pin, make
-> > > the NVMEM subsystem check if the write-protect GPIO being passed
-> > > through the nvmem_config or defined in the device tree and pull it
-> > > low whenever writing to the memory.
-> > >
-> > > There was a suggestion for introducing the gpiodesc from pdata, but
-> > > as pdata is already removed it could be replaced by adding it to
-> > > nvmem_config.
-> > >
-> > > Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.html
-> > >
-> > > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/nvmem/core.c
-> > > +++ b/drivers/nvmem/core.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/module.h>
-> > >  #include <linux/nvmem-consumer.h>
-> > >  #include <linux/nvmem-provider.h>
-> > > +#include <linux/gpio/consumer.h>
-> > >  #include <linux/of.h>
-> > >  #include <linux/slab.h>
-> > >  #include "nvmem.h"
-> > > @@ -54,8 +55,14 @@ static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
-> > >  static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
-> > >                            void *val, size_t bytes)
-> > >  {
-> > > -       if (nvmem->reg_write)
-> > > -               return nvmem->reg_write(nvmem->priv, offset, val, bytes);
-> > > +       int ret;
-> > > +
-> > > +       if (nvmem->reg_write) {
-> > > +               gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
-> > > +               ret = nvmem->reg_write(nvmem->priv, offset, val, bytes);
-> > > +               gpiod_set_value_cansleep(nvmem->wp_gpio, 1);
-> > > +               return ret;
-> > > +       }
-> > >
-> > >         return -EINVAL;
-> > >  }
-> > > @@ -338,6 +345,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> > >                 kfree(nvmem);
-> > >                 return ERR_PTR(rval);
-> > >         }
-> > > +       if (config->wp_gpio)
-> > > +               nvmem->wp_gpio = config->wp_gpio;
-> > > +       else
-> > > +               nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
-> > > +                                                   GPIOD_OUT_HIGH);
-> >
-> > Shouldn't this GPIO be released in nvmem_release(), by calling gpiod_put()?
-> >
->
-> Hi Geert,
->
-> Khouloud already sent out a patch but I think it still doesn't fix all
-> the problems.
->
-> While we should call gpiod_put() for the descs we request - we must
-> not do it for the desc we get over the config structure. Unless... we
+Commit-ID:     c2130090f32165f4303202c7839dcbaf6bf943b6
+Gitweb:        https://git.kernel.org/tip/c2130090f32165f4303202c7839dcbaf6bf943b6
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 07 Feb 2020 13:38:59 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 17 Feb 2020 14:40:25 +01:00
 
-That's true.
+lib/vdso: Cleanup clock mode storage leftovers
 
-> make descs reference counted with kref and add gpiod_ref() helper.
-> That way we could increase the reference counter in the upper branch
-> of the if and not do it in the lower. Calling gpiod_put() would
-> internally call kref_put(). Does it make sense? I think that a
-> function that's called gpiod_put() but doesn't really use reference
-> counting is misleading anyway.
+Now that all architectures are converted to use the generic storage the
+helpers and conditionals can be removed.
 
-Yep.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://lkml.kernel.org/r/20200207124403.470699892@linutronix.de
 
-> > Once that's implemented, I assume it will be auto-released on registration
-> > failure by the call to put_device()?
->
-> No, I think this is another leak - why would put_device() lead to
-> freeing any resources? Am I missing something?
 
-Sorry, I don't remember why I wrote that part...
+---
+ arch/arm/mm/Kconfig                 |  1 -
+ arch/arm64/Kconfig                  |  1 -
+ arch/mips/Kconfig                   |  1 -
+ arch/x86/Kconfig                    |  1 -
+ include/asm-generic/vdso/vsyscall.h |  7 -------
+ include/linux/clocksource.h         |  4 ++--
+ kernel/time/vsyscall.c              |  4 ----
+ lib/vdso/Kconfig                    |  3 ---
+ lib/vdso/gettimeofday.c             | 17 +++++------------
+ 9 files changed, 7 insertions(+), 32 deletions(-)
 
-Anyway, requested GPIOs should be released on failure, and on
-unregistration.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index 865e888..65e4482 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -900,7 +900,6 @@ config VDSO
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_VDSO_32
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	help
+ 	  Place in the process address space an ELF shared object
+ 	  providing fast implementations of gettimeofday and
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7809d49..c6c32fb 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -110,7 +110,6 @@ config ARM64
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HARDIRQS_SW_RESEND
+ 	select HAVE_PCI
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 23b5c05..654369a 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -37,7 +37,6 @@ config MIPS
+ 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HAVE_ARCH_COMPILER_H
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 698e9c8..8b995db 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -125,7 +125,6 @@ config X86
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select GENERIC_VDSO_TIME_NS
+ 	select GUP_GET_PTE_LOW_HIGH		if X86_PAE
+ 	select HARDLOCKUP_CHECK_TIMESTAMP	if X86_64
+diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
+index cec543d..4a28797 100644
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -18,13 +18,6 @@ static __always_inline bool __arch_update_vdso_data(void)
+ }
+ #endif /* __arch_update_vdso_data */
+ 
+-#ifndef __arch_get_clock_mode
+-static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+-{
+-	return 0;
+-}
+-#endif /* __arch_get_clock_mode */
+-
+ #ifndef __arch_update_vsyscall
+ static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
+ 						   struct timekeeper *tk)
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 6d5ed1b..7fefe0b 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -24,13 +24,13 @@ struct clocksource;
+ struct module;
+ 
+ #if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
+-    defined(CONFIG_GENERIC_VDSO_CLOCK_MODE)
++    defined(CONFIG_GENERIC_GETTIMEOFDAY)
+ #include <asm/clocksource.h>
+ #endif
+ 
+ enum vdso_clock_mode {
+ 	VDSO_CLOCKMODE_NONE,
+-#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
++#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+ 	VDSO_ARCH_CLOCKMODES,
+ #endif
+ 	VDSO_CLOCKMODE_MAX,
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index f9a5178..d31a5ef 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -77,11 +77,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	/* copy vsyscall data */
+ 	vdso_write_begin(vdata);
+ 
+-#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+ 	clock_mode = tk->tkr_mono.clock->vdso_clock_mode;
+-#else
+-	clock_mode = __arch_get_clock_mode(tk);
+-#endif
+ 	vdata[CS_HRES_COARSE].clock_mode	= clock_mode;
+ 	vdata[CS_RAW].clock_mode		= clock_mode;
+ 
+diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
+index d9f43c8..d883ac2 100644
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -30,7 +30,4 @@ config GENERIC_VDSO_TIME_NS
+ 	  Selected by architectures which support time namespaces in the
+ 	  VDSO
+ 
+-config GENERIC_VDSO_CLOCK_MODE
+-	bool
+-
+ endif
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 3f2d8b8..00f8d1f 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -65,16 +65,13 @@ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
+ 
+ 	do {
+ 		seq = vdso_read_begin(vd);
+-		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++
++		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
+ 			return -1;
++
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    unlikely((s64)cycles < 0))
+-			return -1;
+-
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+ 		ns >>= vd->shift;
+ 		sec = vdso_ts->sec;
+@@ -137,16 +134,12 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 		}
+ 		smp_rmb();
+ 
+-		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
+ 			return -1;
++
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    unlikely((s64)cycles < 0))
+-			return -1;
+-
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+ 		ns >>= vd->shift;
+ 		sec = vdso_ts->sec;
