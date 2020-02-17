@@ -2,94 +2,108 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BFAC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F553C34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CDB206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEF720718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 13:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="w5VjHmzv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="l9FBQzos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgBQNx1 (ORCPT
+        id S1728761AbgBQN6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 08:53:27 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52982 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgBQNx0 (ORCPT
+        Mon, 17 Feb 2020 08:58:21 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:12455 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgBQN6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 08:53:26 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so17235079wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 05:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=PI0LvpGjO/OZvCQU1PxswC2EPMei884/nsAkhdkaeP8=;
-        b=w5VjHmzvIVp/HsTMrnc9z5s2CtLUjUztbi2kHK96i4oWzwnIcHTP+GtIBtBQuzpl9Z
-         cHu9MWaFp5qHlb8kvQ4/DWJEH5/ae4IjXLtSOQ4d3aWf6XlAHs7VZCA/X1WGMKrxRIke
-         C/2tHs+TtOyiPtB6ebp9jT2B4ob1Qzc16UUd75HXx5cW5XhDZ5F/y+0lieIgjHAYu6tT
-         bGoFdaetxAV2vCp7/kz3sVG+/nurOi1uhP2inSsg76f5uw7QT0Aoy+iDHkbOGMi6dpgS
-         7dmtKchlMlSX2v0/4oS5hqVVSNLwOYUsHlLB0R8Pp6lVxQpiEVTTl9UNhE0eyZbWVYRE
-         dbew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PI0LvpGjO/OZvCQU1PxswC2EPMei884/nsAkhdkaeP8=;
-        b=dkqiNjrOsFx6HJQAIZnl3sGyKC6tySeMuET4pC49pGWNScfo4jzJelDhMAxRuQVyWG
-         WbqnuyqOG6gd+ivH17SJ96yLAY9zTyqlEXlYk0WAuGgwSZY/Myka5yU7Ak8J6RcPbTT2
-         3kGY0C1XmyzxXaUToMhc4QqxuyAGQZ7Cm3myV3+nZioNlwcWd9IQz79rZccTaFJmm1Rj
-         vvgQuTqT1H7cslDv581pQ1TpYkcQxHzg+MA6M6kZRf/ibuHBptqQHqFNfk4wwM3gbixX
-         XV6QRW7NJtSgC1F6NUyuUuqa/zPZZBUeG2omKb2iXLxqKc+Da9YyWUgCLaVwA8gQ32p4
-         wLTA==
-X-Gm-Message-State: APjAAAWlrOZRXSlxGqjKmCSiqEz1qBGpb+Z8wdhJIQJJ50RhRfgYVwld
-        wAdtyGSJ1B49bdRExiTvZKabbA==
-X-Google-Smtp-Source: APXvYqyFEEWXOUljD2Qt5ltg3BSPgA/LaJUjjNfVWfAHFDf2JNWYuLuHTbsUCcGPvL1qQzYV+3TzoA==
-X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr22664934wmi.89.1581947605445;
-        Mon, 17 Feb 2020 05:53:25 -0800 (PST)
-Received: from khouloud-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id o4sm1131010wrx.25.2020.02.17.05.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 05:53:25 -0800 (PST)
-From:   Khouloud Touil <ktouil@baylibre.com>
-To:     srinivas.kandagatla@linaro.org, bgolaszewski@baylibre.com
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        geert@linux-m68k.org, baylibre-upstreaming@groups.io,
-        Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH] nvmem: release the write-protect pin
-Date:   Mon, 17 Feb 2020 14:52:45 +0100
-Message-Id: <20200217135245.29195-1-ktouil@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Feb 2020 08:58:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581947898;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=gtMTPVIhIXUeH0xdkSwv3qku1/SwM+IetmGopOl+iV8=;
+        b=l9FBQzosiiQ2IMm95p+UXyhqg17xAjy7up+qcJswNgEi/w4wH1/b20lBkq3beQPOnQ
+        +aqnv8weFB2Q4DISUYCBehYkIhiqj0ZuyiDLsmDACcEZOedw+4BvabVFf2ObfVJPvkM1
+        O8XEv1Xnc6PjlWrH3vMJztLzu2AuReydamCF5mXnQGjCSpIOXPnUsep4Gq/8XFcfN/ye
+        uGqpYI1QQAP7L9oFd58KZTBME28KKi0pqqmQKDCs+huUMUqcFx4r+I2MKwhbHsv2z4ut
+        4ayh2JnAorfSArO19nEXOkfKP5QG16ZY1meVwzmSz7j9E2WwyP+RXqbvgOD5Ze6Hrsfe
+        x1xQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA0OXQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1HDwFNp5
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 17 Feb 2020 14:58:15 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns -EPROBE_DEFER
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
+Date:   Mon, 17 Feb 2020 14:58:14 +0100
+Cc:     linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C3D9F783-EE45-4681-93D9-C1407284CB59@goldelico.com>
+References: <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the auto-release of the write-protect pin that when the
-registration fails, it's auto-released.
 
-Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
-Reported-by: geert@linux-m68k.org
-Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
----
- drivers/nvmem/core.c | 1 +
- 1 file changed, 1 insertion(+)
+> Am 17.02.2020 um 14:38 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> If the gpios are probed after this driver (e.g. if they
+> come from an i2c expander) there is no need to print an
+> error message.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+> drivers/extcon/extcon-palmas.c | 8 ++++++--
+> 1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/extcon/extcon-palmas.c =
+b/drivers/extcon/extcon-palmas.c
+> index edc5016f46f1..cea58d0cb457 100644
+> --- a/drivers/extcon/extcon-palmas.c
+> +++ b/drivers/extcon/extcon-palmas.c
+> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct =
+platform_device *pdev)
+>=20
+> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
+"id",
+> 							GPIOD_IN);
+> -	if (IS_ERR(palmas_usb->id_gpiod)) {
+> +	if (PTR_ERR(palmas_usb->id_gpiod) =3D=3D -EPROBE_DEFER) {
+> +		return -EPROBE_DEFER;
+> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index ef326f243f36..5f1988498d75 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -72,6 +72,7 @@ static void nvmem_release(struct device *dev)
- 	struct nvmem_device *nvmem = to_nvmem_device(dev);
- 
- 	ida_simple_remove(&nvmem_ida, nvmem->id);
-+	gpiod_put(nvmem->wp_gpio);
- 	kfree(nvmem);
- }
- 
--- 
-2.17.1
+Hm.
 
+While looking again at that: why do we need the "{" and "} else "?
+
+It should be sufficient to have
+
+> 	palmas_usb->id_gpiod =3D devm_gpiod_get_optional(&pdev->dev, =
+"id",
+> 							GPIOD_IN);
+> +	if (PTR_ERR(palmas_usb->id_gpiod) =3D=3D -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> 	if (IS_ERR(palmas_usb->id_gpiod)) {
+
+What do you think is better coding style here?
+
+BR,
+Nikolaus Schaller=
