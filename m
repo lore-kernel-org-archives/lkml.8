@@ -2,138 +2,79 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3415EC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41373C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE6D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zEu5MUQl"
+	by mail.kernel.org (Postfix) with ESMTP id 15A9D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgBQKLS (ORCPT
+        id S1729192AbgBQKLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:11:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40100 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgBQKLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:11:17 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n18so18154117ljo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 02:11:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=A7RKQ4ZTCrIf6WU3LWe0K/rriT2SokS7Kl7BJW+LdTU=;
-        b=zEu5MUQlYw63tCjUwdW8VAq2ypF/TDByOzDs29nJi6lY8niYv18kH3ZiYcVpedxtJt
-         8ELQSR3Gut612KekflotI0fQxcJbKvKebO+5fxvy6HKX7WCbp4Z5YDuhsDAppe0KCOK0
-         2TX5BbsUirQve1UmFY8aDI/qeuqhOamt+BpuWOxtujqCjU6odQGGI5PMGcJZE3XWGBN+
-         F4ULFY9yunWDtm9q5hSpxQIQjEnBvfrb7akkICBNChm79+ixtjdnAlHz6Clx1n/xh8tF
-         MUf4zMqv0wsxHY2jMecinInGzlv/PSf2aKon6Swl7JFwfeF7OYwshRMZ+gQEhNm5P9Ek
-         d05Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=A7RKQ4ZTCrIf6WU3LWe0K/rriT2SokS7Kl7BJW+LdTU=;
-        b=FwQYV7fj8QEorvmOC0sjBPFcKNu++uOAZPSb/aiFcGvWhbSALijnOYjzlZub5jjtWq
-         R5KaruuAtQdNs0+Vuq7AJrJE8LZnOlzvEt2mmScICALV4j5V1GEtHxcOivtaGylg/yM+
-         KJj3gBFWJM6TZc8RAAtwD6Ux/SMCgqKgezomvn1fv1gsvZU1Xb5dk+hgeuYlbshSIt7c
-         OCT/NehQ5drMH1j6o+WUASYE0KRPkT6AyozqbWxJd/JJywLOnQOoQtgDTVMPtYOsjRIl
-         jQT/ArlF/NWytP3sRI59AtqAH6g+cNCa/DaYPjatfsOwVdQV6o+A7S7AsSSARCHR8kQk
-         InJw==
-X-Gm-Message-State: APjAAAXbICihtZy9vturmVp/j0rW4/n9EL+Ks8mV5hvVgpMK0MtPX+mU
-        8e+/hjFNmMZFa2gAwkoYnlIneA==
-X-Google-Smtp-Source: APXvYqwXQ5Fdcz23uGi65PcZ1865HLJNfZsVs0bsnqI/YKhJEznIeMRmjQNYnXM/cnAlOQRoalBn2A==
-X-Received: by 2002:a2e:9d11:: with SMTP id t17mr9871632lji.169.1581934275777;
+        Mon, 17 Feb 2020 05:11:21 -0500
+Received: from mga12.intel.com ([192.55.52.136]:55528 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729126AbgBQKLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:11:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 02:11:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,452,1574150400"; 
+   d="scan'208";a="229155040"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Feb 2020 02:11:18 -0800
+Received: from [10.226.38.21] (unknown [10.226.38.21])
+        by linux.intel.com (Postfix) with ESMTP id EEE77580270;
         Mon, 17 Feb 2020 02:11:15 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id u16sm40913lfi.36.2020.02.17.02.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 02:11:14 -0800 (PST)
-Date:   Mon, 17 Feb 2020 11:11:14 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Message-ID: <20200217101114.GO3013231@oden.dyn.berto.se>
-References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
- <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Vignesh R <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200214114618.29704-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <48e60c06-62d5-4965-97d1-51577da3bbcf@linux.intel.com>
+Date:   Mon, 17 Feb 2020 18:11:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
+In-Reply-To: <CAAh8qsxnRSwonuEPrriuS=gUMTjt8ddUVy5HxegmoCk-FoE4qg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi Simon,
 
-Thanks for your feedback.
+On 14/2/2020 8:02 PM, Simon Goldschmidt wrote:
+> On Fri, Feb 14, 2020 at 12:46 PM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> Add support for the Cadence QSPI controller. This controller is
+>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+>> This driver has been tested on the Intel LGM SoCs.
+> This is v9 and still, none of the altera maintainers are on CC?
+> How will it be ensured that this doesn't break altera if it is merged?
+Thanks for reminded me, sorry, next send time will add them in CC.
 
-On 2020-02-17 09:01:18 +0100, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Sun, Feb 16, 2020 at 2:09 PM Niklas Söderlund
-> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> > Add an entry to make myself a maintainer of the Renesas R-Car thermal
-> > drivers.
-> >
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> Thanks for your patch!
-> 
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14206,6 +14206,15 @@ F:     Documentation/devicetree/bindings/i2c/renesas,iic.txt
-> >  F:     drivers/i2c/busses/i2c-rcar.c
-> >  F:     drivers/i2c/busses/i2c-sh_mobile.c
-> >
-> > +RENESAS R-CAR THERMAL DRIVERS
-> > +M:     Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> 
-> +renesas@???
-
-I have not used the +renesas@ for my other entry in MAINTAINERS for 
-R-Car VIN and wish them to be the same. I have do not mind if that is 
-with or without the +renesas tag.
-
-@Shimoda-san: What would you and Renesas prefer I use?
-
-> 
-> > +L:     linux-renesas-soc@vger.kernel.org
-> > +S:     Supported
-> > +F:     Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
-> > +F:     Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> > +F:     drivers/thermal/rcar_gen3_thermal.c
-> > +F:     drivers/thermal/rcar_thermal.c
-> > +
-> >  RENESAS RIIC DRIVER
-> >  M:     Chris Brandt <chris.brandt@renesas.com>
-> >  S:     Supported
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Regards,
-Niklas Söderlund
+Regards
+Vadivel
+>
+> Regards,
+> Simon
+>
