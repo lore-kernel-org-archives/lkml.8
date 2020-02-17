@@ -2,71 +2,72 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFBBC7619F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49767C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF84206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:49:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TYo9FAAL"
+	by mail.kernel.org (Postfix) with ESMTP id 2C49F206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 09:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgBQJtx (ORCPT
+        id S1729029AbgBQJuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 04:49:53 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53251 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728928AbgBQJtx (ORCPT
+        Mon, 17 Feb 2020 04:50:14 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33473 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgBQJuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 04:49:53 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581932992; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=g//IW0nJXQeUIbmBoJDPkGdvKWYJPRzClQ8OWjgSwlw=; b=TYo9FAALh4ok6imjvWt4taR5uZ2FcITW5jO0RRNa79d/uZez4q/CiSyWOBQ9yGY+l0TQv91s
- 425gJNe3uoxrnDpjm4dO4FvnR8BRC5lxdWJ7MqWa5xyHcFoXj7+6WQ6e1QKecK8lDeNYQm8Y
- 0fGmtOH7SmyZGgCgoqX36yx1lTI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4a61be.7fb7bc9d4340-smtp-out-n02;
- Mon, 17 Feb 2020 09:49:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2621CC447A2; Mon, 17 Feb 2020 09:49:50 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A027C43383;
-        Mon, 17 Feb 2020 09:49:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A027C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH 0/2] Convert QSPI binding to YAML and add interconnect doc
-Date:   Mon, 17 Feb 2020 15:19:32 +0530
-Message-Id: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Feb 2020 04:50:13 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j3d2W-00011U-4w; Mon, 17 Feb 2020 10:50:08 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j3d2V-0003AA-9Q; Mon, 17 Feb 2020 10:50:07 +0100
+Date:   Mon, 17 Feb 2020 10:50:07 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V3 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS pins
+ mux
+Message-ID: <20200217095007.sn7hqbqoqcv75ic3@pengutronix.de>
+References: <1581931886-12173-1-git-send-email-Anson.Huang@nxp.com>
+ <1581931886-12173-2-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1581931886-12173-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Akash Asthana (2):
-  dt-bindings: spi: Convert QSPI bindings to YAML
-  dt-bindings: spi: Add interconnect binding for QSPI
+On Mon, Feb 17, 2020 at 05:31:21PM +0800, Anson Huang wrote:
+> Some of UART RTS/CTS pins' DCE/DTE mux function are missing,
+> add them.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Uwe Kleine-K枚nig <u.kleine-koenig@pengutronix.de>
 
- .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 --------
- .../bindings/spi/qcom,spi-qcom-qspi.yaml           | 97 ++++++++++++++++++++++
- 2 files changed, 97 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+Huh, this is not how I wrote my name :-)
+
+Best regards
+Uwe
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
