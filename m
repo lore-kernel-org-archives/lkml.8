@@ -2,79 +2,151 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D924BC761A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB6AC761A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D43920718
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 12:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Lvw5CC6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgBQMbM (ORCPT
+        id S1729337AbgBQMdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 07:31:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60862 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgBQMbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:31:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E6807B13D;
-        Mon, 17 Feb 2020 12:31:10 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 64EC9DA7A0; Mon, 17 Feb 2020 13:30:54 +0100 (CET)
-Date:   Mon, 17 Feb 2020 13:30:54 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.6-rc2
-Message-ID: <20200217123054.GH2902@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
- <20200217020840.GA24821@codemonkey.org.uk>
- <CAHk-=wg5AkQk-9By-QeyT+5H_t6DLZD=25uOz-ujnV8oEv1Y5Q@mail.gmail.com>
- <8025e1bf-4834-83c6-d12c-4e817f875776@toxicpanda.com>
- <CAHk-=wiG+wjLjuDDNiqfL3iLW25yqsMK_gNEWomyMH=8kxOLwQ@mail.gmail.com>
+        Mon, 17 Feb 2020 07:33:31 -0500
+Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:6219
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727107AbgBQMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 07:33:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C+TKrg33cd3kqjYe4pTdfGbqJPJJFsdV9PX7MBP3PqRCVFZdF6XRh2vIizLKk2oun240pQfmV2OqG5F+/LmzUjBqL4A0AgUHEp16PiLYWkRCvxj/cHQvKprgUUPeJXv91QDgIonflculgnuzn9blD6x7lE1LfgIetMcTkVNiVpBtvAJ1oBwptI/XTE5UzJaslvc13Zi7x2mZvtI2xAaaTynzRv9A19l2d8SMqbyIOFwBlfqB7IFllAB76hXvXLFCzwxwEYI3DydSJugsU8wg4cK2n5tH9rDJddY8Q55c43CIrNLbDGkE2RDsQgWLzr1Z7V6O1XXCavrw8bY2jfWjOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vXHU+hd6mL9wRmSW/j4buXv4HtUc8Ii9PabzwNKK1+w=;
+ b=HmydgbG7//6pg4pS0fxQKDHR7EZB5ROSLMWeGhAy4nG1gnnJuor6YSeOcY0vJHS2rDWB+JwbjkeLANnReC8xzYFtTrTIoEb08zsyK3d4Fhuu/VrvAkgEvNXNTmac5awZ6ADjqOg/Vll9XBaWH2X85VqOsx2x65I51DMPkMFyjtrndXOxbVdaUGWtNQ+kSILXeE4LAwIovviOqivlCoJbWSkEFvKKOYCCTvLUS/8gDD5gKXgimMHYtY++tr4z9q/TWsA2FsrSNhh3/238vltDzi6JBrPYr931vKUdjRq/MyGRWuaiKsbgiCzR9WzCl5tV1hssnZMwfMGjfOY6+BJ8Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vXHU+hd6mL9wRmSW/j4buXv4HtUc8Ii9PabzwNKK1+w=;
+ b=Lvw5CC6pGWClAwI6FrV8bn1PvhphHl3u/wedzc5kSN+6pEiurCpRhlDmH3WOq0ufmbiIMgM+43vFrFs7S5hfxadU9coXDmrxlzGjGyX9AREZvII8VpQ2wnsshP4cPaN+PY2WDU6kpbhN/Kn3i5tlAwkwUnqJSXTRUUQjSVsM3ls=
+Received: from MWHPR02CA0021.namprd02.prod.outlook.com (2603:10b6:300:4b::31)
+ by CY4PR02MB2613.namprd02.prod.outlook.com (2603:10b6:903:71::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Mon, 17 Feb
+ 2020 12:33:28 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::206) by MWHPR02CA0021.outlook.office365.com
+ (2603:10b6:300:4b::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend
+ Transport; Mon, 17 Feb 2020 12:33:27 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
+ via Frontend Transport; Mon, 17 Feb 2020 12:33:27 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3faY-0000SD-Nz; Mon, 17 Feb 2020 04:33:26 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3faT-0001vY-Kx; Mon, 17 Feb 2020 04:33:21 -0800
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HCXHce025810;
+        Mon, 17 Feb 2020 04:33:17 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j3faO-0001uE-GL; Mon, 17 Feb 2020 04:33:16 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: [PATCH V3 0/7] gpio: zynq: Update on gpio-zynq driver
+Date:   Mon, 17 Feb 2020 18:03:06 +0530
+Message-Id: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(199004)(189003)(6666004)(356004)(478600001)(9786002)(70206006)(70586007)(36756003)(15650500001)(107886003)(186003)(6636002)(8676002)(81156014)(81166006)(8936002)(2906002)(7696005)(26005)(4326008)(426003)(44832011)(5660300002)(2616005)(316002)(336012)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2613;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiG+wjLjuDDNiqfL3iLW25yqsMK_gNEWomyMH=8kxOLwQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bb251c8b-71c2-4a85-7b6d-08d7b3a596ad
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2613:
+X-Microsoft-Antispam-PRVS: <CY4PR02MB2613D6FB612AED7FBEF87786AF160@CY4PR02MB2613.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:644;
+X-Forefront-PRVS: 0316567485
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +lBl6SW/emhQuWKh3mpGmo3ILg1gstlHmKFNQwTaMUQ3RRvFO5eoi64VVAJF9BbVzmB48iiyLMNzwjghXatVOcuehC/DQorx3GHfRMWg1SI4oahUHqM6nzKGUOIrNeCV/Q3PlJipnvoffs999CLJTEqNtkRn7SRmt2CZMeOCnbyRvVOCADtP3QSwoeWXRdZN8FfiFHpuAvT53M7+itvKVKOKDXw1r6iZTBmGBWfZ3ix2k2Y1vo481w7oLMDNp4S460mp9efZbpoeF4pHxI6ReRVhLWWPhFjK4bM/AUPOvWtMTd5Urg1fwKkVj8JH60EWOnf2CZS/VR9i9XsP6YLmogP9TsjTpdv30EmxF4Wtdvk4yRFoOcsVik3fl4nd44lX/SXsv3ZR09dPE/XvFiE/bDRQAMSNsAetfC5jh1OzOOjYvdB7dBNbacwSiSpPj9HqdAEmCQisGcO7QLkYFIgPglJQL2L8fygepx/m5TIGjVSiEXyJnAR4G29JaCli/lni
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 12:33:27.3400
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb251c8b-71c2-4a85-7b6d-08d7b3a596ad
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2613
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 09:08:18PM -0800, Linus Torvalds wrote:
-> On Sun, Feb 16, 2020 at 7:02 PM Josef Bacik <josef@toxicpanda.com> wrote:
-> >
-> > I assume Filipe wrote this based on my patch here
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/josef/btrfs-next.git/commit/?id=c821555d2b9733d8f483c9e79481c7209e1c1fb0
-> >
-> > which makes it so we can allocate safely in this context, but that patch hasn't
-> > made it's way to you yet.  Do you want it now?  It was prep for a much less safe
-> > patchset, but is fine by itself.  Thanks,
-> 
-> I assume it's either that, or revert 28553fa992cb and do it differently..
-> 
-> I'll leave that whole decision to the btrfs people who actually know
-> the code and the situations and what the alternative would look
-> like...
+This patch series does the following:
+-protect direction in/out with a spinlock
+-Add binding for Versal gpio
+-Add binding for pmc gpio node
+-Add Versal support
+-Disable the irq if it is not a wakeup source
+-Add pmc gpio support
+-Remove error prints in EPROBE_DEFER
 
-I'll send a pull request with fix today. The fixes get cherry-picked
-from development branch to current rc branch and sometimes affect each
-other. I do test the rc branch independently before sending but I
-haven't seen the bug Dave reported.
+---
+Changes in V2:
+- In previous series [PATCH 1/8] already applied on "linux-next".
+- Fixed checkpatch warning for spinlock description. 
+- Added description for Versal PS_GPIO and PMC_GPIO.
+Changes in V3:
+- Updated commit description for PATCH 4 and 6.
+---
+
+Glenn Langedock (1):
+  gpio: zynq: protect direction in/out with a spinlock
+
+Shubhrajyoti Datta (6):
+  dt-bindings: gpio: Add binding for Versal gpio
+  devicetree-binding: Add pmc gpio node
+  gpio: zynq: Add Versal support
+  gpio: zynq: Disable the irq if it is not a wakeup source
+  gpio: zynq: Add pmc gpio support
+  gpio: zynq: Remove error prints in EPROBE_DEFER
+
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+ drivers/gpio/gpio-zynq.c                           | 66 +++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
