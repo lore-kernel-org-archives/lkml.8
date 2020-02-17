@@ -2,116 +2,175 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E192C761A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECEEC761A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3A920725
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443B020725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 11:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581940775;
+	bh=RcjAZR+Fwe0I2wCcw48lXCGOoSmuQVJM6cpuaEPD3qY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qXgRbnqYc0EhYtelo6DZ44B6CgH8iVkS2/5/KMAUQgQS2py/TlKZlRpDcmBC9EYZP
+	 6TZ5IxpsKbbtmUD3O+FdneRrTh/AV9nWph/qu4IsvYsAz/uLbm0EqoZifEDIyHeb39
+	 C96thFDAGReXSeNZ+HCpIVqVmQ9sTPXzzPOu6rRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgBQL6S (ORCPT
+        id S1729144AbgBQL7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 06:58:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38340 "EHLO mx2.suse.de"
+        Mon, 17 Feb 2020 06:59:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728773AbgBQL6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 06:58:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7594CAAC2;
-        Mon, 17 Feb 2020 11:58:15 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 11:58:10 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     ?????? <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal Koutn? <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
- locality info
-Message-ID: <20200217115810.GA3420@suse.de>
-References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
- <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
- <20200214151048.GL14914@hirez.programming.kicks-ass.net>
+        id S1728831AbgBQL7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:59:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1711E20725;
+        Mon, 17 Feb 2020 11:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581940772;
+        bh=RcjAZR+Fwe0I2wCcw48lXCGOoSmuQVJM6cpuaEPD3qY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YlsPVITY11z973x5x9QOJ3hngST58jqum5XM4PhzFc3F7gO9cIv1U+JMi359+Cni8
+         8YAz0KMt9D5qkpLhFbWNRwYKnSar72ii8DHUFi+Q8bFAnP97sCG4UkLzDzkeW3s4ZL
+         vSPr33KWPqO8uixwC4yFSeLrk74VBUD+FY78Zx+4=
+Date:   Mon, 17 Feb 2020 12:59:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] bus: mhi: core: Add support for registering MHI
+ controllers
+Message-ID: <20200217115930.GA218071@kroah.com>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-3-manivannan.sadhasivam@linaro.org>
+ <20200206165755.GB3894455@kroah.com>
+ <20200211184130.GA11908@Mani-XPS-13-9360>
+ <20200211192055.GA1962867@kroah.com>
+ <20200213152013.GB15010@mani>
+ <20200213153418.GA3623121@kroah.com>
+ <20200213154809.GA26953@mani>
+ <20200213155302.GA3635465@kroah.com>
+ <20200217052743.GA4809@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214151048.GL14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217052743.GA4809@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:10:48PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2020 at 11:35:30AM +0800, ?????? wrote:
-> > By monitoring the increments, we will be able to locate the per-cgroup
-> > workload which NUMA Balancing can't helpwith (usually caused by wrong
-> > CPU and memory node bindings), then we got chance to fix that in time.
+On Mon, Feb 17, 2020 at 10:57:43AM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
+> 
+> On Thu, Feb 13, 2020 at 07:53:02AM -0800, Greg KH wrote:
+> > On Thu, Feb 13, 2020 at 09:18:09PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Greg,
+> > > 
+> > > On Thu, Feb 13, 2020 at 07:34:18AM -0800, Greg KH wrote:
+> > > > On Thu, Feb 13, 2020 at 08:50:13PM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Tue, Feb 11, 2020 at 11:20:55AM -0800, Greg KH wrote:
+> > > > > > On Wed, Feb 12, 2020 at 12:11:30AM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > Hi Greg,
+> > > > > > > 
+> > > > > > > On Thu, Feb 06, 2020 at 05:57:55PM +0100, Greg KH wrote:
+> > > > > > > > On Fri, Jan 31, 2020 at 07:19:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > > > --- /dev/null
+> > > > > > > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > > > > > > @@ -0,0 +1,407 @@
+> > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > > > +/*
+> > > > > > > > > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> > > > > > > > > + *
+> > > > > > > > > + */
+> > > > > > > > > +
+> > > > > > > > > +#define dev_fmt(fmt) "MHI: " fmt
+> > > > > > > > 
+> > > > > > > > This should not be needed, right?  The bus/device name should give you
+> > > > > > > > all you need here from what I can tell.  So why is this needed?
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > The log will have only the device name as like PCI-E. But that won't specify
+> > > > > > > where the error is coming from. Having "MHI" prefix helps the users to
+> > > > > > > quickly identify that the error is coming from MHI stack.
+> > > > > > 
+> > > > > > If the driver binds properly to the device, the name of the driver will
+> > > > > > be there in the message, so I suggest using that please.
+> > > > > > 
+> > > > > > No need for this prefix...
+> > > > > > 
+> > > > > 
+> > > > > So the driver name will be in the log but that won't help identifying where
+> > > > > the log is coming from. This is more important for MHI since it reuses the
+> > > > > `struct device` of the transport device like PCI-E. For instance, below is
+> > > > > the log without MHI prefix:
+> > > > > 
+> > > > > [   47.355582] ath11k_pci 0000:01:00.0: Requested to power on
+> > > > > [   47.355724] ath11k_pci 0000:01:00.0: Power on setup success
+> > > > > 
+> > > > > As you can see, this gives the assumption that the log is coming from the
+> > > > > ath11k_pci driver. But the reality is, it is coming from MHI bus.
+> > > > 
+> > > > Then you should NOT be trying to "reuse" a struct device.
+> > > > 
+> > > > > With the prefix added, we will get below:
+> > > > > 
+> > > > > [   47.355582] ath11k_pci 0000:01:00.0: MHI: Requested to power on
+> > > > > [   47.355724] ath11k_pci 0000:01:00.0: MHI: Power on setup success
+> > > > > 
+> > > > > IMO, the prefix will give users a clear idea of logs and that will be very
+> > > > > useful for debugging.
+> > > > > 
+> > > > > Hope this clarifies.
+> > > > 
+> > > > Don't try to reuse struct devices, if you are a bus, have your own
+> > > > devices as that's the correct way to do things.
+> > > > 
+> > > 
+> > > I assumed that the buses relying on a different physical interface for the
+> > > actual communication can reuse the `struct device`. I can see that the MOXTET
+> > > bus driver already doing it. It reuses the `struct device` of SPI.
 > > 
-> > Cc: Mel Gorman <mgorman@suse.de>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Michal Koutný <mkoutny@suse.com>
-> > Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> > How can you reuse anything?
+> > 
+> > > And this assumption has deep rooted in MHI bus design.
+> > 
+> > Maybe I do not understand what this is at all, but a device can only be
+> > on one "bus" at a time.  How is that being broken here?
+> > 
 > 
-> So here:
+> Let me share some insight on how it is being used:
 > 
->   https://lkml.kernel.org/r/20191127101932.GN28938@suse.de
+> The MHI bus sits on top of the actual physical bus like PCI-E and requires
+> the physical bus for doing activities like allocating I/O virtual address,
+> runtime PM etc... The part which gets tied to the PCI-E from MHI is called MHI
+> controller driver. This MHI controller driver is also the actual PCI-E driver
+> managing the device.
 > 
-> Mel argues that the information exposed is fairly implementation
-> specific and hard to use without understanding how NUMA balancing works.
+> For instance, we have QCA6390 PCI-E WLAN device. For this device, there is a
+> ath11k PCI-E driver and the same driver also registers as a MHI controller and
+> acts as a MHI controller driver. This is where I referred to reusing the PCI-E
+> struct device. It's not that MHI bus itself is reusing the PCI-E struct device
+> but we need the PCI-E device pointer to do above mentioned IOVA, PM operations
+> in some places. One of the usage is below:
 > 
-> By exposing it to userspace, we tie ourselves to these particulars. We
-> can no longer change these NUMA balancing details if we wanted to, due
-> to UAPI concerns.
-> 
-> Mel, I suspect you still feel that way, right?
-> 
+> ```
+> void *buf = dma_alloc_coherent(mhi_cntrl->dev, size, dma_handle, gfp);
+> ```
 
-Yes, I still think it would be a struggle to interpret the data
-meaningfully without very specific knowledge of the implementation. If
-the scan rate was constant, it would be easier but that would make NUMA
-balancing worse overall. Similarly, the stat might get very difficult to
-interpret when NUMA balancing is failing because of a load imbalance,
-pages are shared and being interleaved or NUMA groups span multiple
-active nodes.
+Wait, why do you need to call this with the parent dev?  Why not with
+your struct device?  What does the parent pointer have that yours does
+not?  Is it not correctly having whatever dma attributes the parent has
+set properly for your device as well?  If not, why not just fix that and
+then _your_ device can be doing the allocation?
 
-For example, the series that reconciles NUMA and CPU balancers may look
-worse in these stats even though the overall performance may be better.
+thanks,
 
-> In the document (patch 2/2) you write:
-> 
-> > +However, there are no hardware counters for per-task local/remote accessing
-> > +info, we don't know how many remote page accesses have occurred for a
-> > +particular task.
-> 
-> We can of course 'fix' that by adding a tracepoint.
-> 
-> Mel, would you feel better by having a tracepoint in task_numa_fault() ?
-> 
-
-A bit, although interpreting the data would still be difficult and the
-tracepoint would have to include information about the cgroup. While
-I've never tried, this seems like the type of thing that would be suited
-to a BPF script that probes task_numa_fault and extract the information
-it needs.
-
--- 
-Mel Gorman
-SUSE Labs
+greg k-h
