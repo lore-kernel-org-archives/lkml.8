@@ -2,136 +2,97 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DACC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12753C34026
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D119B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDC1206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 20:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gHGlMLhH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atoDUkNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgBQUCW (ORCPT
+        id S1729594AbgBQUEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 15:02:22 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.109]:26552 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728254AbgBQUCW (ORCPT
+        Mon, 17 Feb 2020 15:04:21 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49227 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727241AbgBQUEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 15:02:22 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id B756C7410
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 14:02:20 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3mayjPa9OSl8q3mayj6f7s; Mon, 17 Feb 2020 14:02:20 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ecty6MerGyd7wX45GYrcBWDuJacrGQZzyDnGictr5cU=; b=gHGlMLhH/8NwV+4WcyPOTRykq/
-        Habr4VE/lVhtlFHsYItOo+hL9NTTW56IU2lJ8eGl1qfEf86QE6sJhsb1LUT+k7QS5FBgH/tJAPzIo
-        Px0tsesC+EQj8bcXjlR+XbKKH9KmMUEv+6W5gSg/ydaU+W7A+FKL4R+4E6v3iHUZsYOSiAkXCJ/54
-        Ule61XOWKpBeAkgzX1D0TpNShvbRdycWsUB0j1fyw/Oaei+VE9ecNQSUgIjTbCspp9+mXKU3kZhXF
-        5NJoeeilulftg49oTqYf9IqAeOCUVeRc0Zmwivo4/6O+aaMo/E5JdzL5g42onE87HssaHFRBC0CWM
-        B1TpV0jg==;
-Received: from [200.68.140.26] (port=23900 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j3max-000Q8w-00; Mon, 17 Feb 2020 14:02:19 -0600
-Date:   Mon, 17 Feb 2020 14:05:00 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] svcrdma: Replace zero-length array with flexible-array
- member
-Message-ID: <20200217200500.GA7628@embeddedor>
+        Mon, 17 Feb 2020 15:04:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581969840;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=gNniWaKO6cLGO+dIQOvLhhRagXQZ/USr9hJlmkNpWOY=;
+        b=atoDUkNLNlePqzJX44hBsXBMiIb+efihDv3VrNuqmDuf3f3dlwGjZY+Gh/FiA520SM83hG
+        WtNQYSNM6LxTOUV9Mvad6YAWWEfdScg6A1AqqqFv6fVr0S/MJ/KagqAeoMdN2RaWFKnAQR
+        EqhuNR5gV8LGkGt3ZUByIb4JW3BNawM=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-4sIZbrXpM0OhyACdxXwMIQ-1; Mon, 17 Feb 2020 14:50:31 -0500
+X-MC-Unique: 4sIZbrXpM0OhyACdxXwMIQ-1
+Received: by mail-qv1-f69.google.com with SMTP id z39so10921985qve.5
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:50:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=gNniWaKO6cLGO+dIQOvLhhRagXQZ/USr9hJlmkNpWOY=;
+        b=d3ldBzNiOT7mr3hNLPKhIxFHhW0q0Wnnuqq0YEZfCizQt0INPGdszquU0Sg3ukcaO4
+         BUBMwHDVoo1qlpR+vOAch9eDtKmNsVWGPiNCHmfq1PUHWr+vulNPZAEB4xggzkFIIDqB
+         mXEq+gTAtSB1qzwJpglwHCtqmmF8F2jQ58KeA8Wgt6vOEvMN095K5OQBnfNwZjhPut0j
+         ufk59xirwafOhO3DvMZ985tUFxVrKr6xP4/YVbM6ooDcyYAEdRdDUYsfs60dLOO4QEJj
+         4J/rfTmVNLus3M4lsNui0yX6s8NjRf3R/QLRewQ5toWv3pxNdA4t38i99gi0sKIqx/4L
+         LuFg==
+X-Gm-Message-State: APjAAAVEb4ekRo7tdYpzyoVrpPu/hKf7Xtu+Eb500QevoRjumTAt0MY0
+        3ZqedwkdlPyZW62GkRkWpZ7sMQG0+MVW5iJDYXELzI8LM0ECZHuohJT4rX2IInzvRqWFVUy0t9b
+        Ah5JrPo8cz6e9y0kaO1SLEkS6
+X-Received: by 2002:a05:620a:1279:: with SMTP id b25mr14322634qkl.385.1581969010470;
+        Mon, 17 Feb 2020 11:50:10 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzEz2fW3GrBa7Qc1v+rXsbwKMDxOkGqyFWXWzs6sQ1ePE7ymxQJi4Brq0/lHG4v1VDI2Vn48Q==
+X-Received: by 2002:a05:620a:1279:: with SMTP id b25mr14322617qkl.385.1581969010237;
+        Mon, 17 Feb 2020 11:50:10 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id a72sm731107qkc.121.2020.02.17.11.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2020 11:50:09 -0800 (PST)
+Date:   Mon, 17 Feb 2020 12:50:08 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] iommu/vt-d: Add attach_deferred() helper
+Message-ID: <20200217195008.kxl6n6ev2jchzcxc@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200217193858.26990-1-joro@8bytes.org>
+ <20200217193858.26990-2-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.26
-X-Source-L: No
-X-Exim-ID: 1j3max-000Q8w-00
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:23900
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200217193858.26990-2-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Mon Feb 17 20, Joerg Roedel wrote:
+>From: Joerg Roedel <jroedel@suse.de>
+>
+>Implement a helper function to check whether a device's attach process
+>is deferred.
+>
+>Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/sunrpc/xprtrdma/svc_rdma_rw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 48fe3b16b0d9..003610ce00bc 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -41,7 +41,7 @@ struct svc_rdma_rw_ctxt {
- 	struct rdma_rw_ctx	rw_ctx;
- 	int			rw_nents;
- 	struct sg_table		rw_sg_table;
--	struct scatterlist	rw_first_sgl[0];
-+	struct scatterlist	rw_first_sgl[];
- };
- 
- static inline struct svc_rdma_rw_ctxt *
--- 
-2.25.0
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
