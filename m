@@ -2,133 +2,212 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDDCC34021
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02BBC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A5F214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581956957;
-	bh=3RyDHdCvjIDVivxlLYCUY6FAPAIB2sXqUpmcgkCzhL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZBNOg6JEjcLxjd5dzdqp6jnMOn3rzeTfQvEGlxB4gUx9Z2ag3z/e7RyoUqzjWHmhj
-	 4R/azTF/Omqa2JLaR3serjwfmDrHF6Ufu4fmBpZlqgQYTt0eG3nDLG1hvGeNsstCK+
-	 m21nv+wmnlIDbV7ZGuN1rOq+17ZcOomZ11vcPNb0=
+	by mail.kernel.org (Postfix) with ESMTP id A543B214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 16:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AnkzS/6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgBQQ3Q (ORCPT
+        id S1728817AbgBQQ3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 11:29:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgBQQ3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 11:29:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Mon, 17 Feb 2020 11:29:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59484 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgBQQ3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 11:29:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=veED7Jo7kFQ/SN9gWCAQtt2HrY+pVqH2/vInXfWPRo8=; b=AnkzS/6J+lSGXkA6ViCUhD9O1n
+        sZuKPZQAoyYiNUld4BxSAqmJN2xJd2x0ulIS1KAaB12Gd+VH0s1kF95byFh/navbNX410DJpe9lsY
+        7E+P5fBV2OEDxGRdytWuRf3A4PohIIgfH4bEhoXMSll3JryDCt4/IkbYfxi0e9CbQmAhu+wchvfIh
+        mD87h3rNybVQWMUCQh/5vZCEvsrSMvF7HB06IqrMXhKhi2lfAor5O3SazKScpAzfAunq7Z3qCfy1Y
+        kGpinGYeSKh8kDMtd8w3CDNfzn5ewc4WkOIxlJDhHvicjCOAzBwtjzom5crwRn3dmxUIhpzzmtdxo
+        AM6bfGbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3jGs-0006bd-Cd; Mon, 17 Feb 2020 16:29:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35B0A214D8;
-        Mon, 17 Feb 2020 16:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581956954;
-        bh=3RyDHdCvjIDVivxlLYCUY6FAPAIB2sXqUpmcgkCzhL0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RDAcdCoNIDDp07PhuKaqUFmG3j2kkYyX4AI8GwU+iW2xs9ifI+alAwc7jSsNjnWNC
-         izXx4On2CO3plUbt+zfIs+pCQT1kvPFnPUUw8rglZ7wWKybI6Y0/BVULDe0zpjMXQ8
-         nmRLuzkDAjLOhPAHZuSzp7CyF1i7uzQHP4+XxcC8=
-Date:   Mon, 17 Feb 2020 17:29:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next v2 01/10] sysfs: add
- sysfs_file_change_owner{_by_name}()
-Message-ID: <20200217162912.GB1502885@kroah.com>
-References: <20200217161436.1748598-1-christian.brauner@ubuntu.com>
- <20200217161436.1748598-2-christian.brauner@ubuntu.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B4FC8301A66;
+        Mon, 17 Feb 2020 17:27:28 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CF0402B910516; Mon, 17 Feb 2020 17:29:19 +0100 (CET)
+Date:   Mon, 17 Feb 2020 17:29:19 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marco Elver <elver@google.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Gary Hook <Gary.Hook@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 2/6] lib: introduce generic min-heap
+Message-ID: <20200217162919.GO14879@hirez.programming.kicks-ass.net>
+References: <20200214075133.181299-1-irogers@google.com>
+ <20200214075133.181299-3-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217161436.1748598-2-christian.brauner@ubuntu.com>
+In-Reply-To: <20200214075133.181299-3-irogers@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:14:27PM +0100, Christian Brauner wrote:
-> Add helpers to change owner of a sysfs files.
-> The ownership of a sysfs object is determined based on the ownership of
-> the corresponding kobject, i.e. only if the ownership of a kobject is
-> changed will this function change the ownership of the corresponding
-> sysfs entry.
-> This function will be used to correctly account for kobject ownership
-> changes, e.g. when moving network devices between network namespaces.
+On Thu, Feb 13, 2020 at 11:51:29PM -0800, Ian Rogers wrote:
+> Supports push, pop and converting an array into a heap. If the sense of
+> the compare function is inverted then it can provide a max-heap.
+
++whitespace
+
+> Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+-whitespace
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> /* v2 */
-> -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
->    - Better naming for sysfs_file_change_owner() to reflect the fact that it
->      can be used to change the owner of the kobject itself by passing NULL as
->      argument.
-> - Christian Brauner <christian.brauner@ubuntu.com>:
->   - Split sysfs_file_change_owner() into two helpers sysfs_change_owner() and
->     sysfs_change_owner_by_name(). The former changes the owner of the kobject
->     itself, the latter the owner of the kobject looked up via the name
->     argument.
-> ---
->  fs/sysfs/file.c       | 82 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/sysfs.h | 14 ++++++++
->  2 files changed, 96 insertions(+)
+>  include/linux/min_heap.h | 135 +++++++++++++++++++++++++++
+>  lib/Kconfig.debug        |  10 ++
+>  lib/Makefile             |   1 +
+>  lib/test_min_heap.c      | 194 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 340 insertions(+)
+>  create mode 100644 include/linux/min_heap.h
+>  create mode 100644 lib/test_min_heap.c
 > 
-> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> index 130fc6fbcc03..8f2607de2456 100644
-> --- a/fs/sysfs/file.c
-> +++ b/fs/sysfs/file.c
-> @@ -558,3 +558,85 @@ void sysfs_remove_bin_file(struct kobject *kobj,
->  	kernfs_remove_by_name(kobj->sd, attr->attr.name);
->  }
->  EXPORT_SYMBOL_GPL(sysfs_remove_bin_file);
+> diff --git a/include/linux/min_heap.h b/include/linux/min_heap.h
+> new file mode 100644
+> index 000000000000..0f04f49c0779
+> --- /dev/null
+> +++ b/include/linux/min_heap.h
+> @@ -0,0 +1,135 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_MIN_HEAP_H
+> +#define _LINUX_MIN_HEAP_H
 > +
-> +static int internal_change_owner(struct kernfs_node *kn, struct kobject *kobj)
-> +{
-> +	kuid_t uid;
-> +	kgid_t gid;
-> +	struct iattr newattrs = {
-> +		.ia_valid = ATTR_UID | ATTR_GID,
-> +	};
-> +
-> +	kobject_get_ownership(kobj, &uid, &gid);
-> +	newattrs.ia_uid = uid;
-> +	newattrs.ia_gid = gid;
-> +
-> +	return kernfs_setattr(kn, &newattrs);
-> +}
+> +#include <linux/bug.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
 > +
 > +/**
-> + *	sysfs_file_change_owner_by_name - change owner of a file.
-> + *	@kobj:	object.
-> + *	@name:	name of the file to change.
-> + *
-> + * To change the ownership of a sysfs object, the caller must first change the
-> + * uid/gid of the kobject and then call this function.
+> + * struct min_heap - Data structure to hold a min-heap.
+> + * @data: Start of array holding the heap elements.
+> + * @size: Number of elements currently in the heap.
+> + * @cap: Maximum number of elements that can be held in current storage.
+> + */
+> +struct min_heap {
+> +	void *data;
+> +	int size;
+> +	int cap;
+> +};
+> +
+> +/**
+> + * struct min_heap_callbacks - Data/functions to customise the min_heap.
+> + * @elem_size: The size of each element in bytes.
+> + * @cmp: Partial order function for this heap 'less'/'<' for min-heap,
+> + *       'greater'/'>' for max-heap.
 
-Why have the caller do this?  Why not pass the uid/gid as a parameter
-here?  That would make it totally obvious as to what is happening here,
-right?
+Since the thing is now called min_heap, 's/cmp/less/g'. cmp in C is a
+-1,0,1 like thing.
 
-Otherwise this function is depending on someone doing something before
-calling it, and that's going to be a very very hard thing to always
-ensure/audit.
+> + * @swp: Swap elements function.
+> + */
+> +struct min_heap_callbacks {
+> +	int elem_size;
+> +	bool (*cmp)(const void *lhs, const void *rhs);
+> +	void (*swp)(void *lhs, void *rhs);
+> +};
+> +
+> +/* Sift the element at pos down the heap. */
+> +static __always_inline
+> +void min_heapify(struct min_heap *heap, int pos,
+> +		const struct min_heap_callbacks *func)
+> +{
+> +	void *left_child, *right_child, *parent, *large_or_smallest;
 
-thanks,
+'s/large_or_smallest/smallest/g' ?
 
-greg k-h
+> +	u8 *data = (u8 *)heap->data;
+
+void * has byte sized arithmetic
+
+> +
+> +	for (;;) {
+> +		if (pos * 2 + 1 >= heap->size)
+> +			break;
+> +
+> +		left_child = data + ((pos * 2 + 1) * func->elem_size);
+> +		parent = data + (pos * func->elem_size);
+
+> +		large_or_smallest = parent;
+> +		if (func->cmp(left_child, large_or_smallest))
+> +			large_or_smallest = left_child;
+
+		smallest = parent;
+		if (func->less(left_child, smallest);
+			smallest = left_child;
+
+Makes sense, no?
+
+> +
+> +		if (pos * 2 + 2 < heap->size) {
+> +			right_child = data + ((pos * 2 + 2) * func->elem_size);
+> +			if (func->cmp(right_child, large_or_smallest))
+> +				large_or_smallest = right_child;
+> +		}
+> +		if (large_or_smallest == parent)
+> +			break;
+> +		func->swp(large_or_smallest, parent);
+> +		if (large_or_smallest == left_child)
+> +			pos = (pos * 2) + 1;
+> +		else
+> +			pos = (pos * 2) + 2;
+
+> +/*
+> + * Remove the minimum element and then push the given element. The
+> + * implementation performs 1 sift (O(log2(size))) and is therefore more
+> + * efficient than a pop followed by a push that does 2.
+> + */
+> +static __always_inline
+> +void min_heap_pop_push(struct min_heap *heap,
+> +		const void *element,
+> +		const struct min_heap_callbacks *func)
+> +{
+> +	memcpy(heap->data, element, func->elem_size);
+> +	min_heapify(heap, 0, func);
+> +}
+
+I still think this is a mightly weird primitive. I think I simply did:
+
+	*evt = perf_event_group(next);
+	if (*evt)
+		min_heapify(..);
+
