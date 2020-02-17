@@ -2,250 +2,190 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2DCC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001DEC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2F2207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33F6207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 17:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="md0FuuyI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KSNQQPta"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="a5ik/lnL";
+	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="ptSjTNGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgBQRvn (ORCPT
+        id S1729798AbgBQRwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 12:51:43 -0500
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:34013 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728467AbgBQRvn (ORCPT
+        Mon, 17 Feb 2020 12:52:18 -0500
+Received: from rcdn-iport-2.cisco.com ([173.37.86.73]:59596 "EHLO
+        rcdn-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbgBQRwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:51:43 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id DF5D1568;
-        Mon, 17 Feb 2020 12:51:41 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 17 Feb 2020 12:51:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=3rFDvViY+O0Mipl0dXMR73dL45T
-        ZFzCvzq7yeICJE7A=; b=md0FuuyIBy0rAJO2YFMDjsB6epTw+dAekyG2bcDuw2g
-        OhpNQnqQ/bnm4Z4Xy0MC/YGOJCDtm6f02a82LLaF3EUaHck8I7VjnzOhitk1NDDw
-        3v1NEPyOQY+NzLhJuc+gu8H/X3PLd7jWvdwXzsxYQ6pe6KfRFMzRtKp+rPk4z39n
-        hx4fhfy1b8gGQEwUBswEj2Gz6JPqLyKG8wWebmN2dnaT0G4+VyaNf3b1KSuXCWQR
-        Mp6emmwgH1xHJBI7atHLiw1NdXUgfdkIkJQJHoEU7vJHOIYgQhkjG2KXttKZOekz
-        zTXl6c4SyOjWRz+cr132HMtVXqxB0Sm0ZtOVIdNazpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3rFDvV
-        iY+O0Mipl0dXMR73dL45TZFzCvzq7yeICJE7A=; b=KSNQQPta7i9YEHQ6fJvrrZ
-        bFgV+bvq6puf7alg8hSEr6KrKtOVP1KBgpKiq9TsBaGifdW4TS+8I88oxxGqUpO5
-        /qJwRloRWE5QLoicRbRXvD0k+4hBIgl7tIxRmy2Llm6WI06wO71MfPTddCNCUpAA
-        INng8qCXE5BSgO276au115lcWFFnsNSekYGLPrxn5uyEp58w3hyz7niE+4bcLmBO
-        VjykR6BJ9wPzi9f4ffnj91P68bDP1RmvRCwnYcpl65WRlpU7D/UEel0zeRyEs39O
-        68CgZA9VDE8rDnuxn+wsGMlQnDkEr6iNhxyG6ljplHMmcNVua6qZgMhhUkd0F8WA
-        ==
-X-ME-Sender: <xms:qdJKXox1MobeNvBVQs5JQyh5PmZ7XuF-hC0KjYHeK1K4Kc1B0WTweg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeeigddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:qdJKXgCaiCFVClHRdB0QvtrVubYcoI-O-x0UuhQpJaBysFAYYQFW4A>
-    <xmx:qdJKXjOezd7dCbgLcUy-v20s1HT-DRcM_ikyL0v1L33AeIg-U03Prg>
-    <xmx:qdJKXuqUqdmVwvP6gxXbBYW_SI3rcBrclRf6gz7odQSVztly4BLOiw>
-    <xmx:rdJKXrGpAJvMOcWqV5KsUf42WkUrNpPJJOzwrJc7L0Hog1QvhXkMWw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9C573060EF2;
-        Mon, 17 Feb 2020 12:51:37 -0500 (EST)
-Date:   Mon, 17 Feb 2020 18:51:35 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Andrey Lebedev <andrey.lebedev@gmail.com>
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: Re: [PATCH v2 2/2] ARM: sun7i: dts: Add LVDS panel support on A20
-Message-ID: <20200217175135.ldtqji4mrwz2wbn5@gilmour.lan>
-References: <20200210195633.GA21832@kedthinkpad>
- <20200212222355.17141-2-andrey.lebedev@gmail.com>
- <20200213094304.hf3glhgmquypxpyf@gilmour.lan>
- <20200213200823.GA28336@kedthinkpad>
- <20200214075218.huxdhmd4qfoakat2@gilmour.lan>
- <20200214084358.GA25266@kedthinkpad>
- <20200214085351.2whnfyulrmyex2va@gilmour.lan>
- <20200214213231.GA6583@kedthinkpad>
+        Mon, 17 Feb 2020 12:52:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=1658; q=dns/txt; s=iport;
+  t=1581961936; x=1583171536;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=grWnaqNHy6oLMdR2hbnJO5oR+tPtc0j7uHR5RGdjHoQ=;
+  b=a5ik/lnL3nU7TyL0H4ukTpw2cuGD7TfCg8Og6uDSmRaEntxJc31IVB9C
+   ezceUqsaiEKYW6tX8uPR5WgHv7iWzrq5YIJ71PNzQu9hcFomGpA4ocX58
+   rlvYFHiZmR83n/Ep2/Zv8uVyYydfOvOpqBtSfGyXtjDWMpJwLRDzNAQRZ
+   g=;
+IronPort-PHdr: =?us-ascii?q?9a23=3AVZ7J/h2bDuOeVSi7smDT+zVfbzU7u7jyIg8e44?=
+ =?us-ascii?q?YmjLQLaKm44pD+JxKGt+51ggrPWoPWo7JfhuzavrqoeFRI4I3J8RVgOIdJSw?=
+ =?us-ascii?q?dDjMwXmwI6B8vQBUT9LfPucCUSF8VZX1gj9Ha+YgBY?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BqAACS0kpe/51dJa1mHQEBAQkBEQU?=
+ =?us-ascii?q?FAYFnCAELAYFTUAWBRCAECyoKh1ADhFqGH4JfjxYSiGmBLoEkA1QJAQEBDAE?=
+ =?us-ascii?q?BLQIEAQGEQAKCBCQ0CQ4CAw0BAQUBAQECAQUEbYU3DIVnAQEBAxIVEwYBATc?=
+ =?us-ascii?q?BDwIBCA4KCRUQDyMlAgQOBSKFTwMuAQKhbQKBOYhigXQzgn8BAQWFHxiCDAm?=
+ =?us-ascii?q?BOAGMIxqBQT+EJD6EIyiFbrACCoI6lkcoDoI7iBaQOy2KWJ8VAgQCBAUCDgE?=
+ =?us-ascii?q?BBYFSOYFYcBWDJ1AYDY4dg3OKU3SBKYp0gTIBgQ8BAQ?=
+X-IronPort-AV: E=Sophos;i="5.70,453,1574121600"; 
+   d="scan'208";a="728264063"
+Received: from rcdn-core-6.cisco.com ([173.37.93.157])
+  by rcdn-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 Feb 2020 17:52:15 +0000
+Received: from XCH-RCD-003.cisco.com (xch-rcd-003.cisco.com [173.37.102.13])
+        by rcdn-core-6.cisco.com (8.15.2/8.15.2) with ESMTPS id 01HHqFlS032016
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Mon, 17 Feb 2020 17:52:15 GMT
+Received: from xhs-rtp-001.cisco.com (64.101.210.228) by XCH-RCD-003.cisco.com
+ (173.37.102.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Feb
+ 2020 11:52:15 -0600
+Received: from xhs-rcd-002.cisco.com (173.37.227.247) by xhs-rtp-001.cisco.com
+ (64.101.210.228) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Feb
+ 2020 12:52:14 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (72.163.14.9) by
+ xhs-rcd-002.cisco.com (173.37.227.247) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 17 Feb 2020 11:52:13 -0600
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fGQxYyQFkvQff271humGVfn5Ljxzrie+XdIK0zuVQuppdshsH71NwqJToNu3mOGSMJ+/wWA52j0O8EdFv9WR+es3fM43cxjHYYiGZ6MwljMIIsacHjOMz9nVex1dvXCXSB7mYgQroR1OeC+MQGq+eLvpo88aEc3/3u69uco+Uqt2TjdEgLJvcQ2ea7QcUFCblpQIwiguyteZx4vgEw3vadseW0GWVkvPGRFm/VMAB5qEVlemQVZgMm77dp9F+SgJhpnUx8KeGKEgjE05N/MbuF6urR7QFD/xi0C1NLHkuSsWq4h9GqxsrEl5h1Hzn6zCiudWa1NR83yLC1VJhzkqPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3eDSoWAp2RszsZIC0GzfU5IyYNyVFd0QICznJx53dgI=;
+ b=lgFwBLaf4BKeVZMl93FA5WYakU9655kq6sM9PoWPxjf8at2KUFV9r2LChUl8SvqkIoPb4MBt+uvu6lpxNwWNzrabio+HZFIIr8FcNdffB2DSGS2LroWL1wBh6SZ+2XtHUBjm0nqGLa5aC2iOH1kvf6NMlEhBWxuwJaHt2Z8wiBRRVJf3EvTtKx2hw/oFjQ5AwJCSeDIPt9RggYJlT0lzO4KrTFgdXqktZhPxP6/lKeX8Oa1WHmnWjrpRqod4fq2Bal9GMA+M802GXd7V0h7xcmHH5umEpKxaJ6Fecu4YcEvSVpqUd1c0ia9FQfLzo8egLgTsi8rdNjOfXrtsVQAi8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
+ s=selector2-cisco-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3eDSoWAp2RszsZIC0GzfU5IyYNyVFd0QICznJx53dgI=;
+ b=ptSjTNGPOqVS5+z73Bt8bLtRPEXut6jAHkEgIsSCSEmkg5o3HDjsmRifB0LJBqHeSOsnQigcWwdSzPnY7kk86nWNj53ybcSZEMyVsFHZ/1o9mMIUqJPli9UQP49bFcB3gLSGxljztK8yx3AiYG86M5XRoN4dRCrlc8HNUBRRz20=
+Received: from BYAPR11MB3205.namprd11.prod.outlook.com (20.177.187.32) by
+ BYAPR11MB3125.namprd11.prod.outlook.com (20.177.227.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Mon, 17 Feb 2020 17:52:11 +0000
+Received: from BYAPR11MB3205.namprd11.prod.outlook.com
+ ([fe80::89a6:9355:e6ba:832]) by BYAPR11MB3205.namprd11.prod.outlook.com
+ ([fe80::89a6:9355:e6ba:832%7]) with mapi id 15.20.2729.031; Mon, 17 Feb 2020
+ 17:52:11 +0000
+From:   "Daniel Walker (danielwa)" <danielwa@cisco.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>
+CC:     David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain
+ messages
+Thread-Topic: [PATCH] drivers: connector: cn_proc: allow limiting certain
+ messages
+Thread-Index: AQHV5br7vHcY3LtkzE2GSB4q/RS10w==
+Date:   Mon, 17 Feb 2020 17:52:11 +0000
+Message-ID: <20200217175209.GM24152@zorba>
+References: <20200212192901.6402-1-danielwa@cisco.com>
+ <20200216.184443.782357344949548902.davem@davemloft.net>
+ <20200217172551.GL24152@zorba>
+ <16818701581961475@iva7-8a22bc446c12.qloud-c.yandex.net>
+In-Reply-To: <16818701581961475@iva7-8a22bc446c12.qloud-c.yandex.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=danielwa@cisco.com; 
+x-originating-ip: [128.107.241.162]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 45a6d45f-22ae-4bfc-0e71-08d7b3d21dbf
+x-ms-traffictypediagnostic: BYAPR11MB3125:
+x-microsoft-antispam-prvs: <BYAPR11MB312507B5E64E0AC378735F8ADD160@BYAPR11MB3125.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0316567485
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(366004)(346002)(39860400002)(376002)(136003)(199004)(189003)(6506007)(2906002)(478600001)(186003)(6512007)(9686003)(316002)(86362001)(76116006)(26005)(66946007)(33656002)(71200400001)(54906003)(6916009)(8676002)(4326008)(66446008)(81156014)(81166006)(64756008)(5660300002)(33716001)(6486002)(66476007)(66556008)(15650500001)(8936002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3125;H:BYAPR11MB3205.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cisco.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rP68uBiohgvMUojwFXUFc5/ZFJl+Wek64pQKRFA5AVlcVtglUbwW91aTyO7iVIrBQMnU/M8OxrN3ntNRHng7I2M0djVyBf645+9Y4lrbaYVfnaM9t/mMsTfqBASBiJWsx0O1h2gEF5c7OIaWa9Uie5Um9lkgkQmuLW/adf9bVdUzyEAxPwtNEaGb+F77lP3WThO5Z7jBghMTUsx5u/c75PynDgIlp85fRQI2S/oe6rS0qeqVRLpwKzwLcaczeB/3monKGCFjyONKkNZts1XilcaW+zJyBoVCBTq+6U7yqTvmrp8TpDdlwIZ1nolTmfWIkMHZJ7NjfMzIDfv1WZL7EnG7kmBTvtJGZZebV49vy+9BHonGOcZgNqqSE1fC74nvTkMkWnNg5L9GRvwe8S4dhejJ6+b8pYqGr5Is/G+w4UfM3+Y5+L5GXBdbtES0b7+y
+x-ms-exchange-antispam-messagedata: /bh+SE3WJ/Yd0VXudy1Wd1Es6p7DJahCkimSCtIhfVP1qL7WZXRhGhMyrwxyNjq+aIJW8JDRgPKhRwzb8a31ycq+Fa3G2t6dkbYcmlujkEPbKJpw8NVSiXiTzUumvaUJYPPd3lJbvYCZ5urI330O4A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9CE2DF0A5AC1274EB7C61D079447A354@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y2rcdgs6xbzt4vvp"
-Content-Disposition: inline
-In-Reply-To: <20200214213231.GA6583@kedthinkpad>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45a6d45f-22ae-4bfc-0e71-08d7b3d21dbf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2020 17:52:11.8909
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9ZHFmfDnNjrtM9y03OlsQO3Nvdb6+eyyiHuscPSlvyBcTZX1HR7q2veDIAKx7hPH/lZLXlLcifKY4dYtWD79cQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3125
+X-OriginatorOrg: cisco.com
+X-Outbound-SMTP-Client: 173.37.102.13, xch-rcd-003.cisco.com
+X-Outbound-Node: rcdn-core-6.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 08:44:35PM +0300, Evgeniy Polyakov wrote:
+>    Hi Daniel, David
+>    =20
+>    17.02.2020, 20:26, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
+>    > On Sun, Feb 16, 2020 at 06:44:43PM -0800, David Miller wrote:
+>    >>  This is a netlink based facility, therefore please you should add
+>    filtering
+>    >>  capabilities to the netlink configuration and communications path.
+>    >>
+>    >>  Module parameters are quite verboten.
+>    >
+>    > How about adding in Kconfig options to limit the types of messages? =
+The
+>    issue
+>    > with this interface is that it's very easy for someone to enable the
+>    interface
+>    > as a listener, then never turn the interface off. Then it becomes a
+>    broadcast
+>    > interface. It's desirable to limit the more noisy messages in some
+>    cases.
+>    =20
+>    =20
+>    Compile-time options are binary switches which live forever after kern=
+el
+>    config has been created, its not gonna help those who enabled messages=
+.
+>    Kernel modules are kind of no-go, since it requires reboot to change i=
+n
+>    some cases.
+>    =20
+>    Having netlink control from userspace is a nice option, and connector =
+has
+>    simple userspace->kernelspace channel,
+>    but it requires additional userspace utils or programming, which is st=
+ill
+>    cumbersome.
+>    =20
+>    What about sysfs interface with one file per message type?
 
---y2rcdgs6xbzt4vvp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You mean similar to the module parameters I've done, but thru sysfs ? It wo=
+uld
+work for Cisco. I kind of like Kconfig because it also reduces kernel size =
+for
+messages you may never want to see.
 
-Hi Andrey,
-
-On Fri, Feb 14, 2020 at 11:32:31PM +0200, Andrey Lebedev wrote:
-> On Fri, Feb 14, 2020 at 09:53:51AM +0100, Maxime Ripard wrote:
-> > On Fri, Feb 14, 2020 at 10:43:58AM +0200, Andrey Lebedev wrote:
-> > > On Fri, Feb 14, 2020 at 08:52:18AM +0100, Maxime Ripard wrote:
-> > > > > > This will create a spurious warning message for TCON1, since we
-> > > > > > adjusted the driver to tell it supports LVDS, but there's no LVDS
-> > > > > > reset line, so we need to make it finer grained.
-> > > > >
-> > > > > Yes, I can attribute two of the messages in my dmesg log [1] to this
-> > > > > ("Missing LVDS properties" and "LVDS output disabled". "sun4i-tcon
-> > > > > 1c0d000.lcd-controller" is indeed tcon1). And yes, I can see how they
-> > > > > can be confusing to someone.
-> > > > >
-> > > > > I'd need some pointers on how to deal with that though (if we want to do
-> > > > > it in this scope).
-> > > >
-> > > > Like I was mentionning, you could introduce a new compatible for each
-> > > > TCON (tcon0 and tcon1) and only set the support_lvds flag for tcon0
-> > >
-> > > Can you give me an idea how that compatible might look like?
-> > >
-> > > 		tcon0: lcd-controller@1c0c000 {
-> > > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,lvds";
-> > >
-> > > or
-> > >
-> > > 		tcon0: lcd-controller@1c0c000 {
-> > > 			compatible = "allwinner,sun7i-a20-tcon", "allwinner,tcon0";
-> > >
-> > > ? Or something completely different?
-> >
-> > Something like
-> >
-> > &tcon0 {
-> >     compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
-> > };
-> >
-> > &tcon1 {
-> >     compatible = "allwinner,sun7i-a20-tcon1", "allwinner,sun7i-a20-tcon";
-> > };
-> >
->
-> Hi Maxime, here is what I came up with, please take a look. If the
-> approach is right, I'll split it up and include into the patch set.
->
-> From f3e45c958a9551a52ac26435785bdb572e54d8db Mon Sep 17 00:00:00 2001
-> From: Andrey Lebedev <andrey@lebedev.lt>
-> Date: Fri, 14 Feb 2020 23:21:59 +0200
-> Subject: [PATCH] Mark tcon0 to be the only tcon capable of LVDS on sun7i-a20
->
-> This allows to avoid warnings about reset line not provided for tcon1.
->
-> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi   |  2 +-
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 22 +++++++++++++++++++++-
->  drivers/gpu/drm/sun4i/sun4i_tcon.h |  2 ++
->  3 files changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index 3b3c366a2bee..bab59fc4d9b1 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -405,7 +405,7 @@
->  		};
->
->  		tcon0: lcd-controller@1c0c000 {
-> -			compatible = "allwinner,sun7i-a20-tcon";
-> +			compatible = "allwinner,sun7i-a20-tcon0", "allwinner,sun7i-a20-tcon";
-
-That's correct
-
->  			reg = <0x01c0c000 0x1000>;
->  			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
->  			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index 800a9bd86112..cb2040aec436 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -1107,6 +1107,25 @@ static struct sunxi_engine *sun4i_tcon_find_engine(struct sun4i_drv *drv,
->  	return sun4i_tcon_find_engine_traverse(drv, node, 0);
->  }
->
-> +/*
-> + * Check if given tcon supports LVDS
-> + *
-> + * Some of the sunxi SoC variants contain several timing controllers, but only
-> + * one of them can be used to drive LVDS screen. In this case such tcon is
-> + * identified in respective quirks struct: lvds_compatible_tcon property will
-> + * hold "compatible" string of the tcon, that supports LVDS.
-> + *
-> + * If lvds_compatible_tcon is not set, all tcons are considered capable of
-> + * driving LVDS.
-> + */
-> +static bool sun4i_tcon_lvds_compat(struct device *dev, struct sun4i_tcon *tcon)
-> +{
-> +	if (tcon->quirks->lvds_compatible_tcon == NULL)
-> +		return true;
-> +	return of_device_is_compatible(dev->of_node,
-> +	                               tcon->quirks->lvds_compatible_tcon);
-> +}
-> +
->  static int sun4i_tcon_bind(struct device *dev, struct device *master,
->  			   void *data)
->  {
-> @@ -1161,7 +1180,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
->  		return ret;
->  	}
->
-> -	if (tcon->quirks->supports_lvds) {
-> +	if (tcon->quirks->supports_lvds && sun4i_tcon_lvds_compat(dev, tcon)) {
->  		/*
->  		 * This can only be made optional since we've had DT
->  		 * nodes without the LVDS reset properties.
-> @@ -1481,6 +1500,7 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
->
->  static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
->  	.supports_lvds		= true,
-> +	.lvds_compatible_tcon	= "allwinner,sun7i-a20-tcon0",
->  	.has_channel_0		= true,
->  	.has_channel_1		= true,
->  	.dclk_min_div		= 4,
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> index cfbf4e6c1679..bc87d28ee341 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> @@ -235,6 +235,8 @@ struct sun4i_tcon_quirks {
->  	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
->  	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
->  	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
-> +	/* "compatible" string of TCON that exclusively supports LVDS */
-> +	const char *lvds_compatible_tcon;
-
-However this is far more complicated than needed, you can simply add a
-new quirks structure associated to the tcon0 compatible in
-sun4i_tcon_of_table, and that will do
-
-Maxime
-
---y2rcdgs6xbzt4vvp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkrSpwAKCRDj7w1vZxhR
-xdwfAQD7pudDUJX6HqY3G7NyOLWJjTgZsxHVOwRS5d0a3dhn1QD/RfVHYhbkkxhP
-4PQVmxzPdewoSbq1VP9knAH9m/XKcAg=
-=ghuQ
------END PGP SIGNATURE-----
-
---y2rcdgs6xbzt4vvp--
+Daniel=
