@@ -2,126 +2,128 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF5C34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB4C3402E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C44207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FAF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 22:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fB16ZjEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgBQWVf (ORCPT
+        id S1726212AbgBQWWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 17:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46820 "EHLO mail.kernel.org"
+        Mon, 17 Feb 2020 17:22:43 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37583 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgBQWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 17:21:35 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725798AbgBQWWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 17:22:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC93B2070B;
-        Mon, 17 Feb 2020 22:21:32 +0000 (UTC)
-Date:   Mon, 17 Feb 2020 17:21:31 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH tip/core/rcu 22/30] rcu: Don't flag non-starting GPs
- before GP kthread is running
-Message-ID: <20200217172131.1f4c48d2@gandalf.local.home>
-In-Reply-To: <20200217220356.GY2935@paulmck-ThinkPad-P72>
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
-        <20200214235607.13749-22-paulmck@kernel.org>
-        <20200214225305.48550d6a@oasis.local.home>
-        <20200215110111.GZ2935@paulmck-ThinkPad-P72>
-        <20200215134208.GA9879@paulmck-ThinkPad-P72>
-        <20200217152517.26cc11ea@gandalf.local.home>
-        <20200217220356.GY2935@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Lz4s3TWQz9sPJ;
+        Tue, 18 Feb 2020 09:22:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581978159;
+        bh=T/Ho1UZEyFt8rs4SdRhU3v+8yxewmcXVrq7So23AQHU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fB16ZjEjWQ1+Dxc9OAbPk1bDSsmg4otnhc3HTmHHRUZxQHUqv5wcWqNqrxOTW+r1J
+         oZlKigjMDFIO/I4jB/cGtIYxaqCPFdkr9TZeALZFb0sAljMlUU63CmHp+e1vbZIFwA
+         u+L8sHcmVeoBFKhmD5BKx7+YPh9dLhdnPOAuMZJNqvTVmYZz8yB44kQUBOEnjUNHFl
+         8OwTcN2z4rNA74p27snEmuoIiyUCDSBxm01OyfUdfYBKYvKUttrenaWdpsuNCjWh1+
+         27rmHRv6oHPkLT/lmu2Z8Eb++7cOZcqH0Rargn+kVEKD+RPyQHIxPiEAFtm5GJgnW5
+         ylz9hfujI2HIQ==
+Date:   Tue, 18 Feb 2020 09:22:29 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH] soc: amlogic: fix compile failure with
+ MESON_SECURE_PM_DOMAINS & !MESON_SM
+Message-ID: <20200218092229.0448d266@canb.auug.org.au>
+In-Reply-To: <20200218080743.07e58c6e@canb.auug.org.au>
+References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
+        <20200218080743.07e58c6e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/.qVlDOXsSXuL3sxUO2UwZ_+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 14:03:56 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+--Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> And what is a day without micro-optimization of a slowpath?  :-)
+Hi all,
 
-A day you have off, but still find yourself working ;-)
+On Tue, 18 Feb 2020 08:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Tue, 18 Feb 2020 00:12:13 +0800 Jianxin Pan <jianxin.pan@amlogic.com> =
+wrote:
+> >
+> > When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failure:
+> > .../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
+> > .../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
+> >=20
+> > Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+> >=20
+> > Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power domain=
+s controller")
+> >=20
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@ke=
+rnel.org>
+> > Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
+> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> > ---
+> >  drivers/soc/amlogic/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-) =20
+>=20
+> I will apply that patch to linux-next today.
 
-> 
-> OK, let's see...
-> 
-> Grace-period kthread wakeups are normally mediated by rcu_start_this_gp(),
-> which uses a funnel lock to consolidate concurrent requests to start
-> a grace period.  If a grace period is already in progress, it refrains
-> from doing a wakeup because that means that the grace-period kthread
-> will check for another grace period being needed at the end of the
-> current grace period.
-> 
-> Exceptions include:
-> 
-> o	The wakeup reporting the last quiescent state of the current
-> 	grace period.
-> 
-> o	Emergency situations such as callback overloads and RCU CPU stalls.
-> 
-> So on a busy system that is not overloaded, the common case is that
-> rcu_gp_kthread_wake() is invoked only once per grace period because there
-> is no emergency and there is a grace period in progress.  If this system
-> has short idle periods and a fair number of quiescent states, a reasonable
-> amount of idle time, then the last quiescent state will not normally be
-> detected by the grace-period kthread.  But workloads can of course vary.
-> 
-> The "!t" holds only during early boot.  So we could put a likely() around
-> the "t".  But more to the point, at runtime, "!t" would always be false,
-> so it really should be last in the list of "||" clauses.  This isn't
-> enough of a fastpath for a static branch to make sense.
+This fixes the build for me.
 
-Hey! Does that mean we can add a static branch for that check?
+Tested-by: Stephen Rothwell<sfr@canb.auug.org.au>
 
+Also, please keep the commit message tags together at the end of the
+commit message i.e. remove the blank line after the Fixes: tag above.
+(see "git interpret-trailers ")
+--=20
+Cheers,
+Stephen Rothwell
 
-struct static_key rcu_booting = STATIC_KEY_INIT_TRUE;
+--Sig_/.qVlDOXsSXuL3sxUO2UwZ_+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
-	if (READ_ONCE(rcu_state.gp_flags) ||
-	    (current == t && !in_irq() && !in_serving_softirq())
-		return;
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5LEiUACgkQAVBC80lX
+0GxiFQf/YRVKJcX4m5O/6kWTlxZ2/vzcKlyfDLSY2sadgEbNcCoGpqHg3C8MuVN5
+SHJd3URexLrLU3zLpCtgxCgDTjoQRNjqUIZVQYnWFBI0bOiWu+rc9Z+SCuJ62UVq
+Ct6I89voQEMg9Wdz37uordsgbGJIRq+VFiA2lOSLJhMxQIJ9/5Wf5AO0i2g/RDxz
+j/xX2bbl2nb3fFBBWQ59Hs1/GHaXCv73apLt0WTxxw8I5slbF0sRYqWDo0BABABX
+PIar9gHeIOrBLJWJJTqJV3E7/JepXwBpfZK7fuZKcroirNefQrkQdhRW26C7gKFN
+9uuM1INSTOTPFxa5jaYaw0r3vAnkYg==
+=IwNd
+-----END PGP SIGNATURE-----
 
-	if (static_branch_unlikely(&rcu_booting) && !t)
-		return;
-
-At end of boot:
-
-	static_key_disable(&rcu_booting);
-
-That way we can really micro-optimize the slow path, and it basically
-becomes a nop!
-
--- Steve
-
-> 
-> The "!READ_ONCE(rcu_state.gp_flags)" will normally hold, though it is
-> false often enough to pay for itself.  Or has been in the past, anyway.
-> I suspect that access to the global variable rcu_state.gp_flags is not
-> always fast either.
-> 
-> So I am having difficulty talking myself into modifying this one given
-> the frequency of operations.
-> 
-> 							Thanx, Paul
-
+--Sig_/.qVlDOXsSXuL3sxUO2UwZ_+--
