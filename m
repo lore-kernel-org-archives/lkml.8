@@ -2,128 +2,193 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214FEC34022
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CCBC34022
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044502070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766C72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 19:11:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXFQT6nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgBQTJ1 (ORCPT
+        id S1729546AbgBQTLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 14:09:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:41148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728448AbgBQTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 14:09:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 021971FB;
-        Mon, 17 Feb 2020 11:09:27 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75EB93F68F;
-        Mon, 17 Feb 2020 11:09:25 -0800 (PST)
-Subject: Re: [PATCH 1/3] sched/rt: cpupri_find: implement fallback mechanism
- for !fit case
-To:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-2-qais.yousef@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
-Date:   Mon, 17 Feb 2020 20:09:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 14:11:02 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43881 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728615AbgBQTLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 14:11:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581966659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vsDIkm7LcuaYgzQdXvjeLYGIluTZwoeMgvuGfii/8og=;
+        b=iXFQT6nhA7av4n3K+nVmXGojTRzyM4EsPEqV4Ise/pr0UUnrFvQcd6FSS8/qf32j1qTEDk
+        jLl/vWmbRxshXaZ+fnLhEz2CVbcdGSpqhREOK7blM3BUqaTXB3tjAPDXYlELbM0l23uAQR
+        L3zYmC3gduxyOHA40FkLziHLSh2wUbI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-GUe3pPqgNdufi0A4oJ1f7Q-1; Mon, 17 Feb 2020 14:10:53 -0500
+X-MC-Unique: GUe3pPqgNdufi0A4oJ1f7Q-1
+Received: by mail-wm1-f69.google.com with SMTP id 7so158161wmf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 11:10:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vsDIkm7LcuaYgzQdXvjeLYGIluTZwoeMgvuGfii/8og=;
+        b=b0Nt6x5sofAVz3yXWuWedkyLyjM3IDrSB5jXKX9EOJUxfXwC+Qr2gXBCr0ik8ttWZ3
+         jG49qkKiMQkbFYCfSlwN3ePZmGIYI9FXqsB4Iqwhq2Im5diGnKgvSfJCFW0jN1PkQ5wS
+         oSErZUKXdUU0mFDqMSdeqppLowvZ8sKMAp3V98lhpvFkQLhz4LpsaL8+iZ2kJwUq4PO8
+         dEbY5LbXvdcV9XI0rOFzn/70RyyX0mDiUp21OKf69SZyiWV1j4yRU/HoK2Mjxe4YMbYK
+         R0j2ey9LzXB0pIj2B9wSop9tSn3fQAnFde8vfhs6/jhjieLSiWnsPFMT/Kqqsp53bSPX
+         IwTA==
+X-Gm-Message-State: APjAAAWENtNmJNwoITYjkWpn396BUeBqQsq8AmbmOV+raPNlslZI1gXb
+        yLA8sjInfTUYh0t0SUc1WcfPCOodN7as92oXfGCKvZ03UzO37cma6K7thuop49yIbeOntleexux
+        vIyi27Fms7wXcnUlpbzkXKpXru8mGek0DPY++jE6c
+X-Received: by 2002:a5d:5485:: with SMTP id h5mr19369837wrv.346.1581966652468;
+        Mon, 17 Feb 2020 11:10:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy2W+Do9mbl/R68triIgvVafhz3P423qEuLPfPsfDhryaTHHrYIbw4irtNBbdRLZQKhBtvRYA3UOCzsxbOjDeA=
+X-Received: by 2002:a5d:5485:: with SMTP id h5mr19369814wrv.346.1581966652120;
+ Mon, 17 Feb 2020 11:10:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200214163949.27850-2-qais.yousef@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200216141104.21477-1-ardb@kernel.org>
+In-Reply-To: <20200216141104.21477-1-ardb@kernel.org>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Tue, 18 Feb 2020 00:40:39 +0530
+Message-ID: <CACi5LpN_Aqop1MQx3ouRd4V27GtiMXBiT=w916P1_zEEc2SJcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] arch-agnostic initrd loading method for EFI systems
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laszlo Ersek <lersek@redhat.com>, leif@nuviainc.com,
+        Peter Jones <pjones@redhat.com>, mjg59@google.com,
+        agraf@csgraf.de, ilias.apalodimas@linaro.org, xypron.glpk@gmx.de,
+        daniel.kiper@oracle.com, nivedita@alum.mit.edu,
+        James.Bottomley@hansenpartnership.com, lukas@wunner.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/02/2020 17:39, Qais Yousef wrote:
+Hi Ard,
 
-[...]
+On Sun, Feb 16, 2020 at 7:41 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> This series introduces an arch agnostic way of loading the initrd into
+> memory from the EFI stub. This addresses a number of shortcomings that
+> affect the current implementations that exist across architectures:
+>
+> - The initrd=<file> command line option can only load files that reside
+>   on the same file system that the kernel itself was loaded from, which
+>   requires the bootloader or firmware to expose that file system via the
+>   appropriate EFI protocol, which is not always feasible. From the kernel
+>   side, this protocol is problematic since it is incompatible with mixed
+>   mode on x86 (this is due to the fact that some of its methods have
+>   prototypes that are difficult to marshall)
+>
+> - The approach that is ordinarily taken by GRUB is to load the initrd into
+>   memory, and pass it to the kernel proper via the bootparams structure or
+>   via the device tree. This requires the boot loader to have an understanding
+>   of those structures, which are not always set in stone, and of the policies
+>   around where the initrd may be loaded into memory. In the ARM case, it
+>   requires GRUB to modify the hardware description provided by the firmware,
+>   given that the initrd base and offset in memory are passed via the same
+>   data structure. It also creates a time window where the initrd data sits
+>   in memory, and can potentially be corrupted before the kernel is booted.
+>
+> Considering that we will soon have new users of these interfaces (EFI for
+> kvmtool on ARM, RISC-V in u-boot, etc), it makes sense to add a generic
+> interface now, before having another wave of bespoke arch specific code
+> coming in.
+>
+> Another aspect to take into account is that support for UEFI secure boot
+> and measured boot is being taken into the upstream, and being able to
+> rely on the PE entry point for booting any architecture makes the GRUB
+> vs shim story much cleaner, as we should be able to rely on LoadImage
+> and StartImage on all architectures, while retaining the ability to
+> load initrds from anywhere.
+>
+> Note that these patches depend on a fair amount of cleanup work that I
+> am targetting for v5.7. Branch can be found at:
+> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
+>
+> A PoC implementation for OVMF and ArmVirtQemu (OVMF for ARM aka AAVMF) can
+> be found at https://github.com/ardbiesheuvel/edk2/commits/linux-efi-generic.
+>
+> A U-Boot implementation is under development as well, and can be found at
+> https://github.com/apalos/u-boot/commits/efi_load_file_8
 
->  /**
->   * cpupri_find - find the best (lowest-pri) CPU in the system
->   * @cp: The cpupri context
-> @@ -62,80 +115,72 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
->  		struct cpumask *lowest_mask,
->  		bool (*fitness_fn)(struct task_struct *p, int cpu))
->  {
-> -	int idx = 0;
->  	int task_pri = convert_prio(p->prio);
-> +	int best_unfit_idx = -1;
-> +	int idx = 0, cpu;
->  
->  	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);
->  
->  	for (idx = 0; idx < task_pri; idx++) {
-> -		struct cpupri_vec *vec  = &cp->pri_to_cpu[idx];
-> -		int skip = 0;
->  
-> -		if (!atomic_read(&(vec)->count))
-> -			skip = 1;
-> -		/*
-> -		 * When looking at the vector, we need to read the counter,
-> -		 * do a memory barrier, then read the mask.
-> -		 *
-> -		 * Note: This is still all racey, but we can deal with it.
-> -		 *  Ideally, we only want to look at masks that are set.
-> -		 *
-> -		 *  If a mask is not set, then the only thing wrong is that we
-> -		 *  did a little more work than necessary.
-> -		 *
-> -		 *  If we read a zero count but the mask is set, because of the
-> -		 *  memory barriers, that can only happen when the highest prio
-> -		 *  task for a run queue has left the run queue, in which case,
-> -		 *  it will be followed by a pull. If the task we are processing
-> -		 *  fails to find a proper place to go, that pull request will
-> -		 *  pull this task if the run queue is running at a lower
-> -		 *  priority.
-> -		 */
-> -		smp_rmb();
-> -
-> -		/* Need to do the rmb for every iteration */
-> -		if (skip)
-> -			continue;
-> -
-> -		if (cpumask_any_and(p->cpus_ptr, vec->mask) >= nr_cpu_ids)
-> +		if (!__cpupri_find(cp, p, lowest_mask, idx))
->  			continue;
->  
-> -		if (lowest_mask) {
-> -			int cpu;
+Thanks a lot for the patchset. I am still going through the patchset
+and trying to understand how will it impact
+kexec use-cases, namely:
 
-Shouldn't we add an extra condition here?
+1. kexec_load() and kecec_file_load(), use '--initrd=<file>' like
+command line options.
 
-+               if (!static_branch_unlikely(&sched_asym_cpucapacity))
-+                       return 1;
-+
+2. We have several kexec based bootloader implementations (for example
+linuxboot, see (a) and (b) below) that replaces specific firmware
+functionality like the UEFI DXE phase with a Linux kernel and runtime
+and find the initrd image (for example, uroot) from that same
+filesystem. So these would need modification(s) similar to the OVMF
+AAVMF and u-boot, right?
 
-Otherwise non-heterogeneous systems have to got through this
-for_each_cpu(cpu, lowest_mask) further below for no good reason.
+a. https://www.linuxboot.org/
+b. https://github.com/linuxboot/linuxboot/blob/master/dxe/linuxboot.c
 
-> +		if (!lowest_mask || !fitness_fn)
-> +			return 1;
->  
-> -			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
-> +		/* Ensure the capacity of the CPUs fit the task */
-> +		for_each_cpu(cpu, lowest_mask) {
-> +			if (!fitness_fn(p, cpu))
-> +				cpumask_clear_cpu(cpu, lowest_mask);
-> +		}
+Thanks,
+Bhupesh
 
-[...]
+
+> Changes since v1:
+> - merge vendor media device path type definition with the existing device path
+>   definitions we already have, and rework the latter slightly to be more easily
+>   reusable
+> - use 'dev_path' not 'devpath' consistently
+> - pass correct FilePath value to LoadFile2 (i.e., the device path pointer that
+>   was advanced to point to the 'end' node by locate_device_path())
+> - add kerneldoc comment to efi_load_initrd_dev_path()
+> - take care to only return EFI_NOT_FOUND from efi_load_initrd_dev_path() if the
+>   LoadFile2 protocol does not exist on the LINUX_EFI_INITRD_MEDIA_GUID device
+>   path - this makes the logic whether to fallback to the command line method
+>   more robust
+>
+> Cc: lersek@redhat.com
+> Cc: leif@nuviainc.com
+> Cc: pjones@redhat.com
+> Cc: mjg59@google.com
+> Cc: agraf@csgraf.de
+> Cc: ilias.apalodimas@linaro.org
+> Cc: xypron.glpk@gmx.de
+> Cc: daniel.kiper@oracle.com
+> Cc: nivedita@alum.mit.edu
+> Cc: James.Bottomley@hansenpartnership.com
+> Cc: lukas@wunner.de
+>
+> Ard Biesheuvel (3):
+>   efi/dev-path-parser: Add struct definition for vendor type device path
+>     nodes
+>   efi/libstub: Add support for loading the initrd from a device path
+>   efi/libstub: Take noinitrd cmdline argument into account for devpath
+>     initrd
+>
+>  drivers/firmware/efi/apple-properties.c       |  8 +-
+>  drivers/firmware/efi/dev-path-parser.c        | 38 ++++----
+>  drivers/firmware/efi/libstub/arm-stub.c       | 20 ++++-
+>  .../firmware/efi/libstub/efi-stub-helper.c    | 89 +++++++++++++++++++
+>  drivers/firmware/efi/libstub/efistub.h        |  5 ++
+>  drivers/firmware/efi/libstub/x86-stub.c       | 47 ++++++++--
+>  include/linux/efi.h                           | 49 ++++++----
+>  7 files changed, 201 insertions(+), 55 deletions(-)
+>
+> --
+> 2.17.1
+>
+
