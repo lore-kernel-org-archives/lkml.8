@@ -2,159 +2,566 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A2C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7FFC7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA4320801
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF00E20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 10:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hduf3fJ2"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="b8wVWnCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgBQK1z (ORCPT
+        id S1729415AbgBQK15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 05:27:55 -0500
-Received: from mail-bn7nam10on2085.outbound.protection.outlook.com ([40.107.92.85]:25727
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729381AbgBQK1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 05:27:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KNGbo3kYzVq5K5ueg0ZomnN6kggkARw/yHVbJTOFEEKWeWxWqmbDoORZsAsxtgNbGhj5i0oqjybb3VDsqwYFpE59XsxoMqWPPswqcu8hUhJIjLTecUXUruqXLWEsG8uYXdTXCAl9qnh0pH9JW8Y4wG49NvwL7NPVMqJR625oWfg4tvO6rcQarzGG35lHydbwLm3eLv6JZzMYsj+I1qZFXFb+K0JtRW+Ygj8lNApbHKDs+GltFhdcbOaWRfL4pyA7BZLftQptODZSuEqrV5Cv5NHUaQ7jGUxVwMkUDQogAD0Va8SJeIQhUkGOuoxSxNK04AEpVvPlf56GD5dZkbvqtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tHCfGC/h+co6K42dAvgN40+/3m0ac0bqAT9iyNUvTFs=;
- b=CR31ZlPkbBiRU6GS9Fh6286q6g+oQhL0W8XW+TRMwUKTe/PirmV3fiL7br8TexlA3BLzMRHtDEFMJYwdiLS6OLUyjiUA0t8k5vizBP4b24KhtOaIROc6ZKyMl2ASEU6qr4/v4MIo1VN4t//eXTN35i6UQhFMxAecXzYDuDlZy1sPziIZbsa+INuyLPq59p7kJWcY99wpy+9x0dBVkoniok7o+uZ07Dyv5qGQ4cIpqA4IQJ2cfMTOK4TvA7VoBwzWv5958gHPFzS+/vYW/O0JNjfE4s2tAjrZ7+y1K61jLWoUEsSOyZaOXYhZfv24G5qq+Fg4Pi3H48el+Nxt6+OmXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 17 Feb 2020 05:27:57 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:40009 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgBQK14 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 05:27:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tHCfGC/h+co6K42dAvgN40+/3m0ac0bqAT9iyNUvTFs=;
- b=hduf3fJ2zxfSyJuTDGkQKCI6a603HHjgIRekh/FA+MLILBxyPAQ8k5oEazSlDcktVfwwCZvl5GfuHg5cFhmzBvibkdgoCe5ZhY1b87dAbmJXh2GYY7vwq9EzjZn1x92Suab9OQ7heIi3O3B+LMEeHnCaCohwP7JsayWtkFm8b/s=
-Received: from SN4PR0201CA0070.namprd02.prod.outlook.com
- (2603:10b6:803:20::32) by MWHPR02MB3357.namprd02.prod.outlook.com
- (2603:10b6:301:61::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.31; Mon, 17 Feb
- 2020 10:27:50 +0000
-Received: from SN1NAM02FT052.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by SN4PR0201CA0070.outlook.office365.com
- (2603:10b6:803:20::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend
- Transport; Mon, 17 Feb 2020 10:27:50 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT052.mail.protection.outlook.com (10.152.72.146) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Mon, 17 Feb 2020 10:27:50 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dcz-0007ny-MZ; Mon, 17 Feb 2020 02:27:49 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <kalyani.akula@xilinx.com>)
-        id 1j3dcu-00034b-JN; Mon, 17 Feb 2020 02:27:44 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HARdDh000804;
-        Mon, 17 Feb 2020 02:27:39 -0800
-Received: from [172.23.155.80] (helo=xhdengvm155080.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <kalyania@xilinx.com>)
-        id 1j3dcp-00034H-Bv; Mon, 17 Feb 2020 02:27:39 -0800
-Received: by xhdengvm155080.xilinx.com (Postfix, from userid 23151)
-        id 23D3681415; Mon, 17 Feb 2020 15:56:46 +0530 (IST)
-From:   Kalyani Akula <kalyani.akula@xilinx.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net, monstr@seznam.cz,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kalyani Akula <kalyania@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        git-dev@xilinx.com,
-        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Harsh Jain <harshj@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>
-Subject: [PATCH V7 4/4] arm64: zynqmp: Add Xilinx AES node.
-Date:   Mon, 17 Feb 2020 15:56:44 +0530
-Message-Id: <1581935204-25673-5-git-send-email-kalyani.akula@xilinx.com>
-X-Mailer: git-send-email 1.9.5
-In-Reply-To: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-References: <1581935204-25673-1-git-send-email-kalyani.akula@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(199004)(189003)(8936002)(107886003)(70206006)(4326008)(81166006)(70586007)(2616005)(81156014)(2906002)(6266002)(8676002)(36756003)(478600001)(356004)(426003)(186003)(44832011)(336012)(54906003)(42186006)(5660300002)(26005)(4744005)(316002)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB3357;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1581935276; x=1613471276;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=pPQEIZX8TvgQGXyTGaNzM/B+S7E003TMEtQo8plEEmA=;
+  b=b8wVWnCPvQMiAFaU5E5flUXJQEyMiaFxrG6GIAewEs/uqN9adB/JVNS6
+   dYXQZTiAxn9DMzC92I5RRthwmD7nSPc5hRN4JkKLiQt2RX09BaW/Alvf9
+   o4gnn6gnUG2ZmcUYoNFv+QWlUmLxridt6KxQFu5HHQxM20Luqz6x5h895
+   s=;
+IronPort-SDR: YHHywitVZn2eOXW7VmlUW9NYp0yutUmQl08SCGdAmCJ63xBc9lGq7duxKGzc/ajyzQe7H7jluI
+ NCa8Ojp/S2OQ==
+X-IronPort-AV: E=Sophos;i="5.70,452,1574121600"; 
+   d="scan'208";a="17477758"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Feb 2020 10:27:53 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id B417CA1EA4;
+        Mon, 17 Feb 2020 10:27:50 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 17 Feb 2020 10:27:50 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 17 Feb 2020 10:27:40 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 08/14] mm/damon: Add debugfs interface
+Date:   Mon, 17 Feb 2020 11:25:38 +0100
+Message-ID: <20200217102544.29012-9-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200217102544.29012-1-sjpark@amazon.com>
+References: <20200217102544.29012-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7db1332a-1876-4f5a-8c42-08d7b3940a15
-X-MS-TrafficTypeDiagnostic: MWHPR02MB3357:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB33579584133804E9041A7749AF160@MWHPR02MB3357.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0316567485
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GrWQC6zJgYCnPX25G4byOS5V+H+QxoQVC4gXU9OYi0jeiLGw/TvOXSjuR6v9CQlhQdcJusdUCUJrX6NWW6yfAzu+aF7Aa8jXqo/9HLvHJUjtTwzgKy2TxqdRYSlgmfiELA40KYkCLM1zSY6+AXd6t9ZZiUdppShMgLek3a1jv9FA5W+ahXhgdHmUWIUqgo5FB2K2zhEk2zt6E0+zQWtscrL3YZO1yol4ujERvBM1ppB6zWhM+19+LaFEWkTadVQx5tlBNeFT+ft0zm06An9ttlElBGcfZmoF4pocdZbKFXp7RjsrSPCv50obEWqpAQzDi39Qk1y91nUYbsaxPTBYspinepdnQC9HP1FcJ+/Qy/YaWbd8+uu/RzKWecwKAQakjv3aqMw0A5hYV/gZLLKGx+vSg731C9u2PtzPWDWjDkkI2ZnnP5rVS5voZJDl0bN6LQdvCE0zKi97c4k0b0ciVmet9hvvLpbRKP5ogCNdLLTmDBhrtJN8GhRPA8xfmatr
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 10:27:50.0799
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7db1332a-1876-4f5a-8c42-08d7b3940a15
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3357
+X-Originating-IP: [10.43.161.214]
+X-ClientProxiedBy: EX13D30UWB004.ant.amazon.com (10.43.161.51) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a AES DT node for Xilinx ZynqMP SoC.
+From: SeongJae Park <sjpark@amazon.de>
 
-Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+This commit adds a debugfs interface for DAMON.
+
+DAMON exports four files, ``attrs``, ``pids``, ``record``, and
+``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+
+Attributes
+----------
+
+Users can read and write the ``sampling interval``, ``aggregation
+interval``, ``regions update interval``, and min/max number of
+monitoring target regions by reading from and writing to the ``attrs``
+file.  For example, below commands set those values to 5 ms, 100 ms,
+1,000 ms, 10, 1000 and check it again::
+
+    # cd <debugfs>/damon
+    # echo 5000 100000 1000000 10 1000 > attrs
+    # cat attrs
+    5000 100000 1000000 10 1000
+
+Target PIDs
+-----------
+
+Users can read and write the pids of current monitoring target processes
+by reading from and writing to the ``pids`` file.  For example, below
+commands set processes having pids 42 and 4242 as the processes to be
+monitored and check it again::
+
+    # cd <debugfs>/damon
+    # echo 42 4242 > pids
+    # cat pids
+    42 4242
+
+Note that setting the pids doesn't starts the monitoring.
+
+Record
+------
+
+DAMON support direct monitoring result record feature.  The recorded
+results are first written to a buffer and flushed to a file in batch.
+Users can set the size of the buffer and the path to the result file by
+reading from and writing to the ``record`` file.  For example, below
+commands set the buffer to be 4 KiB and the result to be saved in
+'/damon.data'.
+
+    # cd <debugfs>/damon
+    # echo 4096 /damon.data > pids
+    # cat record
+    4096 /damon.data
+
+Turning On/Off
+--------------
+
+You can check current status, start and stop the monitoring by reading
+from and writing to the ``monitor_on`` file.  Writing ``on`` to the file
+starts DAMON to monitor the target processes with the attributes.
+Writing ``off`` to the file stops DAMON.  DAMON also stops if every
+target processes is be terminated.  Below example commands turn on, off,
+and check status of DAMON::
+
+    # cd <debugfs>/damon
+    # echo on > monitor_on
+    # echo off > monitor_on
+    # cat monitor_on
+    off
+
+Please note that you cannot write to the ``attrs`` and ``pids`` files
+while the monitoring is turned on.  If you write to the files while
+DAMON is running, ``-EINVAL`` will be returned.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
+ mm/damon.c | 376 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 375 insertions(+), 1 deletion(-)
 
-V5 Changes:
-- Moved arm64: zynqmp: Add Xilinx AES node patch from 2/4 to 4/4
-- Corrected typo in the subject.
-- Updated zynqmp-aes node to correct location.
-
-
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 26d926e..de4c694 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -158,6 +158,10 @@
- 			zynqmp_pcap: pcap {
- 				compatible = "xlnx,zynqmp-pcap-fpga";
- 			};
+diff --git a/mm/damon.c b/mm/damon.c
+index 45d82128e3ac..6deccab354e9 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -10,6 +10,7 @@
+ #define pr_fmt(fmt) "damon: " fmt
+ 
+ #include <linux/damon.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/kthread.h>
+ #include <linux/mm.h>
+@@ -46,6 +47,24 @@
+ /* Get a random number in [l, r) */
+ #define damon_rand(ctx, l, r) (l + prandom_u32_state(&ctx->rndseed) % (r - l))
+ 
++/*
++ * For each 'sample_interval', DAMON checks whether each region is accessed or
++ * not.  It aggregates and keeps the access information (number of accesses to
++ * each region) for 'aggr_interval' and then flushes it to the result buffer if
++ * an 'aggr_interval' surpassed.  And for each 'regions_update_interval', damon
++ * checks whether the memory mapping of the target tasks has changed (e.g., by
++ * mmap() calls from the applications) and applies the changes.
++ *
++ * All time intervals are in micro-seconds.
++ */
++static struct damon_ctx damon_user_ctx = {
++	.sample_interval = 5 * 1000,
++	.aggr_interval = 100 * 1000,
++	.regions_update_interval = 1000 * 1000,
++	.min_nr_regions = 10,
++	.max_nr_regions = 1000,
++};
 +
-+			xlnx_aes: zynqmp-aes {
-+				compatible = "xlnx,zynqmp-aes";
-+			};
- 		};
- 	};
+ /*
+  * Construct a damon_region struct
+  *
+@@ -1024,15 +1043,370 @@ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+ 	return 0;
+ }
+ 
++/*
++ * debugfs functions
++ */
++
++static ssize_t debugfs_monitor_on_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char monitor_on_buf[5];
++	bool monitor_on;
++	int ret;
++
++	spin_lock(&ctx->kdamond_lock);
++	monitor_on = ctx->kdamond != NULL;
++	spin_unlock(&ctx->kdamond_lock);
++
++	ret = snprintf(monitor_on_buf, 5, monitor_on ? "on\n" : "off\n");
++
++	return simple_read_from_buffer(buf, count, ppos, monitor_on_buf, ret);
++}
++
++static ssize_t debugfs_monitor_on_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	ssize_t ret;
++	bool on = false;
++	char cmdbuf[5];
++
++	ret = simple_write_to_buffer(cmdbuf, 5, ppos, buf, count);
++	if (ret < 0)
++		return ret;
++
++	if (sscanf(cmdbuf, "%s", cmdbuf) != 1)
++		return -EINVAL;
++	if (!strncmp(cmdbuf, "on", 5))
++		on = true;
++	else if (!strncmp(cmdbuf, "off", 5))
++		on = false;
++	else
++		return -EINVAL;
++
++	if (damon_turn_kdamond(ctx, on))
++		return -EINVAL;
++
++	return ret;
++}
++
++static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
++{
++	struct damon_task *t;
++	int written = 0;
++	int rc;
++
++	damon_for_each_task(ctx, t) {
++		rc = snprintf(&buf[written], len - written, "%lu ", t->pid);
++		if (!rc)
++			return -ENOMEM;
++		written += rc;
++	}
++	if (written)
++		written -= 1;
++	written += snprintf(&buf[written], len - written, "\n");
++	return written;
++}
++
++static ssize_t debugfs_pids_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	ssize_t len;
++	char pids_buf[320];
++
++	len = damon_sprint_pids(ctx, pids_buf, 320);
++	if (len < 0)
++		return len;
++
++	return simple_read_from_buffer(buf, count, ppos, pids_buf, len);
++}
++
++/*
++ * Converts a string into an array of unsigned long integers
++ *
++ * Returns an array of unsigned long integers if the conversion success, or
++ * NULL otherwise.
++ */
++static unsigned long *str_to_pids(const char *str, ssize_t len,
++				ssize_t *nr_pids)
++{
++	unsigned long *pids;
++	const int max_nr_pids = 32;
++	unsigned long pid;
++	int pos = 0, parsed, ret;
++
++	*nr_pids = 0;
++	pids = kmalloc_array(max_nr_pids, sizeof(unsigned long), GFP_KERNEL);
++	if (!pids)
++		return NULL;
++	while (*nr_pids < max_nr_pids && pos < len) {
++		ret = sscanf(&str[pos], "%lu%n", &pid, &parsed);
++		pos += parsed;
++		if (ret != 1)
++			break;
++		pids[*nr_pids] = pid;
++		*nr_pids += 1;
++	}
++	if (*nr_pids == 0) {
++		kfree(pids);
++		pids = NULL;
++	}
++
++	return pids;
++}
++
++static ssize_t debugfs_pids_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	unsigned long *targets;
++	ssize_t nr_targets;
++	ssize_t ret;
++
++	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, 512, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	targets = str_to_pids(kbuf, ret, &nr_targets);
++	if (!targets) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	spin_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond)
++		goto monitor_running;
++
++	damon_set_pids(ctx, targets, nr_targets);
++	spin_unlock(&ctx->kdamond_lock);
++
++	goto free_targets_out;
++
++monitor_running:
++	spin_unlock(&ctx->kdamond_lock);
++	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
++	ret = -EINVAL;
++free_targets_out:
++	kfree(targets);
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++static ssize_t debugfs_record_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char record_buf[20 + MAX_RFILE_PATH_LEN];
++	int ret;
++
++	ret = snprintf(record_buf, ARRAY_SIZE(record_buf), "%u %s\n",
++			ctx->rbuf_len, ctx->rfile_path);
++	return simple_read_from_buffer(buf, count, ppos, record_buf, ret);
++}
++
++static ssize_t debugfs_record_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	unsigned int rbuf_len;
++	char rfile_path[MAX_RFILE_PATH_LEN];
++	ssize_t ret;
++
++	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++	if (sscanf(kbuf, "%u %s",
++				&rbuf_len, rfile_path) != 2) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	spin_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond)
++		goto monitor_running;
++
++	damon_set_recording(ctx, rbuf_len, rfile_path);
++	spin_unlock(&ctx->kdamond_lock);
++
++	goto out;
++
++monitor_running:
++	spin_unlock(&ctx->kdamond_lock);
++	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
++	ret = -EINVAL;
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++
++static ssize_t debugfs_attrs_read(struct file *file,
++		char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char kbuf[128];
++	int ret;
++
++	ret = snprintf(kbuf, ARRAY_SIZE(kbuf), "%lu %lu %lu %lu %lu\n",
++			ctx->sample_interval, ctx->aggr_interval,
++			ctx->regions_update_interval, ctx->min_nr_regions,
++			ctx->max_nr_regions);
++
++	return simple_read_from_buffer(buf, count, ppos, kbuf, ret);
++}
++
++static ssize_t debugfs_attrs_write(struct file *file,
++		const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	unsigned long s, a, r, minr, maxr;
++	char *kbuf;
++	ssize_t ret;
++
++	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
++	if (ret < 0)
++		goto out;
++
++	if (sscanf(kbuf, "%lu %lu %lu %lu %lu",
++				&s, &a, &r, &minr, &maxr) != 5) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	spin_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond)
++		goto monitor_running;
++
++	damon_set_attrs(ctx, s, a, r, minr, maxr);
++	spin_unlock(&ctx->kdamond_lock);
++
++	goto out;
++
++monitor_running:
++	spin_unlock(&ctx->kdamond_lock);
++	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
++	ret = -EINVAL;
++out:
++	kfree(kbuf);
++	return ret;
++}
++
++static const struct file_operations monitor_on_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_monitor_on_read,
++	.write = debugfs_monitor_on_write,
++};
++
++static const struct file_operations pids_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_pids_read,
++	.write = debugfs_pids_write,
++};
++
++static const struct file_operations record_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_record_read,
++	.write = debugfs_record_write,
++};
++
++static const struct file_operations attrs_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_attrs_read,
++	.write = debugfs_attrs_write,
++};
++
++static struct dentry *debugfs_root;
++
++static int __init debugfs_init(void)
++{
++	const char * const file_names[] = {"attrs", "record",
++		"pids", "monitor_on"};
++	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
++		&pids_fops, &monitor_on_fops};
++	int i;
++
++	debugfs_root = debugfs_create_dir("damon", NULL);
++	if (!debugfs_root) {
++		pr_err("failed to create the debugfs dir\n");
++		return -ENOMEM;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(file_names); i++) {
++		if (!debugfs_create_file(file_names[i], 0600, debugfs_root,
++					NULL, fops[i])) {
++			pr_err("failed to create %s file\n", file_names[i]);
++			return -ENOMEM;
++		}
++	}
++
++	return 0;
++}
++
++static int __init damon_init_user_ctx(void)
++{
++	int rc;
++
++	struct damon_ctx *ctx = &damon_user_ctx;
++
++	ktime_get_coarse_ts64(&ctx->last_aggregation);
++	ctx->last_regions_update = ctx->last_aggregation;
++
++	ctx->rbuf_offset = 0;
++	rc = damon_set_recording(ctx, 1024 * 1024, "/damon.data");
++	if (rc)
++		return rc;
++
++	ctx->kdamond = NULL;
++	ctx->kdamond_stop = false;
++	spin_lock_init(&ctx->kdamond_lock);
++
++	prandom_seed_state(&ctx->rndseed, 42);
++	INIT_LIST_HEAD(&ctx->tasks_list);
++
++	ctx->sample_cb = NULL;
++	ctx->aggregate_cb = NULL;
++
++	return 0;
++}
++
+ static int __init damon_init(void)
+ {
++	int rc;
++
+ 	pr_info("init\n");
+ 
+-	return 0;
++	rc = damon_init_user_ctx();
++	if (rc)
++		return rc;
++
++	return debugfs_init();
+ }
+ 
+ static void __exit damon_exit(void)
+ {
++	damon_turn_kdamond(&damon_user_ctx, false);
++	debugfs_remove_recursive(debugfs_root);
++
++	kfree(damon_user_ctx.rbuf);
++	kfree(damon_user_ctx.rfile_path);
++
+ 	pr_info("exit\n");
+ }
  
 -- 
-1.9.5
+2.17.1
 
