@@ -2,109 +2,129 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6200EC3B1BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35FAC7619B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40057208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39972067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 00:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jtpOapbH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgBQAXC (ORCPT
+        id S1726650AbgBQAgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Feb 2020 19:23:02 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:36336 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgBQAXC (ORCPT
+        Sun, 16 Feb 2020 19:36:14 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33725 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgBQAgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Feb 2020 19:23:02 -0500
-Received: by mail-yw1-f65.google.com with SMTP id n184so7166607ywc.3;
-        Sun, 16 Feb 2020 16:23:01 -0800 (PST)
+        Sun, 16 Feb 2020 19:36:13 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h4so14725083qkm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Feb 2020 16:36:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=PAiDoNcDSsPnNj5W4mWsQjtsAOyOXebI5Rn/LeRO4A0=;
+        b=jtpOapbHFVjp/wJYElpr+0+UN+bnlIm8e5HSRL2u+Y9QkgTx8DY8UMOMNuycHEMJca
+         Y4FkUIHdZPwmPx1cJYizjiP458SAypboQ6RKWnROZb8xEEagkFUFAmmJ4gDJzZ5qmwf1
+         dM039k0juLOOeE1Bg699rDYhNyGIoPHBHYIGZgiQ9RVTXp6TFbiirga3jYjVWEN0FuUf
+         HzrS/XUtO3uRp67ScZMRUVlbcNDCoUIag9WreZ+KXOIaQ7gO/vb1dMcLVf8EOc6mq67D
+         DnnGURL6m+33HicB+cg1TApImTExGruhDQE3mqo3kwVwc0Q/pgFUZW1adIWKhpNeRX4U
+         fWMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RvBPrsaf/vx3QAte1Qnpsp+hszyxo6KbY+gYM2/7LjA=;
-        b=e8nko6o8jnyQyJikRA1fe5DZNTm6bYrKK+LVuMwN4L5yV1lpe3Y3Q89oC08chKlN5f
-         07gM/qKk5hXZDaRl3+4KcT0TYvEruuLIL9Em7hVwCpBbYlD8e3Sx/a6L37oEHcRLPgDP
-         Aj8OdwOtqjnxDGQqQCNKzrdeinxKrrjvQBAdmWe4oP4i+DLsuliIfr4Y6ylRyg8tnTxt
-         hZl1050AaXQPet92kyn2ptGmB+ynMyUp03u+j7pW5uQy7apRsK0px75LTfBSBw7TCy5x
-         +CICS4fGzT8/m4Ls1KpcAQs3fJEJr1kxf1Uu6U+tTPCG9dlt+LQtGJfQ9+T/+i+Kkzjf
-         Ug3A==
-X-Gm-Message-State: APjAAAVrilw6XuqqbcA1Cm452G7CJfx6bC7kcMzLEelW+TQYesSUuX6Q
-        sO03ceGlVqzLBbExLmfT+a7A096v9zVzrr/AkMo=
-X-Google-Smtp-Source: APXvYqyQCU/hZKc6c+ps40FzzNag7kfR8UYQvQHgYyMzprLyT5uqFzzA36KlL+ZEwnYZDX8HWAovcgTPrrSJi42fqBw=
-X-Received: by 2002:a81:4f8b:: with SMTP id d133mr11513961ywb.368.1581898981330;
- Sun, 16 Feb 2020 16:23:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=PAiDoNcDSsPnNj5W4mWsQjtsAOyOXebI5Rn/LeRO4A0=;
+        b=lfYqAEDoUZ++m3S6ouWp0pDND231MHi/yBQv9iCxjXmOY2UjaYmZCGxD6WDRro0IG0
+         CmfGDyV/MDhjmrtpRabB1yFtwCDZR02pctB7PMlLDn1cv+DjU6LnNFlXFPb/kAdGM6WI
+         5BYvMP60EZ2jJjF2vnGWXI/PVmKwlpkvrgC7zFMV5dPcyS5M47MIKrREoLFa38pdTwIO
+         92J0ZjqUZZCVSmtBFvaXUg86sI/qrmsfBlnxulPe210o2g7S72+vKLGjt1wEO8bXWE5/
+         Oor8rq79scW95DJgEsG3+OIs+QQpoVMA2K00wUJtZZH7m7XJRJNgvS1aniP33Jtkxzzu
+         t/kQ==
+X-Gm-Message-State: APjAAAUNuIeWAGMNc1P8xl64e9WYZMfxgjdNDCu6LVXRSiungkGYcwz+
+        FNml/htwTjSBLy8KL03KwnA6qA==
+X-Google-Smtp-Source: APXvYqxeQ1g+jpqlNityj8TgopMrjNmz4CclX96hSYDzY9HRLgVtbwu71aVJTN32smWAWDoy73fOQw==
+X-Received: by 2002:a37:6690:: with SMTP id a138mr9654539qkc.475.1581899772343;
+        Sun, 16 Feb 2020 16:36:12 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id h13sm7852610qtu.23.2020.02.16.16.36.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 16 Feb 2020 16:36:11 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j3UOQ-0003Nj-Fg; Sun, 16 Feb 2020 20:36:10 -0400
+Date:   Sun, 16 Feb 2020 20:36:10 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Maxim Mikityanskiy <maximmi@mellanox.com>
+Cc:     Alexander Lobakin <alobakin@dlink.ru>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rdma] IB/mlx5: Fix linkage failure on 32-bit arches
+Message-ID: <20200217003610.GC31668@ziepe.ca>
+References: <20200214191309.155654-1-alobakin@dlink.ru>
+ <20200214192410.GW31668@ziepe.ca>
+ <6f7c270fef9ec5bae2dcb780dee3f49f@dlink.ru>
+ <3c70c7da-60aa-10ec-767f-5e519357b8e6@mellanox.com>
 MIME-Version: 1.0
-References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-In-Reply-To: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Mon, 17 Feb 2020 01:22:50 +0100
-Message-ID: <CAAdtpL5Tf-8O=xMKO33DWDs=2_Hsdk=FQSNO5Gsrx=9hWvENdg@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        chris.packham@alliedtelesis.co.nz,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3c70c7da-60aa-10ec-767f-5e519357b8e6@mellanox.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Sun, Feb 16, 2020 at 01:53:50PM +0200, Maxim Mikityanskiy wrote:
+> On 2020-02-14 21:44, Alexander Lobakin wrote:
+> > Jason Gunthorpe wrote 14.02.2020 22:24:
+> > > On Fri, Feb 14, 2020 at 10:13:09PM +0300, Alexander Lobakin wrote:
+> > > > Commit f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
+> > > > capabilities") introduced a straight "/" division of the u64
+> > > > variable "bar_size", which emits an __udivdi3() libgcc call on
+> > > > 32-bit arches and certain GCC versions:
+> > > > 
+> > > > error: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko]
+> > > > undefined! [1]
+> > > > 
+> > > > Replace it with the corresponding div_u64() call.
+> > > > Compile-tested on ARCH=mips 32r2el_defconfig BOARDS=ocelot.
+> > > > 
+> > > > [1] https://lore.kernel.org/linux-mips/CAMuHMdXM9S1VkFMZ8eDAyZR6EE4WkJY215Lcn2qdOaPeadF+EQ@mail.gmail.com/
+> > > > 
+> > > > 
+> > > > Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR
+> > > > capabilities")
+> > > > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> > > >  drivers/infiniband/hw/mlx5/main.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > Randy beat you too it..
+> > > 
+> > > https://lore.kernel.org/linux-rdma/20200206143201.GF25297@ziepe.ca/
+> > 
+> > Ah, OK. Sorry for missing this one. I didn't see any fix over
+> > git.kernel.org and thought it doesn't exist yet.
+> > 
+> > > But it seems patchwork missed this somehow.
+> > > 
+> > > Applied now at least
+> 
+> Jason, I think Alexander's patch is more correct. It uses div_u64, while
+> yours uses div64_u64. The divider is 32-bit, so div_u64 would be more
+> optimized on most 32-bit architectures.
 
-On Tue, Feb 11, 2020 at 10:42 PM Mark Tomlinson
-<mark.tomlinson@alliedtelesis.co.nz> wrote:
->
-> The Cavium Octeon CPU uses a special sync instruction for implementing
-> wmb, and due to a CPU bug, the instruction must appear twice. A macro
-> had been defined to hide this:
->
->  #define __SYNC_rpt(type)     (1 + (type == __SYNC_wmb))
->
-> which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any other
-> type of sync. However, this expression is evaluated by the assembler,
-> and not the compiler, and the result of '==' in the assembler is 0 or
-> -1, not 0 or 1 as it is in C. The net result was wmb() producing no code
-> at all. The simple fix in this patch is to change the '+' to '-'.
+Seems so, but it is already done. You can send a followup to fix it
 
-Isn't this particular to the assembler implementation?
-Can you explicit the assembler you are using in the commit description?
-Assuming we have to look at your commit in 3 years from now, we'll
-wonder what assembler you were using.
-
-Thanks,
-
-Phil.
-
-> Fixes: bf92927251b3 ("MIPS: barrier: Add __SYNC() infrastructure")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
->  arch/mips/include/asm/sync.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/mips/include/asm/sync.h b/arch/mips/include/asm/sync.h
-> index 7c6a1095f5..aabd097933 100644
-> --- a/arch/mips/include/asm/sync.h
-> +++ b/arch/mips/include/asm/sync.h
-> @@ -155,9 +155,11 @@
->   * effective barrier as noted by commit 6b07d38aaa52 ("MIPS: Octeon: Use
->   * optimized memory barrier primitives."). Here we specify that the affected
->   * sync instructions should be emitted twice.
-> + * Note that this expression is evaluated by the assembler (not the compiler),
-> + * and that the assembler evaluates '==' as 0 or -1, not 0 or 1.
->   */
->  #ifdef CONFIG_CPU_CAVIUM_OCTEON
-> -# define __SYNC_rpt(type)      (1 + (type == __SYNC_wmb))
-> +# define __SYNC_rpt(type)      (1 - (type == __SYNC_wmb))
->  #else
->  # define __SYNC_rpt(type)      1
->  #endif
-> --
-> 2.25.0
->
+Jason
