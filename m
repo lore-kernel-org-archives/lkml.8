@@ -2,103 +2,128 @@ Return-Path: <SRS0=PfNx=4F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8BCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20912C7619F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E6420718
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PMR1EGl7"
+	by mail.kernel.org (Postfix) with ESMTP id 0288320725
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Feb 2020 08:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgBQIN2 (ORCPT
+        id S1728032AbgBQINt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 03:13:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25961 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727545AbgBQIN1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 03:13:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581927206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vacLSAglKCYHubbBh7xR6hS6YnzloO60LNhYv/4yKQM=;
-        b=PMR1EGl7xxh7k7btZ15QfW0jisFmW5hRd7XHYRecwzszDFVGEwgoekokepxWcPXoMT5iK0
-        C6muK8VyPXgpxyFjqvYY7hnRJqy/pSb0krG/nKFuvDjwlQSNj81ujSmB7bTynUvEiBgqBb
-        Q5clRozsGXBvbxURMSCr1niq7Tu/lNw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-ybn7gDDcO2SLY2d95luYNg-1; Mon, 17 Feb 2020 03:13:23 -0500
-X-MC-Unique: ybn7gDDcO2SLY2d95luYNg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5132800D5A;
-        Mon, 17 Feb 2020 08:13:20 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-39.ams2.redhat.com [10.36.117.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32E01196AE;
-        Mon, 17 Feb 2020 08:13:18 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 80FF416E16; Mon, 17 Feb 2020 09:13:16 +0100 (CET)
-Date:   Mon, 17 Feb 2020 09:13:16 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Emmanuel Vadot <manu@FreeBSD.org>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, jani.nikula@intel.com,
-        efremov@linux.com, tzimmermann@suse.de, noralf@tronnes.org,
-        sam@ravnborg.org, chris@chris-wilson.co.uk,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drm/format_helper: Dual licence the file in GPL 2
- and MIT
-Message-ID: <20200217081316.6ndtpdki7yu4uila@sirius.home.kraxel.org>
-References: <20200215180911.18299-1-manu@FreeBSD.org>
- <20200215180911.18299-3-manu@FreeBSD.org>
+        Mon, 17 Feb 2020 03:13:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:6404 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgBQINt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 03:13:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 00:13:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,451,1574150400"; 
+   d="scan'208";a="435475567"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Feb 2020 00:13:47 -0800
+Received: from [10.125.252.180] (abudanko-mobl.ccr.corp.intel.com [10.125.252.180])
+        by linux.intel.com (Postfix) with ESMTP id 1684E5804A2;
+        Mon, 17 Feb 2020 00:13:40 -0800 (PST)
+Subject: [PATCH v7 12/12] doc/admin-guide: update kernel.rst with CAP_PERFMON
+ information
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <ab933480-ac99-2e22-ed91-f25d2b23ef38@linux.intel.com>
+Date:   Mon, 17 Feb 2020 11:13:39 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200215180911.18299-3-manu@FreeBSD.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 07:09:11PM +0100, Emmanuel Vadot wrote:
-> From: Emmanuel Vadot <manu@FreeBSD.Org>
->=20
-> Contributors for this file are :
-> Gerd Hoffmann <kraxel@redhat.com>
-> Maxime Ripard <mripard@kernel.org>
-> Noralf Tr=F8nnes <noralf@tronnes.org>
->=20
-> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
-> ---
->  drivers/gpu/drm/drm_format_helper.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_=
-format_helper.c
-> index 0897cb9aeaff..3b818f2b2392 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> +// SPDX-License-Identifier: GPL-2.0 or MIT
->  /*
->   * Copyright (C) 2016 Noralf Tr=F8nnes
->   *
 
-Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+Update kernel.rst documentation file with the information
+related to usage of CAP_PERFMON capability to secure performance
+monitoring and observability operations in system.
 
-> --=20
-> 2.25.0
->=20
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee..b06ae9389809 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -720,20 +720,26 @@ perf_event_paranoid:
+ ====================
+ 
+ Controls use of the performance events system by unprivileged
+-users (without CAP_SYS_ADMIN).  The default value is 2.
++users (without CAP_PERFMON). The default value is 2.
++
++For backward compatibility reasons access to system performance
++monitoring and observability remains open for CAP_SYS_ADMIN
++privileged processes but CAP_SYS_ADMIN usage for secure system
++performance monitoring and observability operations is discouraged
++with respect to CAP_PERFMON use cases.
+ 
+ ===  ==================================================================
+  -1  Allow use of (almost) all events by all users
+ 
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+ 
+->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
++>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
+ 
+-     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
++     Disallow raw tracepoint access by users without CAP_PERFMON
+ 
+->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
++>=1  Disallow CPU event access by users without CAP_PERFMON
+ 
+->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
++>=2  Disallow kernel profiling by users without CAP_PERFMON
+ ===  ==================================================================
+ 
+ 
+-- 
+2.20.1
+
 
