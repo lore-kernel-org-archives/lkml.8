@@ -2,194 +2,146 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF42C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A50C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A910021D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAB421D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FAR85Sx/"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fRFCwfYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgBRK1q (ORCPT
+        id S1726477AbgBRK2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:27:46 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:44077 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgBRK1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:27:45 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200218102743epoutp04ec8f6f3e6008b5116ac645d180b4ac7d~0eFI-Nd-s3090430904epoutp04G
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:27:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200218102743epoutp04ec8f6f3e6008b5116ac645d180b4ac7d~0eFI-Nd-s3090430904epoutp04G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582021663;
-        bh=vKSMlfIkqirRTQYXX9qnJW4/hzJAeYLc6csS5YeRX2A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FAR85Sx/Z7fD67K00arVYNY1MQN9XemQQKgyQ9fsMQpOlbrrEVBScD0cBqD1nq/ox
-         cCcXqNBKvEjz1q7EG482CX3Q1HPEuBpdQW59O1zrXherDB8uQ8zn1g8BMk8LXFHE13
-         cGYy+wsPjLQf+Pe/6Ad7cwCBT2R1GQjkBrTljs1I=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200218102743epcas1p251c7b769d756f1c5052bdb58ee99c96b~0eFIpSwYb0296402964epcas1p2J;
-        Tue, 18 Feb 2020 10:27:43 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 48MH9S6sQvzMqYkV; Tue, 18 Feb
-        2020 10:27:40 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E5.97.57028.C1CBB4E5; Tue, 18 Feb 2020 19:27:40 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200218102740epcas1p4717d159cb0fd53fd9feac7c382af43dd~0eFF87-xX0978109781epcas1p4W;
-        Tue, 18 Feb 2020 10:27:40 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200218102740epsmtrp1a2167198b7f4d63c2451ea224e73066b~0eFF8QI890549005490epsmtrp1C;
-        Tue, 18 Feb 2020 10:27:40 +0000 (GMT)
-X-AuditID: b6c32a35-50bff7000001dec4-94-5e4bbc1c5910
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.2C.10238.C1CBB4E5; Tue, 18 Feb 2020 19:27:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200218102740epsmtip293ff206bcaf707bfb3fc8cff3b56981d~0eFFsUUlW0922309223epsmtip2v;
-        Tue, 18 Feb 2020 10:27:40 +0000 (GMT)
-Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns
- -EPROBE_DEFER
-To:     Ladislav Michl <ladis@linux-mips.org>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
-Date:   Tue, 18 Feb 2020 19:35:47 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 18 Feb 2020 05:28:13 -0500
+Received: from mail-eopbgr1410138.outbound.protection.outlook.com ([40.107.141.138]:41568
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726199AbgBRK2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 05:28:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=je7CORM9BnzCfIoLTr5oYXK2jc+2i1jwJo4J3MnVbCTJmYnPegtnex067/FsZwHU/OwSZnueUIysH/+iXkGwyChVv0fHhR3rhFxBuGvHgpI1aHSYmSCaaWCK8Aa0p5LVIl+S9fDJ0kQVRzdiUkT8zbpinBJEt+Z67WjdOiSypHWkP4FwrqKmZ9KPNPPbZbRms72ChMg2iBsnute1p+5gm7X71Q4kafZbg3wlbazkLZ1T8Jv1iP1vrv1Nu/lkAmXcIoT2kGD7vQVbjyW3/axuIxQsat8JVAWQsyd1eE7nqbsTTVAYT7gnW8uZRz8vxpYs6aw73E/hGPA+iLZ90z8zBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mebq2VlUGMUaXUxKvQqbGAlqWPaHzBLYdqsi0zKUe8w=;
+ b=IXn4/dR0z04tF2B3ItwAMcYrmg0CUGr9GB27++4fG6A2sL4Ibcv1rkxAOSAoPEd5kZFUV8HFgX7GZfeTcSUROFLVNH386s8S4tSajr8UIJ6A2TF76IJJar1iXX169GdaY4Mmm3IKGfnvl2qq8DAxScATH2u+PA1oL5w2vzvHH3Lr3suHElKfhWeF6Mg/vUfkb1YuAG/3BA3qVpgffrHcX3WJA3qz0qLkDRbomDurgIFlRIZ/SuIp8e5EUQxv8/9ou2jwD3NNWLQ7z3S3UWpNa3nlSdvHAgTeY01Acv8pEFaBmKIaSqpjw8bkZpWoy86TkEvBlNqwqO0WjMpKG8Lwsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mebq2VlUGMUaXUxKvQqbGAlqWPaHzBLYdqsi0zKUe8w=;
+ b=fRFCwfYX6tk2gtp8tXrGghriPilzEKQOs7sadluF41JQLhTAoos/JWGTrTq0FUCGd4/N3Egq2IvoZhUmNVXVULVtl3KnjnWDxnZ7iTYPhnlHI4f7UZpok3eSBhOPzxsR9l4raPBr/Qc8T3DBp7kV5AIjW2Sut2biLodKQxAv9xU=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2045.jpnprd01.prod.outlook.com (52.133.179.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Tue, 18 Feb 2020 10:28:10 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
+ 10:28:10 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     =?iso-8859-1?Q?Niklas_S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Thread-Topic: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Thread-Index: AQHV5MmmLymxK/lC2USJviU/BgNMZagfB0oAgAAkTgCAAOfAAIAAAooggACrKQCAAADSEA==
+Date:   Tue, 18 Feb 2020 10:28:10 +0000
+Message-ID: <TYAPR01MB454433742064C6F15555BFA2D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
+ <20200217101114.GO3013231@oden.dyn.berto.se>
+ <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
+ <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20200218102224.GA812084@oden.dyn.berto.se>
+In-Reply-To: <20200218102224.GA812084@oden.dyn.berto.se>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [211.11.155.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f42aa9f5-df2d-46e9-928c-08d7b45d40b2
+x-ms-traffictypediagnostic: TYAPR01MB2045:|TYAPR01MB2045:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB20459631780D60558743795DD8110@TYAPR01MB2045.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 031763BCAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(396003)(366004)(346002)(136003)(189003)(199004)(6506007)(53546011)(2906002)(478600001)(9686003)(186003)(110136005)(316002)(76116006)(7696005)(66946007)(26005)(86362001)(33656002)(55016002)(71200400001)(54906003)(6636002)(8676002)(4326008)(64756008)(52536014)(81156014)(81166006)(66476007)(5660300002)(66556008)(8936002)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2045;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: X1SwCjkk1HxqOgLqV4zj9NHDwv5Me8Qz/811WtXrt8xqKxOR0FfRD1cO2edNl0yeEMo5eAaZ7hoKyp81b/MlcpmabNUOpms71u6LakTbbAcK3cYP8VoY4+rfpXnioPQNxD6Alt3Sgbj9LLsrEE2TX3SYdZG6ZU6Pq2aKGYoB6peHhhvyftEzJeYOdL0JEz6NaxZ/ofe6WWBqconmBLUIEwBucl2SJSLGgjeuFZHW3uMxYNGb3SOffN5sq8XKbdtmJiP9zUriabKeAXOsl2V0bBmgqaFloVwCj19bAreZzlYDoP1CBKcOMbvd/Gr0Wza2MvgnoA7x/ic9ZlNeqFR165paH8F9aV5PC10zkbWihGt6ZWOXvKmNEhYG4A/uR56bPA0lk5sKwUPWUy1A5OPgIUNOMWBzFSbzTwiHKom8NFHyTj0s9/sTlH+O/fpzPvOK
+x-ms-exchange-antispam-messagedata: fw/QbyxM8QX8FsZ29YWb6DNX98KVACfZyl4/Jr6fpOvrdAcUYMkKa12Q5kTu2PSOhHAUa/CgScAwKXe9k7eSVy0CDnIOu3A5f/0SFqLUSM1mGxfdTGX9dvwoXxIJ5IEXLP2PftzRbrgD7tGyYfyjsw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200218102140.GA193069@lenoch>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmrq7MHu84g3//TSx+bPvKZHHpa43F
-        7JWTmSy2/rnEZnF51xw2i9lL+lksbjeuYHNg91jz/hSzx9GVa5k8WibtYvf40tLM7NG3ZRWj
-        x+dNcgFsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6Z
-        OUCnKCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0M
-        jEyBChOyM2ZeeMpUsFW44vfPqawNjLf4uxg5OSQETCS+Nc1i7GLk4hAS2MEoMe3CdijnE6PE
-        8ymX2SGcb4wS73tBMhAtV+6vharayyhx9cErqKr3jBIn1r9kBqkSFoiW+DHpIlAVB4eIgKbE
-        nT/6IDXMAucZJY6uncYOUsMmoCWx/8UNNhCbX0BR4uqPx2AbeAXsJI5+bQWrYRFQlXhwrQes
-        RlQgTOLkthaoGkGJkzOfsIDYnAK6EhvOfAaLMwuIS9x6Mp8JwpaX2P52DjPE1d/ZJOZsLIOw
-        XSSa+y6zQ9jCEq+Ob4GypSRe9rdB2dUSK08eYQM5WkKgg1Fiy/4LrBAJY4n9SyczgTzGDPTY
-        +l36EGFFiZ2/50LdwCfx7msPK0iJhACvREebEESJssTlB3eZIGxJicXtnWwTGJVmIflmFpIP
-        ZiH5YBbCsgWMLKsYxVILinPTU4sNCwyRY3sTIziZapnuYJxyzucQowAHoxIPb0CfV5wQa2JZ
-        cWXuIUYJDmYlEV5vcaAQb0piZVVqUX58UWlOavEhRlNgYE9klhJNzgcm+rySeENTI2NjYwsT
-        QzNTQ0Mlcd6HkZpxQgLpiSWp2ampBalFMH1MHJxSDYxH5kXw37nxO7NL5OROloZSU/lFitbZ
-        L26LFRifXrbXv6LRiHnRu09sB2Z6Vl23CsncV1glJMlw52X4uU/ePRevVLdu5J+9hr3dY+n0
-        RJ0tVpMalLYWT5++Yn4315w+jSZnzjdNkZKf94RcXtXh9iqzXizx2ntZdscM8e+8UiJWdfd2
-        zwr6baLEUpyRaKjFXFScCABT8JHovAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSvK7MHu84g79vRSx+bPvKZHHpa43F
-        7JWTmSy2/rnEZnF51xw2i9lL+lksbjeuYHNg91jz/hSzx9GVa5k8WibtYvf40tLM7NG3ZRWj
-        x+dNcgFsUVw2Kak5mWWpRfp2CVwZMy88ZSrYKlzx++dU1gbGW/xdjJwcEgImElfur2XsYuTi
-        EBLYzShx7eIidoiEpMS0i0eZuxg5gGxhicOHiyFq3jJKzPvbxAZSIywQLfFj0kVGkBoRAU2J
-        O3/0QWqYBc4zShy48R5qaDOTxMGlV1lBGtgEtCT2v7gB1swvoChx9cdjRhCbV8BO4ujXVrDF
-        LAKqEg+u9YDViAqESexc8pgJokZQ4uTMJywgNqeArsSGM5/BepkF1CX+zLvEDGGLS9x6Mp8J
-        wpaX2P52DvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLz
-        czcxguNKS3MH4+Ul8YcYBTgYlXh4V0zwihNiTSwrrsw9xCjBwawkwustDhTiTUmsrEotyo8v
-        Ks1JLT7EKM3BoiTO+zTvWKSQQHpiSWp2ampBahFMlomDU6qBMbcrx8CXs/ol/4s9xr87r3R3
-        PjwZwiEuXZEYnxZ3ovJLM8+leqbnp2fabl/9cNGZK502aXtObWG/MHXTv473HkvjFx5++opL
-        ZuL7De+P2FWdDbVcOX/2xjnTdy71Ev/H4dLC4Gxu/YNVUrsn2jL0Ar/egqN3Av6qGPUv4z9x
-        l+/KC9Yl9eWPE5RYijMSDbWYi4oTAQyz9JqnAgAA
-X-CMS-MailID: 20200218102740epcas1p4717d159cb0fd53fd9feac7c382af43dd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2
-References: <CGME20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2@epcas1p3.samsung.com>
-        <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
-        <b2655a58-6541-a2c9-c44d-536e5cef1ee3@samsung.com>
-        <20200218102140.GA193069@lenoch>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f42aa9f5-df2d-46e9-928c-08d7b45d40b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 10:28:10.5168
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eSJNiMHQIpPk4X3rdX/45Hd98ed8a6JIYUeQdVBmmdRihHXDYxnN2inqO6pyINWi0m2RuAKOLXz7D/+rTorVzcs5iitrBZ4WOM8iY6jj85klZkPtv+9Qodb/C1T11hhn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 7:21 PM, Ladislav Michl wrote:
-> On Tue, Feb 18, 2020 at 12:28:25PM +0900, Chanwoo Choi wrote:
->> On 2/17/20 10:38 PM, H. Nikolaus Schaller wrote:
->>> If the gpios are probed after this driver (e.g. if they
->>> come from an i2c expander) there is no need to print an
->>> error message.
->>>
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>> ---
->>>  drivers/extcon/extcon-palmas.c | 8 ++++++--
->>>  1 file changed, 6 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
->>> index edc5016f46f1..cea58d0cb457 100644
->>> --- a/drivers/extcon/extcon-palmas.c
->>> +++ b/drivers/extcon/extcon-palmas.c
->>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
->>>  
->>>  	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
->>>  							GPIOD_IN);
->>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
->>> +	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
->>> +		return -EPROBE_DEFER;
->>> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
->>>  		dev_err(&pdev->dev, "failed to get id gpio\n");
->>>  		return PTR_ERR(palmas_usb->id_gpiod);
->>>  	}
->>>  
->>>  	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
->>>  							GPIOD_IN);
->>> -	if (IS_ERR(palmas_usb->vbus_gpiod)) {
->>> +	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
->>> +		return -EPROBE_DEFER;
->>> +	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
->>>  		dev_err(&pdev->dev, "failed to get vbus gpio\n");
->>>  		return PTR_ERR(palmas_usb->vbus_gpiod);
->>>  	}
->>>
->>
->> I think that it is enough to handle the -EPROBE_DEFER.
->> Also, I prefer to use single if/else statement 
->> instead of the nested if/else statement.
->>
->> Applied it.
-> 
-> Uh... As it is? Then it is matter of time it triggers someones cocci
-> script pointing to else after return. Could you at least fix this?
+Hello Niklas-san,
 
-Sorry. I don't understand. Do you mean that this patch has the
-some issue of cocci script?
+> From: Niklas S=F6derlund, Sent: Tuesday, February 18, 2020 7:22 PM
+>=20
+> Hello Morimoto-san and Shimoda-san,
+>=20
+> Thanks for your feedback.
+>=20
+> On 2020-02-18 00:11:03 +0000, Yoshihiro Shimoda wrote:
+> > Hi Niklas-san,
+> >
+> > > From: Kuninori Morimoto, Sent: Tuesday, February 18, 2020 9:01 AM
+> > >
+> > > Hi Niklas
+> > >
+> > > > > +renesas@???
+> > > >
+> > > > I have not used the +renesas@ for my other entry in MAINTAINERS for
+> > > > R-Car VIN and wish them to be the same. I have do not mind if that =
+is
+> > > > with or without the +renesas tag.
+> > > >
+> > > > @Shimoda-san: What would you and Renesas prefer I use?
+> > >
+> > > Please use +renesas@ for Author when you post patches.
+> > > We don't mind for other mail address, like MAINTAINERS.
+> >
+> > I have the same opinion with Morimoto-san.
+>=20
+> Ok thanks, good to know my view align with yours.
+>=20
+> Could one or both of you provide an Acked-by tag for this patch to bless
+> it?
 
-I think that it fixes the probe sequence issue
-between extcon-palmas and gpio driver. It is not related to
-any result from cocci script. If the extcon-palmas.c has
-the issue by cocci or checkpatch, anyone can send the other patch
-for fixup.
+Oops. I should have provided it when I replied...
 
-I think that it is enough to fix the issue which is only
-related to the probe sequence between gpio and extcon-palmas.c
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-> 
-> Thanks,
-> 	ladis
-> 
-> 
+Best regards,
+Yoshihiro Shimoda
 
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
