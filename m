@@ -2,92 +2,126 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F8BC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1347DC3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D54207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582063742;
-	bh=qRWAvYsavB34O2TeDdY9WjdGCAyZQckEaNKMa6i36QU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VRiqU1jJVsFcrANXgdTXZb2Wj8wSGey3X+/QsqSz1mfl2Dco+ziSZ5V6vnV0KF9F/
-	 zH+TOu9FpEMFSxIFc9gXD0zIYTJm+Xs+wNHdbDXbgZkfuDxGRrAXLYmIrSv0NF4RQP
-	 arybgG+yhmhbfzbWbxeGy+YKZpNuNyxjN0IsQXlw=
+	by mail.kernel.org (Postfix) with ESMTP id E7CA9207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBRWJA (ORCPT
+        id S1726496AbgBRWLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:09:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgBRWJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:09:00 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C93042465A
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 22:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582063740;
-        bh=qRWAvYsavB34O2TeDdY9WjdGCAyZQckEaNKMa6i36QU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=omJwXp9X+6kFpO2wu8Ta98kyv8SsEjfk1yB+iz1Mv1YxN7oEOnhubO6bTgs9dGYmR
-         CpvI9pLLKkevN+guJ7qUfQc36yWglipOIEhDyMO48rVZCnWoqBrcdyNLbSOntYoNqU
-         f+3Wk1LmhjuzHxzg+B9YARQZKgyuwa4yxZM+WVUw=
-Received: by mail-wr1-f41.google.com with SMTP id y11so25830297wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:08:59 -0800 (PST)
-X-Gm-Message-State: APjAAAW+V0in+hwXuAA8OdAoWIxuCLegFHF5zPWQAgsKA4BIDFu+pver
-        etF8aFFXEO4Akijx4PZOOtdVsQ2ByJMlWZHwUuoqgQ==
-X-Google-Smtp-Source: APXvYqy4xcsEXxuc8l5KaIyC3sMnwa0xIIKe/DtpIs+M0XyRRLjwaSyX+69z4jn/QHiiuPUZjm6SsE+BIyDqeRLCpYk=
-X-Received: by 2002:adf:fd8d:: with SMTP id d13mr31636023wrr.208.1582063738210;
- Tue, 18 Feb 2020 14:08:58 -0800 (PST)
+        Tue, 18 Feb 2020 17:11:36 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33895 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgBRWLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:11:36 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c20so21184081qkm.1;
+        Tue, 18 Feb 2020 14:11:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SexCyhtG++Ew70oYHNDjxWHTtm2YNgcLBPVDPrQlosM=;
+        b=M6WgOTSsB2eroVtH/gNW4Np4t84zmB52a5fVaCOmSnLGmkgoqlQUQmPn/mJnfXB7v+
+         EPwEJHZBvPqa6i9u9VpItKK06JobPftiaVM4Kdrvrlup7tV2iJy78hen7Msb6c295mNc
+         Skok3pKk1n8R3mUPYXW2L3NpmyfHoUgB2qN1gwhR7t2sSHnVxyC6GO+ofGYAKss/SXWh
+         gUuKke+mMbfYYDIrxBI7ACN+cKWBVgsSo2eyhZzFsOurffhRw5VhW00p3vlZS4je2BZU
+         kH80heuV3N5tobDmudFrcIieMj2d4BnWj2TpwEAU4aiW8JdEk2Qxttx2oGtY0CA1ydDu
+         YOYQ==
+X-Gm-Message-State: APjAAAXJIHeyechw2FWNLWCoRlLt2yc1DKUT+OoFtRJXU9t4G77KWP1L
+        AWL8cmnjer1zx/UzeHQy8Bw=
+X-Google-Smtp-Source: APXvYqxAuVhE9JWncGZiB96oj6NDqmFr+ATZc2mDIOV3mzx6dygSFAZoH1yla2lHQqbOeZ0xxJtJAQ==
+X-Received: by 2002:a37:6197:: with SMTP id v145mr20336585qkb.443.1582063895017;
+        Tue, 18 Feb 2020 14:11:35 -0800 (PST)
+Received: from localhost.localdomain (189-18-27-64.dsl.telesp.net.br. [189.18.27.64])
+        by smtp.googlemail.com with ESMTPSA id 85sm5415qko.49.2020.02.18.14.11.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 14:11:34 -0800 (PST)
+From:   Carlos de Paula <me@carlosedp.com>
+Cc:     papadakospan@gmail.com, jose.abreu@synopsys.com,
+        Carlos de Paula <me@carlosedp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: Add txpbl node for RK3399/RK3328
+Date:   Tue, 18 Feb 2020 17:10:37 -0500
+Message-Id: <20200218221040.10955-1-me@carlosedp.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200216182334.8121-1-ardb@kernel.org> <CAKv+Gu-4N6B0LPL1fn5C2EAh9y3ECZ=mSi92p0AyJf67mJoWmw@mail.gmail.com>
- <20200218194625.GA25459@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200218194625.GA25459@agluck-desk2.amr.corp.intel.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 18 Feb 2020 23:08:47 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu-P05VJDXpFr_CqA7WVrnac_nWeGT36D4oDEPAHM5cDrw@mail.gmail.com>
-Message-ID: <CAKv+Gu-P05VJDXpFr_CqA7WVrnac_nWeGT36D4oDEPAHM5cDrw@mail.gmail.com>
-Subject: Re: [PATCH 00/18] efi: clean up contents of struct efi
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 20:46, Luck, Tony <tony.luck@intel.com> wrote:
->
-> On Sun, Feb 16, 2020 at 07:31:58PM +0100, Ard Biesheuvel wrote:
-> > (+ Tony and Fenghua)
-> >
-> > Apologies to the IA64 maintainers for forgetting to cc you.
->
-> No worries.
-> >
-> > The whole series can be found at
-> > https://lore.kernel.org/linux-efi/20200216182334.8121-1-ardb@kernel.org/
-> >
-> > Please let me know if you need me to resend with the missing cc's added.
->
-> Thanks to get-lore-mbox.py I don't. It picked up all the pieces.
->
-> It all builds and boots with no issues.
->
-> Looks like a nice cleanup.
->
-> Tested-by: Tony Luck <tony.luck@intel.com> # arch/ia64
->
+Some rockchip SoCs like the RK3399 and RK3328 exhibit an issue
+where tx checksumming does not work with packets larger than 1498.
 
-Thanks Tony.
+The default Programmable Buffer Length for TX in these GMAC's is
+not suitable for MTUs higher than 1498. The workaround is to disable
+TX offloading with 'ethtool -K eth0 tx off rx off' causing performance
+impacts as it disables hardware checksumming.
+
+This patch sets snps,txpbl to 0x4 which is a safe number tested ok for
+the most popular MTU value of 1500.
+
+For reference, see https://lkml.org/lkml/2019/4/1/1382.
+
+Signed-off-by: Carlos de Paula <me@carlosedp.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 ++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 1f53ead52c7f..b7f1de4b7fd0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -906,6 +906,7 @@
+ 		resets = <&cru SRST_GMAC2IO_A>;
+ 		reset-names = "stmmaceth";
+ 		rockchip,grf = <&grf>;
++		snps,txpbl = <0x4>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -913,6 +914,7 @@
+ 		compatible = "rockchip,rk3328-gmac";
+ 		reg = <0x0 0xff550000 0x0 0x10000>;
+ 		rockchip,grf = <&grf>;
++		snps,txpbl = <0x4>;
+ 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "macirq";
+ 		clocks = <&cru SCLK_MAC2PHY_SRC>, <&cru SCLK_MAC2PHY_RXTX>,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 33cc21fcf4c1..cd5415d7e559 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -288,6 +288,7 @@
+ 		resets = <&cru SRST_A_GMAC>;
+ 		reset-names = "stmmaceth";
+ 		rockchip,grf = <&grf>;
++		snps,txpbl = <0x4>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.20.1
+
