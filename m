@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC43DC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB33C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847EF207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4E82173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRtKjPvi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mmw76Nmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBRWH5 (ORCPT
+        id S1726713AbgBRWIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:07:57 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38358 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgBRWH4 (ORCPT
+        Tue, 18 Feb 2020 17:08:01 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47099 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgBRWIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:07:56 -0500
-Received: by mail-pj1-f66.google.com with SMTP id j17so1601915pjz.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:07:55 -0800 (PST)
+        Tue, 18 Feb 2020 17:08:01 -0500
+Received: by mail-pf1-f195.google.com with SMTP id k29so11338579pfp.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:08:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pIQXW5hE1+eSM3lLosf+UpP271pqaf4+040KGno05/4=;
-        b=SRtKjPviRKEjd1+AkFb+3aF7EF0gSfjDVNUnYCbnP61y6zy0QwngTevwCuBByt54RM
-         NCBHDna6P/lH3I12T466ZtCwtuM3bL81j8Uy+J97lb9E9xMz3su4W67vNe2Jm5/uwg29
-         rWrp3OcLGEcuwRD3jzS3Ue8q5WiwOrS/I6S+FJIdHWs8nru69mBWX99SxoTIRV2XX0Kj
-         Bg8lf2AdIscIqA9ls5CJ25PKrG+53/wJ4wkJXaftY2kDv1zU+/Ps4cXP4hpKNIepM5jB
-         JaxySFOiycK1STIlUc0//eNyy07OTqRm4DvoYZ1TIJN0FvYwqkz3iAsBNmbYXjeR5Nvy
-         Bqlw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fddqMLrJQRzitZYDWKracPUF7ZxdfWRkTJcAoveCrU4=;
+        b=mmw76NmczqpmMPWrvF9Ft4knfpYOpBH1k9zm30aH7yEQMHUhBCzxgjawY42G45pvrr
+         yVy4o05/H4pYCJiyFtK6nuYF2ajeZMNdFCliPZzHwkT2u2GW8/aVBa3/4l/8j1pLxwdj
+         sAMw6G/5BWHnxjLr0v0kMBbraVai3qvzSoE831+6VrRU13KtR7ya8b6DLvInjaMZi1bI
+         W71mrPIUlgkCGlqLG7a4Rz7l6S5Yt5/nbxEM79w3oWxdzB87/zbx+OgpU9Zpic7g+dCE
+         3JHSB2g/+OLvu8wZGOi0ioAIRB/SlEDkPVG5w3lhzugI1vbh0vJqISRsh9M0P/hSNF3S
+         Ruaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pIQXW5hE1+eSM3lLosf+UpP271pqaf4+040KGno05/4=;
-        b=CnyT57U1xuSfudH1biaxWgW32FsJX04owR86eD9VxolviQQugqdMcSqcW9LbwuoscW
-         +iL1EYeXMmN2VxW3TxFmbTrn1ZwbTUzSwmhGFgpTeTEJKNYqGopVMlUKecCoJmMuXSIr
-         oRl5PLIEzG7sIhYMX9ulao5+L2B80y3d22eIV5r8m0yq10htkHsDzt5TQwXwodlOhaP3
-         Iekdw0vAaAd2mLPZe+31rLy9iEH7TNfB071IQIY0NAR0+iniVMRIEWCC19CYEeYmFGUp
-         edsYvI507D48uahQXZ4UmwdvQGpD3llJlmZUg9C8m32qoxBAmK7K0uxM7cQQozAWuX/D
-         Vyeg==
-X-Gm-Message-State: APjAAAXX2YigI4Ip3szg0V4ooLQv4p9Nn7VxCG3DxFH3NR0LvWkAfdhL
-        +axYGQNYCOPay1vq9vCbkD8v2dpPmo4=
-X-Google-Smtp-Source: APXvYqyCxijq9UmWFDyySgQnBxHFONgdNjoM9hfMVUkV+GEVmtIRioztxSn530rGJVEEY1Mr5+8f5A==
-X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr5390408pjo.86.1582063674983;
-        Tue, 18 Feb 2020 14:07:54 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fddqMLrJQRzitZYDWKracPUF7ZxdfWRkTJcAoveCrU4=;
+        b=RvYaih+eTVB6aBr00t6M/KIDK6z8r+pnxpqSs3xUJt4JUUulPguoXRLaB2zGUdflp5
+         7UFPdvlSswIgm11kbPsYHB41WyPjy5DTTt6hZWfyIpOz3LuHnuIOzUDrnNcAvFuuK3G2
+         LD05iJaWKRjJzEcdZoxQH0Gt4Y23RXZcaGyYij+zuLvy95X3qtd0SQcuop4wZgSNUjHN
+         i1avJ5tUdp4aVZUsEXwtMYwVD14CvH/dpbB8embjr1nSELKhMuil/0AopZvgbGmbX3fF
+         h2KJ1071hTgzAiVZtwwaqAI/108WMj+2ypE+VvZ/dn7jikYc/JY2u9mqHSIVojqDmyQz
+         FM0A==
+X-Gm-Message-State: APjAAAVr22J7nmA4H7qxepd7q9kp0/vInBJyau8QU3jGrz3+GArNHyGf
+        /OKGAaOcFp9GoETRGcyLs3hDKjz+8Ts=
+X-Google-Smtp-Source: APXvYqza44F+QlcD0d2mvFzZr70iF4BFKK30MuvV2w4EOISTJkmXAY1nf3jjtKHvFEA9mrY8032psg==
+X-Received: by 2002:a63:e4d:: with SMTP id 13mr24648668pgo.343.1582063679790;
+        Tue, 18 Feb 2020 14:07:59 -0800 (PST)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id d69sm5485229pfd.72.2020.02.18.14.07.52
+        by smtp.gmail.com with ESMTPSA id d69sm5485229pfd.72.2020.02.18.14.07.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 14:07:54 -0800 (PST)
+        Tue, 18 Feb 2020 14:07:59 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -68,37 +69,29 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state to allow EPROBE_DEFER to be returned for longer
-Date:   Tue, 18 Feb 2020 22:07:47 +0000
-Message-Id: <20200218220748.54823-1-john.stultz@linaro.org>
+Subject: [PATCH v3 2/2] driver core: Make deferred_probe_timeout global so it can be shared
+Date:   Tue, 18 Feb 2020 22:07:48 +0000
+Message-Id: <20200218220748.54823-2-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200218220748.54823-1-john.stultz@linaro.org>
+References: <20200218220748.54823-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-at the end of initcall"), along with commit 25b4e70dcce9
-("driver core: allow stopping deferred probe after init") after
-late_initcall, drivers will stop getting EPROBE_DEFER, and
-instead see an error causing the driver to fail to load.
+This patch, suggested by Rob, allows deferred_probe_timeout to
+be global so other substems can use it.
 
-That change causes trouble when trying to use many clk drivers
-as modules, as the clk modules may not load until much later
-after init has started. If a dependent driver loads and gets an
-error instead of EPROBE_DEFER, it won't try to reload later when
-the dependency is met, and will thus fail to load.
+This also sets the default to 30 instead of -1 (no timeout) and
+modifies the regulator code to make use of it instead of its
+hard-coded 30 second interval.
 
-This patch reworks some of the logic in
-__driver_deferred_probe_check_state() so that if the
-deferred_probe_timeout value is set, we will return EPROBE_DEFER
-until that timeout expires, which may be after initcalls_done
-is set to true.
+In the case that deferred_probe_timeout is manually set to -1,
+we preserve the regulator's hard coded 30 second interval (just
+to be cautious this doesn't change behavior in that case).
 
-Specifically, on db845c, this change (when combined with booting
-using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
-QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
-system, where as without it the display will fail to load.
+Feedback would be apprecaited!
 
 Cc: Rob Herring <robh@kernel.org>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
@@ -114,40 +107,76 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-pm@vger.kernel.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2:
-* Add calls to driver_deferred_probe_trigger() after the two minute timeout,
-  as suggested by Bjorn
-* Minor whitespace cleanups
-* Switch to 30 second timeout to match what the regulator code is doing as
-  suggested by Rob.
-v3:
-* Rework to reuse existing deferred_probe_timeout value, suggested by Rob
-* Dropped Fixes: tags as Rob requested (Not my hill to die on :)
----
- drivers/base/dd.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/base/dd.c             |  4 +++-
+ drivers/regulator/core.c      | 12 ++++++++----
+ include/linux/device/driver.h |  1 +
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index b25bcab2a26b..9d916a7b56a6 100644
+index 9d916a7b56a6..c8e025a20a9d 100644
 --- a/drivers/base/dd.c
 +++ b/drivers/base/dd.c
-@@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+@@ -224,7 +224,9 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+ }
+ DEFINE_SHOW_ATTRIBUTE(deferred_devs);
  
- static int __driver_deferred_probe_check_state(struct device *dev)
+-static int deferred_probe_timeout = -1;
++int deferred_probe_timeout = 30;
++EXPORT_SYMBOL_GPL(deferred_probe_timeout);
++
+ static int __init deferred_probe_timeout_setup(char *str)
  {
--	if (!initcalls_done)
--		return -EPROBE_DEFER;
--
--	if (!deferred_probe_timeout) {
-+	if (initcalls_done && !deferred_probe_timeout) {
- 		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
- 		return -ETIMEDOUT;
- 	}
-+	if (!initcalls_done || deferred_probe_timeout > 0)
-+		return -EPROBE_DEFER;
+ 	int timeout;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index d015d99cb59d..889d08e65f19 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5757,6 +5757,11 @@ static DECLARE_DELAYED_WORK(regulator_init_complete_work,
+ 
+ static int __init regulator_init_complete(void)
+ {
++	int delay = deferred_probe_timeout;
++
++	/* preserve 30 second interval if deferred_probe_timeout=-1 */
++	if (delay < 0)
++		delay = 30;
+ 	/*
+ 	 * Since DT doesn't provide an idiomatic mechanism for
+ 	 * enabling full constraints and since it's much more natural
+@@ -5767,18 +5772,17 @@ static int __init regulator_init_complete(void)
+ 		has_full_constraints = true;
+ 
+ 	/*
+-	 * We punt completion for an arbitrary amount of time since
++	 * We punt completion for deferred_probe_timeout seconds since
+ 	 * systems like distros will load many drivers from userspace
+ 	 * so consumers might not always be ready yet, this is
+ 	 * particularly an issue with laptops where this might bounce
+ 	 * the display off then on.  Ideally we'd get a notification
+ 	 * from userspace when this happens but we don't so just wait
+ 	 * a bit and hope we waited long enough.  It'd be better if
+-	 * we'd only do this on systems that need it, and a kernel
+-	 * command line option might be useful.
++	 * we'd only do this on systems that need it.
+ 	 */
+ 	schedule_delayed_work(&regulator_init_complete_work,
+-			      msecs_to_jiffies(30000));
++			      delay * HZ);
  
  	return 0;
  }
+diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+index 1188260f9a02..b3ff8cb3fbd6 100644
+--- a/include/linux/device/driver.h
++++ b/include/linux/device/driver.h
+@@ -236,6 +236,7 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+ }
+ #endif
+ 
++extern int deferred_probe_timeout;
+ void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ int driver_deferred_probe_check_state_continue(struct device *dev);
 -- 
 2.17.1
 
