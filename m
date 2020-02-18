@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FAC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65878C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB9824125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C932464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056286;
-	bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+	s=default; t=1582056299;
+	bh=O9r5i8nqHSQAto/Wve6Tojb8JBvbpPLEf6XmOAKP9Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOGBwSQ9S6DS2arSNKyNCMKWj5RqQzRZFmR0VahwvkOmp1QEWefTNDsHTxfvKh9hm
-	 nxA9ewIG8sOQz7zYSG/pzEM2JEucbVjQs3YlH51yNp7S1ZjFzRWAvNQLVQzS7IMEa/
-	 4PoQ2+VZDOgrhCnuuh2tRdbvV7kQtWf2sF/5cQlk=
+	b=Q1NEhNQQkGYKU2y/Fx1cF79zqnziXYgAqtTtVf+4hW0SPOrFWzcmc5lM8nyscmTG3
+	 PVFXxfzIq9Yb0dSmewqNWiSeMgRlQPItEXw1JKoUHvVTPLO4gVm0Xru2gc2ZriOFzo
+	 sLezhLQgAyrw+vwW8JrPBBnvac4S9RGCixEe1Ifc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgBRUEo (ORCPT
+        id S1728940AbgBRUCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:04:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbgBRUC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:59 -0500
+        id S1728930AbgBRUC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF07021D56;
-        Tue, 18 Feb 2020 20:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4FF21D56;
+        Tue, 18 Feb 2020 20:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056179;
-        bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+        s=default; t=1582056146;
+        bh=O9r5i8nqHSQAto/Wve6Tojb8JBvbpPLEf6XmOAKP9Mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xw4ztxXImCygasJii6jBuNGtrMzAFMoEFjRWu6Rs67eiaaWtZIvIg82iF2Wm7pmUH
-         jEZkEaerLVilF8H7ZgertAUV8sn4M0Ljh329oqHOr6eDcWKUaFkbA4EZdqkwdhQdqL
-         mIcRD5Or3FCZh6HGM4MM3EDSN3huPt5u0o+GElMI=
+        b=DND2p6CQpLmF6GqI4suZmO95U1UOBZp1USzH2ZQKDi8udZmnYW7+6b4hjhBwnXZG0
+         JdHRJB1DMxqUByO/l1a9YygJ//EFWe7dHQ6DUzVGEFxYqajxrtH/K+x6e44wEfyo2v
+         BwmmQzVejnjhyan0TNzQ4iCLyc+lrQOHPL+Qr2Qc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.5 64/80] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
-Date:   Tue, 18 Feb 2020 20:55:25 +0100
-Message-Id: <20200218190438.150862023@linuxfoundation.org>
+        stable@vger.kernel.org, Yonatan Cohen <yonatanc@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 52/80] IB/umad: Fix kernel crash while unloading ib_umad
+Date:   Tue, 18 Feb 2020 20:55:13 +0100
+Message-Id: <20200218190437.172007798@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,40 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Jones <michael-a1.jones@analog.com>
+From: Yonatan Cohen <yonatanc@mellanox.com>
 
-commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
+commit 9ea04d0df6e6541c6736b43bff45f1e54875a1db upstream.
 
-Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
-bits 6/5. This fixs a LTC297X family bug where polling always returns
-not busy even when the part is busy. This fixes a LTC388X and
-LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
-not polled, which can lead to NACKing of commands. LTC388X and
-LTM467X modules now poll BUSY and PEND, increasing reliability by
-eliminating NACKing of commands.
+When disassociating a device from umad we must ensure that the sysfs
+access is prevented before blocking the fops, otherwise assumptions in
+syfs don't hold:
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
-Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+	    CPU0            	        CPU1
+	 ib_umad_kill_port()        ibdev_show()
+	    port->ib_dev = NULL
+                                      dev_name(port->ib_dev)
+
+The prior patch made an error in moving the device_destroy(), it should
+have been split into device_del() (above) and put_device() (below). At
+this point we already have the split, so move the device_del() back to its
+original place.
+
+  kernel stack
+  PF: error_code(0x0000) - not-present page
+  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+  RIP: 0010:ibdev_show+0x18/0x50 [ib_umad]
+  RSP: 0018:ffffc9000097fe40 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffffffffa0441120 RCX: ffff8881df514000
+  RDX: ffff8881df514000 RSI: ffffffffa0441120 RDI: ffff8881df1e8870
+  RBP: ffffffff81caf000 R08: ffff8881df1e8870 R09: 0000000000000000
+  R10: 0000000000001000 R11: 0000000000000003 R12: ffff88822f550b40
+  R13: 0000000000000001 R14: ffffc9000097ff08 R15: ffff8882238bad58
+  FS:  00007f1437ff3740(0000) GS:ffff888236940000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00000000000004e8 CR3: 00000001e0dfc001 CR4: 00000000001606e0
+  Call Trace:
+   dev_attr_show+0x15/0x50
+   sysfs_kf_seq_show+0xb8/0x1a0
+   seq_read+0x12d/0x350
+   vfs_read+0x89/0x140
+   ksys_read+0x55/0xd0
+   do_syscall_64+0x55/0x1b0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9:
+
+Fixes: cf7ad3030271 ("IB/umad: Avoid destroying device while it is accessed")
+Link: https://lore.kernel.org/r/20200212072635.682689-9-leon@kernel.org
+Signed-off-by: Yonatan Cohen <yonatanc@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pmbus/ltc2978.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/user_mad.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+--- a/drivers/infiniband/core/user_mad.c
++++ b/drivers/infiniband/core/user_mad.c
+@@ -1312,6 +1312,9 @@ static void ib_umad_kill_port(struct ib_
+ 	struct ib_umad_file *file;
+ 	int id;
  
- #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
++	cdev_device_del(&port->sm_cdev, &port->sm_dev);
++	cdev_device_del(&port->cdev, &port->dev);
++
+ 	mutex_lock(&port->file_mutex);
  
--#define LTC_NOT_BUSY			BIT(5)
--#define LTC_NOT_PENDING			BIT(4)
-+#define LTC_NOT_BUSY			BIT(6)
-+#define LTC_NOT_PENDING			BIT(5)
+ 	/* Mark ib_dev NULL and block ioctl or other file ops to progress
+@@ -1331,8 +1334,6 @@ static void ib_umad_kill_port(struct ib_
  
- /*
-  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
+ 	mutex_unlock(&port->file_mutex);
+ 
+-	cdev_device_del(&port->sm_cdev, &port->sm_dev);
+-	cdev_device_del(&port->cdev, &port->dev);
+ 	ida_free(&umad_ida, port->dev_num);
+ 
+ 	/* balances device_initialize() */
 
 
