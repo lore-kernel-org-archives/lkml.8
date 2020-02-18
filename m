@@ -2,91 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC4AC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE8CC3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B77F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582061346;
-	bh=czeD/sC81voukq+OKQqh/8mwhVexZAVway3j66HsR0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dowt5aXf43Ji6VtrbYh1ldZmaGcUXnOa2cbFhW5Qh/ydaUq1y2Sj7DLuxlqCH12ir
-	 SggWli3iUbv/t9c09siDurdx/o6XKfYLm5wB7FO34CdOxAonT3Sk1HQFbPOLU9z8O2
-	 R7XGriD5mAP3z4xV2GOJ5iSNIYyK6fyuxJ128/X4=
+	by mail.kernel.org (Postfix) with ESMTP id E7CA22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dp2yWu0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgBRV3F (ORCPT
+        id S1727858AbgBRV3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:29:05 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40637 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRV3E (ORCPT
+        Tue, 18 Feb 2020 16:29:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33819 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRV3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:29:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so21030913otr.7;
-        Tue, 18 Feb 2020 13:29:03 -0800 (PST)
+        Tue, 18 Feb 2020 16:29:39 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c20so21072734qkm.1;
+        Tue, 18 Feb 2020 13:29:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OrdDkIMDWhhABSmakNixMXmfGtr8QsZxJzVPjLWIkfU=;
+        b=Dp2yWu0tAN3p4J5E7bAGj7wKakRGPfsizzsbUpzlHOXm84hbrFYHox7r65h9FLA+Ba
+         Z+OYEzg6eNSfiwtPTSSjbY/wWmU/LryxaxwcH4WLJGqEM00jQnJ37XpE8zm4PP/Tp3BR
+         IJzOjWn5cebjb9xGzuLzVh0kChRyVxgWy1jTwO0TL2VaaVqbXYmYB5QQ6/UNqbh428y6
+         YlZyhpBp5VXUgkiS0YQ3I4c+hFPS+7BFh2WN2h4hGAh5zbzzxU6CC6xzyXw6brhH1/0t
+         jX8ngNsuHt5S9linCyWzJjUwIK+MMc3ZCLuqI4JzkIp36zl4rp//4Q4U6l17HFH29nQq
+         geDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=whxmhsnQg5rfeVQ8ZQ6aBPD0ZGe096z7/eTSnisT0kE=;
-        b=RyGv/hjBo0zMcfCt4juT9SXvDolxNpOx+jSSvL3sN3XQ5fvtbHDGy8BRJN544hrIjV
-         +y7McCvkHoN7x8UhkTEV8jsE2o97SSajhxS76rbEnF+jmtI+WrygildiGAw6VaYsBUKB
-         cfR2ZGM9WAsNLc3UN8MO5crv2SzRXppzlq0so6X7JGGcAinRA6P4dc6n+3RWr0pIpC6Q
-         THnHr2Z+XlJUHpYbePuI8GaIuEKtVWGpR3EtfvF1IiyTbLLz9Oo5I5FSXLDDyPAZiywF
-         Bg+UEwBuzXFeabrvRvUwu9fmKc/1/9B80AsIa+6RM6UiIzGA5Da0eWt+JO4q8vIkwvkw
-         9FiA==
-X-Gm-Message-State: APjAAAUfk9YVly9IE0NLBKSH8iuCsNhmkOhiqf9j59wMWT45zWYmry8H
-        p7CdVbXWwS/cfXiX/UG/JA==
-X-Google-Smtp-Source: APXvYqxRtM8ThXtjCCD0M0nTwLEpFE/kUUuYb2tUlDQdcZPWlIjs8Joc8bDnpkG6QuXG2SStNT5Ndg==
-X-Received: by 2002:a9d:5885:: with SMTP id x5mr16787058otg.132.1582061342694;
-        Tue, 18 Feb 2020 13:29:02 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r2sm1752661otk.22.2020.02.18.13.29.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:29:02 -0800 (PST)
-Received: (nullmailer pid 4897 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:29:01 -0000
-Date:   Tue, 18 Feb 2020 15:29:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V4 4/4] dt-bindings: pinctrl: imx8mp: Replace the
- uint32-array with uint32-matrix
-Message-ID: <20200218212901.GA4859@bogus>
-References: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
- <1582012300-30260-4-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OrdDkIMDWhhABSmakNixMXmfGtr8QsZxJzVPjLWIkfU=;
+        b=tVcYkR7dHdykUqZrI/8ndTb/tKhnafhMZ8zsUKFS45yIx96ooSclf1XC2o06HtqRUc
+         fMKCibFSYeycct9bz+m6Mbq3IQ0WeR30thJseocJcpwWAkn0Ch23jhejmuQDQs1ADxmV
+         1TLhDUG86auKrgv2KGKAPmAoQN7OjeraXHet4Ijvztrmat1mTgxKb7jIEyy1tJe+4SFi
+         mtrJkFEmO6QnQ27aTzZJuwFt8AMEHji90pttD9Aus8x48VJAKwFzaXfYG2+iVbkK+9ez
+         GFWahj1gVlisVBFSDxvammoo05fm0WSbTSiPu7U6Pbj1ZA2YsiZYn+46RmmIPsjsOZef
+         H60w==
+X-Gm-Message-State: APjAAAUCQy3CBXQhH9X7jRBUWm9r7AhPPEDHu/IIlcK6VmzB2gb0iMc8
+        l7+otu+iYEb4xQknojAZs7Tlaqv5XD34Iqxs0jA=
+X-Google-Smtp-Source: APXvYqxjkxAsqWVLPzMbXkR3lkgZU0ccbUxFBgO1vVsNjZO397cAYGAzXmyQEdA+DhxQMr1nNx77gFF9y1Wy7t6cZFI=
+X-Received: by 2002:a37:9d03:: with SMTP id g3mr20820108qke.39.1582061378329;
+ Tue, 18 Feb 2020 13:29:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582012300-30260-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200218030432.4600-1-dxu@dxuuu.xyz> <20200218030432.4600-3-dxu@dxuuu.xyz>
+In-Reply-To: <20200218030432.4600-3-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 18 Feb 2020 13:29:27 -0800
+Message-ID: <CAEf4Bza-JRpWhfFr54R-th5EwqB7EmyCV8irZd56YkZ8rOjEDQ@mail.gmail.com>
+Subject: Re: [PATCH v8 bpf-next 2/2] selftests/bpf: add bpf_read_branch_records()
+ selftest
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 15:51:40 +0800, Anson Huang wrote:
-> The items of mux_reg/conf_reg/input_reg/mux_val/input_val/pad_setting
-> should be uint32-matrix instead of uint32-array, fix it and improve the
-> schema and example.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Feb 17, 2020 at 7:06 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Add a selftest to test:
+>
+> * default bpf_read_branch_records() behavior
+> * BPF_F_GET_BRANCH_RECORDS_SIZE flag behavior
+> * error path on non branch record perf events
+> * using helper to write to stack
+> * using helper to write to global
+>
+> On host with hardware counter support:
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+>
+> On host without hardware counter support (VM):
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 1 SKIPPED, 0 FAILED
+>
+> Also sync tools/include/uapi/linux/bpf.h.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 > ---
-> New patch.
-> ---
->  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       | 25 ++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+LGTM.
+
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  tools/include/uapi/linux/bpf.h                |  25 ++-
+>  .../selftests/bpf/prog_tests/perf_branches.c  | 169 ++++++++++++++++++
+>  .../selftests/bpf/progs/test_perf_branches.c  |  50 ++++++
+>  3 files changed, 243 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
+>
+
+[...]
