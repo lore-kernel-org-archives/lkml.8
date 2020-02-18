@@ -2,368 +2,514 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83F2C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B465C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8238D21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7455F2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+2uQ4ni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mvjX4ekS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgBRKtw (ORCPT
+        id S1726437AbgBRKwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:49:52 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53635 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgBRKtw (ORCPT
+        Tue, 18 Feb 2020 05:52:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46109 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgBRKwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:49:52 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so852541pjc.3;
-        Tue, 18 Feb 2020 02:49:51 -0800 (PST)
+        Tue, 18 Feb 2020 05:52:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so23298108wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 02:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZwXivltq9VoAXejggh89BFZy9ScZgEpF2WpWI6wMpU4=;
-        b=E+2uQ4nijbX4BFETPvwXHMwdxG8LYJFauYq3EJKmOCb3TWx/c43SiQ/f09MQNBcseS
-         2VP85i7A+rv4n6lObhzePOJi8fcwjWd0igNNVbzFM1h0fdZ6p+jvp75MCL1Y2wqcLQn5
-         UBGKW+CVigvmhxi7LXKI1wlTtnmz6GfAlkfGNbx9RkKkn3KbdxRjTfWy5UPcgEpgc3XX
-         8bjiLUqpb7evaoO1Ha1ByBubL+mPRiRK94BKJ1dMGHTUUg0STtVe+dp3lRzbQiY2oS/S
-         Xzbbcf+ppAQEHOwnBTU7z0aCJcfRg/rlbgeBEtEQk8C+O76u+foq5YEgIxDLGKfAH/5g
-         3VhQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=CE/pgHyanhmc6jLqsxDCeHUfCHIDMRAwR39NvYTnVpY=;
+        b=mvjX4ekSrTZt9lmQ1FFKz/G7xx1R7scrAlF++QCCbLL7aGzuZGVW9USJKeOCULlG21
+         yh1Xk+PI+vbhOSmfs7F8l1H4Wt0XLaef+bOm+wf+kbilZNHMLiYTeceEibyBEA1JmY4r
+         nnk2mrBG2050jJ6rntkRxZLsORxIpP7G9Le4Egk7p0qYBO5a3GGiLxda8PwKZFigaYeH
+         79uVRpkoZZsrbfIZi1aPJPPB8ne9VyMnYKj3CQQo0GJluFCOjDT3BB93nc8Bw0vT+eK4
+         YqQN0+WV0tTZFVcdDhfbrLalUAlVtNI7YTgK/1z7J71K21QAQpYikiwa+pKUfwhc1jKt
+         XuXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZwXivltq9VoAXejggh89BFZy9ScZgEpF2WpWI6wMpU4=;
-        b=la5Nu0x909fvDLZ6Pz1NNcChpjfAUYY0tTIpGGLyA+LnzAwHKBF+68SfgHqj8px5VB
-         Gk6RUrxkVTxeyAA7WEknasevANjyCER6nWV/7HRXVXoLG7HNTuCSHS9sSeps7d13rpoC
-         wL28YeLlFEE6ulYtSA+F3mPQXXReNXYF5gFjsLbLj/GMWWhQamagrkaWQGJV1cdqlhEH
-         G0q6c7lkT48MPmXmOpFV52wH/Fm3lnR0YoeGHEGL0vgiT4z72zyO6JxSna9MhG6npaW6
-         OiSOMFeOo9tU4MD1/z76YPezK/gGB1QkjfVkNfN6+eZrfcF11aicsDmt3G2L/fnb27Hn
-         gIOg==
-X-Gm-Message-State: APjAAAXfdAKklCBvEJ2392vcgcuvKzHDtsgZ5bRv29By35192dB+WKKA
-        OVhcz8t0pAcCqslTTkx5OQWycw0HE9N3Sg==
-X-Google-Smtp-Source: APXvYqxulRqIFiu35irh0tZxsuWonzlGA9ktIbBv5lXHrYNTqdehtS0gacQLirO4tb0w3/CnhXsunQ==
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr1950518pjb.30.1582022990740;
-        Tue, 18 Feb 2020 02:49:50 -0800 (PST)
-Received: from kernel.DHCP ([120.244.140.205])
-        by smtp.googlemail.com with ESMTPSA id c184sm3812950pfa.39.2020.02.18.02.49.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 02:49:50 -0800 (PST)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: LAPIC: Recalculate apic map in batch
-Date:   Tue, 18 Feb 2020 18:47:09 +0800
-Message-Id: <1582022829-27032-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=CE/pgHyanhmc6jLqsxDCeHUfCHIDMRAwR39NvYTnVpY=;
+        b=sO+qnkT77CzIWe0r9mZ8W7lKV1SBM5ubAddgtgWnECxAD2xEmfmlmnTmCPii/c8qu6
+         WodhYIycu1TjLOxDTLp/ItNR7YNXZEgS6yohskHWguYIr71i9kr6+ip2UZTCtU6dLn0w
+         x13iTI3W/tyzRnjrBiRVnmEV4g3FZP/innQ+YeUMGMUvuoizvogCHqy8I1X64E7dNqum
+         wpyzHiUsqsjL7oJV7DbFlm79Wpor2Bs307SMsQtZbpmLjBQx6v3Xk3IUpWw6dvNCm0sE
+         DP2OM0ZK1BszgpGtclljCbjpSigLoh25J5ujUvLkos4n99jM6UIHtbIO9LXTSmgjJgfb
+         psvA==
+X-Gm-Message-State: APjAAAWIFZD6sOZAyeEaMgPiQKAlVv0RdgSXsiwEzST8o0uvk8YA6tAd
+        6MSdFalGC1Tw2ccnpVkvB/A0yQ==
+X-Google-Smtp-Source: APXvYqxkMbjmf+SDu7haNAsrP5Y4CZzpu7hmBj1k/4YWieRi1ZPkzVsYalktNyvx6jkcQlRACUK8Vw==
+X-Received: by 2002:adf:eb46:: with SMTP id u6mr28673181wrn.239.1582023151386;
+        Tue, 18 Feb 2020 02:52:31 -0800 (PST)
+Received: from apalos.home (ppp-2-87-54-32.home.otenet.gr. [2.87.54.32])
+        by smtp.gmail.com with ESMTPSA id f11sm3013705wml.3.2020.02.18.02.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 02:52:30 -0800 (PST)
+Date:   Tue, 18 Feb 2020 12:52:27 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     netdev@vger.kernel.org
+Cc:     jonathan.lemon@gmail.com, lorenzo@kernel.org, toke@redhat.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net-next v3] net: page_pool: API cleanup and comments
+Message-ID: <20200218105227.GA170097@apalos.home>
+References: <20200218075658.165499-1-ilias.apalodimas@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218075658.165499-1-ilias.apalodimas@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+This breaks xdp.c building since page_pool_release_page is not available if the
+kernel is compiled without PAGE_POOL support. 
 
-In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated 
-several times, each time it will consume 10+ us observed by ftrace in my 
-non-overcommit environment since the expensive memory allocate/mutex/rcu etc 
-operations. This patch optimizes it by recaluating apic map in batch, I hope 
-this can benefit the serverless scenario which can frequently create/destroy 
-VMs.
+I'll fix it and sent a v4
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 74 ++++++++++++++++++++++++++++++++++------------------
- arch/x86/kvm/lapic.h |  3 ++-
- arch/x86/kvm/x86.c   |  3 ++-
- 3 files changed, 53 insertions(+), 27 deletions(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index afcd30d..71f843a 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -164,7 +164,7 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
- 	kvfree(map);
- }
- 
--static void recalculate_apic_map(struct kvm *kvm)
-+void kvm_recalculate_apic_map(struct kvm *kvm)
- {
- 	struct kvm_apic_map *new, *old = NULL;
- 	struct kvm_vcpu *vcpu;
-@@ -244,9 +244,10 @@ static void recalculate_apic_map(struct kvm *kvm)
- 	kvm_make_scan_ioapic_request(kvm);
- }
- 
--static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
-+static inline bool apic_set_spiv(struct kvm_lapic *apic, u32 val)
- {
- 	bool enabled = val & APIC_SPIV_APIC_ENABLED;
-+	bool need_recal = false;
- 
- 	kvm_lapic_set_reg(apic, APIC_SPIV, val);
- 
-@@ -257,20 +258,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
- 		else
- 			static_key_slow_inc(&apic_sw_disabled.key);
- 
--		recalculate_apic_map(apic->vcpu->kvm);
-+		need_recal = true;
- 	}
-+
-+	return need_recal;
- }
- 
- static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
- {
- 	kvm_lapic_set_reg(apic, APIC_ID, id << 24);
--	recalculate_apic_map(apic->vcpu->kvm);
- }
- 
- static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
- {
- 	kvm_lapic_set_reg(apic, APIC_LDR, id);
--	recalculate_apic_map(apic->vcpu->kvm);
- }
- 
- static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
-@@ -286,7 +287,6 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
- 
- 	kvm_lapic_set_reg(apic, APIC_ID, id);
- 	kvm_lapic_set_reg(apic, APIC_LDR, ldr);
--	recalculate_apic_map(apic->vcpu->kvm);
- }
- 
- static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-@@ -1882,14 +1882,16 @@ static void apic_manage_nmi_watchdog(struct kvm_lapic *apic, u32 lvt0_val)
- int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- {
- 	int ret = 0;
-+	bool need_recal = false;
- 
- 	trace_kvm_apic_write(reg, val);
- 
- 	switch (reg) {
- 	case APIC_ID:		/* Local APIC ID */
--		if (!apic_x2apic_mode(apic))
-+		if (!apic_x2apic_mode(apic)) {
- 			kvm_apic_set_xapic_id(apic, val >> 24);
--		else
-+			need_recal = true;
-+		} else
- 			ret = 1;
- 		break;
- 
-@@ -1903,16 +1905,17 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- 		break;
- 
- 	case APIC_LDR:
--		if (!apic_x2apic_mode(apic))
-+		if (!apic_x2apic_mode(apic)) {
- 			kvm_apic_set_ldr(apic, val & APIC_LDR_MASK);
--		else
-+			need_recal = true;
-+		} else
- 			ret = 1;
- 		break;
- 
- 	case APIC_DFR:
- 		if (!apic_x2apic_mode(apic)) {
- 			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
--			recalculate_apic_map(apic->vcpu->kvm);
-+			need_recal = true;
- 		} else
- 			ret = 1;
- 		break;
-@@ -1921,7 +1924,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- 		u32 mask = 0x3ff;
- 		if (kvm_lapic_get_reg(apic, APIC_LVR) & APIC_LVR_DIRECTED_EOI)
- 			mask |= APIC_SPIV_DIRECTED_EOI;
--		apic_set_spiv(apic, val & mask);
-+		if (apic_set_spiv(apic, val & mask))
-+			need_recal = true;
- 		if (!(val & APIC_SPIV_APIC_ENABLED)) {
- 			int i;
- 			u32 lvt_val;
-@@ -2018,6 +2022,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- 		break;
- 	}
- 
-+	if (need_recal)
-+		kvm_recalculate_apic_map(apic->vcpu->kvm);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
-@@ -2143,10 +2150,11 @@ u64 kvm_lapic_get_cr8(struct kvm_vcpu *vcpu)
- 	return (tpr & 0xf0) >> 4;
- }
- 
--void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
-+bool kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
- {
- 	u64 old_value = vcpu->arch.apic_base;
- 	struct kvm_lapic *apic = vcpu->arch.apic;
-+	bool need_recal = false;
- 
- 	if (!apic)
- 		value |= MSR_IA32_APICBASE_BSP;
-@@ -2157,7 +2165,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
- 		kvm_update_cpuid(vcpu);
- 
- 	if (!apic)
--		return;
-+		return need_recal;
- 
- 	/* update jump label if enable bit changes */
- 	if ((old_value ^ value) & MSR_IA32_APICBASE_ENABLE) {
-@@ -2166,12 +2174,14 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
- 			static_key_slow_dec_deferred(&apic_hw_disabled);
- 		} else {
- 			static_key_slow_inc(&apic_hw_disabled.key);
--			recalculate_apic_map(vcpu->kvm);
- 		}
-+		need_recal = true;
- 	}
- 
--	if (((old_value ^ value) & X2APIC_ENABLE) && (value & X2APIC_ENABLE))
-+	if (((old_value ^ value) & X2APIC_ENABLE) && (value & X2APIC_ENABLE)) {
- 		kvm_apic_set_x2apic_id(apic, vcpu->vcpu_id);
-+		need_recal = true;
-+	}
- 
- 	if ((old_value ^ value) & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE))
- 		kvm_x86_ops->set_virtual_apic_mode(vcpu);
-@@ -2182,6 +2192,8 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
- 	if ((value & MSR_IA32_APICBASE_ENABLE) &&
- 	     apic->base_address != APIC_DEFAULT_PHYS_BASE)
- 		pr_warn_once("APIC base relocation is unsupported by KVM");
-+
-+	return need_recal;
- }
- 
- void kvm_apic_update_apicv(struct kvm_vcpu *vcpu)
-@@ -2203,6 +2215,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	int i;
-+	bool need_recal = false;
- 
- 	if (!apic)
- 		return;
-@@ -2214,6 +2227,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- 		kvm_lapic_set_base(vcpu, APIC_DEFAULT_PHYS_BASE |
- 		                         MSR_IA32_APICBASE_ENABLE);
- 		kvm_apic_set_xapic_id(apic, vcpu->vcpu_id);
-+		need_recal = true;
- 	}
- 	kvm_apic_set_version(apic->vcpu);
- 
-@@ -2227,10 +2241,13 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
- 
- 	kvm_lapic_set_reg(apic, APIC_DFR, 0xffffffffU);
--	apic_set_spiv(apic, 0xff);
-+	if (apic_set_spiv(apic, 0xff))
-+		need_recal = true;
- 	kvm_lapic_set_reg(apic, APIC_TASKPRI, 0);
--	if (!apic_x2apic_mode(apic))
-+	if (!apic_x2apic_mode(apic)) {
- 		kvm_apic_set_ldr(apic, 0);
-+		need_recal = true;
-+	}
- 	kvm_lapic_set_reg(apic, APIC_ESR, 0);
- 	kvm_lapic_set_reg(apic, APIC_ICR, 0);
- 	kvm_lapic_set_reg(apic, APIC_ICR2, 0);
-@@ -2246,8 +2263,8 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	update_divide_count(apic);
- 	atomic_set(&apic->lapic_timer.pending, 0);
- 	if (kvm_vcpu_is_bsp(vcpu))
--		kvm_lapic_set_base(vcpu,
--				vcpu->arch.apic_base | MSR_IA32_APICBASE_BSP);
-+		need_recal = kvm_lapic_set_base(vcpu,
-+					vcpu->arch.apic_base | MSR_IA32_APICBASE_BSP);
- 	vcpu->arch.pv_eoi.msr_val = 0;
- 	apic_update_ppr(apic);
- 	if (vcpu->arch.apicv_active) {
-@@ -2258,6 +2275,9 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- 
- 	vcpu->arch.apic_arb_prio = 0;
- 	vcpu->arch.apic_attention = 0;
-+
-+	if (need_recal)
-+		kvm_recalculate_apic_map(vcpu->kvm);
- }
- 
- /*
-@@ -2478,18 +2498,22 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	int r;
-+	bool need_recal = false;
- 
--
--	kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
-+	need_recal = kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
- 	/* set SPIV separately to get count of SW disabled APICs right */
--	apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
-+	if (apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV))))
-+		need_recal = true;
- 
- 	r = kvm_apic_state_fixup(vcpu, s, true);
--	if (r)
-+	if (r) {
-+		if (need_recal)
-+			kvm_recalculate_apic_map(vcpu->kvm);
- 		return r;
-+	}
- 	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
- 
--	recalculate_apic_map(vcpu->kvm);
-+	kvm_recalculate_apic_map(vcpu->kvm);
- 	kvm_apic_set_version(vcpu);
- 
- 	apic_update_ppr(apic);
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index ec6fbfe..58c07ad 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -76,8 +76,9 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event);
- u64 kvm_lapic_get_cr8(struct kvm_vcpu *vcpu);
- void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
- void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
--void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
-+bool kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
- u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
-+void kvm_recalculate_apic_map(struct kvm *kvm);
- void kvm_apic_set_version(struct kvm_vcpu *vcpu);
- int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
- int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 79bc995..e961e65 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -349,7 +349,8 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 	}
- 
--	kvm_lapic_set_base(vcpu, msr_info->data);
-+	if (kvm_lapic_set_base(vcpu, msr_info->data))
-+		kvm_recalculate_apic_map(vcpu->kvm);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(kvm_set_apic_base);
--- 
-2.7.4
-
+Regards
+/Ilias
+On Tue, Feb 18, 2020 at 09:56:57AM +0200, Ilias Apalodimas wrote:
+> Functions starting with __ usually indicate those which are exported,
+> but should not be called directly. Update some of those declared in the
+> API and make it more readable.
+> page_pool_unmap_page() and page_pool_release_page() were doing
+> exactly the same thing. Keep the page_pool_release_page() variant
+> and export it in order to show up on perf logs.
+> Finally rename __page_pool_put_page() to page_pool_put_page() since we
+> can now directly call it from drivers and rename the existing
+> page_pool_put_page() to page_pool_put_full_page() since they do the same
+> thing but the latter is trying to sync the full DMA area.
+> 
+> This patch also updates netsec, mvneta and stmmac drivers which use
+> those functions.
+> 
+> Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> ---
+> v1:
+> - Fixed netsec driver compilation error
+> v2:
+> - Improved comment description of page_pool_put_page()
+> 
+>  drivers/net/ethernet/marvell/mvneta.c         | 19 +++---
+>  drivers/net/ethernet/socionext/netsec.c       | 23 ++++---
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c |  4 +-
+>  include/net/page_pool.h                       | 39 +++++------
+>  net/core/page_pool.c                          | 64 ++++++++++---------
+>  net/core/xdp.c                                |  2 +-
+>  6 files changed, 75 insertions(+), 76 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> index 98017e7d5dd0..22b568c60f65 100644
+> --- a/drivers/net/ethernet/marvell/mvneta.c
+> +++ b/drivers/net/ethernet/marvell/mvneta.c
+> @@ -1933,7 +1933,7 @@ static void mvneta_rxq_drop_pkts(struct mvneta_port *pp,
+>  		if (!data || !(rx_desc->buf_phys_addr))
+>  			continue;
+>  
+> -		page_pool_put_page(rxq->page_pool, data, false);
+> +		page_pool_put_full_page(rxq->page_pool, data, false);
+>  	}
+>  	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq))
+>  		xdp_rxq_info_unreg(&rxq->xdp_rxq);
+> @@ -2108,9 +2108,9 @@ mvneta_run_xdp(struct mvneta_port *pp, struct mvneta_rx_queue *rxq,
+>  		err = xdp_do_redirect(pp->dev, xdp, prog);
+>  		if (err) {
+>  			ret = MVNETA_XDP_DROPPED;
+> -			__page_pool_put_page(rxq->page_pool,
+> -					     virt_to_head_page(xdp->data),
+> -					     len, true);
+> +			page_pool_put_page(rxq->page_pool,
+> +					   virt_to_head_page(xdp->data), len,
+> +					   true);
+>  		} else {
+>  			ret = MVNETA_XDP_REDIR;
+>  		}
+> @@ -2119,9 +2119,9 @@ mvneta_run_xdp(struct mvneta_port *pp, struct mvneta_rx_queue *rxq,
+>  	case XDP_TX:
+>  		ret = mvneta_xdp_xmit_back(pp, xdp);
+>  		if (ret != MVNETA_XDP_TX)
+> -			__page_pool_put_page(rxq->page_pool,
+> -					     virt_to_head_page(xdp->data),
+> -					     len, true);
+> +			page_pool_put_page(rxq->page_pool,
+> +					   virt_to_head_page(xdp->data), len,
+> +					   true);
+>  		break;
+>  	default:
+>  		bpf_warn_invalid_xdp_action(act);
+> @@ -2130,9 +2130,8 @@ mvneta_run_xdp(struct mvneta_port *pp, struct mvneta_rx_queue *rxq,
+>  		trace_xdp_exception(pp->dev, prog, act);
+>  		/* fall through */
+>  	case XDP_DROP:
+> -		__page_pool_put_page(rxq->page_pool,
+> -				     virt_to_head_page(xdp->data),
+> -				     len, true);
+> +		page_pool_put_page(rxq->page_pool,
+> +				   virt_to_head_page(xdp->data), len, true);
+>  		ret = MVNETA_XDP_DROPPED;
+>  		break;
+>  	}
+> diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+> index e8224b543dfc..46424533d478 100644
+> --- a/drivers/net/ethernet/socionext/netsec.c
+> +++ b/drivers/net/ethernet/socionext/netsec.c
+> @@ -896,9 +896,9 @@ static u32 netsec_run_xdp(struct netsec_priv *priv, struct bpf_prog *prog,
+>  	case XDP_TX:
+>  		ret = netsec_xdp_xmit_back(priv, xdp);
+>  		if (ret != NETSEC_XDP_TX)
+> -			__page_pool_put_page(dring->page_pool,
+> -					     virt_to_head_page(xdp->data),
+> -					     len, true);
+> +			page_pool_put_page(dring->page_pool,
+> +					   virt_to_head_page(xdp->data), len,
+> +					   true);
+>  		break;
+>  	case XDP_REDIRECT:
+>  		err = xdp_do_redirect(priv->ndev, xdp, prog);
+> @@ -906,9 +906,9 @@ static u32 netsec_run_xdp(struct netsec_priv *priv, struct bpf_prog *prog,
+>  			ret = NETSEC_XDP_REDIR;
+>  		} else {
+>  			ret = NETSEC_XDP_CONSUMED;
+> -			__page_pool_put_page(dring->page_pool,
+> -					     virt_to_head_page(xdp->data),
+> -					     len, true);
+> +			page_pool_put_page(dring->page_pool,
+> +					   virt_to_head_page(xdp->data), len,
+> +					   true);
+>  		}
+>  		break;
+>  	default:
+> @@ -919,9 +919,8 @@ static u32 netsec_run_xdp(struct netsec_priv *priv, struct bpf_prog *prog,
+>  		/* fall through -- handle aborts by dropping packet */
+>  	case XDP_DROP:
+>  		ret = NETSEC_XDP_CONSUMED;
+> -		__page_pool_put_page(dring->page_pool,
+> -				     virt_to_head_page(xdp->data),
+> -				     len, true);
+> +		page_pool_put_page(dring->page_pool,
+> +				   virt_to_head_page(xdp->data), len, true);
+>  		break;
+>  	}
+>  
+> @@ -1020,8 +1019,8 @@ static int netsec_process_rx(struct netsec_priv *priv, int budget)
+>  			 * cache state. Since we paid the allocation cost if
+>  			 * building an skb fails try to put the page into cache
+>  			 */
+> -			__page_pool_put_page(dring->page_pool, page,
+> -					     pkt_len, true);
+> +			page_pool_put_page(dring->page_pool, page, pkt_len,
+> +					   true);
+>  			netif_err(priv, drv, priv->ndev,
+>  				  "rx failed to build skb\n");
+>  			break;
+> @@ -1199,7 +1198,7 @@ static void netsec_uninit_pkt_dring(struct netsec_priv *priv, int id)
+>  		if (id == NETSEC_RING_RX) {
+>  			struct page *page = virt_to_page(desc->addr);
+>  
+> -			page_pool_put_page(dring->page_pool, page, false);
+> +			page_pool_put_full_page(dring->page_pool, page, false);
+>  		} else if (id == NETSEC_RING_TX) {
+>  			dma_unmap_single(priv->dev, desc->dma_addr, desc->len,
+>  					 DMA_TO_DEVICE);
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 5836b21edd7e..37920b4da091 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -1251,11 +1251,11 @@ static void stmmac_free_rx_buffer(struct stmmac_priv *priv, u32 queue, int i)
+>  	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+>  
+>  	if (buf->page)
+> -		page_pool_put_page(rx_q->page_pool, buf->page, false);
+> +		page_pool_put_full_page(rx_q->page_pool, buf->page, false);
+>  	buf->page = NULL;
+>  
+>  	if (buf->sec_page)
+> -		page_pool_put_page(rx_q->page_pool, buf->sec_page, false);
+> +		page_pool_put_full_page(rx_q->page_pool, buf->sec_page, false);
+>  	buf->sec_page = NULL;
+>  }
+>  
+> diff --git a/include/net/page_pool.h b/include/net/page_pool.h
+> index cfbed00ba7ee..5cf75141c82c 100644
+> --- a/include/net/page_pool.h
+> +++ b/include/net/page_pool.h
+> @@ -162,39 +162,34 @@ static inline void page_pool_use_xdp_mem(struct page_pool *pool,
+>  }
+>  #endif
+>  
+> -/* Never call this directly, use helpers below */
+> -void __page_pool_put_page(struct page_pool *pool, struct page *page,
+> -			  unsigned int dma_sync_size, bool allow_direct);
+> +void page_pool_release_page(struct page_pool *pool, struct page *page);
+>  
+> -static inline void page_pool_put_page(struct page_pool *pool,
+> -				      struct page *page, bool allow_direct)
+> +/* If the page refcnt == 1, this will try to recycle the page.
+> + * if PP_FLAG_DMA_SYNC_DEV is set, we'll try to sync the DMA area for
+> + * the configured size min(dma_sync_size, pool->max_len).
+> + * If the page refcnt != 1, then the page will be returned to memory
+> + * subsystem.
+> + */
+> +void page_pool_put_page(struct page_pool *pool, struct page *page,
+> +			unsigned int dma_sync_size, bool allow_direct);
+> +
+> +/* Same as above but will try to sync the entire area pool->max_len */
+> +static inline void page_pool_put_full_page(struct page_pool *pool,
+> +					   struct page *page, bool allow_direct)
+>  {
+>  	/* When page_pool isn't compiled-in, net/core/xdp.c doesn't
+>  	 * allow registering MEM_TYPE_PAGE_POOL, but shield linker.
+>  	 */
+>  #ifdef CONFIG_PAGE_POOL
+> -	__page_pool_put_page(pool, page, -1, allow_direct);
+> +	page_pool_put_page(pool, page, -1, allow_direct);
+>  #endif
+>  }
+> -/* Very limited use-cases allow recycle direct */
+> +
+> +/* Same as above but the caller must guarantee safe context. e.g NAPI */
+>  static inline void page_pool_recycle_direct(struct page_pool *pool,
+>  					    struct page *page)
+>  {
+> -	__page_pool_put_page(pool, page, -1, true);
+> -}
+> -
+> -/* Disconnects a page (from a page_pool).  API users can have a need
+> - * to disconnect a page (from a page_pool), to allow it to be used as
+> - * a regular page (that will eventually be returned to the normal
+> - * page-allocator via put_page).
+> - */
+> -void page_pool_unmap_page(struct page_pool *pool, struct page *page);
+> -static inline void page_pool_release_page(struct page_pool *pool,
+> -					  struct page *page)
+> -{
+> -#ifdef CONFIG_PAGE_POOL
+> -	page_pool_unmap_page(pool, page);
+> -#endif
+> +	page_pool_put_full_page(pool, page, true);
+>  }
+>  
+>  static inline dma_addr_t page_pool_get_dma_addr(struct page *page)
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index 9b7cbe35df37..464500c551e8 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -96,7 +96,7 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+>  }
+>  EXPORT_SYMBOL(page_pool_create);
+>  
+> -static void __page_pool_return_page(struct page_pool *pool, struct page *page);
+> +static void page_pool_return_page(struct page_pool *pool, struct page *page);
+>  
+>  noinline
+>  static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
+> @@ -137,7 +137,7 @@ static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
+>  			 * (2) break out to fallthrough to alloc_pages_node.
+>  			 * This limit stress on page buddy alloactor.
+>  			 */
+> -			__page_pool_return_page(pool, page);
+> +			page_pool_return_page(pool, page);
+>  			page = NULL;
+>  			break;
+>  		}
+> @@ -281,17 +281,20 @@ static s32 page_pool_inflight(struct page_pool *pool)
+>  }
+>  
+>  /* Cleanup page_pool state from page */
+> -static void __page_pool_clean_page(struct page_pool *pool,
+> -				   struct page *page)
+> +static void page_pool_clean_page(struct page_pool *pool, struct page *page)
+>  {
+>  	dma_addr_t dma;
+>  	int count;
+>  
+>  	if (!(pool->p.flags & PP_FLAG_DMA_MAP))
+> +		/* Always account for inflight pages, even if we didn't
+> +		 * map them
+> +		 */
+>  		goto skip_dma_unmap;
+>  
+>  	dma = page->dma_addr;
+> -	/* DMA unmap */
+> +
+> +	/* When page is unmapped, it cannot be returned our pool */
+>  	dma_unmap_page_attrs(pool->p.dev, dma,
+>  			     PAGE_SIZE << pool->p.order, pool->p.dma_dir,
+>  			     DMA_ATTR_SKIP_CPU_SYNC);
+> @@ -304,20 +307,23 @@ static void __page_pool_clean_page(struct page_pool *pool,
+>  	trace_page_pool_state_release(pool, page, count);
+>  }
+>  
+> -/* unmap the page and clean our state */
+> -void page_pool_unmap_page(struct page_pool *pool, struct page *page)
+> +/* Disconnects a page (from a page_pool).  API users can have a need
+> + * to disconnect a page (from a page_pool), to allow it to be used as
+> + * a regular page (that will eventually be returned to the normal
+> + * page-allocator via put_page).
+> + */
+> +void page_pool_release_page(struct page_pool *pool, struct page *page)
+>  {
+> -	/* When page is unmapped, this implies page will not be
+> -	 * returned to page_pool.
+> -	 */
+> -	__page_pool_clean_page(pool, page);
+> +#ifdef CONFIG_PAGE_POOL
+> +	page_pool_clean_page(pool, page);
+> +#endif
+>  }
+> -EXPORT_SYMBOL(page_pool_unmap_page);
+> +EXPORT_SYMBOL(page_pool_release_page);
+>  
+>  /* Return a page to the page allocator, cleaning up our state */
+> -static void __page_pool_return_page(struct page_pool *pool, struct page *page)
+> +static void page_pool_return_page(struct page_pool *pool, struct page *page)
+>  {
+> -	__page_pool_clean_page(pool, page);
+> +	page_pool_release_page(pool, page);
+>  
+>  	put_page(page);
+>  	/* An optimization would be to call __free_pages(page, pool->p.order)
+> @@ -326,8 +332,7 @@ static void __page_pool_return_page(struct page_pool *pool, struct page *page)
+>  	 */
+>  }
+>  
+> -static bool __page_pool_recycle_into_ring(struct page_pool *pool,
+> -				   struct page *page)
+> +static bool page_pool_recycle_in_ring(struct page_pool *pool, struct page *page)
+>  {
+>  	int ret;
+>  	/* BH protection not needed if current is serving softirq */
+> @@ -344,7 +349,7 @@ static bool __page_pool_recycle_into_ring(struct page_pool *pool,
+>   *
+>   * Caller must provide appropriate safe context.
+>   */
+> -static bool __page_pool_recycle_direct(struct page *page,
+> +static bool page_pool_recycle_in_cache(struct page *page,
+>  				       struct page_pool *pool)
+>  {
+>  	if (unlikely(pool->alloc.count == PP_ALLOC_CACHE_SIZE))
+> @@ -363,8 +368,8 @@ static bool pool_page_reusable(struct page_pool *pool, struct page *page)
+>  	return !page_is_pfmemalloc(page);
+>  }
+>  
+> -void __page_pool_put_page(struct page_pool *pool, struct page *page,
+> -			  unsigned int dma_sync_size, bool allow_direct)
+> +void page_pool_put_page(struct page_pool *pool, struct page *page,
+> +			unsigned int dma_sync_size, bool allow_direct)
+>  {
+>  	/* This allocator is optimized for the XDP mode that uses
+>  	 * one-frame-per-page, but have fallbacks that act like the
+> @@ -381,12 +386,12 @@ void __page_pool_put_page(struct page_pool *pool, struct page *page,
+>  						      dma_sync_size);
+>  
+>  		if (allow_direct && in_serving_softirq())
+> -			if (__page_pool_recycle_direct(page, pool))
+> +			if (page_pool_recycle_in_cache(page, pool))
+>  				return;
+>  
+> -		if (!__page_pool_recycle_into_ring(pool, page)) {
+> +		if (!page_pool_recycle_in_ring(pool, page)) {
+>  			/* Cache full, fallback to free pages */
+> -			__page_pool_return_page(pool, page);
+> +			page_pool_return_page(pool, page);
+>  		}
+>  		return;
+>  	}
+> @@ -403,12 +408,13 @@ void __page_pool_put_page(struct page_pool *pool, struct page *page,
+>  	 * doing refcnt based recycle tricks, meaning another process
+>  	 * will be invoking put_page.
+>  	 */
+> -	__page_pool_clean_page(pool, page);
+> +	/* Do not replace this with page_pool_return_page() */
+> +	page_pool_release_page(pool, page);
+>  	put_page(page);
+>  }
+> -EXPORT_SYMBOL(__page_pool_put_page);
+> +EXPORT_SYMBOL(page_pool_put_page);
+>  
+> -static void __page_pool_empty_ring(struct page_pool *pool)
+> +static void page_pool_empty_ring(struct page_pool *pool)
+>  {
+>  	struct page *page;
+>  
+> @@ -419,7 +425,7 @@ static void __page_pool_empty_ring(struct page_pool *pool)
+>  			pr_crit("%s() page_pool refcnt %d violation\n",
+>  				__func__, page_ref_count(page));
+>  
+> -		__page_pool_return_page(pool, page);
+> +		page_pool_return_page(pool, page);
+>  	}
+>  }
+>  
+> @@ -449,7 +455,7 @@ static void page_pool_empty_alloc_cache_once(struct page_pool *pool)
+>  	 */
+>  	while (pool->alloc.count) {
+>  		page = pool->alloc.cache[--pool->alloc.count];
+> -		__page_pool_return_page(pool, page);
+> +		page_pool_return_page(pool, page);
+>  	}
+>  }
+>  
+> @@ -461,7 +467,7 @@ static void page_pool_scrub(struct page_pool *pool)
+>  	/* No more consumers should exist, but producers could still
+>  	 * be in-flight.
+>  	 */
+> -	__page_pool_empty_ring(pool);
+> +	page_pool_empty_ring(pool);
+>  }
+>  
+>  static int page_pool_release(struct page_pool *pool)
+> @@ -535,7 +541,7 @@ void page_pool_update_nid(struct page_pool *pool, int new_nid)
+>  	/* Flush pool alloc cache, as refill will check NUMA node */
+>  	while (pool->alloc.count) {
+>  		page = pool->alloc.cache[--pool->alloc.count];
+> -		__page_pool_return_page(pool, page);
+> +		page_pool_return_page(pool, page);
+>  	}
+>  }
+>  EXPORT_SYMBOL(page_pool_update_nid);
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index 8310714c47fd..4c7ea85486af 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -372,7 +372,7 @@ static void __xdp_return(void *data, struct xdp_mem_info *mem, bool napi_direct,
+>  		xa = rhashtable_lookup(mem_id_ht, &mem->id, mem_id_rht_params);
+>  		page = virt_to_head_page(data);
+>  		napi_direct &= !xdp_return_frame_no_direct();
+> -		page_pool_put_page(xa->page_pool, page, napi_direct);
+> +		page_pool_put_full_page(xa->page_pool, page, napi_direct);
+>  		rcu_read_unlock();
+>  		break;
+>  	case MEM_TYPE_PAGE_SHARED:
+> -- 
+> 2.25.0
+> 
