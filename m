@@ -2,115 +2,112 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD640C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D111C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6E52464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582054744;
-	bh=rPalsf9ZeS+tRDrXzRVQK0Dn0SDTdPYKYvDItHJ5xGQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OnptlY1dvQ81Y4cNGw3+pPxVe0Yl9HOvqeNKbJjX8/LiQQBc5OVDtdGqRydLY5bQ1
-	 UMdybSfCwOd2hssxXcMjYkitXB0GvO8OE+1W3KoftYj8D04MHOvlIBPU902V1Cd5mY
-	 4ruAuDR9jAHxwMwzG5aF3uA1+bl5+CNcLTb2f5Xs=
+	by mail.kernel.org (Postfix) with ESMTP id B523B21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YZhSVFOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgBRTjD (ORCPT
+        id S1726539AbgBRTjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:39:03 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42963 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTjC (ORCPT
+        Tue, 18 Feb 2020 14:39:47 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49280 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:39:02 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d10so24371767ljl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:39:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CZVPOdBOz9oqPt50DFcOS2FFpkbcLimq03cuRtqGXPA=;
-        b=Xi2BST5TLRjQNTfbbkSbh6qaVoOZxo9wA4E6heEAZZLJ8lCI0RYUW0O3V3Ddaqw4Oe
-         o+B9hvNSpADznWAJR0EE8cpmhP3bLlzMcSp84VDzu+PjQO3HlAfDZGDpTLi2JDkD5jFK
-         AXBsp3XZOAgj/bXQWSuhRhswXAHyU+64Xo3kI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CZVPOdBOz9oqPt50DFcOS2FFpkbcLimq03cuRtqGXPA=;
-        b=hTT3lNC4kcMnkaJpDfbXmySx1adNoLYVDyMkwXyVd5s4bb2sPxRMhC7NWpZXfp6bYF
-         +NKfVgGoEhHCHWXB1WI4OAFD8GCnGS2A3guqOcRHunyAiH84i8C1iTrlJJixWQYWgmFF
-         Bl4EEKep/jbsxDiOS33aQmqetwDf1JdKh794BnbMvF1YSlybCJLl/BkG2xr8U7jamLDy
-         Zb7NUkgl0mcIFBDcp+RLWtw9rG4si8R0tUqavuKXQmrMYoi5ciZ9eocqdACYq94a4ZO9
-         Z4nUrBdx3KyNJlxWsJ/17o9THir0orCHmplVs/oqTwBBbRlsnrghfb2DShqR9YNtDpDP
-         U+9w==
-X-Gm-Message-State: APjAAAWmRxSZ37Wy3Azc+RsmscajCjQLVbtE3zb2Npf1Jwmzw4h88PRO
-        1hYANWnLvw+leWj5DxEgi8L1U8P/B7M=
-X-Google-Smtp-Source: APXvYqx2TSu6SOa01i7vmG4QsdmPz8TXh/8Vgc+2y6Wc9K+6k7WO8vEZWA/vK2Uui+tAg8OPfZZ6dA==
-X-Received: by 2002:a2e:e12:: with SMTP id 18mr14184950ljo.123.1582054739904;
-        Tue, 18 Feb 2020 11:38:59 -0800 (PST)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id y7sm3047714ljy.92.2020.02.18.11.38.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 11:38:59 -0800 (PST)
-Received: by mail-lf1-f51.google.com with SMTP id c23so15402319lfi.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:38:58 -0800 (PST)
-X-Received: by 2002:a05:6512:78:: with SMTP id i24mr11588487lfo.10.1582054738541;
- Tue, 18 Feb 2020 11:38:58 -0800 (PST)
+        Tue, 18 Feb 2020 14:39:47 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IJanDR118725;
+        Tue, 18 Feb 2020 13:36:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582054609;
+        bh=GgHMMWikXXitKD/AGrzFrLxAIGAeZxrL9hb7kQz+ZSg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YZhSVFOmjDz6ndBizA8kSE/cB2eldFw/YkD/OS2oFAHCiSetLl6MStsRdtQmlzWlm
+         mPoL+9T94d05owL3GwqPNR/OqW6j1lssh/LZOJFxNBJfdU7WOUS+UWkvPC7fvNFi1a
+         2Qj+OHEF1/Hrb6+qvcO9qDSoyBISATQkOVEqgoAA=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IJan0T081014
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 13:36:49 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 13:36:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 13:36:48 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IJamdF019213;
+        Tue, 18 Feb 2020 13:36:48 -0600
+Subject: Re: [PATCH v2 2/2] ASoC: tlv320adcx140: Add the tlv320adcx140 codec
+ driver family
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200218172140.23740-1-dmurphy@ti.com>
+ <20200218172140.23740-3-dmurphy@ti.com> <20200218192321.GN4232@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0faf0bfe-6186-59d0-e800-8523a33044dc@ti.com>
+Date:   Tue, 18 Feb 2020 13:32:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200217222803.6723-1-idryomov@gmail.com> <202002171546.A291F23F12@keescook>
- <CAOi1vP-2uAD83Vi=Eebu_GPzq5DUt+z9zogA7BNGF1B1jUgAVw@mail.gmail.com>
- <CAHk-=whj0vMcdVPC0=9aAsN2-tsCyFKF4beb2gohFeFK_Z-Y9g@mail.gmail.com> <20200218193136.GA22499@angband.pl>
-In-Reply-To: <20200218193136.GA22499@angband.pl>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Feb 2020 11:38:42 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
-Message-ID: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
-Subject: Re: [PATCH] vsprintf: don't obfuscate NULL and error pointers
-To:     Adam Borowski <kilobyte@angband.pl>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200218192321.GN4232@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 11:31 AM Adam Borowski <kilobyte@angband.pl> wrote:
+Mark
+
+On 2/18/20 1:23 PM, Mark Brown wrote:
+> On Tue, Feb 18, 2020 at 11:21:40AM -0600, Dan Murphy wrote:
 >
-> Either "0" or "NULL" (or "=E2=88=85" if you allow cp437-subset Unicode ) =
-wouldn't
-> cause such confusion.
+> A couple of very small things, otherwise this looks good:
+>
+>> +	if (unlikely(!tx_mask)) {
+>> +		dev_err(component->dev, "tx and rx masks need to be non 0\n");
+>> +		return -EINVAL;
+>> +	}
+> Do you really need the unlikely() annotation here?  This is *hopefully*
+> not a hot path.
 
-An all-uppercase "NULL" probably matches the error code printout
-syntax better too, and is more clearly a pointer.
+I was copying the code from tlv320aic3x.c as suggested by one our audio 
+guys here in TI.
 
-And with %pe you can't assume columnar output anyway (unless you
-explicitly ask for some width), so the length of the output cannot
-matter.
+I can remove it if you desire
 
-So yeah, I agree. To extend on Ilya's example:
+>
+>> +static int adcx140_codec_probe(struct snd_soc_component *component)
+>> +{
+>> +	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
+>> +	int sleep_cfg_val = ADCX140_WAKE_DEV;
+>> +	u8 bias_source;
+>> +	u8 vref_source;
+>> +	int ret;
+>> +
+>> +	adcx140->supply_areg = devm_regulator_get_optional(adcx140->dev,
+>> +							   "areg");
+>> +	if (IS_ERR(adcx140->supply_areg)) {
+> You should really do the request and defer at the I2C level, that avoids
+> running through the whole card initialization repeatedly when the device
+> isn't ready.  Basically try to do all resource aquisition at the device
+> level and then use it at the card level.
 
-                              ptr        error-ptr             NULL
-  %p:            0000000001f8cc5b fffffffffffffff2 0000000000000000
-  %pK, kptr =3D 0: 0000000001f8cc5b fffffffffffffff2 0000000000000000
-  %px:           ffff888048c04020 fffffffffffffff2 0000000000000000
-  %pK, kptr =3D 1: ffff888048c04020 fffffffffffffff2 0000000000000000
-  %pK, kptr =3D 2: 0000000000000000 0000000000000000 0000000000000000
-  %p:            0000000001f8cc5b -EFAULT NULL
+Ack.  Makes more sense to do it in the I2C probe.
 
-would seem to be a sane output format. Hmm?
+Dan
 
-             Linus
