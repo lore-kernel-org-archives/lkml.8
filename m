@@ -2,152 +2,101 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D40AC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D77C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146B320722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E2520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P9FM9oW0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nIlZXEpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgBRFhF (ORCPT
+        id S1726239AbgBRFjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:37:05 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38928 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgBRFhE (ORCPT
+        Tue, 18 Feb 2020 00:39:35 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:60400 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgBRFje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:37:04 -0500
-Received: by mail-lj1-f195.google.com with SMTP id o15so21439085ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 21:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HQqzcFnDoi+mJWHn9CYGpZJAJQhhw/tPMZwi/T/g4NM=;
-        b=P9FM9oW0/QQsLJRWErjz3Ro5y5GOJlIV78gyDcdDweIynnwcdvnAAnc15dhRt4y7ja
-         +VO6G09pkHoJihWu8qe9H/MUklPe4uNN7jNB29oBWeOkA9ukiI/SHXTQPVnCRFPvYdv1
-         C1RgulT8ay5w4vjwXl8Q1IcIUpK6BnmlX+niwuwCUQsCEvXJ8P42MLyG1Mru9bgweta6
-         t6g8w5oAQG+bm0QmQC43FL4QgdGnrq8pDI6d4LaB7jVjW/dvTNOgMyCTNhhuAxoolwU3
-         xP+XtDqPnVTCScVk1HOq74hd0SHppRtUCaHdNF+7px2b6rjd9pdpDyV4a4bpDiuzJl03
-         Z7uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HQqzcFnDoi+mJWHn9CYGpZJAJQhhw/tPMZwi/T/g4NM=;
-        b=FEwJxgAINSwK/UDG1/lxZlv34PcXtyfQa4I928G6MogqPjgaIYlo3RuZTYuGhWDxgP
-         DSmJZMuVVizqynpT/OPro2EI27H5pLYCZmuyk2DVSPU+jFLopeLZDO6Uy2tMossVf0oT
-         /kiZNDwMn7+AcAcAuyn+iSLdkz290YOD+7aouN8O2BTAGC1qIBnSo8fnfLQLxOAeNeN7
-         Kk2/+TcNwiLLE/5VWGeBsIVW6TrEc2VTniOAB3UuoVwti521+OtW5zGuwB60gaNEKsEC
-         zzpEofcjzJJ50tFWV7UJ3oMxJWISC562Wcxf5IgHHRXQl3/pfckXprPDsX32TL+gsUSr
-         SiwQ==
-X-Gm-Message-State: APjAAAUPKKkVpf/l8FYJTdWI6QKCCvBjMMIoiZUSmNmifZlBnGvWRe1c
-        BEr24lpkEeLicNM4vJ56r50hXxQ7vyt2lffihVA+gg==
-X-Google-Smtp-Source: APXvYqzZk8WTMI+ktNFla+FJhSjzyb+0R+CvGj8jIUEUynj0w8f6xkRereZa9onoa7LNIT5cMbLDTwn/dOHWYqGK0LQ=
-X-Received: by 2002:a2e:5854:: with SMTP id x20mr11130896ljd.287.1582004222420;
- Mon, 17 Feb 2020 21:37:02 -0800 (PST)
+        Tue, 18 Feb 2020 00:39:34 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I5dTVK167552;
+        Tue, 18 Feb 2020 05:39:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=sRkEL1S2F+mzfOQhEzrZU5GvyiQ1qIuq49HJHV2pwLY=;
+ b=nIlZXEpuRQgrZi5uZmn0/D3a71j4lyAeunu2cmcpPgTBLTMfwPsZ2ioMLsZDh83bQngB
+ 3waqcSPokCAiggxHb900ctRXVLM1vdKauaxMTuC+GTGjPLx2/LOBQ9eFFncH7iENxw38
+ gFnnxZeMCUIFaoldyjxqlFQi2qZh4MsCfy62Pap7nTSrRp8hv4AgdRtTh7zV+SOE6N66
+ fgalCvCBBSfbDONaQ2z6v0k/iB91joGfkWTNf4OTJqN2zNjIXL283Q3pgle7ygjEygXc
+ Z2M9nJbAk6KTmhpSSDbMj14Pyx398YDWIewZ1Ebc9pNGKf/uKNpE9k0agXbNFeu70lOn lg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2y7aq5pcq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 05:39:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I5bfWE067464;
+        Tue, 18 Feb 2020 05:39:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2y6t4hessw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 05:39:29 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01I5dPnR012937;
+        Tue, 18 Feb 2020 05:39:26 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Feb 2020 21:39:25 -0800
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     linux-scsi@vger.kernel.org, Merlijn Wajer <merlijn@archive.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: sr: get rid of sr global mutex
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200214135433.29448-1-merlijn@wizzup.org>
+        <yq1a75gmpsv.fsf@oracle.com>
+Date:   Tue, 18 Feb 2020 00:39:23 -0500
+In-Reply-To: <yq1a75gmpsv.fsf@oracle.com> (Martin K. Petersen's message of
+        "Tue, 18 Feb 2020 00:23:44 -0500")
+Message-ID: <yq11rqsmp2s.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <cover.1580390127.git.amit.kucheria@linaro.org> <9d4f69cd-fb00-6216-5621-fa6d5b42ce19@linaro.org>
-In-Reply-To: <9d4f69cd-fb00-6216-5621-fa6d5b42ce19@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 18 Feb 2020 11:06:50 +0530
-Message-ID: <CAP245DXyciZ3RhGiK+10kiiG6ZHWfDXUGr5Dybwx7H5_UqJzjA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] thermal: tsens: Handle critical interrupts
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=950 phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180045
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
+ spamscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
 
-OK. I will address one last comment as part of the rebase.
+Merlijn,
 
-Regards,
-Amit
+>> When replacing the Big Kernel Lock in commit
+>> 2a48fc0ab24241755dc93bfd4f01d68efab47f5a ("block: autoconvert trivial
+>> BKL users to private mutex"), the lock was replaced with a sr-wide
+>> lock.
+>
+> Applied to 5.7/scsi-queue, thanks!
 
-On Mon, Feb 17, 2020 at 8:55 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Amit,
->
-> can you respin the series against v5.6-rc2?
->
-> Thanks
->
->   -- Daniel
->
->
-> On 30/01/2020 14:27, Amit Kucheria wrote:
-> > TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog supp=
-ort
-> > in case the FSM is stuck. Enable support in the driver.
-> >
-> > This series was generated on top of linux-next from 20200130 to integra=
-te
-> > some patches that that are queued currently.
-> >
-> > Changes from v3:
-> > - Remove the DTS changes that are already queued
-> > - Fix review comments by Bjorn
-> > - Fixup patch description to clarify that we don't use TSENS critical
-> >   interrupts in Linux, but need it for the watchdog support that uses t=
-he
-> >   same HW irq line.
-> > - Separate kernel-doc fixes into a separate patch.
-> >
-> > Changes from v2:
-> > - Handle old DTBs w/o critical irq in the same way as fix sent for 5.5
-> >
-> > Changes from v1:
-> > - Make tsens_features non-const to allow run time detection of features
-> > - Pass tsens_sensor around as a const
-> > - Fix a bug to release dev pointer in success path
-> > - Address review comments from Bjorn and Stephen (thanks for the review=
-)
-> > - Add msm8998 and msm8996 DTSI changes for critical interrupts
-> >
-> >
-> >
-> > Amit Kucheria (7):
-> >   drivers: thermal: tsens: Pass around struct tsens_sensor as a constan=
-t
-> >   drivers: thermal: tsens: use simpler variables
-> >   drivers: thermal: tsens: Release device in success path
-> >   drivers: thermal: tsens: Add critical interrupt support
-> >   drivers: thermal: tsens: Add watchdog support
-> >   drivers: thermal: tsens: kernel-doc fixup
-> >   drivers: thermal: tsens: Remove unnecessary irq flag
-> >
-> >  drivers/thermal/qcom/tsens-8960.c   |   2 +-
-> >  drivers/thermal/qcom/tsens-common.c | 191 ++++++++++++++++++++++++----
-> >  drivers/thermal/qcom/tsens-v2.c     |  18 ++-
-> >  drivers/thermal/qcom/tsens.c        |  26 +++-
-> >  drivers/thermal/qcom/tsens.h        |  94 +++++++++++++-
-> >  5 files changed, 300 insertions(+), 31 deletions(-)
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+Doesn't build. Please rebase on top of 5.7/scsi-queue and
+resubmit. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
