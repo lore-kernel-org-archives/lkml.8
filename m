@@ -2,108 +2,155 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA28C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1783C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8884424125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582047782;
-	bh=ULINXfseSagNOZvW6UiN82T7bMpUY/tI1ixigPcoiZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W5Wu9ORraK2ykTW/OlDJbqb3Dlcf8xaXELGHt9fOpcglxrJJB7maQC7TkCkpSINTu
-	 5qJAqh2EN6xRM9tkANaU3uJaJtr/YZT9R5yki87Uu7L9rQtdktLjr/NEY08t3AD8lU
-	 jeFYaLWL87kjn15MsEka4qpG/dlQU7rC9z0O5Xm8=
+	by mail.kernel.org (Postfix) with ESMTP id 7DDB924649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kMONkZtu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBRRnB (ORCPT
+        id S1726766AbgBRRn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:43:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:57216 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgBRRnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:43:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74FC431B;
-        Tue, 18 Feb 2020 09:43:00 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5F53F703;
-        Tue, 18 Feb 2020 09:42:59 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:42:58 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>
-Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
- support
-Message-ID: <20200218174258.GK4232@sirena.org.uk>
-References: <20200211181005.54008-1-tony@atomide.com>
- <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
- <20200212144620.GJ64767@atomide.com>
- <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
- <20200217232325.GD35972@atomide.com>
- <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
- <20200218153211.GI35972@atomide.com>
- <20200218170628.r47xc3yydg6xx2yh@earth.universe>
+        Tue, 18 Feb 2020 12:43:26 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57422 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgBRRn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:43:26 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IHhGVJ023283;
+        Tue, 18 Feb 2020 11:43:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582047796;
+        bh=O4+gW1g1SRXHovfi3SfzE51aWRM2NSIHiqZ75JZRyRY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kMONkZtubMwK1yj81o7zAslQaD9mRvsGiRMt/29eyBWw8fg9YF5kV9O7tkwR0zz9X
+         1+l7ZBejjatAC1h0jQKy5UAsbuRdsRpbozQeZHT3ASLEl7wBe5hrIEXq9WxB5rNcv9
+         uICIkfEEoViupJdCKb/Z9uP9u/nNpmHl5srDtfIs=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IHhGCf093868
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 11:43:16 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 11:43:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 11:43:16 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IHhGPL061422;
+        Tue, 18 Feb 2020 11:43:16 -0600
+Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
+ feature
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
+ <170d6518-ea82-08d3-0348-228c72425e64@ti.com>
+ <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
+ <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
+ <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
+ <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
+ <20200218162522.GH25745@shell.armlinux.org.uk>
+ <1346e6b0-1d20-593f-d994-37de87ede891@ti.com>
+ <20200218164928.GJ25745@shell.armlinux.org.uk>
+ <cba40adb-38b9-2e66-c083-3ca7b570b927@ti.com>
+ <20200218173353.GM25745@shell.armlinux.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f5c42936-98a6-8221-a244-ed61840c9c81@ti.com>
+Date:   Tue, 18 Feb 2020 11:38:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
-Content-Disposition: inline
-In-Reply-To: <20200218170628.r47xc3yydg6xx2yh@earth.universe>
-X-Cookie: No alcohol, dogs or horses.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218173353.GM25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Russell
 
---opg8F0UgoHELSI+9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2/18/20 11:33 AM, Russell King - ARM Linux admin wrote:
+> On Tue, Feb 18, 2020 at 11:12:37AM -0600, Dan Murphy wrote:
+>> Well now the read_status is becoming a lot more complex.  It would be better
+>> to remove the ack_interrupt call back and just have read_status call the
+>> interrupt function regardless of interrupts or not.  Because all the
+>> interrupt function would be doing is clearing all the interrupts in the ISR
+>> register on a link up/down event.  And as you pointed out we can check and
+>> set a flag that indicates if a downshift has happened on link up status and
+>> clear it on link down. We would need to set the downshift interrupt mask to
+>> always report that bit.  As opposed to not setting any interrupts if
+>> interrupts are not enabled.  If the user wants to track WoL interrupt or any
+>> other feature interrupt we would have to add that flag to the read_status as
+>> well seems like it could get a bit out of control.
+> To be honest, I don't like phylib's interrupt implementation; it
+> imposes a fixed way of dealing with interrupts on phylib drivers,
+> and it sounds like its ideas don't match what modern PHYs want.
+>
+> For example, the Marvell 88x3310 can produce interrupts for GPIOs
+> that are on-board, or temperature alarms, or other stuff... but
+> phylib's idea is that a PHY interrupt is for signalling that the
+> link changed somehow, and imposes a did_interrupt(), handle
+> interrupt, clear_interrupt() structure whether or not it's
+> suitable for the PHY.  If you don't provide the functions phylib
+> wants, then phydev->irq gets killed.  Plus, phylib claims the
+> interrupt for you at certain points depending on whether the
+> PHY is bound to a network interface or not.
+>
+> So, my suggestion to move ack_interrupt to did_interrupt will
+> result in phylib forcing phydev->irq to PHY_POLL, killing any
+> support for interrupts what so ever...
 
-On Tue, Feb 18, 2020 at 06:06:28PM +0100, Sebastian Reichel wrote:
+Does it really make sense to do all of this for a downshift message in 
+the kernel log?
 
-> simple-graph-card is the current machine driver. We might have to
-> introduce a Droid 4 specific driver instead. I used simple(-graph)-card
-> instead of introducing a new driver, since the setup was simple enough
-> without modem and bluetooth. The simple card was perfect to test the CPCAP
-> codec driver. The TDM things might be complex enough to create
-> a new machine driver (as I mentioned in the original patchset
-> adding CPCAP codec support).
+>> Again this is a lot of error prone complex changes and tracking just to
+>> populate a message in the kernel log.  There is no guarantee that the LP did
+>> not force the downshift or advertise that it supports 1Gbps.  So what
+>> condition is really being reported here?  There seems like there are so many
+>> different scenarios why the PHY could not negotiate to its advertised 1Gbps.
+> Note that when a PHY wants to downshift, it does that by changing its
+> advertisement that is sent to the other PHY.
+>
+> So, if both ends support 1G, 100M and 10M, and the remote end decides
+> to downshift to 100M, the remote end basically stops advertising 1G
+> and restarts negotiation afresh with the new advertisement.
+>
+> In that case, if you look at ethtool's output, it will indicate that
+> the link partner is not advertising 1G, and the link is operating at
+> 100M.
+>
+> If 100M doesn't work (and there are cases where connections become
+> quite flakey) then 100M may also be omitted as well, negotiation
+> restarted, causing a downshift to 10M.
+>
+> That's basically how downshift works - a PHY will attempt to
+> establish link a number of times before deciding to restart
+> negotiation with some of the advertisement omitted, and the
+> reduced negotiation advertisement appears in the remote PHY's
+> link partner registers.
+This is the way I understand it too.
+> As I mentioned, the PHY on either end of the link can be the one
+> which decides to downshift, and the partner PHY has no idea that
+> a downshift has happened.
+>
+Exactly so we can only report that if the PHY on our end caused the 
+downshift.  If this PHY does not cause the downshift then the message 
+will not be presented even though a downshift occurred. So what is the 
+value in presenting this message?
 
-I tend to agree here, phones are generally one of the most complicated
-classes of system for clocking and interconnects and the CODECs they use
-often the most complex too so they're really stretching the generic
-cards.  It'd be nice to be able to handle things with generic cards but
-it's likely you'll run into issues that it'd be unreasonable to force
-you to address for system enablement.  OTOH if you manage to get one of
-the generic cards working well that'd be excellent!
-
---opg8F0UgoHELSI+9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5MIiEACgkQJNaLcl1U
-h9D6Wgf+KODCNr6XeqdBCSDh3Rzl0aYLJntwETttXe5OX9SV2VAbUhheJKFsmhmK
-UN8bsVZNmhwC8qIAXznxkbwp+9BPnM72lmIuniA8KqRiNHGdMwHUYRqw4g9c53qX
-p2U5E9eZ35ilwDKYpb7SXn4r9pL02zAN7LqfcNs+v4CQ0LuGN/1xxsVKz7MlZ+t1
-J8iizIybXeDxYCIWEHOSQn9+Hq0kdzqziJKLnApzilqRqtB51QWUK/vU1nPtQBfd
-WPaGdaIa3qIh+R2PuhThKlJnQPaD/RRyM6TTApWjYrq8OfvfSvAC7f9r3P5yo3K3
-lT8+OH3w5S8ZHUAE2G1tfHCaNIRiuw==
-=tBdt
------END PGP SIGNATURE-----
-
---opg8F0UgoHELSI+9--
