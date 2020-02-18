@@ -2,52 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBFAC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE70CC3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584EC2467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AFC2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055970;
-	bh=r3Wt9Fqia8ELqoZcBvGRbikshi1Mn5+KDL7u1kFTmjA=;
+	s=default; t=1582055972;
+	bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpJ3djO6PQL/jqA7W+Oo0UIclj/Omx11A9w9WeoVYsXgv0zL9f+9MClni8KtXCA/x
-	 rXYtb/ifQDOnaqi0ap5mSxaKbp/tXYDD/Su5+vHMRkCJUqgLnqVrzWdQG/wceZm73P
-	 kwj9wp0p9pJ6xrjyJ7QNNZY8FZlIU8ecW0Fxoz10=
+	b=SOfPVhX1B/HJV9XzK0J1mgMfYsU0VMSn2fZNFK48gA2WUlvRk1G8uDf6mnJa6Xota
+	 zWqR98+JjrIXVV+fyd8JJxgwWBQ3RjfeFXc128vyMwzXHRYIdWARBqZg/wAiUxAdCO
+	 lvPHNA9gYCLSIaWnf5o2x7LFvitUG6IBPOuRVv4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgBRT73 (ORCPT
+        id S1726719AbgBRT7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbgBRT7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:24 -0500
+        id S1728426AbgBRT73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B67124670;
-        Tue, 18 Feb 2020 19:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F542465A;
+        Tue, 18 Feb 2020 19:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055963;
-        bh=r3Wt9Fqia8ELqoZcBvGRbikshi1Mn5+KDL7u1kFTmjA=;
+        s=default; t=1582055968;
+        bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOfXgD17Qu17QiC9A2yhRzQmP/sEdr9DQ8BmLhVl1XuCdRjYv0tNgOg23qUzPy2a6
-         1Zhivya9ufv8hqHKh6jAFuupJikZ9CLhLU6R5rPUJR7+Et064Ex5WzxmbevF6yT2em
-         TlFL1M4oHsZEI9Lmp2dq323wxeUw+mBikvrGLkA4=
+        b=ajPgpnQt/Gmkd5PUiUhHexmQc5m12GuBH4UwRhurzlSF6TupROZba/H7WeWuVsMyM
+         Ro+r3aho14tAMjgWZrzsssfij0OeVatJNQBTuAKzSAJENu+3ZbUIiNsPoyqxgATRXa
+         wWzvYrWoLB/CO7sD+yNbe6CGwdBH5trjpNms0QMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 47/66] RDMA/rxe: Fix soft lockup problem due to using tasklets in softirq
-Date:   Tue, 18 Feb 2020 20:55:14 +0100
-Message-Id: <20200218190432.365113067@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 49/66] s390/time: Fix clk type in get_tod_clock
+Date:   Tue, 18 Feb 2020 20:55:16 +0100
+Message-Id: <20200218190432.572394728@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,83 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 8ac0e6641c7ca14833a2a8c6f13d8e0a435e535c upstream.
+commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
 
-When run stress tests with RXE, the following Call Traces often occur
+Clang warns:
 
-  watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [swapper/2:0]
-  ...
-  Call Trace:
-  <IRQ>
-  create_object+0x3f/0x3b0
-  kmem_cache_alloc_node_trace+0x129/0x2d0
-  __kmalloc_reserve.isra.52+0x2e/0x80
-  __alloc_skb+0x83/0x270
-  rxe_init_packet+0x99/0x150 [rdma_rxe]
-  rxe_requester+0x34e/0x11a0 [rdma_rxe]
-  rxe_do_task+0x85/0xf0 [rdma_rxe]
-  tasklet_action_common.isra.21+0xeb/0x100
-  __do_softirq+0xd0/0x298
-  irq_exit+0xc5/0xd0
-  smp_apic_timer_interrupt+0x68/0x120
-  apic_timer_interrupt+0xf/0x20
-  </IRQ>
-  ...
+In file included from ../arch/s390/boot/startup.c:3:
+In file included from ../include/linux/elf.h:5:
+In file included from ../arch/s390/include/asm/elf.h:132:
+In file included from ../include/linux/compat.h:10:
+In file included from ../include/linux/time.h:74:
+In file included from ../include/linux/time32.h:13:
+In file included from ../include/linux/timex.h:65:
+../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
+[16]' to parameter of type 'char *' converts between pointers to integer
+types with different sign [-Wpointer-sign]
+        get_tod_clock_ext(clk);
+                          ^~~
+../arch/s390/include/asm/timex.h:149:44: note: passing argument to
+parameter 'clk' here
+static inline void get_tod_clock_ext(char *clk)
+                                           ^
 
-The root cause is that tasklet is actually a softirq. In a tasklet
-handler, another softirq handler is triggered. Usually these softirq
-handlers run on the same cpu core. So this will cause "soft lockup Bug".
+Change clk's type to just be char so that it matches what happens in
+get_tod_clock_ext.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200212072635.682689-8-leon@kernel.org
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
+Link: https://github.com/ClangBuiltLinux/linux/issues/861
+Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/sw/rxe/rxe_comp.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/include/asm/timex.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/sw/rxe/rxe_comp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_comp.c
-@@ -329,7 +329,7 @@ static inline enum comp_state check_ack(
- 					qp->comp.psn = pkt->psn;
- 					if (qp->req.wait_psn) {
- 						qp->req.wait_psn = 0;
--						rxe_run_task(&qp->req.task, 1);
-+						rxe_run_task(&qp->req.task, 0);
- 					}
- 				}
- 				return COMPST_ERROR_RETRY;
-@@ -463,7 +463,7 @@ static void do_complete(struct rxe_qp *q
- 	 */
- 	if (qp->req.wait_fence) {
- 		qp->req.wait_fence = 0;
--		rxe_run_task(&qp->req.task, 1);
-+		rxe_run_task(&qp->req.task, 0);
- 	}
- }
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(cha
  
-@@ -479,7 +479,7 @@ static inline enum comp_state complete_a
- 		if (qp->req.need_rd_atomic) {
- 			qp->comp.timeout_retry = 0;
- 			qp->req.need_rd_atomic = 0;
--			rxe_run_task(&qp->req.task, 1);
-+			rxe_run_task(&qp->req.task, 0);
- 		}
- 	}
+ static inline unsigned long long get_tod_clock(void)
+ {
+-	unsigned char clk[STORE_CLOCK_EXT_SIZE];
++	char clk[STORE_CLOCK_EXT_SIZE];
  
-@@ -725,7 +725,7 @@ int rxe_completer(void *arg)
- 							RXE_CNT_COMP_RETRY);
- 					qp->req.need_retry = 1;
- 					qp->comp.started_retry = 1;
--					rxe_run_task(&qp->req.task, 1);
-+					rxe_run_task(&qp->req.task, 0);
- 				}
- 
- 				if (pkt) {
+ 	get_tod_clock_ext(clk);
+ 	return *((unsigned long long *)&clk[1]);
 
 
