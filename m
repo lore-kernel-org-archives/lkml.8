@@ -2,152 +2,211 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4882BC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FB5C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289982173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EB4206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgBRLy4 (ORCPT
+        id S1726539AbgBRMAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:54:56 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55813 "EHLO mga06.intel.com"
+        Tue, 18 Feb 2020 07:00:39 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25083 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgBRLy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:54:56 -0500
+        id S1726206AbgBRMAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 07:00:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 03:54:56 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 04:00:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="315032008"
-Received: from cuifangf-mobl.ccr.corp.intel.com (HELO [10.254.211.249]) ([10.254.211.249])
-  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 03:54:53 -0800
-Subject: Re: [PATCH 3/5 v2] iommu/vt-d: Do deferred attachment in
- iommu_need_mapping()
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200217193858.26990-1-joro@8bytes.org>
- <20200217193858.26990-4-joro@8bytes.org>
- <83b21e50-9097-06db-d404-8fe400134bac@linux.intel.com>
- <20200218092827.tp3pq67adzr56k7e@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <a83ec6c4-2995-3219-c28a-72d2e56a0557@linux.intel.com>
-Date:   Tue, 18 Feb 2020 19:54:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+   d="scan'208";a="235510781"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 18 Feb 2020 04:00:37 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j41YL-000EhD-6g; Tue, 18 Feb 2020 20:00:37 +0800
+Date:   Tue, 18 Feb 2020 20:00:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/urgent] BUILD SUCCESS
+ dfb9b69e3b84791e4c6b954ac3cc0c4a545484f2
+Message-ID: <5e4bd1d4.nnCRheOI1ShkPlok%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200218092827.tp3pq67adzr56k7e@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
+branch HEAD: dfb9b69e3b84791e4c6b954ac3cc0c4a545484f2  Merge tag 'perf-urgent-for-mingo-5.6-20200214' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
 
-On 2020/2/18 17:28, Joerg Roedel wrote:
-> Hi Baolu,
-> 
-> On Tue, Feb 18, 2020 at 10:38:14AM +0800, Lu Baolu wrote:
->>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->>> index 42cdcce1602e..32f43695a22b 100644
->>> --- a/drivers/iommu/intel-iommu.c
->>> +++ b/drivers/iommu/intel-iommu.c
->>> @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
->>>    static struct dmar_domain *deferred_attach_domain(struct device *dev)
->>>    {
->>> -	if (unlikely(attach_deferred(dev)))
->>> -		do_deferred_attach(dev);
->>> -
->>
->> This should also be moved to the call place of deferred_attach_domain()
->> in bounce_map_single().
->>
->> bounce_map_single() assumes that devices always use DMA domain, so it
->> doesn't call iommu_need_mapping(). We could do_deferred_attach() there
->> manually.
-> 
-> Good point, thanks for your review. Updated patch below.
-> 
+elapsed time: 4383m
 
-Looks good to me now. For all patches in this series,
+configs tested: 148
+configs skipped: 0
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
-baolu
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+m68k                          multi_defconfig
+c6x                              allyesconfig
+riscv                             allnoconfig
+powerpc                       ppc64_defconfig
+sh                                allnoconfig
+i386                             allyesconfig
+i386                              allnoconfig
+csky                                defconfig
+sparc64                           allnoconfig
+um                           x86_64_defconfig
+microblaze                      mmu_defconfig
+m68k                             allmodconfig
+arc                                 defconfig
+parisc                            allnoconfig
+mips                      malta_kvm_defconfig
+openrisc                    or1ksim_defconfig
+s390                                defconfig
+sparc                            allyesconfig
+powerpc                           allnoconfig
+riscv                               defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+s390                             allmodconfig
+alpha                               defconfig
+mips                             allmodconfig
+i386                             alldefconfig
+ia64                             allmodconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+microblaze                    nommu_defconfig
+powerpc                             defconfig
+powerpc                          rhel-kconfig
+mips                      fuloong2e_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200218
+x86_64               randconfig-a002-20200218
+x86_64               randconfig-a003-20200218
+i386                 randconfig-a001-20200218
+i386                 randconfig-a002-20200218
+i386                 randconfig-a003-20200218
+alpha                randconfig-a001-20200218
+m68k                 randconfig-a001-20200218
+mips                 randconfig-a001-20200218
+nds32                randconfig-a001-20200218
+parisc               randconfig-a001-20200218
+riscv                randconfig-a001-20200218
+x86_64               randconfig-b001-20200218
+x86_64               randconfig-b002-20200218
+x86_64               randconfig-b003-20200218
+i386                 randconfig-b001-20200218
+i386                 randconfig-b002-20200218
+i386                 randconfig-b003-20200218
+x86_64               randconfig-c001-20200218
+x86_64               randconfig-c002-20200218
+x86_64               randconfig-c003-20200218
+i386                 randconfig-c001-20200218
+i386                 randconfig-c002-20200218
+i386                 randconfig-c003-20200218
+x86_64               randconfig-d001-20200218
+x86_64               randconfig-d002-20200218
+x86_64               randconfig-d003-20200218
+i386                 randconfig-d001-20200218
+i386                 randconfig-d002-20200218
+i386                 randconfig-d003-20200218
+x86_64               randconfig-e001-20200218
+x86_64               randconfig-e002-20200218
+x86_64               randconfig-e003-20200218
+i386                 randconfig-e001-20200218
+i386                 randconfig-e002-20200218
+i386                 randconfig-e003-20200218
+x86_64               randconfig-f001-20200218
+x86_64               randconfig-f002-20200218
+x86_64               randconfig-f003-20200218
+i386                 randconfig-f001-20200218
+i386                 randconfig-f002-20200218
+i386                 randconfig-f003-20200218
+x86_64               randconfig-g001-20200218
+x86_64               randconfig-g002-20200218
+x86_64               randconfig-g003-20200218
+i386                 randconfig-g001-20200218
+i386                 randconfig-g002-20200218
+i386                 randconfig-g003-20200218
+x86_64               randconfig-h001-20200218
+x86_64               randconfig-h002-20200218
+x86_64               randconfig-h003-20200218
+i386                 randconfig-h001-20200218
+i386                 randconfig-h002-20200218
+i386                 randconfig-h003-20200218
+riscv                            allmodconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
->  From 3a5b8a66d288d86ac1fd45092e7d96f842d0cccf Mon Sep 17 00:00:00 2001
-> From: Joerg Roedel <jroedel@suse.de>
-> Date: Mon, 17 Feb 2020 17:20:59 +0100
-> Subject: [PATCH 3/5] iommu/vt-d: Do deferred attachment in
->   iommu_need_mapping()
-> 
-> The attachment of deferred devices needs to happen before the check
-> whether the device is identity mapped or not. Otherwise the check will
-> return wrong results, cause warnings boot failures in kdump kernels, like
-> 
-> 	WARNING: CPU: 0 PID: 318 at ../drivers/iommu/intel-iommu.c:592 domain_get_iommu+0x61/0x70
-> 
-> 	[...]
-> 
-> 	 Call Trace:
-> 	  __intel_map_single+0x55/0x190
-> 	  intel_alloc_coherent+0xac/0x110
-> 	  dmam_alloc_attrs+0x50/0xa0
-> 	  ahci_port_start+0xfb/0x1f0 [libahci]
-> 	  ata_host_start.part.39+0x104/0x1e0 [libata]
-> 
-> With the earlier check the kdump boot succeeds and a crashdump is written.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->   drivers/iommu/intel-iommu.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 42cdcce1602e..723f615c6e84 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
->   
->   static struct dmar_domain *deferred_attach_domain(struct device *dev)
->   {
-> -	if (unlikely(attach_deferred(dev)))
-> -		do_deferred_attach(dev);
-> -
->   	return find_domain(dev);
->   }
->   
-> @@ -3595,6 +3592,9 @@ static bool iommu_need_mapping(struct device *dev)
->   	if (iommu_dummy(dev))
->   		return false;
->   
-> +	if (unlikely(attach_deferred(dev)))
-> +		do_deferred_attach(dev);
-> +
->   	ret = identity_mapping(dev);
->   	if (ret) {
->   		u64 dma_mask = *dev->dma_mask;
-> @@ -3958,7 +3958,11 @@ bounce_map_single(struct device *dev, phys_addr_t paddr, size_t size,
->   	int prot = 0;
->   	int ret;
->   
-> +	if (unlikely(attach_deferred(dev)))
-> +		do_deferred_attach(dev);
-> +
->   	domain = deferred_attach_domain(dev);
-> +
->   	if (WARN_ON(dir == DMA_NONE || !domain))
->   		return DMA_MAPPING_ERROR;
->   
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
