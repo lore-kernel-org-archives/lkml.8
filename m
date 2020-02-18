@@ -4,213 +4,199 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713DCC34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751C9C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE7C207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53163207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBRG6E (ORCPT
+        id S1726291AbgBRHBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:58:04 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33665 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbgBRG6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:58:03 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7C5BF3A2771;
-        Tue, 18 Feb 2020 17:57:59 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j3wpS-0006Wf-5F; Tue, 18 Feb 2020 17:57:58 +1100
-Date:   Tue, 18 Feb 2020 17:57:58 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 11/19] btrfs: Convert from readpages to readahead
-Message-ID: <20200218065758.GQ10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-19-willy@infradead.org>
+        Tue, 18 Feb 2020 02:01:07 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49720 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726072AbgBRHBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:01:06 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4669D921C802E35843D2;
+        Tue, 18 Feb 2020 15:01:03 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 15:00:55 +0800
+Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
+ SGI callbacks
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-9-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+Date:   Tue, 18 Feb 2020 15:00:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-19-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=cHVu4ezWpKoVtZSsmu8A:9
-        a=a6t_wt_lAo5S5IOh:21 a=CcahuoPPjRgWG3dV:21 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200214145736.18550-9-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:59AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Hi Marc,
+
+On 2020/2/14 22:57, Marc Zyngier wrote:
+> To implement the get/set_irqchip_state callbacks (limited to the
+> PENDING state), we have to use a particular set of hacks:
 > 
-> Use the new readahead operation in btrfs.  Add a
-> readahead_for_each_batch() iterator to optimise the loop in the XArray.
+> - Reading the pending state is done by using a pair of new redistributor
+>    registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 interrupts
+>    state to be retrieved.
+> - Setting the pending state is done by generating it as we'd otherwise do
+>    for a guest (writing to GITS_SGIR)
+> - Clearing the pending state is done by emiting a VSGI command with the
+>    "clear" bit set.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->  fs/btrfs/extent_io.c    | 46 +++++++++++++----------------------------
->  fs/btrfs/extent_io.h    |  3 +--
->  fs/btrfs/inode.c        | 16 +++++++-------
->  include/linux/pagemap.h | 27 ++++++++++++++++++++++++
->  4 files changed, 49 insertions(+), 43 deletions(-)
+>   drivers/irqchip/irq-gic-v3-its.c   | 56 ++++++++++++++++++++++++++++++
+>   include/linux/irqchip/arm-gic-v3.h | 14 ++++++++
+>   2 files changed, 70 insertions(+)
 > 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index c0f202741e09..e97a6acd6f5d 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4278,52 +4278,34 @@ int extent_writepages(struct address_space *mapping,
->  	return ret;
->  }
->  
-> -int extent_readpages(struct address_space *mapping, struct list_head *pages,
-> -		     unsigned nr_pages)
-> +void extent_readahead(struct readahead_control *rac)
->  {
->  	struct bio *bio = NULL;
->  	unsigned long bio_flags = 0;
->  	struct page *pagepool[16];
->  	struct extent_map *em_cached = NULL;
-> -	struct extent_io_tree *tree = &BTRFS_I(mapping->host)->io_tree;
-> -	int nr = 0;
-> +	struct extent_io_tree *tree = &BTRFS_I(rac->mapping->host)->io_tree;
->  	u64 prev_em_start = (u64)-1;
-> +	int nr;
->  
-> -	while (!list_empty(pages)) {
-> -		u64 contig_end = 0;
-> -
-> -		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
-> -			struct page *page = lru_to_page(pages);
-> -
-> -			prefetchw(&page->flags);
-> -			list_del(&page->lru);
-> -			if (add_to_page_cache_lru(page, mapping, page->index,
-> -						readahead_gfp_mask(mapping))) {
-> -				put_page(page);
-> -				break;
-> -			}
-> -
-> -			pagepool[nr++] = page;
-> -			contig_end = page_offset(page) + PAGE_SIZE - 1;
-> -		}
-> +	readahead_for_each_batch(rac, pagepool, ARRAY_SIZE(pagepool), nr) {
-> +		u64 contig_start = page_offset(pagepool[0]);
-> +		u64 contig_end = page_offset(pagepool[nr - 1]) + PAGE_SIZE - 1;
-
-So this assumes a contiguous page range is returned, right?
-
->  
-> -		if (nr) {
-> -			u64 contig_start = page_offset(pagepool[0]);
-> +		ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
-
-Ok, yes it does. :)
-
-I don't see how readahead_for_each_batch() guarantees that, though.
-
->  
-> -			ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
-> -
-> -			contiguous_readpages(tree, pagepool, nr, contig_start,
-> -				     contig_end, &em_cached, &bio, &bio_flags,
-> -				     &prev_em_start);
-> -		}
-> +		contiguous_readpages(tree, pagepool, nr, contig_start,
-> +				contig_end, &em_cached, &bio, &bio_flags,
-> +				&prev_em_start);
->  	}
->  
->  	if (em_cached)
->  		free_extent_map(em_cached);
->  
-> -	if (bio)
-> -		return submit_one_bio(bio, 0, bio_flags);
-> -	return 0;
-> +	if (bio) {
-> +		if (submit_one_bio(bio, 0, bio_flags))
-> +			return;
-> +	}
->  }
-
-Shouldn't that just be
-
-	if (bio)
-		submit_one_bio(bio, 0, bio_flags);
-
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 4f36c06d064d..1bbb60a0bf16 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -669,6 +669,33 @@ static inline void readahead_next(struct readahead_control *rac)
->  #define readahead_for_each(rac, page)					\
->  	for (; (page = readahead_page(rac)); readahead_next(rac))
->  
-> +static inline unsigned int readahead_page_batch(struct readahead_control *rac,
-> +		struct page **array, unsigned int size)
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 1e448d9a16ea..a9753435c4ff 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -3915,11 +3915,67 @@ static int its_sgi_set_affinity(struct irq_data *d,
+>   	return -EINVAL;
+>   }
+>   
+> +static int its_sgi_set_irqchip_state(struct irq_data *d,
+> +				     enum irqchip_irq_state which,
+> +				     bool state)
 > +{
-> +	unsigned int batch = 0;
-
-Confusing when put alongside rac->_batch_count counting the number
-of pages in the batch, and "batch" being the index into the page
-array, and they aren't the same counts....
-
-> +	XA_STATE(xas, &rac->mapping->i_pages, rac->_start);
-> +	struct page *page;
+> +	if (which != IRQCHIP_STATE_PENDING)
+> +		return -EINVAL;
 > +
-> +	rac->_batch_count = 0;
-> +	xas_for_each(&xas, page, rac->_start + rac->_nr_pages - 1) {
-
-That just iterates pages in the start,end doesn't it? What
-guarantees that this fills the array with a contiguous page range?
-
-> +		VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +		VM_BUG_ON_PAGE(PageTail(page), page);
-> +		array[batch++] = page;
-> +		rac->_batch_count += hpage_nr_pages(page);
-> +		if (PageHead(page))
-> +			xas_set(&xas, rac->_start + rac->_batch_count);
-
-What on earth does this do? Comments please!
-
+> +	if (state) {
+> +		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +		struct its_node *its = find_4_1_its();
+> +		u64 val;
 > +
-> +		if (batch == size)
-> +			break;
+> +		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
+> +		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
+> +		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
+> +	} else {
+> +		its_configure_sgi(d, true);
 > +	}
 > +
-> +	return batch;
+> +	return 0;
 > +}
+> +
+> +static int its_sgi_get_irqchip_state(struct irq_data *d,
+> +				     enum irqchip_irq_state which, bool *val)
+> +{
+> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +	void __iomem *base = gic_data_rdist_cpu(vpe->col_idx)->rd_base + SZ_128K;
 
-Seems a bit big for an inline function.
+There might be a race on reading the 'vpe->col_idx' against a concurrent
+vPE schedule (col_idx will be modified in its_vpe_set_affinity)? Will we
+end up accessing the GICR_VSGI* registers of the old redistributor,
+while the vPE is now resident on the new one? Or is it harmful?
+
+The same question for direct_lpi_inv(), where 'vpe->col_idx' will be
+used in irq_to_cpuid().
+
+> +	u32 count = 1000000;	/* 1s! */
+> +	u32 status;
+> +
+> +	if (which != IRQCHIP_STATE_PENDING)
+> +		return -EINVAL;
+> +
+> +	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
+> +	do {
+> +		status = readl_relaxed(base + GICR_VSGIPENDR);
+> +		if (!(status & GICR_VSGIPENDR_BUSY))
+> +			goto out;
+> +
+> +		count--;
+> +		if (!count) {
+> +			pr_err_ratelimited("Unable to get SGI status\n");
+> +			goto out;
+> +		}
+> +		cpu_relax();
+> +		udelay(1);
+> +	} while(count);
+> +
+> +out:
+> +	*val = !!(status & (1 << d->hwirq));
+> +
+> +	return 0;
+> +}
+> +
+>   static struct irq_chip its_sgi_irq_chip = {
+>   	.name			= "GICv4.1-sgi",
+>   	.irq_mask		= its_sgi_mask_irq,
+>   	.irq_unmask		= its_sgi_unmask_irq,
+>   	.irq_set_affinity	= its_sgi_set_affinity,
+> +	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+> +	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
+>   };
+>   
+>   static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+> index a89578884263..64da945486ac 100644
+> --- a/include/linux/irqchip/arm-gic-v3.h
+> +++ b/include/linux/irqchip/arm-gic-v3.h
+> @@ -345,6 +345,15 @@
+>   #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
+>   #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
+>   
+> +#define GICR_VSGIR			0x0080
+> +
+> +#define GICR_VSGIR_VPEID		GENMASK(15, 0)
+> +
+> +#define GICR_VSGIPENDR			0x0088
+> +
+> +#define GICR_VSGIPENDR_BUSY		(1U << 31)
+> +#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
+> +
+>   /*
+>    * ITS registers, offsets from ITS_base
+>    */
+> @@ -368,6 +377,11 @@
+>   
+>   #define GITS_TRANSLATER			0x10040
+>   
+> +#define GITS_SGIR			0x20020
+> +
+> +#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
+> +#define GITS_SGIR_VINTID		GENMASK_ULL(7, 0)
+
+The spec says vINTID field is [3:0] of the GITS_SGIR.
+
+
+Thanks,
+Zenghui
 
 > +
-> +#define readahead_for_each_batch(rac, array, size, nr)			\
-> +	for (; (nr = readahead_page_batch(rac, array, size));		\
-> +			readahead_next(rac))
+>   #define GITS_CTLR_ENABLE		(1U << 0)
+>   #define GITS_CTLR_ImDe			(1U << 1)
+>   #define	GITS_CTLR_ITS_NUMBER_SHIFT	4
+> 
 
-I had to go look at the caller to work out what "size" refered to
-here.
-
-This is complex enough that it needs proper API documentation.
-
-Cheers,
-
-Dave.
-
--- 
-Dave Chinner
-david@fromorbit.com
