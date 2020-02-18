@@ -2,87 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813AC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F33C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E75021D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582060769;
-	bh=vJa/Lzv5R9QXSQWBp04oqsbHnebb9Fh+gzRWPHYPGvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j5hQ0klawCxmP7pItXSv8D4kmXJZBB+qirQzRbRcrwsg8AQURzE+/X7aFa+IqWT+X
-	 rBVwXQL8MADRu5DxKsJlCMZHjDCONipLd1W1mn+eGOtqq5KHS+dmKeMu68z5l07chB
-	 jtMszT3EPIoksbGxFNC/P/V5Vef+kdcCHtushn58=
+	by mail.kernel.org (Postfix) with ESMTP id 369812464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgBRVT2 (ORCPT
+        id S1727161AbgBRVT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:19:28 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40805 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgBRVT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:19:27 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i6so21005868otr.7;
-        Tue, 18 Feb 2020 13:19:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XgkRYjMZSy2zFAcHDa4KGpDFkUtjw2hNkoLV9SrG87g=;
-        b=H9R33l+h1MFkTvNgoqOgETQUGs/LEhfAIfwy5r0R5KXoCNg3jfMGBEP6VeV0bEKghC
-         HP8h48mAO6smA1/bOJdL6SaS80qVNAtlT9lYbAPzCUKkXmRzonL+YzboL6Y5/1BvH8Ye
-         Wflm67lvEB2dAr/fVzYb/cdpp2NoajGfmkZ0lwlP/nzcrt8G7svQTPxs+d1xyVQCO9VB
-         nLRaearF0ORCbvJNtKoyOQx+fYWiXs5ALwvdjj5nAqeIVlfaMj1rBktpbQwIER/nfYuu
-         HR6Kav83D28qJ6KV7hIwBMDH4n+viR5dZPmW+huP44tdszImgDRLmoAhyBLxQXqaeSdk
-         iU7g==
-X-Gm-Message-State: APjAAAWHNWQ2rc889xc/O0/5Brk+JBuK80gCnLUcoIHwvgLXSb7MdlpG
-        Qi5+4/RoggNv9yebzwX6Bw==
-X-Google-Smtp-Source: APXvYqx067Jn3haA6964Buxg+JndkTb+lf/jrEZqq63qpLnE/ua7P966IM0TjJlG4ye8i+J20JHvjA==
-X-Received: by 2002:a9d:750b:: with SMTP id r11mr17982137otk.310.1582060766950;
-        Tue, 18 Feb 2020 13:19:26 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm1750223otr.42.2020.02.18.13.19.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:19:26 -0800 (PST)
-Received: (nullmailer pid 23228 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:19:25 -0000
-Date:   Tue, 18 Feb 2020 15:19:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: Re: [PATCH V4 2/3] dt-bindings: geni-se: Add interconnect binding
- for GENI QUP
-Message-ID: <20200218211925.GA23175@bogus>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
+        Tue, 18 Feb 2020 16:19:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:34482 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgBRVT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:19:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A43351FB;
+        Tue, 18 Feb 2020 13:19:56 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D952D3F68F;
+        Tue, 18 Feb 2020 13:19:54 -0800 (PST)
+Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, parth@linux.ibm.com, hdanton@sina.com
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-5-vincent.guittot@linaro.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
+Date:   Tue, 18 Feb 2020 21:19:16 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581932212-19469-3-git-send-email-akashast@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214152729.6059-5-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 15:06:51 +0530, Akash Asthana wrote:
-> Add documentation for the interconnect and interconnect-names properties
-> for the GENI QUP.
+On 14/02/2020 15:27, Vincent Guittot wrote:
+> Now that runnable_load_avg has been removed, we can replace it by a new
+> signal that will highlight the runnable pressure on a cfs_rq. This signal
+> track the waiting time of tasks on rq and can help to better define the
+> state of rqs.
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> At now, only util_avg is used to define the state of a rq:
+>   A rq with more that around 80% of utilization and more than 1 tasks is
+>   considered as overloaded.
+> 
+> But the util_avg signal of a rq can become temporaly low after that a task
+> migrated onto another rq which can bias the classification of the rq.
+> 
+> When tasks compete for the same rq, their runnable average signal will be
+> higher than util_avg as it will include the waiting time and we can use
+> this signal to better classify cfs_rqs.
+> 
+> The new runnable_avg will track the runnable time of a task which simply
+> adds the waiting time to the running time. The runnable _avg of cfs_rq
+> will be the /Sum of se's runnable_avg and the runnable_avg of group entity
+> will follow the one of the rq similarly to util_avg.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I did a bit of playing around with tracepoints and it seems to be behaving
+fine. For instance, if I spawn 12 always runnable tasks (sysbench --test=cpu)
+on my Juno (6 CPUs), I get to a system-wide runnable value (\Sum cpu_runnable())
+of about 12K. I've only eyeballed them, but migration of the signal values
+seem fine too.
+
+I have a slight worry that the rq-wide runnable signal might be too easy to
+inflate, since we aggregate for *all* runnable tasks, and that may not play
+well with your group_is_overloaded() change (despite having the imbalance_pct
+on the "right" side).
+
+In any case I'll need to convince myself of it with some messing around, and
+this concerns patch 5 more than patch 4. So FWIW for this one:
+
+Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+
+I also have one (two) more nit(s) below.
+
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> @@ -227,14 +231,14 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
+>  	 * Step 1: accumulate *_sum since last_update_time. If we haven't
+>  	 * crossed period boundaries, finish.
+>  	 */
+> -	if (!accumulate_sum(delta, sa, load, running))
+> +	if (!accumulate_sum(delta, sa, load, runnable, running))
+>  		return 0;
+>  
+>  	return 1;
+>  }
+>  
+>  static __always_inline void
+> -___update_load_avg(struct sched_avg *sa, unsigned long load)
+> +___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runnable)
+>  {
+>  	u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
+>  
+> @@ -242,6 +246,7 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load)
+>  	 * Step 2: update *_avg.
+>  	 */
+>  	sa->load_avg = div_u64(load * sa->load_sum, divider);
+> +	sa->runnable_avg =	div _u64(runnable * sa->runnable_sum, divider);
+                          ^^^^^^        ^^^^^^^^
+                            a)             b)
+a) That's a tab
+
+b) The value being passed is always 1, do we really need it to expose it as a
+   parameter?
