@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3696EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84A2C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050B920659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B6524655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055874;
-	bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
+	s=default; t=1582055877;
+	bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOTgET1+SmnzOp3b2Z1Ji1uPzqd8XTjSc2pZoZpiawwjjUAiZS5DwjOa4I9ZFPcyE
-	 LKj/0wyQTFXoc+WISr/DXmlneMjactFXU40aS1g/U59nfbHYZjSsh1fqqG4jouoozL
-	 9qUIHIXH9blKG8CGREmnrfcuGmd+UEXtdR3sENaw=
+	b=SM7rosb6juHpY5oJ4kptt/0TMJnIztV1x0Z41IEFNVJLMzL2Iiozxc9R/kjMGQs/L
+	 w7v/pTpKd1VpQYr54J07xS01MEIlKT6/ZRDflvaKfR7s7x1giADTHay8VJNSLPDJaG
+	 DMQ818RMhhaVCkjzSwGsbwlWmY8y52BbaLUrgPFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgBRT5w (ORCPT
+        id S1728068AbgBRT5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbgBRT5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:49 -0500
+        id S1728051AbgBRT5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6CFD20659;
-        Tue, 18 Feb 2020 19:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FFF220659;
+        Tue, 18 Feb 2020 19:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055869;
-        bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
+        s=default; t=1582055871;
+        bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhHxImfknJQQiYWnO00o4WDz2hXMXboXfaCA1NW2pgTMOHtNn/WkA1bJLX4iN860B
-         +vlkdfX7T8iK/JhNe3m8y9Le0PoS5MLk3jfVIqUGeez8V/+sdqOzlVnCGIAc66L7w1
-         +FSXCA6tAoeayOgToD/Xf38AL250zsiq05TXw8sE=
+        b=UpccIs2f0uS4UrTYRhY5+3hYhTvou+H6w5zXCTJhOQ1BKPRpN5dP7ePu/ozgBvbJi
+         uLZyEIpTmHumsg8m5wFR/Dxs+08Xv9vk3ygNhWRd0e9/AV0GpBkzsbN76rJvlxvUze
+         OnS0Y+7qhqYS+dMJ59eCnX2FlNeYoI3jOXagGiPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 06/66] ALSA: hda/realtek - Fix silent output on MSI-GL73
-Date:   Tue, 18 Feb 2020 20:54:33 +0100
-Message-Id: <20200218190428.702286805@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 07/66] ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
+Date:   Tue, 18 Feb 2020 20:54:34 +0100
+Message-Id: <20200218190428.788565639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -58,33 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit 7dafba3762d6c0083ded00a48f8c1a158bc86717 upstream.
+commit 93f9d1a4ac5930654c17412e3911b46ece73755a upstream.
 
-MSI-GL73 laptop with ALC1220 codec requires a similar workaround for
-Clevo laptops to enforce the DAC/mixer connection path.  Set up a
-quirk entry for that.
+The Audioengine D1 (0x2912:0x30c8) does support reading the sample rate,
+but it returns the rate in byte-reversed order.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204159
+When setting sampling rate, the driver produces these warning messages:
+[168840.944226] usb 3-2.2: current rate 4500480 is different from the runtime rate 44100
+[168854.930414] usb 3-2.2: current rate 8436480 is different from the runtime rate 48000
+[168905.185825] usb 3-2.1.2: current rate 30465 is different from the runtime rate 96000
+
+As can be seen from the hexadecimal conversion, the current rate read
+back is byte-reversed from the rate that was set.
+
+44100 == 0x00ac44, 4500480 == 0x44ac00
+48000 == 0x00bb80, 8436480 == 0x80bb00
+96000 == 0x017700,   30465 == 0x007701
+
+Rather than implementing a new quirk to reverse the order, just skip
+checking the rate to avoid spamming the log.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212081047.27727-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200211162235.1639889-1-nivedita@alum.mit.edu
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
+ sound/usb/quirks.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
-+	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
- 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1402,6 +1402,7 @@ bool snd_usb_get_sample_rate_quirk(struc
+ 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
+ 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
+ 	case USB_ID(0x21B4, 0x0081): /* AudioQuest DragonFly */
++	case USB_ID(0x2912, 0x30c8): /* Audioengine D1 */
+ 		return true;
+ 	}
+ 
 
 
