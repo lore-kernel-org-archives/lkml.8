@@ -2,52 +2,51 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3721C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97BC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC8A24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B6824125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055848;
-	bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+	s=default; t=1582055853;
+	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U2sbpozCm5FxY7fA4vebIylZvZvy4V1XG+luEgEdmiDG/UhJ2DTMAKJK9qzAEDoZm
-	 AFN5ewwojHDZdQScVgKO0EsfQlNQjfWh5zgHyte8Vzh1tx5gY45kraih4vfJCFryhc
-	 yQOUA/PhkM8p5nABBxQsrYRKzNzHB+8TVCScUwhg=
+	b=nUPpT1/WSSGfnYWCgzd22EuO/hcgP2/Gk7ppigVkHP59VFOzmtf8lzD9PiDo4lZAB
+	 wyIrZBX6KhNon2tZVDOZKPs4MUTWjmQfq0yBZD0qTdILIJAvv2A5SNwtNOPxNvYntU
+	 oxqiLWRknrILW3WBF5kV7ufbuRgaxJS7ltLksxak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBRT51 (ORCPT
+        id S1727951AbgBRT5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34628 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgBRT5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:18 -0500
+        id S1727896AbgBRT5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658092465A;
-        Tue, 18 Feb 2020 19:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6262A24655;
+        Tue, 18 Feb 2020 19:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055837;
-        bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+        s=default; t=1582055842;
+        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pAslD6dJqRUSmwACKK0lrxtbjlPOo2Dc/ldo5W5SleHCtO645FSxH5QuWCFmgvO9+
-         k15ax/fGLJYFFnzichxHQOvREAfyzCCQTiYlIu+HX34P3Wkpywnh9nfdH46X6oCZjF
-         ZMWMUGhoiqRAkBQUdYYOxJr7wJEF3kqcWdGgxpvs=
+        b=A0UzeEn6qxxgwWIt3p6f9cYwWeuIRe+RLIex6GNmFYyxFJfw/2MFSQPR/EPNnuo3s
+         X2my0dK35x3FBlkFN9vNHVbjqXh+z53g5X8471y81mDFhp4d8UaZKT03b+ey7m7mpu
+         SOQ91yYk8fFVFiiHwJEispfgN+dEAM7Dod83RZBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.19 32/38] s390/time: Fix clk type in get_tod_clock
-Date:   Tue, 18 Feb 2020 20:55:18 +0100
-Message-Id: <20200218190422.309601321@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 34/38] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+Date:   Tue, 18 Feb 2020 20:55:20 +0100
+Message-Id: <20200218190422.504519165@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -60,54 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Mike Jones <michael-a1.jones@analog.com>
 
-commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
+commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
 
-Clang warns:
+Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
+bits 6/5. This fixs a LTC297X family bug where polling always returns
+not busy even when the part is busy. This fixes a LTC388X and
+LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
+not polled, which can lead to NACKing of commands. LTC388X and
+LTM467X modules now poll BUSY and PEND, increasing reliability by
+eliminating NACKing of commands.
 
-In file included from ../arch/s390/boot/startup.c:3:
-In file included from ../include/linux/elf.h:5:
-In file included from ../arch/s390/include/asm/elf.h:132:
-In file included from ../include/linux/compat.h:10:
-In file included from ../include/linux/time.h:74:
-In file included from ../include/linux/time32.h:13:
-In file included from ../include/linux/timex.h:65:
-../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-[16]' to parameter of type 'char *' converts between pointers to integer
-types with different sign [-Wpointer-sign]
-        get_tod_clock_ext(clk);
-                          ^~~
-../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-parameter 'clk' here
-static inline void get_tod_clock_ext(char *clk)
-                                           ^
-
-Change clk's type to just be char so that it matches what happens in
-get_tod_clock_ext.
-
-Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-Link: https://github.com/ClangBuiltLinux/linux/issues/861
-Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
+Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/timex.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/ltc2978.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(cha
+--- a/drivers/hwmon/pmbus/ltc2978.c
++++ b/drivers/hwmon/pmbus/ltc2978.c
+@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
  
- static inline unsigned long long get_tod_clock(void)
- {
--	unsigned char clk[STORE_CLOCK_EXT_SIZE];
-+	char clk[STORE_CLOCK_EXT_SIZE];
+ #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
  
- 	get_tod_clock_ext(clk);
- 	return *((unsigned long long *)&clk[1]);
+-#define LTC_NOT_BUSY			BIT(5)
+-#define LTC_NOT_PENDING			BIT(4)
++#define LTC_NOT_BUSY			BIT(6)
++#define LTC_NOT_PENDING			BIT(5)
+ 
+ /*
+  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
 
 
