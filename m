@@ -2,117 +2,78 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD44C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16738C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B822173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE2A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dYjV/1Hj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBRNhm (ORCPT
+        id S1726683AbgBRNiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:37:42 -0500
-Received: from 14.mo7.mail-out.ovh.net ([178.33.251.19]:58250 "EHLO
-        14.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbgBRNhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:37:41 -0500
-X-Greylist: delayed 2258 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 08:37:40 EST
-Received: from player779.ha.ovh.net (unknown [10.110.208.203])
-        by mo7.mail-out.ovh.net (Postfix) with ESMTP id D7FEC152E86
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:00:13 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player779.ha.ovh.net (Postfix) with ESMTPSA id 0AFF6F777158;
-        Tue, 18 Feb 2020 13:00:00 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2 2/8] docs: merge debugging-modules.txt into sysctl/kernel.rst
-Date:   Tue, 18 Feb 2020 13:59:17 +0100
-Message-Id: <20200218125923.685-3-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218125923.685-1-steve@sk2.org>
-References: <20200218125923.685-1-steve@sk2.org>
+        Tue, 18 Feb 2020 08:38:01 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:56176 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgBRNiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:38:01 -0500
+Received: from zn.tnic (p200300EC2F0C1F0028FD4265E0CDE335.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:28fd:4265:e0cd:e335])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0E70B1EC0CD1;
+        Tue, 18 Feb 2020 14:38:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582033080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3fEGQmlRrx7Ve1nJ21t9s4LB01DniXaNSXB1qQeQEOk=;
+        b=dYjV/1HjQgoWDktIVXa9DVTBajaxdUS/8ISqM4yublqc3UXsUzugiyrpGNwZV/1KMn49Rp
+        jz7wPaRvqKPStP/ZXlncUaBypSNv2NTa5dhFiwCyzEMLg0cC/AebNBbmgizaqOH0UB4280
+        ZJC61b3E3Zeof9bkHlPU+rTO3sSJOhE=
+Date:   Tue, 18 Feb 2020 14:37:56 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH] x86: Don't declare __force_order in kaslr_64.c
+Message-ID: <20200218133756.GD14449@zn.tnic>
+References: <20200124181811.4780-1-hjl.tools@gmail.com>
+ <E184715B-30CD-4951-BAF4-E95135AEE938@amacapital.net>
+ <CAMe9rOov9pLYcDLcu2CR7-i5VJhWzz4n95MYiXZDd9p79nQFyQ@mail.gmail.com>
+ <CAMe9rOrtj-Hrr6tmSrwg_V9bawXXB2WjsSedL=aCaaH-=ZSKsA@mail.gmail.com>
+ <20200218104552.GA14449@zn.tnic>
+ <CAMe9rOpyb0-DZME8fdqjvD4fM7-0ZugM3YcPfX9i-kGM1Yj_QA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16131049443819212165
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjeekgdegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejjeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMe9rOpyb0-DZME8fdqjvD4fM7-0ZugM3YcPfX9i-kGM1Yj_QA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fits nicely in sysctl/kernel.rst, merge it (and rephrase it)
-instead of linking to it.
+On Tue, Feb 18, 2020 at 03:38:54AM -0800, H.J. Lu wrote:
+> I wrote this patch as the part of the previous CET patch set Yu-cheng submitted.
+> Since this is a standalone patch, he asked me to send it separately.  I didn't
+> remove Yu-cheng's SOB when I submitted this patch.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 14 ++++++++++++-
- Documentation/debugging-modules.txt         | 22 ---------------------
- 2 files changed, 13 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/debugging-modules.txt
+Ok, dropping it.
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index c17ed1db8eea..392c6be1424d 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -386,7 +386,19 @@ This flag controls the L2 cache of G3 processor boards. If
- modprobe
- ========
- 
--See Documentation/debugging-modules.txt.
-+This gives the full path of the modprobe command which the kernel will
-+use to load modules. This can be used to debug module loading
-+requests::
-+
-+    echo '#! /bin/sh' > /tmp/modprobe
-+    echo 'echo "$@" >> /tmp/modprobe.log' >> /tmp/modprobe
-+    echo 'exec /sbin/modprobe "$@"' >> /tmp/modprobe
-+    chmod a+x /tmp/modprobe
-+    echo /tmp/modprobe > /proc/sys/kernel/modprobe
-+
-+This only applies when the *kernel* is requesting that the module be
-+loaded; it won't have any effect if the module is being loaded
-+explicitly using ``modprobe`` from userspace.
- 
- 
- modules_disabled
-diff --git a/Documentation/debugging-modules.txt b/Documentation/debugging-modules.txt
-deleted file mode 100644
-index 172ad4aec493..000000000000
---- a/Documentation/debugging-modules.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Debugging Modules after 2.6.3
-------------------------------
--
--In almost all distributions, the kernel asks for modules which don't
--exist, such as "net-pf-10" or whatever.  Changing "modprobe -q" to
--"succeed" in this case is hacky and breaks some setups, and also we
--want to know if it failed for the fallback code for old aliases in
--fs/char_dev.c, for example.
--
--In the past a debugging message which would fill people's logs was
--emitted.  This debugging message has been removed.  The correct way
--of debugging module problems is something like this:
--
--echo '#! /bin/sh' > /tmp/modprobe
--echo 'echo "$@" >> /tmp/modprobe.log' >> /tmp/modprobe
--echo 'exec /sbin/modprobe "$@"' >> /tmp/modprobe
--chmod a+x /tmp/modprobe
--echo /tmp/modprobe > /proc/sys/kernel/modprobe
--
--Note that the above applies only when the *kernel* is requesting
--that the module be loaded -- it won't have any effect if that module
--is being loaded explicitly using "modprobe" from userspace.
+Thx.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
