@@ -2,149 +2,154 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C92CC3403A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965DFC3403A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5514F21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582033193;
-	bh=8MIgSUVG1vBHF+xjowMLhULulLb4CVftpGAFG9luE9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U6jK3Y2QsN3nqvvt951eahtGihUfO0PdLifTONO1qm8sEZ5goLPY97MBx0crVzrOv
-	 5AXeHSEjxcRhFnJz3kX5R2stiX+6LoxA0nQhulm++4Xw1JJm/4C9Ps4pyPCqEtacWY
-	 FF3zULRCnVS8N6CtYVCs2QdecdXeKpLsw9UlHuKM=
+	by mail.kernel.org (Postfix) with ESMTP id 6E7F1207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="jSWjqqQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgBRNjv (ORCPT
+        id S1726666AbgBRNlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:39:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgBRNju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:39:50 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8578A2173E;
-        Tue, 18 Feb 2020 13:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582033190;
-        bh=8MIgSUVG1vBHF+xjowMLhULulLb4CVftpGAFG9luE9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z1cpeQqTDA28ONjB3IwZuJRuSQO+JuDzB6ePSCf9UaBMYkSo8LemaZzTO6EYjRAYy
-         aCOR+yemsiYGuUoOukhNG5eMAvDQhIV1KKEkrRkzk6G+j3XXPUOECc+d6DzxgFVIll
-         t2LOdnA4KLsCFXarF8XMG87Hsw74ViNntaIUYWGo=
-Date:   Tue, 18 Feb 2020 13:39:43 +0000
-From:   Will Deacon <will@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, suzuki.poulose@arm.com,
-        james.clark@arm.com, zhangshaokun@hisilicon.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
- system PMUs
-Message-ID: <20200218133943.GF20212@willie-the-truck>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <20200218125707.GB20212@willie-the-truck>
- <a40903fe-d52f-96c6-a06a-fe834d71d625@huawei.com>
+        Tue, 18 Feb 2020 08:41:12 -0500
+Received: from mail.inango-systems.com ([178.238.230.57]:55690 "EHLO
+        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgBRNlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:41:12 -0500
+X-Greylist: delayed 393 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 08:41:10 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id 0842010807C2;
+        Tue, 18 Feb 2020 15:34:36 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 7hm_tDghVA1O; Tue, 18 Feb 2020 15:34:35 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id 2FF9810807BD;
+        Tue, 18 Feb 2020 15:34:35 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 2FF9810807BD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1582032875;
+        bh=BnLIe6sgQYUJrm3LGDhkAzwCf08EBK8HoDQzaBz3dbM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jSWjqqQylMIF6017ESekgGCGMmWr3d62l3xi8/WwRQZlhHkpb2gUhc3i8eDYPwpVZ
+         TMy459ext8jfUY1WufwSbOPEsIpFLukncYnFKvlmVet2QK2u3s6RPmyQCUX9Fe0yOT
+         VTYKR/T6lTYgfEmwbT6/GtexzVCO5gdjCF8nkVrsg33SX0SKWEiZmsaRhF6XI/r3z0
+         I4W2HqAvLF1CuBixRc4Dj2g67lV3nul9ozqnqFCAB38tUFM623cvkIYZC82VmIPg1m
+         G+oyu9KDAspC39+bcHQJzgxdu+BtYizKzcaITyQMZ5Zym4acJynA/yGL1xaSNPaacB
+         Q7BVzfJeGjsyw==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4_YIkOoajecK; Tue, 18 Feb 2020 15:34:35 +0200 (IST)
+Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
+        by mail.inango-sw.com (Postfix) with ESMTP id 0A57210807B0;
+        Tue, 18 Feb 2020 15:34:35 +0200 (IST)
+Date:   Tue, 18 Feb 2020 15:34:34 +0200 (IST)
+From:   Nikolai Merinov <n.merinov@inango-systems.com>
+To:     hch@infradead.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Jens Axboe <axboe@kernel.dk>, Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <2004778677.1182221.1582032874756.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
+References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org> <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
+Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
+ partition entry
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a40903fe-d52f-96c6-a06a-fe834d71d625@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.220.3]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC79 (Linux)/8.8.15_GA_3890)
+Thread-Topic: partitions/efi: Fix partition name parsing in GUID partition entry
+Thread-Index: 9xpn1qrbCtCK5dkZiyC1ZLQoAz8IQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:24:38PM +0000, John Garry wrote:
-> On 18/02/2020 12:57, Will Deacon wrote:
-> > On Fri, Jan 24, 2020 at 10:34:58PM +0800, John Garry wrote:
-> > > Currently event aliasing for only CPU and uncore PMUs is supported. In
-> > > fact, only uncore PMUs aliasing for when the uncore PMUs are fixed for a
-> > > CPU is supported, which may not always be the case for certain
-> > > architectures.
-> > > 
-> > > This series adds support for PMU event aliasing for system and other
-> > > uncore PMUs which are not fixed to a specific CPU.
-> > > 
-> > > For this, we introduce support for another per-arch mapfile, which maps a
-> > > particular system identifier to a set of system PMU events for that
-> > > system. This is much the same as what we do for CPU event aliasing.
-> > > 
-> > > To support this, we need to change how we match a PMU to a mapfile,
-> > > whether it should use a CPU or system mapfile. For this we do the
-> > > following:
-> > > 
-> > > - For CPU PMU, we always match for the event mapfile based on the CPUID.
-> > >    This has not changed.
-> > > 
-> > > - For an uncore or system PMU, we match first based on the SYSID (if set).
-> > >    If this fails, then we match on the CPUID.
-> > > 
-> > >    This works for x86, as x86 would not have any system mapfiles for uncore
-> > >    PMUs (and match on the CPUID).
-> > > 
-> > > Initial reference support is also added for ARM SMMUv3 PMCG (Performance
-> > > Monitor Event Group) PMU for HiSilicon hip08 platform with only a single
-> > > event so far - see driver in drivers/perf/arm_smmuv3_pmu.c for that driver.
-> > 
-> > Why don't we just expose SMMU_IIDR in the SMMUv3 PMU directory, so that
-> > you can key off that?
+Hello,
+
+Did you have a time to look at this patch? Should I make any modification? 
+
+Regards,
+Nikolai
+
+----- Original Message -----
+> From: "n merinov" <n.merinov@inango-systems.com>
+> To: hch@infradead.org, "Davidlohr Bueso" <dave@stgolabs.net>, "Jens Axboe" <axboe@kernel.dk>, "Ard Biesheuvel"
+> <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-block@vger.kernel.org, "linux-kernel"
+> <linux-kernel@vger.kernel.org>
+> Cc: "n merinov" <n.merinov@inango-systems.com>
+> Sent: Monday, January 13, 2020 3:27:23 PM
+> Subject: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
+
+> GUID partition entry defined to have a partition name as 36 UTF-16LE
+> code units. This means that on big-endian platforms ASCII symbols
+> would be read with 0xXX00 efi_char16_t character code. In order to
+> correctly extract ASCII characters from a partition name field we
+> should be converted from 16LE to CPU architecture.
 > 
-> That does not sound like a standard sysfs interface.
-
-It's standard in the sense that PMUs already have their own directory under
-sysfs where you can put things. For example, the "caps" directory is a
-dumping ground for all sorts of PMU-specific information.
-
-On the other hand, saying "please go figure out which SoC you're on"
-certainly isn't standard and is likely to lead to unreliable, spaghetti
-code.
-
-> Anyway, I don't think that works for every case, quoting from
-> https://lkml.org/lkml/2019/10/16/465:
+> The problem exists on all big endian platforms.
 > 
-> "> Note: I do acknowledge that an overall issue is that we assume all PMCG
-> IMP DEF events are same for a given SMMU model.
+> Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
+> ---
+> block/partitions/efi.c | 3 ++-
+> block/partitions/efi.h | 2 +-
+> include/linux/efi.h    | 5 +++++
+> 3 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> That assumption does technically fail already - I know MMU-600 has
-> different IMP-DEF events for its TCU and TBUs, however as long as we can
-> get as far as "this is some part of an MMU-600" the driver should be
-> able to figure out the rest ..."
-
-Perhaps I'm misreading this, but it sounds like if you knew it was an
-MMU-600 then you'd be ok. I also don't understand how a SoC ID makes things
-any easier in this regard.
-
-> So even if it is solvable here, the kernel driver(s) will need to be
-> reworked. And that is just solving one case in many.
-
-PMU drivers will need to expose more information to userspace so that they
-can be identified more precisely, yes. I wouldn't say they would need to be
-"reworked".
-
-> I'm nervous about coming up with a global "SYSID"
-> > when we don't have the ability to standardise anything in that space.
+> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+> index db2fef7dfc47..f1d0820de844 100644
+> --- a/block/partitions/efi.c
+> +++ b/block/partitions/efi.c
+> @@ -715,7 +715,8 @@ int efi_partition(struct parsed_partitions *state)
+> 				ARRAY_SIZE(ptes[i].partition_name));
+> 		info->volname[label_max] = 0;
+> 		while (label_count < label_max) {
+> -			u8 c = ptes[i].partition_name[label_count] & 0xff;
+> +			u8 c = 0xff & efi_char16le_to_cpu(
+> +					ptes[i].partition_name[label_count]);
+> 			if (c && !isprint(c))
+> 				c = '!';
+> 			info->volname[label_count] = c;
+> diff --git a/block/partitions/efi.h b/block/partitions/efi.h
+> index 3e8576157575..4d4cae0bb79e 100644
+> --- a/block/partitions/efi.h
+> +++ b/block/partitions/efi.h
+> @@ -88,7 +88,7 @@ typedef struct _gpt_entry {
+> 	__le64 starting_lba;
+> 	__le64 ending_lba;
+> 	gpt_entry_attributes attributes;
+> -	efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
+> +	efi_char16le_t partition_name[72 / sizeof(efi_char16le_t)];
+> } __packed gpt_entry;
 > 
-> I understand totally, especially if any sysid is based on DT bindings.
-
-Well if this is going to be ACPI-only then it's a non-starter.
-
-> But this is some sort of standardization:
-> https://developer.arm.com/docs/den0028/c, see SMCCC_ARCH_SOC_ID
-
-Yay, firmware :/
-
-Even if this was widely implemented (it's not), I still think that it's
-the wrong level of abstraction. Why not do away with ACPI/DT entirely
-and predicate everything off the SoC ID?
-
-Will
+> typedef struct _gpt_mbr_record {
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index aa54586db7a5..47882f2d45db 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -45,9 +45,14 @@
+> typedef unsigned long efi_status_t;
+> typedef u8 efi_bool_t;
+> typedef u16 efi_char16_t;		/* UNICODE character */
+> +typedef __le16 efi_char16le_t;		/* UTF16-LE */
+> +typedef __be16 efi_char16be_t;		/* UTF16-BE */
+> typedef u64 efi_physical_addr_t;
+> typedef void *efi_handle_t;
+> 
+> +#define efi_char16le_to_cpu le16_to_cpu
+> +#define efi_char16be_to_cpu be16_to_cpu
+> +
+> /*
+>  * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
+>  * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
+> --
+> 2.17.1
