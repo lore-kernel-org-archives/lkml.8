@@ -2,121 +2,123 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA879C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7872C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59562070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bBlb7kK0"
+	by mail.kernel.org (Postfix) with ESMTP id 9CBBC24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgBRTHh (ORCPT
+        id S1726488AbgBRTJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:07:37 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40197 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTHh (ORCPT
+        Tue, 18 Feb 2020 14:09:25 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33125 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:07:37 -0500
-Received: by mail-pl1-f195.google.com with SMTP id y1so8442160plp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XDlxGgCpGeqU3KzfKq+0G+pODQzyu67LnVcRDv+D+D4=;
-        b=bBlb7kK0umzlqU+tMcH3s28HrHzKVOWGYgR0f+WFk8H08TYaiaZTu70twpujC0wnlL
-         jvPAxB/i9TZ8TfXzYS00HfBLRn4AaFjHwPpED0345d9rY2hlt8VFBYtOMONkmQRbfwLa
-         SfRGM16Ck3w2GMG+0yDfUWHKyfaxFrHzkq4HA=
+        Tue, 18 Feb 2020 14:09:24 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q81so21273981oig.0;
+        Tue, 18 Feb 2020 11:09:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XDlxGgCpGeqU3KzfKq+0G+pODQzyu67LnVcRDv+D+D4=;
-        b=W749PCOdMc4Xd8b0IFB1byaeA8+4MsEfsN/YIFmLPT7erDKzHJqa6N7AkTX/OVZYlz
-         34oGJIlZrplebLwJDMW7a3sYNlF78HkU1Sm/fbUmO7cM+IU18BajLaB9nsUmS2Qa+nbh
-         oiAbVN2WWWNxwqpMvw9ecud6a8I4nV3nCoovf1MAbeR2Sc+LVlxFqlNZy1FGljpWjGG1
-         IWPD6wiuqj3JILKiuJXZZX6wXoy+LBKmblME7ZSgRTC5p1XAFnaE2vukHAfrVRnSvyq8
-         iRoA31HzGuyrj1bDS3ooI0gTaOuFSCNHPeI0ryG+vPmRKWUkw2yqF2HCLagsJI1jVApT
-         qn7A==
-X-Gm-Message-State: APjAAAU+8GGniikwR4qJypxEQY9FB2Tqs+N45i6m5ZssbyJ5L72Ds44k
-        upcj8Ri1Smq15HYhRaKGLI3n9Q==
-X-Google-Smtp-Source: APXvYqzQ9M1KsgU04ibpPhVZLv0ZY49qRY006V1Xcr4FsYN69DcQUVER/9RLVtPWkxP6bYsZHXAfTA==
-X-Received: by 2002:a17:902:b718:: with SMTP id d24mr22854885pls.80.1582052854867;
-        Tue, 18 Feb 2020 11:07:34 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id q25sm5175786pfg.41.2020.02.18.11.07.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 11:07:33 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:07:31 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org
-Subject: Re: [PATCH V4 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-Message-ID: <20200218190731.GC15781@google.com>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4zbrnNvTNHgXxwjMJnfhT5sGHXVeYA3py+fC4nnQX1g=;
+        b=hxHpfGZ1eg9pnSfPg5YL2okaL4jIsS3ewInVnRJIojrOl5G/z0s1qZnXQGBlQykB0f
+         hSlxBgqWb6BCYu8bIp24/4I7qlQDPuGIv4AI3vUioZ4UzFg8hxphPf0RRLzr+cldvXl3
+         7C8RA+QYFKhThMLd+tcMT8v+n/yY//kQik1u4j95VqkNDyWyFsfU3abb2imPh0UvuMRy
+         JAZWUXCnV6nEgfNcW+hu2OWemlrp55oaqJSU+18nZ18z8euYMqrz5sAdol8ixHfddVpH
+         mlgv/p2nYrTIhUd4U29RfZ7i9N/eqnMUsC2KR+zyUnzpgKnXfQXQ4qa6nu1qDTLsG3i4
+         IzWQ==
+X-Gm-Message-State: APjAAAUCcdYj7HXVOR0jJtNGE+s7v2r1hNaO/oyoyr0yqCNQEBSmwIdM
+        3efZyMZ+BPjiTA5E+uxUwe6QBHivcrjFlUSxGH4=
+X-Google-Smtp-Source: APXvYqwnKTCIB9GTLLpEL5W7g+LauaFKN7iZKQPh2++RZaJoaT+SssBYOvEoCXI/Jb080pGI7GySD9qCX6q6Z+PF39M=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr2308514oia.102.1582052963942;
+ Tue, 18 Feb 2020 11:09:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200218151812.7816-1-geert+renesas@glider.be>
+ <20200218151812.7816-5-geert+renesas@glider.be> <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+In-Reply-To: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Feb 2020 20:09:12 +0100
+Message-ID: <CAMuHMdU9=vgO6ohoYTQMGjoFzhRy=4hYGjVyRsTK2uoNsU08XQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akash,
+Hi Randy,
 
-I didn't see a patch that implements the binding, did you post it?
+On Tue, Feb 18, 2020 at 7:30 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
+> > Document the GPIO Aggregator, and the two typical use-cases.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> > @@ -0,0 +1,102 @@
+> > +.. SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +GPIO Aggregator
+> > +===============
+> > +
+> > +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
+>
+> "allows" really wants an object following the verb [although the kernel sources
+> and docs have many cases of it not having an object].  Something like
+>
+>                        allows {you, one, someone, users, a user} to aggregate
 
-On Mon, Feb 17, 2020 at 03:06:52PM +0530, Akash Asthana wrote:
-> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> index 11530df..7e4b9af 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> @@ -165,6 +165,15 @@ patternProperties:
->            - description: UART core irq
->            - description: Wakeup irq (RX GPIO)
->  
-> +      rx-tx-swap:
-> +        description: RX and TX pins are swap.
+Thanks for the hint!
 
-s/swap/swapped/
+> > +             Example: Instantiate a new GPIO aggregator by aggregating GPIO
+> > +             19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
+> > +             gpio_chip:
+> > +
+> > +             .. code-block:: bash
+> > +
+> > +                 echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
+> > +
+>
+> Does the above command tell the user that the new device is named
+> "gpio-aggregator.0", as used below?
 
-> +
-> +      cts-rts-swap:
-> +        description: CTS and RTS pins are swap.
+Yes, it will be printed through the kernel log, cfr. the sample session in
+the cover letter.
 
-s/swap/swapped/
+Gr{oetje,eeting}s,
 
-> +
-> +      rx-tx-cts-rts-swap:
-> +        description: RX-TX and CTS-RTS both pairs are swap.
+                        Geert
 
-I don't think this option adds much value, if both pairs are swapped
-the above two properties can be set.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +
->      required:
->        - compatible
->        - interrupts
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
