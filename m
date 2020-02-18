@@ -2,72 +2,185 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C372C3404D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731DFC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB8D24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4367624125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582067708;
+	bh=1e6s3LBPWIkH3B8CPIQcoHesI1x/DnMTo3Fll+14BP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lrxHTfvN06Vc2vNu2HQVFwDcDGx3iV/gsy+wSSUTSovlls2limbWtnpURDwNdra6f
+	 ECVVVuJ63bPPuyz051VD24nFECsj6gbIfBgator9ty8VmgTO2F370pE1QqCpKS7sto
+	 Pc0UY7NtkgTeY6yzu/kjyIyiC1rYdwsB13bCGpvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgBRXN0 (ORCPT
+        id S1727872AbgBRXPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:13:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727216AbgBRXN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:13:26 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9469A24125;
-        Tue, 18 Feb 2020 23:13:24 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 18:13:23 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
- rcu_tasks_cbs_head
-Message-ID: <20200218181323.4a102fe7@gandalf.local.home>
-In-Reply-To: <20200218225455.GN2935@paulmck-ThinkPad-P72>
-References: <20200215002446.GA15663@paulmck-ThinkPad-P72>
-        <20200215002520.15746-1-paulmck@kernel.org>
-        <20200217123851.GR14914@hirez.programming.kicks-ass.net>
-        <20200217181615.GP2935@paulmck-ThinkPad-P72>
-        <20200218075648.GW14914@hirez.programming.kicks-ass.net>
-        <20200218162719.GE2935@paulmck-ThinkPad-P72>
-        <20200218201142.GF11457@worktop.programming.kicks-ass.net>
-        <20200218202226.GJ2935@paulmck-ThinkPad-P72>
-        <20200218174503.3d4e4750@gandalf.local.home>
-        <20200218225455.GN2935@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 18 Feb 2020 18:15:07 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35458 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbgBRXPG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:15:06 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so21334333otd.2;
+        Tue, 18 Feb 2020 15:15:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G4WNEhQO20vNtBJwI7oQMtpqp8OCtjLcIlARAY579Do=;
+        b=WTH6j54BqdBaSzT+y1ao52Wn0APSvmvcAcgWBm/OpVPkRpEIuucAQZumAmSEGvxaqj
+         61xLW3nCmucalCD9TMpBVWd3Oq4SrLg9waurxp8L0pewa2Riu7Po5CCu7thssF256O8O
+         L3vIxVMcj50nRuNODVBeSyXcuaGvBVeLor+4c4hyk+WXahQ/9nuPmHYMwbF+uBuyVWXH
+         y9XtPeHsErRdCuW96chNruZ4MhsbcDNWD5FpCvdafkbrMpDoQt0Oh1vpBm6AHq1yVplj
+         Peb/ib1djfwukOZGVBHkMPCdmhoo+58zAgeSM9Y2FqDsgrJ3yOY7Ltc+rt140ZK2Jjej
+         22Dw==
+X-Gm-Message-State: APjAAAXYGLe/VJSQUksq6j6IRIM1iQgtPYN2IugUdpWUDIHNw35/+LM7
+        WHsBd20UJvt+1E+Bl7U0Jw==
+X-Google-Smtp-Source: APXvYqwW+XFF6Vp8UgFF8kVdHeUlJefeBvJgDBj4dBF+mFylUww+21EMO3di/ZeLcp2dJQvp5DyM+g==
+X-Received: by 2002:a05:6830:1294:: with SMTP id z20mr17143801otp.60.1582067705428;
+        Tue, 18 Feb 2020 15:15:05 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j13sm122236oii.14.2020.02.18.15.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 15:15:04 -0800 (PST)
+Received: (nullmailer pid 27451 invoked by uid 1000);
+        Tue, 18 Feb 2020 23:15:03 -0000
+Date:   Tue, 18 Feb 2020 17:15:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
+Message-ID: <20200218231503.GA19099@bogus>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 14:54:55 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
+> Tegra contains VI controller which can support up to 6 MIPI CSI
+> camera sensors.
+> 
+> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+> VI channel and can capture from an external camera sensor or
+> from built-in test pattern generator.
+> 
+> This patch adds dt-bindings for Tegra VI and CSI.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> index 9999255ac5b6..3d0ed540a646 100644
+> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>  
+>    Required properties:
+>    - compatible: "nvidia,tegra<chip>-vi"
+> -  - reg: Physical base address and length of the controller's registers.
+> +  - reg: Physical base address and length of the controller registers.
+>    - interrupts: The interrupt outputs from the controller.
+> -  - clocks: Must contain one entry, for the module clock.
+> +  - clocks: Must contain an entry for the module clock "vi"
+>      See ../clocks/clock-bindings.txt for details.
+>    - resets: Must contain an entry for each entry in reset-names.
+>      See ../reset/reset.txt for details.
+> -  - reset-names: Must include the following entries:
+> -    - vi
+> +  - reset-names: Must include the entry "vi"
+> +
+> +  Tegra210 has CSI part of VI sharing same host interface and register
+> +  space. So, VI device node should have CSI child node.
+> +
+> +  - csi: mipi csi interface to vi
+> +
+> +    Required properties:
+> +    - compatible: "nvidia,tegra<chip>-csi"
+> +    - reg: Physical base address and length of the controller registers.
+> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+> +      See ../clocks/clock-bindings.txt for details.
+>  
+>  - epp: encoder pre-processor
+>  
+> @@ -310,12 +320,41 @@ Example:
+>  		};
+>  
+>  		vi {
+> -			compatible = "nvidia,tegra20-vi";
+> -			reg = <0x54080000 0x00040000>;
+> +			compatible = "nvidia,tegra210-vi";
+> +			reg = <0x0 0x54080000 0x0 0x700>;
+>  			interrupts = <0 69 0x04>;
+> -			clocks = <&tegra_car TEGRA20_CLK_VI>;
+> -			resets = <&tegra_car 100>;
+> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			clock-names = "vi";
+> +			resets = <&tegra_car 20>;
+>  			reset-names = "vi";
+> +
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+> +
+> +			csi@0x54080838 {
 
->     This data race was reported by KCSAN.  Not appropriate for backporting
->     due to failure being unlikely and due to the mild consequences of the
->     failure, namely a confusing rcutorture console message.
->     
+Drop '0x'
 
-I've seen patches backported for less. :-/
+> +				compatible = "nvidia,tegra210-csi";
+> +				reg = <0x0 0x54080838 0x0 0x2000>;
 
-Really, any statement that says something may go awry with the code,
-will be an argument to backport it.
+Kind of odd that this address and ranges address are not the same. And 
+also wrong that the size here exceeds the bounds of ranges.
 
--- Steve
+Also, best practice is to make the child address 0 or relative to the 
+parent.
+
+> +				status = "disabled";
+
+Don't show status in examples.
+
+> +				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+> +						  <&tegra_car TEGRA210_CLK_CILCD>,
+> +						  <&tegra_car TEGRA210_CLK_CILE>;
+> +				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>;
+> +				assigned-clock-rates = <102000000>,
+> +						       <102000000>,
+> +						       <102000000>;
+> +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
+> +					 <&tegra_car TEGRA210_CLK_CILAB>,
+> +					 <&tegra_car TEGRA210_CLK_CILCD>,
+> +					 <&tegra_car TEGRA210_CLK_CILE>;
+> +				clock-names = "csi", "cilab", "cilcd", "cile";
+> +			};
+> +
+>  		};
+>  
+>  		epp {
+> -- 
+> 2.7.4
+> 
