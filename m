@@ -2,195 +2,109 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7871C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B07C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFD424658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E69021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="zBT7ls+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgBRI1U (ORCPT
+        id S1726715AbgBRI1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:27:20 -0500
-Received: from mga07.intel.com ([134.134.136.100]:18962 "EHLO mga07.intel.com"
+        Tue, 18 Feb 2020 03:27:22 -0500
+Received: from mx.kolabnow.com ([95.128.36.42]:51570 "EHLO mx.kolabnow.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgBRI1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:27:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:27:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="235466642"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.151])
-  by orsmga003.jf.intel.com with ESMTP; 18 Feb 2020 00:27:15 -0800
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Feng Tang <feng.tang@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC -V2 1/8] autonuma: Add NUMA_BALANCING_MEMORY_TIERING mode
-Date:   Tue, 18 Feb 2020 16:26:27 +0800
-Message-Id: <20200218082634.1596727-2-ying.huang@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218082634.1596727-1-ying.huang@intel.com>
-References: <20200218082634.1596727-1-ying.huang@intel.com>
+        id S1726667AbgBRI1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:27:21 -0500
+X-Greylist: delayed 591 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 03:27:20 EST
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id 6F98040434;
+        Tue, 18 Feb 2020 09:17:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1582013845; x=1583828246; bh=ZCUmRkTZBCscrc2Oka2I0C9qAlUD6xdUbb8
+        k/+y23eA=; b=zBT7ls+sKA7y8wjvjDIgdOBSl5T+/EIXyh11yYUkB79p/AzsevI
+        l/1AsxWVTmsHOg9ZwehcEk4OTojIUo/uwqqL17q+bKlv4aE17R3ve/Tt9U8sElYH
+        6ksIiwCl3tL8qLwVLCHMIj0CR/IA0f8ncwDKWhNPrmOYSlP1+TFN9pfOy2b1ffHU
+        585fWv8Hv1J/bNCXYU+T5eZTbMgl7YWX5GpQdliZF4K7U2ntnOP3ujSuqwrwNlZK
+        GJHkqLvwWLatclXvJGHj67k+L642EshEhSuBcuNFAcLE1VUIMiGrSWdCcuAmMs1B
+        mugZGVKPwDN1Ks8nfb99e3ERi6BYynWvUcXTgI6jzfqKFSvi09C6ys/3Otss8lHZ
+        GgmrQ9uHLdnl2rgxo3H+rQdgWkaulhmfqqbiNMUYy8v/FjBEVDUIYZzHKouLqW9H
+        qZlUBzm9LnUiKFlKr7UcbbMwkpVyHoo/N2KwdZayxWruA7LJ5gArWJMfchO4Ydgg
+        KGcbD76djb2J4/3ymQ5AfoRkW+giQnEZHUdYVOm1uJxhgr9frr3TszcuNERzqGEa
+        galNq38nbnNHBLi1Mdmcm9WA9/DuMHI3V63dm0LKB7szMURpLUU0h6bGcfqS1GYf
+        eUcIbKGKovS7J2fSWZ5zJstcSijrNxmR0p9SElygnvjtIbqR08fAGnkc=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CYhEPNypRUrb; Tue, 18 Feb 2020 09:17:25 +0100 (CET)
+Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id B8454403C2;
+        Tue, 18 Feb 2020 09:17:25 +0100 (CET)
+Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
+        by int-mx003.mykolab.com (Postfix) with ESMTPS id 57BDDAB7;
+        Tue, 18 Feb 2020 09:17:25 +0100 (CET)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     corbet@lwn.net, rdunlap@infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace stale url with active one for Mutt
+Date:   Tue, 18 Feb 2020 09:17:23 +0100
+Message-ID: <26370462.jMSB3ls19i@pcbe13614>
+In-Reply-To: <20200218065854.13152-1-unixbhaskar@gmail.com>
+References: <20200218065854.13152-1-unixbhaskar@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+On Tuesday, February 18, 2020 7:58:54 AM CET Bhaskar Chowdhury wrote:
+> This patch will replace  dead/stale url with the active urls.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  Documentation/process/email-clients.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/process/email-clients.rst
+> b/Documentation/process/email-clients.rst index 5273d06c8ff6..bf8b4c9a4efe
+> 100644
+> --- a/Documentation/process/email-clients.rst
+> +++ b/Documentation/process/email-clients.rst
+> @@ -237,9 +237,9 @@ using Mutt to send patches through Gmail::
+> 
+>  The Mutt docs have lots more information:
+> 
+> -    http://dev.mutt.org/trac/wiki/UseCases/Gmail
+> +    https://gitlab.com/muttmua/mutt/-/wikis/UseCases/Gmail
+> 
+> -    http://dev.mutt.org/doc/manual.html
+> +    http://www.mutt.org/#doc
 
-With the advent of various new memory types, some machines will have
-multiple memory types, e.g. DRAM and PMEM (persistent memory).
-Because the performance of the different types of memory may be
-different, the memory subsystem could be called memory tiering system.
+http://www.mutt.org/doc/manual/
 
-In a typical memory tiering system, there are CPUs, fast memory and
-slow memory in each physical NUMA node.  The CPUs and the fast memory
-will be put in one logical node (called fast memory node), while the
-slow memory will be put in another (faked) logical node (called slow
-memory node).  And in autonuma, there are a set of mechanisms to
-identify the pages recently accessed by the CPUs in a node and migrate
-the pages to the node.  So the performance optimization to promote the
-hot pages in slow memory node to the fast memory node in the memory
-tiering system could be implemented based on the autonuma framework.
+I think this link is better
 
-But the requirement of the hot page promotion in the memory tiering
-system is different from that of the normal NUMA balancing in some
-aspects.  E.g. for the hot page promotion, we can skip to scan fastest
-memory node because we have nowhere to promote the hot pages to.  To
-make autonuma works for both the normal NUMA balancing and the memory
-tiering hot page promotion, we have defined a set of flags and made
-the value of sysctl_numa_balancing_mode to be "OR" of these flags.
-The flags are as follows,
+> 
+>  Pine (TUI)
+>  **********
+> --
+> 2.24.1
 
-- 0x0: NUMA_BALANCING_DISABLED
-- 0x1: NUMA_BALANCING_NORMAL
-- 0x2: NUMA_BALANCING_MEMORY_TIERING
 
-NUMA_BALANCING_NORMAL enables the normal NUMA balancing across
-sockets, while NUMA_BALANCING_MEMORY_TIERING enables the hot page
-promotion across memory tiers.  They can be enabled individually or
-together.  If all flags are cleared, the autonuma is disabled
-completely.
-
-The sysctl interface is extended accordingly in a backward compatible
-way.
-
-TODO:
-
-- Update ABI document: Documentation/sysctl/kernel.txt
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- include/linux/sched/sysctl.h | 5 +++++
- kernel/sched/core.c          | 9 +++------
- kernel/sysctl.c              | 7 ++++---
- 3 files changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215ee03f..80dc5030c797 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -33,6 +33,11 @@ enum sched_tunable_scaling {
- };
- extern enum sched_tunable_scaling sysctl_sched_tunable_scaling;
- 
-+#define NUMA_BALANCING_DISABLED		0x0
-+#define NUMA_BALANCING_NORMAL		0x1
-+#define NUMA_BALANCING_MEMORY_TIERING	0x2
-+
-+extern int sysctl_numa_balancing_mode;
- extern unsigned int sysctl_numa_balancing_scan_delay;
- extern unsigned int sysctl_numa_balancing_scan_period_min;
- extern unsigned int sysctl_numa_balancing_scan_period_max;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..2d3f456d0ef6 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2723,6 +2723,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- }
- 
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-+int sysctl_numa_balancing_mode;
- 
- #ifdef CONFIG_NUMA_BALANCING
- 
-@@ -2738,20 +2739,16 @@ void set_numabalancing_state(bool enabled)
- int sysctl_numa_balancing(struct ctl_table *table, int write,
- 			 void __user *buffer, size_t *lenp, loff_t *ppos)
- {
--	struct ctl_table t;
- 	int err;
--	int state = static_branch_likely(&sched_numa_balancing);
- 
- 	if (write && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	t = *table;
--	t.data = &state;
--	err = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
-+	err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- 	if (err < 0)
- 		return err;
- 	if (write)
--		set_numabalancing_state(state);
-+		set_numabalancing_state(*(int *)table->data);
- 	return err;
- }
- #endif
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 70665934d53e..3756108bb658 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -126,6 +126,7 @@ static int sixty = 60;
- 
- static int __maybe_unused neg_one = -1;
- static int __maybe_unused two = 2;
-+static int __maybe_unused three = 3;
- static int __maybe_unused four = 4;
- static unsigned long zero_ul;
- static unsigned long one_ul = 1;
-@@ -420,12 +421,12 @@ static struct ctl_table kern_table[] = {
- 	},
- 	{
- 		.procname	= "numa_balancing",
--		.data		= NULL, /* filled in by handler */
--		.maxlen		= sizeof(unsigned int),
-+		.data		= &sysctl_numa_balancing_mode,
-+		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_numa_balancing,
- 		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
-+		.extra2		= &three,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
- #endif /* CONFIG_SCHED_DEBUG */
 -- 
-2.24.1
+Federico Vaga
+http://www.federicovaga.it/
+
 
