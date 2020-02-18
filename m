@@ -2,146 +2,104 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E0C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E016C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B72820801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F148E24658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgBRRUZ (ORCPT
+        id S1726652AbgBRRWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:20:25 -0500
-Received: from rhlx01.hs-esslingen.de ([129.143.116.10]:44156 "EHLO
-        rhlx01.hs-esslingen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgBRRUY (ORCPT
+        Tue, 18 Feb 2020 12:22:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726411AbgBRRWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:20:24 -0500
-X-Greylist: delayed 535 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 12:20:23 EST
-Received: by rhlx01.hs-esslingen.de (Postfix, from userid 1203)
-        id F2D7B29C4924; Tue, 18 Feb 2020 18:11:26 +0100 (CET)
-Date:   Tue, 18 Feb 2020 18:11:26 +0100
-From:   Adrian Reber <adrian@lisas.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers <containers@lists.linux-foundation.org>,
-        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
-        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
-Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
-Message-ID: <20200218171126.GF2322403@lisas.de>
-References: <20191112012724.250792-1-dima@arista.com>
- <20191112012724.250792-4-dima@arista.com>
- <CAHO5Pa2_7BzZPCXjFj4f=YoX28M4q2Au=h6GrzN-EjRffMo1iw@mail.gmail.com>
- <20200217145908.7epzz5nescccwvzv@wittgenstein>
- <CAKgNAkjfdWFwNdFzdBY81_8WZJNtbtztfjO9T2YNQDV4ThNiNw@mail.gmail.com>
- <20200217230331.he6p5bs766zp6smx@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217230331.he6p5bs766zp6smx@wittgenstein>
-X-Url:  <http://lisas.de/~adrian/>
-X-Operating-System: Linux (5.4.8-200.fc31.x86_64)
-X-Load-Average: 7.47 8.46 9.12
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
+        Tue, 18 Feb 2020 12:22:23 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IHJHDR141152;
+        Tue, 18 Feb 2020 12:20:34 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1hvtp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 12:20:34 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01IHCKgV002392;
+        Tue, 18 Feb 2020 17:20:33 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 2y6896ju1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 17:20:33 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IHKW0W58917332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 17:20:32 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1547513605D;
+        Tue, 18 Feb 2020 17:20:32 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04AD313604F;
+        Tue, 18 Feb 2020 17:20:29 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.237.10])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 17:20:29 +0000 (GMT)
+Message-ID: <1582046428.16681.7.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Merlijn Wajer <merlijn@archive.org>
+Cc:     merlijn@wizzup.org, linux-scsi@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Date:   Tue, 18 Feb 2020 09:20:28 -0800
+In-Reply-To: <20200218171259.GA6724@infradead.org>
+References: <20200218143918.30267-1-merlijn@archive.org>
+         <20200218171259.GA6724@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_04:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=818
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 12:03:31AM +0100, Christian Brauner wrote:
-> On Mon, Feb 17, 2020 at 10:47:53PM +0100, Michael Kerrisk (man-pages) wrote:
-> > Hello Christian,
+On Tue, 2020-02-18 at 09:12 -0800, Christoph Hellwig wrote:
+> On Tue, Feb 18, 2020 at 03:39:17PM +0100, Merlijn Wajer wrote:
+> > When replacing the Big Kernel Lock in commit
+> > 2a48fc0ab24241755dc93bfd4f01d68efab47f5a ("block: autoconvert
+> > trivial BKL users to private mutex"), the lock was replaced with a
+> > sr-wide lock.
 > > 
-> > On Mon, 17 Feb 2020 at 16:15, Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > >
-> > > On Mon, Feb 17, 2020 at 03:20:55PM +0100, Michael Kerrisk wrote:
-> > > > Hello Dmitry, Andrei,
-> > > >
-> > > > Is the CLONE_NEWTIME flag intended to be usable with clone3()? The
-> > > > mail quoted below implies (in my reading) that this should be possible
-> > > > once clone3() is available, which it is by now. (See also [1].)
-> > > >
-> > > > If the answer is yes, CLONE_NEWTIME  should be usable with clone3(),
-> > > > then I have a bug report and a question.
-> > > >
-> > > > I successfully used CLONE_NEWTIME with unshare(). But if I try to use
-> > > > CLONE_NEWSIGNAL with clone3(), it errors out with EINVAL, because of
-> > >
-> > > s/CLONE_NEWSIGNAL/CLONE_NEWTIME/
-> > >
-> > > > the following check in clone3_args_valid():
-> > > >
-> > > >         /*
-> > > >          * - make the CLONE_DETACHED bit reuseable for clone3
-> > > >          * - make the CSIGNAL bits reuseable for clone3
-> > > >          */
-> > > >         if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
-> > > >                 return false;
-> > > >
-> > > > The problem is that CLONE_NEWTIME matches one of the bits in the
-> > > > CSIGNAL mask. If the intention is to allow CLONE_NEWTIME with
-> > > > clone3(), then either the bit needs to be redefined, or the error
-> > > > checking in clone3_args_valid() needs to be reworked.
-> > >
-> > > If this is intended to be useable with clone3() the check should be
-> > > adapted to allow for CLONE_NEWTIME. (I asked about this a while ago I
-> > > think.)
-> > > But below rather sounds like it should simply be an unshare() flag. The
-> > > code seems to set frozen_offsets to true right after copy_namespaces()
-> > > in timens_on_fork(new_ns, tsk) and so the offsets can't be changed
-> > > anymore unless I'm reading this wrong.
-> > > Alternatives seem to either make timens_offsets writable once after fork
-> > > and before exec, I guess - though that's probably not going to work
-> > > with the vdso judging from timens_on_fork().
-> > >
-> > > The other alternative is that Andrei and Dmitry send me a patch to
-> > > enable CLONE_NEWTIME with clone3() by exposing struct timens_offsets (or
-> > > a version of it) in the uapi and extend struct clone_args to include a
-> > > pointer to a struct timens_offset that is _only_ set when CLONE_NEWTIME
-> > > is set.
-> > > Though the unshare() way sounds way less invasive simpler.
+> > This causes very poor performance when using multiple sr devices,
+> > as the sr driver was not able to execute more than one command to
+> > one drive at any given time, even when there were many CD drives
+> > available.
 > > 
-> > Actually, I think the alternative you propose just here is better. I
-> > imagine there are times when one will want to create multiple
-> > namespaces with a single call to clone3(), including a time namespace.
-> > I think this should be allowed by the API. And, otherwise, clone3()
-> > becomes something of a second-class citizen for creating namespaces.
-> > (I don't really get the "less invasive" argument. Implementing this is
-> > just a piece of kernel to code to make user-space's life a bit simpler
-> > and more consistent.)
+> > Replace the global mutex with per-sr-device mutex.
 > 
-> I don't particularly mind either way. If there's actual users that need
-> to set it at clone3() time then we can extend it. So I'd like to hear
-> what Adrian, Dmitry, and Thomas think since they are well-versed how
-> this will be used in the wild. I'm weary of exposing a whole new uapi
-> struct and extending clone3() without any real use-case but I'm happy to
-> if there is!
+> Do we actually need the lock at all?  What is protected by it?
 
-Re-creating a time namespace during restore via clone3() would be CRIU's
-preferred way of doing this. If available CRIU is already using
-clone3(), especially because of set_tid, and for the time namespace we
-would also rely on clone3() to re-create it.
+We do at least for cdrom_open.  It modifies the cdi structure with no
+other protection and concurrent modification would at least screw up
+the use counter which is not atomic.  Same reasoning for cdrom_release.
 
-I will provide a patch to extend clone3() to handle the creation of a
-new time namespace.
+I think the ioctls don't need the mutex (not looked deeply enough) and
+certainly the probe only requires it for the idr allocation which has
+its own lock, so I don't believe the mutex additions are needed there.
 
-		Adrian
+James
+
