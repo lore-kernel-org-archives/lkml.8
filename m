@@ -2,96 +2,111 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E5C34037
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF571C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E385206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D482206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="yzllje1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgBRK5O (ORCPT
+        id S1726610AbgBRK5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:57:14 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54846 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgBRK5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:57:13 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 76F431C0371; Tue, 18 Feb 2020 11:57:11 +0100 (CET)
-Date:   Tue, 18 Feb 2020 11:57:10 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Convert common LED binding to
- schema
-Message-ID: <20200218105710.GA28348@duo.ucw.cz>
-References: <20200108001738.8209-1-robh@kernel.org>
- <bec9ab4a-da09-6ef1-7334-d19f11ab2523@gmail.com>
- <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
+        Tue, 18 Feb 2020 05:57:41 -0500
+Received: from mx1.cock.li ([185.10.68.5]:40015 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbgBRK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 05:57:40 -0500
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
+        t=1582023456; bh=pgJCMCsc89IhSBD8DIOQcNQxThGyTuatXZV1ketNMjA=;
+        h=Date:From:To:Subject:From;
+        b=yzllje1D0ggNKxmMYlRwykD4Ie6s05iljOeFxXRl6D0J4gTxVyxw1ox9/MWFWtp4G
+         flU1Yc+B40LI3d6/e8V+v4pxximbSC2VS0b1Rq7ySXz4woCQgo94PnnNUTyODaENhY
+         EtNf1tK3Qwt/ioDslqvaXEhbTa89H+sKh3ympeJx6DPociq+/1KryaAa5eseovXNGm
+         mHSrQH6JmzT1sa6ISfL40PZv3cyVRtLijCuIvHSZRypy/3pX9cPegSNHgr+bYvdQHa
+         Q9TT6MAUWdzG6ymOh50KJKcaZHdhgAWDkHbASR8X8VhZDonSmJI6kM1Hqk45u8v0hc
+         Fa6wB+qmbCp/w==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Feb 2020 10:57:36 +0000
+From:   agentoranger@waifu.club
+To:     linux-kernel@vger.kernel.org
+Subject: Grsecurity blaims insane conspiracy theory for self-imposed legal
+ woes
+Message-ID: <3ee534a5d4a4a442356a528a9fe5fe18@waifu.club>
+X-Sender: agentoranger@waifu.club
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Grsecurity blaims insane conspiracy theory for self-imposed legal woes
+ From the Grsecurity website: 
+https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part1
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > Bindings for LED controllers can reference the common schema for the =
-LED
-> > > child nodes:
-> > >
-> > > patternProperties:
-> > >   "^led@[0-4]":
-> > >     type: object
-> > >     allOf:
-> > >       - $ref: common.yaml#
-> > >
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Dan Murphy <dmurphy@ti.com>
-> > > Cc: linux-leds@vger.kernel.org
-> > > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > Jacek, Please take this via led tree
-> >
-> > Currently Pavel maintains LED tree. Pavel?
->=20
-> As it doesn't look like there's any conflicts, I've applied this
-> series to the DT tree.
-
-Thank you!
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXkvDBgAKCRAw5/Bqldv6
-8uTmAJ4q9FOCilnz5IzvOIzO/Pvu+CTcIACgk95eQ06CVaeLv5XJZIbCQUSPV9I=
-=mqJ6
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+> Company Background
+> 
+> Open Source Security, Inc. was formed in 2008 initially to handle 
+> donations related to the grsecurity project, an open source project 
+> started in 2001 and freely (in all senses) available to the world until 
+> at least 2015. In 2015 we made our stable patches available to paid 
+> customers only via our website, a right granted by the GPL. At the 
+> time, we still had a freely (in all senses) test patch available. In 
+> April of 2017 we stopped providing the test patches to the general 
+> public.
+> A Troll's Revenge
+> 
+> Only a few months after this, a notorious Internet troll who had used 
+> grsecurity in the past and been banned from our forums for misogynistic 
+> comments was apparently upset at having his access cut off completely 
+> (after previously being denied access to the stable patches in 2015), 
+> and came out of hibernation to extend a private and public campaign to 
+> get revenge. This campaign continues today even, with posts to LKML, 
+> various distribution mailing lists, and posts and comments on Slashdot, 
+> Reddit, and other news aggregators. This person poses under various 
+> names, usernames, and email addresses, but most recently poses as a 
+> legitimate lawyer claiming the GPL can be rescinded. The emails come 
+> from @redchan.it,@airmail.cc, and other anonymous mailing services with 
+> usernames like "aconcernedfossdev", "visionsofalice", "gameonlinux", 
+> "nisus", and "unconditionedwitness". Most commonly, the email subject 
+> regarding us includes: "Why will no-one sue GrSecurity for their 
+> blatant GPL violation?" or "Yes you have standing to sue GRSecurity." 
+> In many instances, due to the changing names and email addresses, 
+> readers are unaware this is the same "MikeeUSA" troll, a self-professed 
+> misogynist and pedophile, that had been harrassing and issuing death 
+> threats to women in Open Source for years.
+> 
+> But the anonymous troll wasn't able to inflict the kind of damage he 
+> wanted to achieve alone. People saw an unstable individual mixing 
+> misogynistic comments with nonsensical legal theories, making it clear 
+> he was not an expert and his comments had no basis in reality. To 
+> inflict the damage he wanted, he'd need to enlist the help of someone 
+> the public trusts and views as an expert on license compliance matters, 
+> so that it'd be accepted as fact by the public. So in private, he 
+> contacted various influential people (including Richard Stallman, Eben 
+> Moglen, Bradley Kuhn, and Bruce Perens) involved in Free Software/Open 
+> Source in an attempt to bait them into accepting and repeating his 
+> claims and wild legal theories as true. None of them took the bait, 
+> except for Bruce Perens.
+> 
+> Perens' Collaboration
+> 
+(... and on it goes)
+( 
+https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part1 
+  https://archive.is/7B9No
+)
+( 
+https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part2 
+  https://archive.is/7B9No
+)
+( 
+https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part3 
+  https://archive.is/tvlWf)
