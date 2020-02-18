@@ -3,100 +3,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7571AC3403B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78179C3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B69221D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BC620658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WvIOoKWd"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="rvM+uTtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgBROPg (ORCPT
+        id S1726713AbgBROQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:15:36 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43319 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgBROPf (ORCPT
+        Tue, 18 Feb 2020 09:16:12 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44197 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgBROQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:15:35 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so23141260ljm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:15:34 -0800 (PST)
+        Tue, 18 Feb 2020 09:16:11 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so23076923ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:16:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/I96XjCy45FrSiOOSIP4LbktmpEXlMTBIVpcEP7eY4=;
-        b=WvIOoKWdR3yhpJT8DTNT3yzKoIzfOYLSRNYg0Sj4Wfq9Nxv6caTGv2ew5IEi+yDuXO
-         pKGEgTqEkYwnVlyxt9zBUBpxvYyZKVmmPgXQ0xcRHPRt0GHzD+tpuEb1tm9BMKWClUsy
-         8zxNdvD/COqAhRQ+25hf1eLEaTvHP5DVrvel0YAZkczYZKmt8Pdhe8DptvCetcW5yfyc
-         8v6Xhf396Iv0kGJCQqsF/f5+YAbJPPUFxAxVG3tByf6+k9ZiLYy/sCEL8V/uSPGFruyo
-         9iTWlZRtga168ec/jNIJHTqWPmd36pUQtkacJspWlnp30FO7R3EgD8zUexWaNuc2Yc7F
-         3SaA==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DrqryinCHE3R7/2tc3p+dbFE1V3J/tIWBiDcCxcBwPc=;
+        b=rvM+uTtYcGhHZ+WHLx8oGBbpf1TICugbYiei2nvci6ZwQkMA9VZjYDMEfliNiJ7eb4
+         2/VmsxdyYR1TPgRwPNKxJ9gj17sc1Fvn61NEBh7rzlOaCxPCCSgfVos8wJ/nsBmzS/i6
+         JMTCQbN4wS3+XoSTG8Q+XlSxjfzXnSKAb68Rq1M8KMx+YI+5G4kPuw6FuM+CSscyjYgS
+         AmMEz3Ow/16C/zWTxJV+MOSpHNgbXVKmIeBKyhrNBdtpAJTpC2kaYtjUkLKIpAZv3pm3
+         gyuBowbTttkFmf9D0Ug45JowMXsEdT/gcWQfw5+Oq1YqVTo5uT85Z7PZY6YfAakSyiAq
+         V3tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/I96XjCy45FrSiOOSIP4LbktmpEXlMTBIVpcEP7eY4=;
-        b=UKnl7RmEtdgZ00aOzk0cg+eQ/s5wCvPXJp+HcCyg9wgO/qceFBeNW8yBv4KTQO/D5t
-         9rvlxfqgiQPHGHHd+c+UmdXzGgsmkt7aK+NPx3lX45KWmQMashag/C7YAQZ4jQzhnq9C
-         //0N/OM8UU7Uqjvswc1RYMjXugg5WrmSsLu2eDlWHjayMNCZIE75yD9BngsWviqZ6Jpe
-         /bZOfdmS6gMwenUJURip8jWnlzAFBfxHb1QbTcmUhKYKmQlqkW+IoxQ9BABmTG78NeU9
-         PC4yrP1pXd4WuPM4Ur/R+LrZgA6C10WQE3abQtiROGys3yGL+4aFvNH9AZhGWbyhtsZ0
-         8I4A==
-X-Gm-Message-State: APjAAAUZ3czj3Bd5Ugbaq5Cbsd+cHNzyWg8Z3LJnixtUATYqOsQJPb+s
-        QuMw6BpivUWE4xTHlrF4rEQw51cAqU4dtZSv1FJJNQ==
-X-Google-Smtp-Source: APXvYqz/+XveCSZtSXBY98DPZIClc6Sfarsw73hzrv5HUNrJkZn98HSENcCk60dPkH2DMRTpj3jlVt8ACTyy7fLj9OA=
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr12317715ljg.154.1582035333487;
- Tue, 18 Feb 2020 06:15:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DrqryinCHE3R7/2tc3p+dbFE1V3J/tIWBiDcCxcBwPc=;
+        b=SGfqebUvtLH1Gu5NSnhg8Xw5RY7MXPT4mAQwDmamz083T1HEpLU6pb82f1CZhNU/+t
+         oRWBxVHenjKVJbjq2yAp140V0eNUUUoXqC+RdFR/fKrjIeWKzpJTq5nPfZwT+NsTuata
+         9xaqcTCBkv+k1+k16TjLHnhKkX0gfLcl5u+CkWAnMPJb/8nH8dAi7jlw36Tft/qtkdTu
+         kMNXvP95QcA+LG/nArdewygC1FaEcV7d1rAFdncIArjj5JSxKai/EtTRMZYtR26yQWmP
+         v/HeQI2AQ1TSyBzx7047hdrQYZv0CFNcknMLti91Y8D0xnQK+V0Ohl5XQYROjgtV+bDp
+         vh4w==
+X-Gm-Message-State: APjAAAXYeI/yMNjWB3pWPHx/pFpbtQoHDFDEIoMupe7+nypzu6QUJ1Tb
+        1vV/5Y/jpDgA3ws3AkQkyILtlthyYfI=
+X-Google-Smtp-Source: APXvYqzjNYwKgBp80JN3m6/5g5w6xv2WayWUy4GM1ntmp8uClVmyjfzC/fK+c2QkCKfLr3TMKpLlNw==
+X-Received: by 2002:a2e:1459:: with SMTP id 25mr13376746lju.189.1582035367727;
+        Tue, 18 Feb 2020 06:16:07 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id o19sm2978073lji.54.2020.02.18.06.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 06:16:06 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 22631100FA3; Tue, 18 Feb 2020 17:16:34 +0300 (+03)
+Date:   Tue, 18 Feb 2020 17:16:34 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
+Message-ID: <20200218141634.zhhjgtv44ux23l3l@box>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-14-willy@infradead.org>
+ <20200214135248.zqcqx3erb4pnlvmu@box>
+ <20200214160342.GA7778@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-2-vincent.guittot@linaro.org> <ee38d205-b356-9474-785e-e514d81b7d7f@arm.com>
- <20200218132203.GB14914@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200218132203.GB14914@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 18 Feb 2020 15:15:22 +0100
-Message-ID: <CAKfTPtB3qudK8aMq2cx==4RW8t1pz6ymz1Ti0r8oO4TefWzMRw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] sched/fair: Reorder enqueue/dequeue_task_fair path
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214160342.GA7778@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Feb 18, 2020 at 01:37:37PM +0100, Dietmar Eggemann wrote:
-> > On 14/02/2020 16:27, Vincent Guittot wrote:
-> > > The walk through the cgroup hierarchy during the enqueue/dequeue of a task
-> > > is split in 2 distinct parts for throttled cfs_rq without any added value
-> > > but making code less readable.
-> > >
-> > > Change the code ordering such that everything related to a cfs_rq
-> > > (throttled or not) will be done in the same loop.
-> > >
-> > > In addition, the same steps ordering is used when updating a cfs_rq:
-> > > - update_load_avg
-> > > - update_cfs_group
-> > > - update *h_nr_running
-> >
-> > Is this code change really necessary? You pay with two extra goto's. We
-> > still have the two for_each_sched_entity(se)'s because of 'if
-> > (se->on_rq); break;'.
->
-> IIRC he relies on the presented ordering in patch #5 -- adding the
-> running_avg metric.
+On Fri, Feb 14, 2020 at 08:03:42AM -0800, Matthew Wilcox wrote:
+> On Fri, Feb 14, 2020 at 04:52:48PM +0300, Kirill A. Shutemov wrote:
+> > On Tue, Feb 11, 2020 at 08:18:33PM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > We can't kmap() a THP, so add a wrapper around zero_user() for large
+> > > pages.
+> > 
+> > I would rather address it closer to the root: make zero_user_segments()
+> > handle compound pages.
+> 
+> Hah.  I ended up doing that, but hadn't sent it out.  I don't like
+> how ugly it is:
+> 
+> @@ -219,18 +219,57 @@ static inline void zero_user_segments(struct page *page,
+>         unsigned start1, unsigned end1,
+>         unsigned start2, unsigned end2)
+>  {
+> -       void *kaddr = kmap_atomic(page);
+> -
+> -       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
+> -
+> -       if (end1 > start1)
+> -               memset(kaddr + start1, 0, end1 - start1);
+> -
+> -       if (end2 > start2)
+> -               memset(kaddr + start2, 0, end2 - start2);
+> -
+> -       kunmap_atomic(kaddr);
+> -       flush_dcache_page(page);
+> +       unsigned int i;
+> +
+> +       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+> +
+> +       for (i = 0; i < hpage_nr_pages(page); i++) {
+> +               void *kaddr;
+> +               unsigned this_end;
+> +
+> +               if (end1 == 0 && start2 >= PAGE_SIZE) {
+> +                       start2 -= PAGE_SIZE;
+> +                       end2 -= PAGE_SIZE;
+> +                       continue;
+> +               }
+> +
+> +               if (start1 >= PAGE_SIZE) {
+> +                       start1 -= PAGE_SIZE;
+> +                       end1 -= PAGE_SIZE;
+> +                       if (start2) {
+> +                               start2 -= PAGE_SIZE;
+> +                               end2 -= PAGE_SIZE;
+> +                       }
 
-Yes, that's the main reason, updating load_avg before h_nr_running
+You assume start2/end2 is always after start1/end1 in the page.
+Is it always true? If so, I would add BUG_ON() for it.
+
+Otherwise, looks good.
+
+> +                       continue;
+> +               }
+> +
+> +               kaddr = kmap_atomic(page + i);
+> +
+> +               this_end = min_t(unsigned, end1, PAGE_SIZE);
+> +               if (end1 > start1)
+> +                       memset(kaddr + start1, 0, this_end - start1);
+> +               end1 -= this_end;
+> +               start1 = 0;
+> +
+> +               if (start2 >= PAGE_SIZE) {
+> +                       start2 -= PAGE_SIZE;
+> +                       end2 -= PAGE_SIZE;
+> +               } else {
+> +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
+> +                       if (end2 > start2)
+> +                               memset(kaddr + start2, 0, this_end - start2);
+> +                       end2 -= this_end;
+> +                       start2 = 0;
+> +               }
+> +
+> +               kunmap_atomic(kaddr);
+> +               flush_dcache_page(page + i);
+> +
+> +               if (!end1 && !end2)
+> +                       break;
+> +       }
+> +
+> +       BUG_ON((start1 | start2 | end1 | end2) != 0);
+>  }
+> 
+> I think at this point it has to move out-of-line too.
+> 
+> > > +static inline void zero_user_large(struct page *page,
+> > > +		unsigned start, unsigned size)
+> > > +{
+> > > +	unsigned int i;
+> > > +
+> > > +	for (i = 0; i < thp_order(page); i++) {
+> > > +		if (start > PAGE_SIZE) {
+> > 
+> > Off-by-one? >= ?
+> 
+> Good catch; I'd also noticed that when I came to redo the zero_user_segments().
+> 
+
+-- 
+ Kirill A. Shutemov
