@@ -2,195 +2,158 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EAFC34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA989C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EAF20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81C020836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgBRBBT (ORCPT
+        id S1726266AbgBRBCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:01:19 -0500
-Received: from smtprelay0231.hostedemail.com ([216.40.44.231]:34897 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726054AbgBRBBS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:01:18 -0500
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 634A11802384A;
-        Tue, 18 Feb 2020 01:01:17 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 8D5D018028E97;
-        Tue, 18 Feb 2020 01:01:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sail37_624dff907f544
-X-Filterd-Recvd-Size: 6226
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 18 Feb 2020 01:01:15 +0000 (UTC)
-Message-ID: <cf13bd2d790ae3afbf5da55ea7bed12e00c5119d.camel@perches.com>
-Subject: [PATCH V2] usb-storage: Use const to reduce object data size
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 17 Feb 2020 16:59:54 -0800
-In-Reply-To: <20200217094036.GA47231@kroah.com>
-References: <60559197a1af9e0af7f329cc3427989e5756846f.camel@perches.com>
-         <20200217094036.GA47231@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 17 Feb 2020 20:02:55 -0500
+Received: from mga17.intel.com ([192.55.52.151]:54819 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgBRBCz (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 20:02:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 17:02:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,454,1574150400"; 
+   d="scan'208";a="228151092"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.238.4.8]) ([10.238.4.8])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Feb 2020 17:02:52 -0800
+Subject: Re: [PATCH v4] perf stat: Show percore counts in per CPU output
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200214080452.26402-1-yao.jin@linux.intel.com>
+ <20200216225407.GB157041@krava>
+ <d79a1bbe-bca5-0420-0480-1d508d2a038c@linux.intel.com>
+ <20200217110629.GD157041@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <9c16e98e-aa9e-8879-0690-990a5dcda303@linux.intel.com>
+Date:   Tue, 18 Feb 2020 09:02:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200217110629.GD157041@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make structs const to reduce data size ~20KB.
-
-Change function arguments and prototypes as necessary to compile.
-
-$ size (x86-64 defconfig pre)
-   text	   data	    bss	    dec	    hex	filename
-  12281	  10948	    480	  23709	   5c9d	./drivers/usb/storage/usb.o
-    111	  10528	      8	  10647	   2997	./drivers/usb/storage/usual-tables.o
-
-$ size (x86-64 defconfig post)
-   text	   data	    bss	    dec	    hex	filename
-  22809	    420	    480	  23709	   5c9d	drivers/usb/storage/usb.o
-  10551	      0	      0	  10551	   2937	drivers/usb/storage/usual-tables.o
-
-Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
----
-
-V2: evolution is a terrible email client.
-    no line wrapping this time...
-
- drivers/usb/storage/usb.c          | 10 +++++-----
- drivers/usb/storage/usb.h          |  5 +++--
- drivers/usb/storage/usual-tables.c |  6 +++---
- include/linux/usb_usual.h          |  2 +-
- 4 files changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
-index 9a79cd..94a6472 100644
---- a/drivers/usb/storage/usb.c
-+++ b/drivers/usb/storage/usb.c
-@@ -121,12 +121,12 @@ MODULE_PARM_DESC(quirks, "supplemental list of device IDs and their quirks");
- 	.initFunction = init_function,	\
- }
- 
--static struct us_unusual_dev us_unusual_dev_list[] = {
-+static const struct us_unusual_dev us_unusual_dev_list[] = {
- #	include "unusual_devs.h"
- 	{ }		/* Terminating entry */
- };
- 
--static struct us_unusual_dev for_dynamic_ids =
-+static const struct us_unusual_dev for_dynamic_ids =
- 		USUAL_DEV(USB_SC_SCSI, USB_PR_BULK);
- 
- #undef UNUSUAL_DEV
-@@ -583,7 +583,7 @@ EXPORT_SYMBOL_GPL(usb_stor_adjust_quirks);
- 
- /* Get the unusual_devs entries and the string descriptors */
- static int get_device_info(struct us_data *us, const struct usb_device_id *id,
--		struct us_unusual_dev *unusual_dev)
-+		const struct us_unusual_dev *unusual_dev)
- {
- 	struct usb_device *dev = us->pusb_dev;
- 	struct usb_interface_descriptor *idesc =
-@@ -933,7 +933,7 @@ static unsigned int usb_stor_sg_tablesize(struct usb_interface *intf)
- int usb_stor_probe1(struct us_data **pus,
- 		struct usb_interface *intf,
- 		const struct usb_device_id *id,
--		struct us_unusual_dev *unusual_dev,
-+		const struct us_unusual_dev *unusual_dev,
- 		struct scsi_host_template *sht)
- {
- 	struct Scsi_Host *host;
-@@ -1092,7 +1092,7 @@ static struct scsi_host_template usb_stor_host_template;
- static int storage_probe(struct usb_interface *intf,
- 			 const struct usb_device_id *id)
- {
--	struct us_unusual_dev *unusual_dev;
-+	const struct us_unusual_dev *unusual_dev;
- 	struct us_data *us;
- 	int result;
- 	int size;
-diff --git a/drivers/usb/storage/usb.h b/drivers/usb/storage/usb.h
-index 85052c..5850d62 100644
---- a/drivers/usb/storage/usb.h
-+++ b/drivers/usb/storage/usb.h
-@@ -93,7 +93,8 @@ struct us_data {
- 	struct mutex		dev_mutex;	 /* protect pusb_dev */
- 	struct usb_device	*pusb_dev;	 /* this usb_device */
- 	struct usb_interface	*pusb_intf;	 /* this interface */
--	struct us_unusual_dev   *unusual_dev;	 /* device-filter entry     */
-+	const struct us_unusual_dev   *unusual_dev;
-+						/* device-filter entry     */
- 	unsigned long		fflags;		 /* fixed flags from filter */
- 	unsigned long		dflags;		 /* dynamic atomic bitflags */
- 	unsigned int		send_bulk_pipe;	 /* cached pipe values */
-@@ -185,7 +186,7 @@ extern int usb_stor_post_reset(struct usb_interface *iface);
- extern int usb_stor_probe1(struct us_data **pus,
- 		struct usb_interface *intf,
- 		const struct usb_device_id *id,
--		struct us_unusual_dev *unusual_dev,
-+		const struct us_unusual_dev *unusual_dev,
- 		struct scsi_host_template *sht);
- extern int usb_stor_probe2(struct us_data *us);
- extern void usb_stor_disconnect(struct usb_interface *intf);
-diff --git a/drivers/usb/storage/usual-tables.c b/drivers/usb/storage/usual-tables.c
-index cfd12e5..529512 100644
---- a/drivers/usb/storage/usual-tables.c
-+++ b/drivers/usb/storage/usual-tables.c
-@@ -40,7 +40,7 @@
- 	.driver_info = (flags) \
- }
- 
--struct usb_device_id usb_storage_usb_ids[] = {
-+const struct usb_device_id usb_storage_usb_ids[] = {
- #	include "unusual_devs.h"
- 	{ }		/* Terminating entry */
- };
-@@ -68,7 +68,7 @@ struct ignore_entry {
- 	.bcdmax = bcdDeviceMax,		\
- }
- 
--static struct ignore_entry ignore_ids[] = {
-+static const struct ignore_entry ignore_ids[] = {
- #	include "unusual_alauda.h"
- #	include "unusual_cypress.h"
- #	include "unusual_datafab.h"
-@@ -92,7 +92,7 @@ int usb_usual_ignore_device(struct usb_interface *intf)
- {
- 	struct usb_device *udev;
- 	unsigned vid, pid, bcd;
--	struct ignore_entry *p;
-+	const struct ignore_entry *p;
- 
- 	udev = interface_to_usbdev(intf);
- 	vid = le16_to_cpu(udev->descriptor.idVendor);
-diff --git a/include/linux/usb_usual.h b/include/linux/usb_usual.h
-index 000a595..4a19ac3 100644
---- a/include/linux/usb_usual.h
-+++ b/include/linux/usb_usual.h
-@@ -92,6 +92,6 @@ enum { US_DO_ALL_FLAGS };
- #include <linux/usb/storage.h>
- 
- extern int usb_usual_ignore_device(struct usb_interface *intf);
--extern struct usb_device_id usb_storage_usb_ids[];
-+extern const struct usb_device_id usb_storage_usb_ids[];
- 
- #endif /* __LINUX_USB_USUAL_H */
 
 
+On 2/17/2020 7:06 PM, Jiri Olsa wrote:
+> On Mon, Feb 17, 2020 at 09:22:57AM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 2/17/2020 6:54 AM, Jiri Olsa wrote:
+>>> On Fri, Feb 14, 2020 at 04:04:52PM +0800, Jin Yao wrote:
+>>>
+>>> SNIP
+>>>
+>>>>    CPU1               1,009,312      cpu/event=cpu-cycles,percore/
+>>>>    CPU2               2,784,072      cpu/event=cpu-cycles,percore/
+>>>>    CPU3               2,427,922      cpu/event=cpu-cycles,percore/
+>>>>    CPU4               2,752,148      cpu/event=cpu-cycles,percore/
+>>>>    CPU6               2,784,072      cpu/event=cpu-cycles,percore/
+>>>>    CPU7               2,427,922      cpu/event=cpu-cycles,percore/
+>>>>
+>>>>           1.001416041 seconds time elapsed
+>>>>
+>>>>    v4:
+>>>>    ---
+>>>>    Ravi Bangoria reports an issue in v3. Once we offline a CPU,
+>>>>    the output is not correct. The issue is we should use the cpu
+>>>>    idx in print_percore_thread rather than using the cpu value.
+>>>
+>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>>>
+>>
+>> Thanks so much for ACK this patch. :)
+>>
+>>> btw, there's slight misalignment in -I output, but not due
+>>> to your change, it's there for some time now, and probably
+>>> in other agregation  outputs as well:
+>>>
+>>>
+>>>     $ sudo ./perf stat -e cpu/event=cpu-cycles/ -a -A  -I 1000
+>>>     #           time CPU                    counts unit events
+>>>          1.000224464 CPU0               7,251,151      cpu/event=cpu-cycles/
+>>>          1.000224464 CPU1              21,614,946      cpu/event=cpu-cycles/
+>>>          1.000224464 CPU2              30,812,097      cpu/event=cpu-cycles/
+>>>
+>>> should be (extra space after CPUX):
+>>>
+>>>          1.000224464 CPU2               30,812,097      cpu/event=cpu-cycles/
+>>>
+>>> I'll put it on my TODO, but if you're welcome to check on it ;-)
+>>>
+>>> thanks,
+>>> jirka
+>>>
+>>
+>> I have a simple fix for this misalignment issue.
+>>
+>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>> index bc31fccc0057..95b29c9cba36 100644
+>> --- a/tools/perf/util/stat-display.c
+>> +++ b/tools/perf/util/stat-display.c
+>> @@ -114,11 +114,11 @@ static void aggr_printout(struct perf_stat_config
+>> *config,
+>>                          fprintf(config->output, "S%d-D%d-C%*d%s",
+>>                                  cpu_map__id_to_socket(id),
+>>                                  cpu_map__id_to_die(id),
+>> -                               config->csv_output ? 0 : -5,
+>> +                               config->csv_output ? 0 : -3,
+>>                                  cpu_map__id_to_cpu(id), config->csv_sep);
+>>                  } else {
+>> -                       fprintf(config->output, "CPU%*d%s ",
+>> -                               config->csv_output ? 0 : -5,
+>> +                       fprintf(config->output, "CPU%*d%s",
+>> +                               config->csv_output ? 0 : -7,
+>>                                  evsel__cpus(evsel)->map[id],
+>>                                  config->csv_sep);
+> 
+> I guess that's ok, will that work with higher (3 digit) cpu numbers?
+> 
+> jirka
+> 
+
+Yes, it works with hundreds of CPU. I have tested with that case.
+
+BTW, do you need me to post a separate patch or you will add this fix in 
+your patch series?
+
+Thanks
+Jin Yao
+
+>>                  }
+>>
+>> Following command lines are tested OK.
+>>
+>> perf stat -e cpu/event=cpu-cycles/ -I 1000
+>> perf stat -e cpu/event=cpu-cycles/ -a -I 1000
+>> perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
+>> perf stat -e cpu/event=cpu-cycles,percore/ -a -A -I 1000
+>> perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread -I
+>> 1000
+>>
+>> Could you help to look at that?
+>>
+>> Thanks
+>> Jin Yao
+>>
+> 
