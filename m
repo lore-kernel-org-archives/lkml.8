@@ -2,146 +2,211 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A50C34037
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4115DC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAB421D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fRFCwfYX"
+	by mail.kernel.org (Postfix) with ESMTP id 1756322527
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582021754;
+	bh=8lfCo9JgbsUMnfmswTPY301UU9yeRlXDAewhFt3Z78E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=K5gZBOI50ekzLFm4mY9iNH+JNe+/B4iuZOh5/SaTZZeMLSxYDpihBz5orHD2OHEx6
+	 uoYU6YLObdYW1odhAbQCnJsfKXYZmoevUI0lH9Un+oDtl5Y54rfzhTrh/z5Mva/vBj
+	 RqwDZ5HbaolUV1jkj1l0sS/zXV9DUNqIKbmXOyMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgBRK2N (ORCPT
+        id S1726496AbgBRK3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:28:13 -0500
-Received: from mail-eopbgr1410138.outbound.protection.outlook.com ([40.107.141.138]:41568
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726199AbgBRK2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:28:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=je7CORM9BnzCfIoLTr5oYXK2jc+2i1jwJo4J3MnVbCTJmYnPegtnex067/FsZwHU/OwSZnueUIysH/+iXkGwyChVv0fHhR3rhFxBuGvHgpI1aHSYmSCaaWCK8Aa0p5LVIl+S9fDJ0kQVRzdiUkT8zbpinBJEt+Z67WjdOiSypHWkP4FwrqKmZ9KPNPPbZbRms72ChMg2iBsnute1p+5gm7X71Q4kafZbg3wlbazkLZ1T8Jv1iP1vrv1Nu/lkAmXcIoT2kGD7vQVbjyW3/axuIxQsat8JVAWQsyd1eE7nqbsTTVAYT7gnW8uZRz8vxpYs6aw73E/hGPA+iLZ90z8zBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mebq2VlUGMUaXUxKvQqbGAlqWPaHzBLYdqsi0zKUe8w=;
- b=IXn4/dR0z04tF2B3ItwAMcYrmg0CUGr9GB27++4fG6A2sL4Ibcv1rkxAOSAoPEd5kZFUV8HFgX7GZfeTcSUROFLVNH386s8S4tSajr8UIJ6A2TF76IJJar1iXX169GdaY4Mmm3IKGfnvl2qq8DAxScATH2u+PA1oL5w2vzvHH3Lr3suHElKfhWeF6Mg/vUfkb1YuAG/3BA3qVpgffrHcX3WJA3qz0qLkDRbomDurgIFlRIZ/SuIp8e5EUQxv8/9ou2jwD3NNWLQ7z3S3UWpNa3nlSdvHAgTeY01Acv8pEFaBmKIaSqpjw8bkZpWoy86TkEvBlNqwqO0WjMpKG8Lwsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mebq2VlUGMUaXUxKvQqbGAlqWPaHzBLYdqsi0zKUe8w=;
- b=fRFCwfYX6tk2gtp8tXrGghriPilzEKQOs7sadluF41JQLhTAoos/JWGTrTq0FUCGd4/N3Egq2IvoZhUmNVXVULVtl3KnjnWDxnZ7iTYPhnlHI4f7UZpok3eSBhOPzxsR9l4raPBr/Qc8T3DBp7kV5AIjW2Sut2biLodKQxAv9xU=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2045.jpnprd01.prod.outlook.com (52.133.179.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Tue, 18 Feb 2020 10:28:10 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
- 10:28:10 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     =?iso-8859-1?Q?Niklas_S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Thread-Topic: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Thread-Index: AQHV5MmmLymxK/lC2USJviU/BgNMZagfB0oAgAAkTgCAAOfAAIAAAooggACrKQCAAADSEA==
-Date:   Tue, 18 Feb 2020 10:28:10 +0000
-Message-ID: <TYAPR01MB454433742064C6F15555BFA2D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
- <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
- <20200217101114.GO3013231@oden.dyn.berto.se>
- <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
- <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <20200218102224.GA812084@oden.dyn.berto.se>
-In-Reply-To: <20200218102224.GA812084@oden.dyn.berto.se>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [211.11.155.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f42aa9f5-df2d-46e9-928c-08d7b45d40b2
-x-ms-traffictypediagnostic: TYAPR01MB2045:|TYAPR01MB2045:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB20459631780D60558743795DD8110@TYAPR01MB2045.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 031763BCAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(396003)(366004)(346002)(136003)(189003)(199004)(6506007)(53546011)(2906002)(478600001)(9686003)(186003)(110136005)(316002)(76116006)(7696005)(66946007)(26005)(86362001)(33656002)(55016002)(71200400001)(54906003)(6636002)(8676002)(4326008)(64756008)(52536014)(81156014)(81166006)(66476007)(5660300002)(66556008)(8936002)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2045;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X1SwCjkk1HxqOgLqV4zj9NHDwv5Me8Qz/811WtXrt8xqKxOR0FfRD1cO2edNl0yeEMo5eAaZ7hoKyp81b/MlcpmabNUOpms71u6LakTbbAcK3cYP8VoY4+rfpXnioPQNxD6Alt3Sgbj9LLsrEE2TX3SYdZG6ZU6Pq2aKGYoB6peHhhvyftEzJeYOdL0JEz6NaxZ/ofe6WWBqconmBLUIEwBucl2SJSLGgjeuFZHW3uMxYNGb3SOffN5sq8XKbdtmJiP9zUriabKeAXOsl2V0bBmgqaFloVwCj19bAreZzlYDoP1CBKcOMbvd/Gr0Wza2MvgnoA7x/ic9ZlNeqFR165paH8F9aV5PC10zkbWihGt6ZWOXvKmNEhYG4A/uR56bPA0lk5sKwUPWUy1A5OPgIUNOMWBzFSbzTwiHKom8NFHyTj0s9/sTlH+O/fpzPvOK
-x-ms-exchange-antispam-messagedata: fw/QbyxM8QX8FsZ29YWb6DNX98KVACfZyl4/Jr6fpOvrdAcUYMkKa12Q5kTu2PSOhHAUa/CgScAwKXe9k7eSVy0CDnIOu3A5f/0SFqLUSM1mGxfdTGX9dvwoXxIJ5IEXLP2PftzRbrgD7tGyYfyjsw==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f42aa9f5-df2d-46e9-928c-08d7b45d40b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 10:28:10.5168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eSJNiMHQIpPk4X3rdX/45Hd98ed8a6JIYUeQdVBmmdRihHXDYxnN2inqO6pyINWi0m2RuAKOLXz7D/+rTorVzcs5iitrBZ4WOM8iY6jj85klZkPtv+9Qodb/C1T11hhn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2045
+        Tue, 18 Feb 2020 05:29:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgBRK3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 05:29:12 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C091C21D7D;
+        Tue, 18 Feb 2020 10:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582021751;
+        bh=8lfCo9JgbsUMnfmswTPY301UU9yeRlXDAewhFt3Z78E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=anEayyTALTwnTzWa6RGz9cbR1szMeBbIJFKM3m+FB9jIG49YaxkA5yT1tXTvoiJnS
+         LXse0O+midzMDa+GqvZpRL1qFuCR9+hjJ2SMhKf1ZXcgE4jSGwCHDP5vRMitmzZrTD
+         zPEOqSN45Txc1VHcfXQh8oOoGEXj6IwqIUWBkFxI=
+Date:   Tue, 18 Feb 2020 19:29:05 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
+ real mode
+Message-Id: <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
+In-Reply-To: <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
+References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
+        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
+        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
+        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
+        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+        <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+        <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
+        <20200218094421.6d402de389ce23a55a3ec084@kernel.org>
+        <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Niklas-san,
+On Tue, 18 Feb 2020 06:58:06 +0100
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-> From: Niklas S=F6derlund, Sent: Tuesday, February 18, 2020 7:22 PM
->=20
-> Hello Morimoto-san and Shimoda-san,
->=20
-> Thanks for your feedback.
->=20
-> On 2020-02-18 00:11:03 +0000, Yoshihiro Shimoda wrote:
-> > Hi Niklas-san,
-> >
-> > > From: Kuninori Morimoto, Sent: Tuesday, February 18, 2020 9:01 AM
-> > >
-> > > Hi Niklas
-> > >
-> > > > > +renesas@???
-> > > >
-> > > > I have not used the +renesas@ for my other entry in MAINTAINERS for
-> > > > R-Car VIN and wish them to be the same. I have do not mind if that =
-is
-> > > > with or without the +renesas tag.
-> > > >
-> > > > @Shimoda-san: What would you and Renesas prefer I use?
-> > >
-> > > Please use +renesas@ for Author when you post patches.
-> > > We don't mind for other mail address, like MAINTAINERS.
-> >
-> > I have the same opinion with Morimoto-san.
->=20
-> Ok thanks, good to know my view align with yours.
->=20
-> Could one or both of you provide an Acked-by tag for this patch to bless
-> it?
+> >>>>
+> >>>> What do you mean by 'there' ? At the entry of kprobe_handler() ?
+> >>>>
+> >>>> That's what my patch does, it checks whether MMU is disabled or not. If
+> >>>> it is, it converts the address to a virtual address.
+> >>>>
+> >>>> Do you mean kprobe_handler() should bail out early as it does when the
+> >>>> trap happens in user mode ?
+> >>>
+> >>> Yes, that is what I meant.
+> >>>
+> >>>> Of course we can do that, I don't know
+> >>>> enough about kprobe to know if kprobe_handler() should manage events
+> >>>> that happened in real-mode or just ignore them. But I tested adding an
+> >>>> event on a function that runs in real-mode, and it (now) works.
+> >>>>
+> >>>> So, what should we do really ?
+> >>>
+> >>> I'm not sure how the powerpc kernel runs in real mode.
+> >>> But clearly, at least kprobe event can not handle that case because
+> >>> it tries to access memory by probe_kernel_read(). Unless that function
+> >>> correctly handles the address translation, I want to prohibit kprobes
+> >>> on such address.
+> >>>
+> >>> So what I would like to see is, something like below.
+> >>>
+> >>> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+> >>> index 2d27ec4feee4..4771be152416 100644
+> >>> --- a/arch/powerpc/kernel/kprobes.c
+> >>> +++ b/arch/powerpc/kernel/kprobes.c
+> >>> @@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
+> >>>           unsigned int *addr = (unsigned int *)regs->nip;
+> >>>           struct kprobe_ctlblk *kcb;
+> >>>    
+> >>> -       if (user_mode(regs))
+> >>> +       if (user_mode(regs) || !(regs->msr & MSR_IR))
+> >>>                   return 0;
+> >>>    
+> >>>           /*
+> >>>
+> >>>
+> >>
+> >> With this instead change of my patch, I get an Oops everytime a kprobe
+> >> event occurs in real-mode.
+> >>
+> >> This is because kprobe_handler() is now saying 'this trap doesn't belong
+> >> to me' for a trap that has been installed by it.
+> > 
+> > Hmm, on powerpc, kprobes is allowed to probe on the code which runs
+> > in the real mode? I think we should also prohibit it by blacklisting.
+> > (It is easy to add blacklist by NOKPROBE_SYMBOL(func))
+> 
+> Yes, I see a lot of them tagged with _ASM_NOKPROBE_SYMBOL() on PPC64, 
+> but none on PPC32. I suppose that's missing and have to be added. 
 
-Oops. I should have provided it when I replied...
+Ah, you are using PPC32. 
 
-Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Nevertheless, if one symbol has been forgotten in the blacklist, I think 
+> it is a problem if it generate Oopses.
 
-Best regards,
-Yoshihiro Shimoda
+There is a long history also on x86 to make a blacklist. Anyway, how did
+you get this error on PPC32? Somewhere would you like to probe and
+it is a real mode function? Or, it happened unexpectedly?
 
+> 
+> > Or, some parts are possble to run under both real mode and kernel mode?
+> 
+> I don't think so, at least on PPC32
+
+OK, that's a good news. Also, are there any independent section where such
+real mode functions are stored? (I can see start_real_trampolines in
+sections.h) If that kind of sections are defined, it is easy to make
+a blacklist in arch_populate_kprobe_blacklist(). See arch/arm64/kernel/probes/kprobes.c.
+
+
+> >> So the 'program check' exception handler doesn't find the owner of the
+> >> trap hence generate an Oops.
+> >>
+> >> Even if we don't want kprobe() to proceed with the event entirely
+> >> (allthough it works at least for simple events), I'd expect it to fail
+> >> gracefully.
+> > 
+> > Agreed. I thought it was easy to identify real mode code. But if it is
+> > hard, we should apply your first patch and also skip user handlers
+> > if we are in the real mode (and increment missed count).
+> 
+> user handlers are already skipped.
+
+Yes, if you don't put a kprobes on real mode code. However, if user
+(accidentally) puts a probe on real mode code, it might call a
+user handler?
+
+> 
+> What do you think about my latest proposal below ? If a trap is 
+> encoutered in real mode, if checks if the matching virtual address 
+> corresponds to a valid kprobe. If it is, it skips it. If not, it returns 
+> 0 to tell "it's no me". You are also talking about incrementing the 
+> missed count. Who do we do that ?
+
+I rather like your first patch. If there is a kprobes, we can not skip
+the instruction, because there is an instruction which must be executed.
+(or single-skipped, but I'm not sure the emulator works correctly on
+real mode)
+
+Thank you,
+
+> 
+> 
+> 
+> @@ -264,6 +265,13 @@ int kprobe_handler(struct pt_regs *regs)
+>       if (user_mode(regs))
+>           return 0;
+> 
+> +    if (!(regs->msr & MSR_IR)) {
+> +        if (!get_kprobe(phys_to_virt(regs->nip)))
+> +            return 0;
+> +        regs->nip += 4;
+> +        return 1;
+> +    }
+> +
+>       /*
+>        * We don't want to be preempted for the entire
+>        * duration of kprobe processing
+> 
+> 
+> > 
+> > BTW, can the emulater handle the real mode code correctly?
+> 
+> I don't know, how do I test that ?
+> 
+> Christophe
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
