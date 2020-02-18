@@ -2,173 +2,136 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C95AC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FDC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130B720801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4151724654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EYJNrGWl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ck2dHaLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgBRRRc (ORCPT
+        id S1727020AbgBRRRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:17:32 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52738 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgBRRRa (ORCPT
+        Tue, 18 Feb 2020 12:17:38 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40554 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgBRRRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:17:30 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IHHKY5014972;
-        Tue, 18 Feb 2020 11:17:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582046240;
-        bh=+TJ5/KK2cxl2V9h577y11dsncne9pQ6lzeQkl9kF/2U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EYJNrGWlxkzUzl2W9wb0KDQ3bLbjRkF0cTjuO8rcSWkr3DP6OfUQqWWhuXqJ0PEUT
-         CSO4ub0oGecXzQtRblk+tjzpM4dvnv/GOF/1hCCYiHmhgj83KHwTZIVFIiFlaWZMa4
-         cILf3FHn96HI+wC845eWOGT9hqJfk/d7KuAzEUQU=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IHHK7p052689;
-        Tue, 18 Feb 2020 11:17:20 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 11:17:20 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 11:17:20 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IHHJOf027448;
-        Tue, 18 Feb 2020 11:17:20 -0600
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200204181319.27381-1-dmurphy@ti.com>
- <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
- <170d6518-ea82-08d3-0348-228c72425e64@ti.com>
- <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
- <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
- <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
- <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
- <20200218162522.GH25745@shell.armlinux.org.uk>
- <1346e6b0-1d20-593f-d994-37de87ede891@ti.com>
- <20200218164928.GJ25745@shell.armlinux.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <cba40adb-38b9-2e66-c083-3ca7b570b927@ti.com>
-Date:   Tue, 18 Feb 2020 11:12:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 12:17:37 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n18so23858388ljo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:17:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FouI7HZ504bKO/T8FRzb/PQoWAg9U4L3BBBQW4sgHO0=;
+        b=Ck2dHaLDo/DFp7OZTypsrXOmY6qZHdvkmANMDzfZlRoz8xl+m4guknHB0iuWN6vgk9
+         rcYKC6t1OeiaBACzjmzn8ip6ORAcrxrxzmp3t9q7vCQgqszLNewnrtjJzQ+5BELgqfis
+         vevZaPJw8vankicNryrPrNDtapBBJGhn7+EYqFJ6Ph0uU6vYPHJb1fM0Ms3MEAwFICwF
+         DRqcae3C/bJF3v0B+uLGFbl99ETdrkPv1mkVAOGBnkI8Ivz1AQboNfH7WlwJW0LciaO+
+         LQwNrUO99Of24kmvwH78imh859fGW/bI47VExAUtbah+9xkLiHtmrwfizCD9zgLAkmsc
+         Odqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FouI7HZ504bKO/T8FRzb/PQoWAg9U4L3BBBQW4sgHO0=;
+        b=AZHWoJS10PSAomhGG0pzzlEPzcoN2UtGy7fxhYNe/6qWk7qggwFYWxshgYSB68fX89
+         QPZtO6GDEIjQ8nJW9u0Np8nOxWngZaj7sJTKm/KOOQ0qzKkIsbn8ZZCsBOScd6BLyUqR
+         bqobgXv7fPYo81sB++6rwnlJcXqHKs42xVy9gqyAsIDTOMDGUTrDtiZe+pH+BV69SvSx
+         vAgol1Y6ufNXN+Mgq6iC0Q+ezF0pUxnd9oA9cHJUOAES7JA/VHi9degvmARwpgYf1OnI
+         TUGiC8wOVOBx2g4MedBUlbBYoXdUiCAhPeOyuuc5Mr9fQkvW5jkwqtM07uMBwUEoHPPp
+         3QZA==
+X-Gm-Message-State: APjAAAVeRhBWVVcKWVsKdM3lRE/Gb7I+66OGWuX/vkHtxkJioOuBk44B
+        JmSobDBGDw2y7P7QEYde/ZPiTJHVdcD7+Rk7QYXvlA==
+X-Google-Smtp-Source: APXvYqzFEGNfOz4BXFj8Qxqlu14OZvZjH/IwTtO7j/I4FsZeggmMZjLG1hUnvzsj6gD2JNQbf2bSou6TT8eeUu5yRcI=
+X-Received: by 2002:a2e:b00f:: with SMTP id y15mr13939354ljk.290.1582046254568;
+ Tue, 18 Feb 2020 09:17:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218164928.GJ25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200214224302.229920-1-brianvv@google.com> <8ac06749-491f-9a77-3899-641b4f40afe2@fb.com>
+ <63fa17bf-a109-65c1-6cc5-581dd84fc93b@iogearbox.net> <c8a8d5ca-9b97-68dc-4483-926fd6bddc95@fb.com>
+In-Reply-To: <c8a8d5ca-9b97-68dc-4483-926fd6bddc95@fb.com>
+From:   Brian Vazquez <brianvv@google.com>
+Date:   Tue, 18 Feb 2020 09:17:23 -0800
+Message-ID: <CAMzD94TkwcJrybpmscCdF3OyQ=hcrGOs7QQONSrSMFzXK6otNA@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: Do not grab the bucket spinlock by default on
+ htab batch ops
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux NetDev <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Russell
-
-On 2/18/20 10:49 AM, Russell King - ARM Linux admin wrote:
-> On Tue, Feb 18, 2020 at 10:36:47AM -0600, Dan Murphy wrote:
->> Russell
->>
->> On 2/18/20 10:25 AM, Russell King - ARM Linux admin wrote:
->>> On Fri, Feb 14, 2020 at 12:31:52PM -0600, Dan Murphy wrote:
->>>> Grygorii
->>>>
->>>> On 2/14/20 12:32 PM, Grygorii Strashko wrote:
->>>>> I think it's good idea to have this message as just wrong cable might be
->>>>> used.
->>>>>
->>>>> But this notifier make no sense in it current form - it will produce
->>>>> noise in case of forced 100m/10M.
->>>>>
->>>>> FYI. PHY sequence to update link:
->>>>> phy_state_machine()
->>>>> |-phy_check_link_status()
->>>>>     |-phy_link_down/up()
->>>>>       |- .phy_link_change()->phy_link_change()
->>>>>       |-adjust_link() ----> netdev callback
->>>>> |-phydev->drv->link_change_notify(phydev);
->>>>>
->>>>> So, log output has to be done or in .read_status() or
->>>>> some info has to be saved in .read_status() and then re-used in
->>>>> .link_change_notify().
->>>>>
->>>> OK I will try to find a way to give some sort of message.
->>> How do you know the speed that the PHY downshifted to?
->> The DP83867 has a register PHYSTS where BIT 15:14 indicate the speed that
->> the PHY negotiated.
->>
->> In the same register BIT 13 indicates the duplex mode.
->>
->>> If the speed and duplex are available in some PHY specific status
->>> register, then one way you can detect downshift is to decode the
->>> negotiated speed/duplex from the advertisements (specifically the LPA
->>> read from the registers and the advertisement that we should be
->>> advertising - some PHYs modify their registers when downshifting) and
->>> check whether it matches the negotiated parameters in the PHY
->>> specific status register.
->>>
->>> Alternatively, if the PHY modifies the advertisement register on
->>> downshift, comparing the advertisement register with what it should
->>> be will tell you if downshift has occurred.
->> The ISR register BIT 5 indicates if a downshift occurred or not. So we can
->> indicate that the PHY downshifted but there is no cause in the registers bit
->> field.  My concern for this bit though is the register is clear on read so
->> all other interrupts are lost if we only read to check downshift.  And the
->> link_change_notifier is called before the interrupt ACK call back.  We could
->> call the interrupt function and get the downshift status but again it will
->> clear the interrupt register and any other statuses may be lost.
-> What's wrong with having an ack_interrupt() method that reads the
-> PHY ISR register, and records in a driver private flag that bit 5
-> has been set?  The read_status() method can clear the flag if link
-> goes down, or check the flag if link is up and report that a
-> downshift event occurred.
+On Tue, Feb 18, 2020 at 8:34 AM Yonghong Song <yhs@fb.com> wrote:
 >
-> If IRQs are not in use, then read_status() would have to read the
-> ISR itself.
 >
-> It may be better to move ack_interrupt() to did_interrupt(), which
-> will ensure that it gets executed before the PHY state machine is
-> triggered by phy_interrupt().
 >
-Well now the read_status is becoming a lot more complex.  It would be 
-better to remove the ack_interrupt call back and just have read_status 
-call the interrupt function regardless of interrupts or not.  Because 
-all the interrupt function would be doing is clearing all the interrupts 
-in the ISR register on a link up/down event.  And as you pointed out we 
-can check and set a flag that indicates if a downshift has happened on 
-link up status and clear it on link down. We would need to set the 
-downshift interrupt mask to always report that bit.  As opposed to not 
-setting any interrupts if interrupts are not enabled.  If the user wants 
-to track WoL interrupt or any other feature interrupt we would have to 
-add that flag to the read_status as well seems like it could get a bit 
-out of control.
+> On 2/18/20 7:56 AM, Daniel Borkmann wrote:
+> > On 2/18/20 4:43 PM, Yonghong Song wrote:
+> >> On 2/14/20 2:43 PM, Brian Vazquez wrote:
+> >>> Grabbing the spinlock for every bucket even if it's empty, was causing
+> >>> significant perfomance cost when traversing htab maps that have only a
+> >>> few entries. This patch addresses the issue by checking first the
+> >>> bucket_cnt, if the bucket has some entries then we go and grab the
+> >>> spinlock and proceed with the batching.
+> >>>
+> >>> Tested with a htab of size 50K and different value of populated entries.
+> >>>
+> >>> Before:
+> >>>    Benchmark             Time(ns)        CPU(ns)
+> >>>    ---------------------------------------------
+> >>>    BM_DumpHashMap/1       2759655        2752033
+> >>>    BM_DumpHashMap/10      2933722        2930825
+> >>>    BM_DumpHashMap/200     3171680        3170265
+> >>>    BM_DumpHashMap/500     3639607        3635511
+> >>>    BM_DumpHashMap/1000    4369008        4364981
+> >>>    BM_DumpHashMap/5k     11171919       11134028
+> >>>    BM_DumpHashMap/20k    69150080       69033496
+> >>>    BM_DumpHashMap/39k   190501036      190226162
+> >>>
+> >>> After:
+> >>>    Benchmark             Time(ns)        CPU(ns)
+> >>>    ---------------------------------------------
+> >>>    BM_DumpHashMap/1        202707         200109
+> >>>    BM_DumpHashMap/10       213441         210569
+> >>>    BM_DumpHashMap/200      478641         472350
+> >>>    BM_DumpHashMap/500      980061         967102
+> >>>    BM_DumpHashMap/1000    1863835        1839575
+> >>>    BM_DumpHashMap/5k      8961836        8902540
+> >>>    BM_DumpHashMap/20k    69761497       69322756
+> >>>    BM_DumpHashMap/39k   187437830      186551111
+> >>>
+> >>> Fixes: 057996380a42 ("bpf: Add batch ops to all htab bpf map")
+> >>> Cc: Yonghong Song <yhs@fb.com>
+> >>> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> >>
+> >> Acked-by: Yonghong Song <yhs@fb.com>
+> >
+> > I must probably be missing something, but how is this safe? Presume we
+> > traverse in the walk with bucket_cnt = 0. Meanwhile a different CPU added
+> > entries to this bucket since not locked. Same reader on the other CPU with
+> > bucket_cnt = 0 then starts to traverse the second
+> > hlist_nulls_for_each_entry_safe() unlocked e.g. deleting entries?
+>
+> Thanks for pointing this out. Yes, you are correct. If bucket_cnt is 0
+> and buck->lock is not held, we should skip the
+>     hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+>        ...
+>     }
+> as another cpu may traverse the bucket in parallel by adding/deleting
+> the elements.
 
-Again this is a lot of error prone complex changes and tracking just to 
-populate a message in the kernel log.  There is no guarantee that the LP 
-did not force the downshift or advertise that it supports 1Gbps.  So 
-what condition is really being reported here?  There seems like there 
-are so many different scenarios why the PHY could not negotiate to its 
-advertised 1Gbps.
-
-
-Dan
-
-
+Makes sense. Let me fix it in the next version, thanks for reviewing it!
