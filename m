@@ -2,176 +2,161 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D1EC3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318F6C3403F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701E0207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0214207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zJ9PC+sa"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PzuGy0rl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgBRPQS (ORCPT
+        id S1726795AbgBRPRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:16:18 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55782 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgBRPQS (ORCPT
+        Tue, 18 Feb 2020 10:17:50 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38545 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgBRPRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:16:18 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IFFmX6090741;
-        Tue, 18 Feb 2020 09:15:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582038948;
-        bh=g7CZ22E9Atxx53T54UZaa8VzKxWPPc31ojdRcNza8bc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zJ9PC+saejh46Of6QW2dFH2redqRaK99p/OiX29Vdpq2bwpD+bHlq+E3Fh8yopM99
-         I/26yU3sNuM0HI+54L04lAYpSpW/EcebdbbpnYSFjq8ocZPAFnrgffwUIOYmM5gpUu
-         Uep1knp/sByK6quH10wI4ngBFPboc5v2sPld0XM4=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IFFmUB055288
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 09:15:48 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 09:15:47 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 09:15:47 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IFFi7U067542;
-        Tue, 18 Feb 2020 09:15:44 -0600
-Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
- support
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>
-References: <20200211181005.54008-1-tony@atomide.com>
- <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
- <20200212144620.GJ64767@atomide.com>
- <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
- <20200217232325.GD35972@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
-Date:   Tue, 18 Feb 2020 17:15:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 10:17:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id w1so23392607ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:17:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qWhEX9RKxhypnM5PPqWFOUyYSGe+pegPEe4K7fpUEmA=;
+        b=PzuGy0rlY3m0PILFANKBf4jU07YdevfnTGGFHMjs9F/K8E1yFdiUnUyvR7m8no03/h
+         3pCXn1X+ehHvBcC3Uc3QRYlT/ZjtUhn7I3SiF6yhssc/WTwymLNmQRg8b73Fcm/TzvJd
+         is/qIVvOqL9gFoekZwT0N9mvfC9j0pO39BjX7KBGYqJhCZFbnNX8EIAObEpnQl+Phcx7
+         zKYzVNXnUnHTB1ejNs/Rv9cu1w0ldFPqJDk7qgMGuFprB1XspaTqLRWZSbLGSb07BOOi
+         05unZ2B2QATKxlasmD2FOCEjp2WZ0CNF820QeigP/i2HUW6XVE+i6Uv6tjUzfJEQ9K6Q
+         23Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qWhEX9RKxhypnM5PPqWFOUyYSGe+pegPEe4K7fpUEmA=;
+        b=I7ftrIVfoUDYBOHTSlxmtMoPqttsySGKqTsHZoHidphTi1zFR/hUo/dPfcXIsF5fcv
+         7TojM+Z602vGs2WFcV41bNHTEI8ehOAX+iFMTWfz9j88Xgho4NL2jiYDtaDlNsNMW2BX
+         yTDR9muXLxjDGkBXUqf40Iq//hsJ+wRHlJz4ruskyuHn9ZrLUdR5+RLu2DJzpWEHjyJ7
+         I4aXzM8Sp7trioNMrKbrxLhzGbDiYM5I0TZS4o3N9JbatoBGmRB1XehwX3tVqoMG9m8H
+         5SHsUxiVcXX9Aks9lqS9wNp93TpJUDiYN9r5THm+dBGPywiB8GGD3gPA9hK6sPE/X9Xw
+         uTqg==
+X-Gm-Message-State: APjAAAVJJHytn93iXFZsgjJIXvrjxiHTniJlfIWNGI9J4OUIlCQiUTkS
+        J4Cgi8vqK+qhdR9TTrm7Kb9itQ==
+X-Google-Smtp-Source: APXvYqwmDGsCUfLrJ8biBI5KsgtzZAXb+nMk2XFsea2b0gKSENYf0OwiYFWttt/aHElu78KUASDZmg==
+X-Received: by 2002:a05:651c:239:: with SMTP id z25mr12797943ljn.48.1582039067743;
+        Tue, 18 Feb 2020 07:17:47 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id g15sm2747705ljk.8.2020.02.18.07.17.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 07:17:47 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 74291100FA3; Tue, 18 Feb 2020 18:18:13 +0300 (+03)
+Date:   Tue, 18 Feb 2020 18:18:13 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH -next] fork: annotate a data race in vm_area_dup()
+Message-ID: <20200218151813.3yzzb2hzlmtbf5xg@box>
+References: <20200218103002.6rtjreyqjepo3yxe@box>
+ <93E6B243-9A0F-410C-8EE4-9D57E28AF5AF@lca.pw>
+ <CANpmjNO320YvGvUfBkWJFnv+QwZy=B0GG=WAMKv7ZOJ2UYFkPg@mail.gmail.com>
+ <1582038035.7365.93.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20200217232325.GD35972@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1582038035.7365.93.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
-
-On 18/02/2020 1.23, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200214 13:30]:
->> Hi Tony,
->>
->> On 12/02/2020 16.46, Tony Lindgren wrote:
->>> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 09:18]:
->>>> On 11/02/2020 20.10, Tony Lindgren wrote:
->>>>> +static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
->>>>> +				    unsigned int tx_mask, unsigned int rx_mask,
->>>>> +				    int slots, int slot_width)
->>>>> +{
->>>>> +	struct snd_soc_component *component = dai->component;
->>>>> +	struct cpcap_audio *cpcap = snd_soc_component_get_drvdata(component);
->>>>> +	int err, ts_mask, mask;
->>>>> +	bool voice_call;
->>>>> +
->>>>> +	/*
->>>>> +	 * Primitive test for voice call, probably needs more checks
->>>>> +	 * later on for 16-bit calls detected, Bluetooth headset etc.
->>>>> +	 */
->>>>> +	if (tx_mask == 0 && rx_mask == 1 && slot_width == 8)
->>>>> +		voice_call = true;
->>>>> +	else
->>>>> +		voice_call = false;
->>>>
->>>> You only have voice call if only rx slot0 is in use?
->>>
->>> Yeah so it seems. Then there's the modem to wlcore bluetooth path that
->>> I have not looked at. But presumably that's again just configuring some
->>> tdm slot on the PMIC.
->>>
->>>> If you record mono on the voice DAI, then rx_mask is also 1, no?
->>>
->>> It is above :) But maybe I don't follow what you're asking here
->>
->> If you arecrod -Dvoice_pcm -c1 -fS8 > /dev/null
->> then it is reasonable that the machine driver will set rx_mask = 1
->>
->>> and maybe you have some better check in mind.
->>
->> Not sure, but relying on set_tdm_slots to decide if we are in a call
->> case does not sound right.
+On Tue, Feb 18, 2020 at 10:00:35AM -0500, Qian Cai wrote:
+> On Tue, 2020-02-18 at 15:09 +0100, Marco Elver wrote:
+> > On Tue, 18 Feb 2020 at 13:40, Qian Cai <cai@lca.pw> wrote:
+> > > 
+> > > 
+> > > 
+> > > > On Feb 18, 2020, at 5:29 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > > > 
+> > > > I think I've got this:
+> > > > 
+> > > > vm_area_dup() blindly copies all fields of orignal VMA to the new one.
+> > > > This includes coping vm_area_struct::shared.rb which is normally protected
+> > > > by i_mmap_lock. But this is fine because the read value will be
+> > > > overwritten on the following __vma_link_file() under proper protectection.
+> > > 
+> > > Right, multiple processes could share the same file-based address space where those vma have been linked into address_space::i_mmap via vm_area_struct::shared.rb. Thus, the reader could see its shared.rb linkage pointers got updated by other processes.
+> > > 
+> > > > 
+> > > > So the fix is correct, but justificaiton is lacking.
+> > > > 
+> > > > Also, I would like to more fine-grained annotation: marking with
+> > > > data_race() 200 bytes copy may hide other issues.
+> > > 
+> > > That is the harder part where I don’t think we have anything for that today. Macro, any suggestions? ASSERT_IGNORE_FIELD()?
+> > 
+> > There is no nice interface I can think of. All options will just cause
+> > more problems, inconsistencies, or annoyances.
+> > 
+> > Ideally, to not introduce more types of macros and keep it consistent,
+> > ASSERT_EXCLUSIVE_FIELDS_EXCEPT(var, ...) maybe what you're after:
+> > "Check no concurrent writers to struct, except ignore the provided
+> > fields".
+> > 
+> > This option doesn't quite work, unless you just restrict it to 1 field
+> > (we can't use ranges, because e.g. vm_area_struct has
+> > __randomize_layout). The next time around, you'll want 2 fields, and
+> > it won't work. Also, do we know that 'shared.rb' is the only thing we
+> > want to ignore?
+> > 
+> > If you wanted something similar to ASSERT_EXCLUSIVE_BITS, it'd have to
+> > be ASSERT_EXCLUSIVE_FIELDS(var, ...), however, this is quite annoying
+> > for structs with many fields as you'd have to list all of them. It's
+> > similar to what you can already do currently (but I also don't
+> > recommend because it's unmaintainable):
+> > 
+> > ASSERT_EXCLUSIVE_WRITER(orig->vm_start);
+> > ASSERT_EXCLUSIVE_WRITER(orig->vm_end);
+> > ASSERT_EXCLUSIVE_WRITER(orig->vm_next);
+> > ASSERT_EXCLUSIVE_WRITER(orig->vm_prev);
+> > ... and so on ...
+> > *new = data_race(*orig);
+> > 
+> > Also note that vm_area_struct has __randomize_layout, which makes
+> > using ranges impossible. All in all, I don't see a terribly nice
+> > option.
+> > 
+> > If, however, you knew that there are 1 or 2 fields only that you want
+> > to make sure are not modified concurrently, ASSERT_EXCLUSIVE_WRITER +
+> > data_race() would probably work well (or even ASSERT_EXCLUSIVE_ACCESS
+> > if you want to make sure there are no writers nor _readers_).
 > 
-> OK yeah seems at least bluetooth would need to be also handled
-> in the set_tdm_slots.
-
-set_tdm_slots() is for setting how the TDM slots supposed to be used by
-the component and not really for things to configure different operating
-modes.
-
-If you hardwire things in set_tdm_slots() for the droid4 then how the
-codec driver can be reused in other setups?
-
->>>> You will also set the sampling rate for voice in
->>>> cpcap_voice_hw_params(), but that is for normal playback/capture, right?
->>>
->>> Yeah so normal playback/capture is already working with cpcap codec driver
->>> with mainline Linux. The voice call needs to set rate to 8000.
->>
->> But if you have a voice call initiated should not the rate be set by the
->> set_sysclk()?
+> I am testing an idea that just do,
 > 
-> Hmm does set_sysclk called from modem codec know that cpcap codec
-> is the clock master based on bitclock-master and set the rate
-> for cpcap codec?
-
-Neither component should call set_sysclk, set_tdm_slots. The machine
-driver should as it is the only one who know how things are wired...
-
+> lockdep_assert_held_write(&orig->vm_mm->mmap_sem);
+> *new = data_race(*orig);
 > 
->>>> It feels like that these should be done via DAPM with codec to codec route?
->>>
->>> Sure if you have some better way of doing it :) Do you have an example to
->>> point me to?
->>
->> Something along the lines of:
->> https://mailman.alsa-project.org/pipermail/alsa-devel/2020-February/162915.html
->>
->> The it is a matter of building and connecting the DAPM routes between
->> the two codec and with a flip of the switch you would have audio flowing
->> between them.
-> 
-> Sounds good to me.
-> 
-> Tony
-> 
+> The idea is that as long as we have the exclusive mmap_sem held in all paths
+> (auditing indicated so), no writer should be able to mess up our vm_area_struct
+> except the "shared.rb" field which has no harm.
 
-- Péter
+Well, some fields protected by page_table_lock and can be written to
+without exclusive mmap_sem. Probably even without any mmap_sem: pin
+mm_struct + page_table_lock should be enough.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+ Kirill A. Shutemov
