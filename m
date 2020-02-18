@@ -2,95 +2,172 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8FCC3404D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4376EC3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F28208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582070049;
-	bh=sVFef4PzqftuGRief/QBL+AuxajuMta5Rk9EY8Z0RIg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=sc8emasXiVzONiYiToLOqiCAxK6WgH/LvKq5A0GgVN/jtOi0B0FMiXFGg7fn+fNV0
-	 vniunzgMHg6m7Bsr035ctJFTmRS3WAftwLlTBAHkJ5dSMd5U1FfCkZtxN74G/RqSi9
-	 uPlMlTBee1LIeWVFRDLDTzFszB0Wcrslzx+EzEBc=
+	by mail.kernel.org (Postfix) with ESMTP id 231D5208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgBRXyI (ORCPT
+        id S1727597AbgBRXyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:54:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 18:54:32 -0500
+Received: from mga06.intel.com ([134.134.136.31]:37582 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbgBRXyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:54:07 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1CA2068F;
-        Tue, 18 Feb 2020 23:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582070047;
-        bh=sVFef4PzqftuGRief/QBL+AuxajuMta5Rk9EY8Z0RIg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ysC1+TgxWDsLsphReqqFT1BVqWJ9vnlLOGNZQt3e1XxQH4rY6Li/ezz7z0Evioru1
-         bDn/h6UG/J7T5F1SL3FFSpKqswxoNaCvn8qXP7KnY5Up9WAVAkNEs5KLF1ad5dhuUN
-         v1yHV1aqaNPY34IMZoPTKF2QuGCIq0qmZT2XRdw0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DBF4F3520856; Tue, 18 Feb 2020 15:54:06 -0800 (PST)
-Date:   Tue, 18 Feb 2020 15:54:06 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
- rcu_tasks_cbs_head
-Message-ID: <20200218235406.GO2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200215002520.15746-1-paulmck@kernel.org>
- <20200217123851.GR14914@hirez.programming.kicks-ass.net>
- <20200217181615.GP2935@paulmck-ThinkPad-P72>
- <20200218075648.GW14914@hirez.programming.kicks-ass.net>
- <20200218162719.GE2935@paulmck-ThinkPad-P72>
- <20200218201142.GF11457@worktop.programming.kicks-ass.net>
- <20200218202226.GJ2935@paulmck-ThinkPad-P72>
- <20200218174503.3d4e4750@gandalf.local.home>
- <20200218225455.GN2935@paulmck-ThinkPad-P72>
- <20200218181323.4a102fe7@gandalf.local.home>
+        id S1726716AbgBRXyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:54:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:54:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="408252387"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 18 Feb 2020 15:54:30 -0800
+Date:   Tue, 18 Feb 2020 15:54:30 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
+References: <20200213195839.GG6870@magnolia>
+ <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
+ <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
+ <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+ <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+ <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
+ <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
+ <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
+ <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218181323.4a102fe7@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 06:13:23PM -0500, Steven Rostedt wrote:
-> On Tue, 18 Feb 2020 14:54:55 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
+> Ira Weiny <ira.weiny@intel.com> writes:
 > 
-> >     This data race was reported by KCSAN.  Not appropriate for backporting
-> >     due to failure being unlikely and due to the mild consequences of the
-> >     failure, namely a confusing rcutorture console message.
-> >     
+> > Yep...  and a long weekend if you are in the US...  I ran the test with V4 and
+> > got the panic below.
+> >
+> > Is this similar to what you see?  If so I'll work on it in V4.  FWIW with '-o
 > 
-> I've seen patches backported for less. :-/
-> 
-> Really, any statement that says something may go awry with the code,
-> will be an argument to backport it.
+> Yes, precisely.
 
-You aren't kidding!  Rumor has it that someone tried backporting the
-RCU flavor-consolidation work, for but one example.  Though I cannot
-help but salute the level of insanity represented by that attempt.  ;-)
+Ok...
 
-							Thanx, Paul
+> 
+> > dax' specified I don't see how fsstress is causing an issue with my patch set.
+> > Does fsstress attempt to change dax states?  I don't see that in the test but
+> > I'm not real familiar with generic/013 and fsstress.
+> 
+> Not that I'm aware of, no.
+> 
+> > If my disassembly of read_pages is correct it looks like readpage is null which
+> > makes sense because all files should be IS_DAX() == true due to the mount option...
+> >
+> > But tracing code indicates that the patch:
+> >
+> > 	fs: remove unneeded IS_DAX() check
+> >
+> > ... may be the culprit and the following fix may work...
+> >
+> > diff --git a/mm/filemap.c b/mm/filemap.c
+> > index 3a7863ba51b9..7eaf74a2a39b 100644
+> > --- a/mm/filemap.c
+> > +++ b/mm/filemap.c
+> > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+> >         if (!count)
+> >                 goto out; /* skip atime */
+> >  
+> > -       if (iocb->ki_flags & IOCB_DIRECT) {
+> > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
+> >                 struct file *file = iocb->ki_filp;
+> >                 struct address_space *mapping = file->f_mapping;
+> >                 struct inode *inode = mapping->host;
+> 
+> Well, you'll have to up-level the inode variable instantiation,
+> obviously.  That solves this particular issue.
+
+Well...  This seems to be a random issue.  I've had BMC issues with
+my server most of the day...  But even with this patch I still get the failure
+in read_pages().  :-/
+
+And I have gotten it to both succeed and fail with qemu...  :-/
+
+> The next traceback
+> you'll hit is in the writeback path:
+
+> 
+> [  116.044545] ------------[ cut here ]------------
+> [  116.049163] WARNING: CPU: 48 PID: 4469 at fs/dax.c:862 dax_writeback_mapping_range+0x397/0x530
+> ...
+> [  116.134509] CPU: 48 PID: 4469 Comm: fsstress Not tainted 5.6.0-rc1+ #43
+> [  116.141121] Hardware name: Intel Corporation S2600WFD/S2600WFD, BIOS SE5C620.86B.0D.01.0395.022720191340 02/27/2019
+> [  116.151549] RIP: 0010:dax_writeback_mapping_range+0x397/0x530
+> [  116.157294] Code: ff ff 31 db 48 8b 7c 24 28 c6 07 00 0f 1f 40 00 fb 48 8b 7c 24 10 e8 98 fc 29 00 0f 1f 44 00 00 e9 f1 fc ff ff 4c 8b 64 24 08 <0f> 0b be fb ff ff ff 4c 89 e7 e8 fa 87 ed ff f0 41 80 8c 24 80 00
+> [  116.176036] RSP: 0018:ffffb9b162fa7c18 EFLAGS: 00010046
+> [  116.181261] RAX: 0000000000000000 RBX: 00000000000001ac RCX: 0000000000000020
+> [  116.188387] RDX: 0000000000000000 RSI: 00000000000001ac RDI: ffffb9b162fa7c40
+> [  116.195519] RBP: 0000000000000020 R08: ffff9a73dc24d6b0 R09: 0000000000000020
+> [  116.202648] R10: 0000000000000000 R11: 0000000000000238 R12: ffff9a73d92c66b8
+> [  116.209774] R13: ffffe4a09f0cb200 R14: 0000000000000000 R15: ffffe4a09f0cb200
+> [  116.216907] FS:  00007f2dbcd22b80(0000) GS:ffff9a7420c00000(0000) knlGS:0000000000000000
+> [  116.224992] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  116.230735] CR2: 00007fa21808b648 CR3: 000000179e0a2003 CR4: 00000000007606e0
+> [  116.237860] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  116.244990] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  116.252115] PKRU: 55555554
+> [  116.254827] Call Trace:
+> [  116.257286]  do_writepages+0x41/0xd0
+> [  116.260862]  __filemap_fdatawrite_range+0xcb/0x100
+> [  116.265653]  filemap_write_and_wait_range+0x38/0x90
+> [  116.270579]  xfs_setattr_size+0x2c2/0x3e0 [xfs]
+> [  116.275126]  xfs_file_fallocate+0x239/0x440 [xfs]
+> [  116.279831]  ? selinux_file_permission+0x108/0x140
+> [  116.284622]  vfs_fallocate+0x14d/0x2f0
+> [  116.288374]  ksys_fallocate+0x3c/0x80
+> [  116.292039]  __x64_sys_fallocate+0x1a/0x20
+> [  116.296139]  do_syscall_64+0x55/0x1d0
+> [  116.299806]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  116.304856] RIP: 0033:0x7f2dbc21983b
+> [  116.308435] Code: ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 8d 05 25 0e 2d 00 49 89 ca 8b 00 85 c0 75 14 b8 1d 01 00 00 0f 05 <48> 3d 00 f0 ff ff 77 5d c3 0f 1f 40 00 41 55 49 89 cd 41 54 49 89
+> 
+> That's here:
+> 
+>         /*
+>          * A page got tagged dirty in DAX mapping? Something is seriously
+>          * wrong.
+>          */
+>         if (WARN_ON(!xa_is_value(entry)))
+>                 return -EIO;
+
+I have not gotten this.  Having to walk to the lab to power cycle the machine
+has slowed my progress...
+
+Ira
+
+> 
+> Cheers,
+> Jeff
+> 
