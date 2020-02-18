@@ -2,127 +2,177 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD16C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73040C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61672176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5BB2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rinj2lVT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vaqzdOM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgBRUQP (ORCPT
+        id S1727862AbgBRURV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:16:15 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38617 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBRUQN (ORCPT
+        Tue, 18 Feb 2020 15:17:21 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.102]:27768 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726772AbgBRURQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:13 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a9so4329980wmj.3;
-        Tue, 18 Feb 2020 12:16:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JbsLBIjey08BbMjYFR6nJwXmiiRgfHCLvVuuHl3uFUI=;
-        b=Rinj2lVTWNz7/BNm1zAxBIspri2k1m14YWUmAPlw7jt/8CCHBQSR5Dbk/02hp8P6X9
-         tgJ2kdvS8tG8qqlB0ZjvaayEFISKmKclWsZQkds47pEc4+bKJkZzeeN706uNtH4B03Oe
-         WHJX3/eYAM7VavLRXdpNBS025IBlEkiQVDNQPqD7BAdl2wbNqGpukdIp60clYjW/ugAU
-         Ktq36jx1SiM+3w5TGg3ycKXe+992MGlCeU38o/CP/1ShA4FzOQl0wGxfaOpCN1ZwEs5O
-         LTXU6ytVHGc01+vr7xEX+6UySWu+C1PIyFHJ5Ncj/mtljJMXbyg8py8Rw3G8d7X+yZiS
-         D3AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JbsLBIjey08BbMjYFR6nJwXmiiRgfHCLvVuuHl3uFUI=;
-        b=GB5zp7M4NB9kR1Lizs29dWVTxla+yOPXt5U+RRw6Rp2GVmSnZyKg7vB4/4sDvIbJIP
-         Q+chRS8KR+FdKrELGnpXrrxSDk0Pgf2HIGs9T35+6exVvpnvquG17hB5Fgu4OOtqpJ2f
-         bdXIj+NGVFa16bYY08yC+tQrsNyCckdQb3396TzgBaRSsQBIzT5fAhZB2DN8Jhtcndlo
-         eF9Px0J+O87rb66PzDImz06VKt5rt0zIGAzbmJ89SQHkT79oO5C+FRu/evPFq+P4DWMk
-         1EYaAKX/p2vZHzRv20lTh9ew0MwZaIwu0WwJvwSrXIcRnFTqAGBmtLS2+zpnJEylO96Q
-         Ky9g==
-X-Gm-Message-State: APjAAAX85m8ujm75fgRt8rn8MX5CCOOSOkn8BFVgHdX7OSw5GHZFXGFk
-        F2qtFC1Eq5ub6cAqiiVdO5uelPg9
-X-Google-Smtp-Source: APXvYqxI/VJcYjsYm7gpnuCDb5HwGwkesJn3QsGVBgmcDSCjVOiM3MpKgLzznSNQvZjj5YglEYytpw==
-X-Received: by 2002:a1c:a382:: with SMTP id m124mr4906128wme.90.1582056971147;
-        Tue, 18 Feb 2020 12:16:11 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id f8sm7651895wru.12.2020.02.18.12.16.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:10 -0800 (PST)
-Subject: [PATCH net-next v2 03/13] net: atheros: use new helper
- tcp_v6_gso_csum_prep
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     David Miller <davem@davemloft.net>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <45c910c2-36ed-2557-ac35-cb978e44cbf4@gmail.com>
-Date:   Tue, 18 Feb 2020 20:59:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 15:17:16 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 2844EB4BC5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:17:14 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 49IwjkLnSEfyq49IwjsO0X; Tue, 18 Feb 2020 14:17:14 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hSonzuSC9I+gp7SbsXv5MLaN7QKhuqhe9ZSmdoBwwj4=; b=vaqzdOM3utWVwKGJpO/ksgySbi
+        ATVfEyGZmn5a4DHT6cm63x215cHRxy8PdFD5R3IozmxO3YL8Uzm6J+m+II3nZKM5sXNZAaA1gLCao
+        mEn7+JFihz0Z5qzzpLdJ9WE7hUbCocPFi/+S3K1K/5ZSVGxZA10cymnYB8Rs6xhqYG3Id5W6zZnPe
+        ZBf2ExqNaeVnlJcbLyXwfp5kFuRpHRl8J7NK9gRdIDZmsGiLRXY5x1yoEa0irS0g7FRGVjfjIY+eg
+        OcdtbRqh1XtVWPjV3ZQoKfh9N2+koF55FCis/3NCAn4SNIVIsZcA0KpddyZm+eVyZ5MOmGIDY6ee3
+        /2OvMdpQ==;
+Received: from [200.68.140.26] (port=8476 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j49Iv-000BM2-P3; Tue, 18 Feb 2020 14:17:13 -0600
+Subject: Re: [PATCH][next] net/mlx5: IPsec, Replace zero-length array with
+ flexible-array member
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200217195434.GA1166@embeddedor> <20200218163522.GB11536@unreal>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <2c0b59b6-7897-6618-a72c-8306f42709f6@embeddedor.com>
+Date:   Tue, 18 Feb 2020 14:19:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+In-Reply-To: <20200218163522.GB11536@unreal>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.26
+X-Source-L: No
+X-Exim-ID: 1j49Iv-000BM2-P3
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.140.26]:8476
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new helper tcp_v6_gso_csum_prep in additional network drivers.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/atheros/alx/main.c         | 5 +----
- drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 6 ++----
- 2 files changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index 1dcbc486e..b9b4edb91 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1416,10 +1416,7 @@ static int alx_tso(struct sk_buff *skb, struct alx_txd *first)
- 							 0, IPPROTO_TCP, 0);
- 		first->word1 |= 1 << TPD_IPV4_SHIFT;
- 	} else if (skb_is_gso_v6(skb)) {
--		ipv6_hdr(skb)->payload_len = 0;
--		tcp_hdr(skb)->check = ~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
--						       &ipv6_hdr(skb)->daddr,
--						       0, IPPROTO_TCP, 0);
-+		tcp_v6_gso_csum_prep(skb);
- 		/* LSOv2: the first TPD only provides the packet length */
- 		first->adrl.l.pkt_len = skb->len;
- 		first->word1 |= 1 << TPD_LSO_V2_SHIFT;
-diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-index 4c0b1f855..0d67b951c 100644
---- a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-+++ b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-@@ -2025,10 +2025,8 @@ static int atl1c_tso_csum(struct atl1c_adapter *adapter,
- 						"IPV6 tso with zero data??\n");
- 				goto check_sum;
- 			} else
--				tcp_hdr(skb)->check = ~csum_ipv6_magic(
--						&ipv6_hdr(skb)->saddr,
--						&ipv6_hdr(skb)->daddr,
--						0, IPPROTO_TCP, 0);
-+				tcp_v6_gso_csum_prep(skb);
-+
- 			etpd->word1 |= 1 << TPD_LSO_EN_SHIFT;
- 			etpd->word1 |= 1 << TPD_LSO_VER_SHIFT;
- 			etpd->pkt_len = cpu_to_le32(skb->len);
--- 
-2.25.1
 
 
+On 2/18/20 10:35, Leon Romanovsky wrote:
+> On Mon, Feb 17, 2020 at 01:54:34PM -0600, Gustavo A. R. Silva wrote:
+>> The current codebase makes use of the zero-length array language
+>> extension to the C90 standard, but the preferred mechanism to declare
+>> variable-length types such as these ones is a flexible array member[1][2],
+>> introduced in C99:
+>>
+>> struct foo {
+>>         int stuff;
+>>         struct boo array[];
+>> };
+>>
+>> By making use of the mechanism above, we will get a compiler warning
+>> in case the flexible array does not occur last in the structure, which
+>> will help us prevent some kind of undefined behavior bugs from being
+>> inadvertently introduced[3] to the codebase from now on.
+>>
+>> Also, notice that, dynamic memory allocations won't be affected by
+>> this change:
+>>
+>> "Flexible array members have incomplete type, and so the sizeof operator
+>> may not be applied. As a quirk of the original implementation of
+>> zero-length arrays, sizeof evaluates to zero."[1]
+>>
+>> This issue was found with the help of Coccinelle.
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Can you please do one patch for whole mlx5,
+> instead of many identical patches?
+> 
+
+Sure thing. I can do that.
+
+Thanks
+--
+Gustavo
