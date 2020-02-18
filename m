@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A313C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F3C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2C22465D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C10E24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056036;
-	bh=mgL7HSGN6Ip5HwbugGrUQYfFeYcitgxBsLwi6J77rxo=;
+	s=default; t=1582056038;
+	bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YH9Yg1pSpyfLs/EWibQqc4I/Zg7T5IML79PyUZI3CHncI/QnN4kSE03MSUzl+NdEo
-	 AcQ+NljeOX8vHmxDV+AE+8xBKfGZeGHaAke1HczB0h0ySsKc0hwlmpZhuh/ZLTUG3/
-	 bMfkO7FrrHsMnfzfgx9n30wjZHjCuxJln+Gm9RyY=
+	b=o650aTqt+zNrSsgjYwzertdvNdfPH0ZkfgxUEcZ6DzBWiOiS6nXzSe8+c88yUhv9H
+	 wLRiNEgKN8haoRB9vI8Dj0bjk1ZVR3hrJ9vrZxPyAVUpFL+8fJDC/l/TpqNVEz7qhA
+	 fNB+EVzBjjF17pYL7ZG5bbSzIX9gz0+KUQDCe6X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgBRUAe (ORCPT
+        id S1728632AbgBRUAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgBRUA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:28 -0500
+        id S1728117AbgBRUAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155F82464E;
-        Tue, 18 Feb 2020 20:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC392464E;
+        Tue, 18 Feb 2020 20:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056027;
-        bh=mgL7HSGN6Ip5HwbugGrUQYfFeYcitgxBsLwi6J77rxo=;
+        s=default; t=1582056034;
+        bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oi+6oVhCyf1n74NhQBJyAfuV08sgL68hji/1NjAbGUStfg5dEMv/QVSVN3RXkKtQd
-         4I5tVBDI45Y+x9l7ai8OZTJlAYYGwahIUu70h2wsezC0yVWLizpX7FUEWmurAiEoZM
-         stJ+ESXitc3wXVw4ZGN77pbEjzPkP6bYjzRo7qAY=
+        b=pZ8MvAqDIasbfFv8dVLAcTBtgnWBTjJeqqkjHxvdwpygtbHzG01bMRsCLPJIaKpGY
+         tSCOFouYgG89JrFX04XZIhgGhLxHUV4LfLTvtobYD73SPYzOT61vshPhbxdTb3Vvoc
+         BHmBQAw/k0GTG5boDW60I/thTMsDSzBlCcd0IViE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 59/66] NFSv4.1 make cachethis=no for writes
-Date:   Tue, 18 Feb 2020 20:55:26 +0100
-Message-Id: <20200218190433.535496148@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 10/80] ALSA: hda/realtek - Fix silent output on MSI-GL73
+Date:   Tue, 18 Feb 2020 20:54:31 +0100
+Message-Id: <20200218190433.075335833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
+In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
+References: <20200218190432.043414522@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,32 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit cd1b659d8ce7697ee9799b64f887528315b9097b upstream.
+commit 7dafba3762d6c0083ded00a48f8c1a158bc86717 upstream.
 
-Turning caching off for writes on the server should improve performance.
+MSI-GL73 laptop with ALC1220 codec requires a similar workaround for
+Clevo laptops to enforce the DAC/mixer connection path.  Set up a
+quirk entry for that.
 
-Fixes: fba83f34119a ("NFS: Pass "privileged" value to nfs4_init_sequence()")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204159
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200212081047.27727-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5293,7 +5293,7 @@ static void nfs4_proc_write_setup(struct
- 	hdr->timestamp   = jiffies;
- 
- 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_WRITE];
--	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 1, 0);
-+	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
- 	nfs4_state_protect_write(server->nfs_client, clnt, msg, hdr);
- }
- 
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
++	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+ 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
 
 
