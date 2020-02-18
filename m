@@ -2,77 +2,91 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FF9C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA83CC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E625B20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC86220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgBRFOj (ORCPT
+        id S1726127AbgBRFUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:14:39 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59275 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725909AbgBRFOi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:14:38 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C708D3A1BE6;
-        Tue, 18 Feb 2020 16:14:35 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j3vDP-0005sZ-7K; Tue, 18 Feb 2020 16:14:35 +1100
-Date:   Tue, 18 Feb 2020 16:14:35 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 05/19] mm: Remove 'page_offset' from readahead loop
-Message-ID: <20200218051435.GK10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-8-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-8-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=JuDxSlhT3OO6blO4plAA:9
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        Tue, 18 Feb 2020 00:20:51 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:59986 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbgBRFUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 00:20:50 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F27171A3729;
+        Tue, 18 Feb 2020 06:20:48 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B51CC1A3707;
+        Tue, 18 Feb 2020 06:20:43 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2AD4140245;
+        Tue, 18 Feb 2020 13:20:37 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] arm64: dts: imx8mp-evk: Add GPIO LED support
+Date:   Tue, 18 Feb 2020 13:14:59 +0800
+Message-Id: <1582002899-21391-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:48AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Eliminate the page_offset variable which was confusing with the
-> 'offset' parameter and record the start of each consecutive run of
-> pages in the readahead_control.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  mm/readahead.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+i.MX8MP EVK board has a GPIO LED to indicate status, add support for it.
 
-Looks ok, but having the readahead dispatch out of line from the
-case that triggers it makes it hard to follow.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Cheers,
-
-Dave.
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+index 6df3beb..a97a03c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -15,6 +15,18 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_led>;
++
++		status {
++			label = "yellow:status";
++			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++
+ 	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0 0xc0000000>,
+@@ -120,6 +132,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_gpio_led: gpioledgrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16	0x19
++		>;
++	};
++
+ 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19	0x41
 -- 
-Dave Chinner
-david@fromorbit.com
+2.7.4
+
