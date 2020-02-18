@@ -2,159 +2,76 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E23C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A12BC3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75ED92176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:21:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pVwRuh4B"
+	by mail.kernel.org (Postfix) with ESMTP id 3A8A221D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582035767;
+	bh=LzzH1+A9k81pYpE+xt8iuTzMyoqX7NohKSq641i4n7k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=P8WtsD9elUJv1kToRX9TY7s3BA1ujowu75ATBMrvhJ7E4tAQvv/gMttGckWAAOiE0
+	 eCDc5KKiui+79hJe6UTVn8N69z57Y0/JGjbiwuK3Q8pIoNh3EbMG3NPbsYTr1rPSDm
+	 HDGxbbr+N7oShTN539gXD59f/1wbHOs8Cbej0Eq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgBROVF (ORCPT
+        id S1726650AbgBROWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:21:05 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41579 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgBROVE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:21:04 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d11so19572621qko.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oQ5uMvj46YJt8du9hHYIxA2AHiZ2qf4UtK0vshdPA7k=;
-        b=pVwRuh4BaTn8YPjr2IxIwRAmmQKxPSCA61udn+YRyUJNFsLAVCbihPsf7i75uhUwbr
-         +0fs1RaV4qLf9li0eukOM5+LEaNAwgkcriWirfC0RF6txXF1SBd8esVOjADSEoZO+Wr0
-         /X01M29q8Bi1V8jFSz2+vsig87KwPaoILhBOuAUkTvLaO+AZ7yOXfWej+eBeJXiLuyg7
-         FJGgckZGhgHDiGaof0+31va7N2CnPPuELXoWnsc1ctExVXUBp9Qbbxngeea1NHJmLFUa
-         Fdpjgmod1Ih1wjBMZnE5deA9PivD7MmcRKe6cQoK6wOoF0Pc26hA+6PbHq5IdbLEtNDP
-         pXhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oQ5uMvj46YJt8du9hHYIxA2AHiZ2qf4UtK0vshdPA7k=;
-        b=JvHsUNANdzurmvr7VJzWNuEIZCXfql8lDxLgWGwVykTkQqa7LkawkEXmUQKcY+VRZP
-         t5xcAy8f2M4lNGQ8a1vGh9ETfgiTX0oQhqZjNlnBGAztEg0c0a0cLGvL/il49G/RPrAR
-         3QVeWL4SOfW5t+e8ayol/RU0Zo5ziGZ7+JIU8P3Oj8dlfVNVcESjKrWZeae1StxKFgId
-         iV3lNOr+hHMgOge0debmFLb9sbuDb2CNnbOAB8Nl62oKoPmugoC/pOijZzQl6QbKL+62
-         YRnXF8I2jTr2JIamE1uVA0Bp6z/Q2wkICIY2QEfc10qxEukfBk2CWacoLIP02A3ECmy/
-         6dqg==
-X-Gm-Message-State: APjAAAVFYxqP9zKz39xggF/8/c8lIoZbuUVLsUabhklAV5KcFZDaWutK
-        3SkXjhh67XMf4hoWRDl2rRQBfA==
-X-Google-Smtp-Source: APXvYqzi+ZyeIa0ShCT4V+bcuLrOAzliPevTmxjHuIzAagLNkXUxzGqFIjS23L1FVBe5nLBjzfoN0w==
-X-Received: by 2002:a37:9186:: with SMTP id t128mr17685805qkd.180.1582035661956;
-        Tue, 18 Feb 2020 06:21:01 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id s8sm1936681qkm.88.2020.02.18.06.21.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 06:21:01 -0800 (PST)
-Message-ID: <1582035660.7365.90.camel@lca.pw>
-Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- counter
-From:   Qian Cai <cai@lca.pw>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mina Almasry <almasrymina@google.com>
-Cc:     mike.kravetz@oracle.com, shuah@kernel.org, rientjes@google.com,
-        shakeelb@google.com, gthelen@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Date:   Tue, 18 Feb 2020 09:21:00 -0500
-In-Reply-To: <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
-References: <20200211213128.73302-1-almasrymina@google.com>
-         <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 09:22:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbgBROWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:22:45 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D45C208C4;
+        Tue, 18 Feb 2020 14:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582035765;
+        bh=LzzH1+A9k81pYpE+xt8iuTzMyoqX7NohKSq641i4n7k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=xthntggz/VRh21wg6I4oQxiRVt8eefs49JMKKrhstEdoYAwKSMSoWb9lw0xEuAnQ9
+         lQPd2zq6L9rwzq4hkSxaSOKyCTAUZOUX0z3SibON2b+hml194pt+7eBAm9/Df1ZbW3
+         Xy8RYmQ6i1fjR6hZI9UeHHFu4o5mS+HD4+WMJyhA=
+Date:   Tue, 18 Feb 2020 08:22:43 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Stack trace when removing Thunderbolt devices while kernel
+ shutting down
+Message-ID: <20200218142243.GA190321@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB0438220243C0097569D4B2DB80110@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-11 at 15:19 -0800, Andrew Morton wrote:
-> On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
+On Tue, Feb 18, 2020 at 02:18:40PM +0000, Nicholas Johnson wrote:
+> Hi Bjorn,
 > 
-> > These counters will track hugetlb reservations rather than hugetlb
-> > memory faulted in. This patch only adds the counter, following patches
-> > add the charging and uncharging of the counter.
+> If I surprise remove Thunderbolt 3 devices just as the kernel is 
+> shutting down, I get stack dumps, when those devices would not normally 
+> cause stack dumps if the kernel were not shutting down.
 > 
-> We're still pretty thin on review here, but as it's v12 and Mike
-> appears to be signed up to look at this work, I'll add them to -next to
-> help move things forward.
+> Because the kernel is shutting down, it makes it difficult to capture 
+> the logs without a serial console.
 > 
+> In your mind, is this cause for concern? There is no harm caused and the 
+> kernel still shuts down. The main thing I am worried about is if this 
+> means that the locking around the subsystem is not strict enough.
+> 
+> If you think this is worth looking into, I will try to learn about how 
+> the native interrupts are handled and try to investigate, and I will 
+> also try to get my serial console working again to capture the details.
 
-Reverted the whole series on the top of next-20200217 fixed a crash below (I
-don't see anything in next-20200218 would make any differences).
-
-[ 7933.691114][T35046] LTP: starting hugemmap06
-[ 7933.806377][T14355] ------------[ cut here ]------------
-[ 7933.806541][T14355] kernel BUG at mm/hugetlb.c:490!
-VM_BUG_ON(t - f <= 1);
-[ 7933.806562][T14355] Oops: Exception in kernel mode, sig: 5 [#1]
-[ 7933.806573][T14355] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
-DEBUG_PAGEALLOC NUMA PowerNV
-[ 7933.806594][T14355] Modules linked in: kvm_hv kvm brd ext4 crc16 mbcache jbd2
-loop ip_tables x_tables xfs sd_mod bnx2x ahci mdio libahci tg3 libata libphy
-firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded:
-binfmt_misc]
-[ 7933.806651][T14355] CPU: 54 PID: 14355 Comm: hugemmap06 Tainted:
-G           O      5.6.0-rc2-next-20200217 #1
-[ 7933.806674][T14355] NIP:  c00000000040d22c LR: c00000000040d210 CTR:
-0000000000000000
-[ 7933.806696][T14355] REGS: c0000014b71ef660 TRAP: 0700   Tainted:
-G           O       (5.6.0-rc2-next-20200217)
-[ 7933.806727][T14355] MSR:  900000000282b033
-<SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 22022228  XER: 00000000
-[ 7933.806772][T14355] CFAR: c00000000040cbec IRQMASK: 0 
-[ 7933.806772][T14355] GPR00: c00000000040d210 c0000014b71ef8f0 c000000001657000
-0000000000000001 
-[ 7933.806772][T14355] GPR04: 0000000000000012 0000000000000013 0000000000000000
-0000000000000000 
-[ 7933.806772][T14355] GPR08: 0000000000000002 0000000000000002 0000000000000001
-0000000000000036 
-[ 7933.806772][T14355] GPR12: 0000000022022222 c000001ffffd3d00 00007fffad670000
-00007fffa4bc0000 
-[ 7933.806772][T14355] GPR16: 0000000000000000 c000000001567178 c0000014b71efa50
-0000000000000000 
-[ 7933.806772][T14355] GPR20: 0000000000000000 0000000000000013 0000000000000012
-0000000000000001 
-[ 7933.806772][T14355] GPR24: c0000019f74cd270 5deadbeef0000100 5deadbeef0000122
-c0000019f74cd2c0 
-[ 7933.806772][T14355] GPR28: 0000000000000001 c0000019f74cd268 c0000014b71ef918
-0000000000000001 
-[ 7933.806961][T14355] NIP [c00000000040d22c] region_add+0x11c/0x3a0
-[ 7933.806980][T14355] LR [c00000000040d210] region_add+0x100/0x3a0
-[ 7933.807008][T14355] Call Trace:
-[ 7933.807024][T14355] [c0000014b71ef8f0] [c00000000040d210]
-region_add+0x100/0x3a0 (unreliable)
-[ 7933.807056][T14355] [c0000014b71ef9b0] [c00000000040e0c8]
-__vma_reservation_common+0x148/0x210
-__vma_reservation_common at mm/hugetlb.c:2150
-[ 7933.807087][T14355] [c0000014b71efa20] [c0000000004132a0]
-alloc_huge_page+0x350/0x830
-alloc_huge_page at mm/hugetlb.c:2359
-[ 7933.807100][T14355] [c0000014b71efad0] [c0000000004168f8]
-hugetlb_no_page+0x158/0xcb0
-[ 7933.807113][T14355] [c0000014b71efc20] [c000000000417bc8]
-hugetlb_fault+0x678/0xb30
-[ 7933.807136][T14355] [c0000014b71efcd0] [c0000000003b1de4]
-handle_mm_fault+0x444/0x450
-[ 7933.807158][T14355] [c0000014b71efd20] [c000000000070b1c]
-__do_page_fault+0x2bc/0xfd0
-[ 7933.807181][T14355] [c0000014b71efe20] [c00000000000aa88]
-handle_page_fault+0x10/0x30
-[ 7933.807201][T14355] Instruction dump:
-[ 7933.807209][T14355] 38c00000 7ea5ab78 7ec4b378 7fa3eb78 4bfff80d e9210020
-e91d0050 e95d0068 
-[ 7933.807232][T14355] 7d3c4850 7d294214 7faa4800 409c0238 <0b170000> 7f03c378
-4858c005 60000000 
-[ 7933.807267][T14355] ---[ end trace 7560275de5f409f8 ]---
-[ 7933.905258][T14355] 
-[ 7934.905339][T14355] Kernel panic - not syncing: Fatal exception
+Yes, I think this is worth looking into.
