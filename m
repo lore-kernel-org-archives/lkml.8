@@ -4,77 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A6C3402F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A321C3402F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53B5206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C99F20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgBRB6Z (ORCPT
+        id S1726299AbgBRCAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:58:25 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:39868 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgBRB6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:58:25 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CC4B5202EF5;
-        Tue, 18 Feb 2020 02:58:23 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7C9C6202EE6;
-        Tue, 18 Feb 2020 02:58:17 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3B86D40245;
-        Tue, 18 Feb 2020 09:58:09 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        abel.vesa@nxp.com, leonard.crestez@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] arm64: dts: imx8mn-ddr4-evk: Adjust 1.2GHz OPP voltage to OD mode
-Date:   Tue, 18 Feb 2020 09:52:32 +0800
-Message-Id: <1581990752-10219-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 17 Feb 2020 21:00:09 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgBRCAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 21:00:08 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B0213BD0F2FC8BAE92CD;
+        Tue, 18 Feb 2020 10:00:03 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 09:59:56 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <netanel@amazon.com>, <akiyano@amazon.com>, <gtzalik@amazon.com>,
+        <saeedb@amazon.com>, <zorik@amazon.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
+        <sameehj@amazon.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: ena: remove set but not used variable 'rx_ring'
+Date:   Tue, 18 Feb 2020 09:59:51 +0800
+Message-ID: <20200218015951.7224-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to latest datasheet Rev.0, 10/2019, there is restriction
-as below:
+drivers/net/ethernet/amazon/ena/ena_netdev.c: In function ena_xdp_xmit_buff:
+drivers/net/ethernet/amazon/ena/ena_netdev.c:316:19: warning:
+ variable rx_ring set but not used [-Wunused-but-set-variable]
 
-"If VDD_SOC/GPU/DDR = 0.95V, then VDD_ARM must be >= 0.95V."
+commit 548c4940b9f1 ("net: ena: Implement XDP_TX action")
+left behind this unused variable.
 
-As by default SoC is running at OD mode(VDD_SOC = 0.95V), so
-VDD_ARM 1.2GHz OPP's voltage should be increased to 0.95V.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index 2497eeb..7a61a1a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -13,6 +13,12 @@
- 	compatible = "fsl,imx8mn-ddr4-evk", "fsl,imx8mn";
- };
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 081acf0..894e8c1 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -313,7 +313,6 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
+ 	struct ena_com_tx_ctx ena_tx_ctx = {0};
+ 	struct ena_tx_buffer *tx_info;
+ 	struct ena_ring *xdp_ring;
+-	struct ena_ring *rx_ring;
+ 	u16 next_to_use, req_id;
+ 	int rc;
+ 	void *push_hdr;
+@@ -324,8 +323,6 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
+ 	req_id = xdp_ring->free_ids[next_to_use];
+ 	tx_info = &xdp_ring->tx_buffer_info[req_id];
+ 	tx_info->num_of_bufs = 0;
+-	rx_ring = &xdp_ring->adapter->rx_ring[qid -
+-		  xdp_ring->adapter->xdp_first_ring];
+ 	page_ref_inc(rx_info->page);
+ 	tx_info->xdp_rx_page = rx_info->page;
  
-+&a53_opp_table {
-+	opp-1200000000 {
-+		opp-microvolt = <950000>;
-+	};
-+};
-+
- &A53_0 {
- 	cpu-supply = <&buck2_reg>;
- };
 -- 
 2.7.4
+
 
