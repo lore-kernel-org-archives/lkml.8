@@ -2,111 +2,226 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF571C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD6C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D482206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B01207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="yzllje1D"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VQibAqz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBRK5l (ORCPT
+        id S1726583AbgBRLBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:57:41 -0500
-Received: from mx1.cock.li ([185.10.68.5]:40015 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726414AbgBRK5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:57:40 -0500
+        Tue, 18 Feb 2020 06:01:15 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:34513 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgBRLBP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 06:01:15 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200218110113epoutp03745076c41398cf90a26998f751a46763~0eiYqITTD2758027580epoutp03F
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:01:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200218110113epoutp03745076c41398cf90a26998f751a46763~0eiYqITTD2758027580epoutp03F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582023673;
+        bh=C6dCAQnEDcW0676qRiZ4sb3/DZNCer6oaAzZ+fq/Yl4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=VQibAqz3BG3SewqHl0+LS1zbta0z51UWEX2PbPnxnXresm21Zy7fi1jWeJG3joxVL
+         Xn3K9zX08A8JxRNuEmjTOORqVuQPuuFDoVCaomamMOmMTUHwCT7xvg3XS0Ry3fG8jF
+         MGK61mW/W20leAdkolRvwnPip7rtVCZ8IvOH9jRQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200218110113epcas1p2cb62f189c469662795272e8f12734d96~0eiYQVgWP1700017000epcas1p2K;
+        Tue, 18 Feb 2020 11:01:13 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 48MHw65YXMzMqYlx; Tue, 18 Feb
+        2020 11:01:10 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F0.AD.51241.6F3CB4E5; Tue, 18 Feb 2020 20:01:10 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200218110110epcas1p49fcb41cb04e4b6b4011c0cf15ecca02b~0eiVvJ6Cw0803508035epcas1p4Q;
+        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200218110110epsmtrp17e0e89a0c4502abd70980dbe3e6ccae0~0eiVt0DB72068620686epsmtrp12;
+        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
+X-AuditID: b6c32a39-163ff7000001c829-06-5e4bc3f62bd0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.0E.10238.6F3CB4E5; Tue, 18 Feb 2020 20:01:10 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200218110110epsmtip2b7a6d99c68f7bd020cfa35d60df4b84a~0eiVigtl42361823618epsmtip2e;
+        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
+Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns
+ -EPROBE_DEFER
+To:     Ladislav Michl <ladis@linux-mips.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <34f3cd11-321b-9aab-31a7-a3fb03691980@samsung.com>
+Date:   Tue, 18 Feb 2020 20:09:16 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
-        t=1582023456; bh=pgJCMCsc89IhSBD8DIOQcNQxThGyTuatXZV1ketNMjA=;
-        h=Date:From:To:Subject:From;
-        b=yzllje1D0ggNKxmMYlRwykD4Ie6s05iljOeFxXRl6D0J4gTxVyxw1ox9/MWFWtp4G
-         flU1Yc+B40LI3d6/e8V+v4pxximbSC2VS0b1Rq7ySXz4woCQgo94PnnNUTyODaENhY
-         EtNf1tK3Qwt/ioDslqvaXEhbTa89H+sKh3ympeJx6DPociq+/1KryaAa5eseovXNGm
-         mHSrQH6JmzT1sa6ISfL40PZv3cyVRtLijCuIvHSZRypy/3pX9cPegSNHgr+bYvdQHa
-         Q9TT6MAUWdzG6ymOh50KJKcaZHdhgAWDkHbASR8X8VhZDonSmJI6kM1Hqk45u8v0hc
-         Fa6wB+qmbCp/w==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200218104810.GA194120@lenoch>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Feb 2020 10:57:36 +0000
-From:   agentoranger@waifu.club
-To:     linux-kernel@vger.kernel.org
-Subject: Grsecurity blaims insane conspiracy theory for self-imposed legal
- woes
-Message-ID: <3ee534a5d4a4a442356a528a9fe5fe18@waifu.club>
-X-Sender: agentoranger@waifu.club
-User-Agent: Roundcube Webmail/1.3.10
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfm8Vgt35bLpxGlJ4q0dDvq6lgZRREj+yBFQQXayZ2muBs7
+        U7p9yJqVZlrahaZlZUbaPeYqYwleitldEaI0k0yyi6ZpWQq17Rj57ff+n//D8/7f96EI+WVS
+        SaWbbLzVxBlocoLUVR8RHfWjPjFZXVC+gB12DUnY5qE9bEllsYStHm0m2ZaaUpItuVgoZd9k
+        XyaXB2qv9jUR2sbKaxKtvagmUDto309oC5xVSPv99swkcnPG0jSe0/HWMN6Uatalm/QJdOL6
+        lJUpmoVqJoqJZxfRYSbOyCfQq9YmRa1ON3ivQodlcYZMr5TECQKtWrbUas608WFpZsGWQPMW
+        ncESb4kWOKOQadJHp5qNixm1OkbjNW7NSMvt/S219Ct3uOv1e9FjRR4KogDHwZ/+HiIPTaDk
+        +C6C1sNPCV9BjgcQ7P+8TSz8QHDrREvAv47zg0MBYsGNoL21jRQPfQiaijqkPtdUvAWGi16i
+        PERRITgC2kZVPg+BnyNovHYy0OchcSTUfnxF+jgYh0Pr8HvkYxleBtlVdr8uxXPAvS/Hzwq8
+        ETwu+5hnCnhOd/lnBeEo8HQ/8HsIHAqvu8okIs+CO19L/dkA/ySh8skbUoywCjoarhIiT4VP
+        j5yBIiuhp/DAGO+GSk8DKTYfQuCsfTGWPxZqK4olvmSEN9mNGpUoh8O9kTNIHDwZeofyA3wW
+        wDI4dEAuWmZDy7t2icjTofxgLnkU0Y5xcRzjIjjGRXD8H3YOSavQNN4iGPW8wFg04z/7NvJv
+        aWT8XfTw2do6hClET5IlFaxJlgdwWcJOYx0CiqBDZImhXkmm43bu4q3mFGumgRfqkMb72scI
+        pSLV7N15ky2F0cTExsayccxCDcPQobLOTRHJcqznbHwGz1t4678+CRWk3Iu2H3M7i3cPfAse
+        af4QnmBShE9aUnEq6G3itomuC64jivlWs9J+vXrLpeCcRakjqkLV9/wNBQNXss5mV+VWd39x
+        nqwYbfu1QvjFf+6xxZd9fZVfPtq5fPi+e96Gm5zuiGVw7rqXx/uZDMkt+yZpb7Gnr2vGXPVq
+        x6minIFe6sZNpm0HLRXSOCaSsArcX32U5T+7AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSvO63w95xBj0P+C1+bPvKZHHpa43F
+        7JWTmSy2/rnEZnF51xw2i9lL+lksbjeuYHNg91jz/hSzx9GVa5k8WibtYvf40tLM7NG3ZRWj
+        x+dNcgFsUVw2Kak5mWWpRfp2CVwZne9+sRR8lKrYezi9gfG0aBcjJ4eEgInEwi9fWbsYuTiE
+        BHYzSpxfuYYNIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBILLlxnBqkRFoiW+DHpIiNIjYiApsSd
+        P/ogNcwC5xklDtx4zwjRcJtJ4vqhN2ANbAJaEvtf3ABbwC+gKHH1x2NGEJtXwE6icVULWJxF
+        QFVib1MrmC0qECaxc8ljJogaQYmTM5+wgNicAroSJ5/tA6thFlCX+DPvEjOELS5x68l8Jghb
+        XmL72znMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/d
+        xAiOKi3NHYyXl8QfYhTgYFTi4V0xwStOiDWxrLgy9xCjBAezkgivtzhQiDclsbIqtSg/vqg0
+        J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBkaj+Jl1zS22dgZdr+dMm7rQnWGx
+        7Ze1s57tu/SR4cG584Jv1118nltz4G9tnxrXM1aGv+4xswoPqJqaJ+ebz/xRNK3n1eWu5D39
+        S90ebTr72eTSfW9mERkT9i0y7soF7q83czHEsD65dEXwyLfDr/lv31rt8dPS6fHkjTU1Lbt/
+        miyYJnVvuc5OJZbijERDLeai4kQAGyslV6YCAAA=
+X-CMS-MailID: 20200218110110epcas1p49fcb41cb04e4b6b4011c0cf15ecca02b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2
+References: <CGME20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2@epcas1p3.samsung.com>
+        <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
+        <b2655a58-6541-a2c9-c44d-536e5cef1ee3@samsung.com>
+        <20200218102140.GA193069@lenoch>
+        <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
+        <20200218104810.GA194120@lenoch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Grsecurity blaims insane conspiracy theory for self-imposed legal woes
- From the Grsecurity website: 
-https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part1
+On 2/18/20 7:48 PM, Ladislav Michl wrote:
+> On Tue, Feb 18, 2020 at 07:35:47PM +0900, Chanwoo Choi wrote:
+>> On 2/18/20 7:21 PM, Ladislav Michl wrote:
+>>> On Tue, Feb 18, 2020 at 12:28:25PM +0900, Chanwoo Choi wrote:
+>>>> On 2/17/20 10:38 PM, H. Nikolaus Schaller wrote:
+>>>>> If the gpios are probed after this driver (e.g. if they
+>>>>> come from an i2c expander) there is no need to print an
+>>>>> error message.
+>>>>>
+>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>>> ---
+>>>>>  drivers/extcon/extcon-palmas.c | 8 ++++++--
+>>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+>>>>> index edc5016f46f1..cea58d0cb457 100644
+>>>>> --- a/drivers/extcon/extcon-palmas.c
+>>>>> +++ b/drivers/extcon/extcon-palmas.c
+>>>>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>>>>>  
+>>>>>  	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
+>>>>>  							GPIOD_IN);
+>>>>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
+>>>>> +	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
+>>>>> +		return -EPROBE_DEFER;
+> 
+> Here we returned...
 
-> Company Background
+hmm. you better to suggest the result of cocci script
+to understand why it is matter.
+
 > 
-> Open Source Security, Inc. was formed in 2008 initially to handle 
-> donations related to the grsecurity project, an open source project 
-> started in 2001 and freely (in all senses) available to the world until 
-> at least 2015. In 2015 we made our stable patches available to paid 
-> customers only via our website, a right granted by the GPL. At the 
-> time, we still had a freely (in all senses) test patch available. In 
-> April of 2017 we stopped providing the test patches to the general 
-> public.
-> A Troll's Revenge
+>>>>> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
 > 
-> Only a few months after this, a notorious Internet troll who had used 
-> grsecurity in the past and been banned from our forums for misogynistic 
-> comments was apparently upset at having his access cut off completely 
-> (after previously being denied access to the stable patches in 2015), 
-> and came out of hibernation to extend a private and public campaign to 
-> get revenge. This campaign continues today even, with posts to LKML, 
-> various distribution mailing lists, and posts and comments on Slashdot, 
-> Reddit, and other news aggregators. This person poses under various 
-> names, usernames, and email addresses, but most recently poses as a 
-> legitimate lawyer claiming the GPL can be rescinded. The emails come 
-> from @redchan.it,@airmail.cc, and other anonymous mailing services with 
-> usernames like "aconcernedfossdev", "visionsofalice", "gameonlinux", 
-> "nisus", and "unconditionedwitness". Most commonly, the email subject 
-> regarding us includes: "Why will no-one sue GrSecurity for their 
-> blatant GPL violation?" or "Yes you have standing to sue GRSecurity." 
-> In many instances, due to the changing names and email addresses, 
-> readers are unaware this is the same "MikeeUSA" troll, a self-professed 
-> misogynist and pedophile, that had been harrassing and issuing death 
-> threats to women in Open Source for years.
+> How could this else get triggered?
+
+I don't understand your intention. 
+If devm_gpiod_get_optional return the error except of -EPROBE_DEFER,
+it is triggered. Is it wrong?
+
 > 
-> But the anonymous troll wasn't able to inflict the kind of damage he 
-> wanted to achieve alone. People saw an unstable individual mixing 
-> misogynistic comments with nonsensical legal theories, making it clear 
-> he was not an expert and his comments had no basis in reality. To 
-> inflict the damage he wanted, he'd need to enlist the help of someone 
-> the public trusts and views as an expert on license compliance matters, 
-> so that it'd be accepted as fact by the public. So in private, he 
-> contacted various influential people (including Richard Stallman, Eben 
-> Moglen, Bradley Kuhn, and Bruce Perens) involved in Free Software/Open 
-> Source in an attempt to bait them into accepting and repeating his 
-> claims and wild legal theories as true. None of them took the bait, 
-> except for Bruce Perens.
+>>>>>  		dev_err(&pdev->dev, "failed to get id gpio\n");
+>>>>>  		return PTR_ERR(palmas_usb->id_gpiod);
+>>>>>  	}
+>>>>>  
+>>>>>  	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
+>>>>>  							GPIOD_IN);
+>>>>> -	if (IS_ERR(palmas_usb->vbus_gpiod)) {
+>>>>> +	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
+>>>>> +		return -EPROBE_DEFER;
+>>>>> +	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
+>>>>>  		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+>>>>>  		return PTR_ERR(palmas_usb->vbus_gpiod);
+>>>>>  	}
+>>>>>
+>>>>
+>>>> I think that it is enough to handle the -EPROBE_DEFER.
+>>>> Also, I prefer to use single if/else statement 
+>>>> instead of the nested if/else statement.
+>>>>
+>>>> Applied it.
+>>>
+>>> Uh... As it is? Then it is matter of time it triggers someones cocci
+>>> script pointing to else after return. Could you at least fix this?
+>>
+>> Sorry. I don't understand. Do you mean that this patch has the
+>> some issue of cocci script?
 > 
-> Perens' Collaboration
+> Yes.
+
+As I said, you better to suggest the result of cocci script.
+
 > 
-(... and on it goes)
-( 
-https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part1 
-  https://archive.is/7B9No
-)
-( 
-https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part2 
-  https://archive.is/7B9No
-)
-( 
-https://grsecurity.net/setting_the_record_straight_on_oss_v_perens_part3 
-  https://archive.is/tvlWf)
+>> I think that it fixes the probe sequence issue
+>> between extcon-palmas and gpio driver. It is not related to
+>> any result from cocci script. If the extcon-palmas.c has
+>> the issue by cocci or checkpatch, anyone can send the other patch
+>> for fixup.
+> 
+> Do you mean to send fixup to what you just applied? What happened
+> to review process? Nikolaus himself told you patch could be better
+> and we were just waiting which solution you choose to send final patch.
+
+I has not thought that Nikolaus will send next patch
+when I read this thread.
+
+> 
+>> I think that it is enough to fix the issue which is only
+>> related to the probe sequence between gpio and extcon-palmas.c
+> 
+> Agree, but look again at the patch.
+> 
+> 	ladis
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
