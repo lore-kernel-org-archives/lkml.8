@@ -2,142 +2,105 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AF2C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0659DC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DCA24658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582047390;
-	bh=RH94SPcHVLy/JhgwLM0HegIpDAz7SYTF4JnWYy8q34Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J+sGnldS8pkJQ11GkBgEIR4Q8LvzDHKUddOdiBxOVL+++hkpuHBBoVmyjZBzhXvQh
-	 mbXaSm0yydqaXkvmcOfusJdRsRpaAP3BoBvjl2b+C4SYPLw6OXrBcSUou1LRB9Nsbc
-	 E1UovPVhyUAQ9yDB6eWpWU7CeIXXnuUXw4lI2g8Q=
+	by mail.kernel.org (Postfix) with ESMTP id DCCEB24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBRRg3 (ORCPT
+        id S1726700AbgBRRiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:36:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43282 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgBRRg3 (ORCPT
+        Tue, 18 Feb 2020 12:38:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53077 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgBRRiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:36:29 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so23949310ljm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:36:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ejn5UstmxF7lmN2AxfPRiO0l5wA0+kUDkpk4DTP/TNk=;
-        b=BEZGdGO+K+CM8dnG/8KD7hitd4IDxMiSPgHJkRRJZDw97o+11Qbkvzpk38q2jJLsNY
-         e8Xmr0kLH1BOqKRkok7gyQ3yQLJRWJmKpMsYQtr8L29SkIwjSlGqDIcKEmg/lRvanhR0
-         YwYWAY6jQ3nzi1dL3iFw6Ug12aGV1djv1Up9k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ejn5UstmxF7lmN2AxfPRiO0l5wA0+kUDkpk4DTP/TNk=;
-        b=FLCEDKD0rOe+wuJmPCpIlL/M1dkjNXsSWYs4/fu/7xUkV6gM/Hy+/FnAg0npDZ1vpS
-         BADmlumutxJvdbYguVoz0p0qxL+pifyoaYptqQgAt0jQEBHeiUC6hMdsTDzBfbxhBRJc
-         D6TkKgmQD+17ZwiN/N5QFJCCeCNlNJ2xUItbvFLyXJcPCs7Ssqt7VYHXNRp0Xfjx+44P
-         Hs647Fw/KoPdRKrlPLkVs+AwhUeXsoV17nRZ7ar4FM6lZAJl7/YF+B24utRFDAHmzpbF
-         SwygaoF5LjwtZgdDTVHHXk3CJEBYVp+mo0hC0osZJifuanEElfOUFs1x+A4GsudOxUN/
-         InoQ==
-X-Gm-Message-State: APjAAAXr9hya6h+b+Psb4Ms3PgIGSE86Lgmg+e0aCoDJucDY/xm9xFRK
-        FHgbOSbfKiRiWlK7Ch/uQJHwJi2svvM=
-X-Google-Smtp-Source: APXvYqxH8POv22Js2qfejgWByJ90MPmf8UH9wO7ZrtDd9tAfysrAQ3GsmJYQTo5SKlTnpR+KhdAVqw==
-X-Received: by 2002:a2e:8016:: with SMTP id j22mr12813327ljg.24.1582047386307;
-        Tue, 18 Feb 2020 09:36:26 -0800 (PST)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id i19sm2647800lfj.17.2020.02.18.09.36.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 09:36:25 -0800 (PST)
-Received: by mail-lf1-f47.google.com with SMTP id r14so15129647lfm.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:36:25 -0800 (PST)
-X-Received: by 2002:a19:f514:: with SMTP id j20mr11135556lfb.31.1582047384649;
- Tue, 18 Feb 2020 09:36:24 -0800 (PST)
+        Tue, 18 Feb 2020 12:38:11 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1j46ov-00013U-MI; Tue, 18 Feb 2020 18:38:05 +0100
+Message-ID: <71275b167f41ca424216c2bda0459bf305a1162c.camel@pengutronix.de>
+Subject: Re: [PATCH] drm/etnaviv: remove check for return value of
+ drm_debugfs function
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        linux+etnaviv@armlinux.org.uk, christian.gmeiner@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Date:   Tue, 18 Feb 2020 18:38:04 +0100
+In-Reply-To: <20200218172821.18378-4-wambui.karugax@gmail.com>
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+         <20200218172821.18378-4-wambui.karugax@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-542-sashal@kernel.org>
- <CANaxB-zjYecWpjMoX6dXY3B5HtVu8+G9npRnaX2FnTvp9XucTw@mail.gmail.com>
-In-Reply-To: <CANaxB-zjYecWpjMoX6dXY3B5HtVu8+G9npRnaX2FnTvp9XucTw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Feb 2020 09:36:08 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjd6BKXEpU0MfEaHuOEK-StRToEcYuu6NpVfR0tR5d6xw@mail.gmail.com>
-Message-ID: <CAHk-=wjd6BKXEpU0MfEaHuOEK-StRToEcYuu6NpVfR0tR5d6xw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.5 542/542] pipe: use exclusive waits when
- reading or writing
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000616ba8059edd1c62"
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000616ba8059edd1c62
-Content-Type: text/plain; charset="UTF-8"
+On Di, 2020-02-18 at 20:28 +0300, Wambui Karuga wrote:
+> As there is no need to check the return value if
+> drm_debugfs_create_files,
 
-On Tue, Feb 18, 2020 at 1:51 AM Andrei Vagin <avagin@gmail.com> wrote:
->
-> This patch breaks one of CRIU tests. Here is a small reproducer:
+And here is where the commit message skips a very important
+information: Since 987d65d01356 (drm: debugfs: make
+drm_debugfs_create_files() never fail) this function never returns
+anything other than 0, so there is no point in checking. This
+information should be in the commit message, so the reviewer doesn't
+need to look up this fact in the git history.
 
-Good catch.
+Regards,
+Lucas
 
-> The quick fix looks like this:
+>  remove the check and error handling in
+> etnaviv_debugfs_init and have the function return 0 directly.
+> 
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> index 6b43c1c94e8f..a65d30a48a9d 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> @@ -233,19 +233,11 @@ static struct drm_info_list
+> etnaviv_debugfs_list[] = {
+>  
+>  static int etnaviv_debugfs_init(struct drm_minor *minor)
+>  {
+> -	struct drm_device *dev = minor->dev;
+> -	int ret;
+> -
+> -	ret = drm_debugfs_create_files(etnaviv_debugfs_list,
+> -			ARRAY_SIZE(etnaviv_debugfs_list),
+> -			minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(etnaviv_debugfs_list,
+> +				 ARRAY_SIZE(etnaviv_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  
+> -	if (ret) {
+> -		dev_err(dev->dev, "could not install
+> etnaviv_debugfs_list\n");
+> -		return ret;
+> -	}
+> -
+> -	return ret;
+> +	return 0;
+>  }
+>  #endif
+>  
 
-That one works, but is not really right.
-
-The things that change the number of readers or writers should simply
-use "wake_up_all()".
-
-I thought we did that already, but no - there _was_ one place where we
-did it, but that was for the pipe buffer size case, and in that case
-it's actually pointless. That case acts just like a "new space or data
-was added"
-
-So I think the right fix is the attached patch. Since you had such a
-lovely test-case, let me go test it too ;)
-
-                Linus
-
---000000000000616ba8059edd1c62
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k6s65iuv0>
-X-Attachment-Id: f_k6s65iuv0
-
-IGZzL3BpcGUuYyB8IDEwICsrKysrLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvcGlwZS5jIGIvZnMvcGlwZS5jCmlu
-ZGV4IDVhMzRkNmMyMmQ0Yy4uNzZlN2Y2NmZlMmZlIDEwMDY0NAotLS0gYS9mcy9waXBlLmMKKysr
-IGIvZnMvcGlwZS5jCkBAIC0xMDI2LDggKzEwMjYsOCBAQCBzdGF0aWMgaW50IHdhaXRfZm9yX3Bh
-cnRuZXIoc3RydWN0IHBpcGVfaW5vZGVfaW5mbyAqcGlwZSwgdW5zaWduZWQgaW50ICpjbnQpCiAK
-IHN0YXRpYyB2b2lkIHdha2VfdXBfcGFydG5lcihzdHJ1Y3QgcGlwZV9pbm9kZV9pbmZvICpwaXBl
-KQogewotCXdha2VfdXBfaW50ZXJydXB0aWJsZSgmcGlwZS0+cmRfd2FpdCk7Ci0Jd2FrZV91cF9p
-bnRlcnJ1cHRpYmxlKCZwaXBlLT53cl93YWl0KTsKKwl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxs
-KCZwaXBlLT5yZF93YWl0KTsKKwl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxsKCZwaXBlLT53cl93
-YWl0KTsKIH0KIAogc3RhdGljIGludCBmaWZvX29wZW4oc3RydWN0IGlub2RlICppbm9kZSwgc3Ry
-dWN0IGZpbGUgKmZpbHApCkBAIC0xMTQ0LDcgKzExNDQsNyBAQCBzdGF0aWMgaW50IGZpZm9fb3Bl
-bihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkKIAogZXJyX3dyOgogCWlm
-ICghLS1waXBlLT53cml0ZXJzKQotCQl3YWtlX3VwX2ludGVycnVwdGlibGUoJnBpcGUtPnJkX3dh
-aXQpOworCQl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxsKCZwaXBlLT5yZF93YWl0KTsKIAlyZXQg
-PSAtRVJFU1RBUlRTWVM7CiAJZ290byBlcnI7CiAKQEAgLTEyNzEsOCArMTI3MSw4IEBAIHN0YXRp
-YyBsb25nIHBpcGVfc2V0X3NpemUoc3RydWN0IHBpcGVfaW5vZGVfaW5mbyAqcGlwZSwgdW5zaWdu
-ZWQgbG9uZyBhcmcpCiAJcGlwZS0+bWF4X3VzYWdlID0gbnJfc2xvdHM7CiAJcGlwZS0+dGFpbCA9
-IHRhaWw7CiAJcGlwZS0+aGVhZCA9IGhlYWQ7Ci0Jd2FrZV91cF9pbnRlcnJ1cHRpYmxlX2FsbCgm
-cGlwZS0+cmRfd2FpdCk7Ci0Jd2FrZV91cF9pbnRlcnJ1cHRpYmxlX2FsbCgmcGlwZS0+d3Jfd2Fp
-dCk7CisJd2FrZV91cF9pbnRlcnJ1cHRpYmxlKCZwaXBlLT5yZF93YWl0KTsKKwl3YWtlX3VwX2lu
-dGVycnVwdGlibGUoJnBpcGUtPndyX3dhaXQpOwogCXJldHVybiBwaXBlLT5tYXhfdXNhZ2UgKiBQ
-QUdFX1NJWkU7CiAKIG91dF9yZXZlcnRfYWNjdDoK
---000000000000616ba8059edd1c62--
