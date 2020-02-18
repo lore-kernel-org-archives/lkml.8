@@ -2,137 +2,129 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C60CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D95BC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334B924680
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E34821D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wq3t2Nif"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaQVxnR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgBRSZc (ORCPT
+        id S1726427AbgBRS21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:25:32 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37224 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgBRSZb (ORCPT
+        Tue, 18 Feb 2020 13:28:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45528 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgBRS20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:25:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so10907410ioc.4;
-        Tue, 18 Feb 2020 10:25:31 -0800 (PST)
+        Tue, 18 Feb 2020 13:28:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so11052231pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:28:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0oo2FfOUL0MjlcigokgYSuRLB0N4VOcL/NZk+nWeo40=;
-        b=Wq3t2NifRRVRe6tINTW8hnfC80948jJcADE2VTky69RGcQ4+0Dd53XZ1Y1VlaNyLFa
-         EfnQcbLNpv/2vZpiea2s2z9deEkxsXp14CLzj6XpJ2WOoIbvX7WKkcy/cML5KZh+VeGr
-         UlwwDsF+m1vxVQRM6vLpsNGVaB3R5HIdPOYp07ciPcmBHr7rqWNT1b5v+o7BEW01IhGj
-         ejEtIlBR4lNJUjBPWwg6XvzAX1AJ3XK7nsmTS0zJCx+70vGgdRlDVuN/Etqa1dj8kxDk
-         Dwn6dYui17G6BrZxMFPFthQXEJ9Gj6wSKhjYFWNoMX1KEg2kWuURhzvJBT1LKgORPCFs
-         zFOg==
+        bh=d3KSdYVbADc8vhuPRBnMJ0Olj+WzBHR91Wg/nozFRYA=;
+        b=IaQVxnR3uw31I9KunUQW5x8fXVHpy/6d/88oLvKBtPts2zAXC4WAIdJJWQN8rU7XFZ
+         F9zes4nbRbK4WtDCM3SHBBblZhNRP6VwotM4uwx/Wy2m0TO6Ps/fsNWL3WO7Y8CmBYJV
+         H4XDlwgzFvNsxnyzezcpPqGpDAbmOtjnpj8zYaDld/s2Z7y+qqodtC/Zefvx7tg/s80J
+         2KYLk3CgN1goeYX3nnng1hDTQqCJk2NwClrXveS8dbtg4abUilguyuJcQA8wWr9l4kIQ
+         pgaHPCredNAnrNtlgdUt4o3RF/s5wlfgY9h3wpZL0cbnXyK5ZGnkuJdxRduDs7pQqboV
+         22Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0oo2FfOUL0MjlcigokgYSuRLB0N4VOcL/NZk+nWeo40=;
-        b=cOIvo9KpwseWMBaV0F96CfmUykbqnduIPRtTwsGDuZXgtoN3/BBHSYMh9Eliw+uatp
-         vWeXT1JaMwCpvziT9S+KJVEEe0/nMX6pBq1ahFr/OVXWAHVHkDDeaI+ZgkLL+SAfW1yG
-         FKi3rN/Zviwz3hl9iTRJuaWza5p5wC8L04MDnyRgrU8c/8txUtXOaPwhFLYPoIEuhxPV
-         bU6DZGUqo8TmshQ0RT5oE6uC2QzySdlIRkredT2LwBL4Ddq8WNICMcChrt1l5ehrSib2
-         tWL4Fx2oBOmf4hyFzBzd9MhYN2wE0zuHT7lx1BLN4AvNckiqepWV3OZjpDcNCsw2Vrzn
-         eC2Q==
-X-Gm-Message-State: APjAAAVIg1E0A0zvo5sOlU8D/4swM2qr9ofjYTDnjtk5Ia7PYdsSu+aU
-        eSsnr+wm1HXa/3BltNlo1N4AfIBxFefvaF0dUEo=
-X-Google-Smtp-Source: APXvYqwgtWgImN9QZV7JQUuv0hVUZuRkzL56C+1AttxemO7MC8eMPliv6NfqFQATOc/UbFf6Hm1OohYvw/cxkJsQ2bc=
-X-Received: by 2002:a5e:860f:: with SMTP id z15mr16017999ioj.64.1582050330517;
- Tue, 18 Feb 2020 10:25:30 -0800 (PST)
+        bh=d3KSdYVbADc8vhuPRBnMJ0Olj+WzBHR91Wg/nozFRYA=;
+        b=iOl2/Zpz5nhBm67hQ4tzH4jlPGTlWNKW032inHK3PbqUz2bqMHc2LeeaxzPGreX3zo
+         ISaXeWc/jzMgvYueuZ9lDnAa4yX5sZ7YhCZ6ZbpouZlpDvZovHMcSfyKcmNaRz7fUB35
+         QaLCJp5R/EweLpP4BAPmy9G/tVO06tschFy5xlXoUovadt8WO5wVsk/LCpcbUzmlqlxy
+         cSZM9H/9IXBSFdnY9j1HI+oFKr8QFtf9n4unpvI2taVRpvENvmBwYEmggWS681PFDtXL
+         uNRADq0FzIcv7JHWpsx68Q5sBxwZ2268StXx2ssMR2bQiJ1F4DBAZ+fT6UemV1nJ7amu
+         g9kQ==
+X-Gm-Message-State: APjAAAUBF5XjNHy8ZDKECLH4puuAz2YFquQTfL8fij/R5ns2BUmbKoy6
+        6tBsZodZqdYaMPPDWe0UjjQBxExxAe0L/4hsyn4CFA==
+X-Google-Smtp-Source: APXvYqzxsWCTzcp7XmEp9QyDTP0RELzLF7tqcKNPMkp2zhqxWNZwVbTFpSte6uGJE1AFtMU4DAqfxwEbLUnJyq5Bg/M=
+X-Received: by 2002:a63:64c5:: with SMTP id y188mr23652916pgb.10.1582050506059;
+ Tue, 18 Feb 2020 10:28:26 -0800 (PST)
 MIME-Version: 1.0
-References: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com> <9fdc5f0c-fdf0-122e-48a5-43ff029cf8d9@gmail.com>
-In-Reply-To: <9fdc5f0c-fdf0-122e-48a5-43ff029cf8d9@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 18 Feb 2020 10:25:19 -0800
-Message-ID: <CAKgT0UeUEcoKZsRnxzftMA4tc2chasmW+sWQkP11hVLbdYTYxA@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] net: core: add helper tcp_v6_gso_csum_prep
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guo-Fu Tseng <cooldavid@cooldavid.org>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Timur Tabi <timur@kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        linux-hyperv@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
+References: <20200217211149.44132-1-natechancellor@gmail.com>
+In-Reply-To: <20200217211149.44132-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Feb 2020 10:28:15 -0800
+Message-ID: <CAKwvOdnRbMrXNSMAA20UnoAUKBu5X7JO+DvNTb9pebuzQbRVcw@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: vdso: Wrap -mexplicit-relocs in cc-option
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 1:41 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+On Mon, Feb 17, 2020 at 1:11 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> Several network drivers for chips that support TSO6 share the same code
-> for preparing the TCP header. A difference is that some reset the
-> payload_len whilst others don't do this. Let's factor out this common
-> code to a new helper.
+> Clang does not support this option and errors out:
 >
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> clang-11: error: unknown argument: '-mexplicit-relocs'
+>
+> Clang does not appear to need this flag like GCC does because the jalr
+> check that was added in commit 976c23af3ee5 ("mips: vdso: add build
+> time check that no 'jalr t9' calls left") passes just fine with
+>
+> $ make ARCH=mips CC=clang CROSS_COMPILE=mipsel-linux-gnu- malta_defconfig arch/mips/vdso/
+>
+> even before commit d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in
+> vdso code").
+>
+> -mrelax-pic-calls has been supported since clang 9, which is the
+> earliest version that could build a working MIPS kernel, and it is the
+> default for clang so just leave it be.
+>
+> Fixes: d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in vdso code")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/890
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Thanks for the patch, and detailed context.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+With this patch applied:
+$ make ARCH=mips CC=clang CROSS_COMPILE=mipsel-linux-gnu-
+malta_defconfig arch/mips/vdso/
+$ lvm-objdump --disassemble arch/mips/vdso/vdso.so.dbg.raw | egrep -h "jarl.*t9"
+$ llvm-objdump --disassemble arch/mips/vdso/vdso.so.dbg.raw | grep jarl
+So jarl instructions aren't emitted.
+
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
->  include/net/ip6_checksum.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  arch/mips/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/include/net/ip6_checksum.h b/include/net/ip6_checksum.h
-> index 7bec95df4..ef0130023 100644
-> --- a/include/net/ip6_checksum.h
-> +++ b/include/net/ip6_checksum.h
-> @@ -76,6 +76,18 @@ static inline void __tcp_v6_send_check(struct sk_buff *skb,
->         }
->  }
->
-> +static inline void tcp_v6_gso_csum_prep(struct sk_buff *skb,
-> +                                       bool clear_payload_len)
-> +{
-> +       struct ipv6hdr *ipv6h = ipv6_hdr(skb);
-> +       struct tcphdr *th = tcp_hdr(skb);
-> +
-> +       if (clear_payload_len)
-> +               ipv6h->payload_len = 0;
-> +
-> +       th->check = ~tcp_v6_check(0, &ipv6h->saddr, &ipv6h->daddr, 0);
-> +}
-> +
->  #if IS_ENABLED(CONFIG_IPV6)
->  static inline void tcp_v6_send_check(struct sock *sk, struct sk_buff *skb)
->  {
+> diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+> index 77374c1f0c77..d7fe8408603e 100644
+> --- a/arch/mips/vdso/Makefile
+> +++ b/arch/mips/vdso/Makefile
+> @@ -33,7 +33,7 @@ endif
+>  cflags-vdso := $(ccflags-vdso) \
+>         $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+>         -O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+> -       -mrelax-pic-calls -mexplicit-relocs \
+> +       -mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+>         -fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+>         $(call cc-option, -fno-asynchronous-unwind-tables) \
+>         $(call cc-option, -fno-stack-protector)
+> --
 
-So functionally I believe this is correct. The only piece I have a
-question about is if we should just force the clear_payload_len as
-always being the case since the value should either be
-ignored/overwritten in any GSO case anyway.
-
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+-- 
+Thanks,
+~Nick Desaulniers
