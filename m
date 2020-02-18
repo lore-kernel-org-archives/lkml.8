@@ -2,52 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47668C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D35C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E4A24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6AB22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056533;
-	bh=Hh3IRsjLUN15zrgEekw5SRbopEXDRppNaLMd24qGHP4=;
+	s=default; t=1582056537;
+	bh=B6gvl9MgaO8Xiy2VFy08Io6Y81aERgOcQJ22bPvMxnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIUD5p58mhYjjS8FQfkr1vqFpWfbAxN9UBoOKi7qp7t9ibj9cTews7wLxqrcH9Rrq
-	 kAoLkwJJMiz7rmChfo1/cbwEU7RmB15o0be2GLuZ3mTHsCr2vrx5NM7h+uktCE/lkO
-	 j4eHRNjV9h9IV8j/Mr0lUVEklOJ+6PluG9dxXzlE=
+	b=ejGnNE8YnoGckPgxJf30rSpaA1XPy3IQ6i5qSdiMrhD576EpZGoC/docPZUNAt3RI
+	 v2on3KQdGQDr7SkJaqts94OTanpCmDXNLyE05y3TXMUUp79YOWAw4zIf0GbheoK9Iz
+	 BXwTMb4YDnke8baH9uzHjXdYXCpN6UNUg62lO1Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgBRT5h (ORCPT
+        id S1726391AbgBRT5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34896 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbgBRT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:31 -0500
+        id S1726383AbgBRT5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA3520659;
-        Tue, 18 Feb 2020 19:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E011B2464E;
+        Tue, 18 Feb 2020 19:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055851;
-        bh=Hh3IRsjLUN15zrgEekw5SRbopEXDRppNaLMd24qGHP4=;
+        s=default; t=1582055840;
+        bh=B6gvl9MgaO8Xiy2VFy08Io6Y81aERgOcQJ22bPvMxnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kT29eLHEau+HRjWl/Y5ut8fHLa5OvXclV+RhRi0fFmxCtKRvRbqntg3D46+vaoBdn
-         6mGkEBA9bMJbpr3zvvXBf5irtDkm1fbNxY9QBImJSeD3vAoAtZJZ1ND0p7yf14iTZo
-         +Yi/8JrU+G7LbnA4ztuGbmbQod0ZtV02I8BKNd1Y=
+        b=R8cwnp81QOFKvZmLevrkZ5v2r2eDmGutC/A8ia1eF3Ncop903DO3W3IMFTcgIFHHl
+         +qeionNa+2cWEVCj13rbZ9HqIwDBFV+w51lp1lHbkbHH4uvZW1hXpkxVy8ZAB2n640
+         YaMkcuNxgJ8UpkEVwtq9HWIpGJJxgYttSEuYsAs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/38] jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
-Date:   Tue, 18 Feb 2020 20:55:23 +0100
-Message-Id: <20200218190422.815937101@linuxfoundation.org>
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 33/38] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
+Date:   Tue, 18 Feb 2020 20:55:19 +0100
+Message-Id: <20200218190422.406670481@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -60,94 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit c96dceeabf765d0b1b1f29c3bf50a5c01315b820 ]
+commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
 
-Commit 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from
-an older transaction") set the BH_Freed flag when forgetting a metadata
-buffer which belongs to the committing transaction, it indicate the
-committing process clear dirty bits when it is done with the buffer. But
-it also clear the BH_Mapped flag at the same time, which may trigger
-below NULL pointer oops when block_size < PAGE_SIZE.
+Perf doesn't take the left period into account when auto-reload is
+enabled with fixed period sampling mode in context switch.
 
-rmdir 1             kjournald2                 mkdir 2
-                    jbd2_journal_commit_transaction
-		    commit transaction N
-jbd2_journal_forget
-set_buffer_freed(bh1)
-                    jbd2_journal_commit_transaction
-                     commit transaction N+1
-                     ...
-                     clear_buffer_mapped(bh1)
-                                               ext4_getblk(bh2 ummapped)
-                                               ...
-                                               grow_dev_page
-                                                init_page_buffers
-                                                 bh1->b_private=NULL
-                                                 bh2->b_private=NULL
-                     jbd2_journal_put_journal_head(jh1)
-                      __journal_remove_journal_head(hb1)
-		       jh1 is NULL and trigger oops
+Here is the MSR trace of the perf command as below.
+(The MSR trace is simplified from a ftrace log.)
 
-*) Dir entry block bh1 and bh2 belongs to one page, and the bh2 has
-   already been unmapped.
+    #perf record -e cycles:p -c 2000000 -- ./triad_loop
 
-For the metadata buffer we forgetting, we should always keep the mapped
-flag and clear the dirty flags is enough, so this patch pick out the
-these buffers and keep their BH_Mapped flag.
+      //The MSR trace of task schedule out
+      //perf disable all counters, disable PEBS, disable GP counter 0,
+      //read GP counter 0, and re-enable all counters.
+      //The counter 0 stops at 0xfffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value fffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
 
-Link: https://lore.kernel.org/r/20200213063821.30455-3-yi.zhang@huawei.com
-Fixes: 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from an older transaction")
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+      //The MSR trace of the same task schedule in again
+      //perf disable all counters, enable and set GP counter 0,
+      //enable PEBS, and re-enable all counters.
+      //0xffffffe17b80 (-2000000) is written to GP counter 0.
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+When the same task schedule in again, the counter should starts from
+previous left. However, it starts from the fixed period -2000000 again.
+
+A special variant of intel_pmu_save_and_restart() is used for
+auto-reload, which doesn't update the hwc->period_left.
+When the monitored task schedules in again, perf doesn't know the left
+period. The fixed period is used, which is inaccurate.
+
+With auto-reload, the counter always has a negative counter value. So
+the left period is -value. Update the period_left in
+intel_pmu_save_and_restart_reload().
+
+With the patch:
+
+      //The MSR trace of task schedule out
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value ffffffe25cbc
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //The MSR trace of the same task schedule in again
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/jbd2/commit.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/ds.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 3fe9b7c27ce82..c321fa06081ce 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -980,12 +980,29 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		 * pagesize and it is attached to the last partial page.
- 		 */
- 		if (buffer_freed(bh) && !jh->b_next_transaction) {
-+			struct address_space *mapping;
-+
- 			clear_buffer_freed(bh);
- 			clear_buffer_jbddirty(bh);
--			clear_buffer_mapped(bh);
--			clear_buffer_new(bh);
--			clear_buffer_req(bh);
--			bh->b_bdev = NULL;
-+
-+			/*
-+			 * Block device buffers need to stay mapped all the
-+			 * time, so it is enough to clear buffer_jbddirty and
-+			 * buffer_freed bits. For the file mapping buffers (i.e.
-+			 * journalled data) we need to unmap buffer and clear
-+			 * more bits. We also need to be careful about the check
-+			 * because the data page mapping can get cleared under
-+			 * out hands, which alse need not to clear more bits
-+			 * because the page and buffers will be freed and can
-+			 * never be reused once we are done with them.
-+			 */
-+			mapping = READ_ONCE(bh->b_page->mapping);
-+			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
-+				clear_buffer_mapped(bh);
-+				clear_buffer_new(bh);
-+				clear_buffer_req(bh);
-+				bh->b_bdev = NULL;
-+			}
- 		}
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1402,6 +1402,8 @@ intel_pmu_save_and_restart_reload(struct
+ 	old = ((s64)(prev_raw_count << shift) >> shift);
+ 	local64_add(new - old + count * period, &event->count);
  
- 		if (buffer_jbddirty(bh)) {
--- 
-2.20.1
-
++	local64_set(&hwc->period_left, -new);
++
+ 	perf_event_update_userpage(event);
+ 
+ 	return 0;
 
 
