@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C717C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2068C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E854424658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BDC24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgBRXaE (ORCPT
+        id S1728091AbgBRXaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:30:04 -0500
-Received: from mga04.intel.com ([192.55.52.120]:38644 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgBRXaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 18:30:00 -0500
+Received: from mga04.intel.com ([192.55.52.120]:38639 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgBRX34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:29:56 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:58 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="282936694"
+   d="scan'208";a="282936659"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:58 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:56 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/13] KVM: x86: Allow userspace to disable the kernel's emulator
-Date:   Tue, 18 Feb 2020 15:29:53 -0800
-Message-Id: <20200218232953.5724-14-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 05/13] KVM: x86: Refactor emulated exception injection to take the emul context
+Date:   Tue, 18 Feb 2020 15:29:45 -0800
+Message-Id: <20200218232953.5724-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200218232953.5724-1-sean.j.christopherson@intel.com>
 References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
@@ -49,27 +49,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose the emulator control to userspace via a module param.
+Invert the vcpu->context derivation in inject_emulated_exception() in
+preparation for dynamically allocating the emulation context.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f9134e1104c2..ca3aa185f5ee 100644
+index 772e704e8083..79d1113ad6e7 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -159,7 +159,8 @@ EXPORT_SYMBOL_GPL(enable_vmware_backdoor);
- static bool __read_mostly force_emulation_prefix = false;
- module_param(force_emulation_prefix, bool, S_IRUGO);
+@@ -6399,9 +6399,10 @@ static void toggle_interruptibility(struct kvm_vcpu *vcpu, u32 mask)
+ 	}
+ }
  
--static const bool enable_emulator = true;
-+static bool __read_mostly enable_emulator = true;
-+module_param_named(emulator, enable_emulator, bool, 0440);
+-static bool inject_emulated_exception(struct kvm_vcpu *vcpu)
++static bool inject_emulated_exception(struct x86_emulate_ctxt *ctxt)
+ {
+-	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
++	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++
+ 	if (ctxt->exception.vector == PF_VECTOR)
+ 		return kvm_propagate_fault(vcpu, &ctxt->exception);
  
- int __read_mostly pi_inject_timer = -1;
- module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
+@@ -6806,7 +6807,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 				 */
+ 				WARN_ON_ONCE(ctxt->exception.vector == UD_VECTOR ||
+ 					     exception_type(ctxt->exception.vector) == EXCPT_TRAP);
+-				inject_emulated_exception(vcpu);
++				inject_emulated_exception(ctxt);
+ 				return 1;
+ 			}
+ 			return handle_emulation_failure(vcpu, emulation_type);
+@@ -6860,7 +6861,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 
+ 	if (ctxt->have_exception) {
+ 		r = 1;
+-		if (inject_emulated_exception(vcpu))
++		if (inject_emulated_exception(ctxt))
+ 			return r;
+ 	} else if (vcpu->arch.pio.count) {
+ 		if (!vcpu->arch.pio.in) {
 -- 
 2.24.1
 
