@@ -2,251 +2,136 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6240CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A131C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E87822B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B49A24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rVQswF5V"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DqRQgGg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBRQNv (ORCPT
+        id S1726634AbgBRQPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:13:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44678 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQNu (ORCPT
+        Tue, 18 Feb 2020 11:15:33 -0500
+Received: from mail.efficios.com ([167.114.26.124]:42580 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgBRQPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:13:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2mHR3xMso7wPx9QoGFzx1rwYrTNRCHEQhcUJCVcR0UA=; b=rVQswF5VT6aHITV+WQUJTI3Sz+
-        zyeGRgv7EpRN79/smg6b0KsiaFNp8cz2w9ayvr7zvy0kIym05YzsZ96ljemkKSswVgEtTFy8B/js+
-        RMHOEglvCWUAvrjRhOBvSHoksCz5e8omrZSudJOAymhrgFTP5oDGLhx9D3WKxaqezGQ6YFY4aZQck
-        tEuL6hUTKsUiqbGs4d3jIw7+MGmE7FZ+0OOzyzZIOCTOVEhwJUHhxxXROk1Ce/Pdp+LXknu9Pi9Va
-        djTz61ObHmpvi9D2uCIbaJrqytqtN+DLAMk+ewJWL7KLa2wafgvXByskvEX2et7P3jPN316R1Nxgo
-        cL+/rPoQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j45VN-0002zZ-IR; Tue, 18 Feb 2020 16:13:49 +0000
-Date:   Tue, 18 Feb 2020 08:13:49 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
-Message-ID: <20200218161349.GS7778@bombadil.infradead.org>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-14-willy@infradead.org>
- <20200214135248.zqcqx3erb4pnlvmu@box>
- <20200214160342.GA7778@bombadil.infradead.org>
- <20200218141634.zhhjgtv44ux23l3l@box>
+        Tue, 18 Feb 2020 11:15:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 58D4B256DF3;
+        Tue, 18 Feb 2020 11:15:31 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id tmNNx4F-udVa; Tue, 18 Feb 2020 11:15:31 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E0BEF2578A4;
+        Tue, 18 Feb 2020 11:15:30 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E0BEF2578A4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1582042530;
+        bh=5UEGMAe09c0uhoyr1w31js41MQsx532sjq0P/JWOjIo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=DqRQgGg3QaKuaJ/KHVfwr0hX0w8rcR/sm/1Q5yrVteFd7E1ClYUdUzAsa9MfANy4b
+         BzcHqVH3e5L0RKghM+TFjdBrjxwYepZYej/+FJMw85oFlSrcbgMvTvCsD9JsHKYUUr
+         9bzmwQpLzOTVoZ/G08+wmGY/r9oBSqib7jES4/hsKiwcpQ1SX/s7ZkcynBayNUWxhs
+         Ko6WU+ylzrHJW2O6hRk+oZYu36SNssSt9N/OkVfx1fJZtyKAW0O5iW1PBabqsueVLy
+         ta1I+dMO3R/Uk1hoRgeh0u/6bpQfmFZ5ftz8ykJCYQvMKB1Bdft9KW6GS+IdJuVeFB
+         1U4vxRMXsyN3Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Mycul7_S9TMN; Tue, 18 Feb 2020 11:15:30 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id CACF2256DB5;
+        Tue, 18 Feb 2020 11:15:30 -0500 (EST)
+Date:   Tue, 18 Feb 2020 11:15:30 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     paulmck <paulmck@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Message-ID: <1841874582.7975.1582042530726.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200218161231.GD2935@paulmck-ThinkPad-P72>
+References: <20200213211930.GG170680@google.com> <20200213223918.GN2935@paulmck-ThinkPad-P72> <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org> <20200215145934.GD2935@paulmck-ThinkPad-P72> <20200217175519.12a694a969c1a8fb2e49905e@kernel.org> <20200217163112.GM2935@paulmck-ThinkPad-P72> <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org> <20200218161231.GD2935@paulmck-ThinkPad-P72>
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218141634.zhhjgtv44ux23l3l@box>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: rcu,tracing: Create trace_rcu_{enter,exit}()
+Thread-Index: E7a9UHyAd+58DcDwrMqxghyBB+Sv3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:16:34PM +0300, Kirill A. Shutemov wrote:
-> > +               if (start1 >= PAGE_SIZE) {
-> > +                       start1 -= PAGE_SIZE;
-> > +                       end1 -= PAGE_SIZE;
-> > +                       if (start2) {
-> > +                               start2 -= PAGE_SIZE;
-> > +                               end2 -= PAGE_SIZE;
-> > +                       }
+----- On Feb 18, 2020, at 11:12 AM, paulmck paulmck@kernel.org wrote:
+
+> On Tue, Feb 18, 2020 at 01:33:35PM +0900, Masami Hiramatsu wrote:
+>> On Mon, 17 Feb 2020 08:31:12 -0800
+>> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+>> > 
+>> > > BTW, if you consider the x86 specific code is in the generic file,
+>> > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
+>> > > (Sorry, I've hit this idea right now)
+>> > 
+>> > Might this affect other architectures with NMIs and probe-like things?
+>> > If so, it might make sense to leave it where it is.
+>> 
+>> Yes, git grep shows that arm64 is using rcu_nmi_enter() in
+>> debug_exception_enter().
+>> OK, let's keep it, but maybe it is good to update the comment for
+>> arm64 too. What about following?
+>> 
+>> +/*
+>> + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
+>> + * marked NOKPROBE before kprobes handler is called.
+>> + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
+>> + * before kprobes handle happens to call rcu_nmi_enter() which means
+>> + * that rcu_nmi_enter() must be marked NOKRPOBE.
+>> + */
 > 
-> You assume start2/end2 is always after start1/end1 in the page.
-> Is it always true? If so, I would add BUG_ON() for it.
-
-after or zero.  Yes, I should add a BUG_ON to check for that.
-
-> Otherwise, looks good.
-
-Here's what I currently have (I'll add the BUG_ON later):
-
-commit 7fabe16755365cdc6e80343ef994843ecebde60a
-Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-Date:   Sat Feb 1 03:38:49 2020 -0500
-
-    fs: Support THPs in zero_user_segments
-    
-    We can only kmap() one subpage of a THP at a time, so loop over all
-    relevant subpages, skipping ones which don't need to be zeroed.  This is
-    too large to inline when THPs are enabled and we actually need highmem,
-    so put it in highmem.c.
-    
-    Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index ea5cdbd8c2c3..74614903619d 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
-        kunmap_atomic(kaddr);
- }
- 
-+#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
-+void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
-+               unsigned start2, unsigned end2);
-+#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
- static inline void zero_user_segments(struct page *page,
--       unsigned start1, unsigned end1,
--       unsigned start2, unsigned end2)
-+               unsigned start1, unsigned end1,
-+               unsigned start2, unsigned end2)
- {
-+       unsigned long i;
-        void *kaddr = kmap_atomic(page);
- 
--       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
-+       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
- 
-        if (end1 > start1)
-                memset(kaddr + start1, 0, end1 - start1);
-@@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
-                memset(kaddr + start2, 0, end2 - start2);
- 
-        kunmap_atomic(kaddr);
--       flush_dcache_page(page);
-+       for (i = 0; i < hpage_nr_pages(page); i++)
-+               flush_dcache_page(page + i);
- }
-+#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
- 
- static inline void zero_user_segment(struct page *page,
-        unsigned start, unsigned end)
-diff --git a/mm/highmem.c b/mm/highmem.c
-index 64d8dea47dd1..3a85c66ef532 100644
---- a/mm/highmem.c
-+++ b/mm/highmem.c
-@@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
-        if (need_wakeup)
-                wake_up(pkmap_map_wait);
- }
--
- EXPORT_SYMBOL(kunmap_high);
--#endif
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
-+               unsigned start2, unsigned end2)
-+{
-+       unsigned int i;
-+
-+       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
-+
-+       for (i = 0; i < hpage_nr_pages(page); i++) {
-+               void *kaddr;
-+               unsigned this_end;
-+
-+               if (end1 == 0 && start2 >= PAGE_SIZE) {
-+                       start2 -= PAGE_SIZE;
-+                       end2 -= PAGE_SIZE;
-+                       continue;
-+               }
-+
-+               if (start1 >= PAGE_SIZE) {
-+                       start1 -= PAGE_SIZE;
-+                       end1 -= PAGE_SIZE;
-+                       if (start2) {
-+                               start2 -= PAGE_SIZE;
-+                               end2 -= PAGE_SIZE;
-+                       }
-+                       continue;
-+               }
-+
-+               kaddr = kmap_atomic(page + i);
-+
-+               this_end = min_t(unsigned, end1, PAGE_SIZE);
-+               if (end1 > start1)
-+                       memset(kaddr + start1, 0, this_end - start1);
-+               end1 -= this_end;
-+               start1 = 0;
-+
-+               if (start2 >= PAGE_SIZE) {
-+                       start2 -= PAGE_SIZE;
-+                       end2 -= PAGE_SIZE;
-+               } else {
-+                       this_end = min_t(unsigned, end2, PAGE_SIZE);
-+                       if (end2 > start2)
-+                               memset(kaddr + start2, 0, this_end - start2);
-+                       end2 -= this_end;
-+                       start2 = 0;
-+               }
-+
-+               kunmap_atomic(kaddr);
-+               flush_dcache_page(page + i);
-+
-+               if (!end1 && !end2)
-+                       break;
-+       }
-+
-+       BUG_ON((start1 | start2 | end1 | end2) != 0);
-+}
-+EXPORT_SYMBOL(zero_user_segments);
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+#endif /* CONFIG_HIGHMEM */
- 
- #if defined(HASHED_PAGE_VIRTUAL)
- 
-
-
-
-> > +                       continue;
-> > +               }
-> > +
-> > +               kaddr = kmap_atomic(page + i);
-> > +
-> > +               this_end = min_t(unsigned, end1, PAGE_SIZE);
-> > +               if (end1 > start1)
-> > +                       memset(kaddr + start1, 0, this_end - start1);
-> > +               end1 -= this_end;
-> > +               start1 = 0;
-> > +
-> > +               if (start2 >= PAGE_SIZE) {
-> > +                       start2 -= PAGE_SIZE;
-> > +                       end2 -= PAGE_SIZE;
-> > +               } else {
-> > +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
-> > +                       if (end2 > start2)
-> > +                               memset(kaddr + start2, 0, this_end - start2);
-> > +                       end2 -= this_end;
-> > +                       start2 = 0;
-> > +               }
-> > +
-> > +               kunmap_atomic(kaddr);
-> > +               flush_dcache_page(page + i);
-> > +
-> > +               if (!end1 && !end2)
-> > +                       break;
-> > +       }
-> > +
-> > +       BUG_ON((start1 | start2 | end1 | end2) != 0);
-> >  }
-> > 
-> > I think at this point it has to move out-of-line too.
-> > 
-> > > > +static inline void zero_user_large(struct page *page,
-> > > > +		unsigned start, unsigned size)
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +
-> > > > +	for (i = 0; i < thp_order(page); i++) {
-> > > > +		if (start > PAGE_SIZE) {
-> > > 
-> > > Off-by-one? >= ?
-> > 
-> > Good catch; I'd also noticed that when I came to redo the zero_user_segments().
-> > 
+> Would it work to describe the general problem, then give x86 details
+> as a specific example, as follows?
 > 
-> -- 
->  Kirill A. Shutemov
+> /*
+> * On some architectures, certain exceptions prohibit use of kprobes until
+> * the exception code path reaches a certain point.  For example, on x86 all
+> * functions called by do_int3() must be marked NOKPROBE.  However, once
+> * kprobe_int3_handler() is called, kprobing is permitted.  Specifically,
+> * ist_enter() is called in do_int3() before kprobe_int3_handle().
+> * Furthermore, ist_enter() calls rcu_nmi_enter(), which means that
+> * rcu_nmi_enter() must be marked NOKRPOBE.
+> */
+> 
+> That way, I don't feel like I need to update the commment each time
+> a new architecture adds this capability.  ;-)
+
+I suspect this kind of comment would belong in a new
+Documentation/features/kprobes/annotations.txt or something
+similar. You might want to look at other "features" files to see
+the expected layout.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
