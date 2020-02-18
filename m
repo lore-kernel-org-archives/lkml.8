@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B49C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED78FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADF72465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B943A2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056100;
-	bh=e1dBmmMww1C+qKOs6uo1vHTZzaE6xVBRPGYe8JnNguo=;
+	s=default; t=1582056103;
+	bh=5BanddPanjla8ZTGWbfTE9JVb11UW/XRK0aZm0tPR+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JlCI+tS+87rDK2AIvlF2im28lFePd8Wxal5y94zgODDJxxnwlSRGXKIL1T16s2kxO
-	 TKEAcewJnpXCGe24r/NTn7LdVqbwPKtmehKKHkIaMthl0Hqu7+5Wx8PsBfijqo+WcN
-	 +y1PUUXFKPU7MHuYz+yoUAlohQg8f0tERo6SGNtc=
+	b=ciFI/I+0t/SqLMcU1+tUy7K/wZd7Fxmnw0GcUiQKzVlqHiECOq3JtTSVBzsXvetLC
+	 1V3EfauXQyEfxtMKOcwcFD2OuNQHxkh0YFi1C4CGl9EDeDptuUOt+GHaJdc/39R5qW
+	 giXmG2DWFN8Eg2V5G4o4qu5dN4TI+MGAIxDzTX3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgBRUBj (ORCPT
+        id S1728806AbgBRUBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:01:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:01:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgBRUBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:01:35 -0500
+        id S1728536AbgBRUBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:01:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4248A2464E;
-        Tue, 18 Feb 2020 20:01:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C534124125;
+        Tue, 18 Feb 2020 20:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056094;
-        bh=e1dBmmMww1C+qKOs6uo1vHTZzaE6xVBRPGYe8JnNguo=;
+        s=default; t=1582056097;
+        bh=5BanddPanjla8ZTGWbfTE9JVb11UW/XRK0aZm0tPR+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVfP6DzAGaGL4WFJk1NqYGLkFbRjVtSd28GX8bhKzpWK1V1+8MT23gHOspoSEv56y
-         fhHMDRTfA0nKc1YE+R6jRNdOPC2bdiv+bbelnzy2newhzNhv8+b69i3i+4sNcy8co3
-         4FlJ841QToMlisz5VqQ0YIJFMGVEH0aZB7c2ff/8=
+        b=ryPhAO3Cm8I1osMNpTkv3Grlo6bvhL/wwMNOMzkFNcGSa7vKMciRlypxlCB57Lxoe
+         sCR4FPcz8FmvSnhhnb4x1UhgDudqVcnxb+EpyylhYSIWKH9fXYUp9MejCixsvJm+eB
+         2FLLi6iq7PW/MUkdeJmLE5Ae5i8rLD8B8E0hV66c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 5.5 31/80] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
-Date:   Tue, 18 Feb 2020 20:54:52 +0100
-Message-Id: <20200218190435.434210658@linuxfoundation.org>
+        stable@vger.kernel.org, Gaurav Agrawal <agrawalgaurav@gnome.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.5 04/80] Input: synaptics - enable SMBus on ThinkPad L470
+Date:   Tue, 18 Feb 2020 20:54:25 +0100
+Message-Id: <20200218190432.472014867@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,100 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Gaurav Agrawal <agrawalgaurav@gnome.org>
 
-commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 upstream.
+commit b8a3d819f872e0a3a0a6db0dbbcd48071042fb98 upstream.
 
-There is no need to delay the clearing of b_modified flag to the
-transaction committing time when unmapping the journalled buffer, so
-just move it to the journal_unmap_buffer().
+Add touchpad LEN2044 to the list, as it is capable of working with
+psmouse.synaptics_intertouch=1
 
-Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Signed-off-by: Gaurav Agrawal <agrawalgaurav@gnome.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/CADdtggVzVJq5gGNmFhKSz2MBwjTpdN5YVOdr4D3Hkkv=KZRc9g@mail.gmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/commit.c      |   43 +++++++++++++++----------------------------
- fs/jbd2/transaction.c |   10 ++++++----
- 2 files changed, 21 insertions(+), 32 deletions(-)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -976,34 +976,21 @@ restart_loop:
- 		 * it. */
- 
- 		/*
--		* A buffer which has been freed while still being journaled by
--		* a previous transaction.
--		*/
--		if (buffer_freed(bh)) {
--			/*
--			 * If the running transaction is the one containing
--			 * "add to orphan" operation (b_next_transaction !=
--			 * NULL), we have to wait for that transaction to
--			 * commit before we can really get rid of the buffer.
--			 * So just clear b_modified to not confuse transaction
--			 * credit accounting and refile the buffer to
--			 * BJ_Forget of the running transaction. If the just
--			 * committed transaction contains "add to orphan"
--			 * operation, we can completely invalidate the buffer
--			 * now. We are rather through in that since the
--			 * buffer may be still accessible when blocksize <
--			 * pagesize and it is attached to the last partial
--			 * page.
--			 */
--			jh->b_modified = 0;
--			if (!jh->b_next_transaction) {
--				clear_buffer_freed(bh);
--				clear_buffer_jbddirty(bh);
--				clear_buffer_mapped(bh);
--				clear_buffer_new(bh);
--				clear_buffer_req(bh);
--				bh->b_bdev = NULL;
--			}
-+		 * A buffer which has been freed while still being journaled
-+		 * by a previous transaction, refile the buffer to BJ_Forget of
-+		 * the running transaction. If the just committed transaction
-+		 * contains "add to orphan" operation, we can completely
-+		 * invalidate the buffer now. We are rather through in that
-+		 * since the buffer may be still accessible when blocksize <
-+		 * pagesize and it is attached to the last partial page.
-+		 */
-+		if (buffer_freed(bh) && !jh->b_next_transaction) {
-+			clear_buffer_freed(bh);
-+			clear_buffer_jbddirty(bh);
-+			clear_buffer_mapped(bh);
-+			clear_buffer_new(bh);
-+			clear_buffer_req(bh);
-+			bh->b_bdev = NULL;
- 		}
- 
- 		if (buffer_jbddirty(bh)) {
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2329,14 +2329,16 @@ static int journal_unmap_buffer(journal_
- 			return -EBUSY;
- 		}
- 		/*
--		 * OK, buffer won't be reachable after truncate. We just set
--		 * j_next_transaction to the running transaction (if there is
--		 * one) and mark buffer as freed so that commit code knows it
--		 * should clear dirty bits when it is done with the buffer.
-+		 * OK, buffer won't be reachable after truncate. We just clear
-+		 * b_modified to not confuse transaction credit accounting, and
-+		 * set j_next_transaction to the running transaction (if there
-+		 * is one) and mark buffer as freed so that commit code knows
-+		 * it should clear dirty bits when it is done with the buffer.
- 		 */
- 		set_buffer_freed(bh);
- 		if (journal->j_running_transaction && buffer_jbddirty(bh))
- 			jh->b_next_transaction = journal->j_running_transaction;
-+		jh->b_modified = 0;
- 		spin_unlock(&journal->j_list_lock);
- 		spin_unlock(&jh->b_state_lock);
- 		write_unlock(&journal->j_state_lock);
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -180,6 +180,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
++	"LEN2044", /* L470  */
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
 
 
