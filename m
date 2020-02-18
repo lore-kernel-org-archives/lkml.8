@@ -2,101 +2,145 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A1BC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33781C3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2136420801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:45:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlAxlN0u"
+	by mail.kernel.org (Postfix) with ESMTP id 13A7C20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgBROpm (ORCPT
+        id S1726771AbgBROrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:45:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38976 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbgBROpl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:45:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so3194604wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Dm++KgiZmzIoz3O/C9MxSRIxwKL4qLi+n4zUp5aZGPM=;
-        b=tlAxlN0uE3ErB+aHj6HDUmSorZ6GTEcYOSTRfREJ9NPzN/JtBw3VrIuhIWcvn9aIc5
-         rYTGyf5vaECjfXgPAwe/W/Z5SPM6HhQyL5iRxb2ZHrgFlB1ZKBqfNvfK7EcGqnsA56qh
-         c2PRR+Duh7ToLWIJCVpZQ1kWb25v2Ej09txlDt1ScetF14xJWp27TafGJKZV7aX8cbZ0
-         ONEquH+aYOn00n2Z30wzCNQKT+1jYf6PJQWSXJNxkrgzW0/eqTJZi3oP2qF1RSXPGK1J
-         eqZC+swo0TJREb8U2eDr6daPLf+R+eh0WRPtO1USgY/Mb1RnmbZdjNMuO4xs+YMaNpLx
-         N55w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Dm++KgiZmzIoz3O/C9MxSRIxwKL4qLi+n4zUp5aZGPM=;
-        b=p0wPTA+x0NlhnO7qRRALf4fSQqVXXcTsXRmILxTikM31jC95JOtvLfEuDhfa9mTamE
-         kLZVbdiDOxyTfNEFGIDlutStjcv+uU5pzVgWHBtq77RZLNyfy7PVNrqV/YC2BjxSL1o+
-         IYz154wv/ZoxPoeINjd9PPM1Ic/GLOW33I8D8wOgkTp2/k4pHp31PVngJAu/ScNDWT8m
-         GJa1bGUsjhy3rY66Aou82W0RmDmxOpS1z1GAC5KdBsxkrNboG8PWuXyWQTxf89Rk8HWQ
-         B183KyB2DDDfFhXpEZt3y5fjMG/kyGcECG6ldVqsFHhz3jJaGjMD9+3Fm84mK9geA7xo
-         eIkQ==
-X-Gm-Message-State: APjAAAXbNiJPIQX5Wuje0cXj5ermprcz/bQUIFEHlEdEkXRzI11AUcR2
-        /WgJAEe9RzxiQAhNHO8GU1djbg==
-X-Google-Smtp-Source: APXvYqxVcuws4XNX5QjelEIrPDX/Rf+PsiA49bwcLDSPaFaWv4tMW/RuBzCfCO5LFtCHH8DJJ+KCCw==
-X-Received: by 2002:a05:600c:2c44:: with SMTP id r4mr3498992wmg.140.1582037138175;
-        Tue, 18 Feb 2020 06:45:38 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:b988:85d8:294:141d])
-        by smtp.gmail.com with ESMTPSA id o7sm3705403wmh.11.2020.02.18.06.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 06:45:36 -0800 (PST)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
-        hdanton@sina.com, quentin.perret@arm.com,
-        srikar@linux.vnet.ibm.com, riel@surriel.com,
-        Morten.Rasmussen@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched/fair: fix statistics for find_idlest_group()
-Date:   Tue, 18 Feb 2020 15:45:34 +0100
-Message-Id: <20200218144534.4564-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Feb 2020 09:47:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:53646 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbgBROrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:47:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 413291FB;
+        Tue, 18 Feb 2020 06:47:01 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA7163F703;
+        Tue, 18 Feb 2020 06:46:57 -0800 (PST)
+Date:   Tue, 18 Feb 2020 14:46:53 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Pankaj Bansal (OSS)" <pankaj.bansal@oss.nxp.com>
+Cc:     Hanjun Guo <guohanjun@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Will Deacon <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
+References: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <615c6807-c018-92c9-b66a-8afdda183699@huawei.com>
+ <VI1PR04MB513558BF77192255CBE12102B0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB513558BF77192255CBE12102B0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sgs->group_weight is not set while gathering statistics in
-update_sg_wakeup_stats(). This means that a group can be classified as
-fully busy with 0 running tasks if utilization is high enough.
+On Tue, Feb 18, 2020 at 12:48:39PM +0000, Pankaj Bansal (OSS) wrote:
 
-This path is mainly used for fork and exec.
+[...]
 
-Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
+> > > In DT case, we create the domain DOMAIN_BUS_FSL_MC_MSI for MC bus and
+> > it's children.
+> > > And then when MC child device is created, we search the "msi-parent"
+> > property from the MC
+> > > DT node and get the ITS associated with MC bus. Then we search
+> > DOMAIN_BUS_FSL_MC_MSI
+> > > on that ITS. Once we find the domain, we can call msi_domain_alloc_irqs for
+> > that domain.
+> > >
+> > > This is exactly what we tried to do initially with ACPI. But the searching
+> > DOMAIN_BUS_FSL_MC_MSI
+> > > associated to an ITS, is something that is part of drivers/acpi/arm64/iort.c.
+> > > (similar to DOMAIN_BUS_PLATFORM_MSI and DOMAIN_BUS_PCI_MSI)
+> > 
+> > Can you have a look at mbigen driver (drivers/irqchip/irq-mbigen.c) to see if
+> > it helps you?
+> > 
+> > mbigen is an irq converter to convert device's wired interrupts into MSI
+> > (connecting to ITS), which will alloc a bunch of MSIs from ITS platform MSI
+> > domain at the setup.
+> 
+> Unfortunately this is not the same case as ours. As I see Hisilicon IORT table
+> Is using single id mapping with named components.
+> 
+> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1616/D05AcpiTables/D05Iort.asl#L300
+> 
+> while we are not:
+> 
+> https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platforms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Iort.aslc?h=LX2160_UEFI_ACPI_EAR1#n290
+> 
+> This is because as I said, we are trying to represent a bus in IORT
+> via named components and not individual devices connected to that bus.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a7e11b1bb64c..643ed6d8b8ff 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8354,6 +8354,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
- 
- 	sgs->group_capacity = group->sgc->capacity;
- 
-+	sgs->group_weight = group->group_weight;
-+
- 	sgs->group_type = group_classify(sd->imbalance_pct, group, sgs);
- 
- 	/*
--- 
-2.17.1
+I had a thorough look into this and strictly speaking there is no
+*mapping* requirement at all, all you need to know is what ITS the FSL
+MC bus is mapping MSIs to. Which brings me to the next question (which
+is orthogonal to how to model FSL MC in IORT, that has to be discussed
+but I want to have a full picture in mind first).
 
+When you probe the FSL MC as a platform device, the ACPI core,
+through IORT (if you add the 1:1 mapping as an array of single
+mappings) already link the platform device to ITS platform
+device MSI domain (acpi_configure_pmsi_domain()).
+
+The associated fwnode is the *same* (IIUC) as for the
+DOMAIN_BUS_FSL_MC_MSI and ITS DOMAIN_BUS_NEXUS, so in practice
+you don't need IORT code to retrieve the DOMAIN_BUS_FSL_MC_MSI
+domain, the fwnode is the same as the one in the FSL MC platform
+device IRQ domain->fwnode pointer and you can use it to
+retrieve the DOMAIN_BUS_FSL_MC_MSI domain through it.
+
+Is my reading correct ?
+
+Overall, DOMAIN_BUS_FSL_MC_MSI is just an MSI layer to override the
+provide the MSI domain ->prepare hook (ie to stash the MC device id), no
+more (ie its_fsl_mc_msi_prepare()).
+
+That's it for the MSI layer - I need to figure out whether we *want* to
+extend IORT (and/or ACPI) to defined bindings for "additional busses",
+what I write above is a summary of my understanding, I have not made my
+mind up yet.
+
+As for the IOMMU code, it seems like the only thing needed is
+extending named components configuration to child devices,
+hierarchically.
+
+As Marc already mentioned, IOMMU and IRQ code must be separate for
+future postings but first we need to find a suitable answer to
+the problem at hand.
+
+Lorenzo
