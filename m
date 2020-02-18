@@ -2,84 +2,122 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182F9C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F04FC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D793F24658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582065687;
-	bh=fr+Sb3VDOv2X+vL7GEwYooziLBNmezLRth4YeApzMp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=su353FhWhRepl82gLgOSMfBD7O31gMX670RI4m4NB+NI3PGXkCggNStUuzB8qRCYn
-	 4XdTia8eKfJKhfQKqr/nGR58x4XdqVhblipJFp2Bz5CiOE7WuqDhAkAulXDVOJfwY1
-	 4hSa2TiZVVh7RjGt29BL5vMF4xcjvq+UYZdvTDT8=
+	by mail.kernel.org (Postfix) with ESMTP id 2BE602173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgBRWl0 (ORCPT
+        id S1726641AbgBRWoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60010 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 17:44:07 -0500
+Received: from mga09.intel.com ([134.134.136.24]:23569 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgBRWl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:41:26 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAE12173E;
-        Tue, 18 Feb 2020 22:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582065686;
-        bh=fr+Sb3VDOv2X+vL7GEwYooziLBNmezLRth4YeApzMp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wAB6hjeEGnf2RV7nt4qfw/cO9gc8ZhyADYkt6MyKR4jok+XraDYagNgrTvEPylDje
-         OzaVf16wNKG8gUWGbi1gp9ly0qlZo1gpI66ULB9zb7znCi0qUMAYMcLPcZI3RORk5V
-         whHknD9md+U6DAiOGg438050JJpzt5e0mxjuQGEc=
-Date:   Tue, 18 Feb 2020 23:41:23 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, paulmck@kernel.org
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200218224123.GB13978@lenoir>
-References: <20200218173150.GK14449@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
- <20200218200200.GE11457@worktop.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F57BDFB@ORSMSX115.amr.corp.intel.com>
- <20200218203404.GI11457@worktop.programming.kicks-ass.net>
- <20200218214904.GD11802@worktop.programming.kicks-ass.net>
- <20200218215325.GE11802@worktop.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218215325.GE11802@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726427AbgBRWoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:44:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 14:44:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="436017418"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Feb 2020 14:44:04 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, mhocko@kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v4] mm/vmscan.c: remove cpu online notification for now
+Date:   Wed, 19 Feb 2020 06:44:22 +0800
+Message-Id: <20200218224422.3407-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:53:25PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 18, 2020 at 10:49:04PM +0100, Peter Zijlstra wrote:
-> > diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-> > index da0af631ded5..146332764673 100644
-> > --- a/include/linux/hardirq.h
-> > +++ b/include/linux/hardirq.h
-> > @@ -71,7 +71,7 @@ extern void irq_exit(void);
-> >  		printk_nmi_enter();				\
-> >  		lockdep_off();					\
-> >  		ftrace_nmi_enter();				\
-> > -		BUG_ON(in_nmi());				\
-> > +		BUG_ON(in_nmi() == 0xf);			\
-> 
-> That wants to be:
-> 
-> 		BUG_ON(in_nmi() == NMI_MASK);			\
+kswapd kernel thread starts either with a CPU affinity set to the full
+cpu mask of its target node or without any affinity at all if the node
+is CPUless. There is a cpu hotplug callback (kswapd_cpu_online) that
+implements an elaborate way to update this mask when a cpu is onlined.
 
-Ah that's the email I didn't read...
-Sorry for the noise.
+It is not really clear whether there is any actual benefit from this
+scheme. Completely CPU-less NUMA nodes rarely gain a new CPU during
+runtime. Drop the code for that reason. If there is a real usecase then
+we can resurrect and simplify the code.
+
+[mhocko@suse.com rewrite changelog]
+
+Suggested-by: Michal Hocko <mhocko@suse.org>
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+---
+v4:
+  * adjust changelog suggested by Michal
+v3:
+  * remove the cpu online notification suggested by Michal
+v2:
+  * rephrase the changelog
+---
+ mm/vmscan.c | 27 +--------------------------
+ 1 file changed, 1 insertion(+), 26 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 665f33258cd7..a4fdf3dc8887 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -4023,27 +4023,6 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
+ }
+ #endif /* CONFIG_HIBERNATION */
+ 
+-/* It's optimal to keep kswapds on the same CPUs as their memory, but
+-   not required for correctness.  So if the last cpu in a node goes
+-   away, we get changed to run anywhere: as the first one comes back,
+-   restore their cpu bindings. */
+-static int kswapd_cpu_online(unsigned int cpu)
+-{
+-	int nid;
+-
+-	for_each_node_state(nid, N_MEMORY) {
+-		pg_data_t *pgdat = NODE_DATA(nid);
+-		const struct cpumask *mask;
+-
+-		mask = cpumask_of_node(pgdat->node_id);
+-
+-		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
+-			/* One of our CPUs online: restore mask */
+-			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+-	}
+-	return 0;
+-}
+-
+ /*
+  * This kswapd start function will be called by init and node-hot-add.
+  * On node-hot-add, kswapd will moved to proper cpus if cpus are hot-added.
+@@ -4083,15 +4062,11 @@ void kswapd_stop(int nid)
+ 
+ static int __init kswapd_init(void)
+ {
+-	int nid, ret;
++	int nid;
+ 
+ 	swap_setup();
+ 	for_each_node_state(nid, N_MEMORY)
+  		kswapd_run(nid);
+-	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+-					"mm/vmscan:online", kswapd_cpu_online,
+-					NULL);
+-	WARN_ON(ret < 0);
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
+
