@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FD8C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862CEC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8002464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5561D24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055913;
-	bh=qVVRBgPPkf0uH6lybJWPybIojiNichIoshNQV1Ur0MQ=;
+	s=default; t=1582055917;
+	bh=Y+p35oZA6EvXFtibK1QrYEqzN/+CJYN7+vX9iMq7Tys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbR7WpmI5J/nnTeuq19R4V4MVWZJvVydsgm5eUxOMnakqld5srZPevwekXF7XtGE8
-	 txbcQG9zVy+nydTPO+QJ0Z6zvh3Vvsg32EYS4hrm6DIzLlml/vSDdMPDpniyoFxx3x
-	 8Ka4Bt8U2+wRfLcP0a+L4lS/PRDm2NhM/a2h7Ejk=
+	b=wOT8VFEvLaL3JDAL4C/8Jg8umtT6Jj22OGPsT3JORD9g62qVH0XyrdafaBBPAhIBv
+	 IFw46riIv44JR2HIMU3jeXjvvNlzyL8xGloBCZHFOB0o5mmvzznPtPXjEjp5EXGOeR
+	 zluRZzRWIoeZMCxE3+4DJDia3GgouaISMibOUOhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgBRT6b (ORCPT
+        id S1727720AbgBRT6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:58:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgBRT61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:27 -0500
+        id S1728183AbgBRT6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828DF20659;
-        Tue, 18 Feb 2020 19:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B716B20659;
+        Tue, 18 Feb 2020 19:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055907;
-        bh=qVVRBgPPkf0uH6lybJWPybIojiNichIoshNQV1Ur0MQ=;
+        s=default; t=1582055912;
+        bh=Y+p35oZA6EvXFtibK1QrYEqzN/+CJYN7+vX9iMq7Tys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIB/3Wj+5PUfy72CqYMj62SDu7kMDlxZw179ZhKgGSs2+8rwkKSE4Nm1/HGliKHYE
-         IOl5+uMh91OgNGc55ttVYaohvD9RPIRb/TlX6BM9FqgYArRRCzwvEkn6JjCje1NYCc
-         O1ZUQYLpf1zo+3tElQcplJpbiuTDU8Vv/EjEMwwc=
+        b=JkXCc2aIfH9EbQUvsYiICsXriwLBb9Lio+4K/M12/NWdpbW3l8OQgiE/QAcOBShZK
+         XUtSAbb/a6k0F4wXC1MLfI8yEgLdUq+cbYD8cnGb0bI5CoyRmvJ0orCdQEmGC/mhnB
+         kzbYceKrCbjIl8oWJ5awuw87uTuxyJVrw74xB/3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 27/66] cifs: make sure we do not overflow the max EA buffer size
-Date:   Tue, 18 Feb 2020 20:54:54 +0100
-Message-Id: <20200218190430.579914219@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 29/66] EDAC/mc: Fix use-after-free and memleaks during device removal
+Date:   Tue, 18 Feb 2020 20:54:56 +0100
+Message-Id: <20200218190430.757292618@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,77 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Robert Richter <rrichter@marvell.com>
 
-commit 85db6b7ae65f33be4bb44f1c28261a3faa126437 upstream.
+commit 216aa145aaf379a50b17afc812db71d893bd6683 upstream.
 
-RHBZ: 1752437
+A test kernel with the options DEBUG_TEST_DRIVER_REMOVE, KASAN and
+DEBUG_KMEMLEAK set, revealed several issues when removing an mci device:
 
-Before we add a new EA we should check that this will not overflow
-the maximum buffer we have available to read the EAs back.
-Otherwise we can get into a situation where the EAs are so big that
-we can not read them back to the client and thus we can not list EAs
-anymore or delete them.
+1) Use-after-free:
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+On 27.11.19 17:07:33, John Garry wrote:
+> [   22.104498] BUG: KASAN: use-after-free in
+> edac_remove_sysfs_mci_device+0x148/0x180
+
+The use-after-free is caused by the mci_for_each_dimm() macro called in
+edac_remove_sysfs_mci_device(). The iterator was introduced with
+
+  c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator").
+
+The iterator loop calls device_unregister(&dimm->dev), which removes
+the sysfs entry of the device, but also frees the dimm struct in
+dimm_attr_release(). When incrementing the loop in mci_for_each_dimm(),
+the dimm struct is accessed again, after having been freed already.
+
+The fix is to free all the mci device's subsequent dimm and csrow
+objects at a later point, in _edac_mc_free(), when the mci device itself
+is being freed.
+
+This keeps the data structures intact and the mci device can be
+fully used until its removal. The change allows the safe usage of
+mci_for_each_dimm() to release dimm devices from sysfs.
+
+2) Memory leaks:
+
+Following memory leaks have been detected:
+
+ # grep edac /sys/kernel/debug/kmemleak | sort | uniq -c
+       1     [<000000003c0f58f9>] edac_mc_alloc+0x3bc/0x9d0      # mci->csrows
+      16     [<00000000bb932dc0>] edac_mc_alloc+0x49c/0x9d0      # csr->channels
+      16     [<00000000e2734dba>] edac_mc_alloc+0x518/0x9d0      # csr->channels[chn]
+       1     [<00000000eb040168>] edac_mc_alloc+0x5c8/0x9d0      # mci->dimms
+      34     [<00000000ef737c29>] ghes_edac_register+0x1c8/0x3f8 # see edac_mc_alloc()
+
+All leaks are from memory allocated by edac_mc_alloc().
+
+Note: The test above shows that edac_mc_alloc() was called here from
+ghes_edac_register(), thus both functions show up in the stack trace
+but the module causing the leaks is edac_mc. The comments with the data
+structures involved were made manually by analyzing the objdump.
+
+The data structures listed above and created by edac_mc_alloc() are
+not properly removed during device removal, which is done in
+edac_mc_free().
+
+There are two paths implemented to remove the device depending on device
+registration, _edac_mc_free() is called if the device is not registered
+and edac_unregister_sysfs() otherwise.
+
+The implemenations differ. For the sysfs case, the mci device removal
+lacks the removal of subsequent data structures (csrows, channels,
+dimms). This causes the memory leaks (see mci_attr_release()).
+
+ [ bp: Massage commit message. ]
+
+Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
+Fixes: faa2ad09c01c ("edac_mc: edac_mc_free() cannot assume mem_ctl_info is registered in sysfs.")
+Fixes: 7a623c039075 ("edac: rewrite the sysfs code to use struct device")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: John Garry <john.garry@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200212120340.4764-3-rrichter@marvell.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |   35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc.c       |   12 +++---------
+ drivers/edac/edac_mc_sysfs.c |   15 +++------------
+ 2 files changed, 6 insertions(+), 21 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1087,7 +1087,8 @@ smb2_set_ea(const unsigned int xid, stru
- 	void *data[1];
- 	struct smb2_file_full_ea_info *ea = NULL;
- 	struct kvec close_iov[1];
--	int rc;
-+	struct smb2_query_info_rsp *rsp;
-+	int rc, used_len = 0;
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -503,16 +503,10 @@ void edac_mc_free(struct mem_ctl_info *m
+ {
+ 	edac_dbg(1, "\n");
  
- 	if (smb3_encryption_required(tcon))
- 		flags |= CIFS_TRANSFORM_REQ;
-@@ -1110,6 +1111,38 @@ smb2_set_ea(const unsigned int xid, stru
- 							     cifs_sb);
- 			if (rc == -ENODATA)
- 				goto sea_exit;
-+		} else {
-+			/* If we are adding a attribute we should first check
-+			 * if there will be enough space available to store
-+			 * the new EA. If not we should not add it since we
-+			 * would not be able to even read the EAs back.
-+			 */
-+			rc = smb2_query_info_compound(xid, tcon, utf16_path,
-+				      FILE_READ_EA,
-+				      FILE_FULL_EA_INFORMATION,
-+				      SMB2_O_INFO_FILE,
-+				      CIFSMaxBufSize -
-+				      MAX_SMB2_CREATE_RESPONSE_SIZE -
-+				      MAX_SMB2_CLOSE_RESPONSE_SIZE,
-+				      &rsp_iov[1], &resp_buftype[1], cifs_sb);
-+			if (rc == 0) {
-+				rsp = (struct smb2_query_info_rsp *)rsp_iov[1].iov_base;
-+				used_len = le32_to_cpu(rsp->OutputBufferLength);
-+			}
-+			free_rsp_buf(resp_buftype[1], rsp_iov[1].iov_base);
-+			resp_buftype[1] = CIFS_NO_BUFFER;
-+			memset(&rsp_iov[1], 0, sizeof(rsp_iov[1]));
-+			rc = 0;
-+
-+			/* Use a fudge factor of 256 bytes in case we collide
-+			 * with a different set_EAs command.
-+			 */
-+			if(CIFSMaxBufSize - MAX_SMB2_CREATE_RESPONSE_SIZE -
-+			   MAX_SMB2_CLOSE_RESPONSE_SIZE - 256 <
-+			   used_len + ea_name_len + ea_value_len + 1) {
-+				rc = -ENOSPC;
-+				goto sea_exit;
-+			}
- 		}
- 	}
+-	/* If we're not yet registered with sysfs free only what was allocated
+-	 * in edac_mc_alloc().
+-	 */
+-	if (!device_is_registered(&mci->dev)) {
+-		_edac_mc_free(mci);
+-		return;
+-	}
++	if (device_is_registered(&mci->dev))
++		edac_unregister_sysfs(mci);
  
+-	/* the mci instance is freed here, when the sysfs object is dropped */
+-	edac_unregister_sysfs(mci);
++	_edac_mc_free(mci);
+ }
+ EXPORT_SYMBOL_GPL(edac_mc_free);
+ 
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -276,10 +276,7 @@ static const struct attribute_group *csr
+ 
+ static void csrow_attr_release(struct device *dev)
+ {
+-	struct csrow_info *csrow = container_of(dev, struct csrow_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(csrow);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type csrow_attr_type = {
+@@ -619,10 +616,7 @@ static const struct attribute_group *dim
+ 
+ static void dimm_attr_release(struct device *dev)
+ {
+-	struct dimm_info *dimm = container_of(dev, struct dimm_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(dimm);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type dimm_attr_type = {
+@@ -905,10 +899,7 @@ static const struct attribute_group *mci
+ 
+ static void mci_attr_release(struct device *dev)
+ {
+-	struct mem_ctl_info *mci = container_of(dev, struct mem_ctl_info, dev);
+-
+-	edac_dbg(1, "device %s released\n", dev_name(dev));
+-	kfree(mci);
++	/* release device with _edac_mc_free() */
+ }
+ 
+ static const struct device_type mci_attr_type = {
 
 
