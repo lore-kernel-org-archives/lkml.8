@@ -2,111 +2,146 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7BBC34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F598C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72852072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D6E20718
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UV5oq9wT"
+	dkim=pass (2048-bit key) header.d=neuling.org header.i=@neuling.org header.b="riURPvaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbgBRAcp (ORCPT
+        id S1726182AbgBRAkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 19:32:45 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36600 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgBRAco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 19:32:44 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d9so10065064pgu.3;
-        Mon, 17 Feb 2020 16:32:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YkbCybzk75m/DwfgLQS+k1c3Zj35iCw6kglMnXwvNH4=;
-        b=UV5oq9wT6hVRcrADinmMSfqbJY3tQAss1lJyHmbizX8sMZ44RpJ2KQmvtGFReRluNf
-         WfZhCpP5uSZ51pqmsXdU+Q+btYZgZHQQ3vUGKWWPMB8XQf7FbCa60fCxXS3rqJx3nFyT
-         ZQkXSvWYl29/Nu2UwBGY7AFZCwsVOx68Z+Zq+ugRzHHsQh/EeQ/a7HgowEHm3+/ee6Xn
-         HRZipdm2N+jw0EGme4oasVgpHWGnyoOzMFJ1NwsS7mVJRyokRTu08R8Mi78li3sks6BH
-         9Nifri85WPwR0jc6SQCOb9oVw1rPeRn+vdPQq29r7ZG9oziZ/qKkVWdvvpnCVpsRx5+q
-         wtRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YkbCybzk75m/DwfgLQS+k1c3Zj35iCw6kglMnXwvNH4=;
-        b=g71NaxNpGHcix9sh7jx8pUrugN9dc9bVMuygbT0H2bfS0Q0sMzubL3CDV4zYKKEDuy
-         QG5av/22avrNo3WZgOtOZrL9sm74Yv7A0oAvlgXBKu0gOsTPWsGKRDmxOuoKyCMxcEqM
-         vbzwHBQb1iWpDp3VUhymvH+jy2gjmNvHCaf9Sq6DyCzVDQz9b9CEsB46ETD5CsUzO05F
-         Ucl0VIn/Dg464lvVGqWnypDr+KGk1su76PXgDqHfTDYO76rF2Tqmd1B4Sfphg0LJw5In
-         BKx/tLQoLcx6UCyEv8sSFxCR77/eIhwZfr1o+BmybYhMtyMM6dMFDN3d1GmqPf9xhERl
-         0Hxg==
-X-Gm-Message-State: APjAAAXHNi/IbMzV19gl3t92LuMgeVW2XurRCGZXBz9f3o/OI2/MeZI5
-        RS7MAxaf+FUvIggt/UZi0vbogaqU
-X-Google-Smtp-Source: APXvYqyU4HpyhuNG2Pk7898Kn5kHYBovyU41eVWfl/5GZVfjEERppXeSfSatnk3cMQ5MQeSmMmMfOQ==
-X-Received: by 2002:a63:1044:: with SMTP id 4mr20823772pgq.412.1581985963803;
-        Mon, 17 Feb 2020 16:32:43 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q8sm596672pje.2.2020.02.17.16.32.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 16:32:42 -0800 (PST)
-Subject: Re: [PATCH 0/5] hwmon: (adt7475) attenuator bypass and pwm invert
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <bb029a57-e7d2-c35c-f2e2-276e2373787b@roeck-us.net>
-Date:   Mon, 17 Feb 2020 16:32:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 17 Feb 2020 19:40:24 -0500
+Received: from ozlabs.org ([203.11.71.1]:50255 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgBRAkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 19:40:23 -0500
+Received: from neuling.org (localhost [127.0.0.1])
+        by ozlabs.org (Postfix) with ESMTP id 48M27j6S7gz9sRG;
+        Tue, 18 Feb 2020 11:40:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuling.org;
+        s=201811; t=1581986421;
+        bh=a0CFJXOA/uHY0JLhnZ7YRoOw1DBU5yBkXfyphVoZqaw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=riURPvaOIY/l3TBvQIHGCqvUskxenUh/6gsfrm9JOnY0Wn5ee7mhK17nN5HqmLI3w
+         FRgy96RTFxnr43ast5mbiADEaCxKowK+zpBH9cSck1QMhYmmpTR/jc+JlY6BQX3Nbg
+         zo4yGVR79WhyRkWzRMIioZnl2lE0xzD0FXrF5vX1CJnmRPZKNg0uExWgllZRo+Gt2N
+         x05gFp1mZpvDlNuqZtgsDNbx1OYxjv0kkj2Js0qU3qU6lxoeYdZXWT2sduaoruRwtD
+         SIFEERFL+Kd/cu4zfd5Uz1rUqGFMWDaxUcTZETl8yw/HGXs+eenjd3c7GcDyEtVE48
+         SDLKlx6eVJMUA==
+Received: by neuling.org (Postfix, from userid 1000)
+        id D6F952C01C8; Tue, 18 Feb 2020 11:40:16 +1100 (AEDT)
+Message-ID: <99897b3e22a9131c22c0d9c36bee3d55bff3336b.camel@neuling.org>
+Subject: Re: [PATCH] powerpc/chrp: Fix enter_rtas() with CONFIG_VMAP_STACK
+From:   Michael Neuling <mikey@neuling.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Tue, 18 Feb 2020 11:40:16 +1100
+In-Reply-To: <40126489-adf8-1b65-8974-25bca584bc9b@c-s.fr>
+References: <159ecb0ab021c07fd2f383d4a083a43d16d67b92.1581669187.git.christophe.leroy@c-s.fr>
+         <04cdd26307a1eaebeacc039b207db92e0b6820bb.camel@neuling.org>
+         <40126489-adf8-1b65-8974-25bca584bc9b@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 3:46 PM, Chris Packham wrote:
-> I've picked up Logan's changes[1] and am combining them with an old series of
-> mine[2] to hopefully get them both over the line.
-> 
+On Mon, 2020-02-17 at 07:40 +0100, Christophe Leroy wrote:
+>=20
+> Le 16/02/2020 =C3=A0 23:40, Michael Neuling a =C3=A9crit :
+> > On Fri, 2020-02-14 at 08:33 +0000, Christophe Leroy wrote:
+> > > With CONFIG_VMAP_STACK, data MMU has to be enabled
+> > > to read data on the stack.
+> >=20
+> > Can you describe what goes wrong without this? Some oops message? rtas =
+blows
+> > up?
+> > Get corrupt data?
+>=20
+> Larry reported a machine check. Or in fact, he reported a Oops in=20
+> kprobe_handler(), that Oops being a bug in kprobe_handle() triggered by=
+=20
+> this machine check.
+>=20
+> By converting a VM address to a phys-like address as if is was linear=20
+> mem, you get in the dark. Either there is some physical memory at that=
+=20
+> address and you corrupt it. Or there is none and you get a machine check.
 
-No change log and/or history, so I guess your expectation is that it will be up
-to me to figure out what may have changed and if previous comments have been
-addressed or not.
+Excellent. Please put that in the commit message.
 
-Guenter
+> > Also can you say what you're actually doing (ie turning on MSR[DR])
+>=20
+> Euh ... I'm saying that data MMU has to be enabled, so I'm enabling it.
 
-> This series updates the binding documentation for the adt7475 and adds two new
-> sets of properties.
-> 
-> [1] - https://lore.kernel.org/linux-hwmon/20191219033213.30364-1-logan.shaw@alliedtelesis.co.nz/
-> [2] - https://lore.kernel.org/linux-hwmon/20181107040010.27436-1-chris.packham@alliedtelesis.co.nz/
-> 
-> Chris Packham (2):
->    dt-bindings: hwmon: Document adt7475 invert-pwm property
->    hwmon: (adt7475) Add support for inverting pwm output
-> 
-> Logan Shaw (3):
->    dt-bindings: hwmon: Document adt7475 binding
->    dt-bindings: hwmon: Document adt7475 bypass-attenuator property
->    hwmon: (adt7475) Add attenuator bypass support
-> 
->   .../devicetree/bindings/hwmon/adt7475.yaml    |  82 ++++++++++++++
->   .../devicetree/bindings/trivial-devices.yaml  |   8 --
->   drivers/hwmon/adt7475.c                       | 100 +++++++++++++++++-
->   3 files changed, 179 insertions(+), 11 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> 
+Yeah, it's a minor point.
+
+> >=20
+> > > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > > ---
+> > >   arch/powerpc/kernel/entry_32.S | 9 +++++++--
+> > >   1 file changed, 7 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/arch/powerpc/kernel/entry_32.S
+> > > b/arch/powerpc/kernel/entry_32.S
+> > > index 0713daa651d9..bc056d906b51 100644
+> > > --- a/arch/powerpc/kernel/entry_32.S
+> > > +++ b/arch/powerpc/kernel/entry_32.S
+> > > @@ -1354,12 +1354,17 @@ _GLOBAL(enter_rtas)
+> > >   	mtspr	SPRN_SRR0,r8
+> > >   	mtspr	SPRN_SRR1,r9
+> > >   	RFI
+> > > -1:	tophys(r9,r1)
+> > > +1:	tophys_novmstack r9, r1
+> > > +#ifdef CONFIG_VMAP_STACKisntruction
+> > > +	li	r0, MSR_KERNEL & ~MSR_IR	/* can take DTLB miss */
+> >=20
+> > You're potentially turning on more than MSR DR here. This should be cle=
+ar in
+> > the
+> > commit message.
+>=20
+> Am I ?
+>=20
+> At the time of the RFI just above, SRR1 contains the value of r9 which=
+=20
+> has been set 2 lines before to MSR_KERNEL & ~(MSR_IR|MSR_DR).
+>=20
+> What should be clear in the commit message ?
+
+You're right. I was just looking at the patch and not the code. It's cleare=
+r in
+the code.
+
+Mikey
+
+>=20
+> > > +	mtmsr	r0
+> > > +	isync
+> > > +#endif
+> > >   	lwz	r8,INT_FRAME_SIZE+4(r9)	/* get return address */
+> > >   	lwz	r9,8(r9)	/* original msr value */
+> > >   	addi	r1,r1,INT_FRAME_SIZE
+> > >   	li	r0,0
+> > > -	tophys(r7, r2)
+> > > +	tophys_novmstack r7, r2
+> > >   	stw	r0, THREAD + RTAS_SP(r7)
+> > >   	mtspr	SPRN_SRR0,r8
+> > >   	mtspr	SPRN_SRR1,r9
+>=20
+> Christophe
+>=20
 
