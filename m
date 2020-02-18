@@ -2,155 +2,223 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05ADC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95FAC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8922208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B474820801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxHMSvgY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJyagPQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgBRBTj (ORCPT
+        id S1726296AbgBRBX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:19:39 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35678 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgBRBTi (ORCPT
+        Mon, 17 Feb 2020 20:23:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45923 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgBRBX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:19:38 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y73so9791415pfg.2;
-        Mon, 17 Feb 2020 17:19:38 -0800 (PST)
+        Mon, 17 Feb 2020 20:23:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so18517030oic.12;
+        Mon, 17 Feb 2020 17:23:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uAFuTDTSBh5DgAHzrivMQNHJeAZwyWRUw0tzZPnJB70=;
-        b=kxHMSvgYBck1aHGVwUoliWOhkqU+F3fuoDRzPCkuO6pYEx1nTJuOnFuo3PA6okf3ex
-         VwEYP9tTVXJS4aa5sF4XJYMuZGgNAzoOQIaUPKPHLLZiVBVrd92peGzywkEZfA4r/6k3
-         s4/2tJJLPUb4D4CuEzavW/e2l++Ayc5cQxxU8lSJjGcsLkv7GXlRP4BJppmeRKrTeFwv
-         xgGXb/G00EERo43Evw/CftFLtVmmNmOGlW20rNSUUsF/On3SXJFzOb1dwgBQJGZgYMNA
-         G2tnRnH3FCjaTCMcS15zEV8s0JEvXj5x313Yitovx03QW4Lpx0HZO4zJVLngdDMjVVXQ
-         uuGA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8upeiht+r89HKGNg+QWPXHKtgwxpcyyqCLrriB2c5lg=;
+        b=uJyagPQHBQMc2p72vARugaNjTaNi9Auy6/mDOPA5lUeycInuT7YlArbkMDLQYTvVXX
+         TCKNnsounbc8Yfx4m1g0Zozj0e5y2PVrxxehGELSeIlRuoH4ML336bnS6hrw3I2Uf1ed
+         LkBBeiHyRGQHYUiIwSD0XhDoh8ya1uEVOaBrOax5YZPwwINr5ZJEMeBzpYhs4KOSbzC+
+         4ikSkKpr8ONAwArmzwUXefIBrG2W916T8N2pX9iGj/59UneS3E7uhmwIj3BdF0Mx3L5h
+         YeNFvRAdRGD915XUuqC0rfLaTU0M8YmSeyJccgChu9S/Ap+5mk9eNjz5QY5KmBWragxZ
+         P5gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=uAFuTDTSBh5DgAHzrivMQNHJeAZwyWRUw0tzZPnJB70=;
-        b=bW2KYEYLk14JsaJBFa6Kbm2qW5nf01fSEvwP1sqJykIxk2VKAr8bsYiSxLqCyn7HWF
-         CRQ+8Uh6MMV7WMlqSHAitloD/hJsWTlgyI3GUGA7LV8GonJFQqqe55lMAK6bRkjHZ8vD
-         g/At/Mt5ww/aOZklD0sR46bo0VcNO8gLFbbfRl257gtexdOrjI/Bp3SmLBX63rd3zXWW
-         apRkwKjbrW91E1x6jXaimRRKpUks+iV+Zjusbi4jns+7D55LeTrFNNexqmCpIVNyld4u
-         Z4vv3IlRYsUF2m5e3PrZ72TiiZ57DKiRLUca8jG6/7d4oPrs1tunp+UWqDOP34xcZ1yf
-         EOGA==
-X-Gm-Message-State: APjAAAWT0znlVOaJKXI1Vk+CBvZ6EiH6C5S7vuo6V/zoNLizHaOGRyeE
-        Sxr7qz44saG3j3st82JVxlP7S+55H/LFGw==
-X-Google-Smtp-Source: APXvYqww4cNatnKwY4zaD9Vx/A6THgqmaEck9Z0vbx3g47ErbE9U+rQiWgGNZ3iwQsf5Q5X4Q+aK7Q==
-X-Received: by 2002:a63:7c16:: with SMTP id x22mr20473660pgc.335.1581988777811;
-        Mon, 17 Feb 2020 17:19:37 -0800 (PST)
-Received: from kernel.DHCP ([120.244.140.205])
-        by smtp.googlemail.com with ESMTPSA id g13sm1519511pfo.169.2020.02.17.17.19.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 17 Feb 2020 17:19:37 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8upeiht+r89HKGNg+QWPXHKtgwxpcyyqCLrriB2c5lg=;
+        b=GEu4xF8drWbSPl1xSQyF3reYypbxoofo2f2+7lZ4J+rk3LpcAlXrvX9R83bpN8EggM
+         89F15dsajGkTJ1CG2ABgraWWWTYuYqUErhynFvTuycJ6dbj16pEwFxN7GqcPzlwXPGcz
+         qXfc8l9l0FpRZCVd/uaaIwN0KxMySUvif3cRbtjR5vt2Xcc8a2/x6Ggy/kbj7qhc5SR7
+         fv7KJvVlnHZTdDdJ7G7/pBz4CgPHXIfZYmJxnNqA2XCd6XDYoT7zElW4lBVSwaDaaW01
+         faWgwyLcinkNWp+juhilXyVsBHklJy4YSdW1a2ARzGkuzm1r0BiwvZgSGPnR3JHO8T02
+         RiPQ==
+X-Gm-Message-State: APjAAAWoOIdjeL5703So4DDx+2W3dOCssCrMSwRRLyGJJaWYdJ5cZLCU
+        LT9suDRDMqb3y3CRQwLGLeYhTri4GZDj67Tm+Ev/AgstMEM=
+X-Google-Smtp-Source: APXvYqx4hj1wk1F9MvBZvnoeZOuCQkj7QqeDnG2So1wH3pvraNelBYrkulWsOcWrGas5nPfNZeZHSWAbw8cdZM32a7g=
+X-Received: by 2002:aca:8d5:: with SMTP id 204mr1083369oii.141.1581989005963;
+ Mon, 17 Feb 2020 17:23:25 -0800 (PST)
+MIME-Version: 1.0
+References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
+ <b2ee716e-8ef0-3940-0841-28c5a245b207@redhat.com>
+In-Reply-To: <b2ee716e-8ef0-3940-0841-28c5a245b207@redhat.com>
 From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+Date:   Tue, 18 Feb 2020 09:23:15 +0800
+Message-ID: <CANRm+CwQcg5u=BFYrvRTwLvbVFCpXQyF2wb65org6pdMpSb8mg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for
+ both pv tlb and pv ipis
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH RESEND v4 2/2] KVM: nVMX: Hold KVM's srcu lock when syncing vmcs12->shadow
-Date:   Tue, 18 Feb 2020 09:17:10 +0800
-Message-Id: <1581988630-19182-2-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581988630-19182-1-git-send-email-wanpengli@tencent.com>
-References: <1581988630-19182-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wanpeng li <wanpengli@tencent.com>
+On Tue, 18 Feb 2020 at 01:11, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 10/02/20 07:38, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Nick Desaulniers Reported:
+> >
+> >   When building with:
+> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+> >   The following warning is observed:
+> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+> >   vector)
+> >               ^
+> >   Debugging with:
+> >   https://github.com/ClangBuiltLinux/frame-larger-than
+> >   via:
+> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+> >     kvm_send_ipi_mask_allbutself
+> >   points to the stack allocated `struct cpumask newmask` in
+> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+> >   8192, making a single instance of a `struct cpumask` 1024 B.
+> >
+> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
+> > both pv tlb and pv ipis..
+> >
+> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> >  * remove '!alloc' check
+> >  * use new pv check helpers
+> >
+> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
+> >  1 file changed, 21 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > index 76ea8c4..377b224 100644
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
+> >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
+> >  }
+> >
+> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
+> > +
+> >  #ifdef CONFIG_SMP
+> >
+> >  static bool pv_ipi_supported(void)
+> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
+> > cpumask *mask, int vector)
+> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
+> > int vector)
+> >  {
+> >      unsigned int this_cpu = smp_processor_id();
+> > -    struct cpumask new_mask;
+> > +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >      const struct cpumask *local_mask;
+> >
+> > -    cpumask_copy(&new_mask, mask);
+> > -    cpumask_clear_cpu(this_cpu, &new_mask);
+> > -    local_mask = &new_mask;
+> > +    cpumask_copy(new_mask, mask);
+> > +    cpumask_clear_cpu(this_cpu, new_mask);
+> > +    local_mask = new_mask;
+> >      __send_ipi_mask(local_mask, vector);
+> >  }
+> >
+> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
+> >      update_intr_gate(X86_TRAP_PF, async_page_fault);
+> >  }
+> >
+> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+> >
+> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+> >              const struct flush_tlb_info *info)
+> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
+> > cpumask *cpumask,
+> >      u8 state;
+> >      int cpu;
+> >      struct kvm_steal_time *src;
+> > -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
+> > +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >
+> >      cpumask_copy(flushmask, cpumask);
+> >      /*
+> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
+> >      if (pv_tlb_flush_supported()) {
+> >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+> >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> > +        pr_info("KVM setup pv remote TLB flush\n");
+> >      }
+> >
+> >      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
+> >  }
+> >  arch_initcall(activate_jump_labels);
+> >
+> > -static __init int kvm_setup_pv_tlb_flush(void)
+> > +static __init int kvm_alloc_cpumask(void)
+> >  {
+> >      int cpu;
+> > +    bool alloc = false;
+> >
+> >      if (!kvm_para_available() || nopv)
+> >          return 0;
+> >
+> > -    if (pv_tlb_flush_supported()) {
+> > +    if (pv_tlb_flush_supported())
+> > +        alloc = true;
+> > +
+> > +#if defined(CONFIG_SMP)
+> > +    if (pv_ipi_supported())
+> > +        alloc = true;
+> > +#endif
+> > +
+> > +    if (alloc)
+> >          for_each_possible_cpu(cpu) {
+> > -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+> > +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+> >                  GFP_KERNEL, cpu_to_node(cpu));
+> >          }
+> > -        pr_info("KVM setup pv remote TLB flush\n");
+> > -    }
+> >
+> >      return 0;
+> >  }
+> > -arch_initcall(kvm_setup_pv_tlb_flush);
+> > +arch_initcall(kvm_alloc_cpumask);
+> >
+> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
+> >
+> > --
+> > 2.7.4
+> >
+>
+> Also has messed up whitespace, can you resend please?
 
-For the duration of mapping eVMCS, it derefences ->memslots without holding 
-->srcu or ->slots_lock when accessing hv assist page. This patch fixes it by 
-moving nested_sync_vmcs12_to_shadow to prepare_guest_switch, where the SRCU 
-is already taken.
+My fault, just resend all of them.
 
-It can be reproduced by running kvm's evmcs_test selftest.
-
-  =============================
-  warning: suspicious rcu usage
-  5.6.0-rc1+ #53 tainted: g        w ioe
-  -----------------------------
-  ./include/linux/kvm_host.h:623 suspicious rcu_dereference_check() usage!
- 
-  other info that might help us debug this:
- 
-   rcu_scheduler_active = 2, debug_locks = 1
-  1 lock held by evmcs_test/8507:
-   #0: ffff9ddd156d00d0 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0x85/0x680 [kvm]
- 
-  stack backtrace:
-  cpu: 6 pid: 8507 comm: evmcs_test tainted: g        w ioe     5.6.0-rc1+ #53
-  hardware name: dell inc. optiplex 7040/0jctf8, bios 1.4.9 09/12/2016
-  call trace:
-   dump_stack+0x68/0x9b
-   kvm_read_guest_cached+0x11d/0x150 [kvm]
-   kvm_hv_get_assist_page+0x33/0x40 [kvm]
-   nested_enlightened_vmentry+0x2c/0x60 [kvm_intel]
-   nested_vmx_handle_enlightened_vmptrld.part.52+0x32/0x1c0 [kvm_intel]
-   nested_sync_vmcs12_to_shadow+0x439/0x680 [kvm_intel]
-   vmx_vcpu_run+0x67a/0xe60 [kvm_intel]
-   vcpu_enter_guest+0x35e/0x1bc0 [kvm]
-   kvm_arch_vcpu_ioctl_run+0x40b/0x670 [kvm]
-   kvm_vcpu_ioctl+0x370/0x680 [kvm]
-   ksys_ioctl+0x235/0x850
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x77/0x780
-   entry_syscall_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v2 -> v3:
- * update Subject
- * move the check above
- * add the WARN_ON_ONCE
-
- arch/x86/kvm/vmx/vmx.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3be25ec..9a6797f 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1175,6 +1175,10 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- 					   vmx->guest_msrs[i].mask);
- 
- 	}
-+
-+	if (vmx->nested.need_vmcs12_to_shadow_sync)
-+		nested_sync_vmcs12_to_shadow(vcpu);
-+
- 	if (vmx->guest_state_loaded)
- 		return;
- 
-@@ -6482,8 +6486,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		vmcs_write32(PLE_WINDOW, vmx->ple_window);
- 	}
- 
--	if (vmx->nested.need_vmcs12_to_shadow_sync)
--		nested_sync_vmcs12_to_shadow(vcpu);
-+	WARN_ON_ONCE(vmx->nested.need_vmcs12_to_shadow_sync);
- 
- 	if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
- 		vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
--- 
-2.7.4
-
+    Wanpeng
