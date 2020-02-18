@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBC0C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A20CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6426024654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2049524654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rxlXAX64"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FByhnh4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBRTdY (ORCPT
+        id S1727313AbgBRTeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:33:24 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43350 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTdT (ORCPT
+        Tue, 18 Feb 2020 14:34:22 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40311 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgBRTdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:33:19 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r11so25354032wrq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:33:18 -0800 (PST)
+        Tue, 18 Feb 2020 14:33:23 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so4203495wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:33:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FhP33f76rG+2Qj5CzOw/Y5VWMBQgpWuzrnyIzrFTRug=;
-        b=rxlXAX64TS/KCHzcquPeVDjrlKmhePjl7Da7rcF8lconyP93SOoeZRkpAzD8fKtmwN
-         GyZ52w3D8vQQhcN0UUHGGogGIQCSCsYLLhHmeUAbg5p0Zi1Qe3hj+pxbxKIkp0WTEgti
-         wG6PFqRUclRWAZQOQOFkcEm4BxOBBPj7tMZV63K1ptJfpRV6x2VWltJmPpPVgH7cPiRR
-         x4UFbSTU64A9kFo4Be1Caj3s2qyIctoiCWCsBNZBuemmG2DOnqTlMNeLNYbRviohmz31
-         SUrXmmqVSlasXdBJbXfR+6bKA2L/2Fe2/3siHfd886mRj4AtRBGDMaayfe+49fq18sBZ
-         rarA==
+        bh=pjF+muLIhia2iJlkAiVEwAXGwvsTo93e9rZBfV8mBcQ=;
+        b=FByhnh4aHbUwNUbrLIvCa7S87+yL9GFB5EFtUZDmg6Yh7/YSremqljAk7DlVVNbB0j
+         eDHgyZHU38hH1nj2jmooaixF0wMPPMgmkycHURgyd39qmHHKGjmoJAti7onWk2ytn9yC
+         j5dpQvtW24HH3oxtLgnIYTgtbSMoAV1CEhfbC6L+1tPFy13Rq/ZYJIyyZwRAgBcEp/8m
+         7oEjGi9PRYVjY3hbz+Fc3JBC/GkA0STUH5NPL/BUbp71f3YJZrd5HuH3XHcDJzZJDmXg
+         gqYFqmNij+sNWdWaHXPPLM2Ma6Md6xvqmQITG62MPIwEXmZd5KPSsNMOvV49b2b0unOF
+         FNdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FhP33f76rG+2Qj5CzOw/Y5VWMBQgpWuzrnyIzrFTRug=;
-        b=N5e2mMfmk39EN8lsa8ST+Xk3FzPsEq6YMwnE3zGn4V50N4fBbA6OIba/7c2L05rJbd
-         0cOvc9w02Q1JNWr6DeyJokBZn3RP8iiJHtwNCV+c2avOCCfVv6ggKL8816rJGoJRbyOF
-         f5Ota6qPMzBZqaJAYjG3jXhhKGI/dZXEf1rdBGqz2sHryb7zR1pWc7qzIfjJEzJULlNv
-         q+ginwUGVxJ4E8w11XX3ts2WwT8lPKDgRCBiFoCJa1JeP/0BLpqxoOlCV5D/A6Ug9hJ9
-         +9R6+WnoDlH4L1nq2DFlVuU1eT49AzqQ6yAhHEUHYgGfd/M6iiUZmIk8bXYIg6McBFXQ
-         W2ng==
-X-Gm-Message-State: APjAAAVn14kXxotLt7h1PpPDT9tT1oo30bjJWSqx/A8zAg74S6mMAvw2
-        ZwX7WPegKX52oschm0QuMfp+Vg==
-X-Google-Smtp-Source: APXvYqxhujNKLgxfrSjYnJS/zwBxDj7zsb/kp7GsJVcV6m1WCw9TcjWQNQ1Ew3Vn+k2gChJtTAvicA==
-X-Received: by 2002:adf:cd04:: with SMTP id w4mr32416868wrm.219.1582054397663;
-        Tue, 18 Feb 2020 11:33:17 -0800 (PST)
+        bh=pjF+muLIhia2iJlkAiVEwAXGwvsTo93e9rZBfV8mBcQ=;
+        b=bWZb5oBfXbhpTPok3rbX0CoogfjJ0ApD6T1xYWSKGzb3DgA6vZtyzEy67AATaLUUc4
+         xNTO6nFeM2Wz9vM0GYpMRE2HJAEfjd/S4Xire8k1C9NH+lDBnJoV2Yy/AzEFEH08JaQF
+         6Y8P6xzjsyYzjKX6b+MWj6a7bzEJXQSW3pPI0ZInoRK/AMQRCHq4PwfJuoCSMCKwxxHT
+         +prWIHz3qAIdKAAiIDakVeMao6STZM4HuFquh8dxZT32iycsfmnVPEAkpofGQy6WoHyv
+         l8Mqvo8I0Y4V1tcAh6v53wghWfqoMI8+0Nw4NoEhcncY8fmJRpj1B/KkkLKQxZQ5Ztvv
+         quyg==
+X-Gm-Message-State: APjAAAXMnt1/30JSCBKBBpazvKzgNIwDDo72PQ6o8T+hRk/nmG6XCj65
+        oMQVsA++uwu3WioUXO6uZrCXQQ==
+X-Google-Smtp-Source: APXvYqxoVM6rVVdhsfUOYDPvd6s6raX8l1EuWNKZpuyCFsDx7HpiuPGc56k+1Q/N8uLfxpoiCj/6/Q==
+X-Received: by 2002:a7b:c778:: with SMTP id x24mr4959002wmk.59.1582054402666;
+        Tue, 18 Feb 2020 11:33:22 -0800 (PST)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id k16sm7649266wru.0.2020.02.18.11.33.16
+        by smtp.googlemail.com with ESMTPSA id k16sm7649266wru.0.2020.02.18.11.33.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 11:33:17 -0800 (PST)
+        Tue, 18 Feb 2020 11:33:22 -0800 (PST)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     alexandre.belloni@bootlin.com, b-liu@ti.com, balbi@kernel.org,
         gregkh@linuxfoundation.org, ludovic.desroches@microchip.com,
@@ -62,9 +62,9 @@ To:     alexandre.belloni@bootlin.com, b-liu@ti.com, balbi@kernel.org,
         slemieux.tyco@gmail.com, stern@rowland.harvard.edu, vz@mleia.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 03/20] usb: gadget: udc: amd5536udc_pci: remove useless cast for driver.name
-Date:   Tue, 18 Feb 2020 19:32:46 +0000
-Message-Id: <1582054383-35760-4-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH 08/20] usb: gadget: goku_udc: remove useless cast for driver.name
+Date:   Tue, 18 Feb 2020 19:32:51 +0000
+Message-Id: <1582054383-35760-9-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
 References: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
@@ -74,26 +74,26 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 pci_driver name is const char pointer, so it not useful to cast
-name (which is already const char).
+driver_name (which is already const char).
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/usb/gadget/udc/amd5536udc_pci.c | 2 +-
+ drivers/usb/gadget/udc/goku_udc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/amd5536udc_pci.c b/drivers/usb/gadget/udc/amd5536udc_pci.c
-index bfd1c9e80a1f..80685e4306f3 100644
---- a/drivers/usb/gadget/udc/amd5536udc_pci.c
-+++ b/drivers/usb/gadget/udc/amd5536udc_pci.c
-@@ -202,7 +202,7 @@ MODULE_DEVICE_TABLE(pci, pci_id);
+diff --git a/drivers/usb/gadget/udc/goku_udc.c b/drivers/usb/gadget/udc/goku_udc.c
+index 4a46f661d0e4..91dcb1995c27 100644
+--- a/drivers/usb/gadget/udc/goku_udc.c
++++ b/drivers/usb/gadget/udc/goku_udc.c
+@@ -1844,7 +1844,7 @@ static const struct pci_device_id pci_ids[] = { {
+ MODULE_DEVICE_TABLE (pci, pci_ids);
  
- /* PCI functions */
- static struct pci_driver udc_pci_driver = {
--	.name =		(char *) name,
-+	.name =		name,
- 	.id_table =	pci_id,
- 	.probe =	udc_pci_probe,
- 	.remove =	udc_pci_remove,
+ static struct pci_driver goku_pci_driver = {
+-	.name =		(char *) driver_name,
++	.name =		driver_name,
+ 	.id_table =	pci_ids,
+ 
+ 	.probe =	goku_probe,
 -- 
 2.24.1
 
