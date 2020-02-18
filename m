@@ -2,95 +2,104 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8499C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFCBC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4F324655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582068436;
-	bh=rUP93xEkDhBdiO8ILugsojP+aU7U9As9cgAaxy/Sn8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zu1SWtjoBPHzNoSsssWwKbM2a7f2ywf90OlDPEF0VnKneW2YbjpzrJaLTE92DgM5l
-	 aAJsLZ/ZK72zEl97SfLYJK9mwAFLVxAMf8jAY+9offaKSkNYHdKS+L1dQHLsxysl6C
-	 TmV/hrb/XMQp6VprV4DrASBOfMRpSjgYRT/mkxxY=
+	by mail.kernel.org (Postfix) with ESMTP id C7C8322B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBRX1P (ORCPT
+        id S1727993AbgBRX3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:27:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 18:29:55 -0500
+Received: from mga04.intel.com ([192.55.52.120]:38638 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbgBRX1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:27:15 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8492422B48;
-        Tue, 18 Feb 2020 23:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582068434;
-        bh=rUP93xEkDhBdiO8ILugsojP+aU7U9As9cgAaxy/Sn8c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=njxulyfwSmUPae6vEWrNK0WrXyb7Os08KUJex733g9Q3dyMQdDq4MQlW4XtlIO0RK
-         ORCfyAff92y7OrewyBZODjxSkQIBav7FI8QlooxmPiSrHHuce5EKGtZjqG55yETM06
-         1j6iD8ucFY82Hgm1WVhGsIG7GWuXhWHHaV7jaTok=
-Date:   Tue, 18 Feb 2020 15:27:14 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
- called
-Message-ID: <20200218232714.GB10213@google.com>
-References: <20200214185855.217360-1-jaegeuk@kernel.org>
- <20200214185855.217360-3-jaegeuk@kernel.org>
- <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
+        id S1727772AbgBRX3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:29:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="282936636"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:54 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/13] KVM: x86: Allow userspace to disable the emulator
+Date:   Tue, 18 Feb 2020 15:29:40 -0800
+Message-Id: <20200218232953.5724-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17, Chao Yu wrote:
-> On 2020/2/15 2:58, Jaegeuk Kim wrote:
-> > FG_GC needs to move entire section more quickly.
-> > 
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >  fs/f2fs/gc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> > index bbf4db3f6bb4..1676eebc8c8b 100644
-> > --- a/fs/f2fs/gc.c
-> > +++ b/fs/f2fs/gc.c
-> > @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
-> >  
-> >  		if (get_valid_blocks(sbi, segno, false) == 0)
-> >  			goto freed;
-> > -		if (__is_large_section(sbi) &&
-> > +		if (gc_type == BG_GC && __is_large_section(sbi) &&
-> >  				migrated >= sbi->migration_granularity)
-> 
-> I knew migrating one large section is a more efficient way, but this can
-> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
-> extreme fragmented space.
+The primary intent of this series is to dynamically allocate the emulator
+and get KVM to a state where the emulator *could* be disabled at some
+point in the future.  Actually allowing userspace to disable the emulator
+was a minor change at that point, so I threw it in.
 
-FG_GC requires to wait for whole section migration which shows the entire
-latency.
+Dynamically allocating the emulator shrinks the size of x86 vcpus by
+~2.5k bytes, which is important because 'struct vcpu_vmx' has once again
+fattened up and squeaked past the PAGE_ALLOC_COSTLY_ORDER threshold.
+Moving the emulator to its own allocation gives us some breathing room
+for the near future, and has some other nice side effects.
 
-> 
-> Thanks,
-> 
-> >  			goto skip;
-> >  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
-> > 
+As for disabling the emulator... in the not-too-distant future, I expect
+there will be use cases that can truly disable KVM's emulator, e.g. for
+security (KVM's and/or the guests).  I don't have a strong opinion on
+whether or not KVM should actually allow userspace to disable the emulator
+without a concrete use case (unless there already is a use case?), which
+is why that part is done in its own tiny patch.
+
+Running without an emulator has been "tested" in the sense that the
+selftests that don't require emulation continue to pass, and everything
+else fails with the expected "emulation error".
+
+v2:
+  - Rebase to kvm/queue, 2c2787938512 ("KVM: selftests: Stop ...")
+
+Sean Christopherson (13):
+  KVM: x86: Refactor I/O emulation helpers to provide vcpu-only variant
+  KVM: x86: Explicitly pass an exception struct to check_intercept
+  KVM: x86: Move emulation-only helpers to emulate.c
+  KVM: x86: Refactor R/W page helper to take the emulation context
+  KVM: x86: Refactor emulated exception injection to take the emul
+    context
+  KVM: x86: Refactor emulate tracepoint to explicitly take context
+  KVM: x86: Refactor init_emulate_ctxt() to explicitly take context
+  KVM: x86: Dynamically allocate per-vCPU emulation context
+  KVM: x86: Move kvm_emulate.h into KVM's private directory
+  KVM: x86: Shrink the usercopy region of the emulation context
+  KVM: x86: Add helper to "handle" internal emulation error
+  KVM: x86: Add variable to control existence of emulator
+  KVM: x86: Allow userspace to disable the kernel's emulator
+
+ arch/x86/include/asm/kvm_host.h             |  12 +-
+ arch/x86/kvm/emulate.c                      |  13 +-
+ arch/x86/{include/asm => kvm}/kvm_emulate.h |   9 +-
+ arch/x86/kvm/mmu/mmu.c                      |   1 +
+ arch/x86/kvm/svm.c                          |   5 +-
+ arch/x86/kvm/trace.h                        |  22 +--
+ arch/x86/kvm/vmx/vmx.c                      |  15 +-
+ arch/x86/kvm/x86.c                          | 193 +++++++++++++-------
+ arch/x86/kvm/x86.h                          |  12 +-
+ 9 files changed, 183 insertions(+), 99 deletions(-)
+ rename arch/x86/{include/asm => kvm}/kvm_emulate.h (99%)
+
+-- 
+2.24.1
+
