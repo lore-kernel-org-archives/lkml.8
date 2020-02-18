@@ -2,268 +2,79 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2673C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDEDC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F5F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC562173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgBRNgP (ORCPT
+        id S1726652AbgBRNhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:36:15 -0500
-Received: from 11.mo1.mail-out.ovh.net ([188.165.48.29]:40429 "EHLO
-        11.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgBRNgP (ORCPT
+        Tue, 18 Feb 2020 08:37:06 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55597 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbgBRNhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:36:15 -0500
-X-Greylist: delayed 1793 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 08:36:13 EST
-Received: from player779.ha.ovh.net (unknown [10.108.42.174])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 28E691AFCCC
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:00:57 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player779.ha.ovh.net (Postfix) with ESMTPSA id 4B9ACF77764B;
-        Tue, 18 Feb 2020 13:00:51 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2 7/8] docs: add a script to check sysctl docs
-Date:   Tue, 18 Feb 2020 13:59:22 +0100
-Message-Id: <20200218125923.685-8-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218125923.685-1-steve@sk2.org>
-References: <20200218125923.685-1-steve@sk2.org>
+        Tue, 18 Feb 2020 08:37:05 -0500
+Received: by mail-io1-f69.google.com with SMTP id z21so13891306iob.22
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 05:37:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=aHgHZ98+U4qABqernE/QDZiaIAcqsbiecjuclCSQv3M=;
+        b=Gx+1eT5SBpK9P8o1x0L3wjNuELsik1SrSupkqwZeL/6p3uCJf1aeQ610TzBACvnEdb
+         wy0vRtUtHhb4lFM5QKRgEOG9SyBys9GGZzoUaotL18uSPd9PA33OQFOzuoKPHVuYEGQj
+         uqctyY8/7cqwz6EV95C44p86CiRp1cxdYQblaRNoHcBYCDy9umV/55G3i1iUUjYwwSek
+         uQaN6u49fI2qhf1iignZWAEfrHeFY4h/KHCwLHC/5Z3AgJcxh4v87qnrupVrLte3s1sC
+         Hz6jQLtF/dkDzDAZ6AMvJT9/6JACVdp1aUy/pUFDd9DAAgmJJ+azJWIyQPSguMRV/oFY
+         sKLw==
+X-Gm-Message-State: APjAAAUsCBWuJe9YqVj11wbOR8PUwJGI+oG7tMSdUE02f9yoGlEcBfnG
+        3Rlf/4QEt+mn0/Iec4DAwyAGMuFevBJlxVN5wO03y83qomi2
+X-Google-Smtp-Source: APXvYqyshNr6yoq5/wyQMhnfun/9MaaVUhImNxSLDXvsUcP+/UH3ULcBhS56N6d3AxYFbB6MIE376Q80hME1hctKKSSfPJJLaJ4T
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16143434340172320133
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjeekgdegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkeekrdduvddvrdduvdeirdduudeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeejledrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-Received: by 2002:a92:a1c5:: with SMTP id b66mr18063518ill.190.1582033022916;
+ Tue, 18 Feb 2020 05:37:02 -0800 (PST)
+Date:   Tue, 18 Feb 2020 05:37:02 -0800
+In-Reply-To: <000000000000b7ee04059ed40af8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005a9ed2059ed9c426@google.com>
+Subject: Re: general protection fault in sco_sock_getsockopt
+From:   syzbot <syzbot+4a38d3795200fd59a9eb@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        luiz.von.dentz@intel.com, marcel@holtmann.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This script allows sysctl documentation to be checked against the
-kernel source code, to identify missing or obsolete entries. Running
-it against 5.5 shows for example that sysctl/kernel.rst has two
-obsolete entries and is missing 52 entries.
+syzbot has bisected this bug to:
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst |   3 +
- scripts/check-sysctl-docs                   | 181 ++++++++++++++++++++
- 2 files changed, 184 insertions(+)
- create mode 100755 scripts/check-sysctl-docs
+commit eab2404ba798a8efda2a970f44071c3406d94e57
+Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Date:   Fri Feb 14 18:08:57 2020 +0000
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index a67c218c4066..3d21e076aea4 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -2,6 +2,9 @@
- Documentation for /proc/sys/kernel/
- ===================================
- 
-+.. See scripts/check-sysctl-docs to keep this up to date
-+
-+
- Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
- 
- Copyright (c) 2009,        Shen Feng<shen@cn.fujitsu.com>
-diff --git a/scripts/check-sysctl-docs b/scripts/check-sysctl-docs
-new file mode 100755
-index 000000000000..b3b47c188a2d
---- /dev/null
-+++ b/scripts/check-sysctl-docs
-@@ -0,0 +1,181 @@
-+#!/usr/bin/gawk -f
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+# Script to check sysctl documentation against source files
-+#
-+# Copyright © 2020 Stephen Kitt
-+
-+# Example invocation:
-+#	scripts/check-sysctl-docs -vtable="kernel" \
-+#		Documentation/admin-guide/sysctl/kernel.rst \
-+#		$(git grep -l register_sysctl_table)
-+#
-+# Specify -vdebug=1 to see debugging information
-+
-+BEGIN {
-+    if (!table) {
-+	print "Please specify the table to look for using the table variable" > "/dev/stderr"
-+	exit 1
-+    }
-+}
-+
-+# The following globals are used:
-+# children: maps ctl_table names and procnames to child ctl_table names
-+# documented: maps documented entries (each key is an entry)
-+# entries: maps ctl_table names and procnames to counts (so
-+#          enumerating the subkeys for a given ctl_table lists its
-+#          procnames)
-+# files: maps procnames to source file names
-+# paths: maps ctl_path names to paths
-+# curpath: the name of the current ctl_path struct
-+# curtable: the name of the current ctl_table struct
-+# curentry: the name of the current proc entry (procname when parsing
-+#           a ctl_table, constructed path when parsing a ctl_path)
-+
-+
-+# Remove punctuation from the given value
-+function trimpunct(value) {
-+    while (value ~ /^["&]/) {
-+	value = substr(value, 2)
-+    }
-+    while (value ~ /[]["&,}]$/) {
-+	value = substr(value, 1, length(value) - 1)
-+    }
-+    return value
-+}
-+
-+# Print the information for the given entry
-+function printentry(entry) {
-+    seen[entry]++
-+    printf "* %s from %s", entry, file[entry]
-+    if (documented[entry]) {
-+	printf " (documented)"
-+    }
-+    print ""
-+}
-+
-+
-+# Stage 1: build the list of documented entries
-+FNR == NR && /^=+$/ {
-+    if (prevline ~ /Documentation for/) {
-+	# This is the main title
-+	next
-+    }
-+
-+    # The previous line is a section title, parse it
-+    $0 = prevline
-+    if (debug) print "Parsing " $0
-+    inbrackets = 0
-+    for (i = 1; i <= NF; i++) {
-+	if (length($i) == 0) {
-+	    continue
-+	}
-+	if (!inbrackets && substr($i, 1, 1) == "(") {
-+	    inbrackets = 1
-+	}
-+	if (!inbrackets) {
-+	    token = trimpunct($i)
-+	    if (length(token) > 0 && token != "and") {
-+		if (debug) print trimpunct($i)
-+		documented[trimpunct($i)]++
-+	    }
-+	}
-+	if (inbrackets && substr($i, length($i), 1) == ")") {
-+	    inbrackets = 0
-+	}
-+    }
-+}
-+
-+FNR == NR {
-+    prevline = $0
-+    next
-+}
-+
-+
-+# Stage 2: process each file and find all sysctl tables
-+BEGINFILE {
-+    delete children
-+    delete entries
-+    delete paths
-+    curpath = ""
-+    curtable = ""
-+    curentry = ""
-+    if (debug) print "Processing file " FILENAME
-+}
-+
-+/^static struct ctl_path/ {
-+    match($0, /static struct ctl_path ([^][]+)/, tables)
-+    curpath = tables[1]
-+    if (debug) print "Processing path " curpath
-+}
-+
-+/^static struct ctl_table/ {
-+    match($0, /static struct ctl_table ([^][]+)/, tables)
-+    curtable = tables[1]
-+    if (debug) print "Processing table " curtable
-+}
-+
-+/^};$/ {
-+    curpath = ""
-+    curtable = ""
-+    curentry = ""
-+}
-+
-+curpath && /\.procname[\t ]*=[\t ]*".+"/ {
-+    match($0, /.procname[\t ]*=[\t ]*"([^"]+)"/, names)
-+    if (curentry) {
-+	curentry = curentry "/" names[1]
-+    } else {
-+	curentry = names[1]
-+    }
-+    if (debug) print "Setting path " curpath " to " curentry
-+    paths[curpath] = curentry
-+}
-+
-+curtable && /\.procname[\t ]*=[\t ]*".+"/ {
-+    match($0, /.procname[\t ]*=[\t ]*"([^"]+)"/, names)
-+    curentry = names[1]
-+    if (debug) print "Adding entry " curentry " to table " curtable
-+    entries[curtable][curentry]++
-+    file[curentry] = FILENAME
-+}
-+
-+/\.child[\t ]*=/ {
-+    child = trimpunct($NF)
-+    if (debug) print "Linking child " child " to table " curtable " entry " curentry
-+    children[curtable][curentry] = child
-+}
-+
-+/register_sysctl_table\(.*\)/ {
-+    match($0, /register_sysctl_table\(([^)]+)\)/, tables)
-+    if (debug) print "Registering table " tables[1]
-+    if (children[tables[1]][table]) {
-+	for (entry in entries[children[tables[1]][table]]) {
-+	    printentry(entry)
-+	}
-+    }
-+}
-+
-+/register_sysctl_paths\(.*\)/ {
-+    match($0, /register_sysctl_paths\(([^)]+), ([^)]+)\)/, tables)
-+    if (debug) print "Attaching table " tables[2] " to path " tables[1]
-+    if (paths[tables[1]] == table) {
-+	for (entry in entries[tables[2]]) {
-+	    printentry(entry)
-+	}
-+    }
-+    split(paths[tables[1]], components, "/")
-+    if (length(components) > 1 && components[1] == table) {
-+	# Count the first subdirectory as seen
-+	seen[components[2]]++
-+    }
-+}
-+
-+
-+END {
-+    for (entry in documented) {
-+	if (!seen[entry]) {
-+	    print "No implementation for " entry
-+	}
-+    }
-+}
--- 
-2.20.1
+    Bluetooth: Add BT_PHY socket option
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=105f1a29e00000
+start commit:   c25a951c Add linux-next specific files for 20200217
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=125f1a29e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=145f1a29e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a38d3795200fd59a9eb
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158849e9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e3d711e00000
+
+Reported-by: syzbot+4a38d3795200fd59a9eb@syzkaller.appspotmail.com
+Fixes: eab2404ba798 ("Bluetooth: Add BT_PHY socket option")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
