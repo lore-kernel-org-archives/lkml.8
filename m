@@ -2,154 +2,142 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBF2C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31725C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B053207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582066314;
-	bh=JVw1/p6FsCoqbFDqyFKAI1rqvqyAc6BMfIKN4ddINoY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W1SsYysNgE7wvh9S+6s61G2AQ7X659msLhIt3V96RuOh8rZ2x2sdk385ziO6fQF2D
-	 qSpoNzln8QWOhTdmD0DFZzPXUOIbbFaYhec44R+5Cj916VHffYewBZSLJxaAVICY/z
-	 UZQ4HqnkLIDOdqyM+6eZEHw4jQUiNd3EgRhcr7zs=
+	by mail.kernel.org (Postfix) with ESMTP id 08329207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XSgImk4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgBRWvw (ORCPT
+        id S1727187AbgBRWwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgBRWvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:51:52 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5598024670;
-        Tue, 18 Feb 2020 22:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582066311;
-        bh=JVw1/p6FsCoqbFDqyFKAI1rqvqyAc6BMfIKN4ddINoY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YpnOCoaOARlUo9rIPwheEZK5IyhakaAX1XnEh505iecYtcQ8SEISOzJujPOHQCZX3
-         daj+f64uNxcQzCzerBrnps0WKfP99Ga1Bqur6KfuBteNP9UnGYYKo7mGTEnjt6bh/M
-         VYXbuJCthr56ppJQ896BnSJN2rz8/bewhbTUR+9M=
-Received: by mail-qk1-f174.google.com with SMTP id u124so20746845qkh.13;
-        Tue, 18 Feb 2020 14:51:51 -0800 (PST)
-X-Gm-Message-State: APjAAAVMS5VXyubtyunRMRv/Az822nPf2t2DpP68anXRnEcuyuHW8Qpn
-        Sg0hfgZLVyLd/HEyGPhk2LqzRiguvfs+RlIffg==
-X-Google-Smtp-Source: APXvYqzOycS54fdMe+Mi6jmD1eUPFXsnxiEYEUbIZ2YhQGSynwd5BRWP7iCohzeOF1d0omgODT8b2Ln6vs5ynpThWSg=
-X-Received: by 2002:a37:5347:: with SMTP id h68mr20566408qkb.393.1582066310364;
- Tue, 18 Feb 2020 14:51:50 -0800 (PST)
+        Tue, 18 Feb 2020 17:52:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36008 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbgBRWwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:52:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bnOD/kBvTil/QNFSgjm+GLp6zzWRAz3n6ij6d1hLGNY=; b=XSgImk4I4CPrF8cILzjHDscRop
+        CKntSzDwT1ij4BALLtjNwmBKi3i+1IfSXkAQaoPfXtf07eWDDoH7YFsWdXgnyLOpzGMqaqq2CRFub
+        BZHy/x7PNm6BUzKjUiVDBLzmlxGBQpmjsP1NCuIzQrq8LqeZQW+ZRvlEfOloZaYFkmTHi+0rwO9Zv
+        Ddu6JQ1JidbbVmRq+Q5xXd42Gwb0b3Po5UprxnNSbBfzob2/ZnHN+sTLNiMTHuCydAiddiVUs3MxX
+        OG1nnPjL5NZvf9Cd8Z/nKdIJ16rUosUsXRSn5/mrWjW4457q5JqxRPamjp6r4bhX8SSwQUCeBucUW
+        P3njQkwQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4BjH-0004Ih-9n; Tue, 18 Feb 2020 22:52:35 +0000
+Date:   Tue, 18 Feb 2020 14:52:35 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
+Message-ID: <20200218225235.GH24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-4-willy@infradead.org>
+ <20200218050300.GI10776@dread.disaster.area>
+ <20200218135618.GO7778@bombadil.infradead.org>
+ <20200218224610.GT10776@dread.disaster.area>
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
-In-Reply-To: <20200218220748.54823-1-john.stultz@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Feb 2020 16:51:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com>
-Message-ID: <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218224610.GT10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 4:07 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> at the end of initcall"), along with commit 25b4e70dcce9
-> ("driver core: allow stopping deferred probe after init") after
-> late_initcall, drivers will stop getting EPROBE_DEFER, and
-> instead see an error causing the driver to fail to load.
->
-> That change causes trouble when trying to use many clk drivers
-> as modules, as the clk modules may not load until much later
-> after init has started. If a dependent driver loads and gets an
-> error instead of EPROBE_DEFER, it won't try to reload later when
-> the dependency is met, and will thus fail to load.
->
-> This patch reworks some of the logic in
-> __driver_deferred_probe_check_state() so that if the
-> deferred_probe_timeout value is set, we will return EPROBE_DEFER
-> until that timeout expires, which may be after initcalls_done
-> is set to true.
->
-> Specifically, on db845c, this change (when combined with booting
-> using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
-> QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
-> system, where as without it the display will fail to load.
+On Wed, Feb 19, 2020 at 09:46:10AM +1100, Dave Chinner wrote:
+> On Tue, Feb 18, 2020 at 05:56:18AM -0800, Matthew Wilcox wrote:
+> > On Tue, Feb 18, 2020 at 04:03:00PM +1100, Dave Chinner wrote:
+> > > On Mon, Feb 17, 2020 at 10:45:44AM -0800, Matthew Wilcox wrote:
+> > > > +static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> > > > +		gfp_t gfp)
+> > > >  {
+> > > > +	const struct address_space_operations *aops = rac->mapping->a_ops;
+> > > >  	struct blk_plug plug;
+> > > >  	unsigned page_idx;
+> > > 
+> > > Splitting out the aops rather than the mapping here just looks
+> > > weird, especially as you need the mapping later in the function.
+> > > Using aops doesn't even reduce the code side....
+> > 
+> > It does in subsequent patches ... I agree it looks a little weird here,
+> > but I think in the final form, it makes sense:
+> 
+> Ok. Perhaps just an additional commit comment to say "read_pages() is
+> changed to be aops centric as @rac abstracts away all other
+> implementation details by the end of the patchset."
 
-I would change the default for deferred_probe_timeout to 30 and then
-regulator code can rely on that. Curious, why 30 sec is fine now when
-you originally had 2 min? I'd just pick what you think is best. I
-doubt Mark had any extensive experiments to come up with 30sec.
+ACK, will add.
 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2:
-> * Add calls to driver_deferred_probe_trigger() after the two minute timeout,
->   as suggested by Bjorn
-> * Minor whitespace cleanups
-> * Switch to 30 second timeout to match what the regulator code is doing as
->   suggested by Rob.
-> v3:
-> * Rework to reuse existing deferred_probe_timeout value, suggested by Rob
-> * Dropped Fixes: tags as Rob requested (Not my hill to die on :)
-> ---
->  drivers/base/dd.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b25bcab2a26b..9d916a7b56a6 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
->
->  static int __driver_deferred_probe_check_state(struct device *dev)
->  {
-> -       if (!initcalls_done)
-> -               return -EPROBE_DEFER;
-> -
-> -       if (!deferred_probe_timeout) {
-> +       if (initcalls_done && !deferred_probe_timeout) {
->                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
->                 return -ETIMEDOUT;
->         }
-> +       if (!initcalls_done || deferred_probe_timeout > 0)
-> +               return -EPROBE_DEFER;
->
->         return 0;
->  }
-> --
-> 2.17.1
->
+> > > > +			if (readahead_count(&rac))
+> > > > +				read_pages(&rac, &page_pool, gfp_mask);
+> > > > +			rac._nr_pages = 0;
+> > > 
+> > > Hmmm. Wondering ig it make sense to move the gfp_mask to the readahead
+> > > control structure - if we have to pass the gfp_mask down all the
+> > > way along side the rac, then I think it makes sense to do that...
+> > 
+> > So we end up removing it later on in this series, but I do wonder if
+> > it would make sense anyway.  By the end of the series, we still have
+> > this in iomap:
+> > 
+> >                 if (ctx->rac) /* same as readahead_gfp_mask */
+> >                         gfp |= __GFP_NORETRY | __GFP_NOWARN;
+> > 
+> > and we could get rid of that by passing gfp flags down in the rac.  On the
+> > other hand, I don't know why it doesn't just use readahead_gfp_mask()
+> > here anyway ... Christoph?
+> 
+> mapping->gfp_mask is awful. Is it a mask, or is it a valid set of
+> allocation flags? Or both?  Some callers to mapping_gfp_constraint()
+> uses it as a mask, some callers to mapping_gfp_constraint() use it
+> as base flags that context specific flags get masked out of,
+> readahead_gfp_mask() callers use it as the entire set of gfp flags
+> for allocation.
+> 
+> That whole API sucks - undocumented as to what it's suposed to do
+> and how it's supposed to be used. Hence it's difficult to use
+> correctly or understand whether it's being used correctly. And
+> reading callers only leads to more confusion and crazy code like in
+> do_mpage_readpage() where readahead returns a mask that are used as
+> base flags and normal reads return a masked set of base flags...
+> 
+> The iomap code is obviously correct when it comes to gfp flag
+> manipulation. We start with GFP_KERNEL context, then constrain it
+> via the mask held in mapping->gfp_mask, then if it's readahead we
+> allow the allocation to silently fail.
+> 
+> Simple to read and understand code, versus having weird code that
+> requires the reader to decipher an undocumented and inconsistent API
+> to understand how the gfp flags have been calculated and are valid.
+
+I think a lot of this is not so much a criticism of mapping->gfp_mask
+as a criticism of the whole GFP flags concept.  Some of the flags make
+allocations more likely to succeed, others make them more likely to
+fail.  Some of them allow the allocator to do more things; some prevent
+the allocator from doing things it would otherwise do.  Some of them
+aren't flags at all.  Some of them are mutually incompatible (and will
+be warned about if set in combination), some of them will silently win
+over other flags.
+
+I think they made a certain amount of clunky sense when they were added,
+but they've grown to a point where they don't make sense any more and
+partly that's because there's nobody standing over the allocator with
+a flaming sword promising certain death to anyone who adds a new flag
+without thoroughly documenting its interactions with every other flag.
+
+I am no longer a fan of GFP flags ;-)
