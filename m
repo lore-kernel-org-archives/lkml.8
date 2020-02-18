@@ -2,91 +2,113 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E9C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A47C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D0E2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D482176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YDEakFwS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mxsS0/EU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgBRUH2 (ORCPT
+        id S1726735AbgBRUHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:07:28 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42382 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgBRUHZ (ORCPT
+        Tue, 18 Feb 2020 15:07:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33422 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgBRT65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:07:25 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k11so25480577wrd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 12:07:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=4cyBnsbCp8K2dn/otOwt/zGstBiNP7FQVjJ9JQxVYLE=;
-        b=YDEakFwS6rx6Yuo1qVqHilKpZwkpVTSJrXWNBeXgJM77Lu7v3HNEQfmmphSYGWpMee
-         NRh7b3NKjTgOAEdBMne5KxfZzsInfjIfRCtosemivDHWrdCq9MFDDw50wuRWa7d3HoBK
-         K71JzLvjubtSpjOJgJYKD/1DLuMeGEPOEl7LVb8hcf+cy5uUz6M3v5z0zuGnUezIjzYQ
-         YAEDuJK2A83PKRn2ZJ/JaNOgD2WhKzUbcsia5M7vGXW3vbdtdSu6+U6MElOuqcsS0m9/
-         s+d3Y2tPjhIUuTSGAW9Q7CuSRkz/m7aXEVevsm381tXXX6hniDdmsqZnJp3k/fCi2hD9
-         59YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4cyBnsbCp8K2dn/otOwt/zGstBiNP7FQVjJ9JQxVYLE=;
-        b=fCi8yIc9n8nOLFJ2m9VpU9GNbgMh+vgEfZk1QU4gJJRz4sqca4h+tglDb3P9orExla
-         YKUWCthtmslvpCSHZyqs2JV+PUTeLX1XSnoxJmm9Vfcv2npj47R+mS9HGwwak+QRlmpK
-         r6RmLWd0j1OgIzCIvksub9j9FEhA/t16k1nAO8XdvIoIfmUpPa+xoVqA0X9db1tH+WQK
-         FpynN+YPrItZ/vCcsPhi0dnC9a27S9hSOLCDDgQEvPJJ0xwPCXVlJStuIgN0XzMCyFKs
-         ycpnNpmCdl9DCWO/Iong1OtJpLFldecS4sZuOQUHGjxKirsV6F4LeTn75FQRnBL/paVX
-         qgxg==
-X-Gm-Message-State: APjAAAXuBldXHVWJRQ0cXJ8nrv9sDMWZkRmNF4fsoVdXaA1nAtMcmxxr
-        oTrty3gMWqs7mI59izu9Ml56JQ==
-X-Google-Smtp-Source: APXvYqw7Iu6rNwB0fChV/KT1WXBuRYh6hKrG/zUYDS6v7xZhRgdxSSH7TL6Jasof0jfX5poJDsy7Pw==
-X-Received: by 2002:a5d:4746:: with SMTP id o6mr4379632wrs.70.1582056442773;
-        Tue, 18 Feb 2020 12:07:22 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id a9sm4576598wmm.15.2020.02.18.12.07.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 12:07:22 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     linux@dominikbrodowski.net
-Cc:     linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] pcmcia: omap: remove useless cast for driver.name
-Date:   Tue, 18 Feb 2020 20:07:16 +0000
-Message-Id: <1582056436-15775-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 18 Feb 2020 14:58:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jhFMuIkrGdoFJ2Bzf898MeLf5h06pE6PgMihUSGnnDk=; b=mxsS0/EU42AG2iYsPYJdls+yF1
+        PrlGW+zlqETrZtlV7Vx5vhcX3h7Zj4Grh0Pn9VA8K32FhlVOuJE8pwMx/ggjIvT0ZBHgwLwfVez6S
+        ZZon/NmW8gJa+4vPf91VX3lxFtT7Hnw+PqUuWL3rbf5kbYyDkFP4huOQHB4JAEaOAqGtoMgFHmWDb
+        sKSIBbwqug1KkoXyBMd80l3mNmlqS6TDmzoQRFFpkIuvG6YhvF/r0HOLu/sCtVO/5LGVvkE0fqyS1
+        SVeH3cbjJSkHXVjW5Qi427wWuQn8GbRVVyNR5M5pQUKei7yOOL8W7MUHrI8sZI/vzLWUK2jruoUON
+        ainiY+YQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j490u-0005LK-No; Tue, 18 Feb 2020 19:58:37 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 75315980E53; Tue, 18 Feb 2020 20:58:31 +0100 (CET)
+Date:   Tue, 18 Feb 2020 20:58:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200218195831.GD11457@worktop.programming.kicks-ass.net>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213204444.GA94647@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_driver name is const char pointer, so it not useful to cast
-driver_name (which is already const char).
+On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/pcmcia/omap_cf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > That _should_ already be the case today. That is, if we end up in a
+> > > tracer and in_nmi() is unreliable we're already screwed anyway.
 
-diff --git a/drivers/pcmcia/omap_cf.c b/drivers/pcmcia/omap_cf.c
-index 0a04eb04f3a2..d3ef5534991e 100644
---- a/drivers/pcmcia/omap_cf.c
-+++ b/drivers/pcmcia/omap_cf.c
-@@ -329,7 +329,7 @@ static int __exit omap_cf_remove(struct platform_device *pdev)
- 
- static struct platform_driver omap_cf_driver = {
- 	.driver = {
--		.name	= (char *) driver_name,
-+		.name	= driver_name,
- 	},
- 	.remove		= __exit_p(omap_cf_remove),
- };
--- 
-2.24.1
+> I removed the static from rcu_nmi_enter()/exit() as it is called from
+> outside, that makes it build now. Updated below is Paul's diff. I also added
+> NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> asymmetric.
+
+> +__always_inline void rcu_nmi_exit(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> @@ -651,25 +653,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+>  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+>  
+> -	if (irq)
+> +	if (!in_nmi())
+>  		rcu_prepare_for_idle();
+>  
+>  	rcu_dynticks_eqs_enter();
+>  
+> -	if (irq)
+> +	if (!in_nmi())
+>  		rcu_dynticks_task_enter();
+>  }
+
+Boris and me have been going over the #MC code (and finding loads of
+'interesting' code) and ran into ist_enter(), whish has the following
+code:
+
+                /*
+                 * We might have interrupted pretty much anything.  In
+                 * fact, if we're a machine check, we can even interrupt
+                 * NMI processing.  We don't want in_nmi() to return true,
+                 * but we need to notify RCU.
+                 */
+                rcu_nmi_enter();
+
+
+Which, to me, sounds all sorts of broken. The IST (be it #DB or #MC) can
+happen while we're holding all sorts of locks. This must be an NMI-like
+context.
+
 
