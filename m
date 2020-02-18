@@ -2,53 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E3C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA8C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD0621D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D62321D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056254;
-	bh=VtW4n0e7ugqK2sqHKsCySy63GQ9Z4vHok72WIyQLeSo=;
+	s=default; t=1582056261;
+	bh=RJptZS0OKYne+gFv/LGiaLgBKwZ9QaewdZfuLKFKubs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LrNzYP/gj4J5HPixxZcGEQV09Nca0CzIgMt3oYOtCh8QhrKE9Pd/Pxp3rYZmGvQFG
-	 cD0ti44U2zsuo9DPQazaqxmRwtJojWvdv2EVA4fkND8BGuHNNzV9xulM0SAhwQ8m8Y
-	 AKrUSERKdbbUo1sawB4zDOYeHLk5d1HH54E1W2Og=
+	b=BtvPAUpVy6Qix8EgzESxW4gxeJ9auLmCY76+hozqx4ga8+W2iv8Snnpay42agyLlj
+	 wRLAOSDRNNZ5RhDJpV7GFXPxNZliZCmHs1PbbkvELgxV024Y9h+ZHfGY8iDo7DSFyL
+	 L/9ER/ydpif16YE1XWSALJP9W6WvyZc5nPi3yE0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgBRUEM (ORCPT
+        id S1728768AbgBRUDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:04:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45386 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgBRUDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:55 -0500
+        id S1728964AbgBRUDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B1C2465A;
-        Tue, 18 Feb 2020 20:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C1B921D56;
+        Tue, 18 Feb 2020 20:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056235;
-        bh=VtW4n0e7ugqK2sqHKsCySy63GQ9Z4vHok72WIyQLeSo=;
+        s=default; t=1582056216;
+        bh=RJptZS0OKYne+gFv/LGiaLgBKwZ9QaewdZfuLKFKubs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAjzEAMYJfViRH215JHhXHL6QkNYEx+ap8ZveNFrsBSXNSjwYKC4KK2ib1y/U3qyt
-         +JDh7eJEJSVnU/qnwEEzochLjgv2rzcauelIqtmbkaP2zoyH3ZzG9zhthrwfXb6num
-         YhM7Hlr14qBaSc2A/8L99Sx0F0WEKZGURggh8ZYI=
+        b=jw8p+AVBzQypSeOopJ8CrgNDARSAaXwp6MSL8R9rsZWl93k9iaTbjo8R11EVnZyMV
+         iJYxYhcGnUq3LmKKRvM3kF1TT0LGDDqXXTHiPn9jA2pOJfN1nfMM6BYb9fD2W8hrTF
+         /D2wZkbSb8zXqwWTsjdvbSO65zqx+bhvHUWi4Fg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 79/80] gpio: add gpiod_toggle_active_low()
-Date:   Tue, 18 Feb 2020 20:55:40 +0100
-Message-Id: <20200218190439.344619627@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.5 32/80] jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
+Date:   Tue, 18 Feb 2020 20:54:53 +0100
+Message-Id: <20200218190435.536576320@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -61,73 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit d3a5bcb4a17f1ad072484bb92c42519ff3aba6e1 ]
+commit c96dceeabf765d0b1b1f29c3bf50a5c01315b820 upstream.
 
-Add possibility to toggle active-low flag of a gpio descriptor. This is
-useful for compatibility code, where defaults are inverted vs DT gpio
-flags or the active-low flag is taken from elsewhere.
+Commit 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from
+an older transaction") set the BH_Freed flag when forgetting a metadata
+buffer which belongs to the committing transaction, it indicate the
+committing process clear dirty bits when it is done with the buffer. But
+it also clear the BH_Mapped flag at the same time, which may trigger
+below NULL pointer oops when block_size < PAGE_SIZE.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/7ce0338e01ad17fa5a227176813941b41a7c35c1.1576031637.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+rmdir 1             kjournald2                 mkdir 2
+                    jbd2_journal_commit_transaction
+		    commit transaction N
+jbd2_journal_forget
+set_buffer_freed(bh1)
+                    jbd2_journal_commit_transaction
+                     commit transaction N+1
+                     ...
+                     clear_buffer_mapped(bh1)
+                                               ext4_getblk(bh2 ummapped)
+                                               ...
+                                               grow_dev_page
+                                                init_page_buffers
+                                                 bh1->b_private=NULL
+                                                 bh2->b_private=NULL
+                     jbd2_journal_put_journal_head(jh1)
+                      __journal_remove_journal_head(hb1)
+		       jh1 is NULL and trigger oops
+
+*) Dir entry block bh1 and bh2 belongs to one page, and the bh2 has
+   already been unmapped.
+
+For the metadata buffer we forgetting, we should always keep the mapped
+flag and clear the dirty flags is enough, so this patch pick out the
+these buffers and keep their BH_Mapped flag.
+
+Link: https://lore.kernel.org/r/20200213063821.30455-3-yi.zhang@huawei.com
+Fixes: 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from an older transaction")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/gpiolib.c        | 11 +++++++++++
- include/linux/gpio/consumer.h |  7 +++++++
- 2 files changed, 18 insertions(+)
+ fs/jbd2/commit.c |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 78a16e42f222e..bcfbfded9ba3f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3371,6 +3371,17 @@ int gpiod_is_active_low(const struct gpio_desc *desc)
- }
- EXPORT_SYMBOL_GPL(gpiod_is_active_low);
- 
-+/**
-+ * gpiod_toggle_active_low - toggle whether a GPIO is active-low or not
-+ * @desc: the gpio descriptor to change
-+ */
-+void gpiod_toggle_active_low(struct gpio_desc *desc)
-+{
-+	VALIDATE_DESC_VOID(desc);
-+	change_bit(FLAG_ACTIVE_LOW, &desc->flags);
-+}
-+EXPORT_SYMBOL_GPL(gpiod_toggle_active_low);
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -985,12 +985,29 @@ restart_loop:
+ 		 * pagesize and it is attached to the last partial page.
+ 		 */
+ 		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			struct address_space *mapping;
 +
- /* I/O calls are only valid after configuration completed; the relevant
-  * "is this a valid GPIO" error checks should already have been done.
-  *
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 5215fdba6b9a6..bf2d017dd7b71 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -158,6 +158,7 @@ int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 
- int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce);
- int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
-+void gpiod_toggle_active_low(struct gpio_desc *desc);
- 
- int gpiod_is_active_low(const struct gpio_desc *desc);
- int gpiod_cansleep(const struct gpio_desc *desc);
-@@ -483,6 +484,12 @@ static inline int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
- 	return -ENOSYS;
- }
- 
-+static inline void gpiod_toggle_active_low(struct gpio_desc *desc)
-+{
-+	/* GPIO can never have been requested */
-+	WARN_ON(desc);
-+}
+ 			clear_buffer_freed(bh);
+ 			clear_buffer_jbddirty(bh);
+-			clear_buffer_mapped(bh);
+-			clear_buffer_new(bh);
+-			clear_buffer_req(bh);
+-			bh->b_bdev = NULL;
 +
- static inline int gpiod_is_active_low(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--- 
-2.20.1
-
++			/*
++			 * Block device buffers need to stay mapped all the
++			 * time, so it is enough to clear buffer_jbddirty and
++			 * buffer_freed bits. For the file mapping buffers (i.e.
++			 * journalled data) we need to unmap buffer and clear
++			 * more bits. We also need to be careful about the check
++			 * because the data page mapping can get cleared under
++			 * out hands, which alse need not to clear more bits
++			 * because the page and buffers will be freed and can
++			 * never be reused once we are done with them.
++			 */
++			mapping = READ_ONCE(bh->b_page->mapping);
++			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
++				clear_buffer_mapped(bh);
++				clear_buffer_new(bh);
++				clear_buffer_req(bh);
++				bh->b_bdev = NULL;
++			}
+ 		}
+ 
+ 		if (buffer_jbddirty(bh)) {
 
 
