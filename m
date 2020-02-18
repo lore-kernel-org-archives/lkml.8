@@ -2,223 +2,133 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95FAC34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAEFC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B474820801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJyagPQH"
+	by mail.kernel.org (Postfix) with ESMTP id 2939620801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581989134;
+	bh=pb51zqziVxV8Pmfvrc//lSYiTlBeb8sT5Aim9mjEJ3E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dQKcP3etKyt5C0KQg7gnRNzzr1QR22hLHJHtp7ZDKLp94NjfWRUm8QmME3bZE+hg3
+	 2kDl3V3Mc23R3WecI2Pr8hZlLoyLroeKJtVEXp94xwi17NDFN/qeVDpfvMU5InrRc5
+	 AC12s/xCbMtfHyB3xBfww3yjWdCrG/XFiJk/ze80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgBRBX1 (ORCPT
+        id S1726289AbgBRBZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:23:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45923 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgBRBX0 (ORCPT
+        Mon, 17 Feb 2020 20:25:33 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:33554 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgBRBZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:23:26 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v19so18517030oic.12;
-        Mon, 17 Feb 2020 17:23:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8upeiht+r89HKGNg+QWPXHKtgwxpcyyqCLrriB2c5lg=;
-        b=uJyagPQHBQMc2p72vARugaNjTaNi9Auy6/mDOPA5lUeycInuT7YlArbkMDLQYTvVXX
-         TCKNnsounbc8Yfx4m1g0Zozj0e5y2PVrxxehGELSeIlRuoH4ML336bnS6hrw3I2Uf1ed
-         LkBBeiHyRGQHYUiIwSD0XhDoh8ya1uEVOaBrOax5YZPwwINr5ZJEMeBzpYhs4KOSbzC+
-         4ikSkKpr8ONAwArmzwUXefIBrG2W916T8N2pX9iGj/59UneS3E7uhmwIj3BdF0Mx3L5h
-         YeNFvRAdRGD915XUuqC0rfLaTU0M8YmSeyJccgChu9S/Ap+5mk9eNjz5QY5KmBWragxZ
-         P5gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8upeiht+r89HKGNg+QWPXHKtgwxpcyyqCLrriB2c5lg=;
-        b=GEu4xF8drWbSPl1xSQyF3reYypbxoofo2f2+7lZ4J+rk3LpcAlXrvX9R83bpN8EggM
-         89F15dsajGkTJ1CG2ABgraWWWTYuYqUErhynFvTuycJ6dbj16pEwFxN7GqcPzlwXPGcz
-         qXfc8l9l0FpRZCVd/uaaIwN0KxMySUvif3cRbtjR5vt2Xcc8a2/x6Ggy/kbj7qhc5SR7
-         fv7KJvVlnHZTdDdJ7G7/pBz4CgPHXIfZYmJxnNqA2XCd6XDYoT7zElW4lBVSwaDaaW01
-         faWgwyLcinkNWp+juhilXyVsBHklJy4YSdW1a2ARzGkuzm1r0BiwvZgSGPnR3JHO8T02
-         RiPQ==
-X-Gm-Message-State: APjAAAWoOIdjeL5703So4DDx+2W3dOCssCrMSwRRLyGJJaWYdJ5cZLCU
-        LT9suDRDMqb3y3CRQwLGLeYhTri4GZDj67Tm+Ev/AgstMEM=
-X-Google-Smtp-Source: APXvYqx4hj1wk1F9MvBZvnoeZOuCQkj7QqeDnG2So1wH3pvraNelBYrkulWsOcWrGas5nPfNZeZHSWAbw8cdZM32a7g=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr1083369oii.141.1581989005963;
- Mon, 17 Feb 2020 17:23:25 -0800 (PST)
+        Mon, 17 Feb 2020 20:25:33 -0500
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01I1POvY029003;
+        Tue, 18 Feb 2020 10:25:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01I1POvY029003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581989125;
+        bh=3MSw5JkyO/9OCsOPRafhwqlFQ7vR48exeqQSqYgqIIk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YWjMhh0RDcuF1rO+m3rS+CCSH36MMqHbRScYqqwvGFMku4Tq+v22CxsX/fM++yXyw
+         1DHR6fMH6vHE1heRP/TFE/EXFFbvg9rRE6E6qb/6ZBx5OpdtdNwXGrT/vmdPq+hdqV
+         +7dnSo43yaPKVv3+lBhpbcIJMWkjAvJTFaMoKNvwxvIHpNUMxB0mLcWEDRVu2noWpP
+         BSi55H6OkKOQHkM1t4FXEEBnwuQQbfTdZRjx1OLWKeRVVK447bGPfq8fmZ4KvQBZDD
+         KKh2OrmNwAV2g/99xnOY0M7g8n8yT6NXrHz7zH35sobirTwOt1XTVzuaxNHIFsrPf4
+         QU1+QB3oo5eHA==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id g13so6873499uab.7;
+        Mon, 17 Feb 2020 17:25:24 -0800 (PST)
+X-Gm-Message-State: APjAAAVNZzb3Q+ZiVQpWa2XzDnRhhas7F/k8RZzRx5Xwu9/FZsS3D5Tr
+        UkWI0Xn9jNQrVBaHpYWwZkMI0l5I2jat3a5JXDE=
+X-Google-Smtp-Source: APXvYqyMjSb6Wor89MN0MqasMN0Ke1opsU3txiROIMZz+gj33FtHTfdKKQM+xuUZHJtMCoN2zBnUWZRVF3IUcxqLjh0=
+X-Received: by 2002:ab0:2881:: with SMTP id s1mr9271966uap.95.1581989123428;
+ Mon, 17 Feb 2020 17:25:23 -0800 (PST)
 MIME-Version: 1.0
-References: <CANRm+CxGOeGQ0vV9ueBgjUDvkzH29EQWLe4GQGDvOhm3idM6NQ@mail.gmail.com>
- <b2ee716e-8ef0-3940-0841-28c5a245b207@redhat.com>
-In-Reply-To: <b2ee716e-8ef0-3940-0841-28c5a245b207@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 18 Feb 2020 09:23:15 +0800
-Message-ID: <CANRm+CwQcg5u=BFYrvRTwLvbVFCpXQyF2wb65org6pdMpSb8mg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for
- both pv tlb and pv ipis
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <20200217185437.GA20901@embeddedor>
+In-Reply-To: <20200217185437.GA20901@embeddedor>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 18 Feb 2020 10:24:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR6mKUnr5bJSNy7aVzcdS7tzsj1VEbbsFA2Y3_7vpUi2A@mail.gmail.com>
+Message-ID: <CAK7LNAR6mKUnr5bJSNy7aVzcdS7tzsj1VEbbsFA2Y3_7vpUi2A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: uniphier: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 01:11, Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Tue, Feb 18, 2020 at 3:52 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 >
-> On 10/02/20 07:38, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Nick Desaulniers Reported:
-> >
-> >   When building with:
-> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> >   The following warning is observed:
-> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> >   vector)
-> >               ^
-> >   Debugging with:
-> >   https://github.com/ClangBuiltLinux/frame-larger-than
-> >   via:
-> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
-> >     kvm_send_ipi_mask_allbutself
-> >   points to the stack allocated `struct cpumask newmask` in
-> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> >   8192, making a single instance of a `struct cpumask` 1024 B.
-> >
-> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
-> > both pv tlb and pv ipis..
-> >
-> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * remove '!alloc' check
-> >  * use new pv check helpers
-> >
-> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
-> >  1 file changed, 21 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 76ea8c4..377b224 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
-> >          kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
-> >  }
-> >
-> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
-> > +
-> >  #ifdef CONFIG_SMP
-> >
-> >  static bool pv_ipi_supported(void)
-> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct
-> > cpumask *mask, int vector)
-> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask,
-> > int vector)
-> >  {
-> >      unsigned int this_cpu = smp_processor_id();
-> > -    struct cpumask new_mask;
-> > +    struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >      const struct cpumask *local_mask;
-> >
-> > -    cpumask_copy(&new_mask, mask);
-> > -    cpumask_clear_cpu(this_cpu, &new_mask);
-> > -    local_mask = &new_mask;
-> > +    cpumask_copy(new_mask, mask);
-> > +    cpumask_clear_cpu(this_cpu, new_mask);
-> > +    local_mask = new_mask;
-> >      __send_ipi_mask(local_mask, vector);
-> >  }
-> >
-> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
-> >      update_intr_gate(X86_TRAP_PF, async_page_fault);
-> >  }
-> >
-> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
-> >
-> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-> >              const struct flush_tlb_info *info)
-> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct
-> > cpumask *cpumask,
-> >      u8 state;
-> >      int cpu;
-> >      struct kvm_steal_time *src;
-> > -    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
-> > +    struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >
-> >      cpumask_copy(flushmask, cpumask);
-> >      /*
-> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
-> >      if (pv_tlb_flush_supported()) {
-> >          pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-> >          pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> > +        pr_info("KVM setup pv remote TLB flush\n");
-> >      }
-> >
-> >      if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
-> >  }
-> >  arch_initcall(activate_jump_labels);
-> >
-> > -static __init int kvm_setup_pv_tlb_flush(void)
-> > +static __init int kvm_alloc_cpumask(void)
-> >  {
-> >      int cpu;
-> > +    bool alloc = false;
-> >
-> >      if (!kvm_para_available() || nopv)
-> >          return 0;
-> >
-> > -    if (pv_tlb_flush_supported()) {
-> > +    if (pv_tlb_flush_supported())
-> > +        alloc = true;
-> > +
-> > +#if defined(CONFIG_SMP)
-> > +    if (pv_ipi_supported())
-> > +        alloc = true;
-> > +#endif
-> > +
-> > +    if (alloc)
-> >          for_each_possible_cpu(cpu) {
-> > -            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-> > +            zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
-> >                  GFP_KERNEL, cpu_to_node(cpu));
-> >          }
-> > -        pr_info("KVM setup pv remote TLB flush\n");
-> > -    }
-> >
-> >      return 0;
-> >  }
-> > -arch_initcall(kvm_setup_pv_tlb_flush);
-> > +arch_initcall(kvm_alloc_cpumask);
-> >
-> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
-> >
-> > --
-> > 2.7.4
-> >
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
-> Also has messed up whitespace, can you resend please?
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-My fault, just resend all of them.
 
-    Wanpeng
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+> ---
+>  drivers/pinctrl/uniphier/pinctrl-uniphier-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+> index 57babf31e320..ade348b49b31 100644
+> --- a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+> +++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+> @@ -29,7 +29,7 @@ struct uniphier_pinctrl_reg_region {
+>         struct list_head node;
+>         unsigned int base;
+>         unsigned int nregs;
+> -       u32 vals[0];
+> +       u32 vals[];
+>  };
+>
+>  struct uniphier_pinctrl_priv {
+> --
+> 2.25.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
