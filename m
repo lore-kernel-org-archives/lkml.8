@@ -2,147 +2,234 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDCFC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D55C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FA021D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582050527;
-	bh=jJkCDGG5ZFNXNyHV2P6h6E/KRBQPh8St4HaG6x44ZrY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aN7iDzPakaiCSLfV1EXjYYAhU/c5QZwgh3A7SwQwYW8GyTvXYwpP3RswG8qO10YrW
-	 wla5cjIXY+GGkLPoTGaGpTAAwyW8BVJ3nv5Aux5mKXVpS+YraYRPRedWwnZj64XTbh
-	 uid2gjbJFSHN+iPaG6l+0PMLxmZt5LMEt+nSgVJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 433AC2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m5/39nMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgBRS2q (ORCPT
+        id S1726422AbgBRSaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:28:46 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38442 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgBRS2p (ORCPT
+        Tue, 18 Feb 2020 13:30:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40018 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgBRSaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:28:45 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so24131780ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:28:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+QhJ1rq4OwV2iGSlB588wtXJvujKNK9tlxfzQJwyHS8=;
-        b=ejxkrareXzY6YTUjQpMNQmMbBAVxAeHZpnsjqRJOfVCFhXRJpBgATWPZbLfOiAxW/a
-         th7vIR385GnvQUqIU39rpkayyQ2QV5OZ329vYyqfpQ0PO3TGv7Tsc77viMB/prpd/EN7
-         mxfaTk+8rftAr7S1xcTb0hs67cWZ0/zooHpA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+QhJ1rq4OwV2iGSlB588wtXJvujKNK9tlxfzQJwyHS8=;
-        b=UUfaNAGPByPoupVDtyXU5PmjGkbpINVNV2SbuE/wisb6k/a5hYyW4cHHeMclQGMdaK
-         YWPcjGgeMGS9WXJ/1Od4AwXVxaw2BLNzhPQH19yQIFQ5u2c96c1H7AslfALsXzeMO7DM
-         vL42/5RC70sfyd3SvHeO4GkRh5vqpV+Z/dW42+bLkUASToIrMMxCmO8wmCn9RiiK4wse
-         M1REVMBSpKX/1rtPZpyxOWYYSR1FFcYRsW5dhOOnfyCvrS8yLaWvHFsSIl3leddyWDwB
-         RTkCgUzt09NrDE8AVFykduh2cxNxYr6wYpys2O5Yn1HQ1QSLcfVJkHESL+weBEgjKn1y
-         ++CQ==
-X-Gm-Message-State: APjAAAV1abo/XfP19zsKqQ0D6qBS70ZRQQXKfn5++pbsi5pptrLoAVUo
-        BoU2KCl1wEKqu15sitldDIg8Znpjznw=
-X-Google-Smtp-Source: APXvYqzLICwCjcGVTn+PwvmGWnukhfHBAU3gfwJ2PAI7DXwiqNYUShTFBpmvSYGWfobiD84qZjih6g==
-X-Received: by 2002:a2e:3609:: with SMTP id d9mr13694692lja.188.1582050522105;
-        Tue, 18 Feb 2020 10:28:42 -0800 (PST)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id n13sm3015653lji.91.2020.02.18.10.28.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 10:28:40 -0800 (PST)
-Received: by mail-lf1-f45.google.com with SMTP id t23so15250090lfk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:28:39 -0800 (PST)
-X-Received: by 2002:a19:f514:: with SMTP id j20mr11229869lfb.31.1582050519448;
- Tue, 18 Feb 2020 10:28:39 -0800 (PST)
+        Tue, 18 Feb 2020 13:30:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=wMqtvVtD8RrRuein7/mpaQL8yemoq3/xOYht63VaNdA=; b=m5/39nMtZTbYmnxnpWfY0UNdUI
+        0cb6S1TlahYe11rJEWIN+zmbDpQpiSOGLTAUTINGruiYBtzQHBG7aPKjRDowRpNJzckUjM6Y9feZ5
+        qUVuhmjjHaQiRwcu7n6gVcN65e2NmZmrSXwFwGEOM/vFhvRaEz/abbKA67iZvrj4S5vT8bqzjKvmD
+        v901S0XF0zfdcbhHNwszhXNUfoJm1Ya4Y/4nf+4EasGQlZ/XM5i96YBf0NaxXRSHXLJ4Rn0mPRWEj
+        RHOnvgSjqdWppzpwmq1woWR9r8Bc5Y8MVFTty3jXN1qxJAF+4OSKRgr4bteHIE9ijEdL9bunVdgYO
+        YjCNixcg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j47dA-0005i6-G1; Tue, 18 Feb 2020 18:30:00 +0000
+Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org
+References: <20200218151812.7816-1-geert+renesas@glider.be>
+ <20200218151812.7816-5-geert+renesas@glider.be>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+Date:   Tue, 18 Feb 2020 10:29:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-542-sashal@kernel.org>
- <CANaxB-zjYecWpjMoX6dXY3B5HtVu8+G9npRnaX2FnTvp9XucTw@mail.gmail.com>
- <CAHk-=wjd6BKXEpU0MfEaHuOEK-StRToEcYuu6NpVfR0tR5d6xw@mail.gmail.com>
- <CAHk-=wgs8E4JYVJHaRV2hMn3dxUnM8i0Kn2mA1SjzJdsbB9tXw@mail.gmail.com>
- <CAHk-=wiaDvYHBt8oyZGOp2XwJW4wNXVAchqTFuVBvASTFx_KfA@mail.gmail.com> <20200218182041.GB24185@bombadil.infradead.org>
-In-Reply-To: <20200218182041.GB24185@bombadil.infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Feb 2020 10:28:23 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi8Q8xtZt1iKcqSaV1demDnyixXT+GyDZi-Lk61K3+9rw@mail.gmail.com>
-Message-ID: <CAHk-=wi8Q8xtZt1iKcqSaV1demDnyixXT+GyDZi-Lk61K3+9rw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.5 542/542] pipe: use exclusive waits when
- reading or writing
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrei Vagin <avagin@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000003aa18b059eddd731"
+In-Reply-To: <20200218151812.7816-5-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003aa18b059eddd731
-Content-Type: text/plain; charset="UTF-8"
+Hi Geert,
 
-On Tue, Feb 18, 2020 at 10:20 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> You don't want to move wake_up_partner() up and call it from pipe_release()?
+Just a few comments. Please see below.
 
-I was actually thinking of going the other way - two of three users of
-wake_up_partner() are redundantly waking up the wrong side, and the
-third user is pointlessly written too.
 
-So I was _thinking_ of a patch like the appended (which is on top of
-the previous patch), but ended up not doing it. Until you brought it
-up.
+On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
+> Document the GPIO Aggregator, and the two typical use-cases.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+> v5:
+>   - Add Reviewed-by, Tested-by,
+>   - Fix inconsistent indentation.
+> 
+> v4:
+>   - Add Reviewed-by,
+>   - Drop controversial GPIO repeater,
+>   - Clarify industrial control use case,
+>   - Fix typo s/communicated/communicate/,
+>   - Replace abstract frobnicator example by concrete door example with
+>     gpio-line-names,
+> 
+> v3:
+>   - New.
+> ---
+>  .../admin-guide/gpio/gpio-aggregator.rst      | 102 ++++++++++++++++++
+>  Documentation/admin-guide/gpio/index.rst      |   1 +
+>  2 files changed, 103 insertions(+)
+>  create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+> 
+> diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> new file mode 100644
+> index 0000000000000000..114f72be33c2571e
+> --- /dev/null
+> +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> @@ -0,0 +1,102 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +GPIO Aggregator
+> +===============
+> +
+> +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
 
-But I won't bother committing this, since it shouldn't really matter.
+"allows" really wants an object following the verb [although the kernel sources
+and docs have many cases of it not having an object].  Something like
 
-                 Linus
+                       allows {you, one, someone, users, a user} to aggregate
 
---0000000000003aa18b059eddd731
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k6s80fwq0>
-X-Attachment-Id: f_k6s80fwq0
+> +gpio_chip.  This supports the following use cases.
+> +
+> +
+> +Aggregating GPIOs using Sysfs
+> +-----------------------------
+> +
+> +GPIO controllers are exported to userspace using /dev/gpiochip* character
+> +devices.  Access control to these devices is provided by standard UNIX file
+> +system permissions, on an all-or-nothing basis: either a GPIO controller is
+> +accessible for a user, or it is not.
+> +
+> +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
+> +them into a new gpio_chip, which can be assigned to a group or user using
+> +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
+> +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
+> +GPIO controller, and no longer needs to care about which GPIOs to grab and
+> +which not, reducing the attack surface.
+> +
+> +Aggregated GPIO controllers are instantiated and destroyed by writing to
+> +write-only attribute files in sysfs.
+> +
+> +    /sys/bus/platform/drivers/gpio-aggregator/
+> +
+> +	"new_device" ...
+> +		Userspace may ask the kernel to instantiate an aggregated GPIO
+> +		controller by writing a string describing the GPIOs to
+> +		aggregate to the "new_device" file, using the format
+> +
+> +		.. code-block:: none
+> +
+> +		    [<gpioA>] [<gpiochipB> <offsets>] ...
+> +
+> +		Where:
+> +
+> +		    "<gpioA>" ...
+> +			    is a GPIO line name,
+> +
+> +		    "<gpiochipB>" ...
+> +			    is a GPIO chip label or name, and
+> +
+> +		    "<offsets>" ...
+> +			    is a comma-separated list of GPIO offsets and/or
+> +			    GPIO offset ranges denoted by dashes.
+> +
+> +		Example: Instantiate a new GPIO aggregator by aggregating GPIO
+> +		19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
+> +		gpio_chip:
+> +
+> +		.. code-block:: bash
+> +
+> +		    echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
+> +
 
-IGZzL3BpcGUuYyB8IDE4ICsrKysrKy0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDYgaW5z
-ZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvcGlwZS5jIGIvZnMv
-cGlwZS5jCmluZGV4IDIxNDQ1MDc0NDdjNS4uNzliYTYxNDMwZjljIDEwMDY0NAotLS0gYS9mcy9w
-aXBlLmMKKysrIGIvZnMvcGlwZS5jCkBAIC0xMDI1LDEyICsxMDI1LDYgQEAgc3RhdGljIGludCB3
-YWl0X2Zvcl9wYXJ0bmVyKHN0cnVjdCBwaXBlX2lub2RlX2luZm8gKnBpcGUsIHVuc2lnbmVkIGlu
-dCAqY250KQogCXJldHVybiBjdXIgPT0gKmNudCA/IC1FUkVTVEFSVFNZUyA6IDA7CiB9CiAKLXN0
-YXRpYyB2b2lkIHdha2VfdXBfcGFydG5lcihzdHJ1Y3QgcGlwZV9pbm9kZV9pbmZvICpwaXBlKQot
-ewotCXdha2VfdXBfaW50ZXJydXB0aWJsZV9hbGwoJnBpcGUtPnJkX3dhaXQpOwotCXdha2VfdXBf
-aW50ZXJydXB0aWJsZV9hbGwoJnBpcGUtPndyX3dhaXQpOwotfQotCiBzdGF0aWMgaW50IGZpZm9f
-b3BlbihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkKIHsKIAlzdHJ1Y3Qg
-cGlwZV9pbm9kZV9pbmZvICpwaXBlOwpAQCAtMTA3OCw3ICsxMDcyLDcgQEAgc3RhdGljIGludCBm
-aWZvX29wZW4oc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUgKmZpbHApCiAJICovCiAJ
-CXBpcGUtPnJfY291bnRlcisrOwogCQlpZiAocGlwZS0+cmVhZGVycysrID09IDApCi0JCQl3YWtl
-X3VwX3BhcnRuZXIocGlwZSk7CisJCQl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxsKCZwaXBlLT53
-cl93YWl0KTsKIAogCQlpZiAoIWlzX3BpcGUgJiYgIXBpcGUtPndyaXRlcnMpIHsKIAkJCWlmICgo
-ZmlscC0+Zl9mbGFncyAmIE9fTk9OQkxPQ0spKSB7CkBAIC0xMTA0LDcgKzEwOTgsNyBAQCBzdGF0
-aWMgaW50IGZpZm9fb3BlbihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkK
-IAogCQlwaXBlLT53X2NvdW50ZXIrKzsKIAkJaWYgKCFwaXBlLT53cml0ZXJzKyspCi0JCQl3YWtl
-X3VwX3BhcnRuZXIocGlwZSk7CisJCQl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxsKCZwaXBlLT5y
-ZF93YWl0KTsKIAogCQlpZiAoIWlzX3BpcGUgJiYgIXBpcGUtPnJlYWRlcnMpIHsKIAkJCWlmICh3
-YWl0X2Zvcl9wYXJ0bmVyKHBpcGUsICZwaXBlLT5yX2NvdW50ZXIpKQpAQCAtMTEyMCwxMiArMTEx
-NCwxMiBAQCBzdGF0aWMgaW50IGZpZm9fb3BlbihzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3Qg
-ZmlsZSAqZmlscCkKIAkgKiAgdGhlIHByb2Nlc3MgY2FuIGF0IGxlYXN0IHRhbGsgdG8gaXRzZWxm
-LgogCSAqLwogCi0JCXBpcGUtPnJlYWRlcnMrKzsKLQkJcGlwZS0+d3JpdGVycysrOworCQlpZiAo
-cGlwZS0+cmVhZGVycysrID09IDApCisJCQl3YWtlX3VwX2ludGVycnVwdGlibGVfYWxsKCZwaXBl
-LT53cl93YWl0KTsKKwkJaWYgKHBpcGUtPndyaXRlcnMrKyA9PSAwKQorCQkJd2FrZV91cF9pbnRl
-cnJ1cHRpYmxlX2FsbCgmcGlwZS0+cmRfd2FpdCk7CiAJCXBpcGUtPnJfY291bnRlcisrOwogCQlw
-aXBlLT53X2NvdW50ZXIrKzsKLQkJaWYgKHBpcGUtPnJlYWRlcnMgPT0gMSB8fCBwaXBlLT53cml0
-ZXJzID09IDEpCi0JCQl3YWtlX3VwX3BhcnRuZXIocGlwZSk7CiAJCWJyZWFrOwogCiAJZGVmYXVs
-dDoK
---0000000000003aa18b059eddd731--
+Does the above command tell the user that the new device is named
+"gpio-aggregator.0", as used below?
+
+
+> +	"delete_device" ...
+> +		Userspace may ask the kernel to destroy an aggregated GPIO
+> +		controller after use by writing its device name to the
+> +		"delete_device" file.
+> +
+> +		Example: Destroy the previously-created aggregated GPIO
+> +		controller "gpio-aggregator.0":
+> +
+> +		.. code-block:: bash
+> +
+> +		    echo gpio-aggregator.0 > delete_device
+> +
+> +
+> +Generic GPIO Driver
+> +-------------------
+> +
+> +The GPIO Aggregator can also be used as a generic driver for a simple
+> +GPIO-operated device described in DT, without a dedicated in-kernel driver.
+> +This is useful in industrial control, and is not unlike e.g. spidev, which
+> +allows to communicate with an SPI device from userspace.
+
+   allows {choose an object} to communicate
+
+> +
+> +Binding a device to the GPIO Aggregator is performed either by modifying the
+> +gpio-aggregator driver, or by writing to the "driver_override" file in Sysfs.
+> +
+> +Example: If "door" is a GPIO-operated device described in DT, using its own
+> +compatible value::
+> +
+> +	door {
+> +		compatible = "myvendor,mydoor";
+> +
+> +		gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>,
+> +			<&gpio2 20 GPIO_ACTIVE_LOW>;
+> +		gpio-line-names = "open", "lock";
+> +	};
+> +
+> +it can be bound to the GPIO Aggregator by either:
+> +
+> +1. Adding its compatible value to ``gpio_aggregator_dt_ids[]``,
+> +2. Binding manually using "driver_override":
+> +
+> +.. code-block:: bash
+> +
+> +    echo gpio-aggregator > /sys/bus/platform/devices/door/driver_override
+> +    echo door > /sys/bus/platform/drivers/gpio-aggregator/bind
+
+
+HTH. Thanks.
+-- 
+~Randy
+
