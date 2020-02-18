@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84A2C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1939EC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B6524655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75D624670
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055877;
-	bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
+	s=default; t=1582055880;
+	bh=FpIz84TeGZcaSOVcwGGUp7CVd0vgtjsxOYV2MUZX6v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SM7rosb6juHpY5oJ4kptt/0TMJnIztV1x0Z41IEFNVJLMzL2Iiozxc9R/kjMGQs/L
-	 w7v/pTpKd1VpQYr54J07xS01MEIlKT6/ZRDflvaKfR7s7x1giADTHay8VJNSLPDJaG
-	 DMQ818RMhhaVCkjzSwGsbwlWmY8y52BbaLUrgPFo=
+	b=fWBRuhjaN/Wt4FnYiYGEUCOWJ4SR0zRpnZJP6Bt9CLIpsgED7q4OF7MiqcgRTGu5m
+	 2KzuxIG6QFo9x0MrpeLro7Y6noXr4eZ9fTh52owTzsfjio9xl6kxRdxjCLYiW+7532
+	 rwB5x9SQsibYOO6Vd74C2YBGzBFa9sWSfXeqhATM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBRT5z (ORCPT
+        id S1728092AbgBRT57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBRT5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:52 -0500
+        id S1727233AbgBRT5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FFF220659;
-        Tue, 18 Feb 2020 19:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 227E22465A;
+        Tue, 18 Feb 2020 19:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055871;
-        bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
+        s=default; t=1582055874;
+        bh=FpIz84TeGZcaSOVcwGGUp7CVd0vgtjsxOYV2MUZX6v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpccIs2f0uS4UrTYRhY5+3hYhTvou+H6w5zXCTJhOQ1BKPRpN5dP7ePu/ozgBvbJi
-         uLZyEIpTmHumsg8m5wFR/Dxs+08Xv9vk3ygNhWRd0e9/AV0GpBkzsbN76rJvlxvUze
-         OnS0Y+7qhqYS+dMJ59eCnX2FlNeYoI3jOXagGiPA=
+        b=msO80TW+vKBINtMGXhtZSg/QFUPXcxx6/5JM/rdJUpzoZrO7clkUQNQdZedb6rm9f
+         u2xPVksnK26KPTWkGWsTEUKR6RpFgPHddq25M/iqQ4JBCmR9hpReLsvZlN9lWmBUiU
+         zlPDYNhid1wh+XHnPiFa3few2Cws3KLB1bO6RsDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 07/66] ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
-Date:   Tue, 18 Feb 2020 20:54:34 +0100
-Message-Id: <20200218190428.788565639@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 08/66] ACPI: EC: Fix flushing of pending work
+Date:   Tue, 18 Feb 2020 20:54:35 +0100
+Message-Id: <20200218190428.879663812@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,47 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 93f9d1a4ac5930654c17412e3911b46ece73755a upstream.
+commit f0ac20c3f6137910c8a927953e8a92f5b3716166 upstream.
 
-The Audioengine D1 (0x2912:0x30c8) does support reading the sample rate,
-but it returns the rate in byte-reversed order.
+Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+introduced a subtle bug into the flushing of pending EC work while
+suspended to idle, which may cause the EC driver to fail to
+re-enable the EC GPE after handling a non-wakeup event (like a
+battery status change event, for example).
 
-When setting sampling rate, the driver produces these warning messages:
-[168840.944226] usb 3-2.2: current rate 4500480 is different from the runtime rate 44100
-[168854.930414] usb 3-2.2: current rate 8436480 is different from the runtime rate 48000
-[168905.185825] usb 3-2.1.2: current rate 30465 is different from the runtime rate 96000
+The problem is that the work item flushed by flush_scheduled_work()
+in __acpi_ec_flush_work() may disable the EC GPE and schedule another
+work item expected to re-enable it, but that new work item is not
+flushed, so __acpi_ec_flush_work() returns with the EC GPE disabled
+and the CPU running it goes into an idle state subsequently.  If all
+of the other CPUs are in idle states at that point, the EC GPE won't
+be re-enabled until at least one CPU is woken up by another interrupt
+source, so system wakeup events that would normally come from the EC
+then don't work.
 
-As can be seen from the hexadecimal conversion, the current rate read
-back is byte-reversed from the rate that was set.
+This is reproducible on a Dell XPS13 9360 in my office which
+sometimes stops reacting to power button and lid events (triggered
+by the EC on that machine) after switching from AC power to battery
+power or vice versa while suspended to idle (each of those switches
+causes the EC GPE to trigger for several times in a row, but they
+are not system wakeup events).
 
-44100 == 0x00ac44, 4500480 == 0x44ac00
-48000 == 0x00bb80, 8436480 == 0x80bb00
-96000 == 0x017700,   30465 == 0x007701
+To avoid this problem, it is necessary to drain the workqueue
+entirely in __acpi_ec_flush_work(), but that cannot be done with
+respect to system_wq, because work items may be added to it from
+other places while __acpi_ec_flush_work() is running.  For this
+reason, make the EC driver use a dedicated workqueue for EC events
+processing (let that workqueue be ordered so that EC events are
+processed sequentially) and use drain_workqueue() on it in
+__acpi_ec_flush_work().
 
-Rather than implementing a new quirk to reverse the order, just skip
-checking the rate to avoid spamming the log.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200211162235.1639889-1-nivedita@alum.mit.edu
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/ec.c |   44 ++++++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1402,6 +1402,7 @@ bool snd_usb_get_sample_rate_quirk(struc
- 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
- 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
- 	case USB_ID(0x21B4, 0x0081): /* AudioQuest DragonFly */
-+	case USB_ID(0x2912, 0x30c8): /* Audioengine D1 */
- 		return true;
- 	}
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -179,6 +179,7 @@ EXPORT_SYMBOL(first_ec);
  
+ static struct acpi_ec *boot_ec;
+ static bool boot_ec_is_ecdt = false;
++static struct workqueue_struct *ec_wq;
+ static struct workqueue_struct *ec_query_wq;
+ 
+ static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
+@@ -461,7 +462,7 @@ static void acpi_ec_submit_query(struct
+ 		ec_dbg_evt("Command(%s) submitted/blocked",
+ 			   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
+ 		ec->nr_pending_queries++;
+-		schedule_work(&ec->work);
++		queue_work(ec_wq, &ec->work);
+ 	}
+ }
+ 
+@@ -527,7 +528,7 @@ static void acpi_ec_enable_event(struct
+ #ifdef CONFIG_PM_SLEEP
+ static void __acpi_ec_flush_work(void)
+ {
+-	flush_scheduled_work(); /* flush ec->work */
++	drain_workqueue(ec_wq); /* flush ec->work */
+ 	flush_workqueue(ec_query_wq); /* flush queries */
+ }
+ 
+@@ -548,8 +549,8 @@ static void acpi_ec_disable_event(struct
+ 
+ void acpi_ec_flush_work(void)
+ {
+-	/* Without ec_query_wq there is nothing to flush. */
+-	if (!ec_query_wq)
++	/* Without ec_wq there is nothing to flush. */
++	if (!ec_wq)
+ 		return;
+ 
+ 	__acpi_ec_flush_work();
+@@ -2032,25 +2033,33 @@ static struct acpi_driver acpi_ec_driver
+ 	.drv.pm = &acpi_ec_pm,
+ };
+ 
+-static inline int acpi_ec_query_init(void)
++static void acpi_ec_destroy_workqueues(void)
+ {
+-	if (!ec_query_wq) {
+-		ec_query_wq = alloc_workqueue("kec_query", 0,
+-					      ec_max_queries);
+-		if (!ec_query_wq)
+-			return -ENODEV;
++	if (ec_wq) {
++		destroy_workqueue(ec_wq);
++		ec_wq = NULL;
+ 	}
+-	return 0;
+-}
+-
+-static inline void acpi_ec_query_exit(void)
+-{
+ 	if (ec_query_wq) {
+ 		destroy_workqueue(ec_query_wq);
+ 		ec_query_wq = NULL;
+ 	}
+ }
+ 
++static int acpi_ec_init_workqueues(void)
++{
++	if (!ec_wq)
++		ec_wq = alloc_ordered_workqueue("kec", 0);
++
++	if (!ec_query_wq)
++		ec_query_wq = alloc_workqueue("kec_query", 0, ec_max_queries);
++
++	if (!ec_wq || !ec_query_wq) {
++		acpi_ec_destroy_workqueues();
++		return -ENODEV;
++	}
++	return 0;
++}
++
+ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
+ 	{
+ 		.ident = "Thinkpad X1 Carbon 6th",
+@@ -2081,8 +2090,7 @@ int __init acpi_ec_init(void)
+ 	int result;
+ 	int ecdt_fail, dsdt_fail;
+ 
+-	/* register workqueue for _Qxx evaluations */
+-	result = acpi_ec_query_init();
++	result = acpi_ec_init_workqueues();
+ 	if (result)
+ 		return result;
+ 
+@@ -2113,6 +2121,6 @@ static void __exit acpi_ec_exit(void)
+ {
+ 
+ 	acpi_bus_unregister_driver(&acpi_ec_driver);
+-	acpi_ec_query_exit();
++	acpi_ec_destroy_workqueues();
+ }
+ #endif	/* 0 */
 
 
