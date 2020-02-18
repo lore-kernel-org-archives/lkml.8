@@ -2,87 +2,167 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E14EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4009C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353812464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582050930;
-	bh=3BdkFnYPLhOhBdpCJtbJp9xRUqLuC+0bft4+KFYk3bE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xj8rN7SvYzXbyhVuZ0xEe0TJwBvKEq4WEympuLaVTtKyr+rT7QPszSu8/36MzzRfM
-	 bBU5HyuYk/N6IAWeyAOyC3TOULtn3pXQQZo/1aVmzMSQMTPOiO5qd4zI/nt7D9J+/d
-	 ofKh1aalIbBO91kW+Al2IWXIJ/uXCxZwNy1cmOCM=
+	by mail.kernel.org (Postfix) with ESMTP id 8E6082464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxc9ph8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgBRSf3 (ORCPT
+        id S1726539AbgBRSff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:35:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgBRSf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:35:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A5421D56;
-        Tue, 18 Feb 2020 18:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582050928;
-        bh=3BdkFnYPLhOhBdpCJtbJp9xRUqLuC+0bft4+KFYk3bE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WzqCoK+Ecqn06hqNFk0zCX+iF36AycyV9vA21tteU1RmExbfn6DQVALLxifEE6xKS
-         kmwJSgcUm7/biv2NCNMbcwWYKSQUFDM14jWDPbFje9Pnycri6lRsCd8Lw9DkKUmz9d
-         YJxOHL/o+PuAeE5EUIWLhvBCruAJjkZaPCjqiiB4=
-Date:   Tue, 18 Feb 2020 19:35:26 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v7 0/3] perf x86: Exposing IO stack to IO PMON mapping
- through sysfs
-Message-ID: <20200218183526.GB2665507@kroah.com>
-References: <20200214140159.9267-1-roman.sudarikov@linux.intel.com>
- <34ec945b-2456-7398-44c2-d523973e8e61@linux.intel.com>
+        Tue, 18 Feb 2020 13:35:35 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41229 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgBRSfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:35:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so21090919oie.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:35:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IcvAuzFC9Lkg4wnHNZIr6uoBAzqVVQpFGj5rXmQg/yY=;
+        b=kxc9ph8gFehQw3AtSM+W9te+3/a+NdA+e7nXJ+dFQ5d6uyDVzW4Ldzl8FlH1Jih2Uo
+         oAVUatOsz5v8SNmBFERMUvS6uxS68oY4VUM2OI6RCopTfq8B0eHOwW1srbtkM8IcYOAi
+         CUSupwHe71FgGhmT59zjAPtWjBjHRPjuhLVMI56g9s9hQS6THRaP+95fQnnW1NOA2hen
+         fIFFmkRtnUST7ibHt8MP4lo54Gxm7w6AUCHICtdwwcxZi8+BTHJ8Kgtrs1EVNIMwKi+r
+         KqfEJjmkw9D/J4+idBfn+VyhY0oignGbe/Qw9vYN7nuVtkqBOaCHhyuPxQ3eGrmzBL1K
+         tc/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IcvAuzFC9Lkg4wnHNZIr6uoBAzqVVQpFGj5rXmQg/yY=;
+        b=VQ07osG5H2xfplzkdB3s9Zi8kW1gQN1+G9l5EBg8MiLTj64zTbdZVHcsCBNNkiBpQ2
+         oDcZD4yN03kSyr5CUlXUtyLfNMeYQ940BTy9rTcFsKjvi3kTGL1ywB0cciwJ2d0MihtF
+         NiCen4+qW+5GMii1fS36YA+ydX4cfxP2i0gPAxcCt3Zd3asRPDKUvBj9McrwBMi3/wBp
+         eFNPS4veiK1B/3RSfIQNKgowTakIWgEoQ1YeeI2V8RiakAxtNnrZZtZK2yTZdcZPYDh3
+         nYKRW43ZT3Vx+JRNLvj+qeSq+YCkKlvYgUW3QeQ6kdQ31OHIFGP2rSnAr6noNu4yQw4B
+         LnbQ==
+X-Gm-Message-State: APjAAAVzrhwBXOjA8Yx7e73xNJ3/N6JTi50mKfNwIsaOUfjgt9yTXC6E
+        W3KwKkz3u7hjzPwJv0mDzO+pj6tC5u9CdTsI6ZLU5Q==
+X-Google-Smtp-Source: APXvYqx9u3AJ/a/o5BknBaIj+KQkbejH5iz81odRS6pXkiOlPhUvAYEvsPxLonXOMmgTSCGFT5NxYFI4htC94mNVbHk=
+X-Received: by 2002:aca:af50:: with SMTP id y77mr2193716oie.8.1582050931979;
+ Tue, 18 Feb 2020 10:35:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34ec945b-2456-7398-44c2-d523973e8e61@linux.intel.com>
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211151906.637d1703e4756066583b89da@linux-foundation.org> <1582035660.7365.90.camel@lca.pw>
+In-Reply-To: <1582035660.7365.90.camel@lca.pw>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Tue, 18 Feb 2020 10:35:20 -0800
+Message-ID: <CAHS8izO5=vKs-v9v=Di3hQXBD41+_YpYarXn1yZu9YE6SR-i6Q@mail.gmail.com>
+Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:35:36PM +0300, Sudarikov, Roman wrote:
-> Hi Greg,
-> 
-> Could you please take a look at the patch set?
+On Tue, Feb 18, 2020 at 6:21 AM Qian Cai <cai@lca.pw> wrote:
+>
+> On Tue, 2020-02-11 at 15:19 -0800, Andrew Morton wrote:
+> > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
+> >
+> > > These counters will track hugetlb reservations rather than hugetlb
+> > > memory faulted in. This patch only adds the counter, following patches
+> > > add the charging and uncharging of the counter.
+> >
+> > We're still pretty thin on review here, but as it's v12 and Mike
+> > appears to be signed up to look at this work, I'll add them to -next to
+> > help move things forward.
+> >
+>
+> Reverted the whole series on the top of next-20200217 fixed a crash below (I
+> don't see anything in next-20200218 would make any differences).
+>
+> [ 7933.691114][T35046] LTP: starting hugemmap06
+> [ 7933.806377][T14355] ------------[ cut here ]------------
+> [ 7933.806541][T14355] kernel BUG at mm/hugetlb.c:490!
+> VM_BUG_ON(t - f <= 1);
+> [ 7933.806562][T14355] Oops: Exception in kernel mode, sig: 5 [#1]
+> [ 7933.806573][T14355] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
+> DEBUG_PAGEALLOC NUMA PowerNV
+> [ 7933.806594][T14355] Modules linked in: kvm_hv kvm brd ext4 crc16 mbcache jbd2
+> loop ip_tables x_tables xfs sd_mod bnx2x ahci mdio libahci tg3 libata libphy
+> firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded:
+> binfmt_misc]
+> [ 7933.806651][T14355] CPU: 54 PID: 14355 Comm: hugemmap06 Tainted:
+> G           O      5.6.0-rc2-next-20200217 #1
+> [ 7933.806674][T14355] NIP:  c00000000040d22c LR: c00000000040d210 CTR:
+> 0000000000000000
+> [ 7933.806696][T14355] REGS: c0000014b71ef660 TRAP: 0700   Tainted:
+> G           O       (5.6.0-rc2-next-20200217)
+> [ 7933.806727][T14355] MSR:  900000000282b033
+> <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 22022228  XER: 00000000
+> [ 7933.806772][T14355] CFAR: c00000000040cbec IRQMASK: 0
+> [ 7933.806772][T14355] GPR00: c00000000040d210 c0000014b71ef8f0 c000000001657000
+> 0000000000000001
+> [ 7933.806772][T14355] GPR04: 0000000000000012 0000000000000013 0000000000000000
+> 0000000000000000
+> [ 7933.806772][T14355] GPR08: 0000000000000002 0000000000000002 0000000000000001
+> 0000000000000036
+> [ 7933.806772][T14355] GPR12: 0000000022022222 c000001ffffd3d00 00007fffad670000
+> 00007fffa4bc0000
+> [ 7933.806772][T14355] GPR16: 0000000000000000 c000000001567178 c0000014b71efa50
+> 0000000000000000
+> [ 7933.806772][T14355] GPR20: 0000000000000000 0000000000000013 0000000000000012
+> 0000000000000001
+> [ 7933.806772][T14355] GPR24: c0000019f74cd270 5deadbeef0000100 5deadbeef0000122
+> c0000019f74cd2c0
+> [ 7933.806772][T14355] GPR28: 0000000000000001 c0000019f74cd268 c0000014b71ef918
+> 0000000000000001
+> [ 7933.806961][T14355] NIP [c00000000040d22c] region_add+0x11c/0x3a0
+> [ 7933.806980][T14355] LR [c00000000040d210] region_add+0x100/0x3a0
+> [ 7933.807008][T14355] Call Trace:
+> [ 7933.807024][T14355] [c0000014b71ef8f0] [c00000000040d210]
+> region_add+0x100/0x3a0 (unreliable)
+> [ 7933.807056][T14355] [c0000014b71ef9b0] [c00000000040e0c8]
+> __vma_reservation_common+0x148/0x210
+> __vma_reservation_common at mm/hugetlb.c:2150
+> [ 7933.807087][T14355] [c0000014b71efa20] [c0000000004132a0]
+> alloc_huge_page+0x350/0x830
+> alloc_huge_page at mm/hugetlb.c:2359
+> [ 7933.807100][T14355] [c0000014b71efad0] [c0000000004168f8]
+> hugetlb_no_page+0x158/0xcb0
+> [ 7933.807113][T14355] [c0000014b71efc20] [c000000000417bc8]
+> hugetlb_fault+0x678/0xb30
+> [ 7933.807136][T14355] [c0000014b71efcd0] [c0000000003b1de4]
+> handle_mm_fault+0x444/0x450
+> [ 7933.807158][T14355] [c0000014b71efd20] [c000000000070b1c]
+> __do_page_fault+0x2bc/0xfd0
+> [ 7933.807181][T14355] [c0000014b71efe20] [c00000000000aa88]
+> handle_page_fault+0x10/0x30
+> [ 7933.807201][T14355] Instruction dump:
+> [ 7933.807209][T14355] 38c00000 7ea5ab78 7ec4b378 7fa3eb78 4bfff80d e9210020
+> e91d0050 e95d0068
+> [ 7933.807232][T14355] 7d3c4850 7d294214 7faa4800 409c0238 <0b170000> 7f03c378
+> 4858c005 60000000
+> [ 7933.807267][T14355] ---[ end trace 7560275de5f409f8 ]---
+> [ 7933.905258][T14355]
+> [ 7934.905339][T14355] Kernel panic - not syncing: Fatal exception
 
-Could you please relax and wait?  You sent this less than 48 hours ago:
+Hi Qian,
 
-> On 14.02.2020 17:01, roman.sudarikov@linux.intel.com wrote:
+Yes this VM_BUG_ON was added by a patch in the series ("hugetlb:
+disable region_add file_region coalescing") so it's definitely related
+to the series. I'm taking a look at why this VM_BUG_ON fires. Can you
+confirm you reproduce this by running hugemmap06 from the ltp on a
+powerpc machine? Can I maybe have your config?
 
-For a subsystem that I am not the maintainer of, and for a totally
-low-priority issue, for a feature that I don't have hardware to test it
-for.
-
-You now have moved to the back of my pending review queue:
-	$ mdfrm -c ~/mail/todo/
-	437 messages in /home/gregkh/mail/todo/
-
-As you well know, Intel is already on my "short list of companies to
-ignore patches from" as it is, so I am going to force the issue now and
-REQUIRE you to follow the internally documented Intel rules on how to
-send patches to Greg.  Hint, how you did it is _not_ how I have required
-for it to happen.  No idea how this snuck through my filters, I need to
-go fix that up...
-
-greg k-h
+Thanks!
