@@ -2,105 +2,99 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A84C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED775C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BEA24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CBC21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhDjabUD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsEV4pt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgBRSkd (ORCPT
+        id S1726632AbgBRSlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:40:33 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:39575 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgBRSkd (ORCPT
+        Tue, 18 Feb 2020 13:41:01 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44307 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgBRSlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:40:33 -0500
-Received: by mail-yw1-f68.google.com with SMTP id h126so9845099ywc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:40:32 -0800 (PST)
+        Tue, 18 Feb 2020 13:41:01 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h9so20483798otj.11;
+        Tue, 18 Feb 2020 10:41:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9jZ5yWoaicfmGExgrAkNkbKcks0bHnu5AVQQLZuqwII=;
-        b=XhDjabUDEUe8VC3gAy53xtbp5w/d0/4LQrPDSO5xphlcflwkRF7WDbSyvRYY+OZcsj
-         VUycx3AWRgY5hEdyGk1X/7OG8eCH5VAtgh9HR/tak1UoJYm7VEwF/NByNTZjCYN1GCbB
-         ksPa7tDDuv3QwHIaWV6K+hM2Tixxa/zXjjrGW0Zd15JYWV1PYEs6Kg+UxAkCoygRh5t9
-         qPfsh9Nl0EcvB9a3BixgzbfehcM/rhIMVeqzZZN3giOp2JmqrdlHkyQwsVNxRJWk49Hj
-         SV3A5F5vI4btdgTEZM+Q4wmhL+HCDOKvr9/Kk145vW3Y2e5QWP9jp56vv6L2dLp7mefl
-         ScRw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZCiAlqDH3qOaiJgV5vGDQ5vRps2KrE4XKxEP2OQROw=;
+        b=hsEV4pt5WaXrHLoH1HPuSHEWmmmafWmhhYLpdXlN9spNtEg8FNcn130X8yoxLL7ADk
+         FqnA//uNhE//EssWuwC/JHz4UGQ9Xy+Ak1bvW5AMZQH7Hay8NvbprXa3HHUSnXSMAvq8
+         qDtgxN6XeAd8dLkp24SFA6s0oCjyxTm/ocavaHwlcL1pR1gjhc1OqMIfzX0+8VXwqCz7
+         ALg0nMKr6hXVv+AZIrE9u6F27pxb3FEYzWFB9q33qD1l8OMFG8cPb9CQxqXDQuiEXyPq
+         LxmpQJlHqZIj5TgH+T+ZXVkwg4bTh7Fn8PYv+DLbJSIcPJu7i3IkY6oluvcJg1gHt2N3
+         l/qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9jZ5yWoaicfmGExgrAkNkbKcks0bHnu5AVQQLZuqwII=;
-        b=c+UGEv1ksgPpAtYoIEbnMx4ZZfkchXwFI2mM3Lrv33EN6enC9j+SwJWq1hfXW9aJ63
-         RUcQihiwBaHse4SVKreaImmLSaHAUSJL89ly4qqjiWrmjA6/3o/oEjIxJirW5HM8ae0+
-         1jMssokQzdAhMf2pgUgJ8XkxztIK/3+FWWEN0Bbe9wFY2KtDJoNMG51lCOJpRDft9754
-         CQ9TSKrrZ8OSmiymeMA6XudUG4Fk+4DFjnnCY/a2f21wOcFX7Fo5Dm3XW1bEJ7sqvp76
-         Ud1Cuos6UvwEQx64qyU7LVoDACfDuh7lKLAAsI3iOncMZNGa93ceMO4l3EY0MwLJe4am
-         Nq8Q==
-X-Gm-Message-State: APjAAAVDsEHyyKFppfQHAOUrG5VzgJpsMJf3SDxGwCPhrpruXkTxzNF3
-        ppd5keIBRYfskHPpLC/We1I=
-X-Google-Smtp-Source: APXvYqy0zWwsFCGehkM8xLQ+AQLpo76Cq17gBqATF/hbY7BC3G5kB4ppNDRcpfyh0/JWt8m9UdwHgg==
-X-Received: by 2002:a81:7145:: with SMTP id m66mr17930368ywc.458.1582051232179;
-        Tue, 18 Feb 2020 10:40:32 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id s68sm2012903ywg.69.2020.02.18.10.40.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 10:40:31 -0800 (PST)
-Subject: Re: [PATCH] COPYING: state that all contributions really are covered
- by this file
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-References: <20200206154800.GA3754085@kroah.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <b3dbaeaf-0960-1b76-e2a7-7f45962ffdd2@gmail.com>
-Date:   Tue, 18 Feb 2020 12:40:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZCiAlqDH3qOaiJgV5vGDQ5vRps2KrE4XKxEP2OQROw=;
+        b=JrpaOU36tr+pHNqcGwjoJKeGoND0ZoGMHGGIxExZ3Wo7sWw61lpUB5QPxPIDeOXAo2
+         /YpzyRAaeTvaofk95jTSS31GKgdL8Z/NVgKj5Qvb7ftKDGByKIRUhp/1gTmDcZs1xwMb
+         q5K4TppKvvMrS+JQF7B5zR3sxdaky7IB5993amPuu2XFsF6tuGaD2GwX/jRctLc43bX6
+         nXK5iDbFXFvIL1TcZybQ14tRgHKHJQauF4aL6pKFkxC1yxA1b9IdPEUVdr5BlB7YrhZI
+         XfgXt+WTkCHSWNTJhJPRsCpbbT9zYGXFyPhfbNZDl0XBfG7z7UK26QQI1MwbLolBD/da
+         FuAQ==
+X-Gm-Message-State: APjAAAWeY+gC00ja4+LJWiYl0Mu1LxExJHbrraTfeE7w8EavmJBHX4x8
+        Wm3piYhh1IARm3RGzTlBocrBIaSKrHWU+lzyYtSCPFwsfRk=
+X-Google-Smtp-Source: APXvYqwILFYaM0G8aVXHHaVO6r1RT9OQuAWCnL94KV8KPjsDTVTLkXtMFU3biliEASl7JfiD9n7GzgyPviMCcX+zND0=
+X-Received: by 2002:a9d:53c4:: with SMTP id i4mr17734076oth.48.1582051259934;
+ Tue, 18 Feb 2020 10:40:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200206154800.GA3754085@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200203053650.8923-1-xiyou.wangcong@gmail.com>
+In-Reply-To: <20200203053650.8923-1-xiyou.wangcong@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 18 Feb 2020 10:40:48 -0800
+Message-ID: <CAM_iQpVegeSSWDWZTt4+ZT6qE3-AwsyHj7DAkFiFu8+8Hy-5jA@mail.gmail.com>
+Subject: Re: [Patch v3] block: introduce block_rq_error tracepoint
+To:     linux-block@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 9:48 AM, Greg Kroah-Hartman wrote:
-> Explicitly state that all contributions to the kernel source tree
-> really are covered under this COPYING file in case someone thought
-> otherwise.  Lawyers love to be pedantic, even more so than software
-> engineers at times, and this sentence makes them sleep easier.
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  COPYING | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/COPYING b/COPYING
-> index da4cb28febe6..a635a38ef940 100644
-> --- a/COPYING
-> +++ b/COPYING
-> @@ -16,3 +16,5 @@ In addition, other licenses may also apply. Please see:
->  	Documentation/process/license-rules.rst
->  
->  for more details.
-> +
-> +All contributions to the Linux Kernel are subject to this COPYING file.
-> 
+Hi, Jens
 
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+
+On Sun, Feb 2, 2020 at 9:37 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> Currently, rasdaemon uses the existing tracepoint block_rq_complete
+> and filters out non-error cases in order to capture block disk errors.
+>
+> But there are a few problems with this approach:
+>
+> 1. Even kernel trace filter could do the filtering work, there is
+>    still some overhead after we enable this tracepoint.
+>
+> 2. The filter is merely based on errno, which does not align with kernel
+>    logic to check the errors for print_req_error().
+>
+> 3. block_rq_complete only provides dev major and minor to identify
+>    the block device, it is not convenient to use in user-space.
+>
+> So introduce a new tracepoint block_rq_error just for the error case
+> and provides the device name for convenience too. With this patch,
+> rasdaemon could switch to block_rq_error.
+>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+
+Can you take this patch?
+
+Thanks!
