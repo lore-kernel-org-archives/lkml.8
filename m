@@ -2,102 +2,228 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67397C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D3C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D532067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZP/lIbWI"
+	by mail.kernel.org (Postfix) with ESMTP id 736A12067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056566;
+	bh=mi1fa9tjV0BUcFYBmkbrq5si7+ROUjp6B9kLMqc2Fkg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AsKpTIwDXUQg0xQpgePc1DjrLIHzPFYs7Twv2lAaayH74VPuead3EVxz7xoqZnVav
+	 TCMk9VWJxEXKpmTMg9Ahhl1yP5i4xVtqGMykKOzgxL+FM8hZziEOPY86H8uohbnlau
+	 ir/nIFDii9b0g4EgHTndVHqnPvY42f1fWkxxx53M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBRUJU (ORCPT
+        id S1727795AbgBRT5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:09:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37877 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgBRT5I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:08 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w23so4340759otj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:57:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1jO1q8kwMNU1sHidaXu/iTrKUxw8olHFqB5ddcj+Hqw=;
-        b=ZP/lIbWIDHAZrYeCHKe+6oiU3ofC3zhTeALfX1J0x/xrTLivu9MPaImW7bNovjJX3/
-         /Tj6h5WwJY7zqiKulKdNaATXoZPSIhneFljhHTJCHGzy5JXSnsf/ZPoj3X1j0blwxfB2
-         fVMNJgv4nAxWPR/8wkTivlqXPViIc+4F3xRq0f5ZSIAilPOMk4uLHOKgoMYt8pX9M0TP
-         48Tx6Y+NyXrqOCwwRTfNbF+OVoxTC7jUNi8hJPsVWGJLxPq1XZyPZlh8ASeLBk2P8+PA
-         NbAUljEjPlWNu0KIrJ6zRaPCOwl0PlMu/JY0nSDCZMeoGuN5KbXoByugUFhGqrK5yN7M
-         cBpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1jO1q8kwMNU1sHidaXu/iTrKUxw8olHFqB5ddcj+Hqw=;
-        b=H6SkTE/fu+GwFc5lLQlAdCY7PzGTPaP9uDm698RakqC43C5i4GBTJMhCDjN6uv26RI
-         +8U1l4FjIxqyI5WbMDOkMMx+jYF7UTYqUJomB3AZWUjpUCr4/p+A2AJH+flDP6I5e5Gf
-         myvYU8Tk9Rvjwnl997aRI0YI1m9uu+tQ/5267TnVtiic61/yxEUguhcbWskOMspff8Ey
-         k63WXB+IRsO5zagWKSFzh6vbNX+Da5uakxtqvvZFiVLICQudmEgwwS739Iy0c/lj9NUt
-         aVyXx3Oo9Voa38CsQPQcPVsPx3AvnWHdRtfKWITGe17HkipotSBKFwA33+0GyN5Kidem
-         HOWQ==
-X-Gm-Message-State: APjAAAVFUo67JWe2ROuSXyquQzUzp1aTaxg0bRLAt3w+rl+f9xqEp0P+
-        59lJ2GZjNPqw0k9yHeoHMP8=
-X-Google-Smtp-Source: APXvYqxHVDxt3kjyDTyqT5LZv51VcsPvFV/OaAZMR0D36jEIKH62WVF82+ArplH7Do6LRRQV6RppCQ==
-X-Received: by 2002:a9d:3cf:: with SMTP id f73mr17020995otf.11.1582055827276;
-        Tue, 18 Feb 2020 11:57:07 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id z17sm1506069oib.3.2020.02.18.11.57.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Feb 2020 11:57:06 -0800 (PST)
-Date:   Tue, 18 Feb 2020 12:57:05 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH 1/2] objtool: Fix clang switch table edge case
-Message-ID: <20200218195705.GA10545@ubuntu-m2-xlarge-x86>
-References: <cover.1581997059.git.jpoimboe@redhat.com>
- <263f6aae46d33da0b86d7030ced878cb5cab1788.1581997059.git.jpoimboe@redhat.com>
+        Tue, 18 Feb 2020 14:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727761AbgBRT5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7C124670;
+        Tue, 18 Feb 2020 19:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582055819;
+        bh=mi1fa9tjV0BUcFYBmkbrq5si7+ROUjp6B9kLMqc2Fkg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OlE93QL8HCTLTCrVxk+YobygV38gC/i0Rylq80NmgBaKSed3RCNRZ6bwp66cFejXi
+         8bWLauJToTnDrwjDPFkiREk2aC5zyXHJQ6P1AfdXU8mcDU8+l9KfC0s9tZ9Zrul2F0
+         +AyoK9sjpCyMYPn1/SzF2sNcB8jPDtle5m2pqyvE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 08/38] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
+Date:   Tue, 18 Feb 2020 20:54:54 +0100
+Message-Id: <20200218190419.519633378@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
+References: <20200218190418.536430858@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <263f6aae46d33da0b86d7030ced878cb5cab1788.1581997059.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 09:41:53PM -0600, Josh Poimboeuf wrote:
-> Clang has the ability to create a switch table which is not a jump
-> table, but is rather a table of string pointers.  This confuses objtool,
-> because it sees the relocations for the string pointers and assumes
-> they're part of a jump table:
-> 
->   drivers/ata/sata_dwc_460ex.o: warning: objtool: sata_dwc_bmdma_start_by_tag()+0x3a2: can't find switch jump table
->   net/ceph/messenger.o: warning: objtool: ceph_con_workfn()+0x47c: can't find switch jump table
-> 
-> Make objtool's find_jump_table() smart enough to distinguish between a
-> switch jump table (which has relocations to text addresses in the same
-> function as the original instruction) and other anonymous rodata (which
-> may have relocations to elsewhere).
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/485
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Tested with clang-11 and binutils 2.34, a combo that was previously
-broken and I no longer see these warnings on either defconfig or
-allyesconfig.
+commit 52f73c383b2418f2d31b798e765ae7d596c35021 upstream
 
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+We detect the absence of FP/SIMD after an incapable CPU is brought up,
+and by then we have kernel threads running already with TIF_FOREIGN_FPSTATE set
+which could be set for early userspace applications (e.g, modprobe triggered
+from initramfs) and init. This could cause the applications to loop forever in
+do_nofity_resume() as we never clear the TIF flag, once we now know that
+we don't support FP.
+
+Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
+for tasks which may have them set, as we would have done in the normal
+case, but avoiding touching the hardware state (since we don't support any).
+
+Also to make sure we handle the cases seemlessly we categorise the
+helper functions to two :
+ 1) Helpers for common core code, which calls into take appropriate
+    actions without knowing the current FPSIMD state of the CPU/task.
+
+    e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
+        fpsimd_save_and_flush_cpu_state().
+
+    We bail out early for these functions, taking any appropriate actions
+    (e.g, clearing the TIF flag) where necessary to hide the handling
+    from core code.
+
+ 2) Helpers used when the presence of FP/SIMD is apparent.
+    i.e, save/restore the FP/SIMD register state, modify the CPU/task
+    FP/SIMD state.
+    e.g,
+
+    fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD registers
+
+    fpsimd_bind_task_to_cpu()  \
+                                - Update the "state" metadata for CPU/task.
+    fpsimd_bind_state_to_cpu() /
+
+    fpsimd_update_current_state() - Update the fp/simd state for the current
+                                    task from memory.
+
+    These must not be called in the absence of FP/SIMD. Put in a WARNING
+    to make sure they are not invoked in the absence of FP/SIMD.
+
+KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
+on the CPU. However, without FP/SIMD support we trap all accesses and
+inject undefined instruction. Thus we should never "load" guest state.
+Add a sanity check to make sure this is valid.
+
+Cc: stable@vger.kernel.org # v4.19
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/fpsimd.c  | 20 ++++++++++++++++++--
+ arch/arm64/kvm/hyp/switch.c | 10 +++++++++-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 58c53bc969289..14fdbaa6ee3ab 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -218,6 +218,7 @@ static void sve_free(struct task_struct *task)
+ static void task_fpsimd_load(void)
+ {
+ 	WARN_ON(!in_softirq() && !irqs_disabled());
++	WARN_ON(!system_supports_fpsimd());
+ 
+ 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+ 		sve_load_state(sve_pffr(&current->thread),
+@@ -238,6 +239,7 @@ void fpsimd_save(void)
+ 	struct user_fpsimd_state *st = __this_cpu_read(fpsimd_last_state.st);
+ 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	WARN_ON(!in_softirq() && !irqs_disabled());
+ 
+ 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
+@@ -977,6 +979,7 @@ void fpsimd_bind_task_to_cpu(void)
+ 	struct fpsimd_last_state_struct *last =
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	last->st = &current->thread.uw.fpsimd_state;
+ 	current->thread.fpsimd_cpu = smp_processor_id();
+ 
+@@ -996,6 +999,7 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st)
+ 	struct fpsimd_last_state_struct *last =
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 
++	WARN_ON(!system_supports_fpsimd());
+ 	WARN_ON(!in_softirq() && !irqs_disabled());
+ 
+ 	last->st = st;
+@@ -1008,8 +1012,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st)
+  */
+ void fpsimd_restore_current_state(void)
+ {
+-	if (!system_supports_fpsimd())
++	/*
++	 * For the tasks that were created before we detected the absence of
++	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch(),
++	 * e.g, init. This could be then inherited by the children processes.
++	 * If we later detect that the system doesn't support FP/SIMD,
++	 * we must clear the flag for  all the tasks to indicate that the
++	 * FPSTATE is clean (as we can't have one) to avoid looping for ever in
++	 * do_notify_resume().
++	 */
++	if (!system_supports_fpsimd()) {
++		clear_thread_flag(TIF_FOREIGN_FPSTATE);
+ 		return;
++	}
+ 
+ 	local_bh_disable();
+ 
+@@ -1028,7 +1043,7 @@ void fpsimd_restore_current_state(void)
+  */
+ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
+ {
+-	if (!system_supports_fpsimd())
++	if (WARN_ON(!system_supports_fpsimd()))
+ 		return;
+ 
+ 	local_bh_disable();
+@@ -1055,6 +1070,7 @@ void fpsimd_flush_task_state(struct task_struct *t)
+ 
+ void fpsimd_flush_cpu_state(void)
+ {
++	WARN_ON(!system_supports_fpsimd());
+ 	__this_cpu_write(fpsimd_last_state.st, NULL);
+ 	set_thread_flag(TIF_FOREIGN_FPSTATE);
+ }
+diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+index 6290a4e81d57a..f3978931aaf40 100644
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -37,7 +37,15 @@
+ /* Check whether the FP regs were dirtied while in the host-side run loop: */
+ static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+ {
+-	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
++	/*
++	 * When the system doesn't support FP/SIMD, we cannot rely on
++	 * the _TIF_FOREIGN_FPSTATE flag. However, we always inject an
++	 * abort on the very first access to FP and thus we should never
++	 * see KVM_ARM64_FP_ENABLED. For added safety, make sure we always
++	 * trap the accesses.
++	 */
++	if (!system_supports_fpsimd() ||
++	    vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
+ 		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+ 				      KVM_ARM64_FP_HOST);
+ 
+-- 
+2.20.1
+
+
+
