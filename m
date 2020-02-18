@@ -2,145 +2,76 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D35C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFEFC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6AB22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056537;
-	bh=B6gvl9MgaO8Xiy2VFy08Io6Y81aERgOcQJ22bPvMxnQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejGnNE8YnoGckPgxJf30rSpaA1XPy3IQ6i5qSdiMrhD576EpZGoC/docPZUNAt3RI
-	 v2on3KQdGQDr7SkJaqts94OTanpCmDXNLyE05y3TXMUUp79YOWAw4zIf0GbheoK9Iz
-	 BXwTMb4YDnke8baH9uzHjXdYXCpN6UNUg62lO1Gs=
+	by mail.kernel.org (Postfix) with ESMTP id AB81F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgBRT5a (ORCPT
+        id S1728206AbgBRUI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34660 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:08:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgBRT5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727601AbgBRUIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:08:53 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E011B2464E;
-        Tue, 18 Feb 2020 19:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055840;
-        bh=B6gvl9MgaO8Xiy2VFy08Io6Y81aERgOcQJ22bPvMxnQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8cwnp81QOFKvZmLevrkZ5v2r2eDmGutC/A8ia1eF3Ncop903DO3W3IMFTcgIFHHl
-         +qeionNa+2cWEVCj13rbZ9HqIwDBFV+w51lp1lHbkbHH4uvZW1hXpkxVy8ZAB2n640
-         YaMkcuNxgJ8UpkEVwtq9HWIpGJJxgYttSEuYsAs0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 33/38] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
-Date:   Tue, 18 Feb 2020 20:55:19 +0100
-Message-Id: <20200218190422.406670481@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
-References: <20200218190418.536430858@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4DC22B48;
+        Tue, 18 Feb 2020 20:08:52 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 15:08:50 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] #MC mess
+Message-ID: <20200218150850.224d9b8e@gandalf.local.home>
+In-Reply-To: <20200218195035.GN14449@zn.tnic>
+References: <20200218173150.GK14449@zn.tnic>
+        <20200218131158.693eeefc@gandalf.local.home>
+        <20200218195035.GN14449@zn.tnic>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, 18 Feb 2020 20:50:35 +0100
+Borislav Petkov <bp@alien8.de> wrote:
 
-commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
+> True story, thanks for that hint!
+> 
+> static_key_disable()
+> |-> cpus_read_lock()
+> |-> percpu_down_read(&cpu_hotplug_lock)
+> |->might_sleep()
+> 
+> Yuck. Which means, the #MC handler must switch to __rdmsr()/__wrmsr()
+> now.
+> 
+> I wish I could travel back in time and NAK the hell of that MSR
+> tracepoint crap.
 
-Perf doesn't take the left period into account when auto-reload is
-enabled with fixed period sampling mode in context switch.
+Can we create a per_cpu variable that gets set when we enter the MC
+handler, and not call the msr trace points when that is set?
 
-Here is the MSR trace of the perf command as below.
-(The MSR trace is simplified from a ftrace log.)
+Now, is jump labels bad in these cases (note, it is possible to trigger
+a breakpoint in them, does an iret disable the MC as well, which means
+we could get nested MC handlers corrupting the IST stack?).
 
-    #perf record -e cycles:p -c 2000000 -- ./triad_loop
+You could have the msr_tracepoint_active() check this per cpu variable?
 
-      //The MSR trace of task schedule out
-      //perf disable all counters, disable PEBS, disable GP counter 0,
-      //read GP counter 0, and re-enable all counters.
-      //The counter 0 stops at 0xfffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value fffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+msr reading and writing is rather slow, and I'm sure reading a per_cpu
+variable is going to be in the noise of it.
 
-      //The MSR trace of the same task schedule in again
-      //perf disable all counters, enable and set GP counter 0,
-      //enable PEBS, and re-enable all counters.
-      //0xffffffe17b80 (-2000000) is written to GP counter 0.
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-When the same task schedule in again, the counter should starts from
-previous left. However, it starts from the fixed period -2000000 again.
-
-A special variant of intel_pmu_save_and_restart() is used for
-auto-reload, which doesn't update the hwc->period_left.
-When the monitored task schedules in again, perf doesn't know the left
-period. The fixed period is used, which is inaccurate.
-
-With auto-reload, the counter always has a negative counter value. So
-the left period is -value. Update the period_left in
-intel_pmu_save_and_restart_reload().
-
-With the patch:
-
-      //The MSR trace of task schedule out
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value ffffffe25cbc
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/intel/ds.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1402,6 +1402,8 @@ intel_pmu_save_and_restart_reload(struct
- 	old = ((s64)(prev_raw_count << shift) >> shift);
- 	local64_add(new - old + count * period, &event->count);
- 
-+	local64_set(&hwc->period_left, -new);
-+
- 	perf_event_update_userpage(event);
- 
- 	return 0;
-
-
+-- Steve
