@@ -2,52 +2,51 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE70CC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358BAC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AFC2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C75B2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055972;
-	bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+	s=default; t=1582055975;
+	bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOfPVhX1B/HJV9XzK0J1mgMfYsU0VMSn2fZNFK48gA2WUlvRk1G8uDf6mnJa6Xota
-	 zWqR98+JjrIXVV+fyd8JJxgwWBQ3RjfeFXc128vyMwzXHRYIdWARBqZg/wAiUxAdCO
-	 lvPHNA9gYCLSIaWnf5o2x7LFvitUG6IBPOuRVv4w=
+	b=mCkw8Y227TJVIpe7A4a7JI04nu56XEAOq0kNxEruT1xLEf2aATCnkJ8tpOnsA7XgM
+	 RA9GbJcN4Ql35bu8JyN99MDyCurFpdcBCTTfUY13JfqicpTReQ5OlPuRksg6pQMU8Y
+	 M86aQO/+LILPSrjmIZuVPP97HZiyY4to4pJLmL+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBRT7b (ORCPT
+        id S1726482AbgBRT7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38146 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgBRT73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:29 -0500
+        id S1728436AbgBRT7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F542465A;
-        Tue, 18 Feb 2020 19:59:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFC8A2464E;
+        Tue, 18 Feb 2020 19:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055968;
-        bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+        s=default; t=1582055971;
+        bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajPgpnQt/Gmkd5PUiUhHexmQc5m12GuBH4UwRhurzlSF6TupROZba/H7WeWuVsMyM
-         Ro+r3aho14tAMjgWZrzsssfij0OeVatJNQBTuAKzSAJENu+3ZbUIiNsPoyqxgATRXa
-         wWzvYrWoLB/CO7sD+yNbe6CGwdBH5trjpNms0QMY=
+        b=h+IAVcipXO4JaUnSaSMJyxEZUxq52poX48mKF39s7HStkUaBirQk9lnKUhGwXyJne
+         CeydVvy+lDBxfqh9p9Mt5ZFnNFb9+u4zqfSv4xAmUdusUUX6tiwYTOsUAqzBYS/q4g
+         4LK3IIPzWSkH1fr9BLQ0VoOaHreVWNUGLHiFr83w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 49/66] s390/time: Fix clk type in get_tod_clock
-Date:   Tue, 18 Feb 2020 20:55:16 +0100
-Message-Id: <20200218190432.572394728@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.4 14/66] ext4: dont assume that mmp_nodename/bdevname have NUL
+Date:   Tue, 18 Feb 2020 20:54:41 +0100
+Message-Id: <20200218190429.416968691@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,54 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Andreas Dilger <adilger@dilger.ca>
 
-commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
+commit 14c9ca0583eee8df285d68a0e6ec71053efd2228 upstream.
 
-Clang warns:
+Don't assume that the mmp_nodename and mmp_bdevname strings are NUL
+terminated, since they are filled in by snprintf(), which is not
+guaranteed to do so.
 
-In file included from ../arch/s390/boot/startup.c:3:
-In file included from ../include/linux/elf.h:5:
-In file included from ../arch/s390/include/asm/elf.h:132:
-In file included from ../include/linux/compat.h:10:
-In file included from ../include/linux/time.h:74:
-In file included from ../include/linux/time32.h:13:
-In file included from ../include/linux/timex.h:65:
-../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-[16]' to parameter of type 'char *' converts between pointers to integer
-types with different sign [-Wpointer-sign]
-        get_tod_clock_ext(clk);
-                          ^~~
-../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-parameter 'clk' here
-static inline void get_tod_clock_ext(char *clk)
-                                           ^
-
-Change clk's type to just be char so that it matches what happens in
-get_tod_clock_ext.
-
-Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-Link: https://github.com/ClangBuiltLinux/linux/issues/861
-Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Link: https://lore.kernel.org/r/1580076215-1048-1-git-send-email-adilger@dilger.ca
+Signed-off-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/timex.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/mmp.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(cha
- 
- static inline unsigned long long get_tod_clock(void)
+--- a/fs/ext4/mmp.c
++++ b/fs/ext4/mmp.c
+@@ -120,10 +120,10 @@ void __dump_mmp_msg(struct super_block *
  {
--	unsigned char clk[STORE_CLOCK_EXT_SIZE];
-+	char clk[STORE_CLOCK_EXT_SIZE];
+ 	__ext4_warning(sb, function, line, "%s", msg);
+ 	__ext4_warning(sb, function, line,
+-		       "MMP failure info: last update time: %llu, last update "
+-		       "node: %s, last update device: %s",
+-		       (long long unsigned int) le64_to_cpu(mmp->mmp_time),
+-		       mmp->mmp_nodename, mmp->mmp_bdevname);
++		       "MMP failure info: last update time: %llu, last update node: %.*s, last update device: %.*s",
++		       (unsigned long long)le64_to_cpu(mmp->mmp_time),
++		       (int)sizeof(mmp->mmp_nodename), mmp->mmp_nodename,
++		       (int)sizeof(mmp->mmp_bdevname), mmp->mmp_bdevname);
+ }
  
- 	get_tod_clock_ext(clk);
- 	return *((unsigned long long *)&clk[1]);
+ /*
+@@ -154,6 +154,7 @@ static int kmmpd(void *data)
+ 	mmp_check_interval = max(EXT4_MMP_CHECK_MULT * mmp_update_interval,
+ 				 EXT4_MMP_MIN_CHECK_INTERVAL);
+ 	mmp->mmp_check_interval = cpu_to_le16(mmp_check_interval);
++	BUILD_BUG_ON(sizeof(mmp->mmp_bdevname) < BDEVNAME_SIZE);
+ 	bdevname(bh->b_bdev, mmp->mmp_bdevname);
+ 
+ 	memcpy(mmp->mmp_nodename, init_utsname()->nodename,
+@@ -375,7 +376,8 @@ skip:
+ 	/*
+ 	 * Start a kernel thread to update the MMP block periodically.
+ 	 */
+-	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%s",
++	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%.*s",
++					     (int)sizeof(mmp->mmp_bdevname),
+ 					     bdevname(bh->b_bdev,
+ 						      mmp->mmp_bdevname));
+ 	if (IS_ERR(EXT4_SB(sb)->s_mmp_tsk)) {
 
 
