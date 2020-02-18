@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97BC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D9C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B6824125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494EE24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055853;
-	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+	s=default; t=1582055855;
+	bh=u9QadL+YesFMEdUQcQEqUQB7XQTVq7Y/7R5E6mojdVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nUPpT1/WSSGfnYWCgzd22EuO/hcgP2/Gk7ppigVkHP59VFOzmtf8lzD9PiDo4lZAB
-	 wyIrZBX6KhNon2tZVDOZKPs4MUTWjmQfq0yBZD0qTdILIJAvv2A5SNwtNOPxNvYntU
-	 oxqiLWRknrILW3WBF5kV7ufbuRgaxJS7ltLksxak=
+	b=W7MQSc8rThKWAhd7LZtzyBLAAORNcZqbIPlz8hSZ30cpPTKKlBz53P0dLSWuhJS2t
+	 y2XnYjkid3pUg4AAUU2cRYP133/mekEbkyukFi7c8bPDy45gpasRjVXduG9QrAhQiK
+	 WHmrb3zAMnZ3NhJGsEFczvk2IKm0ASJJxQEsnfqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgBRT5b (ORCPT
+        id S1727959AbgBRT5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbgBRT5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:23 -0500
+        id S1726735AbgBRT50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6262A24655;
-        Tue, 18 Feb 2020 19:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C0C20659;
+        Tue, 18 Feb 2020 19:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055842;
-        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+        s=default; t=1582055845;
+        bh=u9QadL+YesFMEdUQcQEqUQB7XQTVq7Y/7R5E6mojdVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0UzeEn6qxxgwWIt3p6f9cYwWeuIRe+RLIex6GNmFYyxFJfw/2MFSQPR/EPNnuo3s
-         X2my0dK35x3FBlkFN9vNHVbjqXh+z53g5X8471y81mDFhp4d8UaZKT03b+ey7m7mpu
-         SOQ91yYk8fFVFiiHwJEispfgN+dEAM7Dod83RZBI=
+        b=Cf53A2HV90r4BQNaIZhWm1Q5b+NGBF/PZF7RaPSVI234U02wIY07o34u8lOoDXazs
+         0+TCY74SIY7Dkvy6qy3FcP21njkBlplmLeu0CO8z5tGE41vb+ugrRkN6LXu6+nJRUu
+         42HJLBNx/xwHqd7Ml/7juLxDdYnrKGzqxyHuiS5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 34/38] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
-Date:   Tue, 18 Feb 2020 20:55:20 +0100
-Message-Id: <20200218190422.504519165@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.19 35/38] NFSv4.1 make cachethis=no for writes
+Date:   Tue, 18 Feb 2020 20:55:21 +0100
+Message-Id: <20200218190422.605660378@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -59,40 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Jones <michael-a1.jones@analog.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
+commit cd1b659d8ce7697ee9799b64f887528315b9097b upstream.
 
-Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
-bits 6/5. This fixs a LTC297X family bug where polling always returns
-not busy even when the part is busy. This fixes a LTC388X and
-LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
-not polled, which can lead to NACKing of commands. LTC388X and
-LTM467X modules now poll BUSY and PEND, increasing reliability by
-eliminating NACKing of commands.
+Turning caching off for writes on the server should improve performance.
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
-Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: fba83f34119a ("NFS: Pass "privileged" value to nfs4_init_sequence()")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pmbus/ltc2978.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5117,7 +5117,7 @@ static void nfs4_proc_write_setup(struct
+ 	hdr->timestamp   = jiffies;
  
- #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_WRITE];
+-	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 1, 0);
++	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
+ 	nfs4_state_protect_write(server->nfs_client, clnt, msg, hdr);
+ }
  
--#define LTC_NOT_BUSY			BIT(5)
--#define LTC_NOT_PENDING			BIT(4)
-+#define LTC_NOT_BUSY			BIT(6)
-+#define LTC_NOT_PENDING			BIT(5)
- 
- /*
-  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
 
 
