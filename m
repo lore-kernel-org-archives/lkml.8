@@ -2,112 +2,81 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D111C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D63C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B523B21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YZhSVFOm"
+	by mail.kernel.org (Postfix) with ESMTP id 107AF21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBRTjr (ORCPT
+        id S1726595AbgBRTkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:39:47 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49280 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTjr (ORCPT
+        Tue, 18 Feb 2020 14:40:33 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:40355 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:39:47 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IJanDR118725;
-        Tue, 18 Feb 2020 13:36:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582054609;
-        bh=GgHMMWikXXitKD/AGrzFrLxAIGAeZxrL9hb7kQz+ZSg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YZhSVFOmjDz6ndBizA8kSE/cB2eldFw/YkD/OS2oFAHCiSetLl6MStsRdtQmlzWlm
-         mPoL+9T94d05owL3GwqPNR/OqW6j1lssh/LZOJFxNBJfdU7WOUS+UWkvPC7fvNFi1a
-         2Qj+OHEF1/Hrb6+qvcO9qDSoyBISATQkOVEqgoAA=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IJan0T081014
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 13:36:49 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 13:36:48 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 13:36:48 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IJamdF019213;
-        Tue, 18 Feb 2020 13:36:48 -0600
-Subject: Re: [PATCH v2 2/2] ASoC: tlv320adcx140: Add the tlv320adcx140 codec
- driver family
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200218172140.23740-1-dmurphy@ti.com>
- <20200218172140.23740-3-dmurphy@ti.com> <20200218192321.GN4232@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0faf0bfe-6186-59d0-e800-8523a33044dc@ti.com>
-Date:   Tue, 18 Feb 2020 13:32:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 14:40:33 -0500
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BE37440005;
+        Tue, 18 Feb 2020 19:40:24 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 20:40:24 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     b-liu@ti.com, balbi@kernel.org, gregkh@linuxfoundation.org,
+        ludovic.desroches@microchip.com, mathias.nyman@intel.com,
+        nicolas.ferre@microchip.com, slemieux.tyco@gmail.com,
+        stern@rowland.harvard.edu, vz@mleia.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 04/20] usb: gadget: at91_udc: remove useless cast for
+ driver.name
+Message-ID: <20200218194024.GD3385@piout.net>
+References: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
+ <1582054383-35760-5-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218192321.GN4232@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582054383-35760-5-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On 18/02/2020 19:32:47+0000, Corentin Labbe wrote:
+> device_driver name is const char pointer, so it not useful to cast
+> driver_name (which is already const char).
+> 
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-On 2/18/20 1:23 PM, Mark Brown wrote:
-> On Tue, Feb 18, 2020 at 11:21:40AM -0600, Dan Murphy wrote:
->
-> A couple of very small things, otherwise this looks good:
->
->> +	if (unlikely(!tx_mask)) {
->> +		dev_err(component->dev, "tx and rx masks need to be non 0\n");
->> +		return -EINVAL;
->> +	}
-> Do you really need the unlikely() annotation here?  This is *hopefully*
-> not a hot path.
+> ---
+>  drivers/usb/gadget/udc/at91_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/at91_udc.c b/drivers/usb/gadget/udc/at91_udc.c
+> index 1b2b548c59a0..eede5cedacb4 100644
+> --- a/drivers/usb/gadget/udc/at91_udc.c
+> +++ b/drivers/usb/gadget/udc/at91_udc.c
+> @@ -2021,7 +2021,7 @@ static struct platform_driver at91_udc_driver = {
+>  	.suspend	= at91udc_suspend,
+>  	.resume		= at91udc_resume,
+>  	.driver		= {
+> -		.name	= (char *) driver_name,
+> +		.name	= driver_name,
+>  		.of_match_table	= at91_udc_dt_ids,
+>  	},
+>  };
+> -- 
+> 2.24.1
+> 
 
-I was copying the code from tlv320aic3x.c as suggested by one our audio 
-guys here in TI.
-
-I can remove it if you desire
-
->
->> +static int adcx140_codec_probe(struct snd_soc_component *component)
->> +{
->> +	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
->> +	int sleep_cfg_val = ADCX140_WAKE_DEV;
->> +	u8 bias_source;
->> +	u8 vref_source;
->> +	int ret;
->> +
->> +	adcx140->supply_areg = devm_regulator_get_optional(adcx140->dev,
->> +							   "areg");
->> +	if (IS_ERR(adcx140->supply_areg)) {
-> You should really do the request and defer at the I2C level, that avoids
-> running through the whole card initialization repeatedly when the device
-> isn't ready.  Basically try to do all resource aquisition at the device
-> level and then use it at the card level.
-
-Ack.  Makes more sense to do it in the I2C probe.
-
-Dan
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
