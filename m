@@ -2,99 +2,112 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB24C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D679CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3982067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056479;
-	bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FrmJD4WfA8KGNttrNYuWsLr+VrtvKr7Du5Skc8Tqju+gz45LLpbToPhtCOpal+eYL
-	 bRyTO2wkXcYiy8kZOZHuWHXfrA85Y1+rMy3QDF7+lNHza2UZPOunft1cU+wEp0nWQa
-	 qJqhZdIec5DKED0Y1X1Mmni0QdPoIhqKQcmeV/kQ=
+	by mail.kernel.org (Postfix) with ESMTP id AD17B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cjnbef0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBRT6l (ORCPT
+        id S1728237AbgBRT6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbgBRT6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:38 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39734 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgBRT6a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 14:58:30 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424F424125;
-        Tue, 18 Feb 2020 19:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055909;
-        bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TgSRUfSvXZQtBz3N0gnamkpv9aczV4NUZZN4LtnNT5uww8UyQWeX45UnFx7M/DHz6
-         NFsg2SSYguua6Euk7c1AR0bcQQe3aVEkcCzTl8o14sUip203ao6hk6+E9k3EDVKWOj
-         dt4gPXeR1ddcTN8zSB+SAkWqPyNQ0NxVJHDVX2yY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 5.4 28/66] EDAC/sysfs: Remove csrow objects on errors
-Date:   Tue, 18 Feb 2020 20:54:55 +0100
-Message-Id: <20200218190430.669318831@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by mail-pl1-f196.google.com with SMTP id g6so8511100plp.6;
+        Tue, 18 Feb 2020 11:58:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QiZww/RzBIiqsbrHHxIYSu/iuDgV4YFLQLrfy6sFiNk=;
+        b=Cjnbef0k4m3B/ywmq6dWoUbGU3Ag1/Zc52LYCXAhwdYSC+or3uUZwbzROS2iVMTzAi
+         YLO/erejLW1NG2U06RoeMfO1zgQmJmqz+yEvzqfRgMJQ0vvXzD2K0qAYliuPrqsSu7+t
+         71G2NPYLlCmUTztI1DY+qu3oCHsl+Ww+xbdsUfnr6DHkjxmkyutlIF+MufPXN1YNzqVa
+         PAmYLF77yJwYfhVIasqfzPGJUeU7bmVxrvWjLK8Rx+T8YdhMhn4Fxpb5gfsrZtiXywAH
+         DWI5q18zqSpsKLE1sCtbYUZdsP+g8qrmRnqK3okYMZcAjNqktRCVduYKjHvFRkg0K6BR
+         v+FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QiZww/RzBIiqsbrHHxIYSu/iuDgV4YFLQLrfy6sFiNk=;
+        b=bpoCdpDXG3SsgQsd9TD4rNAHyoSXcl4dv5w9VA3JRvntuFH+l+pDfKZ6lvU4Gr0pyW
+         KG0Ru6KYdQVWptk3Wgy588sOzfj3RJchpyoIQbzmlnNsILexWYgDx5XjDGkvOFqRVIJS
+         QvF9p4n6ZoYKYzyfRRoEUTS7oY/sgO70hK+OsRikxTG5TXSoyqEJei5NPexzImJr8xM8
+         NXWAtstTverRINi+h3BFGkZs2bO+uyz6oYe4XQmnFm2K2oyqB4QuDselIcXTq9VU5ihV
+         Zx9ThtAX9LQDEmNnhdktCjcYxEWcq2eYThU6D77g6FLc4pipzkWbb8NBAy55DlOpYWRq
+         pkog==
+X-Gm-Message-State: APjAAAWogzaVEdXlbBgI63cCwwzYVOscuvRp2liOfKPX03M/Huez8R25
+        gMzT0rhzj8re67RJSlBZzxl52m0=
+X-Google-Smtp-Source: APXvYqwH1nOirlZGhvmTOw16Nv7wur/YGu3iaddjnmcqplevu4ou6GC57/7gKbJ/RXghEymI4BH9uA==
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr22116151plt.221.1582055909574;
+        Tue, 18 Feb 2020 11:58:29 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:ff08:f869:e1e5:121e:cdbf])
+        by smtp.gmail.com with ESMTPSA id k4sm5118883pfg.40.2020.02.18.11.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 11:58:28 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     pshelar@ovn.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 4/4] flow_table.c: Use built-in RCU list checking
+Date:   Wed, 19 Feb 2020 01:28:20 +0530
+Message-Id: <20200218195820.2769-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-commit 4d59588c09f2a2daedad2a544d4d1b602ab3a8af upstream.
+hlist_for_each_entry_rcu() has built-in RCU and lock checking.
 
-All created csrow objects must be removed in the error path of
-edac_create_csrow_objects(). The objects have been added as devices.
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+by default.
 
-They need to be removed by doing a device_del() *and* put_device() call
-to also free their memory. The missing put_device() leaves a memory
-leak. Use device_unregister() instead of device_del() which properly
-unregisters the device doing both.
-
-Fixes: 7adc05d2dc3a ("EDAC/sysfs: Drop device references properly")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: John Garry <john.garry@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200212120340.4764-4-rrichter@marvell.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- drivers/edac/edac_mc_sysfs.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/openvswitch/flow_table.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -447,8 +447,7 @@ error:
- 		csrow = mci->csrows[i];
- 		if (!nr_pages_per_csrow(csrow))
- 			continue;
--
--		device_del(&mci->csrows[i]->dev);
-+		device_unregister(&mci->csrows[i]->dev);
- 	}
+diff --git a/net/openvswitch/flow_table.c b/net/openvswitch/flow_table.c
+index 5904e93e5765..fd8a01ca7a2d 100644
+--- a/net/openvswitch/flow_table.c
++++ b/net/openvswitch/flow_table.c
+@@ -585,7 +585,8 @@ static struct sw_flow *masked_flow_lookup(struct table_instance *ti,
+ 	head = find_bucket(ti, hash);
+ 	(*n_mask_hit)++;
  
- 	return err;
-
+-	hlist_for_each_entry_rcu(flow, head, flow_table.node[ti->node_ver]) {
++	hlist_for_each_entry_rcu(flow, head, flow_table.node[ti->node_ver],
++				lockdep_ovsl_is_held()) {
+ 		if (flow->mask == mask && flow->flow_table.hash == hash &&
+ 		    flow_cmp_masked_key(flow, &masked_key, &mask->range))
+ 			return flow;
+@@ -769,7 +770,8 @@ struct sw_flow *ovs_flow_tbl_lookup_ufid(struct flow_table *tbl,
+ 
+ 	hash = ufid_hash(ufid);
+ 	head = find_bucket(ti, hash);
+-	hlist_for_each_entry_rcu(flow, head, ufid_table.node[ti->node_ver]) {
++	hlist_for_each_entry_rcu(flow, head, ufid_table.node[ti->node_ver],
++				lockdep_ovsl_is_held()) {
+ 		if (flow->ufid_table.hash == hash &&
+ 		    ovs_flow_cmp_ufid(flow, ufid))
+ 			return flow;
+-- 
+2.17.1
 
