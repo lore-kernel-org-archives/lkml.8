@@ -2,122 +2,106 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=MAILING_LIST_MULTI,
+	SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B71C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D5FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA1A22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gPYG7Up2"
+	by mail.kernel.org (Postfix) with ESMTP id 6522F20801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgBRTSz (ORCPT
+        id S1726439AbgBRTUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:18:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34570 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgBRTSz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:18:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n10so23407132wrm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:18:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EDv1Nfe5wsXfzyx8EHU5Go2CXWqnRUT+kGZGsxidLAE=;
-        b=gPYG7Up24HLKpZ2gCcBHga9Kdn41TjeEpUn3sEfyxxZOeb7n5ZX/xuScf9tRJaAVx6
-         MoH32/VpmVP1Jt3EglGtbe0koWcMmkTEE2/5ECdhSTZ60aSdd0RR2DnfByRsKFU595Os
-         uoRd7KoMm5qj6sBTo1P+E6zboAFd3PnBLqEno=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=EDv1Nfe5wsXfzyx8EHU5Go2CXWqnRUT+kGZGsxidLAE=;
-        b=B+TEgWeOoR5gD+LInmgN6s8LPnPjgWCr8wKiP7Igp08X7xW3JJIm8FqsH9FFerLI6h
-         3q44BwYQT/LfzvumY+Bgw4Zcaw7Kw5R3hZAGHY3MmdT/Iid26vdw71VlMp1ynAqNNci0
-         VJ0Kr87gEc+YkONLIPH6GQks9x6Dwhl+11YkaQQ8PWfRHBoX7Q3tyebmeS9Fmvy7yj6r
-         CylMLl8Fu8+vfxGRzE7P3z3ZJ/Qftuez8MeOcoHjgsMgkEpHgSmqGdFF+V+PV36QHiIG
-         509kp6/jixNHQaB8QRQgIP3ARsAv6F9SQjOa1oYHqr8h50ukxLDY+LWudEvlaKmGdBQm
-         4g4A==
-X-Gm-Message-State: APjAAAUEUCEtU1Mf6fIp5jCQAgh0IjzELixFNppXFvqemA5X5gI1S3iW
-        yJIwKhpSFXq7yxT7y3ea6B++LpYLGxA=
-X-Google-Smtp-Source: APXvYqx+/IkcOWLmZ/nIlILF5xmAM7d4Bh9kKuTs/+e2gy8RKNfntjbzdg7t7O97vuabW9+kI7TpgA==
-X-Received: by 2002:a5d:5148:: with SMTP id u8mr32125166wrt.132.1582053533137;
-        Tue, 18 Feb 2020 11:18:53 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id x11sm4433598wmg.46.2020.02.18.11.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 11:18:52 -0800 (PST)
-Date:   Tue, 18 Feb 2020 20:18:50 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     Alexey Brodkin <abrodkin@synopsys.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/arc: make arcpgu_debugfs_init return 0
-Message-ID: <20200218191850.GP2363188@phenom.ffwll.local>
-Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200218172821.18378-1-wambui.karugax@gmail.com>
- <CAKMK7uHeSW-sFCZK09n89mJ66J3sb0EtxYU9Ojfi-adM7czTug@mail.gmail.com>
+        Tue, 18 Feb 2020 14:20:30 -0500
+Received: from mail.archive.org ([207.241.224.6]:57414 "EHLO mail.archive.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgBRTU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:20:29 -0500
+Received: from mail.archive.org (localhost [127.0.0.1])
+        by mail.archive.org (Postfix) with ESMTP id 06B371FB34;
+        Tue, 18 Feb 2020 19:20:25 +0000 (UTC)
+Received: from [0.0.0.0] (a82-161-36-93.adsl.xs4all.nl [82.161.36.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: merlijn@archive.org)
+        by mail.archive.org (Postfix) with ESMTPSA id 971A71FB1D;
+        Tue, 18 Feb 2020 19:20:23 +0000 (UTC)
+Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
+To:     Christoph Hellwig <hch@infradead.org>,
+        James Bottomley <jejb@linux.ibm.com>
+Cc:     merlijn@wizzup.org, linux-scsi@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+References: <20200218143918.30267-1-merlijn@archive.org>
+ <20200218171259.GA6724@infradead.org>
+ <1582046428.16681.7.camel@linux.ibm.com>
+ <20200218172347.GA3020@infradead.org>
+ <1582046914.16681.11.camel@linux.ibm.com>
+ <20200218173158.GA18386@infradead.org>
+From:   "Merlijn B.W. Wajer" <merlijn@archive.org>
+Message-ID: <33da5f81-ad37-05fd-d765-8bd997995dd2@archive.org>
+Date:   Tue, 18 Feb 2020 20:21:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uHeSW-sFCZK09n89mJ66J3sb0EtxYU9Ojfi-adM7czTug@mail.gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200218173158.GA18386@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Envelope-From: <merlijn@archive.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:00:30PM +0100, Daniel Vetter wrote:
-> On Tue, Feb 18, 2020 at 6:28 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> >
-> > As drm_debugfs_create_files should return void, remove its use as the
-> > return value of arcpgu_debugfs_init and have the latter function
-> > return 0 directly.
-> >
-> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> > ---
-> >  drivers/gpu/drm/arc/arcpgu_drv.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/arc/arcpgu_drv.c b/drivers/gpu/drm/arc/arcpgu_drv.c
-> > index d6a6692db0ac..660b25f9588e 100644
-> > --- a/drivers/gpu/drm/arc/arcpgu_drv.c
-> > +++ b/drivers/gpu/drm/arc/arcpgu_drv.c
-> > @@ -139,8 +139,10 @@ static struct drm_info_list arcpgu_debugfs_list[] = {
-> >
-> >  static int arcpgu_debugfs_init(struct drm_minor *minor)
-> >  {
-> > -       return drm_debugfs_create_files(arcpgu_debugfs_list,
-> > -               ARRAY_SIZE(arcpgu_debugfs_list), minor->debugfs_root, minor);
-> > +       drm_debugfs_create_files(arcpgu_debugfs_list,
-> > +                                ARRAY_SIZE(arcpgu_debugfs_list),
-> > +                                minor->debugfs_root, minor);
-> > +       return 0;
-> 
-> For cases like these I think we should go a step further and also
-> remove the return value from the driver wrapper. And that all the way
-> up until there's something that actually needs to return a value for
-> some other reason than debugfs.
+Hi,
 
-This ofc applies to almost all the driver patches for this series, most
-can be cleaned up quite a bit more.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+On 18/02/2020 18:31, Christoph Hellwig wrote:
+> On Tue, Feb 18, 2020 at 09:28:34AM -0800, James Bottomley wrote:
+>> On Tue, 2020-02-18 at 09:23 -0800, Christoph Hellwig wrote:
+>>> On Tue, Feb 18, 2020 at 09:20:28AM -0800, James Bottomley wrote:
+>>>>>> Replace the global mutex with per-sr-device mutex.
+>>>>>
+>>>>> Do we actually need the lock at all?  What is protected by it?
+>>>>
+>>>> We do at least for cdrom_open.  It modifies the cdi structure with
+>>>> no other protection and concurrent modification would at least
+>>>> screw up the use counter which is not atomic.  Same reasoning for
+>>>> cdrom_release.
+>>>
+>>> Wouldn't the right fix to add locking to cdrom_open/release instead
+>>> of having an undocumented requirement for the callers?
+>>
+>> Yes ... but that's somewhat of a bigger patch because you now have to
+>> reason about the callbacks within cdrom.  There's also the question of
+>> whether you can assume ops->generic_packet() has its own concurrency
+>> protections ... it's certainly true for SCSI, but is it for anything
+>> else?  Although I suppose you can just not care and run the internal
+>> lock over it anyway.
+> 
+> We have 4 instances of struct cdrom_device_ops in the kernel, one of
+> which has a no-op generic_packet.  So I don't think this should be a
+> huge project.
+
+The are two reasons I decided to make minor changes to fix the
+performance regression.
+
+First, being able to send the patch to the various stable branches once
+merged. For people working with many CD drives attached to one station,
+this is a pretty big deal, so I tried to keep the patch simple. It fixes
+the regression introduced in another commit.
+
+Secondly, I don't have the hardware to test sophisticated or old setups,
+like some of the issues linked from my patch. I have SATA CD drives with
+USB->SATA bridges, no IDE, no PATA, etc. So the testing I can do is
+relatively limited.
+
+Perhaps I or someone else can work on removing the usage of the locks,
+but as it stands I think this addresses the performance issue present in
+the current kernel, and removing locks and the associated testing
+required with that is something I am not entirely comfortable doing.
+
+Cheers,
+Merlijn
