@@ -2,140 +2,150 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A16C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DCAC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B42A2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:36:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ihx4EYf/"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE042173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgBRWgB (ORCPT
+        id S1726680AbgBRWic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:36:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22836 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726427AbgBRWgA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:36:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582065359;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XYHKylbYwWbwgVI0oUf0RytWHiUiJpTboStfvZsvNo=;
-        b=Ihx4EYf/U2zxBAUisdA4HErCki/POnF9CEsfH4dEiBa5AYhU0fuPpEfIAGy2aquD727xcq
-        Q4J8M4InLCQIOn71rBaSj8eSJ4K2ogj4mqU/IRfdbyBPGxBm7WC0ffL/8rEAdMwls9chkA
-        PZUHgxGUIN2z0Ekq0Mz/z5wnzUtUXpw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-4PVG-_cgM5azTwe8uV8i-A-1; Tue, 18 Feb 2020 17:35:53 -0500
-X-MC-Unique: 4PVG-_cgM5azTwe8uV8i-A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF18A18A8C80;
-        Tue, 18 Feb 2020 22:35:51 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C0D785735;
-        Tue, 18 Feb 2020 22:35:43 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 17:35:40 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v2 7/9] netfilter: ebtables audit table
- registration
-Message-ID: <20200218223540.2apm7spat3z3yyif@madcap2.tricolour.ca>
-References: <cover.1577830902.git.rgb@redhat.com>
- <9f16dee52bac9a3068939283a0122a632ee0438d.1577830902.git.rgb@redhat.com>
- <CAHC9VhS4Cz1T=hycPVz3aCzOpPX-EDzwh284YQ2V5rUM7BJkzg@mail.gmail.com>
+        Tue, 18 Feb 2020 17:38:32 -0500
+Received: from mga18.intel.com ([134.134.136.126]:11305 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgBRWic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:38:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 14:38:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="434266675"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Feb 2020 14:38:29 -0800
+Date:   Wed, 19 Feb 2020 06:38:49 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com
+Subject: Re: [PATCH] mm/vmscan.c: remove cpu online notification for now
+Message-ID: <20200218223849.GA25405@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200218004354.24996-1-richardw.yang@linux.intel.com>
+ <20200218084023.GC21113@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhS4Cz1T=hycPVz3aCzOpPX-EDzwh284YQ2V5rUM7BJkzg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200218084023.GC21113@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-30 22:18, Paul Moore wrote:
-> On Mon, Jan 6, 2020 at 1:56 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Generate audit NETFILTER_CFG records on ebtables table registration.
-> >
-> > Previously this was only being done for all x_tables operations and
-> > ebtables table replacement.
-> >
-> > Call new audit_nf_cfg() to store table parameters for later use with
-> > syscall records.
-> >
-> > Here is a sample accompanied record:
-> >   type=NETFILTER_CFG msg=audit(1494907217.558:5403): table=filter family=7 entries=0
-> 
-> Wait a minute ... in patch 4 you have code that explicitly checks for
-> "entries=0" and doesn't generate a record in that case; is the example
-> a lie or is the code a lie? ;)
+On Tue, Feb 18, 2020 at 09:40:23AM +0100, Michal Hocko wrote:
+>On Tue 18-02-20 08:43:54, Wei Yang wrote:
+>> The cpu online notification is used to adjust kswapd cpu affinity when a
+>> NUMA node gains a new CPU.
+>> 
+>> Since currently we don't see a real runtime configuration like this,
+>> let's drop this online notification for now.
+>
+>This deserves much more explanation IMHO. What would you say about the
+>following.
+>"
+>kswapd kernel thread starts either with a CPU affinity set to the full
+>cpu mask of its target node or without any affinity at all if the node
+>is CPUless. There is a cpu hotplug callback (kswapd_cpu_online) that
+>implements an elaborate way to update this mask when a cpu is onlined.
+>
+>It is not really clear whether there is any actual benefit from this
+>scheme. Completely CPU-less NUMA nodes rarely gain a new CPU during
+>runtime. Drop the code for that reason. If there is a real usecase then
+>we can resurrect and simplify the code.
+>"
 
-The example was stale once the entries check was added.  The entries
-check has now been removed due to the source of registration records
-being orphanned from their syscall record being found and solved in the
-ghak120 (norule missing accompanying) issue.
+More better :-) Thanks
 
-However, there are ebtables nat and filter tables being added that are
-being automatically reaped if there are no entries and there is no
-syscall accompanying them.  I don't yet know if it is being reaped by
-userspace with an async drop, or if it is the kernel that is deciding to
-garbage collect that table after a period of disuse.
+>> 
+>> Suggested-by: Michal Hocko <mhocko@kernel.org>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>
+>Acked-by: Michal Hocko <mhocko@suse.com>
+>
+>> 
+>> ---
+>> v3:
+>>   * remove the cpu online notification suggested by Michal
+>> v2:
+>>   * rephrase the changelog
+>> ---
+>>  mm/vmscan.c | 27 +--------------------------
+>>  1 file changed, 1 insertion(+), 26 deletions(-)
+>> 
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 665f33258cd7..a4fdf3dc8887 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -4023,27 +4023,6 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
+>>  }
+>>  #endif /* CONFIG_HIBERNATION */
+>>  
+>> -/* It's optimal to keep kswapds on the same CPUs as their memory, but
+>> -   not required for correctness.  So if the last cpu in a node goes
+>> -   away, we get changed to run anywhere: as the first one comes back,
+>> -   restore their cpu bindings. */
+>> -static int kswapd_cpu_online(unsigned int cpu)
+>> -{
+>> -	int nid;
+>> -
+>> -	for_each_node_state(nid, N_MEMORY) {
+>> -		pg_data_t *pgdat = NODE_DATA(nid);
+>> -		const struct cpumask *mask;
+>> -
+>> -		mask = cpumask_of_node(pgdat->node_id);
+>> -
+>> -		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
+>> -			/* One of our CPUs online: restore mask */
+>> -			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>>  /*
+>>   * This kswapd start function will be called by init and node-hot-add.
+>>   * On node-hot-add, kswapd will moved to proper cpus if cpus are hot-added.
+>> @@ -4083,15 +4062,11 @@ void kswapd_stop(int nid)
+>>  
+>>  static int __init kswapd_init(void)
+>>  {
+>> -	int nid, ret;
+>> +	int nid;
+>>  
+>>  	swap_setup();
+>>  	for_each_node_state(nid, N_MEMORY)
+>>   		kswapd_run(nid);
+>> -	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+>> -					"mm/vmscan:online", kswapd_cpu_online,
+>> -					NULL);
+>> -	WARN_ON(ret < 0);
+>>  	return 0;
+>>  }
+>>  
+>> -- 
+>> 2.17.1
+>
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-Some quick instrumentation says it is kernel thread [kworker/u4:2-events_unbound]
-
-pid=153 uid=0 auid=4294967295 tty=(none) ses=4294967295 subj=system_u:system_r:kernel_t:s0 comm="kworker/u4:2" exe=(null)
-
-> > See: https://github.com/linux-audit/audit-kernel/issues/43
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  net/bridge/netfilter/ebtables.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-> > index 57dc11c0f349..58126547b175 100644
-> > --- a/net/bridge/netfilter/ebtables.c
-> > +++ b/net/bridge/netfilter/ebtables.c
-> > @@ -1219,6 +1219,8 @@ int ebt_register_table(struct net *net, const struct ebt_table *input_table,
-> >                 *res = NULL;
-> >         }
-> >
-> > +       if (audit_enabled)
-> > +               audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries);
-> >         return ret;
-> >  free_unlock:
-> >         mutex_unlock(&ebt_mutex);
-> > --
-> > 1.8.3.1
-> 
-> --
-> paul moore
-> www.paul-moore.com
-> 
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+-- 
+Wei Yang
+Help you, Help me
