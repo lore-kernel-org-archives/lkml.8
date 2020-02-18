@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E543C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E58AC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D522464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6B62465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055934;
-	bh=VXS9ycr6wu/QTgmXZxZM+8/LTsMlAdSZjeqbUw8H8Gc=;
+	s=default; t=1582055937;
+	bh=ThgjNCU+8MS+eBKTclwmfynFRyuPnapydKLL6JZ7fXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6NdS7HnQn6BX1lPsDTK+y5zFa9qFOpcs0cCCzPtRkTRcbksjOFFAz/FMs73PUqyd
-	 GFfIp85+CD4MwFrmZMCl7GZ4GpYkIfc4wtGuW56DC7cG/588zkEyuqcx29YhIWs/Cv
-	 JwoxW6cHhK/yzukP4KlhlGNFZjtdtOMZN60wvqgY=
+	b=HesS+J79T9jyrgbayuiAunpk8Bej+X0LvTpOF/VsLEKdgU1PeRHoIUhtqIe5z22PM
+	 2A7lbzAUJ0RNQt9qCN7suCRTDeuiRLlFE2VslLbTnk6/f/X+yktYrIOHOpWIHtOObm
+	 cqY0LLe8+1vUJfQCufU+RgymEikwy/acVCZr9Qe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgBRT6x (ORCPT
+        id S1728331AbgBRT64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgBRT6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:50 -0500
+        id S1728315AbgBRT6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7331324125;
-        Tue, 18 Feb 2020 19:58:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E71924125;
+        Tue, 18 Feb 2020 19:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055929;
-        bh=VXS9ycr6wu/QTgmXZxZM+8/LTsMlAdSZjeqbUw8H8Gc=;
+        s=default; t=1582055932;
+        bh=ThgjNCU+8MS+eBKTclwmfynFRyuPnapydKLL6JZ7fXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPprocoHjYHRtz9u6MMLmmGbgdci87xp6HQnQXE68aE1tRaJdzP3LWFYzzFBRayKA
-         amVOUTgh//cWn7JPUV+BQ21lOfqEoQre7+2tBT66f4LdWw/1/VSkvH/GQVvAwGGGYN
-         judDIDR6/PxvLYjyQRJaPmTrGdHbdNi3CaA1uXcc=
+        b=jRhUCtu1cOIIGUQRsfRT8zpiJ9dAVBp9odNoBux3HvMR4j+eNdwJEO0TNh0WCvigQ
+         h/H37g6BYGb+xX02O561IyM680yPg40TvaUpMymz+yuekTv7cI6V2spp4MaJQw1y1X
+         aXeDsOJdvHdyDPgLLiVPhnTFiujqhdv5t/BJBLaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 35/66] drm/panfrost: Make sure the shrinker does not reclaim referenced BOs
-Date:   Tue, 18 Feb 2020 20:55:02 +0100
-Message-Id: <20200218190431.301556622@linuxfoundation.org>
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        sohu0106 <sohu0106@126.com>, Olof Johansson <olof@lixom.net>
+Subject: [PATCH 5.4 36/66] bus: moxtet: fix potential stack buffer overflow
+Date:   Tue, 18 Feb 2020 20:55:03 +0100
+Message-Id: <20200218190431.382797218@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -61,82 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+From: Marek Behún <marek.behun@nic.cz>
 
-commit 7e0cf7e9936c4358b0863357b90aa12afe6489da upstream.
+commit 3bf3c9744694803bd2d6f0ee70a6369b980530fd upstream.
 
-Userspace might tag a BO purgeable while it's still referenced by GPU
-jobs. We need to make sure the shrinker does not purge such BOs until
-all jobs referencing it are finished.
+The input_read function declares the size of the hex array relative to
+sizeof(buf), but buf is a pointer argument of the function. The hex
+array is meant to contain hexadecimal representation of the bin array.
 
-Fixes: 013b65101315 ("drm/panfrost: Add madvise and shrinker support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191129135908.2439529-9-boris.brezillon@collabora.com
+Link: https://lore.kernel.org/r/20200215142130.22743-1-marek.behun@nic.cz
+Fixes: 5bc7f990cd98 ("bus: Add support for Moxtet bus")
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Reported-by: sohu0106 <sohu0106@126.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/panfrost/panfrost_drv.c          |    1 +
- drivers/gpu/drm/panfrost/panfrost_gem.h          |    6 ++++++
- drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c |    3 +++
- drivers/gpu/drm/panfrost/panfrost_job.c          |    7 ++++++-
- 4 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/bus/moxtet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -166,6 +166,7 @@ panfrost_lookup_bos(struct drm_device *d
- 			break;
- 		}
+--- a/drivers/bus/moxtet.c
++++ b/drivers/bus/moxtet.c
+@@ -466,7 +466,7 @@ static ssize_t input_read(struct file *f
+ {
+ 	struct moxtet *moxtet = file->private_data;
+ 	u8 bin[TURRIS_MOX_MAX_MODULES];
+-	u8 hex[sizeof(buf) * 2 + 1];
++	u8 hex[sizeof(bin) * 2 + 1];
+ 	int ret, n;
  
-+		atomic_inc(&bo->gpu_usecount);
- 		job->mappings[i] = mapping;
- 	}
- 
---- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-@@ -30,6 +30,12 @@ struct panfrost_gem_object {
- 		struct mutex lock;
- 	} mappings;
- 
-+	/*
-+	 * Count the number of jobs referencing this BO so we don't let the
-+	 * shrinker reclaim this object prematurely.
-+	 */
-+	atomic_t gpu_usecount;
-+
- 	bool noexec		:1;
- 	bool is_heap		:1;
- };
---- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-@@ -41,6 +41,9 @@ static bool panfrost_gem_purge(struct dr
- 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
- 	struct panfrost_gem_object *bo = to_panfrost_bo(obj);
- 
-+	if (atomic_read(&bo->gpu_usecount))
-+		return false;
-+
- 	if (!mutex_trylock(&shmem->pages_lock))
- 		return false;
- 
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -270,8 +270,13 @@ static void panfrost_job_cleanup(struct
- 	dma_fence_put(job->render_done_fence);
- 
- 	if (job->mappings) {
--		for (i = 0; i < job->bo_count; i++)
-+		for (i = 0; i < job->bo_count; i++) {
-+			if (!job->mappings[i])
-+				break;
-+
-+			atomic_dec(&job->mappings[i]->obj->gpu_usecount);
- 			panfrost_gem_mapping_put(job->mappings[i]);
-+		}
- 		kvfree(job->mappings);
- 	}
- 
+ 	ret = moxtet_spi_read(moxtet, bin);
 
 
