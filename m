@@ -2,166 +2,164 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B204C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B46C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F2E20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF37D2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAo7jbuP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6vDnXRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgBRFn1 (ORCPT
+        id S1726193AbgBRFvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:43:27 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:56028 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgBRFn1 (ORCPT
+        Tue, 18 Feb 2020 00:51:52 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35857 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgBRFvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:43:27 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so512171pjz.5;
-        Mon, 17 Feb 2020 21:43:26 -0800 (PST)
+        Tue, 18 Feb 2020 00:51:52 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so10400866pgu.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 21:51:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=WEpfeOp5vZhDYg4OxZGgpOVUu6OTNleZynBaicYdCeM=;
-        b=KAo7jbuPiacrEd6LJdarm48YnC0xplHogBHcaipVbzri/Gf5EslQOdJtcB9sPEn1tc
-         FCNw02PIEUpK2GqA5mvEOtVcNYM8eouQSqpH/mqfne0DV+I1mlxYO9X08MDWY7VJf5I5
-         Poea88dwhMk4kfK9VKZB64vhEQjAN8XFHkYpE8hSA61Ap93DWrc4cg840jhgCHyQbgtT
-         l0YCysWVj616uMKRAYtcltUMf2RhH06BupNjlXZIwZvs0FLoWFDkZUqBBNd/UeCLjDBw
-         CVNdVyc2fthpNPqqbBy/zbaEFPLAD28JUusn4Mo+VO7LrP8toj+7w//y2xltkySs2vQj
-         AGhQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ce8OOkWfjw5jVWk59ugGKRVgBYm6HB1xi8c9ebl4I5g=;
+        b=p6vDnXRx8Lt2QQo5iqGpTCkRuqfGnM9Rzn4zwWMk7BAnTDsm2IuHaKSL+naL4/1bWQ
+         UgCdjP0L3Sx5n7jcE6joCY05E56kEA4db4MeGbgQKlZVvY6bY5mp8BrsWvQr91/J/bXO
+         e6vZ1jKdUPOeNcGUUa2lFF3PlWw9z5rSHfv9uhTF5Z1n4/YuLqmNK9iYaCs/7JN3Bhwt
+         hUpaQ4z7bhBFfF1cV46ZbGoL2Pon2s2SKtpRLShSoT0kSlMYPAydUkyFvtavUjiwvyeI
+         ja/KrwKZds8ZNePpKfIC69786U+lrT52WmnnOBfNX2pgUIyEsPv5Uu/G1ieaWVjLt3Jl
+         uouw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WEpfeOp5vZhDYg4OxZGgpOVUu6OTNleZynBaicYdCeM=;
-        b=GRQnHTtqdZJFbeIiF4QIiOmdm7bh+24zg+5MSm5bKWyNzC+qA/Fi2SGAVZ4O0U8ms+
-         qvqoxlS8Ay/8Ypu2HHC8J/pNDgv338sGWmcyM31P1ZZ9/HnXbMtqs4MKKjBNNb9VliX8
-         r9iPwGo4rU4M/Yrq+3OtYlYk4oF55oh4Xz1XN2Ict9Q7u3eEX59LXMUiUuyG6bLAOr49
-         o9nqNECWUOJdeLui0L6eWeYm7G5Lak7kZKYRw9cIQdCm3YGMTCbItk3Ixcac2GAIFqtb
-         uifv8E4tdHxb9SzcMGcKRWgD+OnCBKSdbz0Bl4Rze/yhztC6geEZih5rCzm1mF4pGhgk
-         G4MQ==
-X-Gm-Message-State: APjAAAUIKmG0Sq630nR1XSiymqPWa3ak3MHpsMLLDNZtl1GoIL/2NXwN
-        19dXzissJTbgh7ByX5Wzxh0=
-X-Google-Smtp-Source: APXvYqxgoCOWtjTsIGW4bU5shwQO55FQSXikBaj4lrwMfTVwCeCN3H9Ietu8EChSfkmoDUEW3CJwOQ==
-X-Received: by 2002:a17:90a:3745:: with SMTP id u63mr594668pjb.123.1582004606378;
-        Mon, 17 Feb 2020 21:43:26 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id l29sm2658748pgb.86.2020.02.17.21.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 21:43:25 -0800 (PST)
-Subject: Re: general protection fault in l2cap_sock_getsockopt
-To:     syzbot <syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com>,
-        davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-References: <0000000000007838f1059ed1cea5@google.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <1a4385eb-ddae-5411-786d-e818f91dbb7c@gmail.com>
-Date:   Mon, 17 Feb 2020 21:43:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ce8OOkWfjw5jVWk59ugGKRVgBYm6HB1xi8c9ebl4I5g=;
+        b=q08ePG3wJWbCua5yyi+bdk6SXVwx/tX2YfXXhRSfZt7eGX6VhMPddjRsNvRzHJtC4b
+         l0h+Y/u5l3OydoFd2yOBpYBibwsG5FdkKn10iTKFpDlKHGlAYXcSgx+lBtEtgd198JCg
+         2GuxE85bBcbHEuLhdd6TJbyU5Cnxi0PQbQa8usb8ao6NaJBhr6oUivvUbC2vDLdR2YKK
+         1i1gM/Y60BCVKFT0mLQNsPUuJsKPtw4inqRdaQFAq6onqzebMM6GVRedLuSZs3J1zgfT
+         ZNGX8q7D9yV49g9Ot5GJDeNx6++gtviojvjiJ9F/XlFUm71AgXY4Rj3qXakycKnAJy2R
+         cg4A==
+X-Gm-Message-State: APjAAAXP4XPcMfyaKJ9i+nrLMIu0cU/Xi8UnT+TRPjA3nQY201MGkdeg
+        euG7JyEAirvu3N7d55M1vIsFXhJD0w==
+X-Google-Smtp-Source: APXvYqzzaktP/1JoWkazaAtmfHhtnCI9qNbQsjBJVhjflRxwYgzm6RzkNTTDQxlbQc3moXEw4befNw==
+X-Received: by 2002:a63:7ce:: with SMTP id 197mr10404414pgh.429.1582005111632;
+        Mon, 17 Feb 2020 21:51:51 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2409:4072:604:4c69:39d7:c38:1134:8ea0])
+        by smtp.gmail.com with ESMTPSA id b4sm2431774pfd.18.2020.02.17.21.51.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Feb 2020 21:51:50 -0800 (PST)
+Date:   Tue, 18 Feb 2020 11:21:42 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        hemantk@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/16] bus: mhi: core: Add support for data transfer
+Message-ID: <20200218055142.GA29573@Mani-XPS-13-9360>
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-12-manivannan.sadhasivam@linaro.org>
+ <CAK8P3a1DOta5Uj3dNFWVqwgyPKs0cQsoymXE7svcOZoPiY+YGw@mail.gmail.com>
+ <20200217164751.GA7305@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <0000000000007838f1059ed1cea5@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217164751.GA7305@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Arnd,
 
-
-On 2/17/20 8:07 PM, syzbot wrote:
-> Hello,
+On Mon, Feb 17, 2020 at 10:17:51PM +0530, Manivannan Sadhasivam wrote:
+> Hi Arnd,
 > 
-> syzbot found the following crash on:
+> On Mon, Feb 17, 2020 at 05:13:37PM +0100, Arnd Bergmann wrote:
+> > On Fri, Jan 31, 2020 at 2:51 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > 
+> > > @@ -648,6 +715,31 @@ static int parse_ch_cfg(struct mhi_controller *mhi_cntrl,
+> > >                 mhi_chan->db_cfg.pollcfg = ch_cfg->pollcfg;
+> > >                 mhi_chan->xfer_type = ch_cfg->data_type;
+> > >
+> > > +               switch (mhi_chan->xfer_type) {
+> > > +               case MHI_BUF_RAW:
+> > > +                       mhi_chan->gen_tre = mhi_gen_tre;
+> > > +                       mhi_chan->queue_xfer = mhi_queue_buf;
+> > > +                       break;
+> > > +               case MHI_BUF_SKB:
+> > > +                       mhi_chan->queue_xfer = mhi_queue_skb;
+> > > +                       break;
+> > > +               case MHI_BUF_SCLIST:
+> > > +                       mhi_chan->gen_tre = mhi_gen_tre;
+> > > +                       mhi_chan->queue_xfer = mhi_queue_sclist;
+> > > +                       break;
+> > > +               case MHI_BUF_NOP:
+> > > +                       mhi_chan->queue_xfer = mhi_queue_nop;
+> > > +                       break;
+> > > +               case MHI_BUF_DMA:
+> > > +               case MHI_BUF_RSC_DMA:
+> > > +                       mhi_chan->queue_xfer = mhi_queue_dma;
+> > > +                       break;
+> > > +               default:
+> > > +                       dev_err(mhi_cntrl->dev,
+> > > +                               "Channel datatype not supported\n");
+> > > +                       goto error_chan_cfg;
+> > > +               }
+> > > +
+> > 
+> > While looking through the driver to see how the DMA gets handled, I came
+> > across the multitude of mhi_queue_* functions, which seems like a
+> > layering violation to me, given that they are all implemented by the
+> > core code as well, and the client driver needs to be aware of
+> > which one to call. Are you able to lift these out of the common interface
+> > and make the client driver call these directly, or maybe provide a direct
+> > interface based on mhi_buf_info to replace these?
+> > 
 > 
-> HEAD commit:    c25a951c Add linux-next specific files for 20200217
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=171b1a29e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6446a589a5ca34dd6e8b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10465579e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16dabb11e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com
-> 
-> general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-> CPU: 0 PID: 9844 Comm: syz-executor679 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
-> Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
-> RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
-> RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
-> RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
-> R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
-> R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
-> FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  __sys_getsockopt+0x16d/0x310 net/socket.c:2175
->  __do_sys_getsockopt net/socket.c:2190 [inline]
->  __se_sys_getsockopt net/socket.c:2187 [inline]
->  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2187
->  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x440149
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffcb256f088 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440149
-> RDX: 000000000000000e RSI: 0000000000000112 RDI: 0000000000000003
-> RBP: 00000000006ca018 R08: 0000000020000140 R09: 00000000004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019d0
-> R13: 0000000000401a60 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 63f0b6416dbaab7d ]---
-> RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
-> Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
-> RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
-> RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
-> RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
-> R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
-> R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
-> FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> It sounds reasonable to me. Let me discuss this internally with Qcom guys to
+> see if they have any objections.
 > 
 
-Probably caused by commit eab2404ba798a8efda2a970f44071c3406d94e57
-Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Date:   Fri Feb 14 10:08:57 2020 -0800
+I looked into this in detail and found that the queue_xfer callbacks are tied
+to the MHI channels. For instance, the callback gets attached to ul_chan (uplink
+channel) and dl_chan (downlink channel) during controller registration. And
+when the device driver calls the callback, the MHI stack calls respective queue
+function for the relevant channel. For instance,
 
-    Bluetooth: Add BT_PHY socket option
+```
+int mhi_queue_transfer(struct mhi_device *mhi_dev,
+                       enum dma_data_direction dir, void *buf, size_t len,
+                       enum mhi_flags mflags)
+{
+        if (dir == DMA_TO_DEVICE)
+                return mhi_dev->ul_chan->queue_xfer(mhi_dev, mhi_dev->ul_chan,
+                                                    buf, len, mflags);
+        else
+                return mhi_dev->dl_chan->queue_xfer(mhi_dev, mhi_dev->dl_chan,
+                                                    buf, len, mflags);
+}
+```
 
+If we use the direct queue API's this will become hard to handle. So, I'll keep
+it as it is.
+
+Thanks,
+Mani
+
+> Thanks,
+> Mani
+> 
+> >       Arnd
