@@ -2,117 +2,164 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4DCC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADDFC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC72207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoN26OTS"
+	by mail.kernel.org (Postfix) with ESMTP id 9FAEB24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582066498;
+	bh=b57O7Q3xNzy0G0mohr9Qa5PA/2PUgMbA5hYF4Hu/4No=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=R3MmIDv3Xo2olUqM55pfij1INKMrb70jCfQmlkjul09/cJ2W68x2bYe665eG3TWPm
+	 SsmmaKe+LfPuBWtOWGZpyV7GUF7QGyPNt25L3f1j3NgLT80iCXmKeZjs8yRW/nTLNd
+	 LIQnQjWm1ZgyqwkvrLKY1hkExL+lHg7xxnd1IsvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgBRWyq (ORCPT
+        id S1727216AbgBRWy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:54:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37735 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRWyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:54:45 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so1652604pjb.2;
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
-        b=RoN26OTSoD8xQPX8Ejb8azpPGaUfxPDvq/VvNyKPUXC02u6KESX4+KewWJ0C3B6BvY
-         Qe1m2IweSiLDlgWK90aBCD09mUr1arr5/A8ACf2W+VfYSIlOLRZM9GnqkYCH1Hk9Agoj
-         +PNGQbijasxynJv26p7N5IwUoW2ory/yMjEaGzcnvWGXZ9Ty/Y4qskG2oDvwhP9uGs4U
-         7/Vzvi4mr8AnPcRhPfuz+jTCNtKEXjzqK2+uZ5DD5xXRui0DuhY8RuP2kRy9664Z9xkn
-         Ajfm5wDf5zrloWSVfa/c1AYPhfG8K/6YjkD/0dfA1novKrcoPB8Ky47OKjgh6sc2gsXF
-         GXwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
-        b=MbT2RWCqmBBkJ42x+7Teut1a4S/gQhjz4Yunw2/mtV1WOdKpekVBIX8KbXwzy2D5fW
-         HAl6bDtDRet/MKxIn+VvPDw9oeb0pVVS9+EJKN4eTWX5ih5DS4PdJllXmzf9T5lRJxXb
-         inge/9zLoa5Obezo9N0H88dtZ9uCt12vMaZ+Lrm8Y6+5mWOKNurd1qSV5SaZJ9XkP8EQ
-         f2o1bwT3fdMA9y+bUKx0TiG/NBmZ6lsbRPS5UXsyfi8JbP4Y6UDtKciZm5LhIE7FJfKS
-         Nztr9uHgEgvqfn+aSp/g1N8rATrYWm3eP5ghbnnjGIlLD9BPuoEiTuec7YJts67XBPOy
-         BGLw==
-X-Gm-Message-State: APjAAAWjEZ7efmpTPbZQaagIqS5Ib4x1dEotrUcI3cFMKdA3Rzbx8Opn
-        uqrJTH+zmDzkqMnGTzYFe0w=
-X-Google-Smtp-Source: APXvYqxKyKfvB6gUIxasXk+3gpb22DtW5pbbJzCinqep7l23wSdhHK6tbwkFTvHB8sVofima6J/cHw==
-X-Received: by 2002:a17:90a:cc16:: with SMTP id b22mr5326984pju.65.1582066485149;
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id i2sm4403pjs.21.2020.02.18.14.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
-Date:   Tue, 18 Feb 2020 14:54:54 -0800
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] ASoC: dt-bindings: fsl_easrc: Add document for
- EASRC
-Message-ID: <20200218225454.GA32720@Asurada-Nvidia.nvidia.com>
-References: <cover.1582007379.git.shengjiu.wang@nxp.com>
- <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
+        Tue, 18 Feb 2020 17:54:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726427AbgBRWy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:54:57 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA52D207FD;
+        Tue, 18 Feb 2020 22:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582066496;
+        bh=b57O7Q3xNzy0G0mohr9Qa5PA/2PUgMbA5hYF4Hu/4No=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=EMmNe7YvcJy9VW21eyqDg46Ch4m05ZrjnpmyvRDsmmZg6N8WmC/4VR0JnYzwvc9S2
+         4uBvmrn5meudDyKFNfThCqbtvQXLFE2iNmW6b1KsU+dpPjWUH2Rf/4Y8WWLb5hnZyj
+         eQ6+5B2Fc7mq4nhMc+7FCSTf2dY//GEGdCcksmM4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BEB923520856; Tue, 18 Feb 2020 14:54:55 -0800 (PST)
+Date:   Tue, 18 Feb 2020 14:54:55 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
+ rcu_tasks_cbs_head
+Message-ID: <20200218225455.GN2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200215002446.GA15663@paulmck-ThinkPad-P72>
+ <20200215002520.15746-1-paulmck@kernel.org>
+ <20200217123851.GR14914@hirez.programming.kicks-ass.net>
+ <20200217181615.GP2935@paulmck-ThinkPad-P72>
+ <20200218075648.GW14914@hirez.programming.kicks-ass.net>
+ <20200218162719.GE2935@paulmck-ThinkPad-P72>
+ <20200218201142.GF11457@worktop.programming.kicks-ass.net>
+ <20200218202226.GJ2935@paulmck-ThinkPad-P72>
+ <20200218174503.3d4e4750@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20200218174503.3d4e4750@gandalf.local.home>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 02:39:36PM +0800, Shengjiu Wang wrote:
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> IP module found on i.MX8MN.
+On Tue, Feb 18, 2020 at 05:45:03PM -0500, Steven Rostedt wrote:
+> On Tue, 18 Feb 2020 12:22:26 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> > On Tue, Feb 18, 2020 at 09:11:42PM +0100, Peter Zijlstra wrote:
+> > > On Tue, Feb 18, 2020 at 08:27:19AM -0800, Paul E. McKenney wrote:  
+> > > > On Tue, Feb 18, 2020 at 08:56:48AM +0100, Peter Zijlstra wrote:  
+> > >   
+> > > > > I just took offence at the Changelog wording. It seems to suggest there
+> > > > > actually is a problem, there is not.  
+> > > > 
+> > > > Quoting the changelog: "Not appropriate for backporting due to failure
+> > > > being unlikely."  
+> > > 
+> > > That implies there is failure, however unlikely.
+> > > 
+> > > In this particular case there is absolutely no failure, except perhaps
+> > > in KCSAN. This patch is a pure annotation such that KCSAN can understand
+> > > the code.
+> > > 
+> > > Like said, I don't object to the actual patch, but I do think it is
+> > > important to call out false negatives or to describe the actual problem
+> > > found.  
+> > 
+> > I don't feel at all comfortable declaring that there is absolutely
+> > no possibility of failure.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> new file mode 100644
-> index 000000000000..0e8153165e3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
-> @@ -0,0 +1,57 @@
-> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
+> Perhaps wording it like so:
+> 
+> "There's know known issue with the current code, but the *_ONCE()
+> annotations here makes KCSAN happy, allowing us to focus on KCSAN
+> warnings that can help bring about known issues in other code that we
+> can fix, without being distracted by KCSAN warnings that we do not see
+> a problem with."
+> 
+> ?
 
-Missing "Enhanced", I guess.
+That sounds more like something I might put in rcutodo.html as a statement
+of the RCU approach to KCSAN reports.
 
-And "ASRC" => "EASRC"
+But switching to a different situation (for variety, if nothing else),
+what about the commit shown below?
 
-> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+							Thanx, Paul
 
-Ditto
+------------------------------------------------------------------------
 
-> +signal associated with an input clock into a signal associated with a different
-> +output clock. The driver currently works as a Front End of DPCM with other Back
-> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
+commit 35bc02b04a041f32470ae6d959c549bcce8483db
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Tue Feb 18 13:41:02 2020 -0800
 
-"context" => "contexts"
+    rcutorture: Mark data-race potential for rcu_barrier() test statistics
+    
+    The n_barrier_successes, n_barrier_attempts, and
+    n_rcu_torture_barrier_error variables are updated (without access
+    markings) by the main rcu_barrier() test kthread, and accessed (also
+    without access markings) by the rcu_torture_stats() kthread.  This of
+    course can result in KCSAN complaints.
+    
+    Because the accesses are in diagnostic prints, this commit uses
+    data_race() to excuse the diagnostic prints from the data race.  If this
+    were to ever cause bogus statistics prints (for example, due to store
+    tearing), any misleading information would be disambiguated by the
+    presence or absence of an rcutorture splat.
+    
+    This data race was reported by KCSAN.  Not appropriate for backporting
+    due to failure being unlikely and due to the mild consequences of the
+    failure, namely a confusing rcutorture console message.
+    
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Btw, what's the definition of this "context"?
-
-And, is SSI still available on imx8mn?
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 5453bd5..b3301f3 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -1444,9 +1444,9 @@ rcu_torture_stats_print(void)
+ 		atomic_long_read(&n_rcu_torture_timers));
+ 	torture_onoff_stats();
+ 	pr_cont("barrier: %ld/%ld:%ld\n",
+-		n_barrier_successes,
+-		n_barrier_attempts,
+-		n_rcu_torture_barrier_error);
++		data_race(n_barrier_successes),
++		data_race(n_barrier_attempts),
++		data_race(n_rcu_torture_barrier_error));
+ 
+ 	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
+ 	if (atomic_read(&n_rcu_torture_mberror) ||
