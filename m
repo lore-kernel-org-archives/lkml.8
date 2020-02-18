@@ -2,69 +2,91 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD07AC34045
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E4C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5FD22527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0B7207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgBRPrv (ORCPT
+        id S1726582AbgBRPvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:47:51 -0500
-Received: from verein.lst.de ([213.95.11.211]:38838 "EHLO verein.lst.de"
+        Tue, 18 Feb 2020 10:51:51 -0500
+Received: from mga09.intel.com ([134.134.136.24]:47243 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgBRPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:47:50 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 59E2D68C4E; Tue, 18 Feb 2020 16:47:48 +0100 (CET)
-From:   Torsten Duwe <duwe@lst.de>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime@cerno.tech>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [RESEND][PATCH] drm/bridge: analogix-anx6345: Avoid duplicate -supply suffix
-Message-Id: <20200218154748.59E2D68C4E@verein.lst.de>
-Date:   Tue, 18 Feb 2020 16:47:48 +0100 (CET)
+        id S1726338AbgBRPvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:51:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 07:51:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="382490238"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 18 Feb 2020 07:51:46 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j45A4-0035xT-CI; Tue, 18 Feb 2020 17:51:48 +0200
+Date:   Tue, 18 Feb 2020 17:51:48 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     "fengping.yu" <fengping.yu@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        DTML <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V3 2/2] drivers: input: keyboard: add mtk keypad driver
+Message-ID: <20200218155148.GJ10400@smile.fi.intel.com>
+References: <20200114122738.103344-1-fengping.yu@mediatek.com>
+ <20200114122738.103344-3-fengping.yu@mediatek.com>
+ <CAOwMV_w=Ad8gt1rftFw_EbtaZ2uCz=oWpm_P5YMHLNpok7Q09Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOwMV_w=Ad8gt1rftFw_EbtaZ2uCz=oWpm_P5YMHLNpok7Q09Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_get_regulator() will unconditionally add "-supply" to form the
-property name. This is documented in commit 69511a452e6dc ("map consumer
-regulator based on device tree"). Remove the suffix from the requests.
+On Tue, Feb 18, 2020 at 04:14:24PM +0100, Fabien Parent wrote:
+> On Tue, Jan 14, 2020 at 1:39 PM fengping.yu <fengping.yu@mediatek.com> wrote:
 
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
-https://patchwork.freedesktop.org/patch/343005/
-https://lists.freedesktop.org/archives/dri-devel/2020-January/253535.html
+...
 
---- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-@@ -712,14 +709,14 @@ static int anx6345_i2c_probe(struct i2c_client *client,
- 		DRM_DEBUG("No panel found\n");
- 
- 	/* 1.2V digital core power regulator  */
--	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12-supply");
-+	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
- 	if (IS_ERR(anx6345->dvdd12)) {
- 		DRM_ERROR("dvdd12-supply not found\n");
- 		return PTR_ERR(anx6345->dvdd12);
- 	}
- 
- 	/* 2.5V digital core power regulator  */
--	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
-+	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
- 	if (IS_ERR(anx6345->dvdd25)) {
- 		DRM_ERROR("dvdd25-supply not found\n");
- 		return PTR_ERR(anx6345->dvdd25);
+> > +#define KP_STA                         0x0000
+> > +#define KP_MEM1                                0x0004
+> > +#define KP_MEM2                                0x0008
+> > +#define KP_MEM3                                0x000c
+> > +#define KP_MEM4                                0x0010
+> > +#define KP_MEM5                                0x0014
+> > +#define KP_DEBOUNCE                    0x0018
+> > +#define KP_SEL                         0x0020
+> > +#define KP_EN                          0x0024
+
+...
+
+> > +#define KPD_NUM_MEMS   5
+> > +#define KPD_MEM5_BITS  8
+> > +#define KPD_NUM_KEYS   72      /* 4 * 16 + KPD_MEM5_BITS */
+
+> > +       kpd_get_keymap_state(keypad->base, new_state);
+> 
+> kpd_get_keymap_state(keypad->base + KP_MEM1, new_state);
+
+Why?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
