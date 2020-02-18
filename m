@@ -2,122 +2,182 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68034C3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2842C34040
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49547208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB28A22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBROe2 (ORCPT
+        id S1726751AbgBROfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:34:28 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:60043 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgBROe1 (ORCPT
+        Tue, 18 Feb 2020 09:35:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52954 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgBROfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:34:27 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N17cq-1jRTqs37es-012Zsb; Tue, 18 Feb 2020 15:34:24 +0100
-Received: by mail-qk1-f174.google.com with SMTP id c188so19653118qkg.4;
-        Tue, 18 Feb 2020 06:34:24 -0800 (PST)
-X-Gm-Message-State: APjAAAXU8S9gsbnFNkQ7k1CdHe6e5fnkN0RRBjLBv3sSruTQGuqg8jAB
-        aPXnEnbjH+BiH6jq/jjsu44a9/I0EHfcFlHNEtM=
-X-Google-Smtp-Source: APXvYqzVLXPOr/slJ4h40kCQ7NGmZHgZaZtwK8/kywQm3UCxvrjssvSyFwAP9OUhRcye0POKwGuKwNWR3BSxkzm84ok=
-X-Received: by 2002:a05:620a:909:: with SMTP id v9mr18633385qkv.138.1582036463546;
- Tue, 18 Feb 2020 06:34:23 -0800 (PST)
+        Tue, 18 Feb 2020 09:35:34 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j43xy-0000fF-1W; Tue, 18 Feb 2020 14:35:14 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v3 10/25] namei: may_{o_}create(): handle fsid mappings
+Date:   Tue, 18 Feb 2020 15:33:56 +0100
+Message-Id: <20200218143411.2389182-11-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-12-manivannan.sadhasivam@linaro.org>
- <CAK8P3a1DOta5Uj3dNFWVqwgyPKs0cQsoymXE7svcOZoPiY+YGw@mail.gmail.com>
- <20200217164751.GA7305@Mani-XPS-13-9360> <20200218055142.GA29573@Mani-XPS-13-9360>
-In-Reply-To: <20200218055142.GA29573@Mani-XPS-13-9360>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Feb 2020 15:34:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2gxgsJskSVVGLBRkYTqBbJs20Mwe-x1FExiUeNBN9eUQ@mail.gmail.com>
-Message-ID: <CAK8P3a2gxgsJskSVVGLBRkYTqBbJs20Mwe-x1FExiUeNBN9eUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 11/16] bus: mhi: core: Add support for data transfer
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     gregkh <gregkh@linuxfoundation.org>, smohanad@codeaurora.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        hemantk@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:wHI0ayzfTGVitXbd/Vd26MMT06cd2aWO16fIFCN0Y/yUDOmnBRF
- 5zcgc+uC2DC/LuoEs8q4WeD7Gfdg8Vo2BAMsvmgihyO5h4BqUqsmsN08rBoYwkGLgn5uWe0
- KnvXjOyJ62B+8VHdmzln0tYswe9saWTE2g60i24hLHV08fub/pfdQbYXNo5wtaP8IdqZN0G
- R+mm7UMfzMAIbMrb4mkgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Se8YxxOWKU8=:vaNZusZ/eh0dHzLXNBJni/
- W6VFub7iImA0LrzCNiGhs9nxX0ilhRMpX4A0YvCUwGA7gnU81VL8hf5pPY341QdIT1HnvdyLZ
- sQYWPP4Rg5MigIh7AjCeYCS1P6cdv0xsBNmhkcBQ5euLQm2pndL47BkOSeMAT76nqEAOFAAhg
- 6tRdj5ZBMBDomrTez4g9j4k8/FRTZFp+vDp+/rB7EHgcf6+/E1dovSiUysY51e7ocnVeLUNkt
- VHjXjefgFgmbRkPoI2fLYdElDcVmDuKTG5P1kQwezq+L4Z/OV3ride6gSNyh+yg/wbvpfIn62
- ISrQWJIkqaB9AjhrYIxZGzrzJeVFO69F0sHY5Mn8LjflyE/htRnTErEwqnLG8k3uXV4Tgc2Bq
- 665lxJSbndA24DSc0piN5qLfsh0YqWDrQUWw0If6FDUKQ1O9GcWt/6TlheDyO1YE1+AbjObGS
- annJDdxehHfvA1RDrhoa5BwrhZ/O8cwl6kfvDdouJHLbwkSqJp0RJVoQse7HXimlxfgYMat2R
- 7Fzm1god3LR55LAhUrq0BJkgkMbV9Ms0ZptS/eFXYUxtH3M8WN+gxgmWjG9Q1ihFJAvI+T+0w
- 3UK14UIO4+r8Z31hz+vZ8miJWxN+v3uzqbEWNignspTkYdcP3DbT7QtX6mmOjvI9WXICTgUOa
- oSNO+kVvQgDau1gGTMgZFkA6L8gg35EG0f7grdKn45gywsULQh2R/fj6zasbzQMbnJEBY4sRM
- oSj8F2kqZ7SPi630QV0/7Q44oDFyvHBqDV14NOXF2HewWuhfbagkn0VCnnQZdW8W9uUi6KhFZ
- kVde7xqr19/qzLXpa4fHFrNfXcDWXILsdlXzMWdYu8LZtl3pqk=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 6:51 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> On Mon, Feb 17, 2020 at 10:17:51PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Feb 17, 2020 at 05:13:37PM +0100, Arnd Bergmann wrote:
-> > > On Fri, Jan 31, 2020 at 2:51 PM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > While looking through the driver to see how the DMA gets handled, I came
-> > > across the multitude of mhi_queue_* functions, which seems like a
-> > > layering violation to me, given that they are all implemented by the
-> > > core code as well, and the client driver needs to be aware of
-> > > which one to call. Are you able to lift these out of the common interface
-> > > and make the client driver call these directly, or maybe provide a direct
-> > > interface based on mhi_buf_info to replace these?
-> > >
-> >
-> > It sounds reasonable to me. Let me discuss this internally with Qcom guys to
-> > see if they have any objections.
-> >
->
-> I looked into this in detail and found that the queue_xfer callbacks are tied
-> to the MHI channels. For instance, the callback gets attached to ul_chan (uplink
-> channel) and dl_chan (downlink channel) during controller registration. And
-> when the device driver calls the callback, the MHI stack calls respective queue
-> function for the relevant channel. For instance,
->
-> ```
-> int mhi_queue_transfer(struct mhi_device *mhi_dev,
->                        enum dma_data_direction dir, void *buf, size_t len,
->                        enum mhi_flags mflags)
-> {
->         if (dir == DMA_TO_DEVICE)
->                 return mhi_dev->ul_chan->queue_xfer(mhi_dev, mhi_dev->ul_chan,
->                                                     buf, len, mflags);
->         else
->                 return mhi_dev->dl_chan->queue_xfer(mhi_dev, mhi_dev->dl_chan,
->                                                     buf, len, mflags);
-> }
-> ```
->
-> If we use the direct queue API's this will become hard to handle. So, I'll keep
-> it as it is.
+Switch may_{o_}create() to lookup fsids in the fsid mappings. If no fsid
+mappings are setup the behavior is unchanged, i.e. fsids are looked up in the
+id mappings.
 
-Please have another look, this is exactly the part of the subsystem
-that I think should be replaced. For the caller, there should not be much
-difference between passing ul_chan/dl_chan or
-DMA_TO_DEVICE/DMA_FROM_DEVICE, so that too can be lifted
-to a higher level.
+Filesystems that share a superblock in all user namespaces they are mounted in
+will retain their old semantics even with the introduction of fsid mappings.
 
-      Arnd
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+- Jann Horn <jannh@google.com>:
+  - Ensure that the correct fsid is used when dealing with userns visible
+    filesystems like proc.
+
+/* v3 */
+unchanged
+---
+ fs/namei.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index db6565c99825..c5b014000f13 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -39,6 +39,7 @@
+ #include <linux/bitops.h>
+ #include <linux/init_task.h>
+ #include <linux/uaccess.h>
++#include <linux/fsuidgid.h>
+ 
+ #include "internal.h"
+ #include "mount.h"
+@@ -287,6 +288,13 @@ static int check_acl(struct inode *inode, int mask)
+ 	return -EAGAIN;
+ }
+ 
++static inline kuid_t get_current_fsuid(const struct inode *inode)
++{
++	if (is_userns_visible(inode->i_sb->s_iflags))
++		return current_kfsuid();
++	return current_fsuid();
++}
++
+ /*
+  * This does the basic permission checking
+  */
+@@ -294,7 +302,7 @@ static int acl_permission_check(struct inode *inode, int mask)
+ {
+ 	unsigned int mode = inode->i_mode;
+ 
+-	if (likely(uid_eq(current_fsuid(), inode->i_uid)))
++	if (likely(uid_eq(get_current_fsuid(inode), inode->i_uid)))
+ 		mode >>= 6;
+ 	else {
+ 		if (IS_POSIXACL(inode) && (mode & S_IRWXG)) {
+@@ -980,7 +988,7 @@ static inline int may_follow_link(struct nameidata *nd)
+ 
+ 	/* Allowed if owner and follower match. */
+ 	inode = nd->link_inode;
+-	if (uid_eq(current_cred()->fsuid, inode->i_uid))
++	if (uid_eq(get_current_fsuid(inode), inode->i_uid))
+ 		return 0;
+ 
+ 	/* Allowed if parent directory not sticky and world-writable. */
+@@ -1097,7 +1105,7 @@ static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
+ 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
+ 	    likely(!(dir_mode & S_ISVTX)) ||
+ 	    uid_eq(inode->i_uid, dir_uid) ||
+-	    uid_eq(current_fsuid(), inode->i_uid))
++	    uid_eq(get_current_fsuid(inode), inode->i_uid))
+ 		return 0;
+ 
+ 	if (likely(dir_mode & 0002) ||
+@@ -2832,7 +2840,7 @@ EXPORT_SYMBOL(kern_path_mountpoint);
+ 
+ int __check_sticky(struct inode *dir, struct inode *inode)
+ {
+-	kuid_t fsuid = current_fsuid();
++	kuid_t fsuid = get_current_fsuid(inode);
+ 
+ 	if (uid_eq(inode->i_uid, fsuid))
+ 		return 0;
+@@ -2902,6 +2910,20 @@ static int may_delete(struct inode *dir, struct dentry *victim, bool isdir)
+ 	return 0;
+ }
+ 
++static bool fsid_has_mapping(struct user_namespace *ns, struct super_block *sb)
++{
++	if (is_userns_visible(sb->s_iflags)) {
++		if (!kuid_has_mapping(ns, current_kfsuid()) ||
++		    !kgid_has_mapping(ns, current_kfsgid()))
++			return false;
++	} else if (!kfsuid_has_mapping(ns, current_fsuid()) ||
++		   !kfsgid_has_mapping(ns, current_fsgid())) {
++		return false;
++	}
++
++	return true;
++}
++
+ /*	Check whether we can create an object with dentry child in directory
+  *  dir.
+  *  1. We can't do it if child already exists (open has special treatment for
+@@ -2920,8 +2942,7 @@ static inline int may_create(struct inode *dir, struct dentry *child)
+ 	if (IS_DEADDIR(dir))
+ 		return -ENOENT;
+ 	s_user_ns = dir->i_sb->s_user_ns;
+-	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
+-	    !kgid_has_mapping(s_user_ns, current_fsgid()))
++	if (!fsid_has_mapping(s_user_ns, dir->i_sb))
+ 		return -EOVERFLOW;
+ 	return inode_permission(dir, MAY_WRITE | MAY_EXEC);
+ }
+@@ -3103,8 +3124,7 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
+ 		return error;
+ 
+ 	s_user_ns = dir->dentry->d_sb->s_user_ns;
+-	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
+-	    !kgid_has_mapping(s_user_ns, current_fsgid()))
++	if (!fsid_has_mapping(s_user_ns, dir->dentry->d_sb))
+ 		return -EOVERFLOW;
+ 
+ 	error = inode_permission(dir->dentry->d_inode, MAY_WRITE | MAY_EXEC);
+-- 
+2.25.0
+
