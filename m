@@ -2,132 +2,146 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA918C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B2C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDC22173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="KhPrEaLp";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="KhPrEaLp"
+	by mail.kernel.org (Postfix) with ESMTP id 1B7642173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBRXvA (ORCPT
+        id S1727463AbgBRXvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 18 Feb 2020 18:51:01 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:40390 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgBRXvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 18:51:00 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:35564 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726716AbgBRXu7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:50:59 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CECF68EE367;
-        Tue, 18 Feb 2020 15:50:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582069858;
-        bh=uAmYYHSWRiJ7Jt65f/eBWdihBlK1KFIAAWXVc9m7yt0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KhPrEaLpdk5FFgsYKEuwFY/rqCQlUMnKPGm2py/twY0ZtW2iIguWNWc8WFKNn2a8s
-         5anURAu22KldxiQZCLKx46Rfz58z1zsxEFuyiy1CPDao4Ru/8YS+lSURC0sO/oUk7S
-         yIehdox1DGMePvRq0uPTOqchbx7i1wAEhSQw2u0U=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ilGQnuwfvJXX; Tue, 18 Feb 2020 15:50:58 -0800 (PST)
-Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 73D138EE0D5;
-        Tue, 18 Feb 2020 15:50:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582069858;
-        bh=uAmYYHSWRiJ7Jt65f/eBWdihBlK1KFIAAWXVc9m7yt0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KhPrEaLpdk5FFgsYKEuwFY/rqCQlUMnKPGm2py/twY0ZtW2iIguWNWc8WFKNn2a8s
-         5anURAu22KldxiQZCLKx46Rfz58z1zsxEFuyiy1CPDao4Ru/8YS+lSURC0sO/oUk7S
-         yIehdox1DGMePvRq0uPTOqchbx7i1wAEhSQw2u0U=
-Message-ID: <1582069856.16681.59.camel@HansenPartnership.com>
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        =?ISO-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, smbarber@chromium.org,
-        Seth Forshee <seth.forshee@canonical.com>,
-        linux-security-module@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Date:   Tue, 18 Feb 2020 15:50:56 -0800
-In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
+Received: from utente-Aspire-V3-572G (wireless-130-133.net.uniroma2.it [160.80.133.130])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with SMTP id 01INo6DF032331;
+        Wed, 19 Feb 2020 00:50:11 +0100
+Date:   Wed, 19 Feb 2020 00:50:07 +0100
+From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
+        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
+        paolo.lungaroni@cnit.it
+Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB
+ table
+Message-Id: <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
+In-Reply-To: <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
+References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+        <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
+        <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
 Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-18 at 15:33 +0100, Christian Brauner wrote:
-> In the usual case of running an unprivileged container we will have
-> setup an id mapping, e.g. 0 100000 100000. The on-disk mapping will
-> correspond to this id mapping, i.e. all files which we want to appear
-> as 0:0 inside the user namespace will be chowned to 100000:100000 on
-> the host. This works, because whenever the kernel needs to do a
-> filesystem access it will lookup the corresponding uid and gid in the
-> idmapping tables of the container. Now think about the case where we
-> want to have an id mapping of 0 100000 100000 but an on-disk mapping
-> of 0 300000 100000 which is needed to e.g. share a single on-disk
-> mapping with multiple containers that all have different id mappings.
-> This will be problematic. Whenever a filesystem access is requested,
-> the kernel will now try to lookup a mapping for 300000 in the id
-> mapping tables of the user namespace but since there is none the
-> files will appear to be owned by the overflow id, i.e. usually
-> 65534:65534 or nobody:nogroup.
+Hi David, 
+Thanks for the review and sorry for the late reply 
+
+Indeed both call fib_table_lookup and rt_dst_alloc are exported for modules. 
+However, several functions defined in route.c are not exported:
+- the two functions rt_cache_valid and rt_cache_route required to handle the routing cache
+- find_exception, required to support fib exceptions.
+This would require duplicating a lot of the IPv4 routing code. 
+The reason behind this change is really to reuse the IPv4 routing code instead of doing a duplication. 
+
+For the fi member of the struct fib_result, we will fix it by initializing before "if (!tbl_known)"
+
+Thanks, 
+Carmine 
+
+
+On Sat, 15 Feb 2020 11:06:43 -0700
+David Ahern <dsahern@gmail.com> wrote:
+
+> On 2/12/20 6:09 PM, Carmine Scarpitta wrote:
+> > In IPv4, the routing subsystem is invoked by calling ip_route_input_rcu()
+> > which performs the recognition logic and calls ip_route_input_slow().
+> > 
+> > ip_route_input_slow() initialises both "fi" and "table" members
+> > of the fib_result structure to null before calling fib_lookup().
+> > 
+> > fib_lookup() performs fib lookup in the routing table configured
+> > by the policy routing rules.
+> > 
+> > In this patch, we allow invoking the ip4 routing subsystem
+> > with known routing table. This is useful for use-cases implementing
+> > a separate routing table per tenant.
+> > 
+> > The patch introduces a new flag named "tbl_known" to the definition of
+> > ip_route_input_rcu() and ip_route_input_slow().
+> > 
+> > When the flag is set, ip_route_input_slow() will call fib_table_lookup()
+> > using the defined table instead of using fib_lookup().
 > 
-> With fsid mappings we can solve this by writing an id mapping of 0
-> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
-> access the kernel will now lookup the mapping for 300000 in the fsid
-> mapping tables of the user namespace. And since such a mapping
-> exists, the corresponding files will have correct ownership.
+> I do not like this change. If you want a specific table lookup, then why
+> just call fib_table_lookup directly? Both it and rt_dst_alloc are
+> exported for modules. Your next patch already does a fib table lookup.
+> 
+> 
+> > 
+> > Signed-off-by: Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+> > Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
+> > Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+> > Acked-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
+> > ---
+> >  include/net/route.h |  2 +-
+> >  net/ipv4/route.c    | 22 ++++++++++++++--------
+> >  2 files changed, 15 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/include/net/route.h b/include/net/route.h
+> > index a9c60fc68e36..4ff977bd7029 100644
+> > --- a/include/net/route.h
+> > +++ b/include/net/route.h
+> > @@ -183,7 +183,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 dst, __be32 src,
+> >  			 u8 tos, struct net_device *devin);
+> >  int ip_route_input_rcu(struct sk_buff *skb, __be32 dst, __be32 src,
+> >  		       u8 tos, struct net_device *devin,
+> > -		       struct fib_result *res);
+> > +		       struct fib_result *res, bool tbl_known);
+> >  
+> >  int ip_route_use_hint(struct sk_buff *skb, __be32 dst, __be32 src,
+> >  		      u8 tos, struct net_device *devin,
+> > diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> > index d5c57b3f77d5..39cec9883d6f 100644
+> > --- a/net/ipv4/route.c
+> > +++ b/net/ipv4/route.c
+> > @@ -2077,7 +2077,7 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
+> >  
+> >  static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
+> >  			       u8 tos, struct net_device *dev,
+> > -			       struct fib_result *res)
+> > +			       struct fib_result *res, bool tbl_known)
+> >  {
+> >  	struct in_device *in_dev = __in_dev_get_rcu(dev);
+> >  	struct flow_keys *flkeys = NULL, _flkeys;
+> > @@ -2109,8 +2109,6 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
+> >  	if (ipv4_is_multicast(saddr) || ipv4_is_lbcast(saddr))
+> >  		goto martian_source;
+> >  
+> > -	res->fi = NULL;
+> > -	res->table = NULL;
+> >  	if (ipv4_is_lbcast(daddr) || (saddr == 0 && daddr == 0))
+> >  		goto brd_input;
+> 
+> I believe this also introduces a potential bug. You remove the fi
+> initialization yet do not cover the goto case.
+> 
+> 
 
-So I did compile this up in order to run the shiftfs tests over it to
-see how it coped with the various corner cases.  However, what I find
-is it simply fails the fsid reverse mapping in the setup.  Trying to
-use a simple uid of 0 100000 1000 and a fsid of 100000 0 1000 fails the
-entry setuid(0) call because of this code:
 
-long __sys_setuid(uid_t uid)
-{
-	struct user_namespace *ns =
-current_user_ns();
-	const struct cred *old;
-	struct cred *new;
-	int
-retval;
-	kuid_t kuid;
-	kuid_t kfsuid;
-
-	kuid = make_kuid(ns, uid);
-	if
-(!uid_valid(kuid))
-		return -EINVAL;
-
-	kfsuid = make_kfsuid(ns, uid);
-	if
-(!uid_valid(kfsuid))
-		return -EINVAL;
-
-which means you can't have a fsid mapping that doesn't have the same
-domain as the uid mapping, meaning a reverse mapping isn't possible
-because the range and domain have to be inverse and disjoint.
-
-James
-
+-- 
+Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
