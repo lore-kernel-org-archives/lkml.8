@@ -2,254 +2,131 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79961C3403A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD777C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494F3206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B25D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:10:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="K7NSLicl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AoJrD6o2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgBRMEv (ORCPT
+        id S1726415AbgBRMKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:04:51 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:11502 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgBRMEu (ORCPT
+        Tue, 18 Feb 2020 07:10:44 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35094 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgBRMKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:04:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582027485;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=t6s1JpY0LmHtLoGSSFIvNKDRe/OMQyYcfkfK21lWzo8=;
-        b=K7NSLiclt2FxAmn6ZriCNOjn7Hg+h331JE+5KX8P4JTZ/iCbsWI8x3vZdVgGyk40yu
-        rXTd5GZ97zwF5u9JOb96+D99itEdCh+ePtrJNIvjc2go4tFUCFU4lOCSJdAUP3+Ufbd3
-        fL08vOOXt2GjUMIZd/ieGVjhZwZ4pVfVOlV/BMZIZYr22EPolYnQzRQRzIig+Z5D8HT/
-        tRgBa4YNFUuKTlT+y9S3W4BruIomzFTin9cl1THci7ZvSBIpP+x3jm/Vk43Df81dizoK
-        HxmBeKBnpBJfEYKsmHVLqX/yJuNWeYFQVdHuKn0vWTWQ/OMbu4PdILgx2Oyw2FegNW7Q
-        9wUg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8b7Ic/NaIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id a01fe9w1IC4eieC
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 18 Feb 2020 13:04:40 +0100 (CET)
-Date:   Tue, 18 Feb 2020 13:04:35 +0100
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
-        bjorn.andersson@linaro.org, joro@8bytes.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        j.neuschaefer@gmx.net, iommu@lists.linux-foundation.org,
-        agross@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH v2] iommu/qcom: fix NULL pointer dereference during probe
- deferral
-Message-ID: <20200218120435.GA152723@gerhold.net>
-References: <20200104002024.37335-1-masneyb@onstation.org>
- <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
+        Tue, 18 Feb 2020 07:10:44 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01ICAeaH043183;
+        Tue, 18 Feb 2020 06:10:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582027840;
+        bh=hghT9iQam6tM0rXGoSq9eUjSA8Ysq29n/W7kwiQbjmY=;
+        h=From:To:CC:Subject:Date;
+        b=AoJrD6o2LucjeNGnQlvONml5K1tkGi3KIKTC9ZXk16t08AwUVaCumVOCkdN+Igs2E
+         c4eylGuVt3rWl3LxxG3x2fZLzo4VswZE+F6fGn4BiA0dUJ3EK53GMnWXbpRArmwk7f
+         qK65hxRGn48c3JDwrE4J2X+LiJNaQ80/u08FinJQ=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01ICAe2N037620
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 06:10:40 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 06:10:40 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 06:10:40 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01ICAbu4001526;
+        Tue, 18 Feb 2020 06:10:38 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>, youling257 <youling257@gmail.com>
+Subject: [PATCH] phy: core: Fix phy_get() to not return error on link creation failure
+Date:   Tue, 18 Feb 2020 17:44:18 +0530
+Message-ID: <20200218121418.6292-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+commit 987351e1ea77 ("phy: core: Add consumer device link support")
+added device link support between PHY consumer and PHY provider.
+However certain peripherals (DWC3 ULPI) have cyclic dependency
+between the PHY provider and PHY consumer causing the device link
+creation to fail.
 
-On Mon, Jan 06, 2020 at 01:26:58PM +0000, Robin Murphy wrote:
-> On 04/01/2020 12:20 am, Brian Masney wrote:
-> > When attempting to load the qcom-iommu driver, and an -EPROBE_DEFER
-> > error occurs, the following attempted NULL pointer deference occurs:
-> > 
-> >      Unable to handle kernel NULL pointer dereference at virtual address 00000014
-> >      pgd = (ptrval)
-> >      [00000014] *pgd=00000000
-> >      Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-> >      Modules linked in:
-> >      CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191220-00010-gfb6b8e8bced6-dirty #3
-> >      Hardware name: Generic DT based system
-> >      PC is at qcom_iommu_domain_free (include/linux/pm_runtime.h:226
-> >        drivers/iommu/qcom_iommu.c:358)
-> >      LR is at release_iommu_mapping (arch/arm/mm/dma-mapping.c:2141)
-> >      pc : lr : psr: 60000013
-> >      sp : ee89dc48  ip : 00000000  fp : c13a6684
-> >      r10: c13a661c  r9 : 00000000  r8 : c13a1240
-> >      r7 : fffffdfb  r6 : 00000000  r5 : edc32f00  r4 : edc32f1c
-> >      r3 : 00000000  r2 : 00000001  r1 : 00000004  r0 : edc32f1c
-> >      Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> >      Control: 10c5787d  Table: 0020406a  DAC: 00000051
-> >      Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> >      Stack: (0xee89dc48 to 0xee89e000)
-> >      dc40:                   edc3d010 edc37020 00000000 c0316af8 edc3d010 edc37000
-> >      dc60: 00000000 c0319684 c14341ac edc3d010 00000000 c083bd88 edc3d010 c13a1240
-> >      dc80: c083c2e8 c13a6684 c13a661c c13a6508 c13a661c c083c134 c13a1240 ee89dcec
-> >      dca0: edc3d010 00000000 ee89dcec c083c2e8 c13a6684 c13a661c c13a6508 c13a661c
-> >      dcc0: c13a6684 c083a31c c13a6684 ee82a86c edc327b8 c1304e48 edc3d010 00000001
-> >      dce0: edc3d054 c083bc08 ee82a880 edc3d010 00000001 c1304e48 edc3d010 edc3d010
-> >      dd00: c13a69e8 c083b010 edc3d010 00000000 eea1fc10 c0837aac 00000200 00000000
-> >      dd20: 00000000 00000000 00000000 c1304e48 00000000 edc3d000 eea1fc10 00000000
-> >      dd40: 00000000 eeff42f4 00000000 00000001 00000000 c09e96e0 eeff42a4 00000000
-> >      dd60: 00000000 00000000 eea1fc10 c09e98bc 00000001 eea1fc10 00000000 eea1fc10
-> >      dd80: edc32c00 c1391580 eea1fc10 00000001 eea1fc10 c0850f90 c2706dec c14368c0
-> >      dda0: 60000013 c1304e48 00000106 eeff42a4 eeff3fa0 00000000 00000000 eea1fc10
-> >      ddc0: 00000001 c1248900 00000106 c09e9bd0 00000001 c0c2ee64 eea1fc00 eea1fc10
-> >      dde0: eea1fc10 00000000 c13a5b70 00000000 c1248900 c081496c c1023d84 00000000
-> >      de00: eeff3fa0 c2706e48 c2706e48 c1304e48 00000001 00000000 eea1fc10 c13a5b70
-> >      de20: 00000000 c13a5b70 00000000 c1248900 00000106 c083dfb8 c14341ac eea1fc10
-> >      de40: 00000000 c083be58 eea1fc10 c13a5b70 c13a5b70 c13a69e8 c12003ec c123a854
-> >      de60: c1248900 c083c134 c1248900 c09e6f3c c0d8d514 eea1fc10 00000000 c13a5b70
-> >      de80: c13a69e8 c12003ec c123a854 c1248900 00000106 c083c3e0 00000000 c13a5b70
-> >      dea0: eea1fc10 c083c440 00000000 c13a5b70 c083c3e8 c083a23c 00000106 ee82a858
-> >      dec0: eea052b4 c1304e48 c13a5b70 edc32b80 00000000 c083b270 c1043084 c121d1d8
-> >      dee0: ffffe000 c13a5b70 c121d1d8 ffffe000 00000000 c083cfcc c13ece60 c121d1d8
-> >      df00: ffffe000 c0302f90 00000106 c034407c 00000000 c10e3a00 c1044dd0 c12003ec
-> >      df20: 00000000 00000006 00000006 c0fbecac c0fada88 c0fada3c 00000000 efffcbf8
-> >      df40: efffcc0d c1304e48 00000000 00000006 c13f9500 c1304e48 c123a830 00000007
-> >      df60: c13f9500 c13f9500 c123a834 c1200f64 00000006 00000006 00000000 c12003ec
-> >      df80: c0c28194 00000000 c0c28194 00000000 00000000 00000000 00000000 00000000
-> >      dfa0: 00000000 c0c2819c 00000000 c03010e8 00000000 00000000 00000000 00000000
-> >      dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> >      dfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> >      (qcom_iommu_domain_free) from release_iommu_mapping
-> >        (arch/arm/mm/dma-mapping.c:2141)
-> >      (release_iommu_mapping) from arch_teardown_dma_ops
-> >        (include/linux/dma-mapping.h:271 arch/arm/mm/dma-mapping.c:2335)
-> >      (arch_teardown_dma_ops) from really_probe (drivers/base/dd.c:607)
-> >      (really_probe) from driver_probe_device (drivers/base/dd.c:721)
-> >      (driver_probe_device) from bus_for_each_drv (drivers/base/bus.c:431)
-> >      (bus_for_each_drv) from __device_attach (drivers/base/dd.c:896)
-> >      (__device_attach) from bus_probe_device (drivers/base/bus.c:491)
-> >      (bus_probe_device) from device_add (drivers/base/core.c:2488)
-> >      (device_add) from of_platform_device_create_pdata
-> >        (drivers/of/platform.c:189)
-> >      (of_platform_device_create_pdata) from of_platform_bus_create
-> >        (drivers/of/platform.c:393 drivers/of/platform.c:346)
-> >      (of_platform_bus_create) from of_platform_populate
-> >        (drivers/of/platform.c:486)
-> >      (of_platform_populate) from msm_pdev_probe
-> >        (drivers/gpu/drm/msm/msm_drv.c:1197 drivers/gpu/drm/msm/msm_drv.c:1281)
-> >      (msm_pdev_probe) from platform_drv_probe (drivers/base/platform.c:726)
-> >      (platform_drv_probe) from really_probe (drivers/base/dd.c:553)
-> >      (really_probe) from driver_probe_device (drivers/base/dd.c:721)
-> >      (driver_probe_device) from device_driver_attach (drivers/base/dd.c:995)
-> >      (device_driver_attach) from __driver_attach (drivers/base/dd.c:1074)
-> >      (__driver_attach) from bus_for_each_dev (drivers/base/bus.c:304)
-> >      (bus_for_each_dev) from bus_add_driver (drivers/base/bus.c:623)
-> >      (bus_add_driver) from driver_register (drivers/base/driver.c:172)
-> >      (driver_register) from do_one_initcall (include/linux/compiler.h:232
-> >        include/linux/jump_label.h:254 include/linux/jump_label.h:264
-> >        include/trace/events/initcall.h:48 init/main.c:941)
-> >      (do_one_initcall) from kernel_init_freeable (init/main.c:1013
-> >        init/main.c:1022 init/main.c:1039 init/main.c:1231)
-> >      (kernel_init_freeable) from kernel_init (init/main.c:1127)
-> >      (kernel_init) from ret_from_fork (arch/arm/kernel/entry-common.S:156)
-> > 
-> > qcom_iommu_domain_free() has a WARN_ON() that checks to see if the value
-> > of iommu is NULL and returns early, so iommu->dev will always be NULL.
-> > qcom_iommu_detach_dev() is called prior to freeing the IOMMU domain and
-> > is what sets the iommu member to NULL.
-> > 
-> > Let's fix this by adding the 'struct dev' pointer to the
-> > qcom_iommu_domain struct.
-> 
-> Actually, it looks like the qcom_domain->iommu logic is fundamentally broken
-> anyway - this sequence of calls is perfectly valid, but AFAICS will make
-> qcom-iommu go horribly wrong:
-> 
-> 	dom = iommu_domain_alloc(...);
-> 	iommu_attach_device(dom, dev1);
-> 	iommu_attach_device(dom, dev2);
-> 	iommu_detach_device(dom, dev2);
-> 	// dev1 still attached but dom->iommu now NULL
-> 
-> Furthermore, even this should technically be valid:
-> 
-> 	dom = iommu_domain_alloc(...);
-> 	iommu_attach_device(dom, dev);
-> 	iommu_map(dom, addr, ...);
-> 	iommu_detach_device(dom, dev);
-> 	iommu_unmap(dom, addr, ...); // oops, dereferences NULL again
-> 
-> Does something like the diff below work?
-> 
-> Robin.
+Instead of erroring out on failure to create device link, only add a
+debug print to indicate device link creation failed to get USB
+working again in multiple platforms.
 
-Are you going to send a patch for the diff below?
-AFAICT this problem still exists in 5.6-rc2.
+Fixes: 987351e1ea77 ("phy: core: Add consumer device link support")
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-core.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-Your patch also seems to fix a warning during probe deferral on arm64
-that has been around for quite a while. (At least for me...)
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index cd5a6c95dbdc..a27b8d578d7f 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -688,11 +688,9 @@ struct phy *phy_get(struct device *dev, const char *string)
+ 	get_device(&phy->dev);
+ 
+ 	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+-	if (!link) {
+-		dev_err(dev, "failed to create device link to %s\n",
++	if (!link)
++		dev_dbg(dev, "failed to create device link to %s\n",
+ 			dev_name(phy->dev.parent));
+-		return ERR_PTR(-EINVAL);
+-	}
+ 
+ 	return phy;
+ }
+@@ -803,11 +801,9 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+ 	}
+ 
+ 	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+-	if (!link) {
+-		dev_err(dev, "failed to create device link to %s\n",
++	if (!link)
++		dev_dbg(dev, "failed to create device link to %s\n",
+ 			dev_name(phy->dev.parent));
+-		return ERR_PTR(-EINVAL);
+-	}
+ 
+ 	return phy;
+ }
+@@ -852,11 +848,9 @@ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
+ 	devres_add(dev, ptr);
+ 
+ 	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+-	if (!link) {
+-		dev_err(dev, "failed to create device link to %s\n",
++	if (!link)
++		dev_dbg(dev, "failed to create device link to %s\n",
+ 			dev_name(phy->dev.parent));
+-		return ERR_PTR(-EINVAL);
+-	}
+ 
+ 	return phy;
+ }
+-- 
+2.17.1
 
-(See https://lore.kernel.org/linux-iommu/CA+G9fYtScOpkLvx=__gP903uJ2v87RwZgkAuL6RpF9_DTDs9Zw@mail.gmail.com/)
-
-Thanks,
-Stephan
-
-> 
-> ----->8-----
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index c31e7bc4ccbe..af6ee4bf1712 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -345,21 +345,20 @@ static void qcom_iommu_domain_free(struct iommu_domain
-> *domain)
->  {
->  	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
-> 
-> -	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
-> -		return;
-> -
->  	iommu_put_dma_cookie(domain);
-> 
-> -	/* NOTE: unmap can be called after client device is powered off,
-> -	 * for example, with GPUs or anything involving dma-buf.  So we
-> -	 * cannot rely on the device_link.  Make sure the IOMMU is on to
-> -	 * avoid unclocked accesses in the TLB inv path:
-> -	 */
-> -	pm_runtime_get_sync(qcom_domain->iommu->dev);
-> +	if (qcom_domain->iommu) {
-> +		/* NOTE: unmap can be called after client device is powered off,
-> +		 * for example, with GPUs or anything involving dma-buf.  So we
-> +		 * cannot rely on the device_link.  Make sure the IOMMU is on to
-> +		 * avoid unclocked accesses in the TLB inv path:
-> +		 */
-> +		pm_runtime_get_sync(qcom_domain->iommu->dev);
-> 
-> -	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
-> +		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
-> 
-> -	pm_runtime_put_sync(qcom_domain->iommu->dev);
-> +		pm_runtime_put_sync(qcom_domain->iommu->dev);
-> +	}
-> 
->  	kfree(qcom_domain);
->  }
-> @@ -405,7 +404,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain
-> *domain, struct device *de
->  	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
->  	unsigned i;
-> 
-> -	if (!qcom_domain->iommu)
-> +	if (WARN_ON(!qcom_domain->iommu))
->  		return;
-> 
->  	pm_runtime_get_sync(qcom_iommu->dev);
-> @@ -418,8 +417,6 @@ static void qcom_iommu_detach_dev(struct iommu_domain
-> *domain, struct device *de
->  		ctx->domain = NULL;
->  	}
->  	pm_runtime_put_sync(qcom_iommu->dev);
-> -
-> -	qcom_domain->iommu = NULL;
->  }
-> 
->  static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
