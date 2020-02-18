@@ -2,209 +2,114 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D5CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB84C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4CA21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70D021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBAV8LV/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahXKmudh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgBRPd2 (ORCPT
+        id S1726663AbgBRPd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:33:28 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40922 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgBRPd2 (ORCPT
+        Tue, 18 Feb 2020 10:33:56 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36152 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726373AbgBRPd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:33:28 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n18so23443077ljo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:33:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BzEWLvcFSaCbrCpz0nr75OD3J67QR5Liqg2BI7LH4tY=;
-        b=PBAV8LV/+MdR3jrCwWHVfYbS/SB2ByiNPA16fHDsrbyw3cRsXc5Hf99obK7C9zU/dB
-         rVUQSZNkW8CuIA/99O93wiJcksqASUzhqey7F9IxziUsFZv0hPlTkRYol/qQhekY6O7P
-         V1JFlYdowHWxMAb4es4KB6xPczkz7w4IDZW6pbnKTzAoFWnLnuMvGRoOKypLvWFaNCXz
-         9FzCcnxoHIVg70pV3mgxTQZh99LzdgEyZEaGofRMVtslQtttfNr4T9i/FBLXhvvidjRR
-         zdx9uYzX4wg+HJyU/z6TAd+jTR/YaBo60wFbJBlABYveurhV6GDXVndIJm8F5v403Xjg
-         sliA==
+        Tue, 18 Feb 2020 10:33:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582040034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wcuVY7kYjAiaGruZIaqVS5hTIYdIF7Sz5fz0+avlUjQ=;
+        b=ahXKmudhq1e/U6+KQ6jgo3dlnGP0+Lo6G/84Dp84SiGEXvs/XqMrqPClRejyYLI9aiUceV
+        6T0HODyICvwPtv/0Yu+fEIM5IlLmKTzW3bIdOB/qyIZck0ceZIh9L2gmVHWOwOdV6ZjMFR
+        ELv/0EiBO9vT8Qd8QK5lMbtaQuhm5F4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-y-teKex6NDCVJXTomytO6Q-1; Tue, 18 Feb 2020 10:33:48 -0500
+X-MC-Unique: y-teKex6NDCVJXTomytO6Q-1
+Received: by mail-wr1-f72.google.com with SMTP id t3so10939986wrm.23
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:33:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BzEWLvcFSaCbrCpz0nr75OD3J67QR5Liqg2BI7LH4tY=;
-        b=tfTp7OUip7jcFM3CwQ4I93mf0SoHiyZvlZiBJaYQoXUHN2wicECfgr2P1MzE2XTviq
-         vtfLoYHQk8B1DFqDUcXPerPBpPTCUuo3iGID8/juYIf7U4xTV0MgbTdd9uqGKDCOyeJ4
-         Tz4xBLLSJBTj0h4FJfQPtCvcAl1gY4MKbMEh6RtdP/zRdKWkqQ6smO0+8YimaQHhEgnf
-         qoLkuloSGzz2EHI3qKsLcJutI+14f31V3VG75RKGY2zkU22t0yVTbVc89PTQ2SAfH7Zr
-         lXRXbMq4cA++yIrp2gTCjgyOFpDQKqRDsarLIqnlMsRL664hgfBEU+a0VVZ+PrhEmuC7
-         E7Aw==
-X-Gm-Message-State: APjAAAWztYWr0gyldRXCLIVazxcCPbhGc9a/PBlAiqQfQtvBsrKjBF+4
-        xogzv52g1Z9oz+UYDVFbjqXIidYVvxyH2qlX5HY4TQ==
-X-Google-Smtp-Source: APXvYqy5mGwt1tHS3LUG2Y66FDBL4M5k2UdAHgSa9WCBEB7zOUneiygpeigrNgtVc8oQVKHIliRmlYwvC30EqwEi7hQ=
-X-Received: by 2002:a2e:808a:: with SMTP id i10mr13127195ljg.151.1582040005674;
- Tue, 18 Feb 2020 07:33:25 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wcuVY7kYjAiaGruZIaqVS5hTIYdIF7Sz5fz0+avlUjQ=;
+        b=VQ9lKO9waCR1m+OpDRzWYai5uLfAeCV0w2erhn/nLsg4sO+0MUfjVVlz1N8TxJNsSc
+         UjCuR6GkDmY4TIWQ7uSmJkqDCPuCFdfqYufxSenH8yvLd7Cb4mhQ6QFDI33URiiHSC5B
+         iwWpPpTuRd8vfxVxtsQPhzzUT32uOVfQY1oNj6qVX8t5rRJ5CjUNaCXqcx0H2XcgPePu
+         j9PCmrkMmjnZKu+bZsnssFKW+xFSn7keI7bAaEa798O4aCtn/AG8NbS+E0bab5RGL8JK
+         xI4pKJjGG8fNn6CQLVJd30fXxhtBA+aBPWvTcsRRGEtwwA660ITpcWmAeQAyFdmD4iZa
+         Esuw==
+X-Gm-Message-State: APjAAAXp9G5uKVX1kz6i76LphnKc7ElNNeU+6DyPGo4yNkVqzcGAktzh
+        lUsMpG8jxuIG8/9uH0fSb2JeF7R7cSe1NpKlnfpVC4qNxlwqkqSs3SxpI3av8GNnAk3FDT/UZ/o
+        O8oI0tlVXHT/jI2RFle9XjkX/
+X-Received: by 2002:adf:dc8d:: with SMTP id r13mr30717632wrj.357.1582040027401;
+        Tue, 18 Feb 2020 07:33:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw9u1DnkOPCdRW6cVeA5bmWDKs4XoNSD+yppiDGAQJFcUF0rXlT8L1PPZOthPVch2bV7Rhidg==
+X-Received: by 2002:adf:dc8d:: with SMTP id r13mr30717607wrj.357.1582040027200;
+        Tue, 18 Feb 2020 07:33:47 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
+        by smtp.gmail.com with ESMTPSA id c15sm6405828wrt.1.2020.02.18.07.33.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 07:33:46 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] KVM: X86: Less kvmclock sync induced vmexits after
+ VM boots
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1581988630-19182-1-git-send-email-wanpengli@tencent.com>
+ <87r1ys7xpk.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e6caee13-f8f7-596c-fb37-6120e7c25f99@redhat.com>
+Date:   Tue, 18 Feb 2020 16:33:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-3-vincent.guittot@linaro.org> <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
-In-Reply-To: <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 18 Feb 2020 16:33:14 +0100
-Message-ID: <CAKfTPtB04MdaU+C4uSS=qU8O69UFjNsOJw5Ck17WBhxVNHETmg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87r1ys7xpk.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 15:54, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 2/14/20 3:27 PM, Vincent Guittot wrote:
-> > @@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
-> >              group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
-> >  }
-> >
-> > -static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
-> > -
-> > -static unsigned long cpu_runnable_load(struct rq *rq)
-> > -{
-> > -     return cfs_rq_runnable_load_avg(&rq->cfs);
-> > -}
-> > +/*
-> > + * 'numa_type' describes the node at the moment of load balancing.
-> > + */
-> > +enum numa_type {
-> > +     /* The node has spare capacity that can be used to run more tasks.  */
-> > +     node_has_spare = 0,
-> > +     /*
-> > +      * The node is fully used and the tasks don't compete for more CPU
-> > +      * cycles. Nevertheless, some tasks might wait before running.
-> > +      */
-> > +     node_fully_busy,
-> > +     /*
-> > +      * The node is overloaded and can't provide expected CPU cycles to all
-> > +      * tasks.
-> > +      */
-> > +     node_overloaded
-> > +};
->
-> Could we reuse group_type instead? The definitions are the same modulo
-> s/group/node/.
+On 18/02/20 15:54, Vitaly Kuznetsov wrote:
+>> -	schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+>> -					KVMCLOCK_SYNC_PERIOD);
+>> +	if (vcpu->vcpu_idx == 0)
+>> +		schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+>> +						KVMCLOCK_SYNC_PERIOD);
+>>  }
+>>  
+>>  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> Forgive me my ignorance, I was under the impression
+> schedule_delayed_work() doesn't do anything if the work is already
+> queued (see queue_delayed_work_on()) and we seem to be scheduling the
+> same work (&kvm->arch.kvmclock_sync_work) which is per-kvm (not
+> per-vcpu).
 
-Also, imbalance might have but misfit and asym have no meaning at NUMA level
+No, it executes after 5 minutes.  I agree that the patch shouldn't be
+really necessary, though you do save on cacheline bouncing due to
+test_and_set_bit.
 
-For now I prefer to keep them separate to ease code readability. Also
-more changes will come on top of this for NUMA balancing which could
-also ends up with numa dedicated states
+Paolo
 
->
-> >
-> >  /* Cached statistics for all CPUs within a node */
-> >  struct numa_stats {
-> >       unsigned long load;
-> > -
-> > +     unsigned long util;
-> >       /* Total compute capacity of CPUs on a node */
-> >       unsigned long compute_capacity;
-> > +     unsigned int nr_running;
-> > +     unsigned int weight;
-> > +     enum numa_type node_type;
-> >  };
-> >
-> > -/*
-> > - * XXX borrowed from update_sg_lb_stats
-> > - */
-> > -static void update_numa_stats(struct numa_stats *ns, int nid)
-> > -{
-> > -     int cpu;
-> > -
-> > -     memset(ns, 0, sizeof(*ns));
-> > -     for_each_cpu(cpu, cpumask_of_node(nid)) {
-> > -             struct rq *rq = cpu_rq(cpu);
-> > -
-> > -             ns->load += cpu_runnable_load(rq);
-> > -             ns->compute_capacity += capacity_of(cpu);
-> > -     }
-> > -
-> > -}
-> > -
-> >  struct task_numa_env {
-> >       struct task_struct *p;
-> >
-> > @@ -1521,6 +1518,47 @@ struct task_numa_env {
-> >       int best_cpu;
-> >  };
-> >
-> > +static unsigned long cpu_load(struct rq *rq);
-> > +static unsigned long cpu_util(int cpu);
-> > +
-> > +static inline enum
-> > +numa_type numa_classify(unsigned int imbalance_pct,
-> > +                      struct numa_stats *ns)
-> > +{
-> > +     if ((ns->nr_running > ns->weight) &&
-> > +         ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
-> > +             return node_overloaded;
-> > +
-> > +     if ((ns->nr_running < ns->weight) ||
-> > +         ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
-> > +             return node_has_spare;
-> > +
-> > +     return node_fully_busy;
-> > +}
-> > +
->
-> As Mel pointed out, this is group_is_overloaded() and group_has_capacity().
-> @Mel, you mentioned having a common helper, do you have that laying around?
-> I haven't seen it in your reconciliation series.
->
-> What I'm naively thinking here is that we could have either move the whole
-> thing to just sg_lb_stats (AFAICT the fields of numa_stats are a subset of it),
-> or if we really care about the stack we could tweak the ordering to ensure
-> we can cast one into the other (not too enticed by that one though).
->
-> > +/*
-> > + * XXX borrowed from update_sg_lb_stats
-> > + */
-> > +static void update_numa_stats(struct task_numa_env *env,
-> > +                           struct numa_stats *ns, int nid)
-> > +{
-> > +     int cpu;
-> > +
-> > +     memset(ns, 0, sizeof(*ns));
-> > +     for_each_cpu(cpu, cpumask_of_node(nid)) {
-> > +             struct rq *rq = cpu_rq(cpu);
-> > +
-> > +             ns->load += cpu_load(rq);
-> > +             ns->util += cpu_util(cpu);
-> > +             ns->nr_running += rq->cfs.h_nr_running;
-> > +             ns->compute_capacity += capacity_of(cpu);
-> > +     }
-> > +
-> > +     ns->weight = cpumask_weight(cpumask_of_node(nid));
-> > +
-> > +     ns->node_type = numa_classify(env->imbalance_pct, ns);
-> > +}
-> > +
-> >  static void task_numa_assign(struct task_numa_env *env,
-> >                            struct task_struct *p, long imp)
-> >  {
+> Do we actually happen to finish executing it before next vCPU
+> is created or why does the storm you describe happens?
+
