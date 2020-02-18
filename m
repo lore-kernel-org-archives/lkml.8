@@ -2,183 +2,100 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EBC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E921FC3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7823921D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C284521D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSuwaLtH"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Ed7nv27M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgBRO53 (ORCPT
+        id S1726735AbgBRO7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:57:29 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34380 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgBRO52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:57:28 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c20so19755512qkm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:57:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LOLKrSIHs5n1Ao8qBTTrL6G5TDCm7BgBfgPgBCGeuVQ=;
-        b=oSuwaLtHZ9tYkLJx/zDk3PMwMqEuVX8ycYIhJaN+AieL6BxKaLAIdHoJb7XT9m0XMt
-         pP4B7wd4VCGURTcNymwsAuVEm3TDtK7ACKhrFHPBACUHEsnuLQODDrIVKPWHiY8PoeF6
-         RFgqDh8KrpeKwjkypegLQIrHCTdPlHd3oYCieww8osTI4waNOpAzDmBf05qWw6MstWiR
-         gOOWdavRldx4f0Lb9ssxXxXHtAjb2/khCREiL7KivohvZECX+908fih+btO2Bfh4G63o
-         FTV0gbg8fCv1Mh8VIVlf/qFbTL74g9K0a69oBk3Q35cbAO4f6xeUuVELMmREVNgFCZiL
-         qMgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LOLKrSIHs5n1Ao8qBTTrL6G5TDCm7BgBfgPgBCGeuVQ=;
-        b=YVJsYIxHRwVQFDGl2fprA83OofYwUHtgIIPkAxeD6QeHFEpCTVPCeJeOPDU7ioJCmV
-         i7eK2WfylfcjMyqIMzx77uY1YOQdzGKodFKuiCV9/QKH9BB4huRrmhoIiCjBTx3Cf5xk
-         1qDj/xKaA0lY+suvnofhyRtmhvgDK6zm1r2yX66z3Janj+TmtCd8NMSxklNIaQZeMQvI
-         5o/oQGll11Id7BLsOworj1DoXLQZrRaoy5cZMY0++s81u8UsYfNhmIknsBu3EbqNCGDZ
-         a/924WrHXIR06/kbnwozocake2sRyVk54V5KQtGt4ah9VDq9RAx/fHtV+MbW21rZ/iX7
-         WTww==
-X-Gm-Message-State: APjAAAUUllbMLXDpwsB81ncK/9VQfiQL/pRuml5TUKaVuW0ssro0qyJb
-        gA3cbnB5QdOlBJU9BXt9NkKt2w==
-X-Google-Smtp-Source: APXvYqx4fjTNmXoxSKjOMlr9yMPxjslNaBoYWNfgfejBegzvIhdUVXEYLNVCYDKG11cQ1L4K2bIS5Q==
-X-Received: by 2002:a05:620a:78f:: with SMTP id 15mr18655840qka.295.1582037847432;
-        Tue, 18 Feb 2020 06:57:27 -0800 (PST)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id j127sm1607916qkc.36.2020.02.18.06.57.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 06:57:26 -0800 (PST)
-Subject: Re: [Patch v9 7/8] sched/fair: Enable tuning of decay period
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com,
-        juri.lelli@redhat.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
- <1580250967-4386-8-git-send-email-thara.gopinath@linaro.org>
- <4eb10687-1a62-cee3-7285-3f50cc023071@infradead.org>
- <5E380D1D.7020500@linaro.org>
- <20200203155549.GL14914@hirez.programming.kicks-ass.net>
- <cc83634f-b3af-6024-7f89-9b231b153070@arm.com> <5E3DE7CC.3060300@linaro.org>
- <c7f299bb-5302-9bfb-2356-61b4c856bd2e@arm.com> <5E455533.3000600@linaro.org>
- <549ab3ab-f344-a915-7c6a-b0ffa808c354@arm.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <a821cf3f-7a79-85f7-2c88-33a42e600aa4@linaro.org>
-Date:   Tue, 18 Feb 2020 09:57:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 09:59:00 -0500
+Received: from mout.gmx.net ([212.227.17.21]:60305 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgBRO67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:58:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582037931;
+        bh=AKEe5GkAENzAllhW9wit/K+ItMrJsGooEPHh3QAMS0k=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Ed7nv27MmOhrCRb0jwaNMfXunQDoloW4nb5x+FCQnrh07A48s4qz6N5ATdIDn0LCz
+         X8K4vzni2aHWEiFxXjmXVqj4EV5d+56JH9ZL9wulut8zPyb4EREeGguEPRTI0FK0va
+         68zNHNYqpE1ufNSib185SEpXDSZyGryWmT7r1GKc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Msq24-1jJFjf1fXk-00t96u; Tue, 18
+ Feb 2020 15:58:51 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] docs: power: Drop reference to interface.rst
+Date:   Tue, 18 Feb 2020 15:58:18 +0100
+Message-Id: <20200218145819.17314-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <549ab3ab-f344-a915-7c6a-b0ffa808c354@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:um4vvbYIrZ3DzIDgpFy8U3EJcAeplKNx0PjRgZ9T90zJsCXrjwv
+ myE4G3+RGIwO04LcuGoQvgZFjRfuqJxGgNYFsagp10+E6uZ+vHDgDw+hr3xlVuRwQFSOVjO
+ Ta8Gxyngnf9ahBfWSliHXW9HrtD9ztaaWDkhgr4ChpDHFUUnoq0FNtunIRJNjoBuHpDE+Er
+ rfgJ4hDefe4vcIjTxG2Jg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:i/NGwyUvS8o=:nhloy+zYvjuZO518bPkL94
+ 85pfXbdDHw4O7z+AGvux7vtbr8Re614aoznpLTV4dnYt50XwShIOnjlc/W8I6hb/XtmVhDgB/
+ X13Rt/hEPCCashEbOvEbTLhURIqyfeOdh+nBYOPDHEWlwN0SOMb035z77mo+TkcK3p6QMGhwp
+ mzr2PFuGcMCIy4sUSwdoqM6rDuSgVAB7r4UQ9ilR8Ar4ZrRYg+ylsMMiaifvvGLKYsAQkQ4x9
+ E2+tZ+f3SfGqYTsIWRAwSLoF4ALxS/3i//2SVRWdTSxO86R5xcffsndsB88QxCSq8G1ibj9w9
+ 6lPtQ8HOkoaKWoNLVssn0XsN0hCLyKa1FWRRh7n3tt6IwpcLpPXk6pANi9xWkcyKq/9RleuNi
+ htQNHKefgfR7gKeo4V+hzW8njcEMc8EYM+agEKge1UqwSeO6/B4e4aUD9ZsZCFs8iac01jEHu
+ NZ3tG3Qhl/Fucj9jStu8/Y1me3G1sXXbsSLDVaki4r5mmh6IUBVFCPrRJltEEQ8/iST9Q8fC3
+ vsjAAGovEGInY3G2SvE+9kbb3rOPoZdgamlGaPX1Xj/BbLhzSXUwNcBIZHM3pSXRw+y7EyTc7
+ 7vdPSo94Q16fIBmh57Vbuur8XsI+HPyy73GTS+14Qx67h1/FtDV/fAUExFo6TkemIxbJ1X1Gz
+ XIHbSPkIBD08hh0LkOTu1BllJ44XbtvlX/vxCbnks2TyJ/D3j9rikvwEPO2Fg6qacdCGXV6he
+ 2ytBBq1abPGtOR+fh/Ui1iylHF4L+jSvBW7GfqRVJI14G0+nVKEmYs0/JNNzZhWFPeYufDIO2
+ H7/ycGCd/jWElNpYO3E0PL81D27hqFnIwjjaBXLHhTbA9BznILiST3s/bnZrsfnZ5q3lvditN
+ b/4NpL9WHBqUJGOQXelsN1eU/3fGP4X92QuxgdLCuKH5KLtTPB548NNYNGFGw9hEVw7D1/LOL
+ NGzQJedjLnri0nom6aM1oO/XnqIEt98Wv8oEJwLCelmIZ0atdpZvcWdTHePfC73GsacNlt+AL
+ 4VL8bi291grKWEB043ZztXe4cTwe/W7L3O96gScMO9+byF+fpHJ03gHs5V7dCbv9bin+L0isn
+ 4/L3P5Ev5es7oRza6ABs5hYVGtGKaE8XVxTkOUhwjUX/S8q8eWKoRu90qqNoX5DwCalA5LdNh
+ vZj473yErNNYdPwrT95x7MbaV7KSxzg5aflRrQPPe7r60Nd7pHndhh2wIFHUz3ONQeOO5tEiX
+ oQwkSP2af4/gBCPjf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It has been merged into sleep-states.rst.
 
+Fixes: c21502efdaed ("Documentation: admin-guide: PM: Update sleep states =
+documentation")
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/power/index.rst | 1 -
+ 1 file changed, 1 deletion(-)
 
-On 2/14/20 5:26 AM, Dietmar Eggemann wrote:
-> On 13/02/2020 14:54, Thara Gopinath wrote:
->> On 02/10/2020 06:59 AM, Dietmar Eggemann wrote:
->>> On 07/02/2020 23:42, Thara Gopinath wrote:
->>>> On 02/04/2020 03:39 AM, Dietmar Eggemann wrote:
->>>>> On 03/02/2020 16:55, Peter Zijlstra wrote:
->>>>>> On Mon, Feb 03, 2020 at 07:07:57AM -0500, Thara Gopinath wrote:
->>>>>>> On 01/28/2020 06:56 PM, Randy Dunlap wrote:
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> On 1/28/20 2:36 PM, Thara Gopinath wrote:
-> 
-> [...]
-> 
->>> is really not saying from which review comment the individual changes in
->>> the function name are coming from. And I don't see an answer to Ionela's
->>> email saying that her proposal will manifest in a particular part of
->>> this change.
->> Hi Dietmar,
->>
->> Like I said, don't want to argue on name. It is trivial for me. I have
->> v10 prepped with the name change. Will send it out shortly.
-> 
-> Thanks.
-> 
-> [...]
-> 
->>> Cpu-invariant accounting can't be guarded with a kernel CONFIG switch.
->>> Frequency-invariant accounting could be with CONFIG_CPU_FREQ but this is
->>> enabled by default by Arm64 defconfig.
->>> Thermal pressure (accounting) (CONFIG_HAVE_SCHED_THERMAL_PRESSURE) is
->>> disabled by default so why should a per-cpu thermal_pressure be
->>> maintained on such a system (CONFIG_CPU_THERMAL=y by default)?
->>
->> I agree that there is no need for per-cpu thermal pressure to be
->> maintained if no averaging is happening in the scheduler, today. I don't
->> know if there will ever be an use for it.
-> 
-> All arch_scale_FOO() functions follow the approach to force the arch
-> (currently x86, arm, arm64) to do
-> 
-> #define arch_scale_FOO BAR
-> 
-> to enable the FOO functionality.
-> 
-> There is no direct link between consumer and provider here.
-> 
->   consumer (sched) -> arch <- provider (arch, counters, CPUfreq, CPU
->                                         cooling, etc.)
-> 
-> So IMHO, FOO=thermal_pressure should follow this design pattern too.
-> 
-> 'thermal_pressure' would be the only one which can be disabled by a
-> kernel config switch at the consumer side.
-> IMHO, it doesn't make sense to have the provider operating in this case.
-> 
->> My issue has to do with using a config option meant for internal
->> scheduler code being used else where. To me, once this happens, the
->> entire work done to separate out reading and writing of instantaneous
->> thermal pressure to arch_topology makes no sense. We could have kept it
->> in scheduler itself.
-> 
-> You might see thermal_pressure more on the level of irq_load or
-> [rt/dl]_rq_load and that could be why we have a different opinion here?
-> 
-> Now rt_rq_load and dl_rq_load are scheduler internal providers and
-> irq_load is driven by 'irq_delta + steal' time (which is much closer to
-> the scheduler than thermal for instance).
+diff --git a/Documentation/power/index.rst b/Documentation/power/index.rst
+index 002e42745263..ced8a8007434 100644
+=2D-- a/Documentation/power/index.rst
++++ b/Documentation/power/index.rst
+@@ -13,7 +13,6 @@ Power Management
+     drivers-testing
+     energy-model
+     freezing-of-tasks
+-    interface
+     opp
+     pci
+     pm_qos_interface
+=2D-
+2.20.1
 
-In this case, thermal pressure is quite close to scheduler as it reduces 
-the maximum capacity available per cpu and hence affects scheduler 
-placement of tasks
-
-> 
-> My assumption is that we don't want a direct link between the scheduler
-> and e.g. a provider 'thermal'.
-
-Exactly. Which is why the same CONFIG option should not be used between 
-the provider and consumer.
-
-> 
->> Another way I think about this whole thermal pressure framework  is that
->> it is the job of cooling device or cpufreq or any other entity to update
->> a throttle in maximum pressure to the scheduler. It should be
->> independent of what scheduler does with it. Scheduler can choose to
->> ignore it
-
--- 
-Warm Regards
-Thara
