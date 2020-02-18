@@ -2,386 +2,223 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C32C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1628BC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00D921D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Gm9eS/Xo"
+	by mail.kernel.org (Postfix) with ESMTP id E2DE520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgBRGVD (ORCPT
+        id S1726463AbgBRGVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:21:03 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:58024 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgBRGUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:20:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5hmvZ4s2ZfotLVfVE2HDn0S2IYvgOP6OBTCMpuoAPUA=; b=Gm9eS/XoK3ZRKIneTCtWOmCT+P
-        IfqWKcnSixaIG9z4E4N/0fxQM73Z94tX/zGjQ063zdTpqL23VidaOmr6RwTtpziCf6U/AWsihj9nj
-        TKu93CcYsw34tMDaPeNFvbt+1A2GpALrgkBgDLIqdcTe9IulrJLSWsIzK7V4/gCYDl1E=;
-Received: from [77.247.85.102] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j3wFM-0000oj-Bs; Tue, 18 Feb 2020 07:20:40 +0100
-Received: from andi by localhost with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j3wF3-0005rI-Uf; Tue, 18 Feb 2020 07:20:21 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, b.galvani@gmail.com,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
-        letux-kernel@openphoenux.org, martin.blumenstingl@googlemail.com,
-        jic23@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 2/4] iio: adc: rn5t618: Add ADC driver for RN5T618/RC5T619
-Date:   Tue, 18 Feb 2020 07:17:23 +0100
-Message-Id: <20200218061725.22420-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218061725.22420-1-andreas@kemnade.info>
-References: <20200218061725.22420-1-andreas@kemnade.info>
+        Tue, 18 Feb 2020 01:21:53 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45504 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbgBRGVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 01:21:53 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D25FD3A2514;
+        Tue, 18 Feb 2020 17:21:48 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3wGR-0006EU-Pg; Tue, 18 Feb 2020 17:21:47 +1100
+Date:   Tue, 18 Feb 2020 17:21:47 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
+Message-ID: <20200218062147.GN10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-14-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-14-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=ZUKaNjAUM_NwrQaOQj4A:9
+        a=JQFMNDVPDCAknBdf:21 a=DU4q-3mnrf8zicIu:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both chips have an A/D converter capable of measuring
-things like VBAT, VUSB and analog inputs.
+On Mon, Feb 17, 2020 at 10:45:54AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This replaces ->readpages with a saner interface:
+>  - Return void instead of an ignored error code.
+>  - Pages are already in the page cache when ->readahead is called.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-depends on (build and runtime):
-https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
+Might read better as:
 
-Changes in v3:
-- output scale instead of processed
-- prefixed symbols with RN5T618
+ - Page cache is already populates with locked pages when
+   ->readahead is called.
 
-Changes in v2:
-- enum for channels
-- bulk read instead of single byte read for conversion
-  result
-- fix get_virq error handling
-- use devm for registering device and requesting IRQ
+>  - Implementation looks up the pages in the page cache instead of
+>    having them passed in a linked list.
 
- drivers/iio/adc/Kconfig       |  10 ++
- drivers/iio/adc/Makefile      |   1 +
- drivers/iio/adc/rn5t618-adc.c | 258 ++++++++++++++++++++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 drivers/iio/adc/rn5t618-adc.c
+Add:
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 5d8540b7b427..e7e74e775336 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -766,6 +766,16 @@ config RCAR_GYRO_ADC
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called rcar-gyroadc.
- 
-+config RN5T618_ADC
-+	tristate "ADC for the RN5T618/RC5T619 family of chips"
-+	depends on MFD_RN5T618
-+	help
-+	  Say yes here to build support for the integrated ADC inside the
-+	  RN5T618/619 series PMICs:
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rn5t618-adc.
-+
- config ROCKCHIP_SARADC
- 	tristate "Rockchip SARADC driver"
- 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index a1f1fbec0f87..ea95f89c91cd 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -72,6 +72,7 @@ obj-$(CONFIG_QCOM_VADC_COMMON) += qcom-vadc-common.o
- obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
- obj-$(CONFIG_QCOM_PM8XXX_XOADC) += qcom-pm8xxx-xoadc.o
- obj-$(CONFIG_RCAR_GYRO_ADC) += rcar-gyroadc.o
-+obj-$(CONFIG_RN5T618_ADC) += rn5t618-adc.o
- obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
- obj-$(CONFIG_SC27XX_ADC) += sc27xx_adc.o
- obj-$(CONFIG_SPEAR_ADC) += spear_adc.o
-diff --git a/drivers/iio/adc/rn5t618-adc.c b/drivers/iio/adc/rn5t618-adc.c
-new file mode 100644
-index 000000000000..8396eba0fcb5
---- /dev/null
-+++ b/drivers/iio/adc/rn5t618-adc.c
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * ADC driver for the RICOH RN5T618 power management chip family
-+ *
-+ * Copyright (C) 2019 Andreas Kemnade
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/mfd/rn5t618.h>
-+#include <linux/platform_device.h>
-+#include <linux/completion.h>
-+#include <linux/regmap.h>
-+#include <linux/iio/iio.h>
-+#include <linux/slab.h>
-+
-+#define RN5T618_ADC_CONVERSION_TIMEOUT   (msecs_to_jiffies(500))
-+#define RN5T618_REFERENCE_VOLT 2500
-+
-+/* mask for selecting channels for single conversion */
-+#define RN5T618_ADCCNT3_CHANNEL_MASK 0x7
-+/* average 4-time conversion mode */
-+#define RN5T618_ADCCNT3_AVG BIT(3)
-+/* set for starting a single conversion, gets cleared by hw when done */
-+#define RN5T618_ADCCNT3_GODONE BIT(4)
-+/* automatic conversion, period is in ADCCNT2, selected channels are
-+ * in ADCCNT1
-+ */
-+#define RN5T618_ADCCNT3_AUTO BIT(5)
-+#define RN5T618_ADCEND_IRQ BIT(0)
-+
-+struct rn5t618_adc_data {
-+	struct device *dev;
-+	struct rn5t618 *rn5t618;
-+	struct completion conv_completion;
-+	int irq;
-+};
-+
-+struct rn5t618_channel_ratios {
-+	u16 numerator;
-+	u16 denominator;
-+};
-+
-+enum rn5t618_channels {
-+	LIMMON = 0,
-+	VBAT,
-+	VADP,
-+	VUSB,
-+	VSYS,
-+	VTHM,
-+	AIN1,
-+	AIN0
-+};
-+
-+static const struct rn5t618_channel_ratios rn5t618_ratios[8] = {
-+	[LIMMON] = {50, 32}, /* measured across 20mOhm, amplified by 32 */
-+	[VBAT] = {2, 1},
-+	[VADP] = {3, 1},
-+	[VUSB] = {3, 1},
-+	[VSYS] = {3, 1},
-+	[VTHM] = {1, 1},
-+	[AIN1] = {1, 1},
-+	[AIN0] = {1, 1},
-+};
-+
-+static int rn5t618_read_adc_reg(struct rn5t618 *rn5t618, int reg, u16 *val)
-+{
-+	u8 data[2];
-+	int ret;
-+
-+	ret = regmap_bulk_read(rn5t618->regmap, reg, data, sizeof(data));
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = (data[0] << 4) | (data[1] & 0xF);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t rn5t618_adc_irq(int irq, void *data)
-+{
-+	struct rn5t618_adc_data *adc = data;
-+	unsigned int r = 0;
-+	int ret;
-+
-+	/* clear low & high threshold irqs */
-+	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC1, 0);
-+	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC2, 0);
-+
-+	ret = regmap_read(adc->rn5t618->regmap, RN5T618_IR_ADC3, &r);
-+	if (ret < 0)
-+		dev_err(adc->dev, "failed to read IRQ status: %d\n", ret);
-+
-+	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC3, 0);
-+
-+	if (r & RN5T618_ADCEND_IRQ)
-+		complete(&adc->conv_completion);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rn5t618_adc_read(struct iio_dev *iio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct rn5t618_adc_data *adc = iio_priv(iio_dev);
-+	u16 raw;
-+	int ret;
-+
-+	if (mask == IIO_CHAN_INFO_SCALE) {
-+		*val = RN5T618_REFERENCE_VOLT *
-+		       rn5t618_ratios[chan->channel].numerator;
-+		*val2 = rn5t618_ratios[chan->channel].denominator * 4095;
-+
-+		return IIO_VAL_FRACTIONAL;
-+	}
-+
-+	/* select channel */
-+	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-+				 RN5T618_ADCCNT3_CHANNEL_MASK,
-+				 chan->channel);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_write(adc->rn5t618->regmap, RN5T618_EN_ADCIR3,
-+			   RN5T618_ADCEND_IRQ);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-+				 RN5T618_ADCCNT3_AVG,
-+				 mask == IIO_CHAN_INFO_AVERAGE_RAW ?
-+				 RN5T618_ADCCNT3_AVG : 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	init_completion(&adc->conv_completion);
-+	/* single conversion */
-+	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-+				 RN5T618_ADCCNT3_GODONE,
-+				 RN5T618_ADCCNT3_GODONE);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = wait_for_completion_timeout(&adc->conv_completion,
-+					  RN5T618_ADC_CONVERSION_TIMEOUT);
-+	if (ret == 0) {
-+		dev_warn(adc->dev, "timeout waiting for adc result\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = rn5t618_read_adc_reg(adc->rn5t618,
-+				   RN5T618_ILIMDATAH + 2 * chan->channel,
-+				   &raw);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = raw;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static const struct iio_info rn5t618_adc_iio_info = {
-+	.read_raw = &rn5t618_adc_read,
-+};
-+
-+#define RN5T618_ADC_CHANNEL(_channel, _type, _name) { \
-+	.type = _type, \
-+	.channel = _channel, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-+			      BIT(IIO_CHAN_INFO_AVERAGE_RAW) | \
-+			      BIT(IIO_CHAN_INFO_SCALE), \
-+	.datasheet_name = _name, \
-+	.indexed = 1. \
-+}
-+
-+static const struct iio_chan_spec rn5t618_adc_iio_channels[] = {
-+	RN5T618_ADC_CHANNEL(LIMMON, IIO_CURRENT, "LIMMON"),
-+	RN5T618_ADC_CHANNEL(VBAT, IIO_VOLTAGE, "VBAT"),
-+	RN5T618_ADC_CHANNEL(VADP, IIO_VOLTAGE, "VADP"),
-+	RN5T618_ADC_CHANNEL(VUSB, IIO_VOLTAGE, "VUSB"),
-+	RN5T618_ADC_CHANNEL(VSYS, IIO_VOLTAGE, "VSYS"),
-+	RN5T618_ADC_CHANNEL(VTHM, IIO_VOLTAGE, "VTHM"),
-+	RN5T618_ADC_CHANNEL(AIN1, IIO_VOLTAGE, "AIN1"),
-+	RN5T618_ADC_CHANNEL(AIN0, IIO_VOLTAGE, "AIN0")
-+};
-+
-+static int rn5t618_adc_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct iio_dev *iio_dev;
-+	struct rn5t618_adc_data *adc;
-+	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-+
-+	iio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc));
-+	if (!iio_dev) {
-+		dev_err(&pdev->dev, "failed allocating iio device\n");
-+		return -ENOMEM;
-+	}
-+
-+	adc = iio_priv(iio_dev);
-+	adc->dev = &pdev->dev;
-+	adc->rn5t618 = rn5t618;
-+
-+	if (rn5t618->irq_data)
-+		adc->irq = regmap_irq_get_virq(rn5t618->irq_data,
-+					       RN5T618_IRQ_ADC);
-+
-+	if (adc->irq <= 0) {
-+		dev_err(&pdev->dev, "get virq failed\n");
-+		return -EINVAL;
-+	}
-+
-+	init_completion(&adc->conv_completion);
-+
-+	iio_dev->name = dev_name(&pdev->dev);
-+	iio_dev->dev.parent = &pdev->dev;
-+	iio_dev->info = &rn5t618_adc_iio_info;
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+	iio_dev->channels = rn5t618_adc_iio_channels;
-+	iio_dev->num_channels = ARRAY_SIZE(rn5t618_adc_iio_channels);
-+
-+	/* stop any auto-conversion */
-+	ret = regmap_write(rn5t618->regmap, RN5T618_ADCCNT3, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, iio_dev);
-+
-+	ret = devm_request_threaded_irq(adc->dev, adc->irq, NULL,
-+					rn5t618_adc_irq,
-+					IRQF_ONESHOT, dev_name(adc->dev),
-+					adc);
-+	if (ret < 0) {
-+		dev_err(adc->dev, "request irq %d failed: %d\n", adc->irq, ret);
-+		return ret;
-+	}
-+
-+	ret = devm_iio_device_register(adc->dev, iio_dev);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver rn5t618_adc_driver = {
-+	.driver = {
-+		.name   = "rn5t618-adc",
-+	},
-+	.probe = rn5t618_adc_probe,
-+};
-+
-+module_platform_driver(rn5t618_adc_driver);
-+MODULE_ALIAS("platform:rn5t618-adc");
-+MODULE_DESCRIPTION("RICOH RN5T618 ADC driver");
-+MODULE_LICENSE("GPL");
+ - cleanup of unused readahead handled by ->readahead caller, not
+   the method implementation.
+
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  Documentation/filesystems/locking.rst |  6 +++++-
+>  Documentation/filesystems/vfs.rst     | 13 +++++++++++++
+>  include/linux/fs.h                    |  2 ++
+>  include/linux/pagemap.h               | 18 ++++++++++++++++++
+>  mm/readahead.c                        |  8 +++++++-
+>  5 files changed, 45 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+> index 5057e4d9dcd1..0ebc4491025a 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -239,6 +239,7 @@ prototypes::
+>  	int (*readpage)(struct file *, struct page *);
+>  	int (*writepages)(struct address_space *, struct writeback_control *);
+>  	int (*set_page_dirty)(struct page *page);
+> +	void (*readahead)(struct readahead_control *);
+>  	int (*readpages)(struct file *filp, struct address_space *mapping,
+>  			struct list_head *pages, unsigned nr_pages);
+>  	int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -271,7 +272,8 @@ writepage:		yes, unlocks (see below)
+>  readpage:		yes, unlocks
+>  writepages:
+>  set_page_dirty		no
+> -readpages:
+> +readahead:		yes, unlocks
+> +readpages:		no
+>  write_begin:		locks the page		 exclusive
+>  write_end:		yes, unlocks		 exclusive
+>  bmap:
+> @@ -295,6 +297,8 @@ the request handler (/dev/loop).
+>  ->readpage() unlocks the page, either synchronously or via I/O
+>  completion.
+>  
+> +->readahead() unlocks the pages like ->readpage().
+> +
+
+"... the pages that I/O is attempted on ..."
+
+>  ->readpages() populates the pagecache with the passed pages and starts
+>  I/O against them.  They come unlocked upon I/O completion.
+>  
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> index 7d4d09dd5e6d..81ab30fbe45c 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -706,6 +706,7 @@ cache in your filesystem.  The following members are defined:
+>  		int (*readpage)(struct file *, struct page *);
+>  		int (*writepages)(struct address_space *, struct writeback_control *);
+>  		int (*set_page_dirty)(struct page *page);
+> +		void (*readahead)(struct readahead_control *);
+>  		int (*readpages)(struct file *filp, struct address_space *mapping,
+>  				 struct list_head *pages, unsigned nr_pages);
+>  		int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -781,12 +782,24 @@ cache in your filesystem.  The following members are defined:
+>  	If defined, it should set the PageDirty flag, and the
+>  	PAGECACHE_TAG_DIRTY tag in the radix tree.
+>  
+> +``readahead``
+> +	Called by the VM to read pages associated with the address_space
+> +	object.  The pages are consecutive in the page cache and are
+> +	locked.  The implementation should decrement the page refcount
+> +	after starting I/O on each page.  Usually the page will be
+> +	unlocked by the I/O completion handler.  If the function does
+> +	not attempt I/O on some pages, the caller will decrement the page
+> +	refcount and unlock the pages for you.	Set PageUptodate if the
+> +	I/O completes successfully.  Setting PageError on any page will
+> +	be ignored; simply unlock the page if an I/O error occurs.
+> +
+>  ``readpages``
+>  	called by the VM to read pages associated with the address_space
+>  	object.  This is essentially just a vector version of readpage.
+>  	Instead of just one page, several pages are requested.
+>  	readpages is only used for read-ahead, so read errors are
+>  	ignored.  If anything goes wrong, feel free to give up.
+> +	This interface is deprecated; implement readahead instead.
+
+What is the removal schedule for the deprecated interface? 
+
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 3613154e79e4..bd4291f78f41 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -665,6 +665,24 @@ static inline void readahead_next(struct readahead_control *rac)
+>  #define readahead_for_each(rac, page)					\
+>  	for (; (page = readahead_page(rac)); readahead_next(rac))
+>  
+> +/* The byte offset into the file of this readahead block */
+> +static inline loff_t readahead_offset(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_start * PAGE_SIZE;
+> +}
+
+Urk. Didn't an early page use "offset" for the page index? That
+was was "mm: Remove 'page_offset' from readahead loop" did, right?
+
+That's just going to cause confusion to have different units for
+readahead "offsets"....
+
+> +
+> +/* The number of bytes in this readahead block */
+> +static inline loff_t readahead_length(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_nr_pages * PAGE_SIZE;
+> +}
+> +
+> +/* The index of the first page in this readahead block */
+> +static inline unsigned int readahead_index(struct readahead_control *rac)
+> +{
+> +	return rac->_start;
+> +}
+
+Based on this, I suspect the earlier patch should use "index" rather
+than "offset" when walking the page cache indexes...
+
+> +
+>  /* The number of pages in this readahead block */
+>  static inline unsigned int readahead_count(struct readahead_control *rac)
+>  {
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 9e430daae42f..975ff5e387be 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -121,7 +121,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages)
+>  
+>  	blk_start_plug(&plug);
+>  
+> -	if (aops->readpages) {
+> +	if (aops->readahead) {
+> +		aops->readahead(rac);
+> +		readahead_for_each(rac, page) {
+> +			unlock_page(page);
+> +			put_page(page);
+> +		}
+
+This needs a comment to explain the unwinding that needs to be done
+here. I'm not going to remember in a year's time that this is just
+for the pages that weren't submitted by ->readahead....
+
+Cheers,
+
+Dave.
 -- 
-2.20.1
-
+Dave Chinner
+david@fromorbit.com
