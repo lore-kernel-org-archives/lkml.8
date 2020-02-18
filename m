@@ -2,70 +2,73 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C3C3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E294AC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7793208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD751208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="NyLbT3+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgBRO1Y (ORCPT
+        id S1726736AbgBRO2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:27:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:53250 "EHLO foss.arm.com"
+        Tue, 18 Feb 2020 09:28:17 -0500
+Received: from first.geanix.com ([116.203.34.67]:50546 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbgBRO1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:27:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1B931FB;
-        Tue, 18 Feb 2020 06:27:23 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5089C3F6CF;
-        Tue, 18 Feb 2020 06:27:22 -0800 (PST)
-Subject: Re: [PATCH v2] iommu/qcom: fix NULL pointer dereference during probe
- deferral
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
-        bjorn.andersson@linaro.org, joro@8bytes.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        j.neuschaefer@gmx.net, iommu@lists.linux-foundation.org,
-        agross@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>
-References: <20200104002024.37335-1-masneyb@onstation.org>
- <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
- <20200218120435.GA152723@gerhold.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4ed8542a-40fe-ae34-4203-efbcf285d784@arm.com>
-Date:   Tue, 18 Feb 2020 14:27:20 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726422AbgBRO2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:28:17 -0500
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id D029AC0029;
+        Tue, 18 Feb 2020 14:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582036045; bh=mHzt9vtnKLHNpF1/+TJ0Mqr2u8xuO4Fqk8u6fW/EDks=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=NyLbT3+ZSzHRzg/t+SZBSVHIzj+RTsJ8tdYGFRfqqiEUS/jqPTEink6P8B1VeKQhi
+         03YfkqFq9I2sRDrqM0dSjOclLHHJv3YSXe9r0dW85VE4IFynlrAuMO4csbTBBuHRnf
+         mVm7wqFLiL/jbvxZDh1AZ0iJTuPQgiOV89lvoD2fmQrNuShJ7VB4SWVpAUPNcPjNQn
+         UAk4u1b5PwE9sqkSOVAwe/PgUxu/6Tfe9avRct3mnZ+rsG7n4Jzszl2sNz81cZIIrU
+         UEQzUDO1jdtad3twes8tIoMr/IP5PMAGMuHXN3eRb2MmX8kv23mFFOaLn88y4gVA/1
+         9eN3uSeayg7ZA==
+From:   Esben Haabendal <esben@geanix.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH 8/8] net: ll_temac: Add ethtool support for coalesce parameters
+References: <20200218082741.7710-1-esben@geanix.com>
+        <20200218133943.GA10541@lunn.ch>
+Date:   Tue, 18 Feb 2020 15:28:13 +0100
+In-Reply-To: <20200218133943.GA10541@lunn.ch> (Andrew Lunn's message of "Tue,
+        18 Feb 2020 14:39:43 +0100")
+Message-ID: <87v9o4gebm.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200218120435.GA152723@gerhold.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 12:04 pm, Stephan Gerhold wrote:
-[...]
-> Are you going to send a patch for the diff below?
-> AFAICT this problem still exists in 5.6-rc2.
-> 
-> Your patch also seems to fix a warning during probe deferral on arm64
-> that has been around for quite a while. (At least for me...)
-> 
-> (See https://lore.kernel.org/linux-iommu/CA+G9fYtScOpkLvx=__gP903uJ2v87RwZgkAuL6RpF9_DTDs9Zw@mail.gmail.com/)
+Andrew Lunn <andrew@lunn.ch> writes:
 
-Ha, I did see that and vaguely remembered a discussion about that 
-warning logic being broken, but I'd totally forgotten I was involved to 
-that extent :)
+> Hi Esben
+>
+>> +	if (ec->tx_coalesce_usecs)
+>> +		lp->coalesce_delay_tx =
+>> +			min(255U, (ec->tx_coalesce_usecs * 100) / 512);
+>> +
+>> +	pr_info("%d -> %d  %d -> %d\n",
+>> +		ec->rx_coalesce_usecs, lp->coalesce_delay_rx,
+>> +		ec->tx_coalesce_usecs, lp->coalesce_delay_tx);
+>
+> I guess this is left over from debug? You don't actually want it here?
 
-Luckily I've managed to track the diff down in my Git stash, so I'll 
-write it up properly - thanks for the reminder!
+Yes, I will remove that in v2.  Thanks.
 
-Robin.
+/Esben
