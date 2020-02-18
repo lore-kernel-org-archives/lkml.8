@@ -2,120 +2,195 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF7AC34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EAFC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D16420836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfe5YN1O"
+	by mail.kernel.org (Postfix) with ESMTP id F0EAF20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBRBAS (ORCPT
+        id S1726237AbgBRBBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:00:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43093 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgBRBAS (ORCPT
+        Mon, 17 Feb 2020 20:01:19 -0500
+Received: from smtprelay0231.hostedemail.com ([216.40.44.231]:34897 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726054AbgBRBBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:00:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so20904726ljm.10;
-        Mon, 17 Feb 2020 17:00:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N3Wa2BGzPuFtAt4Hvp1UfThMFJPTB2GMc1k1np2GKU0=;
-        b=sfe5YN1OtoDO+kekL/Xz4/fWFMfVhU6pzKL8YOgzJQD3luNHeLeXmr+NtbNbHzHNfl
-         h18FQuBh6ucdum9WYBnUXurSnMOIOo3TblCnfNS/ccQYsk2SJvl1IeNKXGYG07FV6+bR
-         cfi1uJFeJeqzQ38t5O1sa1j1E/kOKKvT8WZ9BP+uIh6Gq3x1u2fO9QvV8hIXnS71uzqV
-         ruveI2mT8tKWW5IvQjlppD2rsCGC9WwkGeVAglKs+Wj7VFhSaIJO2Vsqbh/ZHWcyj4M6
-         DXJhh7TexQlxvg90SIt8vXVqe14SKpbTmey9+55/e/D4Q4jD4vz+s5if9U/ErQPfoFS1
-         I7Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N3Wa2BGzPuFtAt4Hvp1UfThMFJPTB2GMc1k1np2GKU0=;
-        b=H/TtYOP1s/PyW3CV+0ajl1LCj2PztoKmhGn0QMK1EJ5+7pn/MT0mEzzzab2TjSUqEm
-         FkIzc5h+B+ess4Q577JgjVQcsdq7mQosHf6DJcoPkCwJUHYEwjUikG47f707o+f8C35H
-         j+FuedvXVuZfm+/SKV+eJFPhs+jnuFjZePYQzWspK0in084WAUjkBFXshFdSiATH26Vs
-         QWFe8rrKLrGUYu8DeybjiyX9rzCQm10tePN3rpeOszEQNfGf0+S2THt3dGAqa7p+/tt9
-         jDbIbKktE4FBSsqpXSnWODHaEUW7NA9tIV/vpau6/j79Yo0BFeVn/+ONxRZpphmMPFTS
-         OS5w==
-X-Gm-Message-State: APjAAAVP+/hDd003yMSylQrAJNhhTgvvKKCLy4uTbq2x0TtV0PUhPiao
-        xsTnwwX0GGg10BqL4xh5HoM=
-X-Google-Smtp-Source: APXvYqxl0e2saUaXkBe5/Mraz7tV+hghoh3F+M045Hp3wjrFqzmf1QxgPCmplNEo0DL99MdfIIB+4A==
-X-Received: by 2002:a2e:809a:: with SMTP id i26mr11565660ljg.108.1581987615650;
-        Mon, 17 Feb 2020 17:00:15 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u16sm1315815ljl.34.2020.02.17.17.00.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 17:00:14 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Jon Hunter <jonathanh@nvidia.com>, Sameer Pujar <spujar@nvidia.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, atalambedu@nvidia.com, tiwai@suse.com,
-        viswanathl@nvidia.com, linux-tegra@vger.kernel.org,
-        robh+dt@kernel.org, thierry.reding@gmail.com, sharadg@nvidia.com,
-        rlokhande@nvidia.com, mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
- <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
- <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
- <34ac1fd3-ae0f-07f2-555f-a55087a2c9dc@nvidia.com>
- <1a84b393-938f-8bed-d08e-cc3bb6ed4844@gmail.com>
- <0fc814c2-0dc6-7741-b954-463381ff7fb9@nvidia.com>
- <b5c581b9-17af-d004-33fb-2cc782ab820a@gmail.com>
- <9f73afdf-1e9a-cdbd-f972-a022d503ef51@nvidia.com>
- <264d3354-8a2e-ee12-44ae-aff69213d551@nvidia.com>
- <075e476a-36bb-5fee-15bc-76af4474a797@gmail.com>
- <c6022a93-b79a-c691-1d75-d007d0b64ead@nvidia.com>
- <3b42c858-733b-0d17-f457-8043d97f5058@gmail.com>
- <62b8ffbc-aa32-ae44-6cb4-b176b8ba9b0e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <847739f8-6f54-cf64-54b8-94707944850b@gmail.com>
-Date:   Tue, 18 Feb 2020 04:00:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 17 Feb 2020 20:01:18 -0500
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 634A11802384A;
+        Tue, 18 Feb 2020 01:01:17 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 8D5D018028E97;
+        Tue, 18 Feb 2020 01:01:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sail37_624dff907f544
+X-Filterd-Recvd-Size: 6226
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 18 Feb 2020 01:01:15 +0000 (UTC)
+Message-ID: <cf13bd2d790ae3afbf5da55ea7bed12e00c5119d.camel@perches.com>
+Subject: [PATCH V2] usb-storage: Use const to reduce object data size
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 17 Feb 2020 16:59:54 -0800
+In-Reply-To: <20200217094036.GA47231@kroah.com>
+References: <60559197a1af9e0af7f329cc3427989e5756846f.camel@perches.com>
+         <20200217094036.GA47231@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <62b8ffbc-aa32-ae44-6cb4-b176b8ba9b0e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.02.2020 17:05, Jon Hunter пишет:
-> 
-> On 29/01/2020 03:41, Dmitry Osipenko wrote:
-> 
-> ...
-> 
->> The !RPM case isn't supported by Tegra anymore in upstream kernel. I'm
->> trying to help to make yours driver better and gave you reasons to
->> remove the unneeded code, while you're keep saying that "there is no
->> harm to retain it", which is not a reason to clutter up the code. I
->> don't feel that it's worthwhile to continue arguing here.
-> 
-> On further review, it does look like a reasonable argument to get rid of
-> this now completely. Like you see less clutter and the soc-core should
-> ensure that the card is shutdown before unloading. OK, so fine with me.
+Make structs const to reduce data size ~20KB.
 
-And the RPM core ensures that state is synced on disable, sorry if I
-didn't make it clear before.
+Change function arguments and prototypes as necessary to compile.
 
-+1 for less clutter :)
+$ size (x86-64 defconfig pre)
+   text	   data	    bss	    dec	    hex	filename
+  12281	  10948	    480	  23709	   5c9d	./drivers/usb/storage/usb.o
+    111	  10528	      8	  10647	   2997	./drivers/usb/storage/usual-tables.o
+
+$ size (x86-64 defconfig post)
+   text	   data	    bss	    dec	    hex	filename
+  22809	    420	    480	  23709	   5c9d	drivers/usb/storage/usb.o
+  10551	      0	      0	  10551	   2937	drivers/usb/storage/usual-tables.o
+
+Signed-off-by: Joe Perches <joe@perches.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+---
+
+V2: evolution is a terrible email client.
+    no line wrapping this time...
+
+ drivers/usb/storage/usb.c          | 10 +++++-----
+ drivers/usb/storage/usb.h          |  5 +++--
+ drivers/usb/storage/usual-tables.c |  6 +++---
+ include/linux/usb_usual.h          |  2 +-
+ 4 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+index 9a79cd..94a6472 100644
+--- a/drivers/usb/storage/usb.c
++++ b/drivers/usb/storage/usb.c
+@@ -121,12 +121,12 @@ MODULE_PARM_DESC(quirks, "supplemental list of device IDs and their quirks");
+ 	.initFunction = init_function,	\
+ }
+ 
+-static struct us_unusual_dev us_unusual_dev_list[] = {
++static const struct us_unusual_dev us_unusual_dev_list[] = {
+ #	include "unusual_devs.h"
+ 	{ }		/* Terminating entry */
+ };
+ 
+-static struct us_unusual_dev for_dynamic_ids =
++static const struct us_unusual_dev for_dynamic_ids =
+ 		USUAL_DEV(USB_SC_SCSI, USB_PR_BULK);
+ 
+ #undef UNUSUAL_DEV
+@@ -583,7 +583,7 @@ EXPORT_SYMBOL_GPL(usb_stor_adjust_quirks);
+ 
+ /* Get the unusual_devs entries and the string descriptors */
+ static int get_device_info(struct us_data *us, const struct usb_device_id *id,
+-		struct us_unusual_dev *unusual_dev)
++		const struct us_unusual_dev *unusual_dev)
+ {
+ 	struct usb_device *dev = us->pusb_dev;
+ 	struct usb_interface_descriptor *idesc =
+@@ -933,7 +933,7 @@ static unsigned int usb_stor_sg_tablesize(struct usb_interface *intf)
+ int usb_stor_probe1(struct us_data **pus,
+ 		struct usb_interface *intf,
+ 		const struct usb_device_id *id,
+-		struct us_unusual_dev *unusual_dev,
++		const struct us_unusual_dev *unusual_dev,
+ 		struct scsi_host_template *sht)
+ {
+ 	struct Scsi_Host *host;
+@@ -1092,7 +1092,7 @@ static struct scsi_host_template usb_stor_host_template;
+ static int storage_probe(struct usb_interface *intf,
+ 			 const struct usb_device_id *id)
+ {
+-	struct us_unusual_dev *unusual_dev;
++	const struct us_unusual_dev *unusual_dev;
+ 	struct us_data *us;
+ 	int result;
+ 	int size;
+diff --git a/drivers/usb/storage/usb.h b/drivers/usb/storage/usb.h
+index 85052c..5850d62 100644
+--- a/drivers/usb/storage/usb.h
++++ b/drivers/usb/storage/usb.h
+@@ -93,7 +93,8 @@ struct us_data {
+ 	struct mutex		dev_mutex;	 /* protect pusb_dev */
+ 	struct usb_device	*pusb_dev;	 /* this usb_device */
+ 	struct usb_interface	*pusb_intf;	 /* this interface */
+-	struct us_unusual_dev   *unusual_dev;	 /* device-filter entry     */
++	const struct us_unusual_dev   *unusual_dev;
++						/* device-filter entry     */
+ 	unsigned long		fflags;		 /* fixed flags from filter */
+ 	unsigned long		dflags;		 /* dynamic atomic bitflags */
+ 	unsigned int		send_bulk_pipe;	 /* cached pipe values */
+@@ -185,7 +186,7 @@ extern int usb_stor_post_reset(struct usb_interface *iface);
+ extern int usb_stor_probe1(struct us_data **pus,
+ 		struct usb_interface *intf,
+ 		const struct usb_device_id *id,
+-		struct us_unusual_dev *unusual_dev,
++		const struct us_unusual_dev *unusual_dev,
+ 		struct scsi_host_template *sht);
+ extern int usb_stor_probe2(struct us_data *us);
+ extern void usb_stor_disconnect(struct usb_interface *intf);
+diff --git a/drivers/usb/storage/usual-tables.c b/drivers/usb/storage/usual-tables.c
+index cfd12e5..529512 100644
+--- a/drivers/usb/storage/usual-tables.c
++++ b/drivers/usb/storage/usual-tables.c
+@@ -40,7 +40,7 @@
+ 	.driver_info = (flags) \
+ }
+ 
+-struct usb_device_id usb_storage_usb_ids[] = {
++const struct usb_device_id usb_storage_usb_ids[] = {
+ #	include "unusual_devs.h"
+ 	{ }		/* Terminating entry */
+ };
+@@ -68,7 +68,7 @@ struct ignore_entry {
+ 	.bcdmax = bcdDeviceMax,		\
+ }
+ 
+-static struct ignore_entry ignore_ids[] = {
++static const struct ignore_entry ignore_ids[] = {
+ #	include "unusual_alauda.h"
+ #	include "unusual_cypress.h"
+ #	include "unusual_datafab.h"
+@@ -92,7 +92,7 @@ int usb_usual_ignore_device(struct usb_interface *intf)
+ {
+ 	struct usb_device *udev;
+ 	unsigned vid, pid, bcd;
+-	struct ignore_entry *p;
++	const struct ignore_entry *p;
+ 
+ 	udev = interface_to_usbdev(intf);
+ 	vid = le16_to_cpu(udev->descriptor.idVendor);
+diff --git a/include/linux/usb_usual.h b/include/linux/usb_usual.h
+index 000a595..4a19ac3 100644
+--- a/include/linux/usb_usual.h
++++ b/include/linux/usb_usual.h
+@@ -92,6 +92,6 @@ enum { US_DO_ALL_FLAGS };
+ #include <linux/usb/storage.h>
+ 
+ extern int usb_usual_ignore_device(struct usb_interface *intf);
+-extern struct usb_device_id usb_storage_usb_ids[];
++extern const struct usb_device_id usb_storage_usb_ids[];
+ 
+ #endif /* __LINUX_USB_USUAL_H */
+
+
