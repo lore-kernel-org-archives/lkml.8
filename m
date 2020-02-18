@@ -7,243 +7,175 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09ADC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCEC34048
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAAC208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7004B2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLxiIZV+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfQvv/VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgBRRFq (ORCPT
+        id S1726871AbgBRRFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:05:46 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20158 "EHLO
+        Tue, 18 Feb 2020 12:05:48 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54709 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726415AbgBRRFq (ORCPT
+        by vger.kernel.org with ESMTP id S1726830AbgBRRFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:05:46 -0500
+        Tue, 18 Feb 2020 12:05:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582045544;
+        s=mimecast20190719; t=1582045547;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RK4fXk/nlqQZvM5xiHnv6XbhijwmUPQA7G8Km4Ldnrs=;
-        b=KLxiIZV+6pkQytDVrr6R9IYb9tASfkmU2gS8JSKDroVUxK5kaEpnG+48EJF+ghCxUvHAAX
-        h59qV0mTG9EHpAqlqSbgtC2mJmVudjJg6lN0yYLWbgWvIpYi3GwtjMNFzGGvCj1EGaWKo8
-        kZLeNsxJJLC8mWE0eZMQnYB1Mhkz8ys=
+        bh=fGZxSELfqrHJPKRn840iFp6Yuj5hlSA7GNsiSFEGbXE=;
+        b=TfQvv/VVM0DKFxbsI19z7HnqjVHiCeb7vaqEVwgmcSitr5iAC2tFpc3E6e+sAuhfMpwCXq
+        mLVUYziY1XmdAHebV+oHGG3GBAVVqFXNXHmw3Pu1hlN3QuHMGFMICajwgfPGosW8yPLFPC
+        nU26S+SA2S96ULvRP+t4t0tpWZXVuOs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-NydyL36vOWKYbJjCC1KVDQ-1; Tue, 18 Feb 2020 12:05:19 -0500
-X-MC-Unique: NydyL36vOWKYbJjCC1KVDQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-157-rlE6BNOMNo2MgjOGR0BXcg-1; Tue, 18 Feb 2020 12:05:41 -0500
+X-MC-Unique: rlE6BNOMNo2MgjOGR0BXcg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68BED8010EB;
-        Tue, 18 Feb 2020 17:05:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CD58800D5E;
+        Tue, 18 Feb 2020 17:05:38 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCE275D9E2;
-        Tue, 18 Feb 2020 17:05:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68F2319757;
+        Tue, 18 Feb 2020 17:05:36 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 02/19] fsinfo: Add syscalls to other arches [ver #16]
+Subject: [PATCH 05/19] vfs: Introduce a non-repeating system-unique superblock
+ ID [ver #16]
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
 Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
         christian@brauner.io, linux-api@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Feb 2020 17:05:13 +0000
-Message-ID: <158204551308.3299825.11782813238111590104.stgit@warthog.procyon.org.uk>
+Date:   Tue, 18 Feb 2020 17:05:35 +0000
+Message-ID: <158204553565.3299825.3864357054582488949.stgit@warthog.procyon.org.uk>
 In-Reply-To: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
 References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.21
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the fsinfo syscall to the other arches.
+Introduce an (effectively) non-repeating system-unique superblock ID that
+can be used to determine that two object are in the same superblock without
+risking reuse of the ID in the meantime (as is possible with device IDs).
+
+The ID is time-based to make it harder to use it as a covert communications
+channel.
+
+Also make it so that this ID can be fetched by the fsinfo() system call.
+The ID added so that superblock notification messages will also be able to
+be tagged with it.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
- arch/arm/tools/syscall.tbl                  |    1 +
- arch/arm64/include/asm/unistd.h             |    2 +-
- arch/arm64/include/asm/unistd32.h           |    2 +-
- arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |    2 ++
- arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
- arch/s390/kernel/syscalls/syscall.tbl       |    1 +
- arch/sh/kernel/syscalls/syscall.tbl         |    1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
- 16 files changed, 17 insertions(+), 2 deletions(-)
+ fs/fsinfo.c               |    1 +
+ fs/super.c                |   24 ++++++++++++++++++++++++
+ include/linux/fs.h        |    3 +++
+ samples/vfs/test-fsinfo.c |    1 +
+ 4 files changed, 29 insertions(+)
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 36d42da7466a..961750417ef2 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -477,3 +477,4 @@
- # 545 reserved for clone3
- 547	common	openat2				sys_openat2
- 548	common	pidfd_getfd			sys_pidfd_getfd
-+549	common	fsinfo				sys_fsinfo
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 4d1cf74a2caa..e6b9dfe01471 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -451,3 +451,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 1dd22da1c3a9..75f04a1023be 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 55710d6da327..f8e85762fc47 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -92,6 +92,7 @@ static int fsinfo_generic_ids(struct path *path, struct fsinfo_context *ctx)
+ 	p->f_fstype	= sb->s_magic;
+ 	p->f_dev_major	= MAJOR(sb->s_dev);
+ 	p->f_dev_minor	= MINOR(sb->s_dev);
++	p->f_sb_id	= sb->s_unique_id;
  
--#define __NR_compat_syscalls		439
-+#define __NR_compat_syscalls		440
- #endif
+ 	memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
+ 	strlcpy(p->f_fs_name, path->dentry->d_sb->s_type->name,
+diff --git a/fs/super.c b/fs/super.c
+index cd352530eca9..a63073e6127e 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -44,6 +44,8 @@ static int thaw_super_locked(struct super_block *sb);
  
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index c1c61635f89c..7d1225de47e6 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -873,7 +873,7 @@ __SYSCALL(__NR_fsopen, sys_fsopen)
- __SYSCALL(__NR_fsconfig, sys_fsconfig)
- #define __NR_fsmount 432
- __SYSCALL(__NR_fsmount, sys_fsmount)
--#define __NR_fspick 433
-+#define __NR_fspick 434
- __SYSCALL(__NR_fspick, sys_fspick)
- #define __NR_pidfd_open 434
- __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 042911e670b8..9018a3a6b067 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -358,3 +358,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index f4f49fcb76d0..10172bb6ba1f 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,5 @@
- 435	common	clone3				__sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+# 435 reserved for clone3
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 4c67b11f9c9e..58665073c1f0 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -443,3 +443,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 1f9e8ad636cc..1f07a89473c3 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -376,3 +376,4 @@
- 435	n32	clone3				__sys_clone3
- 437	n32	openat2				sys_openat2
- 438	n32	pidfd_getfd			sys_pidfd_getfd
-+439	n32	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c0b9d802dbf6..3c853ca54901 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -352,3 +352,4 @@
- 435	n64	clone3				__sys_clone3
- 437	n64	openat2				sys_openat2
- 438	n64	pidfd_getfd			sys_pidfd_getfd
-+439	n64	fsinfo				sys_fsinfo
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index ac586774c980..727f54542bf4 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -425,3 +425,4 @@
- 435	o32	clone3				__sys_clone3
- 437	o32	openat2				sys_openat2
- 438	o32	pidfd_getfd			sys_pidfd_getfd
-+439	o32	fsinfo				sys_fsinfo
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 52a15f5cd130..2e9576638d80 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 435	common	clone3				sys_clone3_wrapper
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 35b61bfc1b1a..397190734ca7 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -519,3 +519,4 @@
- 435	nospu	clone3				ppc_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index bd7bd3581a0f..e9340d712dcd 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- 435  common	clone3			sys_clone3			sys_clone3
- 437  common	openat2			sys_openat2			sys_openat2
- 438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
-+439  common	fsinfo			sys_fsinfo			sys_fsinfo
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index c7a30fcd135f..7bb5ec284fbb 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index f13615ecdecc..a902b757ace2 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -483,3 +483,4 @@
- # 435 reserved for clone3
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 85a9ab1bc04d..f82702a7ab38 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -408,3 +408,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	fsinfo				sys_fsinfo
+ static LIST_HEAD(super_blocks);
+ static DEFINE_SPINLOCK(sb_lock);
++static u64 sb_last_identifier;
++static u64 sb_identifier_offset;
+ 
+ static char *sb_writers_name[SB_FREEZE_LEVELS] = {
+ 	"sb_writers",
+@@ -188,6 +190,27 @@ static void destroy_unused_super(struct super_block *s)
+ 	destroy_super_work(&s->destroy_work);
+ }
+ 
++/*
++ * Generate a unique identifier for a superblock.
++ */
++static void generate_super_id(struct super_block *s)
++{
++	u64 id = ktime_to_ns(ktime_get());
++
++	spin_lock(&sb_lock);
++
++	id += sb_identifier_offset;
++	if (id <= sb_last_identifier) {
++		id = sb_last_identifier + 1;
++		sb_identifier_offset = sb_last_identifier - id;
++	}
++
++	sb_last_identifier = id;
++	spin_unlock(&sb_lock);
++
++	s->s_unique_id = id;
++}
++
+ /**
+  *	alloc_super	-	create new superblock
+  *	@type:	filesystem type superblock should belong to
+@@ -273,6 +296,7 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
+ 		goto fail;
+ 	if (list_lru_init_memcg(&s->s_inode_lru, &s->s_shrink))
+ 		goto fail;
++	generate_super_id(s);
+ 	return s;
+ 
+ fail:
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f74a4ee36eb3..e5db22d536a3 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1550,6 +1550,9 @@ struct super_block {
+ 
+ 	spinlock_t		s_inode_wblist_lock;
+ 	struct list_head	s_inodes_wb;	/* writeback inodes */
++
++	/* Superblock event notifications */
++	u64			s_unique_id;
+ } __randomize_layout;
+ 
+ /* Helper functions so that in most cases filesystems will
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index 6fbf0ce099b2..d6ec5713364f 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -140,6 +140,7 @@ static void dump_fsinfo_generic_ids(void *reply, unsigned int size)
+ 	printf("\tdev          : %02x:%02x\n", f->f_dev_major, f->f_dev_minor);
+ 	printf("\tfs           : type=%x name=%s\n", f->f_fstype, f->f_fs_name);
+ 	printf("\tfsid         : %llx\n", (unsigned long long)f->f_fsid);
++	printf("\tsbid         : %llx\n", (unsigned long long)f->f_sb_id);
+ }
+ 
+ static void dump_fsinfo_generic_limits(void *reply, unsigned int size)
 
 
