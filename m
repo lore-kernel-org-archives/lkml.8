@@ -2,85 +2,68 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E2DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5D0C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27DA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28F42176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:39:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LAIeX56U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBRNjb (ORCPT
+        id S1726691AbgBRNju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:39:31 -0500
-Received: from 1.mo2.mail-out.ovh.net ([46.105.63.121]:56434 "EHLO
-        1.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgBRNjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:39:31 -0500
-Received: from player779.ha.ovh.net (unknown [10.110.103.129])
-        by mo2.mail-out.ovh.net (Postfix) with ESMTP id 3EA5B1CA159
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:00:37 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player779.ha.ovh.net (Postfix) with ESMTPSA id B4C08F777501;
-        Tue, 18 Feb 2020 13:00:31 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2 5/8] docs: document stop-a in sysctl/kernel.rst
-Date:   Tue, 18 Feb 2020 13:59:20 +0100
-Message-Id: <20200218125923.685-6-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218125923.685-1-steve@sk2.org>
-References: <20200218125923.685-1-steve@sk2.org>
+        Tue, 18 Feb 2020 08:39:50 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:51560 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgBRNju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:39:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ZvM5SJLfCygy+dxNwz0/A0b6jQXOvJ0xzPs0cBdmSKg=; b=LAIeX56UO8rWJZdbAF65v0ChM9
+        9v/9mznqO6FhMXCCC8zRD03rRzca9/LhSLn8DD/hUXhshfgL8pD/Gy0jUNx5pVNDy05NqO1J0YeKK
+        T28hKdeVK/xUxvAEZY1IOahF3P0wJIX7AK18Tfvtf2wG10uZ7mxaINzzZLPbVFcQg3JM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j436F-0002mI-L1; Tue, 18 Feb 2020 14:39:43 +0100
+Date:   Tue, 18 Feb 2020 14:39:43 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Subject: Re: [PATCH 8/8] net: ll_temac: Add ethtool support for coalesce
+ parameters
+Message-ID: <20200218133943.GA10541@lunn.ch>
+References: <20200218082741.7710-1-esben@geanix.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16137804843222060421
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjeekgdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejjeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218082741.7710-1-esben@geanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This describes the SPARC-specific stop-a sysctl entry, which was
-previously listed in kernel.rst but not documented.
+Hi Esben
 
-Base on the implementation in arch/sparc/kernel/setup_{32,64}.c and
-kernel/panic.c.
+> +	if (ec->tx_coalesce_usecs)
+> +		lp->coalesce_delay_tx =
+> +			min(255U, (ec->tx_coalesce_usecs * 100) / 512);
+> +
+> +	pr_info("%d -> %d  %d -> %d\n",
+> +		ec->rx_coalesce_usecs, lp->coalesce_delay_rx,
+> +		ec->tx_coalesce_usecs, lp->coalesce_delay_tx);
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I guess this is left over from debug? You don't actually want it here?
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 76ff10f6f63a..795d8e695f50 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1068,6 +1068,16 @@ compilation sees a 1% slowdown, other systems and workloads may vary.
- stop-a (SPARC only)
- ===================
- 
-+Controls Stop-A:
-+
-+= ====================================
-+0 Stop-A has no effect.
-+1 Stop-A breaks to the PROM (default).
-+= ====================================
-+
-+Stop-A is always enabled on a panic, so that the user can return to
-+the boot PROM.
-+
- 
- sysrq
- =====
--- 
-2.20.1
-
+  Andrew
