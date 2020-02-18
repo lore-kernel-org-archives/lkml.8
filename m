@@ -2,98 +2,108 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE3EC34045
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB5CC34045
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4837624655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CCB2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UtUufhEB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cO47Is+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBRQ2r (ORCPT
+        id S1726707AbgBRQ3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:28:47 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:52240 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgBRQ2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:28:46 -0500
-Received: from zn.tnic (p200300EC2F0C1F0014C3F76BBACA8B76.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:14c3:f76b:baca:8b76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0AFD71EC02D2;
-        Tue, 18 Feb 2020 17:28:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582043325;
+        Tue, 18 Feb 2020 11:29:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59079 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726422AbgBRQ3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:29:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582043389;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XHwbSZ3DAFOYktOHxFjUverHeEraGIR2KVPHXRaJz+Y=;
-        b=UtUufhEBu3BrIHzXmXf230+fla0+swQ9btDJ4GIKrjr+4sgkrs4I941/iN8OeQFVKhUQDY
-        GeDfrvmaGYBWD61MhTS9AoVZq0nhwLQq3kRIitxV+pNPJgTkoICcBdmDI/JdKSZudQT3cM
-        R+MXH5ouVjvadBtw91RfZOZChbRmoe8=
-Date:   Tue, 18 Feb 2020 17:28:45 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH] EDAC/mce_amd: Output Scalable MCA processor warning once
-Message-ID: <20200218162845.GI14449@zn.tnic>
-References: <20200217134627.19765-1-prarit@redhat.com>
+         in-reply-to:in-reply-to:references:references;
+        bh=/xeFn2xogkvVTbJnDqLCWor5PNlBtKum0AFBL80A1+Q=;
+        b=cO47Is+hcCu1c5DYa7K1krdGrOf7LOS1FBQO5Pr4XDINCZ3kcT/6gxr5tufh+k4Rm3HEEN
+        HGjIcDiqo5ySDpQlNOwQNmbWOcjy12IB0o7e+AIxp9uSGn3EUvVLAa3RRMsT44e2rl6wgP
+        EwYS8SbjS7m3LitfgGxon5qfxT03MIw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-IHskR0TJPmenkVWzUSfg6g-1; Tue, 18 Feb 2020 11:29:47 -0500
+X-MC-Unique: IHskR0TJPmenkVWzUSfg6g-1
+Received: by mail-wm1-f71.google.com with SMTP id f207so262755wme.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:29:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/xeFn2xogkvVTbJnDqLCWor5PNlBtKum0AFBL80A1+Q=;
+        b=IS/8psNJbILaW60bcDD8UizqPgT3Fmam+5NrtKDIjQiVrc6oa4OvqZIuN3KrleBH7R
+         s8hTcZ0IhLQwwpmS1MZkxepl60V0F3X0dVfvSB8Q54EffhiNoiovGpFvbb49LP4B1XRv
+         NL1L6On+LFi3gBSjfz5JjpMcXisLgiJ0/q3dsurMtO6wfRbxYCWFkO7DPt5R7H5k70HH
+         nnebGQEoNmNS2NjLNiOkFe9xM6bUtOczMILIb4PzXt1ciAlWY+KApJta5x1DuHRpFo8S
+         4opLhUnCqlAA7ZXdEIH0PDXqAcsszBrr1UUyPxzqu2lA7WGWvbpuLIXa3s8OBXN9wGet
+         nYDA==
+X-Gm-Message-State: APjAAAUf+OZvHTsrBaa0dSQgxVB56mYTbuTIuBrD7B+7MANQ348+iTvD
+        im3UwzgCACFIZedvq5+8N7ke9HccGaQLtGbvMnKyOvbgioUpvPliWPD8eQ+Z407U8ulkUePoOQP
+        3JZyGxBCrwKLKWMiZ7L48AEOL
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr4126821wmj.72.1582043386465;
+        Tue, 18 Feb 2020 08:29:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyu+z4ptlYhKpFiduZBLAPpESjhfWuQywip8nwgL2XtTPQu1tJhUCSKUdBT0QweLYw1Oz5CRg==
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr4126799wmj.72.1582043386211;
+        Tue, 18 Feb 2020 08:29:46 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id x6sm4088344wmi.44.2020.02.18.08.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 08:29:45 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] KVM: X86: Less kvmclock sync induced vmexits after VM boots
+In-Reply-To: <e6caee13-f8f7-596c-fb37-6120e7c25f99@redhat.com>
+References: <1581988630-19182-1-git-send-email-wanpengli@tencent.com> <87r1ys7xpk.fsf@vitty.brq.redhat.com> <e6caee13-f8f7-596c-fb37-6120e7c25f99@redhat.com>
+Date:   Tue, 18 Feb 2020 17:29:44 +0100
+Message-ID: <87mu9f97uv.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200217134627.19765-1-prarit@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 08:46:27AM -0500, Prarit Bhargava wrote:
-> This warning is output for every virtual cpu in a guest on an EPYC 2
-> system.  The warning only needs to be logged one time.
-> 
-> Output the warning only once.
-> 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Robert Richter <rrichter@marvell.com>
-> Cc: linux-edac@vger.kernel.org
-> ---
->  drivers/edac/mce_amd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-> index ea980c556f2e..8874b7722b2f 100644
-> --- a/drivers/edac/mce_amd.c
-> +++ b/drivers/edac/mce_amd.c
-> @@ -1239,7 +1239,7 @@ static int __init mce_amd_init(void)
->  
->  	case 0x17:
->  	case 0x18:
-> -		pr_warn("Decoding supported only on Scalable MCA processors.\n");
-> +		pr_warn_once("Decoding supported only on Scalable MCA processors.\n");
->  		return -EINVAL;
->  
->  	default:
-> -- 
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Applied, thanks.
+> On 18/02/20 15:54, Vitaly Kuznetsov wrote:
+>>> -	schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+>>> -					KVMCLOCK_SYNC_PERIOD);
+>>> +	if (vcpu->vcpu_idx == 0)
+>>> +		schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+>>> +						KVMCLOCK_SYNC_PERIOD);
+>>>  }
+>>>  
+>>>  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+>> Forgive me my ignorance, I was under the impression
+>> schedule_delayed_work() doesn't do anything if the work is already
+>> queued (see queue_delayed_work_on()) and we seem to be scheduling the
+>> same work (&kvm->arch.kvmclock_sync_work) which is per-kvm (not
+>> per-vcpu).
+>
+> No, it executes after 5 minutes.  I agree that the patch shouldn't be
+> really necessary, though you do save on cacheline bouncing due to
+> test_and_set_bit.
+>
+
+True, but the changelog should probably be updated then.
 
 -- 
-Regards/Gruss,
-    Boris.
+Vitaly
 
-https://people.kernel.org/tglx/notes-about-netiquette
