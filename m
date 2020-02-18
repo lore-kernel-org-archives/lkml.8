@@ -2,132 +2,158 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C8C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57147C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BB720722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CDE206EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAXJuJ+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgBRJ2f (ORCPT
+        id S1726347AbgBRJ3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:28:35 -0500
-Received: from 8bytes.org ([81.169.241.247]:54594 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgBRJ2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:28:35 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D3CCC36C; Tue, 18 Feb 2020 10:28:33 +0100 (CET)
-Date:   Tue, 18 Feb 2020 10:28:27 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5 v2] iommu/vt-d: Do deferred attachment in
- iommu_need_mapping()
-Message-ID: <20200218092827.tp3pq67adzr56k7e@8bytes.org>
-References: <20200217193858.26990-1-joro@8bytes.org>
- <20200217193858.26990-4-joro@8bytes.org>
- <83b21e50-9097-06db-d404-8fe400134bac@linux.intel.com>
+        Tue, 18 Feb 2020 04:29:43 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:43614 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgBRJ3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:29:42 -0500
+Received: by mail-wr1-f53.google.com with SMTP id r11so22961913wrq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:29:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x2s9Vlm8Xs5SFKLJRgXyDkqsNds2RA2bN9hJWbCVdRM=;
+        b=gAXJuJ+uw8vdRqvxDQ5IGA9/+4u2SieS59aen6xgMticqIjWF6jI7ZSQCy7l1P0Wir
+         Fh+NSvhMTtYWt1S+7dyL7oZD1iPJlSfuPi2CDOGAm9SKQcTwWPh348RURitv4CZ/MWKL
+         Mzeh3KZ2Rq1rGpk+N/RmL0IE0qFufOwsUo7qCLRLEN8zyB4kO0YcIC3LwH0VOkFaAGkT
+         VrH1gf6Qp/I7uXsSJ6nmzsqJgdwxRsFw79p4FMYMU1FGZR7SmCf4NznFu75N/VUu5ESL
+         UwGRsOrwH93wIaIxt60hygidHQPQO9cD+VflotRjpH/a4aLUeJyQwdhUY0qbv9tCYx0h
+         m2Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x2s9Vlm8Xs5SFKLJRgXyDkqsNds2RA2bN9hJWbCVdRM=;
+        b=gOS0oL2lMtpwsgujYhbvC8+iGQvPOxOnBZgZ2Co5Wj51uXCZSBtJ6DdSPEK3U9aaYu
+         w52bZY3UqyJ+643+aW8zrMKY96TLTHyk4MxAEEkqZ0aQzAJpAKx9/I6Q6TVqop+5Sj6p
+         TU6wrwCeNp744Elza/6Jk+2D5ALuCR9kUNx7cUtuu0B2jSSnVpi18sOSJjXY90WLLDBh
+         LtfyJxoV9/b733cxxQFFWD2Dxyq/ogx/hUlkk2kvwYEAAmhkfVxsshGRe6IAoU/DGgCo
+         jSlu6/zYacw7FHciCOxBpgFcW3CK/QCN6mNN2Pr2ZLP54BIhoRAA+FTIvAK0FnsqIw3n
+         EYGA==
+X-Gm-Message-State: APjAAAWB74/E6Qzj44lRRWfrNIPKOBfvFcnDYd+p4fv/NFIllcQH/agf
+        JGt1LWQ5ws6yVJABOBYteuZABQ==
+X-Google-Smtp-Source: APXvYqwX8ALABKiS1olnPwGRlGKw9pwwpknEwezan/AqLzPy5qaxx2VpgxtDGmNTBTDySCzR9fZ9jQ==
+X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr29361219wrt.229.1582018181035;
+        Tue, 18 Feb 2020 01:29:41 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id w11sm5103479wrt.35.2020.02.18.01.29.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 01:29:40 -0800 (PST)
+Subject: Re: NVMEM usage consult for device information
+To:     =?UTF-8?B?TWFjIEx1ICjnm6flrZ/lvrcp?= <mac.lu@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Cc:     =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
+        <Andrew-CT.Chen@mediatek.com>
+References: <06d083206a4f4f5981be9d2e628162f8@mtkmbs01n1.mediatek.inc>
+ <11b42d7b-ff96-d377-5225-6f9fcd5c57b8@linaro.org>
+ <57c79cb8f45449d3ba49609cdd4a0767@mtkmbs01n1.mediatek.inc>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6db967dc-7776-a10e-21cd-ba47ff6f02c3@linaro.org>
+Date:   Tue, 18 Feb 2020 09:29:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83b21e50-9097-06db-d404-8fe400134bac@linux.intel.com>
+In-Reply-To: <57c79cb8f45449d3ba49609cdd4a0767@mtkmbs01n1.mediatek.inc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
 
-On Tue, Feb 18, 2020 at 10:38:14AM +0800, Lu Baolu wrote:
-> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> > index 42cdcce1602e..32f43695a22b 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
-> >   static struct dmar_domain *deferred_attach_domain(struct device *dev)
-> >   {
-> > -	if (unlikely(attach_deferred(dev)))
-> > -		do_deferred_attach(dev);
-> > -
+
+On 18/02/2020 09:26, Mac Lu (盧孟德) wrote:
+> Hi Srini:
+>>Is this data stored in a non volatile memory on the SoC?
+>>if yes, then we should have a proper nvmem provider driver.
 > 
-> This should also be moved to the call place of deferred_attach_domain()
-> in bounce_map_single().
+> Yes. This data is stored in non volatile memory on the SoC.
+It makes sense to have  nvmem driver in that case. which can then be 
+used by Device Tree to retrieve the required configurations from NVMEM.
+
+--srini
+> It would be read at bootloader and delivered to kernel by DTB.
+
 > 
-> bounce_map_single() assumes that devices always use DMA domain, so it
-> doesn't call iommu_need_mapping(). We could do_deferred_attach() there
-> manually.
-
-Good point, thanks for your review. Updated patch below.
-
-From 3a5b8a66d288d86ac1fd45092e7d96f842d0cccf Mon Sep 17 00:00:00 2001
-From: Joerg Roedel <jroedel@suse.de>
-Date: Mon, 17 Feb 2020 17:20:59 +0100
-Subject: [PATCH 3/5] iommu/vt-d: Do deferred attachment in
- iommu_need_mapping()
-
-The attachment of deferred devices needs to happen before the check
-whether the device is identity mapped or not. Otherwise the check will
-return wrong results, cause warnings boot failures in kdump kernels, like
-
-	WARNING: CPU: 0 PID: 318 at ../drivers/iommu/intel-iommu.c:592 domain_get_iommu+0x61/0x70
-
-	[...]
-
-	 Call Trace:
-	  __intel_map_single+0x55/0x190
-	  intel_alloc_coherent+0xac/0x110
-	  dmam_alloc_attrs+0x50/0xa0
-	  ahci_port_start+0xfb/0x1f0 [libahci]
-	  ata_host_start.part.39+0x104/0x1e0 [libata]
-
-With the earlier check the kdump boot succeeds and a crashdump is written.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/intel-iommu.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 42cdcce1602e..723f615c6e84 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
- 
- static struct dmar_domain *deferred_attach_domain(struct device *dev)
- {
--	if (unlikely(attach_deferred(dev)))
--		do_deferred_attach(dev);
--
- 	return find_domain(dev);
- }
- 
-@@ -3595,6 +3592,9 @@ static bool iommu_need_mapping(struct device *dev)
- 	if (iommu_dummy(dev))
- 		return false;
- 
-+	if (unlikely(attach_deferred(dev)))
-+		do_deferred_attach(dev);
-+
- 	ret = identity_mapping(dev);
- 	if (ret) {
- 		u64 dma_mask = *dev->dma_mask;
-@@ -3958,7 +3958,11 @@ bounce_map_single(struct device *dev, phys_addr_t paddr, size_t size,
- 	int prot = 0;
- 	int ret;
- 
-+	if (unlikely(attach_deferred(dev)))
-+		do_deferred_attach(dev);
-+
- 	domain = deferred_attach_domain(dev);
-+
- 	if (WARN_ON(dir == DMA_NONE || !domain))
- 		return DMA_MAPPING_ERROR;
- 
--- 
-2.25.0
-
+> 
+> Thanks
+> Mac
+> 
+> -----Original Message-----
+> From: Srinivas Kandagatla [mailto:srinivas.kandagatla@linaro.org]
+> Sent: Tuesday, February 18, 2020 5:19 PM
+> To: Mac Lu (盧孟德) <mac.lu@mediatek.com>; linux-kernel@vger.kernel.org; linux-mediatek@lists.infradead.org
+> Cc: Andrew-CT Chen (陳智迪) <Andrew-CT.Chen@mediatek.com>
+> Subject: Re: NVMEM usage consult for device information
+> 
+> 
+> 
+> On 18/02/2020 05:16, Mac Lu (盧孟德) wrote:
+>> Hello,
+>> 
+>> Mediatek chip have some SOC configurations and specific data which 
+>> would be delivered to kernel by DTB.
+>> 
+> Is this data stored in a non volatile memory on the SoC?
+> if yes, then we should have a proper nvmem provider driver.
+> 
+> --srini
+> 
+>> So we want to implement a new NVMEM driver to retrieve these data for 
+>> use by the NVMEM Framework.
+>> 
+>> Do you agree with the usage for our application?
+>> 
+>> Thanks
+>> 
+>> Mac
+>> 
+>> ************* MEDIATEK Confidentiality Notice ******************** The 
+>> information contained in this e-mail message (including any
+>> attachments) may be confidential, proprietary, privileged, or 
+>> otherwise exempt from disclosure under applicable laws. It is intended 
+>> to be conveyed only to the designated recipient(s). Any use, 
+>> dissemination, distribution, printing, retaining or copying of this 
+>> e-mail (including its
+>> attachments) by unintended recipient(s) is strictly prohibited and may 
+>> be unlawful. If you are not an intended recipient of this e-mail, or 
+>> believe that you have received this e-mail in error, please notify the 
+>> sender immediately (by replying to this e-mail), delete any and all 
+>> copies of this e-mail (including any attachments) from your system, 
+>> and do not disclose the content of this e-mail to any other person. Thank you!
+>> 
+> 
+> ************* MEDIATEK Confidentiality Notice ********************
+> The information contained in this e-mail message (including any
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be
+> conveyed only to the designated recipient(s). Any use, dissemination,
+> distribution, printing, retaining or copying of this e-mail (including its
+> attachments) by unintended recipient(s) is strictly prohibited and may
+> be unlawful. If you are not an intended recipient of this e-mail, or believe
+> that you have received this e-mail in error, please notify the sender
+> immediately (by replying to this e-mail), delete any and all copies of
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
+> 
