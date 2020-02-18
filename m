@@ -2,127 +2,107 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB4FC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73378C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2093320836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E272064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgBRFHz convert rfc822-to-8bit (ORCPT
+        id S1726262AbgBRFIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:07:55 -0500
-Received: from mga12.intel.com ([192.55.52.136]:8794 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725263AbgBRFHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:07:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 21:07:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="282689196"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Feb 2020 21:07:54 -0800
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 17 Feb 2020 21:07:53 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.126]) with mapi id 14.03.0439.000;
- Tue, 18 Feb 2020 13:07:51 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Topic: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Index: AQHV1pyWdXmNxNYiSUCDLwZiDlOrAKgBy+IAgALeXlCAG9SJ8A==
-Date:   Tue, 18 Feb 2020 05:07:50 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1C0D93@SHSMSX104.ccr.corp.intel.com>
-References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
-        <1580299912-86084-2-git-send-email-yi.l.liu@intel.com>
- <20200129165540.335774d5@w520.home>
- <A2975661238FB949B60364EF0F2C25743A1993E8@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A1993E8@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODk5Y2JlYjEtZjRjMi00ZTI3LWJjNTYtY2NlZmMyZWZhYjBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaVZFb3VjY1ZoWEVKd3JcL1F1dEhIamZ3NDE2RzdISUZRdlZ2UzBlbzIzVmpqcDVxa3FSWDE5c3VDRFYxNkRrTVEifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 18 Feb 2020 00:08:31 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47711 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbgBRFIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 00:08:30 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 415077E9CE8;
+        Tue, 18 Feb 2020 16:08:26 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3v7Q-0005sF-Jw; Tue, 18 Feb 2020 16:08:24 +1100
+Date:   Tue, 18 Feb 2020 16:08:24 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 04/19] mm: Rearrange readahead loop
+Message-ID: <20200218050824.GJ10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-5-willy@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-5-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=xb1gzgCgqvQNCHvA9YAA:9
+        a=NFtlFkhSHy5C-G_b:21 a=QFM0elaIi_6nPVwS:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Friday, January 31, 2020 8:41 PM
-> To: Alex Williamson <alex.williamson@redhat.com>
-> Subject: RE: [RFC v3 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-> > > +static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
-> > > +				       unsigned int pasid)
-> > > +{
-> > > +	struct vfio_mm *vmm = iommu->vmm;
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&iommu->lock);
-> > > +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
-> >
-> > But we could have been IOMMU backed when the pasid was allocated, did we
-> just
-> > leak something?  In fact, I didn't spot anything in this series that handles
-> > a container with pasids allocated losing iommu backing.
-> > I'd think we want to release all pasids when that happens since permission for
-> > the user to hold pasids goes along with having an iommu backed device.
+On Mon, Feb 17, 2020 at 10:45:45AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> oh, yes. If a container lose iommu backend, then needs to reclaim the allocated
-> PASIDs. right? I'll add it. :-)
+> Move the declaration of 'page' to inside the loop and move the 'kick
+> off a fresh batch' code to the end of the function for easier use in
+> subsequent patches.
 
-Hi Alex,
+Stale? the "kick off" code is moved to the tail of the loop, not the
+end of the function.
 
-I went through the flow again. Maybe current series has already covered
-it. There is vfio_mm which is used to track allocated PASIDs. Its life
-cycle is type1 driver open and release. If I understand it correctly,
-type1 driver release happens when there is no more iommu backed groups
-in a container.
+> @@ -183,14 +183,14 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		page = xa_load(&mapping->i_pages, page_offset);
+>  		if (page && !xa_is_value(page)) {
+>  			/*
+> -			 * Page already present?  Kick off the current batch of
+> -			 * contiguous pages before continuing with the next
+> -			 * batch.
+> +			 * Page already present?  Kick off the current batch
+> +			 * of contiguous pages before continuing with the
+> +			 * next batch.  This page may be the one we would
+> +			 * have intended to mark as Readahead, but we don't
+> +			 * have a stable reference to this page, and it's
+> +			 * not worth getting one just for that.
+>  			 */
+> -			if (readahead_count(&rac))
+> -				read_pages(&rac, &page_pool, gfp_mask);
+> -			rac._nr_pages = 0;
+> -			continue;
+> +			goto read;
+>  		}
+>  
+>  		page = __page_cache_alloc(gfp_mask);
+> @@ -201,6 +201,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		if (page_idx == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		rac._nr_pages++;
+> +		continue;
+> +read:
+> +		if (readahead_count(&rac))
+> +			read_pages(&rac, &page_pool, gfp_mask);
+> +		rac._nr_pages = 0;
+>  	}
 
-static void __vfio_group_unset_container(struct vfio_group *group)
-{
-[...]
+Also, why? This adds a goto from branched code that continues, then
+adds a continue so the unbranched code doesn't execute the code the
+goto jumps to. In absence of any explanation, this isn't an
+improvement and doesn't make any sense...
 
-	/* Detaching the last group deprivileges a container, remove iommu */
-	if (driver && list_empty(&container->group_list)) {
-		driver->ops->release(container->iommu_data);
-		module_put(driver->ops->owner);
-		container->iommu_driver = NULL;
-		container->iommu_data = NULL;
-	}
-[...]
-}
-
-Regards,
-Yi Liu
-
-
+-- 
+Dave Chinner
+david@fromorbit.com
