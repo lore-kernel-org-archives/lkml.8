@@ -2,301 +2,216 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779AC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDB3C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18829206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vzKt+LpK"
+	by mail.kernel.org (Postfix) with ESMTP id BDF6D20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgBRIyh (ORCPT
+        id S1726353AbgBRI4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:54:37 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26724 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgBRIyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:54:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582016077; x=1613552077;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=adALBkNXH0eWFKDu+TJ3ZoBrkHljhbeL1cdArgJQwAQ=;
-  b=vzKt+LpKjPn7lHdXkjw/jn00MCVhUrtzwuh1t1P/0DgedVW27hHmbBwu
-   ieLd/ON6pzXqvcYz5AUSNATsZSd+ztKr/vpaEik3lrl7NP+L+OrhMrRtV
-   9zxIWUXq04iqYZfyL0U1T9Ey8Z3lJ1I3WgL6eJLEgUmQGRgjx+0nVNTt1
-   k=;
-IronPort-SDR: mytlnP7L8JBYAJql1QFbn56Qc9R2CBU8Yl1dtRjZ+ddE7clSBS9S6WMJkYkV5RwNA8fPBWa+Ko
- l7fA0SZrMHew==
-X-IronPort-AV: E=Sophos;i="5.70,455,1574121600"; 
-   d="scan'208";a="27053928"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 18 Feb 2020 08:54:33 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 268EE286AB9;
-        Tue, 18 Feb 2020 08:54:24 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 18 Feb 2020 08:54:24 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.108) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 18 Feb 2020 08:54:13 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v2 4/4] mm/damon/schemes: Implement a debugfs interface
-Date:   Tue, 18 Feb 2020 09:53:09 +0100
-Message-ID: <20200218085309.18346-5-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200218085309.18346-1-sjpark@amazon.com>
-References: <20200218085309.18346-1-sjpark@amazon.com>
+        Tue, 18 Feb 2020 03:56:21 -0500
+Received: from mga02.intel.com ([134.134.136.20]:63923 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgBRI4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:56:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:56:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="314991628"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 00:56:15 -0800
+Subject: Re: [PATCH V1] mmc: mmc_test: Pass different sg lists for
+ non-blocking requests
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <8d632d78-2bf7-e207-92bf-93c792b3f7b0@intel.com>
+Date:   Tue, 18 Feb 2020 10:55:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.108]
-X-ClientProxiedBy: EX13D10UWB004.ant.amazon.com (10.43.161.121) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 11/02/20 11:36 am, Veerabhadrarao Badiganti wrote:
+> Supply a separate sg list for each of the request in non-blocking
+> IO test cases where two requests will be issued at same time.
+> 
+> Otherwise, sg memory may get unmapped when a request is done while
+> same memory is being accessed by controller from the other request,
+> and it leads to iommu errors with below call stack:
+> 
+> 	__arm_lpae_unmap+0x2e0/0x478
+> 	arm_lpae_unmap+0x54/0x70
+> 	arm_smmu_unmap+0x64/0xa4
+> 	__iommu_unmap+0xb8/0x1f0
+> 	iommu_unmap_fast+0x38/0x48
+> 	__iommu_dma_unmap+0x88/0x108
+> 	iommu_dma_unmap_sg+0x90/0xa4
+> 	sdhci_post_req+0x5c/0x78
+> 	mmc_test_start_areq+0x10c/0x120 [mmc_test]
+> 	mmc_test_area_io_seq+0x150/0x264 [mmc_test]
+> 	mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
+> 	mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
+> 	mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
+> 	mtf_test_write+0x238/0x3cc [mmc_test]
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>  drivers/mmc/core/mmc_test.c | 38 ++++++++++++++++++++++++++++++++------
+>  1 file changed, 32 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
+> index 492dd45..69bdf60 100644
+> --- a/drivers/mmc/core/mmc_test.c
+> +++ b/drivers/mmc/core/mmc_test.c
+> @@ -71,6 +71,7 @@ struct mmc_test_mem {
+>   * @sg_len: length of currently mapped scatterlist @sg
+>   * @mem: allocated memory
+>   * @sg: scatterlist
+> + * @sg_areq: scatterlist for non blocking request
+>   */
+>  struct mmc_test_area {
+>  	unsigned long max_sz;
+> @@ -82,6 +83,7 @@ struct mmc_test_area {
+>  	unsigned int sg_len;
+>  	struct mmc_test_mem *mem;
+>  	struct scatterlist *sg;
+> +	struct scatterlist *sg_areq;
+>  };
+>  
+>  /**
+> @@ -836,7 +838,9 @@ static int mmc_test_start_areq(struct mmc_test_card *test,
+>  }
+>  
+>  static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
+> -				      struct scatterlist *sg, unsigned sg_len,
+> +				      struct scatterlist *sg,
+> +				      struct scatterlist *sg_areq,
+> +				      unsigned int sg_len,
+>  				      unsigned dev_addr, unsigned blocks,
+>  				      unsigned blksz, int write, int count)
+>  {
+> @@ -867,6 +871,7 @@ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
+>  			prev_mrq = &rq2->mrq;
+>  
+>  		swap(mrq, prev_mrq);
+> +		swap(sg, sg_areq);
+>  		dev_addr += blocks;
+>  	}
+>  
+> @@ -1396,7 +1401,7 @@ static int mmc_test_no_highmem(struct mmc_test_card *test)
+>   * Map sz bytes so that it can be transferred.
+>   */
+>  static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
+> -			     int max_scatter, int min_sg_len)
+> +			     int max_scatter, int min_sg_len, bool nonblock)
+>  {
+>  	struct mmc_test_area *t = &test->area;
+>  	int err;
+> @@ -1411,6 +1416,20 @@ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
+>  		err = mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
+>  				      t->max_seg_sz, &t->sg_len, min_sg_len);
+>  	}
+> +
+> +	if (err || !nonblock)
+> +		goto err;
+> +
+> +	if (max_scatter) {
+> +		err = mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_areq,
+> +						  t->max_segs, t->max_seg_sz,
+> +				       &t->sg_len);
+> +	} else {
+> +		err = mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max_segs,
+> +				      t->max_seg_sz, &t->sg_len, min_sg_len);
+> +	}
 
-This commit implements a debugfs interface for the data access
-monitoring oriented memory management schemes.  It is supposed to be
-used by administrators and privileged user space programs.  Users read
-and update the rules using ``<debugfs>/damon/schemes`` file.  The format
-is::
+I suggest getting the length to a local and confirming it is the same
 
-    <min/max size> <min/max access frequency> <min/max age> <action>
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- mm/damon.c | 171 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 169 insertions(+), 2 deletions(-)
-
-diff --git a/mm/damon.c b/mm/damon.c
-index 45139d344f58..de3e2b343139 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -199,6 +199,29 @@ static void damon_destroy_task(struct damon_task *t)
- 	damon_free_task(t);
- }
- 
-+static struct damos *damon_new_scheme(
-+		unsigned int min_sz_region, unsigned int max_sz_region,
-+		unsigned int min_nr_accesses, unsigned int max_nr_accesses,
-+		unsigned int min_age_region, unsigned int max_age_region,
-+		enum damos_action action)
-+{
-+	struct damos *ret;
-+
-+	ret = kmalloc(sizeof(struct damos), GFP_KERNEL);
-+	if (!ret)
-+		return NULL;
-+	ret->min_sz_region = min_sz_region;
-+	ret->max_sz_region = max_sz_region;
-+	ret->min_nr_accesses = min_nr_accesses;
-+	ret->max_nr_accesses = max_nr_accesses;
-+	ret->min_age_region = min_age_region;
-+	ret->max_age_region = max_age_region;
-+	ret->action = action;
-+	INIT_LIST_HEAD(&ret->list);
-+
-+	return ret;
-+}
-+
- static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
- {
- 	list_add_tail(&s->list, &ctx->schemes_list);
-@@ -1273,6 +1296,144 @@ static ssize_t debugfs_monitor_on_write(struct file *file,
- 	return ret;
- }
- 
-+static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
-+{
-+	struct damos *s;
-+	int written = 0;
-+	int rc;
-+
-+	damon_for_each_schemes(c, s) {
-+		rc = snprintf(&buf[written], len - written,
-+				"%u %u %u %u %u %u %d\n",
-+				s->min_sz_region, s->max_sz_region,
-+				s->min_nr_accesses, s->max_nr_accesses,
-+				s->min_age_region, s->max_age_region,
-+				s->action);
-+		if (!rc)
-+			return -ENOMEM;
-+		written += rc;
++	if (max_scatter) {
++		err = mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_areq,
++						  t->max_segs, t->max_seg_sz,
++						  &sg_len);
++	} else {
++		err = mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max_segs,
++				      t->max_seg_sz, &sg_len, min_sg_len);
 +	}
-+	return written;
-+}
-+
-+static ssize_t debugfs_schemes_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	ssize_t ret;
-+
-+	kbuf = kmalloc(count, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	ret = sprint_schemes(ctx, kbuf, count);
-+	if (ret < 0)
-+		goto out;
-+	ret = simple_read_from_buffer(buf, count, ppos, kbuf, ret);
-+
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
-+static void free_schemes_arr(struct damos **schemes, ssize_t nr_schemes)
-+{
-+	ssize_t i;
-+
-+	for (i = 0; i < nr_schemes; i++)
-+		kfree(schemes[i]);
-+	kfree(schemes);
-+}
-+
-+/*
-+ * Converts a string into an array of struct damos pointers
-+ *
-+ * Returns an array of struct damos pointers that converted if the conversion
-+ * success, or NULL otherwise.
-+ */
-+static struct damos **str_to_schemes(const char *str, ssize_t len,
-+				ssize_t *nr_schemes)
-+{
-+	struct damos *scheme, **schemes;
-+	const int max_nr_schemes = 256;
-+	int pos = 0, parsed, ret;
-+	unsigned int min_sz, max_sz, min_nr_a, max_nr_a, min_age, max_age;
-+	int action;
-+
-+	schemes = kmalloc_array(max_nr_schemes, sizeof(struct damos *),
-+			GFP_KERNEL);
-+	if (!schemes)
-+		return NULL;
-+
-+	*nr_schemes = 0;
-+	while (pos < len && *nr_schemes < max_nr_schemes) {
-+		ret = sscanf(&str[pos], "%u %u %u %u %u %u %d%n",
-+				&min_sz, &max_sz, &min_nr_a, &max_nr_a,
-+				&min_age, &max_age, &action, &parsed);
-+		pos += parsed;
-+		if (ret != 7)
-+			break;
-+		if (action >= DAMOS_ACTION_LEN) {
-+			pr_err("wrong action %d\n", action);
-+			goto error;
-+		}
-+
-+		scheme = damon_new_scheme(min_sz, max_sz, min_nr_a, max_nr_a,
-+				min_age, max_age, action);
-+		if (!scheme)
-+			goto error;
-+
-+		schemes[*nr_schemes] = scheme;
-+		*nr_schemes += 1;
-+	}
-+	return schemes;
-+error:
-+	free_schemes_arr(schemes, *nr_schemes);
-+	return NULL;
-+}
-+
-+static ssize_t debugfs_schemes_write(struct file *file, const char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	struct damon_ctx *ctx = &damon_user_ctx;
-+	char *kbuf;
-+	struct damos **schemes;
-+	ssize_t nr_schemes, ret;
-+
-+	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
-+	if (ret < 0)
-+		goto out;
-+
-+	schemes = str_to_schemes(kbuf, ret, &nr_schemes);
-+	if (!schemes) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	spin_lock(&ctx->kdamond_lock);
-+	if (ctx->kdamond)
-+		goto monitor_running;
-+
-+	damon_set_schemes(ctx, schemes, nr_schemes);
-+	spin_unlock(&ctx->kdamond_lock);
-+	goto free_schemes_out;
-+
-+monitor_running:
-+	spin_unlock(&ctx->kdamond_lock);
-+	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
-+	ret = -EINVAL;
-+free_schemes_out:
-+	free_schemes_arr(schemes, nr_schemes);
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
- static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
- {
- 	struct damon_task *t;
-@@ -1502,6 +1663,12 @@ static const struct file_operations pids_fops = {
- 	.write = debugfs_pids_write,
- };
- 
-+static const struct file_operations schemes_fops = {
-+	.owner = THIS_MODULE,
-+	.read = debugfs_schemes_read,
-+	.write = debugfs_schemes_write,
-+};
-+
- static const struct file_operations record_fops = {
- 	.owner = THIS_MODULE,
- 	.read = debugfs_record_read,
-@@ -1518,10 +1685,10 @@ static struct dentry *debugfs_root;
- 
- static int __init debugfs_init(void)
- {
--	const char * const file_names[] = {"attrs", "record",
-+	const char * const file_names[] = {"attrs", "record", "schemes",
- 		"pids", "monitor_on"};
- 	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
--		&pids_fops, &monitor_on_fops};
-+		&schemes_fops, &pids_fops, &monitor_on_fops};
- 	int i;
- 
- 	debugfs_root = debugfs_create_dir("damon", NULL);
--- 
-2.17.1
++	if (!err && sg_len != t->sg_len)
++		err = -EINVAL;
+
+> +
+> +err:
+>  	if (err)
+>  		pr_info("%s: Failed to map sg list\n",
+>  		       mmc_hostname(test->card->host));
+> @@ -1458,15 +1477,16 @@ static int mmc_test_area_io_seq(struct mmc_test_card *test, unsigned long sz,
+>  			sz = max_tfr;
+>  	}
+>  
+> -	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len);
+> +	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonblock);
+>  	if (ret)
+>  		return ret;
+>  
+>  	if (timed)
+>  		ktime_get_ts64(&ts1);
+>  	if (nonblock)
+> -		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
+> -				 dev_addr, t->blocks, 512, write, count);
+> +		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_areq,
+> +				 t->sg_len, dev_addr, t->blocks, 512, write,
+> +				 count);
+>  	else
+>  		for (i = 0; i < count && ret == 0; i++) {
+>  			ret = mmc_test_area_transfer(test, dev_addr, write);
+> @@ -1584,6 +1604,12 @@ static int mmc_test_area_init(struct mmc_test_card *test, int erase, int fill)
+>  		goto out_free;
+>  	}
+>  
+> +	t->sg_areq = kmalloc_array(t->max_segs, sizeof(*t->sg), GFP_KERNEL);
+
+Needs to be freed in mmc_test_area_cleanup()
+
+> +	if (!t->sg_areq) {
+> +		ret = -ENOMEM;
+> +		goto out_free;
+> +	}
+> +
+>  	t->dev_addr = mmc_test_capacity(test->card) / 2;
+>  	t->dev_addr -= t->dev_addr % (t->max_sz >> 9);
+>  
+> @@ -2468,7 +2494,7 @@ static int __mmc_test_cmds_during_tfr(struct mmc_test_card *test,
+>  	if (!(test->card->host->caps & MMC_CAP_CMD_DURING_TFR))
+>  		return RESULT_UNSUP_HOST;
+>  
+> -	ret = mmc_test_area_map(test, sz, 0, 0);
+> +	ret = mmc_test_area_map(test, sz, 0, 0, use_areq);
+>  	if (ret)
+>  		return ret;
+>  
+> 
 
