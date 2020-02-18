@@ -2,111 +2,70 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10055C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493C12176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lEAw20A9"
+	by mail.kernel.org (Postfix) with ESMTP id E43382176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBRPra (ORCPT
+        id S1726716AbgBRPrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:47:30 -0500
-Received: from mout.gmx.net ([212.227.15.19]:46263 "EHLO mout.gmx.net"
+        Tue, 18 Feb 2020 10:47:45 -0500
+Received: from verein.lst.de ([213.95.11.211]:38811 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgBRPr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:47:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582040838;
-        bh=MBOJrFcaXa3Z19n1i45xJXpCvEYvi0ktVJoJ0KCJdaM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=lEAw20A9pa4AMyV2mOHYTAYIhJPNpYHngS5bg8kwJcoVo+iuzPocNOYbDtuBiVWPe
-         ukVY//hBaxNGUw16uGyN9eH1BgJqS7q1OOnNbXVYmA/9Li7vyyTb4y93CZfJx64cPB
-         BKg0V2/7Nb7bycl5dWxxazxRijxtVcdNtnIY5eRM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5QF5-1j3Fbv3L3F-001RAv; Tue, 18
- Feb 2020 16:47:18 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     netdev@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: phy: broadcom: Fix a typo ("firsly")
-Date:   Tue, 18 Feb 2020 16:47:01 +0100
-Message-Id: <20200218154701.1639-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:c0xLfCruKpO49xdxAJWcPwUZ8C0bEuPdja+hSV//rJgFLlGQLlh
- 8pHOZUB6UVZ3NDRosEVruEci3mivxKm3kJzTNlbIE9k0GkyMqwOogA7pBas4fzElBwu44Tz
- 4bENV1Y/kyWD/OWxiZ3wiXAQs+fMAx8/vGwHi6ylP9Ryrrq0AseLtlvPu68ZclCo36cnLj2
- 3l3QeqP+LupeCUhY42R6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8fOIy8TzPYM=:w3XmnmVGYvahaYGzCVqNwe
- KLu1WaDDWsLkJqiHw38ffAdHLR3+6mDtbz3UD2EzkCdLt+LMfio1cKeAdqS13UeVyEtHX7RtA
- qcVOas4Zsjmq09DQnEfQbNDsXoymm8Z7OuQNTPuDWmbrmsMXA1UB3qh1VCxtKkwer+ALaNDFR
- f7dNZ/lHk3VxRH0oyoHBne25oCs8V2eG/a7TS5Ngt3MvWPbA+TzGui1bjBsK8vupxbGHz/lU+
- TiGN9ZGBYJwVcVVI1T6C1rRlQ6nSnDdig+2vCX4IIYWiSNkgGqgn+EK2c/BuzAay87vU0x3cK
- WRRQeJkq7ar66FHcEuR5E/hoeXV9noQh0QxOK3xLwDP+oIxv12YJK5vahXZ6T0aayi/A0Ht+z
- 7HiiIXmSrwZVsmXBNDScy+jHSMsFLAIuZQrg7DtF+3Ks8AqSUBU47OmyH1vaA4QEGX3ibj8qQ
- nbmhYSYwbjPTw80OjkoCwlL0Lt9Ef8bI6JStwgseYWrahPN1iBeb2J8aQ1f+yzs0N4ZFn4rKb
- Abn9sZtNYbY80noibkupgH9SefbQd45K2isMocsFbHGxd59Pyc7mBWwxRYIIjaOcmiEPu5Dzw
- /2nIp+Per/YJ3Q32sNOQ1P+6XhbXaBGI88V9+unG7C+HkyjIyj4MmD+21iULNA8xX96BuLEsy
- lSJhuqWHMQ6t7gWV0f9Z3m6GhThiBy1ogKHhdKPXtQht1o09PRz1zeM/UwiLx/v+BsHJScsN0
- jfpQb9guFZ3Z0hUjqq6tPyHQu3Okv3MeCi8PB8/BLqYMV6x/fHs/JiVGhCEwwA21J/7xo0Cqb
- 83Ib1x90fNyPLqbqIeXKUM1dBmvyv8+EvfWam/E77qywFbAxLZStqn8N9CZYaQSlOhfegR9hY
- 8bVdR/S5pE8rdhcOEuOBTEBMxFzNvBBfdFmZyRtDaih2wiuhIA7x60C+OmJ/JlHuzdAL5CLgu
- HovwOxMAugBVaTDqh43winFahe7o4UvSoeuRcKTKtqpoHKUFKRvXLu6LARuzG/Dwg7aQhgrie
- yfxgVQgibi5mkDhGQU8VoHXO69TbWiLkMRjGSQemKM0SZVBt3vlq/eHB/55yX3d+UybPsTRAr
- R6myshlmqp5kBi3qY4Uj3D7ezvIJRGTn3xjjqiorgapIih6NdKNdHY8fe7wSFzlPWyxkX6BOE
- KIRYv3WkEwwp/iL2XYF4ikS8XDhx4ow7K8ZULjHfSl5fm1nVpFFgC9hkXk9Yg+IPOs8XXQ/KQ
- ljxVPU7JGkDdVfKOl
+        id S1726338AbgBRPrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:47:45 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 85DED68BE1; Tue, 18 Feb 2020 16:47:42 +0100 (CET)
+From:   Torsten Duwe <duwe@lst.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <maxime@cerno.tech>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [RESEND][PATCH] drm/bridge: analogix-anx78xx: Fix drm_dp_link helper removal
+Message-Id: <20200218154742.85DED68BE1@verein.lst.de>
+Date:   Tue, 18 Feb 2020 16:47:42 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/net/phy/broadcom.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
+and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
+and the multiply+divide alltogether.
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 7d68b28bb893..a62229a8b1a4 100644
-=2D-- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -410,7 +410,7 @@ static int bcm5481_config_aneg(struct phy_device *phyd=
-ev)
- 	struct device_node *np =3D phydev->mdio.dev.of_node;
- 	int ret;
+fixes: ff1e8fb68ea06027 ("analogix-anx78xx: Avoid drm_dp_link helpers")
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+---
+https://patchwork.freedesktop.org/patch/343003/
+https://lists.freedesktop.org/archives/dri-devel/2020-January/253535.html
 
--	/* Aneg firsly. */
-+	/* Aneg firstly. */
- 	ret =3D genphy_config_aneg(phydev);
-
- 	/* Then we can set up the delay. */
-@@ -463,7 +463,7 @@ static int bcm54616s_config_aneg(struct phy_device *ph=
-ydev)
- {
- 	int ret;
-
--	/* Aneg firsly. */
-+	/* Aneg firstly. */
- 	if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX)
- 		ret =3D genphy_c37_config_aneg(phydev);
- 	else
-=2D-
-2.20.1
-
+---
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+index 41867be03751..864423f59d66 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+@@ -722,10 +722,9 @@ static int anx78xx_dp_link_training(struct anx78xx *anx78xx)
+ 	if (err)
+ 		return err;
+ 
+-	dpcd[0] = drm_dp_max_link_rate(anx78xx->dpcd);
+-	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+ 	err = regmap_write(anx78xx->map[I2C_IDX_TX_P0],
+-			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
++			   SP_DP_MAIN_LINK_BW_SET_REG,
++			   anx78xx->dpcd[DP_MAX_LINK_RATE]);
+ 	if (err)
+ 		return err;
+ 
