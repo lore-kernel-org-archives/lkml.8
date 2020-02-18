@@ -4,63 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F97C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E3EC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E5622B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91B022B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056380;
-	bh=BzMa2qGO8g16s/WmhDUrJw7bWLJLX8rlwouMNxuw3rc=;
+	s=default; t=1582056383;
+	bh=AvAoxOwl8RH6toj6B/bYYgQhwV9RU4hQAOceSW9wlZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9CA8IOhU+4Sw/ghj+3wWO8L90KPMvQaVXdjGAHTO+IkCBtxUHPtxX3NpIDcXBLuC
-	 Cg02GFMeaw1oX8MuTZbfPeF1iZCVY1XSiH2rJghBLOd1e+lPYvLOo/qYWlE1IkkFp3
-	 9RQSBa+MOfkYsivtYgEZhOIHtEZmk49P/e0SvFvA=
+	b=GNNkpdnDrb5nKW6mT4bGqBV7QjSenHxchy4+E9xjJFevEStQ/aA4jf73Tm3N+lGk+
+	 gzt360kBqBT2A+gmOvx3v+vaUc+eDtQxyBjFM/r7LDbuDp+K9WXVCw3VTx8GXZxBXG
+	 5mbf0B44xpe6s88sftELrDZLc74R+gnohA3GZcTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgBRUAd (ORCPT
+        id S1727208AbgBRUGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39626 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:06:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgBRUAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:25 -0500
+        id S1728376AbgBRUAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95ACF24670;
-        Tue, 18 Feb 2020 20:00:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB56D2465D;
+        Tue, 18 Feb 2020 20:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056025;
-        bh=BzMa2qGO8g16s/WmhDUrJw7bWLJLX8rlwouMNxuw3rc=;
+        s=default; t=1582056032;
+        bh=AvAoxOwl8RH6toj6B/bYYgQhwV9RU4hQAOceSW9wlZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jy5kMjCEWJsKEHKg26RGOgR9ft5bewEGIzgyRXG8p1swMR/s1MHoWVDPwln4DZbaK
-         3OFnMeNv7Je9IbALVIQTuE/ZSHZzyZi0ew94jgYs0a+zjPWvqBUgfVMz2b7Iy8qPk1
-         +LVjil66MFOYBIPvdjGlaFZ4SEqK5/DRK81a2n4c=
+        b=eSxlsQ+LgGoIiipaMqUUi0mXDU6fh6rUx0cMyJqESFWSWd1gKPVy5g3GThWkEMFVP
+         sq6N4L88PTOuBQI4J8HDQP4PWTTIai5/A71cUe6EGMLXjvnZGppodUO6/oo8JXUYe9
+         kjrz8h60ZjV/u9dMnBazmaSvBwTI1Reu2P/PKl3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 58/66] perf stat: Dont report a null stalled cycles per insn metric
-Date:   Tue, 18 Feb 2020 20:55:25 +0100
-Message-Id: <20200218190433.435351946@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 01/80] io_uring: fix deferred req iovec leak
+Date:   Tue, 18 Feb 2020 20:54:22 +0100
+Message-Id: <20200218190432.175397429@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
+In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
+References: <20200218190432.043414522@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,124 +61,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-commit 80cc7bb6c104d733bff60ddda09f19139c61507c upstream.
+commit 1e95081cb5b4cf77065d37866f57cf3c90a3df78 upstream.
 
-For data collected on machines with front end stalled cycles supported,
-such as found on modern AMD CPU families, commit 146540fb545b ("perf
-stat: Always separate stalled cycles per insn") introduces a new line in
-CSV output with a leading comma that upsets some automated scripts.
-Scripts have to use "-e ex_ret_instr" to work around this issue, after
-upgrading to a version of perf with that commit.
+After defer, a request will be prepared, that includes allocating iovec
+if needed, and then submitted through io_wq_submit_work() but not custom
+handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
+iovec, as it's in io-wq and the code goes as follows:
 
-We could add "if (have_frontend_stalled && !config->csv_sep)" to the not
-(total && avg) else clause, to emphasize that CSV users are usually
-scripts, and are written to do only what is needed, i.e., they wouldn't
-typically invoke "perf stat" without specifying an explicit event list.
+io_read() {
+	if (!io_wq_current_is_worker())
+		kfree(iovec);
+}
 
-But - let alone CSV output - why should users now tolerate a constant
-0-reporting extra line in regular terminal output?:
+Put all deallocation logic in io_{read,write,send,recv}(), which will
+leave the memory, if going async with -EAGAIN.
 
-BEFORE:
+It also fixes a leak after failed io_alloc_async_ctx() in
+io_{recv,send}_msg().
 
-$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       181,110,981      instructions              #    0.58  insn per cycle
-                                                  #    0.00  stalled cycles per insn
-       309,876,469      cycles
-
-       1.002202582 seconds time elapsed
-
-The user would not like to see the now permanent:
-
-  "0.00  stalled cycles per insn"
-
-line fixture, as it gives no useful information.
-
-So this patch removes the printing of the zeroed stalled cycles line
-altogether, almost reverting the very original commit fb4605ba47e7
-("perf stat: Check for frontend stalled for metrics"), which seems like
-it was written to normalize --metric-only column output of common Intel
-machines at the time: modern Intel machines have ceased to support the
-genericised frontend stalled metrics AFAICT.
-
-AFTER:
-
-$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       244,071,432      instructions              #    0.69  insn per cycle
-       355,353,490      cycles
-
-       1.001862516 seconds time elapsed
-
-Output behaviour when stalled cycles is indeed measured is not affected
-(BEFORE == AFTER):
-
-$ sudo perf stat --all-cpus -einstructions,cycles,stalled-cycles-frontend -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       247,227,799      instructions              #    0.63  insn per cycle
-                                                  #    0.26  stalled cycles per insn
-       394,745,636      cycles
-        63,194,485      stalled-cycles-frontend   #   16.01% frontend cycles idle
-
-       1.002079770 seconds time elapsed
-
-Fixes: 146540fb545b ("perf stat: Always separate stalled cycles per insn")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200207230613.26709-1-kim.phillips@amd.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: stable@vger.kernel.org # 5.5
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/stat-shadow.c |    6 ------
- 1 file changed, 6 deletions(-)
+ fs/io_uring.c |   47 ++++++++++++-----------------------------------
+ 1 file changed, 12 insertions(+), 35 deletions(-)
 
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -18,7 +18,6 @@
-  * AGGR_NONE: Use matching CPU
-  * AGGR_THREAD: Not supported?
-  */
--static bool have_frontend_stalled;
- 
- struct runtime_stat rt_stat;
- struct stats walltime_nsecs_stats;
-@@ -144,7 +143,6 @@ void runtime_stat__exit(struct runtime_s
- 
- void perf_stat__init_shadow_stats(void)
- {
--	have_frontend_stalled = pmu_have_event("cpu", "stalled-cycles-frontend");
- 	runtime_stat__init(&rt_stat);
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1786,17 +1786,6 @@ static int io_alloc_async_ctx(struct io_
+ 	return req->io == NULL;
  }
  
-@@ -853,10 +851,6 @@ void perf_stat__print_shadow_stats(struc
- 			print_metric(config, ctxp, NULL, "%7.2f ",
- 					"stalled cycles per insn",
- 					ratio);
--		} else if (have_frontend_stalled) {
--			out->new_line(config, ctxp);
--			print_metric(config, ctxp, NULL, "%7.2f ",
--				     "stalled cycles per insn", 0);
+-static void io_rw_async(struct io_wq_work **workptr)
+-{
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct iovec *iov = NULL;
+-
+-	if (req->io->rw.iov != req->io->rw.fast_iov)
+-		iov = req->io->rw.iov;
+-	io_wq_submit_work(workptr);
+-	kfree(iov);
+-}
+-
+ static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
+ 			     struct iovec *iovec, struct iovec *fast_iov,
+ 			     struct iov_iter *iter)
+@@ -1810,7 +1799,6 @@ static int io_setup_async_rw(struct io_k
+ 
+ 		io_req_map_rw(req, io_size, iovec, fast_iov, iter);
+ 	}
+-	req->work.func = io_rw_async;
+ 	return 0;
+ }
+ 
+@@ -1897,8 +1885,7 @@ copy_iov:
  		}
- 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
- 		if (runtime_stat_n(st, STAT_BRANCHES, ctx, cpu) != 0)
+ 	}
+ out_free:
+-	if (!io_wq_current_is_worker())
+-		kfree(iovec);
++	kfree(iovec);
+ 	return ret;
+ }
+ 
+@@ -2003,8 +1990,7 @@ copy_iov:
+ 		}
+ 	}
+ out_free:
+-	if (!io_wq_current_is_worker())
+-		kfree(iovec);
++	kfree(iovec);
+ 	return ret;
+ }
+ 
+@@ -2174,19 +2160,6 @@ static int io_sync_file_range(struct io_
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_NET)
+-static void io_sendrecv_async(struct io_wq_work **workptr)
+-{
+-	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+-	struct iovec *iov = NULL;
+-
+-	if (req->io->rw.iov != req->io->rw.fast_iov)
+-		iov = req->io->msg.iov;
+-	io_wq_submit_work(workptr);
+-	kfree(iov);
+-}
+-#endif
+-
+ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+ #if defined(CONFIG_NET)
+@@ -2254,17 +2227,19 @@ static int io_sendmsg(struct io_kiocb *r
+ 		if (force_nonblock && ret == -EAGAIN) {
+ 			if (req->io)
+ 				return -EAGAIN;
+-			if (io_alloc_async_ctx(req))
++			if (io_alloc_async_ctx(req)) {
++				if (kmsg && kmsg->iov != kmsg->fast_iov)
++					kfree(kmsg->iov);
+ 				return -ENOMEM;
++			}
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
+-			req->work.func = io_sendrecv_async;
+ 			return -EAGAIN;
+ 		}
+ 		if (ret == -ERESTARTSYS)
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (!io_wq_current_is_worker() && kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
+@@ -2346,17 +2321,19 @@ static int io_recvmsg(struct io_kiocb *r
+ 		if (force_nonblock && ret == -EAGAIN) {
+ 			if (req->io)
+ 				return -EAGAIN;
+-			if (io_alloc_async_ctx(req))
++			if (io_alloc_async_ctx(req)) {
++				if (kmsg && kmsg->iov != kmsg->fast_iov)
++					kfree(kmsg->iov);
+ 				return -ENOMEM;
++			}
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
+-			req->work.func = io_sendrecv_async;
+ 			return -EAGAIN;
+ 		}
+ 		if (ret == -ERESTARTSYS)
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (!io_wq_current_is_worker() && kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
 
 
