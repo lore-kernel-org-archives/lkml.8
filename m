@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38987C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F519C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0463924655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED8D2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055944;
-	bh=6Q7UhUc1xzaaYT1fnjAKTkB/6wFgVIW/ZTQsvvAYn3k=;
+	s=default; t=1582055947;
+	bh=RYYN5qTMyBY+8UgtW3B8zXLXW/ynPsVz+QuTgD0qJfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQKnR+SENsJgIvRTrIwy2L+ZzxU/GiwCeDfgfPiG/8y1FbhBLNyAzX8+jVpf6VbPI
-	 lkbOXEc0Jn9T0VBmcv+z4ivyzVozUHRNSPOh/E4P3NBB6JW3Fx++jzLfHKbsAZswWm
-	 dF0I53q3sdK7CCsodx0LcmKfumLsrPGSIxuhj5yA=
+	b=ePSXQsa4wUPZNqdQ58lfJlgotGwMMYyQ921et0NHZ8YgmEeUpcy4MK9uGPRv/wbBf
+	 S9Oga+8qW89eL6kmg4sFP0ex+iGCD+RF8jWFeSK2Hm91FtliO03/302YeSgEhou7bb
+	 wn8qhe/qc+sCsopAmrw+hg70cv0xYAcIzFEanfos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgBRT7C (ORCPT
+        id S1728361AbgBRT7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbgBRT66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:58 -0500
+        id S1727941AbgBRT7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C281C2465A;
-        Tue, 18 Feb 2020 19:58:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 382BD24670;
+        Tue, 18 Feb 2020 19:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055938;
-        bh=6Q7UhUc1xzaaYT1fnjAKTkB/6wFgVIW/ZTQsvvAYn3k=;
+        s=default; t=1582055940;
+        bh=RYYN5qTMyBY+8UgtW3B8zXLXW/ynPsVz+QuTgD0qJfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i1rUlh1q5Jw4sWqS74CfkAwjGbJMSzn7998rr8VnP+A0Vee61TyQUTOThynlrJxwl
-         eddb7NgsxgdVMDmjy8IVBaSXyjWFMQdmWz25Oyk1IBDHDUeA2hENowa0INLPUJQqTx
-         mzLF9cV7u7cGztji8CQf+KTv0UvEsoL+iYdijuhw=
+        b=SqTfjeyHi+XqbafnW7bjPAgWstaq3BnKGRHp15YebTX9Xn5twkGE+ICPbXKvKI7ak
+         /G3SwaZ2PHpvrIRQvj1Q35kGfxnwQZe1d906kBWZpEPmjlvasNwN9Od2zHqyJTCX/L
+         4996ofg+IUW6Aw5qLoZuGeOWBzCMdQn7S08LEST8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Asmaa Mnebhi <asmaa@mellanox.com>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 5.4 38/66] drivers: ipmi: fix off-by-one bounds check that leads to a out-of-bounds write
-Date:   Tue, 18 Feb 2020 20:55:05 +0100
-Message-Id: <20200218190431.553464416@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 39/66] IB/mlx5: Return failure when rts2rts_qp_counters_set_id is not supported
+Date:   Tue, 18 Feb 2020 20:55:06 +0100
+Message-Id: <20200218190431.636036146@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,36 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Mark Zhang <markz@mellanox.com>
 
-commit e0354d147e5889b5faa12e64fa38187aed39aad4 upstream.
+commit 10189e8e6fe8dcde13435f9354800429c4474fb1 upstream.
 
-The end of buffer check is off-by-one since the check is against
-an index that is pre-incremented before a store to buf[]. Fix this
-adjusting the bounds check appropriately.
+When binding a QP with a counter and the QP state is not RESET, return
+failure if the rts2rts_qp_counters_set_id is not supported by the
+device.
 
-Addresses-Coverity: ("Out-of-bounds write")
-Fixes: 51bd6f291583 ("Add support for IPMB driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Message-Id: <20200114144031.358003-1-colin.king@canonical.com>
-Reviewed-by: Asmaa Mnebhi <asmaa@mellanox.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+This is to prevent cases like manual bind for Connect-IB devices from
+returning success when the feature is not supported.
+
+Fixes: d14133dd4161 ("IB/mlx5: Support set qp counter")
+Link: https://lore.kernel.org/r/20200126171708.5167-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmb_dev_int.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/qp.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/char/ipmi/ipmb_dev_int.c
-+++ b/drivers/char/ipmi/ipmb_dev_int.c
-@@ -265,7 +265,7 @@ static int ipmb_slave_cb(struct i2c_clie
- 		break;
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -3391,9 +3391,6 @@ static int __mlx5_ib_qp_set_counter(stru
+ 	struct mlx5_ib_qp_base *base;
+ 	u32 set_id;
  
- 	case I2C_SLAVE_WRITE_RECEIVED:
--		if (ipmb_dev->msg_idx >= sizeof(struct ipmb_msg))
-+		if (ipmb_dev->msg_idx >= sizeof(struct ipmb_msg) - 1)
- 			break;
+-	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id))
+-		return 0;
+-
+ 	if (counter)
+ 		set_id = counter->id;
+ 	else
+@@ -6503,6 +6500,7 @@ void mlx5_ib_drain_rq(struct ib_qp *qp)
+  */
+ int mlx5_ib_qp_set_counter(struct ib_qp *qp, struct rdma_counter *counter)
+ {
++	struct mlx5_ib_dev *dev = to_mdev(qp->device);
+ 	struct mlx5_ib_qp *mqp = to_mqp(qp);
+ 	int err = 0;
  
- 		buf[++ipmb_dev->msg_idx] = *val;
+@@ -6512,6 +6510,11 @@ int mlx5_ib_qp_set_counter(struct ib_qp
+ 		goto out;
+ 	}
+ 
++	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id)) {
++		err = -EOPNOTSUPP;
++		goto out;
++	}
++
+ 	if (mqp->state == IB_QPS_RTS) {
+ 		err = __mlx5_ib_qp_set_counter(qp, counter);
+ 		if (!err)
 
 
