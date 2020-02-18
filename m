@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EC7C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B52C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A047421D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E1021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056309;
-	bh=mAmV8dIK69+9SooGk8jR/mmY2MxyUb+N5NoJ1Go+u4g=;
+	s=default; t=1582056315;
+	bh=l4P5wzIuHe9TK/p1Lf98jBjZh1puwj7i0tmg6bUuEOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xbK3RG9hiirkV6mUcEPn2w1sxqslt1nK6n7/hCjgaWnyjGOY2ZKswLS5nXAZh8awS
-	 y3GFOESrZFWdJnIjfTj2aAxfrQIHeM9JaonxyPW/DEEYVzqdYDDMDQ55zw5/Na4oLM
-	 IZPMhUuDXT3wlftZhEel2SLhRHy38SLCBiLghAQw=
+	b=Rv+ZSXFr3kOfM5u5c+1B6s09drLTYZnO188kvD4SfvjF4J7D/iM4qnu+8JZ3eXgqU
+	 NnbP0SbWi8avrtbUP38hT3dEhZ5uFJww3mOIzyVCEyWJL0IhFVc4GZD9nPiq0ghys+
+	 tfGMxznewfuZAQFB4rkm0v5m6k+CfGCVB+EDGljs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBRUFI (ORCPT
+        id S1728873AbgBRUCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:05:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42460 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbgBRUCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:16 -0500
+        id S1728868AbgBRUCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6760A24125;
-        Tue, 18 Feb 2020 20:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19EAD24672;
+        Tue, 18 Feb 2020 20:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056135;
-        bh=mAmV8dIK69+9SooGk8jR/mmY2MxyUb+N5NoJ1Go+u4g=;
+        s=default; t=1582056128;
+        bh=l4P5wzIuHe9TK/p1Lf98jBjZh1puwj7i0tmg6bUuEOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ks1F4cfg6RU3DoST0Q+8pFF3P1lzIFyXKvtrBUgv0zKK8xOiqdOM38WvE8idN/DVO
-         O0f0KwssRjq949lUIDT217ERI9DsNNVNsKwWmYtQFN+RMHvWXegayCdENmszDqY4Ty
-         7RnFk3oDfvwujr/Nyn+k8zN92VfSv9TJ8xW8qvaI=
+        b=1KAGgf12SaXVK4xSznOw4AibHrpbL3yEsW4ib0vWP73yfB2SeBjt+ep71j8rmQxwn
+         Ly32Utg8H1ans4bI4sbhkXSj2u+Ei/lygPmj0jPG8nN6HcwZwbFXOeKkexPnm1Za3y
+         w4HQNiO8zZ3M0If/YwQT+KKyz8h7rjEnc1q33zuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 49/80] IB/hfi1: Acquire lock to release TID entries when user file is closed
-Date:   Tue, 18 Feb 2020 20:55:10 +0100
-Message-Id: <20200218190436.942775429@linuxfoundation.org>
+        stable@vger.kernel.org, Sujith Pandel <sujith_pandel@dell.com>,
+        David Milburn <dmilburn@redhat.com>,
+        Yi Zhang <yi.zhang@redhat.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 46/80] nvme: fix the parameter order for nvme_get_log in nvme_get_fw_slot_info
+Date:   Tue, 18 Feb 2020 20:55:07 +0100
+Message-Id: <20200218190436.723495694@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -62,52 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Yi Zhang <yi.zhang@redhat.com>
 
-commit a70ed0f2e6262e723ae8d70accb984ba309eacc2 upstream.
+commit f25372ffc3f6c2684b57fb718219137e6ee2b64c upstream.
 
-Each user context is allocated a certain number of RcvArray (TID)
-entries and these entries are managed through TID groups. These groups
-are put into one of three lists in each user context: tid_group_list,
-tid_used_list, and tid_full_list, depending on the number of used TID
-entries within each group. When TID packets are expected, one or more
-TID groups will be allocated. After the packets are received, the TID
-groups will be freed. Since multiple user threads may access the TID
-groups simultaneously, a mutex exp_mutex is used to synchronize the
-access. However, when the user file is closed, it tries to release
-all TID groups without acquiring the mutex first, which risks a race
-condition with another thread that may be releasing its TID groups,
-leading to data corruption.
+nvme fw-activate operation will get bellow warning log,
+fix it by update the parameter order
 
-This patch addresses the issue by acquiring the mutex first before
-releasing the TID groups when the file is closed.
+[  113.231513] nvme nvme0: Get FW SLOT INFO log error
 
-Fixes: 3abb33ac6521 ("staging/hfi1: Add TID cache receive init and free funcs")
-Link: https://lore.kernel.org/r/20200210131026.87408.86853.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 0e98719b0e4b ("nvme: simplify the API for getting log pages")
+Reported-by: Sujith Pandel <sujith_pandel@dell.com>
+Reviewed-by: David Milburn <dmilburn@redhat.com>
+Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/user_exp_rcv.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-+++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-@@ -142,10 +142,12 @@ void hfi1_user_exp_rcv_free(struct hfi1_
- {
- 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3867,7 +3867,7 @@ static void nvme_get_fw_slot_info(struct
+ 	if (!log)
+ 		return;
  
-+	mutex_lock(&uctxt->exp_mutex);
- 	if (!EXP_TID_SET_EMPTY(uctxt->tid_full_list))
- 		unlock_exp_tids(uctxt, &uctxt->tid_full_list, fd);
- 	if (!EXP_TID_SET_EMPTY(uctxt->tid_used_list))
- 		unlock_exp_tids(uctxt, &uctxt->tid_used_list, fd);
-+	mutex_unlock(&uctxt->exp_mutex);
- 
- 	kfree(fd->invalid_tids);
- 	fd->invalid_tids = NULL;
+-	if (nvme_get_log(ctrl, NVME_NSID_ALL, 0, NVME_LOG_FW_SLOT, log,
++	if (nvme_get_log(ctrl, NVME_NSID_ALL, NVME_LOG_FW_SLOT, 0, log,
+ 			sizeof(*log), 0))
+ 		dev_warn(ctrl->device, "Get FW SLOT INFO log error\n");
+ 	kfree(log);
 
 
