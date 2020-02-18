@@ -2,486 +2,278 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7893BC3403A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6A1C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8B32173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95A52173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:08:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sbd4QaAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgBRLHS (ORCPT
+        id S1726492AbgBRLIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:07:18 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58087 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgBRLHR (ORCPT
+        Tue, 18 Feb 2020 06:08:30 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:60055 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgBRLIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:07:17 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j40ie-0000iS-Ni; Tue, 18 Feb 2020 12:07:12 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j40ie-0002OZ-24; Tue, 18 Feb 2020 12:07:12 +0100
-Date:   Tue, 18 Feb 2020 12:07:12 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
-Message-ID: <20200218110712.7wllleu2w5myphyb@pengutronix.de>
-References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-4-m.felsch@pengutronix.de>
- <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 18 Feb 2020 06:08:30 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200218110827epoutp01049aec39c4e97db9f9e0bd73d6e07074~0eotQgKnn0367303673epoutp01R
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:08:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200218110827epoutp01049aec39c4e97db9f9e0bd73d6e07074~0eotQgKnn0367303673epoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582024107;
+        bh=5BHF8sxffFwnmAXK8ugvrthLsppbzxxxoZDHAX3S8qw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sbd4QaAlLIxX1/ADmWxvqtH4JeVDzAUoNAFWY8S3tt7KoWjI2wQBD1WtZigmyclKQ
+         H3k25RwsbBIlZQ0FfNDDrZK3a0lSqo5q6C5WBJL/73O1S4b/ScDY3PFB55kGCHDX5p
+         KUsyGlOCRem/PvNI+m82blaFlGVuzk/tFMyQU5zM=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200218110827epcas1p2d476d2fed5bb7fce223cd3fe6fc85ec1~0eos4Hjjk0618006180epcas1p2n;
+        Tue, 18 Feb 2020 11:08:27 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 48MJ4T2lLyzMqYkW; Tue, 18 Feb
+        2020 11:08:25 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        45.0D.57028.9A5CB4E5; Tue, 18 Feb 2020 20:08:25 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200218110823epcas1p1881cca768305c71c23ca161e35919a7e~0eopXL_T-1086810868epcas1p1B;
+        Tue, 18 Feb 2020 11:08:23 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200218110823epsmtrp125af98158c0172719fbc7a0862f05b6f~0eopWhHMx2413024130epsmtrp1B;
+        Tue, 18 Feb 2020 11:08:23 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-4d-5e4bc5a9edff
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C3.6E.10238.7A5CB4E5; Tue, 18 Feb 2020 20:08:23 +0900 (KST)
+Received: from [10.113.113.235] (unknown [10.113.113.235]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200218110823epsmtip1c7059f2c7263044569e0b024e139f34c~0eopLbBnO3234732347epsmtip1T;
+        Tue, 18 Feb 2020 11:08:23 +0000 (GMT)
+Subject: Re: RPI4: fail too boot with an initrd
+To:     Matthias Brugger <mbrugger@suse.com>,
+        LABBE Corentin <clabbe@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        u-boot@lists.denx.de, James Morse <james.morse@arm.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com
+From:   Jaehoon Chung <jh80.chung@samsung.com>
+Message-ID: <901d17c4-8265-a2a2-313b-cd9aeb7ecd63@samsung.com>
+Date:   Tue, 18 Feb 2020 20:08:30 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:05:45 up 95 days,  2:24, 122 users,  load average: 0.27, 0.55,
- 0.42
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <d9727fac-e7fd-7dfb-ce39-da0c5b0d12a2@suse.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmge7Ko95xBl9XC1us7T3KYnFp7Sw2
+        i/v7ljNZbHp8jdXi8q45bBYTb29gt2hqMbZYMPkJq8XbvZ3sDpwea+atYfR4f6OV3WPW/bNs
+        Hjtn3WX3OHtnB6PH5iX1Huu3XGXx+LxJLoAjKtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTM
+        wFDX0NLCXEkhLzE31VbJxSdA1y0zB+g6JYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpB
+        Sk6BZYFecWJucWleul5yfq6VoYGBkSlQYUJ2xu+FPxkL7hhUNC3rYWlgPKraxcjJISFgItG9
+        7TlrFyMXh5DADkaJyZ/us4EkhAQ+MUrc3eYIkfjGKNF8fTs7TMe6nXOgOvYySnxY3cQO0fGe
+        UeL25lAQW1hAX6Lp5TxmEFtEoFri2LLZYA3MAhcYJVr7/oCtYBPQkdj+7TgTiM0rYCexpHEn
+        2CAWAVWJW//XATVzcIgKREic/poIUSIocXLmExYQm1PARmLeG4i9zALiEreezGeCsOUltr+d
+        wwyyS0KgmV1i4ec1jBBXu0isOzKPDcIWlnh1fAvUN1ISL/vboOxqiV3NZ6CaOxglbm1rYoJI
+        GEvsXzqZCeQgZgFNifW79CHCihI7f89lhFjMJ/Huaw8rSImEAK9ER5sQRImKxKXXL5lgVt19
+        8p8VwvaQmPt+C/sERsVZSF6bheSdWUjemYWweAEjyypGsdSC4tz01GLDAkPkyN7ECE64WqY7
+        GKec8znEKMDBqMTDG9DnFSfEmlhWXJl7iFGCg1lJhNdbHCjEm5JYWZValB9fVJqTWnyI0RQY
+        8BOZpUST84HZIK8k3tDUyNjY2MLE0MzU0FBJnPdhpGackEB6YklqdmpqQWoRTB8TB6dUA6P0
+        0RlBp9a+/Cli8Wrr5Ly/Qf1rcv9prjeWCbjhcE3lbZcQz0R/D/Hm+JfH3r+el3vw7KxKi7yK
+        J3XrDaSvsIk0Wl//o3EkW6nwZNCGtPatXAu9nwSfPla4WSL15I2Q0B8+7q+jq7MPB7453mI+
+        ITjS83rW834NfumNRxuc9nqUHhZ0fZcfnqfEUpyRaKjFXFScCABjCnbpzgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSnO7yo95xBv/uqFqs7T3KYnFp7Sw2
+        i/v7ljNZbHp8jdXi8q45bBYTb29gt2hqMbZYMPkJq8XbvZ3sDpwea+atYfR4f6OV3WPW/bNs
+        Hjtn3WX3OHtnB6PH5iX1Huu3XGXx+LxJLoAjissmJTUnsyy1SN8ugSvj98KfjAV3DCqalvWw
+        NDAeVe1i5OSQEDCRWLdzDmsXIxeHkMBuRondp6ayQySkJD4/ncrWxcgBZAtLHD5cDFHzllHi
+        Ut8uJpAaYQF9iaaX85hBbBGBaokLL3tYQWxmgQuMEsv6BCEa5jBLbJ79CKyBTUBHYvu342A2
+        r4CdxJLGnWDLWARUJW79Xwc2SFQgQuL59huMEDWCEidnPmEBsTkFbCTmvWlih1igLvFn3iVm
+        CFtc4taT+UwQtrzE9rdzmCcwCs1C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlec
+        mFtcmpeul5yfu4kRHGVamjsYLy+JP8QowMGoxMO7YoJXnBBrYllxZe4hRgkOZiURXm9xoBBv
+        SmJlVWpRfnxRaU5q8SFGaQ4WJXHep3nHIoUE0hNLUrNTUwtSi2CyTBycUg2MFe+U+BtrZp1l
+        uG7qO3fOfN2vH/n+S9bJsd1NP2UTNM9pgtzOMO1ah3VbH/59/TkuqiKI8/CcbUJ5byeyPDmX
+        HZ64e1sRw/uZ+gIvuY3tOfuuS/G5bS6bl31E78hZDeUS/z0H5DRXGhe+zFvSUhPx5pbRObmp
+        WnxPi7c3hmVPbjhecN0g6qCwEktxRqKhFnNRcSIA+A1GfK4CAAA=
+X-CMS-MailID: 20200218110823epcas1p1881cca768305c71c23ca161e35919a7e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200218103651epcas1p4b6a9d599ec3577f1407ebc5b781c127f
+References: <20200214132748.GA23276@Red>
+        <b726290c-1038-3771-5187-6ac370bc92c9@arm.com> <20200217103733.GA11379@Red>
+        <c5a959d7-44b2-fab9-8269-d8e858790925@gmail.com>
+        <20200217125301.GA31847@Red>
+        <982c710c-d606-2c04-03ee-604626230bbc@gmail.com>
+        <20200218100128.GB10369@Red>
+        <CGME20200218103651epcas1p4b6a9d599ec3577f1407ebc5b781c127f@epcas1p4.samsung.com>
+        <d9727fac-e7fd-7dfb-ce39-da0c5b0d12a2@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2/18/20 7:36 PM, Matthias Brugger wrote:
+> 
+> 
+> On 18/02/2020 11:01, LABBE Corentin wrote:
+>> On Mon, Feb 17, 2020 at 02:07:09PM +0100, Matthias Brugger wrote:
+>>>
+>>>
+>>> On 17/02/2020 13:53, LABBE Corentin wrote:
+>>>> On Mon, Feb 17, 2020 at 11:50:04AM +0100, Matthias Brugger wrote:
+>>>>>
+>>>>>
+>>>>> On 17/02/2020 11:37, LABBE Corentin wrote:
+>>>>>> On Fri, Feb 14, 2020 at 06:15:27PM +0000, James Morse wrote:
+>>>>>>> Hi Corentin,
+>>>>>>>
+>>>>>>> On 14/02/2020 13:27, LABBE Corentin wrote:
+>>>>>>>> Since the inclusion of the "enable network support in RPi4 config" serie on uboot, I
+>>>>>>>> have started to work on adding the rpi4 in kernelCI.
+>>>>>>>> But I fail to succeed in using a kernel/dtb/ramdisk downloaded via tftp.
+>>>>>>>>
+>>>>>>>> Using booti I hit:
+>>>>>>>> [    0.000000] Linux version 5.6.0-rc1-next-20200212 (clabbe@build2-bionic-1804) (gcc version 7.4.1 20181213 [linaro-7.4-2019.02 revision 56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4] (Linaro    GCC 7.4-2019.02)) #66 SMP PREEMPT Wed Feb 12 10:14:20 UTC 2020
+>>>>>>>> [    0.000000] Machine model: Raspberry Pi 4 Model B
+>>>>>>>> [    0.000000] earlycon: uart0 at MMIO32 0x00000000fe215040 (options '')
+>>>>>>>> [    0.000000] printk: bootconsole [uart0] enabled
+>>>>>>>> [    0.000000] efi: Getting EFI parameters from FDT:
+>>>>>>>> [    0.000000] efi: UEFI not found.
+>>>>>>>
+>>>>>>> So no EFI,
+>>>>>>>
+>>>>>>>> [    0.000000] OF: reserved mem: failed to allocate memory for node 'linux,cma'
+>>>>>>>
+>>>>>>> Out of memory.
+>>>>>>>
+>>>>>>>> [    0.000000] cma: Failed to reserve 32 MiB
+>>>>>>>> [    0.000000] Kernel panic - not syncing: Failed to allocate page table page
+>>>>>>>
+>>>>>>> Out of memory...
+>>>>>>>
+>>>>>>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-rc1-next-20200212 #66
+>>>>>>>> [    0.000000] Hardware name: Raspberry Pi 4 Model B (DT)
+>>>>>>>> [    0.000000] Call trace:
+>>>>>>>> [    0.000000]  dump_backtrace+0x0/0x1a0
+>>>>>>>> [    0.000000]  show_stack+0x14/0x20
+>>>>>>>> [    0.000000]  dump_stack+0xbc/0x104
+>>>>>>>> [    0.000000]  panic+0x16c/0x37c
+>>>>>>>> [    0.000000]  early_pgtable_alloc+0x30/0xa0
+>>>>>>>
+>>>>>>> ... really early!
+>>>>>>>
+>>>>>>>> [    0.000000]  __create_pgd_mapping+0x36c/0x588
+>>>>>>>> [    0.000000]  map_kernel_segment+0x70/0xa4
+>>>>>>>> [    0.000000]  paging_init+0xf4/0x528
+>>>>>>>> [    0.000000]  setup_arch+0x250/0x5d8
+>>>>>>>> [    0.000000]  start_kernel+0x90/0x6d8
+>>>>>>>>
+>>>>>>>>  
+>>>>>>>> Since the same kernel boot with bootefi and that bootefi lack ramdisk address,
+>>>>>>>
+>>>>>>> Booting with EFI will cause linux to use the EFI memory map.
+>>>>>>>
+>>>>>>> Does your DT have a memory node? (or does it expect EFI to provide the information)
+>>>>>>>
+>>>>>>>
+>>>>>>>> I tried to add the address in the dtb via:
+>>>>>>>> fdt addr 0x02400000; fdt resize; fdt set /chosen linux,initrd-start 0x02700000; fdt set /chosen linux,initrd-end 0x10000000; bootefi 0x00080000 0x02400000
+>>>>>>>> But with that, I get:
+>>>>>>>> initrd not fully accessible via the linear mapping -- please check your bootloader ...
+>>>>>>>
+>>>>>>> So this one is an EFI boot, but you can't find where to put the initramfs such that the
+>>>>>>> kernel agrees its in memory.
+>>>>>>>
+>>>>>>> If you boot with 'efi=debug', linux will print the EFI memory map. Could you compare that
+>>>>>>> to where U-Boot thinks memory is?
+>>>>>>>
+>>>>>>> (it sounds like your DT memory node is missing, and your EFI memory map is surprisingly small)
+>>>>>>
+>>>>>> Hello
+>>>>>>
+>>>>>> Thanks for your advices.
+>>>>>>
+>>>>>> In the dtb of mainline linux:
+>>>>>> 	/* Will be filled by the bootloader */
+>>>>>> 	memory@0 {
+>>>>>> 		device_type = "memory";
+>>>>>> 		reg = <0 0 0>;
+>>>>>> 	};
+>>>>>>
+>>>>>> In uboot I have:
+>>>>>> static struct mm_region bcm2711_mem_map[] = {
+>>>>>>         {
+>>>>>>                 .virt = 0x00000000UL,
+>>>>>>                 .phys = 0x00000000UL,
+>>>>>>                 .size = 0xfe000000UL,
+>>>>>>                 .attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
+>>>>>>                          PTE_BLOCK_INNER_SHARE
+>>>>>>         }, {
+>>>>>>                 .virt = 0xfc000000UL,
+>>>>>>                 .phys = 0xfc000000UL,
+>>>>>>                 .size = 0x03800000UL,
+>>>>>>                 .attrs = PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
+>>>>>>                          PTE_BLOCK_NON_SHARE |
+>>>>>>                          PTE_BLOCK_PXN | PTE_BLOCK_UXN
+>>>>>>         }, {
+>>>>>>                 /* List terminator */
+>>>>>>                 0,
+>>>>>>         }
+>>>>>> };
+>>>>>> But I dont know if uboot use that for filling the memory node.
+>>>>>
+>>>>> No it doesn't. U-Boot uses the DT from the firmware and passes this to the
+>>>>> kernel. But it seems you pass instead your own device-tree to the kernel, so you
+>>>>> will need to update the memory node to show the available memory on you board.
+>>>>>
+>>>>
+>>>> I dont understand, in the Linux commit "ARM: dts: Add minimal Raspberry Pi 4 support" I read:
+>>>> The RPi 4 is available in 3 different variants (1, 2 and 4 GB RAM), so leave the memory size to zero and let the bootloader take care of it.
+>>>> But if uboot dont fill that...
+>>>> So the DTB in mainline is wrong, right ?
+>>>>
+>>>
+>>> How do you pass your DTB to the kernel? Does the FW uses your DTB by putting it
+>>> as bcm2711-rpi-4-b.dtb in the first FAT partition? Or do you load it from U-Boot
+>>> afterwards? In the latter case you have to take care to add the needed size of
+>>> memory. In the first case you use what is the default behavior for U-Boot; the
+>>> RPi FW updates the node and then passes it to U-Boot then it get's passed to the
+>>> kernel.
+>>>
+>>
+>> Hello
+>>
+>> I load the dtb via uboot/tftp.
+>> On another thread, I got the hint to enable CONFIG_ARCH_FIXUP_FDT_MEMORY and it made my problem solved.
+> 
+> Hm, so should we enable that for all RPi3/4/arm64 configs then?
 
-gentle ping. The mfd-code and the dt-bindings are landed in 5.6-rc1 but
-this patch is missing.
+In u-boot, it's already enabled, except RPI4. I didn't check in more detail.
 
-Regards,
-  Marco
+In RPI4's case, it doesn't set in config
+# CONFIG_ARCH_FIXUP_FDT_MEMORY is not set
 
-On 20-01-17 09:57, Adam Thomson wrote:
-> On 08 January 2020 10:48, Marco Felsch wrote:
+Best Regards,
+Jaehoon Chung
+
 > 
-> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> > be used as input, output or have a special use-case.
-> > 
-> > The patch adds the support for the normal input/output use-case.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Regards,
+> Matthias
 > 
-> A little late, but:
-> 
-> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> 
-> > ---
-> > Changelog:
-> > v4:
-> > - add missing PIN_CONFIG_BIAS_DISABLE
-> > 
-> > v3:
-> > - add comment for gpio private include
-> > - add missing bits.h include
-> > - add pin_config state container and set initial pin state to push-pull
-> > - make use of GPIO_LINE_DIRECTION_{IN,OUT}
-> > - update MAINTAINERS entry -> gpio-da90??.c already covered but not
-> >   pinctrl-da90??.c
-> > 
-> > v2:
-> > - fix minor style issue
-> > - move from drivers/gpio to drivers/pinctrl
-> > - Fix spelling issue
-> > - rename local gpio_dir to gpio_mode
-> > - Add datasheet reference and TODO notes
-> > - move gpio to mfd-root node to avoid hierarchical interrupt chips
-> > - Add gpio-controller property check
-> > - remove of_device_id since we drop the gpio of-subnode
-> > - Drop da9062_gpio_get_hwgpio
-> > ---
-> >  MAINTAINERS                      |   1 +
-> >  drivers/pinctrl/Kconfig          |  12 ++
-> >  drivers/pinctrl/Makefile         |   1 +
-> >  drivers/pinctrl/pinctrl-da9062.c | 300 +++++++++++++++++++++++++++++++
-> >  4 files changed, 314 insertions(+)
-> >  create mode 100644 drivers/pinctrl/pinctrl-da9062.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index bd5847e802de..9692ff05cd14 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4867,6 +4867,7 @@ F:	drivers/leds/leds-da90??.c
-> >  F:	drivers/mfd/da903x.c
-> >  F:	drivers/mfd/da90??-*.c
-> >  F:	drivers/mfd/da91??-*.c
-> > +F:	drivers/pinctrl/pinctrl-da90??.c
-> >  F:	drivers/power/supply/da9052-battery.c
-> >  F:	drivers/power/supply/da91??-*.c
-> >  F:	drivers/regulator/da903x.c
-> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > index 3bfbf2ff6e2b..88a3864f32a5 100644
-> > --- a/drivers/pinctrl/Kconfig
-> > +++ b/drivers/pinctrl/Kconfig
-> > @@ -126,6 +126,18 @@ config PINCTRL_DA850_PUPD
-> >  	  Driver for TI DA850/OMAP-L138/AM18XX pinconf. Used to control
-> >  	  pullup/pulldown pin groups.
-> > 
-> > +config PINCTRL_DA9062
-> > +	tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
-> > +	depends on MFD_DA9062
-> > +	select GPIOLIB
-> > +	help
-> > +	  The Dialog DA9062 PMIC provides multiple GPIOs that can be muxed for
-> > +	  different functions. This driver bundles a pinctrl driver to select the
-> > +	  function muxing and a GPIO driver to handle the GPIO when the GPIO
-> > +	  function is selected.
-> > +
-> > +	  Say yes to enable pinctrl and GPIO support for the DA9062 PMIC.
-> > +
-> >  config PINCTRL_DIGICOLOR
-> >  	bool
-> >  	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
-> > diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> > index 879f312bfb75..0b36a1cfca8a 100644
-> > --- a/drivers/pinctrl/Makefile
-> > +++ b/drivers/pinctrl/Makefile
-> > @@ -16,6 +16,7 @@ obj-$(CONFIG_PINCTRL_AT91PIO4)	+= pinctrl-at91-
-> > pio4.o
-> >  obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
-> >  obj-$(CONFIG_PINCTRL_BM1880)	+= pinctrl-bm1880.o
-> >  obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
-> > +obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
-> >  obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
-> >  obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
-> >  obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
-> > diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-> > new file mode 100644
-> > index 000000000000..f704ee0b2fd9
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/pinctrl-da9062.c
-> > @@ -0,0 +1,300 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Dialog DA9062 pinctrl and GPIO driver.
-> > + * Based on DA9055 GPIO driver.
-> > + *
-> > + * TODO:
-> > + *   - add pinmux and pinctrl support (gpio alternate mode)
-> > + *
-> > + * Documents:
-> > + * [1] https://www.dialog-
-> > semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-> > + *
-> > + * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> > + */
-> > +#include <linux/bits.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +
-> > +#include <linux/mfd/da9062/core.h>
-> > +#include <linux/mfd/da9062/registers.h>
-> > +
-> > +/*
-> > + * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
-> > + * the gpio is active low without a vendor specific dt-binding.
-> > + */
-> > +#include <../gpio/gpiolib.h>
-> > +
-> > +#define DA9062_TYPE(offset)		(4 * (offset % 2))
-> > +#define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
-> > +#define DA9062_PIN_ALTERNATE		0x00 /* gpio alternate mode */
-> > +#define DA9062_PIN_GPI			0x01 /* gpio in */
-> > +#define DA9062_PIN_GPO_OD		0x02 /* gpio out open-drain */
-> > +#define DA9062_PIN_GPO_PP		0x03 /* gpio out push-pull */
-> > +#define DA9062_GPIO_NUM			5
-> > +
-> > +struct da9062_pctl {
-> > +	struct da9062 *da9062;
-> > +	struct gpio_chip gc;
-> > +	unsigned int pin_config[DA9062_GPIO_NUM];
-> > +};
-> > +
-> > +static int da9062_pctl_get_pin_mode(struct da9062_pctl *pctl,
-> > +				    unsigned int offset)
-> > +{
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int ret, val;
-> > +
-> > +	ret = regmap_read(regmap, DA9062AA_GPIO_0_1 + (offset >> 1), &val);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	val >>= DA9062_PIN_SHIFT(offset);
-> > +	val &= DA9062AA_GPIO0_PIN_MASK;
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int da9062_pctl_set_pin_mode(struct da9062_pctl *pctl,
-> > +				    unsigned int offset, unsigned int mode_req)
-> > +{
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	unsigned int mode = mode_req;
-> > +	unsigned int mask;
-> > +	int ret;
-> > +
-> > +	mode &= DA9062AA_GPIO0_PIN_MASK;
-> > +	mode <<= DA9062_PIN_SHIFT(offset);
-> > +	mask = DA9062AA_GPIO0_PIN_MASK << DA9062_PIN_SHIFT(offset);
-> > +
-> > +	ret = regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-> > +				 mask, mode);
-> > +	if (!ret)
-> > +		pctl->pin_config[offset] = mode_req;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int gpio_mode, val;
-> > +	int ret;
-> > +
-> > +	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +	if (gpio_mode < 0)
-> > +		return gpio_mode;
-> > +
-> > +	switch (gpio_mode) {
-> > +	case DA9062_PIN_ALTERNATE:
-> > +		return -ENOTSUPP;
-> > +	case DA9062_PIN_GPI:
-> > +		ret = regmap_read(regmap, DA9062AA_STATUS_B, &val);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +		break;
-> > +	case DA9062_PIN_GPO_OD:
-> > +	case DA9062_PIN_GPO_PP:
-> > +		ret = regmap_read(regmap, DA9062AA_GPIO_MODE0_4, &val);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return !!(val & BIT(offset));
-> > +}
-> > +
-> > +static void da9062_gpio_set(struct gpio_chip *gc, unsigned int offset,
-> > +			    int value)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +
-> > +	regmap_update_bits(regmap, DA9062AA_GPIO_MODE0_4, BIT(offset),
-> > +			   value << offset);
-> > +}
-> > +
-> > +static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	int gpio_mode;
-> > +
-> > +	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +	if (gpio_mode < 0)
-> > +		return gpio_mode;
-> > +
-> > +	switch (gpio_mode) {
-> > +	case DA9062_PIN_ALTERNATE:
-> > +		return -ENOTSUPP;
-> > +	case DA9062_PIN_GPI:
-> > +		return GPIO_LINE_DIRECTION_IN;
-> > +	case DA9062_PIN_GPO_OD:
-> > +	case DA9062_PIN_GPO_PP:
-> > +		return GPIO_LINE_DIRECTION_OUT;
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int da9062_gpio_direction_input(struct gpio_chip *gc,
-> > +				       unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-> > +	unsigned int gpi_type;
-> > +	int ret;
-> > +
-> > +	ret = da9062_pctl_set_pin_mode(pctl, offset, DA9062_PIN_GPI);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/*
-> > +	 * If the gpio is active low we should set it in hw too. No worries
-> > +	 * about gpio_get() because we read and return the gpio-level. So the
-> > +	 * gpiolib active_low handling is still correct.
-> > +	 *
-> > +	 * 0 - active low, 1 - active high
-> > +	 */
-> > +	gpi_type = !gpiod_is_active_low(desc);
-> > +
-> > +	return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >>
-> > 1),
-> > +				DA9062AA_GPIO0_TYPE_MASK <<
-> > DA9062_TYPE(offset),
-> > +				gpi_type << DA9062_TYPE(offset));
-> > +}
-> > +
-> > +static int da9062_gpio_direction_output(struct gpio_chip *gc,
-> > +					unsigned int offset, int value)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	unsigned int pin_config = pctl->pin_config[offset];
-> > +	int ret;
-> > +
-> > +	ret = da9062_pctl_set_pin_mode(pctl, offset, pin_config);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	da9062_gpio_set(gc, offset, value);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-> > +				  unsigned long config)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct regmap *regmap = pctl->da9062->regmap;
-> > +	int gpio_mode;
-> > +
-> > +	/*
-> > +	 * We need to meet the following restrictions [1, Figure 18]:
-> > +	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
-> > +	 *				  gpio input
-> > +	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
-> > +	 *				  gpio output open-drain.
-> > +	 */
-> > +
-> > +	switch (pinconf_to_config_param(config)) {
-> > +	case PIN_CONFIG_BIAS_DISABLE:
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), 0);
-> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPI)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > +		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-> > +		if (gpio_mode < 0)
-> > +			return -EINVAL;
-> > +		else if (gpio_mode != DA9062_PIN_GPO_OD)
-> > +			return -ENOTSUPP;
-> > +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-> > +					  BIT(offset), BIT(offset));
-> > +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_OD);
-> > +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +		return da9062_pctl_set_pin_mode(pctl, offset,
-> > +						DA9062_PIN_GPO_PP);
-> > +	default:
-> > +		return -ENOTSUPP;
-> > +	}
-> > +}
-> > +
-> > +static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-> > +	struct da9062 *da9062 = pctl->da9062;
-> > +
-> > +	return regmap_irq_get_virq(da9062->regmap_irq,
-> > +				   DA9062_IRQ_GPI0 + offset);
-> > +}
-> > +
-> > +static const struct gpio_chip reference_gc = {
-> > +	.owner = THIS_MODULE,
-> > +	.get = da9062_gpio_get,
-> > +	.set = da9062_gpio_set,
-> > +	.get_direction = da9062_gpio_get_direction,
-> > +	.direction_input = da9062_gpio_direction_input,
-> > +	.direction_output = da9062_gpio_direction_output,
-> > +	.set_config = da9062_gpio_set_config,
-> > +	.to_irq = da9062_gpio_to_irq,
-> > +	.can_sleep = true,
-> > +	.ngpio = DA9062_GPIO_NUM,
-> > +	.base = -1,
-> > +};
-> > +
-> > +static int da9062_pctl_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *parent = pdev->dev.parent;
-> > +	struct da9062_pctl *pctl;
-> > +	int i;
-> > +
-> > +	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
-> > +	if (!pctl)
-> > +		return -ENOMEM;
-> > +
-> > +	pctl->da9062 = dev_get_drvdata(parent);
-> > +	if (!pctl->da9062)
-> > +		return -EINVAL;
-> > +
-> > +	if (!device_property_present(parent, "gpio-controller"))
-> > +		return 0;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(pctl->pin_config); i++)
-> > +		pctl->pin_config[i] = DA9062_PIN_GPO_PP;
-> > +
-> > +	/*
-> > +	 * Currently the driver handles only the GPIO support. The
-> > +	 * pinctrl/pinmux support can be added later if needed.
-> > +	 */
-> > +	pctl->gc = reference_gc;
-> > +	pctl->gc.label = dev_name(&pdev->dev);
-> > +	pctl->gc.parent = &pdev->dev;
-> > +#ifdef CONFIG_OF_GPIO
-> > +	pctl->gc.of_node = parent->of_node;
-> > +#endif
-> > +
-> > +	platform_set_drvdata(pdev, pctl);
-> > +
-> > +	return devm_gpiochip_add_data(&pdev->dev, &pctl->gc, pctl);
-> > +}
-> > +
-> > +static struct platform_driver da9062_pctl_driver = {
-> > +	.probe = da9062_pctl_probe,
-> > +	.driver = {
-> > +		.name	= "da9062-gpio",
-> > +	},
-> > +};
-> > +module_platform_driver(da9062_pctl_driver);
-> > +
-> > +MODULE_AUTHOR("Marco Felsch <kernel@pengutronix.de>");
-> > +MODULE_DESCRIPTION("DA9062 PMIC pinctrl and GPIO Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:da9062-gpio");
-> > --
-> > 2.20.1
 > 
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
