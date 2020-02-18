@@ -2,112 +2,118 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D679CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DCC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD17B2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cjnbef0k"
+	by mail.kernel.org (Postfix) with ESMTP id 57B012067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056485;
+	bh=S7Ztsxekh19xf5KRg0jXLvZMQ3oj0ync9f2TGpT6rxA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NT++uiePT1GzRfrjjvHoIE/03MSYs9Vyd3r7naIffOVuZBT8758hNL6XOAEXxVJjs
+	 ybYg55jVB4LzCrb1rJu19jMyzcDE2gAHIOEdP8MKUVg9nHXHXFw1i3fxEmjTSx40YK
+	 xCP4NssQKYdyCDfxATBVEAgF9fDl+tOxOD/JjTyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgBRT6i (ORCPT
+        id S1728097AbgBRUIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:38 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39734 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgBRT6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:30 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so8511100plp.6;
-        Tue, 18 Feb 2020 11:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QiZww/RzBIiqsbrHHxIYSu/iuDgV4YFLQLrfy6sFiNk=;
-        b=Cjnbef0k4m3B/ywmq6dWoUbGU3Ag1/Zc52LYCXAhwdYSC+or3uUZwbzROS2iVMTzAi
-         YLO/erejLW1NG2U06RoeMfO1zgQmJmqz+yEvzqfRgMJQ0vvXzD2K0qAYliuPrqsSu7+t
-         71G2NPYLlCmUTztI1DY+qu3oCHsl+Ww+xbdsUfnr6DHkjxmkyutlIF+MufPXN1YNzqVa
-         PAmYLF77yJwYfhVIasqfzPGJUeU7bmVxrvWjLK8Rx+T8YdhMhn4Fxpb5gfsrZtiXywAH
-         DWI5q18zqSpsKLE1sCtbYUZdsP+g8qrmRnqK3okYMZcAjNqktRCVduYKjHvFRkg0K6BR
-         v+FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QiZww/RzBIiqsbrHHxIYSu/iuDgV4YFLQLrfy6sFiNk=;
-        b=bpoCdpDXG3SsgQsd9TD4rNAHyoSXcl4dv5w9VA3JRvntuFH+l+pDfKZ6lvU4Gr0pyW
-         KG0Ru6KYdQVWptk3Wgy588sOzfj3RJchpyoIQbzmlnNsILexWYgDx5XjDGkvOFqRVIJS
-         QvF9p4n6ZoYKYzyfRRoEUTS7oY/sgO70hK+OsRikxTG5TXSoyqEJei5NPexzImJr8xM8
-         NXWAtstTverRINi+h3BFGkZs2bO+uyz6oYe4XQmnFm2K2oyqB4QuDselIcXTq9VU5ihV
-         Zx9ThtAX9LQDEmNnhdktCjcYxEWcq2eYThU6D77g6FLc4pipzkWbb8NBAy55DlOpYWRq
-         pkog==
-X-Gm-Message-State: APjAAAWogzaVEdXlbBgI63cCwwzYVOscuvRp2liOfKPX03M/Huez8R25
-        gMzT0rhzj8re67RJSlBZzxl52m0=
-X-Google-Smtp-Source: APXvYqwH1nOirlZGhvmTOw16Nv7wur/YGu3iaddjnmcqplevu4ou6GC57/7gKbJ/RXghEymI4BH9uA==
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr22116151plt.221.1582055909574;
-        Tue, 18 Feb 2020 11:58:29 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:ff08:f869:e1e5:121e:cdbf])
-        by smtp.gmail.com with ESMTPSA id k4sm5118883pfg.40.2020.02.18.11.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 11:58:28 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     pshelar@ovn.org, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH 4/4] flow_table.c: Use built-in RCU list checking
-Date:   Wed, 19 Feb 2020 01:28:20 +0530
-Message-Id: <20200218195820.2769-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Feb 2020 15:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728226AbgBRT6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:35 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0FEC2464E;
+        Tue, 18 Feb 2020 19:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582055915;
+        bh=S7Ztsxekh19xf5KRg0jXLvZMQ3oj0ync9f2TGpT6rxA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p9WofKwK/cna7q1mmyb7kZ2T/RyjOj+m2NEn0WTnkUemnvC9ATfalmfJNQxM3u0wE
+         kSNuo7YRn5UrJFeSePeMwS/NOnnSpKY80FeW18ies5luuMKBwmt+8Sq9kIRgeVskIV
+         HNeohwWHiJHaWKrtq1JnUcz5RsnCEIhk7H65myUU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Saurav Girepunje <saurav.girepunje@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 12/66] ALSA: usb-audio: sound: usb: usb true/false for bool return type
+Date:   Tue, 18 Feb 2020 20:54:39 +0100
+Message-Id: <20200218190429.246014666@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
+References: <20200218190428.035153861@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Saurav Girepunje <saurav.girepunje@gmail.com>
 
-hlist_for_each_entry_rcu() has built-in RCU and lock checking.
+commit 1d4961d9eb1aaa498dfb44779b7e4b95d79112d0 upstream.
 
-Pass cond argument to list_for_each_entry_rcu() to silence
-false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-by default.
+Use true/false for bool type return in uac_clock_source_is_valid().
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+Link: https://lore.kernel.org/r/20191029175200.GA7320@saurav
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/openvswitch/flow_table.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/usb/clock.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/openvswitch/flow_table.c b/net/openvswitch/flow_table.c
-index 5904e93e5765..fd8a01ca7a2d 100644
---- a/net/openvswitch/flow_table.c
-+++ b/net/openvswitch/flow_table.c
-@@ -585,7 +585,8 @@ static struct sw_flow *masked_flow_lookup(struct table_instance *ti,
- 	head = find_bucket(ti, hash);
- 	(*n_mask_hit)++;
+--- a/sound/usb/clock.c
++++ b/sound/usb/clock.c
+@@ -165,21 +165,21 @@ static bool uac_clock_source_is_valid(st
+ 			snd_usb_find_clock_source_v3(chip->ctrl_intf, source_id);
  
--	hlist_for_each_entry_rcu(flow, head, flow_table.node[ti->node_ver]) {
-+	hlist_for_each_entry_rcu(flow, head, flow_table.node[ti->node_ver],
-+				lockdep_ovsl_is_held()) {
- 		if (flow->mask == mask && flow->flow_table.hash == hash &&
- 		    flow_cmp_masked_key(flow, &masked_key, &mask->range))
- 			return flow;
-@@ -769,7 +770,8 @@ struct sw_flow *ovs_flow_tbl_lookup_ufid(struct flow_table *tbl,
+ 		if (!cs_desc)
+-			return 0;
++			return false;
+ 		bmControls = le32_to_cpu(cs_desc->bmControls);
+ 	} else { /* UAC_VERSION_1/2 */
+ 		struct uac_clock_source_descriptor *cs_desc =
+ 			snd_usb_find_clock_source(chip->ctrl_intf, source_id);
  
- 	hash = ufid_hash(ufid);
- 	head = find_bucket(ti, hash);
--	hlist_for_each_entry_rcu(flow, head, ufid_table.node[ti->node_ver]) {
-+	hlist_for_each_entry_rcu(flow, head, ufid_table.node[ti->node_ver],
-+				lockdep_ovsl_is_held()) {
- 		if (flow->ufid_table.hash == hash &&
- 		    ovs_flow_cmp_ufid(flow, ufid))
- 			return flow;
--- 
-2.17.1
+ 		if (!cs_desc)
+-			return 0;
++			return false;
+ 		bmControls = cs_desc->bmControls;
+ 	}
+ 
+ 	/* If a clock source can't tell us whether it's valid, we assume it is */
+ 	if (!uac_v2v3_control_is_readable(bmControls,
+ 				      UAC2_CS_CONTROL_CLOCK_VALID))
+-		return 1;
++		return true;
+ 
+ 	err = snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0), UAC2_CS_CUR,
+ 			      USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_DIR_IN,
+@@ -191,10 +191,10 @@ static bool uac_clock_source_is_valid(st
+ 		dev_warn(&dev->dev,
+ 			 "%s(): cannot get clock validity for id %d\n",
+ 			   __func__, source_id);
+-		return 0;
++		return false;
+ 	}
+ 
+-	return !!data;
++	return data ? true :  false;
+ }
+ 
+ static int __uac_clock_find_source(struct snd_usb_audio *chip, int entity_id,
+
 
