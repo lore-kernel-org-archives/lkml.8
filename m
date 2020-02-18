@@ -2,74 +2,83 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D38C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB78C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D68720722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D0624125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582001414;
+	bh=N+xX+mDsxDGSMkwYZW4RS224VwznzZuqhDmLgQyosBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jrEZV0ca/A6fBr3abqgCqjFtpVm8Qasx0PItm0JAhYBY0yCdViDhj8/IFg6hge1gC
+	 9XQBV56LPxvxE95GPbsg/QTDqJuLfYJss8T7irtxEiofY5K54sx8faqNlTTvW0UKc9
+	 +LZURwo7Fe4q8Vl+hBJSJSNeAjUpKWBGQtLqUIsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgBREs7 (ORCPT
+        id S1726346AbgBREuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 23:48:59 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45268 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726296AbgBREs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 23:48:58 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A78797EA005;
-        Tue, 18 Feb 2020 15:48:55 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j3uoY-0005i5-Lq; Tue, 18 Feb 2020 15:48:54 +1100
-Date:   Tue, 18 Feb 2020 15:48:54 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 02/19] mm: Ignore return value of ->readpages
-Message-ID: <20200218044854.GG10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-3-willy@infradead.org>
+        Mon, 17 Feb 2020 23:50:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgBREuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 23:50:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC9920722;
+        Tue, 18 Feb 2020 04:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582001410;
+        bh=N+xX+mDsxDGSMkwYZW4RS224VwznzZuqhDmLgQyosBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pG4DkmffdTVzSH2OWgrJf+2oB9DEN0h+8C04V3gy8lqGuxE2sQnkXjePHb/uAv+45
+         4a98ootHMrVVCPi5CCn/XuRfhf3APd4IzhvHA7qxSU635Z6gnyZc1ZlMHeqmBz58DZ
+         /AAvGLSLJ/sQvgZeNvO6ckf6rzv40D8gWkn2NYtI=
+Date:   Tue, 18 Feb 2020 05:50:08 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH 0/2] serial: imx: Backport fixes for irq handling to v4.14
+Message-ID: <20200218045008.GA2049358@kroah.com>
+References: <20200217140740.29743-1-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-3-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=x_zGJsPA0gc82MDK-9gA:9
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200217140740.29743-1-frieder.schrempf@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:43AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Mon, Feb 17, 2020 at 02:08:00PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
 > 
-> We used to assign the return value to a variable, which we then ignored.
-> Remove the pretence of caring.
+> A customer of ours has problems with RS485 on i.MX6UL with the latest v4.14
+> kernel. They get an exception like below from time to time (the trace is
+> from an older kernel, but the problem also exists in v4.14.170).
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  mm/readahead.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+> As the cpuidle state 2 causes large delays for the interrupt that controls the
+> RS485 RTS signal (which can lead to collisions on the bus), cpuidle state 2 was
+> disabled on this system. This aspect might cause the exception happening more
+> often on this system than on other systems with default cpuidle settings.
+> 
+> Looking for solutions I found Uwe's patches that were applied in v4.17 being
+> mentioned here [1] and here [2]. In [1] Uwe notes that backporting these fixes
+> to v4.14 might not be trivial, but I tried and in my opinion found it not to be
+> too problematic either.
+> 
+> With the backported patches applied, our customer reports that the exceptions
+> stopped occuring. Given this and the fact that the problem seems to be known
+> and quite common, it would be nice to get this into the v4.14 stable tree. 
 
-Simple enough.
+Thanks for the backports, both now queued up.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+greg k-h
