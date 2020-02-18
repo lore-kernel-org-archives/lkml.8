@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F783C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69899C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CC121D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4040F21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056263;
-	bh=oM3IV5POdbjJh4hmqvmev7NnW2IKj0WapaGYhE37NXw=;
+	s=default; t=1582056268;
+	bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/14Nrs5Drnw4eaR3Pakl5nrvo/glXqa8fOKyD9Hxr9DNG64su0Zv1bUpXaDyXzpz
-	 4DOxfimHqC2OMUjH1KF4GVgAUiclIFU201pVgYc+OxO4Sfx0T0lJxdP+rUGVzLrdHi
-	 GjkdnMuThbRKj+udG3cu+Y9XIxknCUiIllZ1zWc0=
+	b=GKTfGqM51Q9ltwk7WVnsRbOAzfL6aOE6UhMUYGu2DVt/c9imcxVpRthl1qCeD0p2P
+	 AdkEulHwOqvGoIK95bkhP40Oje86N0RpqVQgjW4u+pV25aGvH3Cxuc3frpwGJgnJJg
+	 b9MibS4i4lNwErJGr+9rl3NGIWvgrN7ykQ/Ba00w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgBRUEW (ORCPT
+        id S1729151AbgBRUE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:04:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:04:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbgBRUDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:39 -0500
+        id S1728753AbgBRUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9F124125;
-        Tue, 18 Feb 2020 20:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C61221D56;
+        Tue, 18 Feb 2020 20:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056219;
-        bh=oM3IV5POdbjJh4hmqvmev7NnW2IKj0WapaGYhE37NXw=;
+        s=default; t=1582056210;
+        bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I44bABFxPW1nHxB42MkNi28bcrHulEeB1KcL2645bci7H/e+l8u67OOYyNWBdoB9r
-         A/y5TrkSz6QowNq89ElHQ2Cu5kw8Yf91n+ci9Jn5YmCSgKyk0A/8fgORbmCCQ4QTBH
-         p9g+NPWB8z5CLO7U+O6S3Q3DIddy/d/NoKiS7gSE=
+        b=RgA0LqaDN8xShlC0RI1UK7Mfj2WO94r+5j+3pmEmzQJWNTPxOQnR3oyB/fLiF6YZG
+         Z5xgUT7sajxloxNl6rtTqO4TrY2br/lHA0g9sonlekCPma9Uz3yoP3Q0+7Qd7meAS5
+         HE1dQXTPdvb1XMqWSQR0HMJQ4HhOjq9sk7AfCwE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.5 73/80] NFSv4: Ensure the delegation cred is pinned when we call delegreturn
-Date:   Tue, 18 Feb 2020 20:55:34 +0100
-Message-Id: <20200218190438.811033255@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Eric Anholt <eric@anholt.net>, Sam Ravnborg <sam@ravnborg.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH 5.5 40/80] drm/vgem: Close use-after-free race in vgem_gem_create
+Date:   Tue, 18 Feb 2020 20:55:01 +0100
+Message-Id: <20200218190436.210849575@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,45 +67,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 5d63944f8206a80636ae8cb4b9107d3b49f43d37 upstream.
+commit 4b848f20eda5974020f043ca14bacf7a7e634fc8 upstream.
 
-Ensure we don't release the delegation cred during the call to
-nfs4_proc_delegreturn().
+There's two references floating around here (for the object reference,
+not the handle_count reference, that's a different thing):
 
-Fixes: ee05f456772d ("NFSv4: Fix races between open and delegreturn")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+- The temporary reference held by vgem_gem_create, acquired by
+  creating the object and released by calling
+  drm_gem_object_put_unlocked.
+
+- The reference held by the object handle, created by
+  drm_gem_handle_create. This one generally outlives the function,
+  except if a 2nd thread races with a GEM_CLOSE ioctl call.
+
+So usually everything is correct, except in that race case, where the
+access to gem_object->size could be looking at freed data already.
+Which again isn't a real problem (userspace shot its feet off already
+with the race, we could return garbage), but maybe someone can exploit
+this as an information leak.
+
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200202132133.1891846-1-daniel.vetter@ffwll.ch
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/delegation.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vgem/vgem_drv.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -222,13 +222,18 @@ void nfs_inode_reclaim_delegation(struct
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -196,9 +196,10 @@ static struct drm_gem_object *vgem_gem_c
+ 		return ERR_CAST(obj);
  
- static int nfs_do_return_delegation(struct inode *inode, struct nfs_delegation *delegation, int issync)
- {
-+	const struct cred *cred;
- 	int res = 0;
- 
--	if (!test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
--		res = nfs4_proc_delegreturn(inode,
--				delegation->cred,
-+	if (!test_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
-+		spin_lock(&delegation->lock);
-+		cred = get_cred(delegation->cred);
-+		spin_unlock(&delegation->lock);
-+		res = nfs4_proc_delegreturn(inode, cred,
- 				&delegation->stateid,
- 				issync);
-+		put_cred(cred);
+ 	ret = drm_gem_handle_create(file, &obj->base, handle);
+-	drm_gem_object_put_unlocked(&obj->base);
+-	if (ret)
++	if (ret) {
++		drm_gem_object_put_unlocked(&obj->base);
+ 		return ERR_PTR(ret);
 +	}
- 	return res;
- }
  
+ 	return &obj->base;
+ }
+@@ -221,7 +222,9 @@ static int vgem_gem_dumb_create(struct d
+ 	args->size = gem_object->size;
+ 	args->pitch = pitch;
+ 
+-	DRM_DEBUG("Created object of size %lld\n", size);
++	drm_gem_object_put_unlocked(gem_object);
++
++	DRM_DEBUG("Created object of size %llu\n", args->size);
+ 
+ 	return 0;
+ }
 
 
