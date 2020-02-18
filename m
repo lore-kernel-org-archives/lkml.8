@@ -2,142 +2,167 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68167C34044
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55C0C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474FC21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A447A2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgBRPee (ORCPT
+        id S1726582AbgBRPiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:34:34 -0500
-Received: from muru.com ([72.249.23.125]:55968 "EHLO muru.com"
+        Tue, 18 Feb 2020 10:38:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42878 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgBRPee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:34:34 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id F4223812F;
-        Tue, 18 Feb 2020 15:35:16 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 07:34:29 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200218153429.GJ35972@atomide.com>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <20200217233623.GE35972@atomide.com>
- <07989190-e110-13c4-50ea-875431725b47@ti.com>
+        id S1726338AbgBRPiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:38:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B2057BAF0;
+        Tue, 18 Feb 2020 15:38:04 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 15:38:01 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        linux-kernel@vger.kernel.org, pauld@redhat.com,
+        parth@linux.ibm.com, hdanton@sina.com
+Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
+Message-ID: <20200218153801.GF3420@suse.de>
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-3-vincent.guittot@linaro.org>
+ <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <07989190-e110-13c4-50ea-875431725b47@ti.com>
+In-Reply-To: <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200218 15:28]:
+On Tue, Feb 18, 2020 at 02:54:14PM +0000, Valentin Schneider wrote:
+> On 2/14/20 3:27 PM, Vincent Guittot wrote:
+> > @@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+> >  	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
+> >  }
+> >  
+> > -static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
+> > -
+> > -static unsigned long cpu_runnable_load(struct rq *rq)
+> > -{
+> > -	return cfs_rq_runnable_load_avg(&rq->cfs);
+> > -}
+> > +/*
+> > + * 'numa_type' describes the node at the moment of load balancing.
+> > + */
+> > +enum numa_type {
+> > +	/* The node has spare capacity that can be used to run more tasks.  */
+> > +	node_has_spare = 0,
+> > +	/*
+> > +	 * The node is fully used and the tasks don't compete for more CPU
+> > +	 * cycles. Nevertheless, some tasks might wait before running.
+> > +	 */
+> > +	node_fully_busy,
+> > +	/*
+> > +	 * The node is overloaded and can't provide expected CPU cycles to all
+> > +	 * tasks.
+> > +	 */
+> > +	node_overloaded
+> > +};
 > 
+> Could we reuse group_type instead? The definitions are the same modulo
+> s/group/node/.
 > 
-> On 18/02/2020 1.36, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [200217 23:10]:
-> >> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200217 12:10]:
-> >>> On 14/02/2020 19.03, Tony Lindgren wrote:
-> >>>> But right now in droid4 voice call case mcbsp is just the i2s transport,
-> >>>> and everything happens betwee the modem and the cpcap pmic.
-> >>>
-> >>> Iow you don't need McBSP DAI at all. If you would have added the dummy
-> >>> codec to McBSP !3 and use that, it would work in a same way, or to DMIC
-> >>> or McPDM...
-> >>>
-> >>> The McBSP ops are NULL for the dummy dai, so McBSP is turned off.
-> >>
-> >> Hmm yeah I don't know if the cpcap codec on the same mcbsp needs
-> >> mcbsp for voice call.
-> >>
-> >> According to Sebastian sounds like mcbsp can be idle at that point.
-> >>
-> >> But what about capture of voice call at the mcbsp from the
-> >> TDM slot? In that case mcbsp would be active.
-> > 
-> > Looks like only initializing only one mcbsp3 instance here
-> > instead of two will produce an oops as below.
-> > 
-> > I'm not sure how this is supposed to work for
-> > snd-soc-audio-graph-card with multipe endpoints connected
-> > to just one mcbsp dai instance?
-> > 
-> > Regards,
-> > 
-> > Tony
-> > 
-> > 8< -------------------
-> What is the kernel version?
-> The context is missing...
-> Who printed the line:
-> dev_err(dev, "ASoC: Failed to register DAIs: %d\n", ret);
 
-Oh sorry, this was just a quick test with droid4-pending-v5.5 branch
-with only one mcbsp dai initialized.
+I kept the naming because there is the remote possibility that NUMA
+balancing will deviate in some fashion. Right now, it's harmless.
 
-> This is only possible if snd_soc_component_initialize() fail, which can
-> only fail if snd_soc_component_unique_name() fails.
+> >  
+> >  /* Cached statistics for all CPUs within a node */
+> >  struct numa_stats {
+> >  	unsigned long load;
+> > -
+> > +	unsigned long util;
+> >  	/* Total compute capacity of CPUs on a node */
+> >  	unsigned long compute_capacity;
+> > +	unsigned int nr_running;
+> > +	unsigned int weight;
+> > +	enum numa_type node_type;
+> >  };
+> >  
+> > -/*
+> > - * XXX borrowed from update_sg_lb_stats
+> > - */
+> > -static void update_numa_stats(struct numa_stats *ns, int nid)
+> > -{
+> > -	int cpu;
+> > -
+> > -	memset(ns, 0, sizeof(*ns));
+> > -	for_each_cpu(cpu, cpumask_of_node(nid)) {
+> > -		struct rq *rq = cpu_rq(cpu);
+> > -
+> > -		ns->load += cpu_runnable_load(rq);
+> > -		ns->compute_capacity += capacity_of(cpu);
+> > -	}
+> > -
+> > -}
+> > -
+> >  struct task_numa_env {
+> >  	struct task_struct *p;
+> >  
+> > @@ -1521,6 +1518,47 @@ struct task_numa_env {
+> >  	int best_cpu;
+> >  };
+> >  
+> > +static unsigned long cpu_load(struct rq *rq);
+> > +static unsigned long cpu_util(int cpu);
+> > +
+> > +static inline enum
+> > +numa_type numa_classify(unsigned int imbalance_pct,
+> > +			 struct numa_stats *ns)
+> > +{
+> > +	if ((ns->nr_running > ns->weight) &&
+> > +	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
+> > +		return node_overloaded;
+> > +
+> > +	if ((ns->nr_running < ns->weight) ||
+> > +	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
+> > +		return node_has_spare;
+> > +
+> > +	return node_fully_busy;
+> > +}
+> > +
 > 
-> > Internal error: Oops: 805 [#1] PREEMPT SMP ARM
-> > snd_soc_del_component_unlocked+0xf4/0x110
+> As Mel pointed out, this is group_is_overloaded() and group_has_capacity().
+> @Mel, you mentioned having a common helper, do you have that laying around?
+> I haven't seen it in your reconciliation series.
 > 
-> Not too helpful ;)
 
-Yeah I have not looked at it closer so far..
+I didn't merge that part of the first version of my series. I was
+waiting to see how the implementation for allowing a small degree of
+imbalance looks like. If it's entirely confined in adjust_numa_balance
+then I'll create the common helper at the same time. For now, I left the
+possibility open that numa_classify would use something different than
+group_is_overloaded or group_has_capacity even if I find that hard to
+imagine at the moment.
 
-Regards,
-
-Tony
-
-> > ...
-> > [   39.616027] Backtrace:
-> > [   39.616149] [<bf3f6bc4>] (snd_soc_del_component_unlocked [snd_soc_core]) from [<bf3f8ff4>] (snd_soc_add_component+0x238/0x374 [snd_s)
-> > [   39.616149]  r7:00000002 r6:00000002 r5:ec9a0e78 r4:00000122
-> > [   39.678283] qmi_wwan 1-1:1.6: cdc-wdm1: USB WDM device
-> > [   39.739074] [<bf3f8dbc>] (snd_soc_add_component [snd_soc_core]) from [<bf3f9180>] (snd_soc_register_component+0x50/0x60 [snd_soc_cor)
-> > [   39.739074]  r10:bf4582d0 r9:ec9d0840 r8:00000002 r7:00000002 r6:ec9d0640 r5:bf4584ac
-> > [   39.800842] asoc-audio-graph-card soundcard: using device tree for GPIO lookup
-> > [   39.808685]  r4:eed52410
-> > [   39.862304] [<bf3f9130>] (snd_soc_register_component [snd_soc_core]) from [<bf4088b4>] (devm_snd_soc_register_component+0x54/0x90 [s)
-> > [   39.862304]  r7:ec9d0640 r6:bf4584ac r5:ec9d3040 r4:eed52410
-> > [   39.925048] qmi_wwan 1-1:1.6 wwan1: register 'qmi_wwan' at usb-4a064800.ohci-1, WWAN/QMI device, 2e:59:df:3f:4f:ef
-> > [   39.984558] [<bf408860>] (devm_snd_soc_register_component [snd_soc_core]) from [<bf456fb8>] (asoc_mcbsp_probe+0x3e8/0x574 [snd_soc_o)
-> > [   39.984558]  r9:ec9d0840 r8:ec9f4000 r7:eed52410 r6:00000000 r5:eed52400 r4:ec9d0840
-> > [   39.984588] [<bf456bd0>] (asoc_mcbsp_probe [snd_soc_omap_mcbsp]) from [<c068475c>] (platform_drv_probe+0x58/0xa8)
-> > [   39.984619]  r10:00000000 r9:0000002e r8:bf459014 r7:00000000 r6:bf459014 r5:00000000
-> > [   40.044342] of_get_named_gpiod_flags: can't parse 'pa-gpios' property of node '/soundcard[0]'
-> > [   40.051788]  r4:eed52410
-> > [   40.100769] [<c0684704>] (platform_drv_probe) from [<c06820ac>] (really_probe+0x1ec/0x358)
-> > 
+> What I'm naively thinking here is that we could have either move the whole
+> thing to just sg_lb_stats (AFAICT the fields of numa_stats are a subset of it),
+> or if we really care about the stack we could tweak the ordering to ensure
+> we can cast one into the other (not too enticed by that one though).
 > 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+Yikes, no I'd rather not do that. Basically all I did before was create
+a common helper like __lb_has_capacity that only took basic types as
+parameters. group_has_capacity and numa_has_capacity were simple wrappers
+that read the correct fields from their respective stats structures.
+
+-- 
+Mel Gorman
+SUSE Labs
