@@ -2,42 +2,43 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC23C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7560C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 483D924673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB55421D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="GyI7KtpT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Ua4SnNym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgBRGU5 (ORCPT
+        id S1726383AbgBRGVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:20:57 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:58056 "EHLO mail.andi.de1.cc"
+        Tue, 18 Feb 2020 01:21:01 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:58054 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgBRGUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726168AbgBRGUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 01:20:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=h/IV/F0QbpAv18eUQXLvrag9HkoF0+s99aXrVmJuJcM=; b=GyI7KtpTnFwbMICTIDc1ZNYBqT
-        hWpZ05DyIzCXTYGv1Gc0iIV7ClCJyNHWuEHhJ5xl9mLGhIW8Y23IBi8cCV4MsPPKn0CxmGwsm2ahy
-        RyS4evkGeqZf3BhW4tjFaoSBiy51xrpR1cYXgzySX3Su3wJF5+Spv+edv0xrku5Ez6nA=;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bDxLdFftj2IWWC8iJ/gD6olwrFTBIbD4WB3uu4ao4RY=; b=Ua4SnNymDOW+CeAghFqEEFozG/
+        Tj5c3e6dpeLvF3Oe1pDNqKEhaPCpjj/c1aBF4FEK5Hz9T/ZKpVav3IPAH54Fir05T56hUmoDtdJee
+        4LiRplNUeRlufno8ua2NmI/6Q2Ep5veFFTjJRHtU400eyGOEzllogeua/SeC4mEn8V+M=;
 Received: from [77.247.85.102] (helo=localhost)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1j3wFN-0000ov-Sx; Tue, 18 Feb 2020 07:20:42 +0100
+        id 1j3wFO-0000oy-1L; Tue, 18 Feb 2020 07:20:42 +0100
 Received: from andi by localhost with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1j3wEr-0005rD-VQ; Tue, 18 Feb 2020 07:20:09 +0100
+        id 1j3wF4-0005rK-VX; Tue, 18 Feb 2020 07:20:22 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         lee.jones@linaro.org, b.galvani@gmail.com,
@@ -46,10 +47,12 @@ To:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         letux-kernel@openphoenux.org, martin.blumenstingl@googlemail.com,
         jic23@kernel.org
 Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 0/4] mfd: rn5t618: add ADC support
-Date:   Tue, 18 Feb 2020 07:17:21 +0100
-Message-Id: <20200218061725.22420-1-andreas@kemnade.info>
+Subject: [PATCH RFC v3 3/4] mfd: rn5t618: add IRQ definitions for RN5T618
+Date:   Tue, 18 Feb 2020 07:17:24 +0100
+Message-Id: <20200218061725.22420-4-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200218061725.22420-1-andreas@kemnade.info>
+References: <20200218061725.22420-1-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,46 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mfd: rn5t618: add ADC support
+Previously, only the definitions for the RC5T619 were
+available.
 
-This series adds support for the ADC in the RN5T618/RC5T619.
-It depends on the IRQ support added in the RTC support series here:
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+depends on:
 https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
 
-I tested the driver only with the RC5T619 but it should work with the with 
-the RN5T618 as well based on these facts:
-- The corresponding register definitions originally went into the kernel
-  for the RN5T618
-- Public datasheet sections about the ADC look same.
-- Out-of-tree code for these chips look same regarding to ADC
+Untested, IMHO only acceptable with a Tested-By.
+Not needed for the RC5T619, feel free to ignore them if the whole series
+would be delayed just because of missing Tested-By for this.
 
-But due to missing hardware I cannot test the patches 2/3 and 3/3 which
-add support for the RN5T618 ADC.
-I marked these untested patches as RFC, and IMHO they require a Tested-By.
-Feel free to ignore them if the whole series would be delayed just because
-of missing Tested-By for those.
 
-Changes in v3:
-- re-included former 2/5 of these patches, since it was not applied
+ drivers/mfd/rn5t618.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Changes in v2:
-- got an "Applied, thanks" message for the first two, so I do not include
-  them anymore
-- some cleanups for the ADC driver itself
-
-Andreas Kemnade (4):
-  mfd: rn5t618: add ADC subdevice for RC5T619
-  iio: adc: rn5t618: Add ADC driver for RN5T618/RC5T619
-  mfd: rn5t618: add IRQ definitions for RN5T618
-  mfd: rn5t618: add ADC subdevice for RN5T618
-
- drivers/iio/adc/Kconfig       |  10 ++
- drivers/iio/adc/Makefile      |   1 +
- drivers/iio/adc/rn5t618-adc.c | 258 ++++++++++++++++++++++++++++++++++
- drivers/mfd/rn5t618.c         |  48 ++++++-
- 4 files changed, 315 insertions(+), 2 deletions(-)
- create mode 100644 drivers/iio/adc/rn5t618-adc.c
-
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 321836f78120..6828fd40b0a1 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -58,6 +58,24 @@ static const struct regmap_config rn5t618_regmap_config = {
+ 	.cache_type	= REGCACHE_RBTREE,
+ };
+ 
++static const struct regmap_irq rn5t618_irqs[] = {
++	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
++};
++
++static const struct regmap_irq_chip rn5t618_irq_chip = {
++	.name = "rn5t618",
++	.irqs = rn5t618_irqs,
++	.num_irqs = ARRAY_SIZE(rn5t618_irqs),
++	.num_regs = 1,
++	.status_base = RN5T618_INTMON,
++	.mask_base = RN5T618_INTEN,
++	.mask_invert = true,
++};
++
+ static const struct regmap_irq rc5t619_irqs[] = {
+ 	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
+ 	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
+@@ -92,6 +110,9 @@ static int rn5t618_irq_init(struct rn5t618 *rn5t618)
+ 	case RC5T619:
+ 		irq_chip = &rc5t619_irq_chip;
+ 		break;
++	case RN5T618:
++		irq_chip = &rn5t618_irq_chip;
++		break;
+ 	default:
+ 		irq_chip = NULL;
+ 		break;
 -- 
 2.20.1
 
