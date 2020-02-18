@@ -2,185 +2,212 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01319C34031
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B911C3404B
 	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC70E2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0148D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="dTeLpuFT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OYgEBVV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgBRUtZ (ORCPT
+        id S1727683AbgBRUt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 18 Feb 2020 15:49:26 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3361 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgBRUtZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 15:49:25 -0500
-Received: from mail-dm6nam10on2091.outbound.protection.outlook.com ([40.107.93.91]:27744
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726449AbgBRUtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:49:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Trk9Ox4TA7n1M+YJnNe+QTtC33xpKClzYEc8OGVKzNrWklPz2dfLp0ZW1AWtBFXEloptCSPiudLWOmVEM0s/07bhezzHD+9m+goknVZd7KUKKtwwnlNxUr8s30VIzUFE7jDiIauOM3bpdT87YdcwPZPoPmmT4EzsV6fMUVNzD795txRrqa5AcnmgHkR/9PWI4AkbpoKL9RNFCTok5XFMupj9BUmHgItMHIIx5wiiThXFz+VV+3SsPHfMM4P3bKr9SxBZGczWOXF3gIOD0mfi0+/8UmFZ4NCqo6DifWzTQ8e8TtghuJvhy1fOq5HobqitSha2plo24cfALQ9x9dF71g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAYJeHDPMp+nXjJddP+wGPF6zJ/hu0G+tXQ0rLrLHhI=;
- b=iXxcRMLLGHOkiko+6P3Mqh5tVbUiymJCH9cxQpYPZomHVVcZGJ606H3a0zlLOgLCDNFPLLEvkEEV1XfzcUxiuNM6Wm4QHSf8/PPVUWx+pLck1KcYjenzsXN3tMu+rX1kXKpNpDaKQ82CBg36MPTysA2qpxf9cSX0Mng0VEq5q/wM9tqkH4vHEozPvE6dR84tylNH8ll2DFxLxtPuLqYrvYRg7W7pz0/giV9jnvzHSa2UhVgya/mkarM4tVImABvbKUCI6oTUUcMvivtEIvSv2HH0yJqPKpLG9qnN26YKnKhcXwEdlNFHyZShEUwZNRlc+ERpJOyUr0Djg1pXGQpC9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
- dkim=pass header.d=sony.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAYJeHDPMp+nXjJddP+wGPF6zJ/hu0G+tXQ0rLrLHhI=;
- b=dTeLpuFTmRPLkNv57SzWxF67TjYTbdCQ3waqXKul4K0CfGMigyz37SYbO2aP6JxSMZrZqKY/LaSg+UuflO3Eu0FtgCEwZiag5mqR9lSNhPViJ2khH+TH7oAvpLs+97fnMK4p/FoeV6xawPqAidltzYjs60L5MI4nAN0+CQVH6wM=
-Received: from MWHPR13MB0895.namprd13.prod.outlook.com (10.169.172.155) by
- MWHPR13MB1824.namprd13.prod.outlook.com (10.171.145.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.8; Tue, 18 Feb 2020 20:49:21 +0000
-Received: from MWHPR13MB0895.namprd13.prod.outlook.com
- ([fe80::7544:fc2:b078:5dcd]) by MWHPR13MB0895.namprd13.prod.outlook.com
- ([fe80::7544:fc2:b078:5dcd%3]) with mapi id 15.20.2750.014; Tue, 18 Feb 2020
- 20:49:21 +0000
-From:   "Bird, Tim" <Tim.Bird@sony.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Frank Rowand <frowand.list@gmail.com>
-CC:     Alan Maguire <alan.maguire@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>, shuah <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Gow <davidgow@google.com>
-Subject: RE: [PATCH v3 kunit-next 1/2] kunit: add debugfs
- /sys/kernel/debug/kunit/<suite>/results display
-Thread-Topic: [PATCH v3 kunit-next 1/2] kunit: add debugfs
- /sys/kernel/debug/kunit/<suite>/results display
-Thread-Index: AQHV3dfv58zRX/NXyUSJApFF8BhfLqgYfqyAgAjt7ICAAAqyEA==
-Date:   Tue, 18 Feb 2020 20:49:21 +0000
-Message-ID: <MWHPR13MB0895A9AC64475539ECF99987FD110@MWHPR13MB0895.namprd13.prod.outlook.com>
-References: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
- <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
- <c42ac237-476a-526f-b445-61e7a63bc101@gmail.com>
- <CAFd5g47p9wnbz=HrNh0U2bbc=0ZaJ7n0U+_=E8yp8yPMrqwzaA@mail.gmail.com>
-In-Reply-To: <CAFd5g47p9wnbz=HrNh0U2bbc=0ZaJ7n0U+_=E8yp8yPMrqwzaA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Tim.Bird@sony.com; 
-x-originating-ip: [160.33.66.122]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ae6cdb8a-0152-4005-6a0b-08d7b4b407de
-x-ms-traffictypediagnostic: MWHPR13MB1824:
-x-microsoft-antispam-prvs: <MWHPR13MB18247D34D0F4F9538B49FE57FD110@MWHPR13MB1824.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 031763BCAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(199004)(189003)(81166006)(81156014)(8676002)(9686003)(8936002)(66476007)(64756008)(66446008)(66556008)(316002)(86362001)(76116006)(7696005)(66946007)(26005)(7416002)(6506007)(53546011)(52536014)(5660300002)(110136005)(71200400001)(33656002)(54906003)(4326008)(2906002)(186003)(478600001)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR13MB1824;H:MWHPR13MB0895.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: sony.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PAnKW4bVwIxGnxLE/h+jhwSzDutBewGNb7BURginga29xCDq6RojuKNv6p6Exot7dINZEExz0CYSK/WsQpslrpT3z9w4mG8kFAH0lvWlpA6bASwbCLnp2Ubc3/GEtixQiQ4jtH9lcV4uSbWMmi4E9rIMasIkyX0PjHiuaO+V9Us1KgGJcTEkp8/G2+rIcZ75H9n0dva7Y789lJlGxWYZh6Y4dmHU5AD8ITql203ysT2zSkFlly6NsZtbmulaJeEj6hMA/XeTzdp6NidzmepR+5Waz6I+1+VQUkV4COwtZ6Dx6vaAjXy4ZuAh3SNxGF3oz4ZAc3RuvOx+bE6T7rnMCNl26f3wcMCfayGYPDSegsxv8z5DHchbz5/OrtTYY4HC5bsp2VEUEyj1elyhwcEXjZqLjvCsInHgsMZMpHYDC+tJoek5tauzctm0jC29xsx3
-x-ms-exchange-antispam-messagedata: 22DcSCF4ivWthAYgW1TCMkIHkcj+FmXWYNB4MW+YAuLoGJ3Fpq1oYJjC5gBrllK7p8UFFbx5ygcHgfmwQSxiBtCMGsdVOt3R8VA3rrgh+LCJYckAKlF8Chq1n3iSIff+7s7docdx9kx/kXveOlUlCA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c4da80000>; Tue, 18 Feb 2020 12:48:40 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 12:49:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 12:49:11 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
+ 2020 20:49:11 +0000
+Subject: Re: [PATCH v6 00/19] Change readahead API
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <80d98657-2f93-da92-a541-707429a6fcdf@nvidia.com>
+Date:   Tue, 18 Feb 2020 12:49:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae6cdb8a-0152-4005-6a0b-08d7b4b407de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 20:49:21.4074
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NT4R1thDKC7zssVPm/iOvbsVzM8brPltfEgujkhVkJuVC9p46/BKsfV8XTtvmjB7AChkDLaAVJZORFWBoPnsTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1824
+In-Reply-To: <20200217184613.19668-1-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582058920; bh=sSzUuAsXGIrXy4vQ0zTAGyf0jed9sNlmwz2tpEx8I1w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OYgEBVV/ua9FohonQVxYl3qPPXVMYQG31aVJZXFPu7SkYOwxhtaZfQM11ZRWuKWRn
+         lVI3HR/RIXFrZMOWjvHUihTcKXkE2jgWZqXXGCNxpXb3Nv2SKAT+FXp4fzmW9R+SbR
+         +H8xokJDzpZ6UCukKlMzu/5eKP5axPGrm5jxpyyz73wcaxjN5ykeBaYI4TDMwgMSY8
+         xsZHrBQYyHRUHdXgYU3ZVNQuJpgqlmVcDrdSv4XqikXa55cxrAOxN2l1s5oRfr4SZG
+         EEyk1LdZCMme+4QhBVN+8g/HUCynjQ8e9lz6/YoFujDdaTBOhd1TQ8nXhH+hrOTVqL
+         JwGZHfev+XX/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogIEJyZW5kYW4gSGlnZ2lu
-cw0KPiANCj4gT24gV2VkLCBGZWIgMTIsIDIwMjAgYXQgNzoyNSBQTSBGcmFuayBSb3dhbmQgPGZy
-b3dhbmQubGlzdEBnbWFpbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gT24gMi83LzIwIDEwOjU4IEFN
-LCBBbGFuIE1hZ3VpcmUgd3JvdGU6DQoNCi4uLg0KDQo+ID4gPiBkaWZmIC0tZ2l0IGEvbGliL2t1
-bml0L3Rlc3QuYyBiL2xpYi9rdW5pdC90ZXN0LmMNCj4gPiA+IGluZGV4IDkyNDJmOTMuLmFlYzYw
-N2YgMTAwNjQ0DQo+ID4gPiAtLS0gYS9saWIva3VuaXQvdGVzdC5jDQo+ID4gPiArKysgYi9saWIv
-a3VuaXQvdGVzdC5jDQo+ID4gPiBAQCAtMTAsNiArMTAsNyBAQA0KPiA+ID4gICNpbmNsdWRlIDxs
-aW51eC9rZXJuZWwuaD4NCj4gPiA+ICAjaW5jbHVkZSA8bGludXgvc2NoZWQvZGVidWcuaD4NCj4g
-PiA+DQo+ID4gPiArI2luY2x1ZGUgImRlYnVnZnMuaCINCj4gPiA+ICAjaW5jbHVkZSAic3RyaW5n
-LXN0cmVhbS5oIg0KPiA+ID4gICNpbmNsdWRlICJ0cnktY2F0Y2gtaW1wbC5oIg0KPiA+ID4NCj4g
-PiA+IEBAIC0yOCw3MyArMjksOTEgQEAgc3RhdGljIHZvaWQga3VuaXRfcHJpbnRfdGFwX3ZlcnNp
-b24odm9pZCkNCj4gPiA+ICAgICAgIH0NCj4gPiA+ICB9DQo+ID4gPg0KPiA+ID4gLXN0YXRpYyBz
-aXplX3Qga3VuaXRfdGVzdF9jYXNlc19sZW4oc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZXMp
-DQo+ID4gPiArc2l6ZV90IGt1bml0X3N1aXRlX251bV90ZXN0X2Nhc2VzKHN0cnVjdCBrdW5pdF9z
-dWl0ZSAqc3VpdGUpDQo+ID4gPiAgew0KPiA+ID4gICAgICAgc3RydWN0IGt1bml0X2Nhc2UgKnRl
-c3RfY2FzZTsNCj4gPiA+ICAgICAgIHNpemVfdCBsZW4gPSAwOw0KPiA+ID4NCj4gPiA+IC0gICAg
-IGZvciAodGVzdF9jYXNlID0gdGVzdF9jYXNlczsgdGVzdF9jYXNlLT5ydW5fY2FzZTsgdGVzdF9j
-YXNlKyspDQo+ID4gPiArICAgICBrdW5pdF9zdWl0ZV9mb3JfZWFjaF90ZXN0X2Nhc2Uoc3VpdGUs
-IHRlc3RfY2FzZSkNCj4gPiA+ICAgICAgICAgICAgICAgbGVuKys7DQo+ID4gPg0KPiA+ID4gICAg
-ICAgcmV0dXJuIGxlbjsNCj4gPiA+ICB9DQo+ID4gPiArRVhQT1JUX1NZTUJPTF9HUEwoa3VuaXRf
-c3VpdGVfbnVtX3Rlc3RfY2FzZXMpOw0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgdm9pZCBrdW5pdF9w
-cmludF9zdWJ0ZXN0X3N0YXJ0KHN0cnVjdCBrdW5pdF9zdWl0ZSAqc3VpdGUpDQo+ID4gPiAgew0K
-PiA+ID4gICAgICAga3VuaXRfcHJpbnRfdGFwX3ZlcnNpb24oKTsNCj4gPiA+IC0gICAgIHByX2lu
-Zm8oIlx0IyBTdWJ0ZXN0OiAlc1xuIiwgc3VpdGUtPm5hbWUpOw0KPiA+ID4gLSAgICAgcHJfaW5m
-bygiXHQxLi4lemRcbiIsIGt1bml0X3Rlc3RfY2FzZXNfbGVuKHN1aXRlLT50ZXN0X2Nhc2VzKSk7
-DQo+ID4gPiArICAgICBrdW5pdF9sb2coS0VSTl9JTkZPLCBzdWl0ZSwgIiMgU3VidGVzdDogJXMi
-LCBzdWl0ZS0+bmFtZSk7DQo+ID4gPiArICAgICBrdW5pdF9sb2coS0VSTl9JTkZPLCBzdWl0ZSwg
-IjEuLiV6ZCIsDQo+ID4gPiArICAgICAgICAgICAgICAga3VuaXRfc3VpdGVfbnVtX3Rlc3RfY2Fz
-ZXMoc3VpdGUpKTsNCj4gPg0KPiA+IFRoZSBzdWJ0ZXN0ICdpcyBhIFRBUCBzdHJlYW0gaW5kZW50
-ZWQgNCBzcGFjZXMnLiAgKFNvIHRoZSBvbGQgY29kZSB3YXMNCj4gPiBhbHNvIGluY29ycmVjdCBz
-aW5jZSBpdCBpbmRlbnRlZCB3aXRoIGEgdGFiLikNCj4gDQo+IFdob29wcy4NCj4gDQo+IEkgYWdy
-ZWUgdGhhdCBmaXhpbmcgdGFicyB0byBzcGFjZXMgaXMgcHJvYmFibHkgdGhlIGVhc2llc3QgdGhp
-bmcgdG8gZG8NCj4gaGVyZTsgbmV2ZXJ0aGVsZXNzLCBJIHRoaW5rIHRoaXMgbWlnaHQgYmUgYSBn
-b29kIHRpbWUgdG8gdGFsayBhYm91dA0KPiBvdGhlciBkZXZpYXRpb25zIGZyb20gdGhlIHNwZWMg
-YW5kIHdoYXQgdG8gZG8gYWJvdXQgaXQuIFRoaXMgbWlnaHQNCj4gYWxzbyBiZSBhIGdvb2QgdGlt
-ZSB0byBicmluZyB1cCBUaW0ncyBjb21tZW50IGF0IExQQyBsYXN0IHllYXIgYWJvdXQNCj4gZm9y
-a2luZyBUQVAuIEFyZ3VhYmx5IEkgYWxyZWFkeSBoYXZlIGdpdmVuIHRoYXQgVEFQMTQgaXMgc3Rp
-bGwgdW5kZXINCj4gcmV2aWV3IGFuZCBpcyBjb25zZXF1ZW50bHkgc3ViamVjdCB0byBjaGFuZ2Uu
-DQo+IA0KPiBBZGRpdGlvbmFsbHksIHRoZSB3YXkgSSByZXBvcnQgZXhwZWN0YXRpb24vYXNzZXJ0
-aW9uIGZhaWx1cmVzIGFyZSBteQ0KPiBvd24gZXh0ZW5zaW9uIHRvIHRoZSBUQVAgc3BlYy4gSSBk
-aWQgdGhpcyBiZWNhdXNlIGF0IHRoZSB0aW1lIEkgd2Fzbid0DQo+IHJlYWR5IHRvIG9wZW4gdGhl
-IGNhbiBvZiB3b3JtcyB0aGF0IHdhcyBhZGRpbmcgYSBZQU1MIHNlcmlhbGl6ZXIgdG8NCj4gdGhl
-IExpbnV4IGtlcm5lbDsgSSBtZW50aW9uZWQgYWRkaW5nIGEgWUFNTCBzZXJpYWxpemVyIGF0IExQ
-QyBhbmQNCj4gcGVvcGxlIGRpZG4ndCBzZWVtIHN1cGVyIHRocmlsbGVkIHdpdGggdGhlIGlkZWEu
-DQoNCkknbSBub3Qgc3VyZSBJIGZvbGxvdy4gIEFyZSB5b3UgdGFsa2luZyBhYm91dCB3cml0aW5n
-IFlBTUwgb3IgaW50ZXJwcmV0aW5nDQpZQU1MLiAgWW91IGRvbid0IG5lZWQgYSBzZXJpYWxpemVy
-IHRvIHdyaXRlIFlBTUwuICBJdCBjYW4gYmUgZG9uZSANCndpdGggc3RyYWlnaHQgdGV4dCBvdXRw
-dXQuICBJIGd1ZXNzIGl0IGRlcGVuZHMgb24gdGhlIHNjb3BlIG9mIHdoYXQgeW91DQplbnZpc2lv
-bi4gIEV2ZW4gaWYgeW91IHdhbnQgdG8gZG8gbW9yZSB0aGFuIHRyaXZpYWwgc3RydWN0dXJlZCBv
-dXRwdXQsDQpJIGRvbid0IHRoaW5rIHlvdSdsbCBuZWVkIGEgZnVsbCBzZXJpYWxpemVyLiAgKElP
-VywgSSB0aGluayB5b3UgY291bGQgc25lYWsNCnNvbWV0aGluZyBpbiBhbmQganVzdCBjYWxsIGl0
-IGEgdGVzdCBvdXRwdXQgZm9ybWF0dGVyLiAgSnVzdCBkb24ndCBjYWxsIGl0IFlBTUwNCmFuZCBt
-b3N0IHBlb3BsZSB3b24ndCBub3RpY2UuIDotKQ0KDQo+IA0KPiBGdXJ0aGVyIGJvdGggdGhlIFRB
-UCBpbXBsZW1lbnRhdGlvbiBoZXJlIGFzIHdlbGwgYXMgd2hhdCBpcyBpbg0KPiBrc2VsZnRlc3Qg
-aGF2ZSBhcmJpdHJhcnkga2VybmVsIG91dHB1dCBtaXhlZCBpbiB3aXRoIFRBUCBvdXRwdXQsIHdo
-aWNoDQo+IHNlZW1zIHRvIGJlIGEgZnVydGhlciBkZXZpYXRpb24gZnJvbSB0aGUgc3BlYy4NCldl
-bGwgdGhhdCdzIGEgZGlmZmVyZW50IGtldHRsZSBvZiB3b3JtcywgYW5kIHJlYWxseSBhcmd1ZXMg
-Zm9yIHN0YXlpbmcNCndpdGggc29tZXRoaW5nIHRoYXQgaXMgc3RyaWN0bHkgbGluZS1iYXNlZC4N
-Cg0KPiANCj4gSW4gYW4gZWZmb3J0IHRvIGRvIHRoaXMsIGFuZCBzbyB0aGF0IGF0IHRoZSB2ZXJ5
-IGxlYXN0IEkgY291bGQNCj4gZG9jdW1lbnQgd2hhdCBJIGhhdmUgZG9uZSBoZXJlLCBJIGhhdmUg
-YmVlbiBsb29raW5nIGludG8gZ2V0dGluZyBhDQo+IGNvcHkgb2YgVEFQIGludG8gdGhlIGtlcm5l
-bC4gVW5mb3J0dW5hdGVseSwgVEFQIGFwcGVhcnMgdG8gaGF2ZSBzb21lDQo+IGxpY2Vuc2luZyBp
-c3N1ZXMuIFRBUCBzYXlzIHRoYXQgaXQgY2FuIGJlIHVzZWQvbW9kaWZpZWQgInVuZGVyIHRoZQ0K
-PiBzYW1lIHRlcm1zIGFzIFBlcmwgaXRzZWxmIiBhbmQgdGhlbiBwcm92aWRlcyBhIGRlYWQgbGlu
-ay4gSSBmaWxlZCBhDQo+IHB1bGwgcmVxdWVzdCB0byB1cGRhdGUgdGhlIGxpY2VuY2UgdG8gdGhl
-IFBlcmwgQXJ0aXN0aWMgTGljZW5jZSAxLjANCj4gc2luY2UgSSBiZWxpZXZlIHRoYXQgaXMgd2hh
-dCB0aGV5IGFyZSByZWZlcmVuY2luZzsgaG93ZXZlciwgSSBoYXZlIG5vdA0KPiBoZWFyZCBiYWNr
-IGZyb20gdGhlbSB5ZXQuDQoNCldoZW4geW91IHNheSAiZ2V0dGluZyBhIGNvcHkgb2YgVEFQIGlu
-dG8gdGhlIGtlcm5lbCIsIEkgcHJlc3VtZSB5b3UgbWVhbg0KYW4gZXhpc3RpbmcgaW1wbGVtZW50
-YXRpb24gdG8gcHJvZHVjZSBUQVAgb3V0cHV0PyAgT3IgYXJlIHlvdSB0YWxraW5nIGFib3V0DQph
-IFRBUCBpbnRlcnByZXRlcj8gIEknbSBub3Qgc3VyZSB0aGUgZm9ybWVyIG5lZWRzIHRvIHVzZSBh
-biBleGlzdGluZyBpbXBsZW1lbnRhdGlvbi4NCg0KSSBwcmV2aW91c2x5IHZvbHVudGVlcmVkIChp
-biBMaXNib24pIHRvIHdyaXRlIHVwIHRoZSBUQVAgZGV2aWF0aW9ucywNCmFuZCBuZXZlciBnb3Qg
-YXJvdW5kIHRvIGl0LiAgIFNvcnJ5IGFib3V0IHRoYXQuIEkgY2FuIHRyeSB0byB3b3JrIG9uIGl0
-IG5vdyBpZg0KcGVvcGxlIGFyZSBzdGlsbCBpbnRlcmVzdGVkLg0KIC0tIFRpbQ0KDQpbcmVzdCBv
-ZiBwYXRjaCBvbWl0dGVkXQ0KDQoNCg==
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This series adds a readahead address_space operation to eventually
+> replace the readpages operation.  The key difference is that
+> pages are added to the page cache as they are allocated (and
+> then looked up by the filesystem) instead of passing them on a
+> list to the readpages operation and having the filesystem add
+> them to the page cache.  It's a net reduction in code for each
+> implementation, more efficient than walking a list, and solves
+> the direct-write vs buffered-read problem reported by yu kuai at
+> https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+> 
+> The only unconverted filesystems are those which use fscache.
+> Their conversion is pending Dave Howells' rewrite which will make the
+> conversion substantially easier.
+
+Hi Matthew,
+
+I see that Dave Chinner is reviewing this series, but I'm trying out his recent
+advice about code reviews [1], and so I'm not going to read his comments first.
+So you may see some duplication or contradictions this time around.
+
+
+[1] Somewhere in this thread, "[LSF/MM/BPF TOPIC] FS Maintainers Don't Scale": 
+https://lore.kernel.org/r/20200131052520.GC6869@magnolia
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+> v6:
+>  - Name the private members of readahead_control with a leading underscore
+>    (suggested by Christoph Hellwig)
+>  - Fix whitespace in rst file
+>  - Remove misleading comment in btrfs patch
+>  - Add readahead_next() API and use it in iomap
+>  - Add iomap_readahead kerneldoc.
+>  - Fix the mpage_readahead kerneldoc
+>  - Make various readahead functions return void
+>  - Keep readahead_index() and readahead_offset() pointing to the start of
+>    this batch through the body.  No current user requires this, but it's
+>    less surprising.
+>  - Add kerneldoc for page_cache_readahead_limit
+>  - Make page_idx an unsigned long, and rename it to just 'i'
+>  - Get rid of page_offset local variable
+>  - Add patch to call memalloc_nofs_save() before allocating pages (suggested
+>    by Michal Hocko)
+>  - Resplit a lot of patches for more logical progression and easier review
+>    (suggested by John Hubbard)
+>  - Added sign-offs where received, and I deemed still relevant
+> 
+> v5 switched to passing a readahead_control struct (mirroring the
+> writepages_control struct passed to writepages).  This has a number of
+> advantages:
+>  - It fixes a number of bugs in various implementations, eg forgetting to
+>    increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
+>    as a byte offset instead of a page offset.
+>  - It allows us to change the arguments without changing all the
+>    implementations of ->readahead which just call mpage_readahead() or
+>    iomap_readahead()
+>  - Figuring out which pages haven't been attempted by the implementation
+>    is more natural this way.
+>  - There's less code in each implementation.
+> 
+> Matthew Wilcox (Oracle) (19):
+>   mm: Return void from various readahead functions
+>   mm: Ignore return value of ->readpages
+>   mm: Use readahead_control to pass arguments
+>   mm: Rearrange readahead loop
+>   mm: Remove 'page_offset' from readahead loop
+>   mm: rename readahead loop variable to 'i'
+>   mm: Put readahead pages in cache earlier
+>   mm: Add readahead address space operation
+>   mm: Add page_cache_readahead_limit
+>   fs: Convert mpage_readpages to mpage_readahead
+>   btrfs: Convert from readpages to readahead
+>   erofs: Convert uncompressed files from readpages to readahead
+>   erofs: Convert compressed files from readpages to readahead
+>   ext4: Convert from readpages to readahead
+>   f2fs: Convert from readpages to readahead
+>   fuse: Convert from readpages to readahead
+>   iomap: Restructure iomap_readpages_actor
+>   iomap: Convert from readpages to readahead
+>   mm: Use memalloc_nofs_save in readahead path
+> 
+>  Documentation/filesystems/locking.rst |   6 +-
+>  Documentation/filesystems/vfs.rst     |  13 ++
+>  drivers/staging/exfat/exfat_super.c   |   7 +-
+>  fs/block_dev.c                        |   7 +-
+>  fs/btrfs/extent_io.c                  |  46 ++-----
+>  fs/btrfs/extent_io.h                  |   3 +-
+>  fs/btrfs/inode.c                      |  16 +--
+>  fs/erofs/data.c                       |  39 ++----
+>  fs/erofs/zdata.c                      |  29 ++--
+>  fs/ext2/inode.c                       |  10 +-
+>  fs/ext4/ext4.h                        |   3 +-
+>  fs/ext4/inode.c                       |  23 ++--
+>  fs/ext4/readpage.c                    |  22 ++-
+>  fs/ext4/verity.c                      |  35 +----
+>  fs/f2fs/data.c                        |  50 +++----
+>  fs/f2fs/f2fs.h                        |   5 +-
+>  fs/f2fs/verity.c                      |  35 +----
+>  fs/fat/inode.c                        |   7 +-
+>  fs/fuse/file.c                        |  46 +++----
+>  fs/gfs2/aops.c                        |  23 ++--
+>  fs/hpfs/file.c                        |   7 +-
+>  fs/iomap/buffered-io.c                | 118 +++++++----------
+>  fs/iomap/trace.h                      |   2 +-
+>  fs/isofs/inode.c                      |   7 +-
+>  fs/jfs/inode.c                        |   7 +-
+>  fs/mpage.c                            |  38 ++----
+>  fs/nilfs2/inode.c                     |  15 +--
+>  fs/ocfs2/aops.c                       |  34 ++---
+>  fs/omfs/file.c                        |   7 +-
+>  fs/qnx6/inode.c                       |   7 +-
+>  fs/reiserfs/inode.c                   |   8 +-
+>  fs/udf/inode.c                        |   7 +-
+>  fs/xfs/xfs_aops.c                     |  13 +-
+>  fs/zonefs/super.c                     |   7 +-
+>  include/linux/fs.h                    |   2 +
+>  include/linux/iomap.h                 |   3 +-
+>  include/linux/mpage.h                 |   4 +-
+>  include/linux/pagemap.h               |  90 +++++++++++++
+>  include/trace/events/erofs.h          |   6 +-
+>  include/trace/events/f2fs.h           |   6 +-
+>  mm/internal.h                         |   8 +-
+>  mm/migrate.c                          |   2 +-
+>  mm/readahead.c                        | 184 +++++++++++++++++---------
+>  43 files changed, 474 insertions(+), 533 deletions(-)
+> 
+> 
+> base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+> 
