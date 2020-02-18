@@ -2,100 +2,123 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D513BC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7056C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA552173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582057482;
-	bh=5f98cBuHe/a1fe/SI4s1hmsWb7iBUYv/dCU9M1zj2/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IfdXdplucpZj5f67RTaRr37kMLm74n7oLM3Iis7yIokdaYdjAteDHrnko5n1isDX2
-	 XYdokYI4LmZkuzTAgU6jGCFsF08QmOlgB6rI64kUvE8hdq4hqZBct+k14O+N6rAXvi
-	 FxtyDqIqi+c8IlIcC9+M3i7vYY7THtSaGejUTddw=
+	by mail.kernel.org (Postfix) with ESMTP id 8F5882173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oen+0qmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgBRUYl (ORCPT
+        id S1726847AbgBRU1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:24:41 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44894 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRUYl (ORCPT
+        Tue, 18 Feb 2020 15:27:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40076 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgBRU1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:24:41 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so21422725oia.11;
-        Tue, 18 Feb 2020 12:24:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tO19nIckNkDU5JzuGmfbb1T3kIAPq1F96qlDELrXEPQ=;
-        b=YqbQ4XGoim0kYtlIQpOTu7pFKX5oP0arTkOTmIyXGgXV0OW25ro5shIRcDel8p+Sr+
-         VXJpD5MptyQ/LIo56gkPXEOYBMHUxtwf19PgWepDt84zfTKgVL7CXIPnr7c2mlya8Bz2
-         jBrF0/nlnrP9qxUQCV08Jzb/yuHpwTqM8y36XZyhhXoqYxU49lxiGEUFQ8ffn3SQdWJm
-         5wl9KG/wNWQRPTzSnthJb9h1rWzMJCD3DNTJrZhDAsJY2/y16cuX1+4YwM8g+8BrWBve
-         k6KrNLOInog4wkCzb5gaw2JIkkD2I/nYk78jkxat6KndrrOLyWH2Zllntdjw0C8LmdHK
-         eKfA==
-X-Gm-Message-State: APjAAAWAhy6tTnnvGXMJnaEIADZ8z+qvtIPasm+qChXL521vqYdpbFty
-        X1hTuYKpnb6WdDqFZ6gxjQ==
-X-Google-Smtp-Source: APXvYqx1k9+vtqpJhauuPUQGR/hJ0ExvHHpLBsIXoeSA3F4fnMZwLCKBfV9B2Eu8nKNc1Bl0nOCHVg==
-X-Received: by 2002:a05:6808:611:: with SMTP id y17mr2348472oih.146.1582057480260;
-        Tue, 18 Feb 2020 12:24:40 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm1543312oia.21.2020.02.18.12.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:24:39 -0800 (PST)
-Received: (nullmailer pid 6545 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:24:39 -0000
-Date:   Tue, 18 Feb 2020 14:24:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, logan.shaw@alliedtelesis.co.nz,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-Message-ID: <20200218202439.GA4617@bogus>
-References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
- <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
+        Tue, 18 Feb 2020 15:27:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MsmkZg6wZrEhezy9R5YbQTUgrdTDhzPB+OkYnO5Pl0U=; b=Oen+0qmNRjfXIHYz20JeeFGcoE
+        QEkZxoj1f8cyZZrwUcdG+/PN62xbB41Ig8cC4hmVseF2UTRP6/MwtB5RjknENoDaVceDgK5dGOhUX
+        704AD+q+nLumZg0j5/aE3dqIYNE/It3a4G/NhNwCDBj5EqCxTnyS+imld0ZwuUSmV9LrNvbxfnv52
+        DI4nKSzCxOVDC9+1xH3kWbx2ZvvUM9jP8rm2qDL4yr/S08OSAbypMRojEuzG57MXl/upMFsyiiP/0
+        PA/WFbjCMGcTdBSgWV0saNu+kZMEr/qIUdvpZGB0q/jvEjQmxmbyHIut7K0tj/g8GYGVEjeoiEyy2
+        m2EXOsNw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j49SB-0004D6-3O; Tue, 18 Feb 2020 20:26:47 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0F2E4980E56; Tue, 18 Feb 2020 21:26:45 +0100 (CET)
+Date:   Tue, 18 Feb 2020 21:26:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
+ ->srcu_gp_seq load
+Message-ID: <20200218202644.GG11457@worktop.programming.kicks-ass.net>
+References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
+ <20200215002932.15976-4-paulmck@kernel.org>
+ <20200217124507.GT14914@hirez.programming.kicks-ass.net>
+ <20200217183220.GS2935@paulmck-ThinkPad-P72>
+ <20200218114334.GX14914@hirez.programming.kicks-ass.net>
+ <20200218163405.GF2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200218163405.GF2935@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 12:46:54 +1300, Chris Packham wrote:
-> 
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> 
-> Add documentation for the bypass-attenuator-in[0-4] property.
-> 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
+On Tue, Feb 18, 2020 at 08:34:05AM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 18, 2020 at 12:43:34PM +0100, Peter Zijlstra wrote:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> > Well, I didn't get further than the Changelog fails to describe an
+> > actual problem and it looks like compare-against-a-constant.
+> > 
+> > (worse, it masks off everything but the 2 lowest bits, so even if there
+> > was a problem with load-tearing, it still wouldn't matter)
+> 
+> There is still the possibility of load fusing. 
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/adt7475.yaml: patternProperties:^bypass-attenuator-in[0-4]$:maximum: False schema does not allow 1
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/adt7475.yaml: patternProperties:^bypass-attenuator-in[0-4]$:minimum: False schema does not allow 0
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/hwmon/adt7475.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/hwmon/adt7475.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Agreed; that can be an issue. But if so, that then needs to be stated.
 
-See https://patchwork.ozlabs.org/patch/1239694
-Please check and re-submit.
+> And the possibility
+> of defending against possible future changes as well as the current
+> snapshot of the code base.
+
+Sure; and like I said, if you want to use READ_ONCE() I'm not going to
+argue.
+
+> > I'm not going to argue with you if you want to use READ_ONCE() vs
+> > data_race() and a comment to denote false-positive KCSAN warnings, but I
+> > do feel somewhat strongly that the Changelog should describe the actual
+> > problem -- if there is one -- or just flat out state that this is to
+> > make KCSAN shut up but the code is fine.
+> 
+> The problem is that "the code is fine" is highly subjective and varies
+> over time.  :-/
+> 
+> But in this case there was a real problem, just that I got confused
+> when analyzing.
+
+Shit happens :-)
+
+> > That is; every KCSAN report should be analysed, right? All I'm asking is
+> > for that analysis to end up in the Changelog.
+> 
+> Before responding further, I have to ask...
+> 
+> Are you intending your "every KCSAN report should be analyzed" to apply
+> globally or just when someone creates a patch based on such a report?
+
+Ideally every KCSAN report, but that is a longer term effort. But
+specifically, when someone has written a patch, I expect that same
+someone to have analysed the code. Then it also makes sense to put that
+in the Changelog.
+
+> In any case, you have acked this patch's successor (thank you very
+> much!), so on this specific patch (or more accurately, its successor)
+> I presume that we are all good.
+
+We are. That new patch describes a clear problem and fixes it.
+
+Anyway, the reaoson I'm being difficuly is partly because on the one
+hand I'm just an annoying pendant at times, but also because I've seen
+a bunch of, let's say, hasty, KCSAN patches.
