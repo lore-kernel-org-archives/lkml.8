@@ -2,112 +2,127 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B8C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9CDC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BA621D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96D124649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFWBs0Fk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgBRSMB (ORCPT
+        id S1726582AbgBRSMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:12:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbgBRSMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:12:01 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48CB1208C4;
-        Tue, 18 Feb 2020 18:12:00 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 13:11:58 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200218131158.693eeefc@gandalf.local.home>
-In-Reply-To: <20200218173150.GK14449@zn.tnic>
-References: <20200218173150.GK14449@zn.tnic>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 18 Feb 2020 13:12:20 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43944 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgBRSMU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:12:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s1so11040550pfh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:12:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aEx06awt80jAiN38AZX49qL25dVM9rqZAP00JoKZ/1Y=;
+        b=iFWBs0FkEI2gFTZEtmapEPIfUk/1BHgR6/8C7cy9tCyQgZnwEidoCOaGe2BbCywP7Y
+         dCSNeFzuHQdAG0Ypm7IeiqPu3kdhsHEtatvB/GX3yZcG5Ij7r1lUNhBN8eFDdl+LY2ul
+         7y5gFsa7IhVoIuMKWESajf4rAv8FQv1zmkt4Vv/GI6QEVenkNfcYTrV3th7ZWENgUaQM
+         iwFH35NRw+tPRKU1FdZxaLQmzL+nyYUVLYutUHuwmzbxC0bH2jh8Yt/RMisg9OzE3+Jq
+         qrRH5M+/6tUcmxeEA/M++hK75kN5uvuHJL0eDwfpqIBbcrv/+ugDjZAI1mQKZnvwzcok
+         EPJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aEx06awt80jAiN38AZX49qL25dVM9rqZAP00JoKZ/1Y=;
+        b=H/WyovbznMrS08Qe5MhaBCSuWXXlQyI42Q58fUeJD2bOY4XPMQevB20MtGf9j3pUtV
+         ZXJkWSoTfnLafzfUEzMmoRGIq3jSEJZbLopVwJVs0TcRvHSVa1r8G/AutzXZU9zok78k
+         zQw4MyS3Ew0iUfVM6Pmi7Z38vaKahLO0b2cd89hSFE7ZhvScQuVoVHieVBI5Cf8k3xta
+         ArQa1kNzvy/ACxofvTMQNZvZbfACvJBbH4J8CWoRBLwvcvnvd/sM1veltH9rQ3gSELuc
+         nTHj1AeyS6vLeffKSzNmRs0YoXJFpU6OP6BInOZZ3ZXVeuDgzuIXjhCOunbQ/NNs/GHV
+         017w==
+X-Gm-Message-State: APjAAAURvzNIjCiSPT09mKWDq31kwh8U5N9a5mylynSS94yrbLsNFOuY
+        iDNIEylbPeflFjh06D1cqdnuuL0inoI=
+X-Google-Smtp-Source: APXvYqzRi7O6oL6zesAkbVlSiq+VLIsiK6/GEYjK1IYW1nzcmRnPUB0H7UmdmroY+zhRwI0RtOQx7w==
+X-Received: by 2002:a63:5345:: with SMTP id t5mr23708373pgl.254.1582049538893;
+        Tue, 18 Feb 2020 10:12:18 -0800 (PST)
+Received: from localhost ([103.195.202.120])
+        by smtp.gmail.com with ESMTPSA id d14sm5071557pfq.117.2020.02.18.10.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 10:12:17 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v5 0/8] thermal: tsens: Handle critical interrupts
+Date:   Tue, 18 Feb 2020 23:42:04 +0530
+Message-Id: <cover.1582048155.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 18:31:50 +0100
-Borislav Petkov <bp@alien8.de> wrote:
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is stuck. Enable support in the driver.
 
-> Ok,
-> 
-> so Peter raised this question on IRC today, that the #MC handler needs
-> to disable all kinds of tracing/kprobing and etc exceptions happening
-> while handling an #MC. And I guess we can talk about supporting some
-> exceptions but #MC is usually nasty enough to not care about tracing
-> when former happens.
+This series was generated on top of v5.6-rc2.
 
-What's the issue with tracing? Does this affect the tracing done by the
-edac_mc_handle_error code?
+Changes from v4:
+- Add back patch 1 from v3[*], I mistakenly didn't post it for v4.
+- Remove spinlock from critical interrupt handling
+- Change critical interrupt handler to fall thru watchdog bark handling to
+  handle critical interrupts too
 
-It has a trace event in it, that the rasdaemon uses.
+[*] https://lore.kernel.org/linux-arm-msm/77dd80eb58f0db29a03097cb442d606f810a849a.1577976221.git.amit.kucheria@linaro.org/
 
-> 
-> So how about this trivial first stab of using the big hammer and simply
-> turning off stuff? The nmi_enter()/nmi_exit() thing still needs debating
-> because ist_enter() already does rcu_nmi_enter() and I'm not sure
-> whether any of the context tracking would still be ok with that.
-> 
-> Anything else I'm missing? It is likely...
-> 
-> Thx.
-> 
-> ---
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 2c4f949611e4..6dff97c53310 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1214,7 +1214,7 @@ static void __mc_scan_banks(struct mce *m, struct mce *final,
->   * MCE broadcast. However some CPUs might be broken beyond repair,
->   * so be always careful when synchronizing with others.
->   */
-> -void do_machine_check(struct pt_regs *regs, long error_code)
-> +void notrace do_machine_check(struct pt_regs *regs, long error_code)
->  {
->  	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
->  	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
-> @@ -1251,6 +1251,10 @@ void do_machine_check(struct pt_regs *regs, long error_code)
->  	if (__mc_check_crashing_cpu(cpu))
->  		return;
->  
-> +	hw_breakpoint_disable();
-> +	static_key_disable(&__tracepoint_read_msr.key);
+Changes from v3:
+- Remove the DTS changes that are already queued
+- Fix review comments by Bjorn
+- Fixup patch description to clarify that we don't use TSENS critical
+  interrupts in Linux, but need it for the watchdog support that uses the
+  same HW irq line.
+- Separate kernel-doc fixes into a separate patch.
 
-I believe static_key_disable() sleeps, and does all kinds of crazing
-things (like update the code).
+Changes from v2:
+- Handle old DTBs w/o critical irq in the same way as fix sent for 5.5
 
--- Steve
+Changes from v1:
+- Make tsens_features non-const to allow run time detection of features
+- Pass tsens_sensor around as a const
+- Fix a bug to release dev pointer in success path
+- Address review comments from Bjorn and Stephen (thanks for the review)
+- Add msm8998 and msm8996 DTSI changes for critical interrupts
 
-> +	tracing_off();
-> +
->  	ist_enter(regs);
->  
->  	this_cpu_inc(mce_exception_count);
-> @@ -1360,6 +1364,7 @@ void do_machine_check(struct pt_regs *regs, long error_code)
->  	ist_exit(regs);
->  }
->  EXPORT_SYMBOL_GPL(do_machine_check);
-> +NOKPROBE_SYMBOL(do_machine_check);
->  
->  #ifndef CONFIG_MEMORY_FAILURE
->  int memory_failure(unsigned long pfn, int flags)
-> 
+Amit Kucheria (8):
+  drivers: thermal: tsens: De-constify struct tsens_features
+  drivers: thermal: tsens: Pass around struct tsens_sensor as a constant
+  drivers: thermal: tsens: use simpler variables
+  drivers: thermal: tsens: Release device in success path
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  drivers: thermal: tsens: kernel-doc fixup
+  drivers: thermal: tsens: Remove unnecessary irq flag
+
+ drivers/thermal/qcom/tsens-8960.c   |   4 +-
+ drivers/thermal/qcom/tsens-common.c | 185 ++++++++++++++++++++++++----
+ drivers/thermal/qcom/tsens-v0_1.c   |   6 +-
+ drivers/thermal/qcom/tsens-v1.c     |   6 +-
+ drivers/thermal/qcom/tsens-v2.c     |  24 +++-
+ drivers/thermal/qcom/tsens.c        |  26 +++-
+ drivers/thermal/qcom/tsens.h        | 103 ++++++++++++++--
+ 7 files changed, 307 insertions(+), 47 deletions(-)
+
+-- 
+2.20.1
 
