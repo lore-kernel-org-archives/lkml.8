@@ -2,92 +2,129 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA85AC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DADC34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5427206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JhhyvvVn"
+	by mail.kernel.org (Postfix) with ESMTP id 6298820801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgBREEx (ORCPT
+        id S1726363AbgBREHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 23:04:53 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41263 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgBREEx (ORCPT
+        Mon, 17 Feb 2020 23:07:14 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:50763 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgBREHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 23:04:53 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so18206247otc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 20:04:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=vY7fH5iDeVgQ09OH+F6dLJt4UbcEen0dlqaa+tULjdE=;
-        b=JhhyvvVnW/WJF6OWpshfuCwPF3Of9bbZrhhG6XRf0E86J3/7v/RkhOzZX6CIdYzsv9
-         SvxjYNrN9wEg5HI49WAJVQ9IrZaBt0AU9Dt+RIqXGlUMwCQsLHDWootAPODDw4SoVkNZ
-         oeOmn+NM41WHy7dcKokNWxfAcTYyCFhsLDUPALuQCB6tIplfrefz+/qzgTNjDKeiTt6G
-         +72dFPbt5QOlM/QAjxWs+WIBnXsJAxhHGq1nDtHN4AlMLNt6JtTPEQxLW+vQC+sTDeT8
-         8uvxbsQZyBesOwM+YyWQIBrdKfPIg5QHCKM4Xlr6iWvJfRdm5tLinWJ0SZGuDujl6CKO
-         dzoA==
+        Mon, 17 Feb 2020 23:07:13 -0500
+Received: by mail-il1-f200.google.com with SMTP id z12so15943942ilh.17
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 20:07:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=vY7fH5iDeVgQ09OH+F6dLJt4UbcEen0dlqaa+tULjdE=;
-        b=EhLzCsuMZGYK2GOd/2QWzlrqppCCA/XdKHZV4+/rWgAzR2sqTsWH9JZkgWIVEG1xhh
-         nVJagEgSDVSL44L/q0WaDVkFziBzYJkTHhia3SJ+kBGFqfjnkhRcqXlsJYXk3Gb3E0n3
-         108BlB39Px5MvsWYe1+qfeDyebdqz0nY3s0zSR3KhUwb6hT1OtekIK9I24hnOGuK1/5A
-         OiGg8ldZfmE1xFM2RdgEoVUozu8Lo2k8ciRPnyEgZmZ4d6hqvnX/22NTtqu2guthXxYo
-         cLqi2aAr7H5gbBhfGBRlvK8ytGQ53+y2MzzyfkLKM1OXmT5HG8E1Lz1l86JOFgepWzpS
-         3pMw==
-X-Gm-Message-State: APjAAAWA6LLxd3iTGiDvTZlRfGomH861vSazwsEI5syVNsYPoVW8Abal
-        4OdLO8wiFtshNBsr5dLZU1OiW9C9FlU=
-X-Google-Smtp-Source: APXvYqzGVwnh/QBmIZAY4QuYaMyw23I2NgYCmapOEl3zBDDR4M/if/GIOZCJoulZu7tq0lrlVMtIMg==
-X-Received: by 2002:a9d:7:: with SMTP id 7mr13839013ota.26.1581998690798;
-        Mon, 17 Feb 2020 20:04:50 -0800 (PST)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id r80sm821143oie.41.2020.02.17.20.04.49
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 17 Feb 2020 20:04:50 -0800 (PST)
-Date:   Mon, 17 Feb 2020 20:04:19 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Al Viro <viro@zeniv.linux.org.uk>
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] tmpfs: deny and force are not huge mount options
-Message-ID: <alpine.LSU.2.11.2002171959001.1412@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=uHglhlTsZL9nYXC1SuW5n8zSraL5OSomR7EKPnnITWs=;
+        b=j/mtihZDyUiQqigOeJSSo4Adgs+bz+UobTPM9kr5r5tbLAeXrPefds0CdXlHFwZUOC
+         VK21CHAay9qHOFNQNtwfOy+O5dKWWw4XoMb27R3N6jWhWdeoMo+SKkgcQDA4Ypd99Qga
+         fnXzvQuq5I9cDqWZ+rj/5LJxYdGmmuVZDlEOmowjG8d4WStSWRlwH53sHHwUZD16iE6V
+         gYOH+36HIz4YMmDrMNL/DPeQUEkjZPw5As5sCswEaNYdl2OwBf9wxFl9Zyn1N6UalcCP
+         Z0fR76SdfaxVy71KtmZG+QkcUF/dtEGCkOu51j9dJNySNczK4/w1QSwPhjufPkpzoDPR
+         k5Fw==
+X-Gm-Message-State: APjAAAXmmogmRbQ432hBrtyFkJOu/pYuQnnmjLAIwTqCpvqYhd8NGC54
+        E3K8oeQefs+9J+DKFb006tUcxMa0ksObUaUHH0hMqA3DMTeB
+X-Google-Smtp-Source: APXvYqykvr5lZYYJzLA1G3jokmMLxLQMutu/6LzMIis/OPHm53DIYqPrXMQ1lTAZYZ7MZTpQKx8uB0HWAK4G5RctK5UqXjFwwjDg
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Received: by 2002:a6b:d912:: with SMTP id r18mr13781201ioc.306.1581998832890;
+ Mon, 17 Feb 2020 20:07:12 -0800 (PST)
+Date:   Mon, 17 Feb 2020 20:07:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007838f1059ed1cea5@google.com>
+Subject: general protection fault in l2cap_sock_getsockopt
+From:   syzbot <syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.6-rc1 commit 2710c957a8ef ("fs_parse: get rid of ->enums") regressed
-the huge tmpfs mount options to an earlier state: "deny" and "force"
-are not valid there, and can crash the kernel.  Delete those lines.
+Hello,
 
-Signed-off-by: Hugh Dickins <hughd@google.com>
+syzbot found the following crash on:
+
+HEAD commit:    c25a951c Add linux-next specific files for 20200217
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=171b1a29e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
+dashboard link: https://syzkaller.appspot.com/bug?extid=6446a589a5ca34dd6e8b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10465579e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16dabb11e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 9844 Comm: syz-executor679 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
+Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
+RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
+RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
+RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
+R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
+R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
+FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __sys_getsockopt+0x16d/0x310 net/socket.c:2175
+ __do_sys_getsockopt net/socket.c:2190 [inline]
+ __se_sys_getsockopt net/socket.c:2187 [inline]
+ __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2187
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440149
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcb256f088 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440149
+RDX: 000000000000000e RSI: 0000000000000112 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000020000140 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019d0
+R13: 0000000000401a60 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 63f0b6416dbaab7d ]---
+RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
+Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
+RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
+RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
+RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
+R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
+R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
+FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- mm/shmem.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- 5.6-rc2/mm/shmem.c	2020-02-09 17:36:41.798976778 -0800
-+++ linux/mm/shmem.c	2020-02-17 19:27:22.704093986 -0800
-@@ -3386,8 +3386,6 @@ static const struct constant_table shmem
- 	{"always",	SHMEM_HUGE_ALWAYS },
- 	{"within_size",	SHMEM_HUGE_WITHIN_SIZE },
- 	{"advise",	SHMEM_HUGE_ADVISE },
--	{"deny",	SHMEM_HUGE_DENY },
--	{"force",	SHMEM_HUGE_FORCE },
- 	{}
- };
- 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
