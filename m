@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B4EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A313C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EE924677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2C22465D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056031;
-	bh=7M1vMXCQS5hu++7duI5JtqPDkix7ApqrdOPr8r1xcB4=;
+	s=default; t=1582056036;
+	bh=mgL7HSGN6Ip5HwbugGrUQYfFeYcitgxBsLwi6J77rxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EvAIPo7YcLq6oYJNz/TaOUxojs2bVG/kZgeWJ7uwPrh25olPV7hwg8E+NmG8NeX2Z
-	 fVSharSOZ7+Re+1hqKvaroOESNuK3LM4P6CSKSk5ptLRIpZ4sFXmPB01EuwkRmoezh
-	 nOczgc/R/aExk1n5KawCKa+V96S8a5T+z1e1YBpU=
+	b=YH9Yg1pSpyfLs/EWibQqc4I/Zg7T5IML79PyUZI3CHncI/QnN4kSE03MSUzl+NdEo
+	 AcQ+NljeOX8vHmxDV+AE+8xBKfGZeGHaAke1HczB0h0ySsKc0hwlmpZhuh/ZLTUG3/
+	 bMfkO7FrrHsMnfzfgx9n30wjZHjCuxJln+Gm9RyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgBRUAa (ORCPT
+        id S1728621AbgBRUAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgBRUAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:23 -0500
+        id S1728590AbgBRUA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC6C24672;
-        Tue, 18 Feb 2020 20:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 155F82464E;
+        Tue, 18 Feb 2020 20:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056022;
-        bh=7M1vMXCQS5hu++7duI5JtqPDkix7ApqrdOPr8r1xcB4=;
+        s=default; t=1582056027;
+        bh=mgL7HSGN6Ip5HwbugGrUQYfFeYcitgxBsLwi6J77rxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEeFe9vshpK5BlJpxgjtc/aA6uUSD+LPvbcw5VA12oMi0OLoLCFhOQDxRAlU8ukG6
-         +PS/1VZGkWO3YPCBP5RVG0BcgbyWcdo5EntAGEgcgZLAnOpIyKnWTUgeOiivhW4IqW
-         az4ovi+y3gzQDBaJS+M1Ks2zN5HxXLhVhOZoaDvE=
+        b=oi+6oVhCyf1n74NhQBJyAfuV08sgL68hji/1NjAbGUStfg5dEMv/QVSVN3RXkKtQd
+         4I5tVBDI45Y+x9l7ai8OZTJlAYYGwahIUu70h2wsezC0yVWLizpX7FUEWmurAiEoZM
+         stJ+ESXitc3wXVw4ZGN77pbEjzPkP6bYjzRo7qAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 57/66] KVM: x86: Mask off reserved bit from #DB exception payload
-Date:   Tue, 18 Feb 2020 20:55:24 +0100
-Message-Id: <20200218190433.347254952@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 59/66] NFSv4.1 make cachethis=no for writes
+Date:   Tue, 18 Feb 2020 20:55:26 +0100
+Message-Id: <20200218190433.535496148@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,40 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit 307f1cfa269657c63cfe2c932386fcc24684d9dd upstream.
+commit cd1b659d8ce7697ee9799b64f887528315b9097b upstream.
 
-KVM defines the #DB payload as compatible with the 'pending debug
-exceptions' field under VMX, not DR6. Mask off bit 12 when applying the
-payload to DR6, as it is reserved on DR6 but not the 'pending debug
-exceptions' field.
+Turning caching off for writes on the server should improve performance.
 
-Fixes: f10c729ff965 ("kvm: vmx: Defer setting of DR6 until #DB delivery")
-Signed-off-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: fba83f34119a ("NFS: Pass "privileged" value to nfs4_init_sequence()")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Reviewed-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/nfs/nfs4proc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -445,6 +445,14 @@ void kvm_deliver_exception_payload(struc
- 		 * for #DB exceptions under VMX.
- 		 */
- 		vcpu->arch.dr6 ^= payload & DR6_RTM;
-+
-+		/*
-+		 * The #DB payload is defined as compatible with the 'pending
-+		 * debug exceptions' field under VMX, not DR6. While bit 12 is
-+		 * defined in the 'pending debug exceptions' field (enabled
-+		 * breakpoint), it is reserved and must be zero in DR6.
-+		 */
-+		vcpu->arch.dr6 &= ~BIT(12);
- 		break;
- 	case PF_VECTOR:
- 		vcpu->arch.cr2 = payload;
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5293,7 +5293,7 @@ static void nfs4_proc_write_setup(struct
+ 	hdr->timestamp   = jiffies;
+ 
+ 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_WRITE];
+-	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 1, 0);
++	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
+ 	nfs4_state_protect_write(server->nfs_client, clnt, msg, hdr);
+ }
+ 
 
 
