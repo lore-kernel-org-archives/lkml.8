@@ -2,125 +2,82 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE9C34036
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5DC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30EBA21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA75A21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgBRKsP (ORCPT
+        id S1726620AbgBRKsj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:48:15 -0500
-Received: from eddie.linux-mips.org ([148.251.95.138]:47514 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgBRKsP (ORCPT
+        Tue, 18 Feb 2020 05:48:39 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49425 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgBRKsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:48:15 -0500
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23991105AbgBRKsLlRzGF (ORCPT <rfc822;linux-omap@vger.kernel.org>
-        + 1 other); Tue, 18 Feb 2020 11:48:11 +0100
-Date:   Tue, 18 Feb 2020 11:48:10 +0100
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns
- -EPROBE_DEFER
-Message-ID: <20200218104810.GA194120@lenoch>
-References: <CGME20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2@epcas1p3.samsung.com>
- <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
- <b2655a58-6541-a2c9-c44d-536e5cef1ee3@samsung.com>
- <20200218102140.GA193069@lenoch>
- <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
+        Tue, 18 Feb 2020 05:48:39 -0500
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id C0F8D100010;
+        Tue, 18 Feb 2020 10:48:37 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 11:48:37 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Piotr Sroka <piotrs@cadence.com>
+Cc:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] mtd: rawnand: cadence: reinit complete before
+ execute command
+Message-ID: <20200218114837.2d5e6104@xps13>
+In-Reply-To: <1581328530-29966-4-git-send-email-piotrs@cadence.com>
+References: <1581328530-29966-1-git-send-email-piotrs@cadence.com>
+        <1581328530-29966-4-git-send-email-piotrs@cadence.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 07:35:47PM +0900, Chanwoo Choi wrote:
-> On 2/18/20 7:21 PM, Ladislav Michl wrote:
-> > On Tue, Feb 18, 2020 at 12:28:25PM +0900, Chanwoo Choi wrote:
-> >> On 2/17/20 10:38 PM, H. Nikolaus Schaller wrote:
-> >>> If the gpios are probed after this driver (e.g. if they
-> >>> come from an i2c expander) there is no need to print an
-> >>> error message.
-> >>>
-> >>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >>> ---
-> >>>  drivers/extcon/extcon-palmas.c | 8 ++++++--
-> >>>  1 file changed, 6 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-> >>> index edc5016f46f1..cea58d0cb457 100644
-> >>> --- a/drivers/extcon/extcon-palmas.c
-> >>> +++ b/drivers/extcon/extcon-palmas.c
-> >>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
-> >>>  
-> >>>  	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
-> >>>  							GPIOD_IN);
-> >>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
-> >>> +	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
-> >>> +		return -EPROBE_DEFER;
+Hi Piotr,
 
-Here we returned...
+Piotr Sroka <piotrs@cadence.com> wrote on Mon, 10 Feb 2020 10:55:28
++0100:
 
-> >>> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
+> Reinitilaize complete object before executing CDMA command to make sure
+> that done flag is ok.
 
-How could this else get triggered?
+Looks fine, besides the need for Fixes/Stable tags, what do you think?
 
-> >>>  		dev_err(&pdev->dev, "failed to get id gpio\n");
-> >>>  		return PTR_ERR(palmas_usb->id_gpiod);
-> >>>  	}
-> >>>  
-> >>>  	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
-> >>>  							GPIOD_IN);
-> >>> -	if (IS_ERR(palmas_usb->vbus_gpiod)) {
-> >>> +	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
-> >>> +		return -EPROBE_DEFER;
-> >>> +	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
-> >>>  		dev_err(&pdev->dev, "failed to get vbus gpio\n");
-> >>>  		return PTR_ERR(palmas_usb->vbus_gpiod);
-> >>>  	}
-> >>>
-> >>
-> >> I think that it is enough to handle the -EPROBE_DEFER.
-> >> Also, I prefer to use single if/else statement 
-> >> instead of the nested if/else statement.
-> >>
-> >> Applied it.
-> > 
-> > Uh... As it is? Then it is matter of time it triggers someones cocci
-> > script pointing to else after return. Could you at least fix this?
 > 
-> Sorry. I don't understand. Do you mean that this patch has the
-> some issue of cocci script?
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+> ---
+>  drivers/mtd/nand/raw/cadence-nand-controller.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
+> index 5c1bbb05ab51..efddc5c68afb 100644
+> --- a/drivers/mtd/nand/raw/cadence-nand-controller.c
+> +++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
+> @@ -998,6 +998,7 @@ static int cadence_nand_cdma_send(struct cdns_nand_ctrl *cdns_ctrl,
+>  		return status;
+>  
+>  	cadence_nand_reset_irq(cdns_ctrl);
+> +	reinit_completion(&cdns_ctrl->complete);
+>  
+>  	writel_relaxed((u32)cdns_ctrl->dma_cdma_desc,
+>  		       cdns_ctrl->reg + CMD_REG2);
 
-Yes.
-
-> I think that it fixes the probe sequence issue
-> between extcon-palmas and gpio driver. It is not related to
-> any result from cocci script. If the extcon-palmas.c has
-> the issue by cocci or checkpatch, anyone can send the other patch
-> for fixup.
-
-Do you mean to send fixup to what you just applied? What happened
-to review process? Nikolaus himself told you patch could be better
-and we were just waiting which solution you choose to send final patch.
-
-> I think that it is enough to fix the issue which is only
-> related to the probe sequence between gpio and extcon-palmas.c
-
-Agree, but look again at the patch.
-
-	ladis
+Thanks,
+Miquèl
