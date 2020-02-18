@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F028C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBFAC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9C724672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584EC2467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055966;
-	bh=iJHNKSYGnxMSCtFIX5d8ZQWPZczsyXHD2fcIXpGlXXM=;
+	s=default; t=1582055970;
+	bh=r3Wt9Fqia8ELqoZcBvGRbikshi1Mn5+KDL7u1kFTmjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DtfzRgYJZD/Usq8gvver81B1HD6AV3CeMz1EywyHph/BU1pNDCbhqTjvMLw7d+vHw
-	 pfV9yde60hsXoI/lSd4onT9udbMooJ0rbOQAe3f9QyHlBZS+bOeelGkBvmhXlMHCqU
-	 Mg/R+16upik12RDOtdtTqwI+5/71Ftf013bCD5TE=
+	b=xpJ3djO6PQL/jqA7W+Oo0UIclj/Omx11A9w9WeoVYsXgv0zL9f+9MClni8KtXCA/x
+	 rXYtb/ifQDOnaqi0ap5mSxaKbp/tXYDD/Su5+vHMRkCJUqgLnqVrzWdQG/wceZm73P
+	 kwj9wp0p9pJ6xrjyJ7QNNZY8FZlIU8ecW0Fxoz10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgBRT7Y (ORCPT
+        id S1728427AbgBRT73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37770 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgBRT7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:18 -0500
+        id S1727158AbgBRT7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10EE24655;
-        Tue, 18 Feb 2020 19:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B67124670;
+        Tue, 18 Feb 2020 19:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055958;
-        bh=iJHNKSYGnxMSCtFIX5d8ZQWPZczsyXHD2fcIXpGlXXM=;
+        s=default; t=1582055963;
+        bh=r3Wt9Fqia8ELqoZcBvGRbikshi1Mn5+KDL7u1kFTmjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3A54nBIGsumJrtW0YDfJ/mvgCc0T/dszEVC4qvFvyMWy5POL4vYd1QobcsDUMDD8
-         SxSBboPlSh7IqXh8e8Mggg+62tObQ/VwxPTsEL5sRyZAsIrVExRA0gAhCRosp/N4Jg
-         x3EAXtfzE9xUs8LAiCbpjNUADsvLNW+V1R8z1M24=
+        b=kOfXgD17Qu17QiC9A2yhRzQmP/sEdr9DQ8BmLhVl1XuCdRjYv0tNgOg23qUzPy2a6
+         1Zhivya9ufv8hqHKh6jAFuupJikZ9CLhLU6R5rPUJR7+Et064Ex5WzxmbevF6yT2em
+         TlFL1M4oHsZEI9Lmp2dq323wxeUw+mBikvrGLkA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Krishnamraju Eraparaju <krishna2@chelsio.com>,
+        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 45/66] RDMA/iw_cxgb4: initiate CLOSE when entering TERM
-Date:   Tue, 18 Feb 2020 20:55:12 +0100
-Message-Id: <20200218190432.166865120@linuxfoundation.org>
+Subject: [PATCH 5.4 47/66] RDMA/rxe: Fix soft lockup problem due to using tasklets in softirq
+Date:   Tue, 18 Feb 2020 20:55:14 +0100
+Message-Id: <20200218190432.365113067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,70 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-commit d219face9059f38ad187bde133451a2a308fdb7c upstream.
+commit 8ac0e6641c7ca14833a2a8c6f13d8e0a435e535c upstream.
 
-As per draft-hilland-iwarp-verbs-v1.0, sec 6.2.3, always initiate a CLOSE
-when entering into TERM state.
+When run stress tests with RXE, the following Call Traces often occur
 
-In c4iw_modify_qp(), disconnect operation should only be performed when
-the modify_qp call is invoked from ib_core. And all other internal
-modify_qp calls(invoked within iw_cxgb4) that needs 'disconnect' should
-call c4iw_ep_disconnect() explicitly after modify_qp. Otherwise, deadlocks
-like below can occur:
+  watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [swapper/2:0]
+  ...
+  Call Trace:
+  <IRQ>
+  create_object+0x3f/0x3b0
+  kmem_cache_alloc_node_trace+0x129/0x2d0
+  __kmalloc_reserve.isra.52+0x2e/0x80
+  __alloc_skb+0x83/0x270
+  rxe_init_packet+0x99/0x150 [rdma_rxe]
+  rxe_requester+0x34e/0x11a0 [rdma_rxe]
+  rxe_do_task+0x85/0xf0 [rdma_rxe]
+  tasklet_action_common.isra.21+0xeb/0x100
+  __do_softirq+0xd0/0x298
+  irq_exit+0xc5/0xd0
+  smp_apic_timer_interrupt+0x68/0x120
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
+  ...
 
- Call Trace:
-  schedule+0x2f/0xa0
-  schedule_preempt_disabled+0xa/0x10
-  __mutex_lock.isra.5+0x2d0/0x4a0
-  c4iw_ep_disconnect+0x39/0x430    => tries to reacquire ep lock again
-  c4iw_modify_qp+0x468/0x10d0
-  rx_data+0x218/0x570              => acquires ep lock
-  process_work+0x5f/0x70
-  process_one_work+0x1a7/0x3b0
-  worker_thread+0x30/0x390
-  kthread+0x112/0x130
-  ret_from_fork+0x35/0x40
+The root cause is that tasklet is actually a softirq. In a tasklet
+handler, another softirq handler is triggered. Usually these softirq
+handlers run on the same cpu core. So this will cause "soft lockup Bug".
 
-Fixes: d2c33370ae73 ("RDMA/iw_cxgb4: Always disconnect when QP is transitioning to TERMINATE state")
-Link: https://lore.kernel.org/r/20200204091230.7210-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Link: https://lore.kernel.org/r/20200212072635.682689-8-leon@kernel.org
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb4/cm.c |    4 ++++
- drivers/infiniband/hw/cxgb4/qp.c |    4 ++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_comp.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -3036,6 +3036,10 @@ static int terminate(struct c4iw_dev *de
- 				       C4IW_QP_ATTR_NEXT_STATE, &attrs, 1);
- 		}
+--- a/drivers/infiniband/sw/rxe/rxe_comp.c
++++ b/drivers/infiniband/sw/rxe/rxe_comp.c
+@@ -329,7 +329,7 @@ static inline enum comp_state check_ack(
+ 					qp->comp.psn = pkt->psn;
+ 					if (qp->req.wait_psn) {
+ 						qp->req.wait_psn = 0;
+-						rxe_run_task(&qp->req.task, 1);
++						rxe_run_task(&qp->req.task, 0);
+ 					}
+ 				}
+ 				return COMPST_ERROR_RETRY;
+@@ -463,7 +463,7 @@ static void do_complete(struct rxe_qp *q
+ 	 */
+ 	if (qp->req.wait_fence) {
+ 		qp->req.wait_fence = 0;
+-		rxe_run_task(&qp->req.task, 1);
++		rxe_run_task(&qp->req.task, 0);
+ 	}
+ }
  
-+		/* As per draft-hilland-iwarp-verbs-v1.0, sec 6.2.3,
-+		 * when entering the TERM state the RNIC MUST initiate a CLOSE.
-+		 */
-+		c4iw_ep_disconnect(ep, 1, GFP_KERNEL);
- 		c4iw_put_ep(&ep->com);
- 	} else
- 		pr_warn("TERM received tid %u no ep/qp\n", tid);
---- a/drivers/infiniband/hw/cxgb4/qp.c
-+++ b/drivers/infiniband/hw/cxgb4/qp.c
-@@ -1948,10 +1948,10 @@ int c4iw_modify_qp(struct c4iw_dev *rhp,
- 			qhp->attr.layer_etype = attrs->layer_etype;
- 			qhp->attr.ecode = attrs->ecode;
- 			ep = qhp->ep;
--			c4iw_get_ep(&ep->com);
--			disconnect = 1;
- 			if (!internal) {
-+				c4iw_get_ep(&ep->com);
- 				terminate = 1;
-+				disconnect = 1;
- 			} else {
- 				terminate = qhp->attr.send_term;
- 				ret = rdma_fini(rhp, qhp, ep);
+@@ -479,7 +479,7 @@ static inline enum comp_state complete_a
+ 		if (qp->req.need_rd_atomic) {
+ 			qp->comp.timeout_retry = 0;
+ 			qp->req.need_rd_atomic = 0;
+-			rxe_run_task(&qp->req.task, 1);
++			rxe_run_task(&qp->req.task, 0);
+ 		}
+ 	}
+ 
+@@ -725,7 +725,7 @@ int rxe_completer(void *arg)
+ 							RXE_CNT_COMP_RETRY);
+ 					qp->req.need_retry = 1;
+ 					qp->comp.started_retry = 1;
+-					rxe_run_task(&qp->req.task, 1);
++					rxe_run_task(&qp->req.task, 0);
+ 				}
+ 
+ 				if (pkt) {
 
 
