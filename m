@@ -2,107 +2,97 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85B8C3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC7FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E4C2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V+xHiljL"
+	by mail.kernel.org (Postfix) with ESMTP id 69655207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgBRPDj (ORCPT
+        id S1726735AbgBRPHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:03:39 -0500
-Received: from mout.gmx.net ([212.227.15.19]:38477 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgBRPDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:03:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582038159;
-        bh=78WLr0Jh0oX941+EHl0TP1NEkR5NyE7h/+gfWtJqsqA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=V+xHiljLUpanYuvJitxOcIggYEggezMjFipHdOvHaga5Eurb3vA0pA1BYSPwCewAA
-         xhhesrB6c5IEOBzBeE0cQM4irbpox/5DXxkXdLQA9WhNZspXjPuACaUwG+UdAg6liX
-         mOxQJrqxVHweeik5u61bE+N9ZWHcq2T9orXC5g7Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MXGvM-1ixtDd37Mc-00YidA; Tue, 18
- Feb 2020 16:02:39 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Richard Weinberger <richard@nod.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: Fix path to MTD command line partition parser
-Date:   Tue, 18 Feb 2020 16:02:19 +0100
-Message-Id: <20200218150222.18590-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Feb 2020 10:07:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36326 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgBRPH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:07:29 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j44T7-0006Db-N0; Tue, 18 Feb 2020 16:07:25 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5887D1C20BD;
+        Tue, 18 Feb 2020 16:07:25 +0100 (CET)
+Date:   Tue, 18 Feb 2020 15:07:24 -0000
+From:   "tip-bot2 for H.J. Lu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot/compressed: Don't declare __force_order in
+ kaslr_64.c
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200124181811.4780-1-hjl.tools@gmail.com>
+References: <20200124181811.4780-1-hjl.tools@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kZSahnpTKmGAZGrssfHw5TUnMAFLMXg3CFjIbXnPC0vqEdMxxPO
- uj8IUfNCN52o/tUGY9sUDPa96hkrOpsBku8upZfPHIF3K3c2bLkhEFKvWYONDL+OW4Iq6cE
- R01WX4JADvtpEj+ReLrGdt6s8xQYsYucLxXtiVDY48KQolDoVJCrvQicaqGvb0NWnzq/SHr
- 5tg2gijiJoobgUzIbKygw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w85UQI942Kw=:aUKBxXiwwpBL5kKKplIrZ3
- LWSEQLuCeWmEv/OmSfmwlTuXoiPnRCqDCMlThgINYrt5ds3P9BVBkUV5w0bKqsBnXt0Ea6p8Q
- 42kPF3J2pN4hJcAxIyc+xhRQQ7RSSqdMFHW3Q8JWSoMo3l7RKAZdZ5hnNCuOf68nvKxfXPxWt
- A3q5bl/b8aRcPzvrsIUwvxH9yv354iuquGyD2Q+MBGVAWE1/l4QXOxVdJwlBLkqrslhNEwcaC
- P8lPHYewUxSgwksvQgtnW/q423T75nG4AEk5gRsxKEB4mbarRz5Nsc7jwr/anhprPfYoIpPk3
- p42OEH5XuvQw7Y02YEPeAR7odryy6g7vjgKkLOAOYuoXsKQwkUr+tPLwwN1Rdu6JrKK/hWx5Z
- EbFJV5m4Je26JZmvRFPfnIp6TOLPS0BAbvo+mAqR0ZTTaq/1IgXs8BbZkGZjmcSzFHYS+vNMY
- tc0ngvduWTZ7GP0+Lyr47lTavckogL2M3tmo43nWSKLY1WX5my+ks/DMa4crrpPTP+tcKx5Vl
- A9hI8Tr4gfbKX+7D5tiUNoy6l4raBlyVxuV3SB/SuM4AF0981/v7M0fKcjEHPXRBjxncmA4hS
- AP+hS+y/0C+qwSPqh4cW9hL50y+93wh2D1D8GdeVRib/jFQg8Sy3yJDOZRK+6pKptWVusDEDc
- l6NN/k5twKnAiM0XbKOk+9sdJeQvFp//j+g8jU3hJ3NtlmZuqmDR88Jo1sT6nGowflKOp2fPG
- cA0hieFAa2nTeNx+ClRojxYoNp/V3bBMO2yA0qVrNWgmeVRENEKO/p6ZsjuffLAmH/D9eLd6D
- QZGGjxPbmeTfXzOi85XmMri9AdPF3GxDrmj3v+eCfodhj14/jwdK6a3CocyhUvdlO+NHdrcKt
- 6wPGRRzokY3noYelGGYUpUCB9WwZeq22GRzlTdM8WdmpkUnr96jkJ4gzQmHHzj+p/nLioabHS
- QBaIVnwwHz7RpEU+xS+AGqF2yL1fzLIISI6Wd2igT1CSkU+YmTuv+MNNm92T/QtwLhbtqDCpv
- ndBnEemXKS4nMvohAmP39n3HR1ZHxmGZJpgfkX0PudyEhQ79x3CmHNB6HPRX7UkD99RvXyOiG
- jaO3FSkOvaNxzHzd7ehdeJw1aEzRG7CeNFAH9eKxLF60zvf/TxGPMQTN1aU3s8j8L+V4JM1VQ
- AR+wR193CGPXYwesN6jRGTsmDhcdaufGOgxEn8mUzsW8u3KKD1Xm47mu/Hx8pcREa7evZA7wq
- OIAjJqTCnZN2IdNcd
+Message-ID: <158203844496.13786.14610614257521764500.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cmdlinepart.c has been moved to drivers/mtd/parsers/.
+The following commit has been merged into the x86/boot branch of tip:
 
-Fixes: a3f12a35c91d ("mtd: parsers: Move CMDLINE parser")
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Commit-ID:     970b41399925e34fdf5783a53fe8cc73f04fec37
+Gitweb:        https://git.kernel.org/tip/970b41399925e34fdf5783a53fe8cc73f04fec37
+Author:        H.J. Lu <hjl.tools@gmail.com>
+AuthorDate:    Thu, 16 Jan 2020 12:46:51 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 18 Feb 2020 14:40:53 +01:00
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentati=
-on/admin-guide/kernel-parameters.txt
-index dbc22d684627..47cd55e339a5 100644
-=2D-- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2791,7 +2791,7 @@
- 			<name>,<region-number>[,<base>,<size>,<buswidth>,<altbuswidth>]
+x86/boot/compressed: Don't declare __force_order in kaslr_64.c
 
- 	mtdparts=3D	[MTD]
--			See drivers/mtd/cmdlinepart.c.
-+			See drivers/mtd/parsers/cmdlinepart.c
+GCC 10 changed the default to -fno-common, which leads to
 
- 	multitce=3Doff	[PPC]  This parameter disables the use of the pSeries
- 			firmware feature for updating multiple TCE entries
-=2D-
-2.20.1
+    LD      arch/x86/boot/compressed/vmlinux
+  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
+    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
 
+Since __force_order is already provided in pgtable_64.c, there is no
+need to declare __force_order in kaslr_64.c.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
+---
+ arch/x86/boot/compressed/kaslr_64.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
+index 748456c..9557c5a 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
++++ b/arch/x86/boot/compressed/kaslr_64.c
+@@ -29,9 +29,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
+ 
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
