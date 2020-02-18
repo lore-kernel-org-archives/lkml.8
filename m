@@ -2,292 +2,110 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51571C34032
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4419C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14677214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581992518;
-	bh=UFm8ktdZhblu/2s0ozFeAb4+2Rlmv3TL7j0nOVximz0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G0VruMFfqwpa/U70UtsWQJ4s957a6JD3CbwY2z3A1c4lfWIDS1DRK9DpakE2O8OZ2
-	 Ep7wsXHLMKqwN3g3vHMDu9hihcGn3shNgx3tfrwV9jNUEBH76CTBDAIeZ6MGS81aYH
-	 hzeUFiClHNAtVC82d6t2p1IvY1BRUOgKXO7oF470=
+	by mail.kernel.org (Postfix) with ESMTP id 9CDE1214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ao33AH+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgBRCV4 (ORCPT
+        id S1726298AbgBRC1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 21:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgBRCV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 21:21:56 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 17 Feb 2020 21:27:04 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35438 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726212AbgBRC1D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 21:27:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581992822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s+rxSpvQ1vwDbeuy8s6SOqVEIqbGp9AfMoz3S66N13U=;
+        b=Ao33AH+3k/3xXjH1GzjqfNC+107fPX7FWuTqwitvgwnT0Hox+sHQigxANc8jh4jFqaK0qn
+        bLnQ6YwMwWQ24Bg6wGnt1PUsFSXp7hVWpr7Wf8MlkTJGSjMZGjuDy65gPGAIem0QGNopXJ
+        hOC+dzoHRGFNTxNCxGMzvgKEeS0irLI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-_n4gutFuPVm5i0c0jyjSWg-1; Mon, 17 Feb 2020 21:27:01 -0500
+X-MC-Unique: _n4gutFuPVm5i0c0jyjSWg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B29A2465D;
-        Tue, 18 Feb 2020 02:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581992514;
-        bh=UFm8ktdZhblu/2s0ozFeAb4+2Rlmv3TL7j0nOVximz0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PEjs99KqMCb92Wk1M7ayKtUXgPiXb6a6dacanXMhKN3X7z8L+Cz0w2BVaE9c0lCaZ
-         LyfwA8H6aLbB2uEYNoNrEedS7L6KUhhtxCx3d86P/WAoReitv9/CxEH8jK18jLmsZc
-         YnCh6IVgQrm1txL3nvx1nek6grRsjJ2XJXdnqhRM=
-Received: by mail-lj1-f175.google.com with SMTP id x14so21035842ljd.13;
-        Mon, 17 Feb 2020 18:21:54 -0800 (PST)
-X-Gm-Message-State: APjAAAXOlTyL4bMDkP8vL+7ftRh9Zs+6tG3jyQxTRJ9yyQgy2jBEJMiF
-        t/PQh2YEUCoKQIylSulg2BsvkczsYDP8DIdKggo=
-X-Google-Smtp-Source: APXvYqwLxeMgM+mSk0yU+FYSCGy3AfSLs0zCZ4mYg0byKooBHPWU4rt3UmuGmS6NBw9sW9r0FPIiyiQYYxAAvpvgI18=
-X-Received: by 2002:a2e:81c3:: with SMTP id s3mr11214674ljg.168.1581992512158;
- Mon, 17 Feb 2020 18:21:52 -0800 (PST)
-MIME-Version: 1.0
-References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com> <1581915833-21984-3-git-send-email-anshuman.khandual@arm.com>
-In-Reply-To: <1581915833-21984-3-git-send-email-anshuman.khandual@arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 18 Feb 2020 10:21:40 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSj9aOhkNo5eZQD0a7vWJ1-6_CX4LSuhm54odQsxqV37Q@mail.gmail.com>
-Message-ID: <CAJF2gTSj9aOhkNo5eZQD0a7vWJ1-6_CX4LSuhm54odQsxqV37Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mm/vma: Make vma_is_accessible() available for
- general use
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9E9118A5500;
+        Tue, 18 Feb 2020 02:26:59 +0000 (UTC)
+Received: from mail (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EF9B360BE1;
+        Tue, 18 Feb 2020 02:26:56 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 21:26:55 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Peter Xu <peterx@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: Re: [RFC PATCH] userfaultfd: Address race after fault.
+Message-ID: <20200218022655.GE29216@redhat.com>
+References: <20200214225849.108108-1-bgeffon@google.com>
+ <20200214231954.GA29849@redhat.com>
+ <CADyq12w3tBO5NfZ33R__B3jvF=ed7ys+o4horGwyUO3bNevObg@mail.gmail.com>
+ <20200217160739.GB1309280@xz-x1>
+ <CADyq12zU25+w2nX9bFGm=O2svgMM_ReC73qfE7JDeVfJz0Y0UQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADyq12zU25+w2nX9bFGm=O2svgMM_ReC73qfE7JDeVfJz0Y0UQ@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-csky:
+On Mon, Feb 17, 2020 at 07:50:19PM -0600, Brian Geffon wrote:
+> But in the meantime, if the plan of record will be to always allow
+> retrying then shouldn't the block I mailed a patch on be removed
+> regardless because do_user_addr_fault always starts with
+> FAULT_FLAG_ALLOW_RETRY and we shouldn't ever land there without it in
+> the future and allows userfaultfd to retry?
 
-Acked-by: Guo Ren <guoren@kernel.org>
+It might hide the limitation but only if the page fault originated in
+userland (Android's case), but that's not something userfault users
+should depend on. Userfaults (unlike sigsegv trapping) are meant to be
+reliable and transparent to all user and kernel accesses alike.
 
+It is also is unclear how long Android will be forced to keep doing
+bounce buffers copies in RAM before considering passing any memory to
+kernel syscalls.
 
-On Mon, Feb 17, 2020 at 1:04 PM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> Lets move vma_is_accessible() helper to include/linux/mm.h which makes it
-> available for general use. While here, this replaces all remaining open
-> encodings for VMA access check with vma_is_accessible().
->
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/csky/mm/fault.c    | 2 +-
->  arch/m68k/mm/fault.c    | 2 +-
->  arch/mips/mm/fault.c    | 2 +-
->  arch/powerpc/mm/fault.c | 2 +-
->  arch/sh/mm/fault.c      | 2 +-
->  arch/x86/mm/fault.c     | 2 +-
->  include/linux/mm.h      | 5 +++++
->  kernel/sched/fair.c     | 2 +-
->  mm/gup.c                | 2 +-
->  mm/memory.c             | 5 -----
->  mm/mempolicy.c          | 3 +--
->  11 files changed, 14 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
-> index f76618b630f9..4b3511b8298d 100644
-> --- a/arch/csky/mm/fault.c
-> +++ b/arch/csky/mm/fault.c
-> @@ -137,7 +137,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
->                 if (!(vma->vm_flags & VM_WRITE))
->                         goto bad_area;
->         } else {
-> -               if (!(vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC)))
-> +               if (!vma_is_accessible(vma))
->                         goto bad_area;
->         }
->
-> diff --git a/arch/m68k/mm/fault.c b/arch/m68k/mm/fault.c
-> index e9b1d7585b43..d5131ec5d923 100644
-> --- a/arch/m68k/mm/fault.c
-> +++ b/arch/m68k/mm/fault.c
-> @@ -125,7 +125,7 @@ int do_page_fault(struct pt_regs *regs, unsigned long address,
->                 case 1:         /* read, present */
->                         goto acc_err;
->                 case 0:         /* read, not present */
-> -                       if (!(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE)))
-> +                       if (!vma_is_accessible(vma))
->                                 goto acc_err;
->         }
->
-> diff --git a/arch/mips/mm/fault.c b/arch/mips/mm/fault.c
-> index 1e8d00793784..5b9f947bfa32 100644
-> --- a/arch/mips/mm/fault.c
-> +++ b/arch/mips/mm/fault.c
-> @@ -142,7 +142,7 @@ static void __kprobes __do_page_fault(struct pt_regs *regs, unsigned long write,
->                                 goto bad_area;
->                         }
->                 } else {
-> -                       if (!(vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC)))
-> +                       if (!vma_is_accessible(vma))
->                                 goto bad_area;
->                 }
->         }
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index 8db0507619e2..71a3658c516b 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -314,7 +314,7 @@ static bool access_error(bool is_write, bool is_exec,
->                 return false;
->         }
->
-> -       if (unlikely(!(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE))))
-> +       if (unlikely(!vma_is_accessible(vma)))
->                 return true;
->         /*
->          * We should ideally do the vma pkey access check here. But in the
-> diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-> index 5f51456f4fc7..a8c4253f37d7 100644
-> --- a/arch/sh/mm/fault.c
-> +++ b/arch/sh/mm/fault.c
-> @@ -355,7 +355,7 @@ static inline int access_error(int error_code, struct vm_area_struct *vma)
->                 return 1;
->
->         /* read, not present: */
-> -       if (unlikely(!(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE))))
-> +       if (unlikely(!vma_is_accessible(vma)))
->                 return 1;
->
->         return 0;
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index fa4ea09593ab..c461eaab0306 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -1200,7 +1200,7 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
->                 return 1;
->
->         /* read, not present: */
-> -       if (unlikely(!(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE))))
-> +       if (unlikely(!vma_is_accessible(vma)))
->                 return 1;
->
->         return 0;
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..b0e53ef13ff1 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -541,6 +541,11 @@ static inline bool vma_is_anonymous(struct vm_area_struct *vma)
->         return !vma->vm_ops;
->  }
->
-> +static inline bool vma_is_accessible(struct vm_area_struct *vma)
-> +{
-> +       return vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC);
-> +}
-> +
->  #ifdef CONFIG_SHMEM
->  /*
->   * The vma_is_shmem is not inline because it is used only by slow
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index fe4e0d775375..6ce54d57dd09 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2573,7 +2573,7 @@ static void task_numa_work(struct callback_head *work)
->                  * Skip inaccessible VMAs to avoid any confusion between
->                  * PROT_NONE and NUMA hinting ptes
->                  */
-> -               if (!(vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE)))
-> +               if (!vma_is_accessible(vma))
->                         continue;
->
->                 do {
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 1b521e0ac1de..c8ffe2e61f03 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1171,7 +1171,7 @@ long populate_vma_page_range(struct vm_area_struct *vma,
->          * We want mlock to succeed for regions that have any permissions
->          * other than PROT_NONE.
->          */
-> -       if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
-> +       if (vma_is_accessible(vma))
->                 gup_flags |= FOLL_FORCE;
->
->         /*
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 0bccc622e482..2f07747612b7 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3942,11 +3942,6 @@ static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf, pmd_t orig_pmd)
->         return VM_FAULT_FALLBACK;
->  }
->
-> -static inline bool vma_is_accessible(struct vm_area_struct *vma)
-> -{
-> -       return vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE);
-> -}
-> -
->  static vm_fault_t create_huge_pud(struct vm_fault *vmf)
->  {
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 977c641f78cf..91c1ad6ab8ea 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -649,8 +649,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->
->         if (flags & MPOL_MF_LAZY) {
->                 /* Similar to task_numa_work, skip inaccessible VMAs */
-> -               if (!is_vm_hugetlb_page(vma) &&
-> -                       (vma->vm_flags & (VM_READ | VM_EXEC | VM_WRITE)) &&
-> +               if (!is_vm_hugetlb_page(vma) && vma_is_accessible(vma) &&
->                         !(vma->vm_flags & VM_MIXEDMAP))
->                         change_prot_numa(vma, start, endvma);
->                 return 1;
-> --
-> 2.20.1
->
+For all other users where the kernel access may be the one triggering
+the fault the patch will remove a debug aid and the kernel fault would
+then fail by hitting on the below:
 
+		/* Not returning to user mode? Handle exceptions or die: */
+		no_context(regs, hw_error_code, address, SIGBUS, BUS_ADRERR);
 
--- 
-Best Regards
- Guo Ren
+There may be more side effects in other archs I didn't evaluate
+because there's no other place where the common code can return
+VM_FAULT_RETRY despite the arch code explicitly told the common code
+it can't do that (by not setting FAULT_FLAG_ALLOW_RETRY) so it doesn't
+look very safe and it doesn't seem a generic enough solution to the
+problem.
 
-ML: https://lore.kernel.org/linux-csky/
+That dump_stack() helped a lot to identify those kernel outliers that
+erroneously use get_user_pages instead of the gup_locked/unlocked
+variant that are uffd-capable.
+
+Thanks,
+Andrea
+
