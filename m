@@ -2,93 +2,122 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0421EC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B298C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06B320801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ghLMVHiV"
+	by mail.kernel.org (Postfix) with ESMTP id 4A2F120801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgBRR13 (ORCPT
+        id S1726841AbgBRR1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:27:29 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55942 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgBRR13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:27:29 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IHQPBe095293;
-        Tue, 18 Feb 2020 11:26:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582046785;
-        bh=lvwXkYs8d80yE7BNnJ2oI2ay727RRz52IoOVRAsarhw=;
-        h=From:To:CC:Subject:Date;
-        b=ghLMVHiVkMzpMdZkJWxB53JeSi9Fc+l1fm0o7lZvV5SR/P8H5raaglOKnXChVJ4w4
-         0julWR7da7m/RXgKrfTuNokFmjOtg05SJz9gjWklDNehR1uo8U0pG8+kfjH0gPbq3L
-         ac+doOHhpFIXjdty+i5hDqPXm/kiIOq06tFkS+aI=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IHQPPk065185;
-        Tue, 18 Feb 2020 11:26:25 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 11:26:25 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 11:26:25 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IHQO72068505;
-        Tue, 18 Feb 2020 11:26:25 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 0/2] INtroduce the TLV320ADCx140 codec family
-Date:   Tue, 18 Feb 2020 11:21:38 -0600
-Message-ID: <20200218172140.23740-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 18 Feb 2020 12:27:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:56790 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbgBRR1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:27:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 706AD31B;
+        Tue, 18 Feb 2020 09:27:50 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EBD03F703;
+        Tue, 18 Feb 2020 09:27:49 -0800 (PST)
+Date:   Tue, 18 Feb 2020 17:27:46 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] sched/rt: cpupri_find: implement fallback mechanism
+ for !fit case
+Message-ID: <20200218172745.hd7fxjqnzqkhfqx3@e107158-lin.cambridge.arm.com>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-2-qais.yousef@arm.com>
+ <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
+ <20200217234549.rpv3ns7bd7l6twqu@e107158-lin>
+ <20200218114658.74236b3c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200218114658.74236b3c@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On 02/18/20 11:46, Steven Rostedt wrote:
+> On Mon, 17 Feb 2020 23:45:49 +0000
+> Qais Yousef <qais.yousef@arm.com> wrote:
+> 
+> > --- a/kernel/sched/rt.c
+> > +++ b/kernel/sched/rt.c
+> > @@ -14,6 +14,8 @@ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
+> > 
+> >  struct rt_bandwidth def_rt_bandwidth;
+> > 
+> > +typedef bool (*fitness_fn_t)(struct task_struct *p, int cpu);
+> > +
+> >  static enum hrtimer_restart sched_rt_period_timer(struct hrtimer *timer)
+> >  {
+> >         struct rt_bandwidth *rt_b =
+> > @@ -1708,6 +1710,7 @@ static int find_lowest_rq(struct task_struct *task)
+> >         struct cpumask *lowest_mask = this_cpu_cpumask_var_ptr(local_cpu_mask);
+> >         int this_cpu = smp_processor_id();
+> >         int cpu      = task_cpu(task);
+> > +       fitness_fn_t fitness_fn;
+> > 
+> >         /* Make sure the mask is initialized first */
+> >         if (unlikely(!lowest_mask))
+> > @@ -1716,8 +1719,17 @@ static int find_lowest_rq(struct task_struct *task)
+> >         if (task->nr_cpus_allowed == 1)
+> >                 return -1; /* No other targets possible */
+> > 
+> > +       /*
+> > +        * Help cpupri_find avoid the cost of looking for a fitting CPU when
+> > +        * not really needed.
+> > +        */
+> > +       if (static_branch_unlikely(&sched_asym_cpucapacity))
+> > +               fitness_fn = rt_task_fits_capacity;
+> > +       else
+> > +               fitness_fn = NULL;
+> > +
+> >         if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
+> > -                        rt_task_fits_capacity))
+> > +                        fitness_fn))
+> >                 return -1; /* No targets found */
+> > 
+> >         /*
+> 
+> 
+> If we are going to use static branches, then lets just remove the
+> parameter totally. That is, make two functions (with helpers), where
+> one needs this fitness function the other does not.
+> 
+> 	if (static_branch_unlikely(&sched_asym_cpu_capacity))
+> 		ret = cpupri_find_fitness(...);
+> 	else
+> 		ret = cpupri_find(...);
+> 
+> 	if (!ret)
+> 		return -1;
+> 
+> Something like that?
 
-Introducing the Texas Instruments TLV320ADCx140 quad channel audio ADC.
-This device supports 4 analog inputs, 8 digital inputs or a combination of
-analog and digital microphones.
+Is there any implication on code generation here?
 
-TLV320ADC3140 - http://www.ti.com/lit/gpn/tlv320adc3140
-TLV320ADC5140 - http://www.ti.com/lit/gpn/tlv320adc5140
-TLV320ADC6140 - http://www.ti.com/lit/gpn/tlv320adc6140
+I like my flavour better tbh. But I don't mind refactoring the function out if
+it does make it more readable.
 
-Dan Murphy (2):
-  dt-bindings: sound: Add TLV320ADCx140 dt bindings
-  ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family
+Thanks
 
- .../bindings/sound/tlv320adcx140.yaml         |  83 ++
- sound/soc/codecs/Kconfig                      |   9 +
- sound/soc/codecs/Makefile                     |   2 +
- sound/soc/codecs/tlv320adcx140.c              | 851 ++++++++++++++++++
- sound/soc/codecs/tlv320adcx140.h              | 130 +++
- 5 files changed, 1075 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
- create mode 100644 sound/soc/codecs/tlv320adcx140.c
- create mode 100644 sound/soc/codecs/tlv320adcx140.h
-
--- 
-2.25.0
-
+--
+Qais Yousef
