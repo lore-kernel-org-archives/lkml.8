@@ -2,526 +2,131 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22C7C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8820C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ADE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB952176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kGXHZtoJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iD2zBTBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgBRLLf (ORCPT
+        id S1726492AbgBRLQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:11:35 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28603 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726415AbgBRLLe (ORCPT
+        Tue, 18 Feb 2020 06:16:20 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37945 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgBRLQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:11:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582024294; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=+ZhXrCGiroKxS0y2NbAXy2Q56OPm0h5198cey44uu/g=;
- b=kGXHZtoJdxdMbpLqBURM6kCGA+2x/52tOYho6HgWziW3OyAAHb9pclO3pV0fbwFtTB9V8aSi
- e090KVRzWANzr1cFeNDio6ftM+DV2qFPPjacghF0vl/UNOtN0htoiUpgHo3I8wt52zN4wEXJ
- blkvJm37jo/wYzMo6v+ZJpvBOfA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4bc665.7fb70e70d570-smtp-out-n03;
- Tue, 18 Feb 2020 11:11:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7BFDC4479C; Tue, 18 Feb 2020 11:11:32 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BD43C43383;
-        Tue, 18 Feb 2020 11:11:31 +0000 (UTC)
+        Tue, 18 Feb 2020 06:16:20 -0500
+Received: by mail-il1-f195.google.com with SMTP id f5so16985335ilq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 03:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YdRs4CSk1sjEx2XGYnd0uv2adtZQecUaYs/TF44cHQQ=;
+        b=iD2zBTBdLkMqLy+ZjFu4qXkv3YiYq5r1sn8vLGZMFr9DkR4f3HsqMlxI9DVyv55eMY
+         c9ZPi1WODHCWNuCA+uHXjKPA6T2IUqgOEsJ6dBILTW0caDfEilc3wKtaswqJU7w4vGW8
+         Ly7nC04wHJEaqpYeZxuxEwXmp/RZfFSAI2P7FdZyIaZnJZJQl36c2Af27Xeyub/6Mw5S
+         zWKqaSDNACtXlRFkln2wsbINcweW6bsEh+UEun4DIKX9B+5podBteKK7fCE3o4R2O/2y
+         Piw7It+D0hSuatOE8LqpMMetYdS1rTBYh7yPM4WCq3gMIzyuE/wXQs5n/D2Ft9eLcKm9
+         zg6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YdRs4CSk1sjEx2XGYnd0uv2adtZQecUaYs/TF44cHQQ=;
+        b=jH2xP/1wHAn6KauYCl5GD53b1VnS24rJgS+jRfUnfwqT7ThixfwFe6jG64c0JilrjG
+         /tpFXlK/0ApiAXGlEsULqnKLaUnQNweZouPTf1Q1b5hgg6kRYLwQzzUBwwjjzDFvl9AP
+         EXc/wyu4aX/HLgV8GLBuJpJC8oE7KLwWEeOXirakhglcfjdlLWJrZarxYOP8WZGbfpkm
+         LX0kVQhgjMI/+4J8maA/DAvRIqOlttpb118gys7h10nr/xFS4fMEbAhDLSwKE3mdQZN8
+         sTEuHASOu7H0ulOCIFdfC2uceT1ngvXbZUBY863cyGOybSW3O6N6wHJmxEd8NKaf3RAF
+         K2cg==
+X-Gm-Message-State: APjAAAVg6MHBJjULjGuvnf591uZ7G2ya+nZgnj1nVkih6jSnsgb7kpWN
+        Wmdt71iqBjb1WkHah7KAEz7TSwkwPeOft5DxnD0=
+X-Google-Smtp-Source: APXvYqxDk98RG3lKRN3GccvRjsezOiRKS5m6gqa9fln/q5fLvi+1vW1oE63xiA1qqyNyP0/uoX51wu9+QVWE030B0nc=
+X-Received: by 2002:a92:3a8d:: with SMTP id i13mr19835911ilf.112.1582024577946;
+ Tue, 18 Feb 2020 03:16:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Feb 2020 16:41:31 +0530
-From:   ppvk@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org, mka@chromium.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v3 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-In-Reply-To: <20200208233910.GB955802@ripper>
-References: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
- <1581086695-16645-2-git-send-email-ppvk@codeaurora.org>
- <20200208233910.GB955802@ripper>
-Message-ID: <48e0f11b7b8e278eba1004c1001706ae@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200217222803.6723-1-idryomov@gmail.com> <202002171546.A291F23F12@keescook>
+ <CAOi1vP-2uAD83Vi=Eebu_GPzq5DUt+z9zogA7BNGF1B1jUgAVw@mail.gmail.com> <20200218103346.5hbe7d5aj2ma7trk@pathway.suse.cz>
+In-Reply-To: <20200218103346.5hbe7d5aj2ma7trk@pathway.suse.cz>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 18 Feb 2020 12:16:43 +0100
+Message-ID: <CAOi1vP-854iSypqYKLQQLgRsaHStzaiJD2JQ-i+KDLgrFC1PaA@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: don't obfuscate NULL and error pointers
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Tobin C . Harding" <me@tobin.cc>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Feb 18, 2020 at 11:33 AM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Tue 2020-02-18 01:07:53, Ilya Dryomov wrote:
+> > On Tue, Feb 18, 2020 at 12:47 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Mon, Feb 17, 2020 at 11:28:03PM +0100, Ilya Dryomov wrote:
+> > > > I don't see what security concern is addressed by obfuscating NULL
+> > > > and IS_ERR() error pointers, printed with %p/%pK.  Given the number
+> > > > of sites where %p is used (over 10000) and the fact that NULL pointers
+> > > > aren't uncommon, it probably wouldn't take long for an attacker to
+> > > > find the hash that corresponds to 0.  Although harder, the same goes
+> > > > for most common error values, such as -1, -2, -11, -14, etc.
+> > > >
+> > > > The NULL part actually fixes a regression: NULL pointers weren't
+> > > > obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
+> > > > dereferencing invalid pointers") which went into 5.2.  I'm tacking
+> > > > the IS_ERR() part on here because error pointers won't leak kernel
+> > > > addresses and printing them as pointers shouldn't be any different
+> > > > from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
+> > > > debugging based on existing pr_debug and friends excruciating.
+> > > >
+> > > > Note that the "always print 0's for %pK when kptr_restrict == 2"
+> > > > behaviour which goes way back is left as is.
+> > > >
+> > > > Example output with the patch applied:
+> > > >
+> > > >                             ptr         error-ptr              NULL
+> > > > %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
+> > > > %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
+> > > > %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
+> > > > %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
+> > > > %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
+> > >
+> > > This seems reasonable. Though I wonder -- since the efault string is
+> > > exposed now -- should this instead print all the error-ptr strings
+> > > instead of the unsigned negative pointer value?
+>
+> It would make sense to distinguish it from a hashed value that might
+> be in the NULL or ERR range as well.
+>
+> The chance is small. But it might safe people from spending time
+> on false paths.
 
-Thanks for the review !
+Yeah, when the obfuscation patch went in, NULL was "(null)", but
+that got dropped later in an argument that "(null)" should only
+be printed on dereference attempts and also in an effort to make it
+consistent with %pK.  I don't agree with that because "(null)" dated
+back to 2009 and %pK has always been a special case, but I decided
+to go with the minimal fix to avoid bike shedding.
 
-On 2020-02-09 05:09, Bjorn Andersson wrote:
-> On Fri 07 Feb 06:44 PST 2020, Pradeep P V K wrote:
-> 
->> Add interconnect bandwidths for SDHC driver using OPP framework that
->> is required by SDHC driver based on the clock frequency and bus width
->> of the card. Otherwise, the system clocks may run at minimum clock
->> speed and thus affecting the performance.
->> 
->> This change is based on Georgi Djakov [RFC]
->> (https://lkml.org/lkml/2018/10/11/499) and
->> 
->> Saravana Kannan [PATCH v6]
->> (https://lkml.org/lkml/2019/12/6/740)
-> 
-> Write out the subject of these two patches, rather than stating that
-> it's based on one RFC and some PATCH version 6. Or just state that it's
-> based on work by Georgi and Saravana.
-> 
-Sure. i will update this in my next patch set.
+For error pointers, at least on 64-bit they are easy to distinguish
+because the upper 32 bits of the hash are cleared.
 
->> 
->> change from RFC v2 -> v3 changes:
->> - Modified interconnect bandwidth support using OPP framework.
->> - Addressed review comments on v2.
-> 
-> Move the changelog below the --- line
-> 
-ok.
+Thanks,
 
->> 
->> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> 
-> You should read these as the history of how this patch reached LKML and
-> can use Co-developed-by to indicate that several people was part of a
-> single step.
-> 
-> So if you're both co-author and the one sending it to LKML then you
-> should have 4 Co-developed-by tags here.
-> 
-sure, i will follow this from my patch series.
-
->> ---
->>  drivers/mmc/host/sdhci-msm.c | 251 
->> ++++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 247 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/mmc/host/sdhci-msm.c 
->> b/drivers/mmc/host/sdhci-msm.c
->> index 71f29ba..f061cd8 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -11,8 +11,10 @@
->>  #include <linux/mmc/mmc.h>
->>  #include <linux/pm_runtime.h>
->>  #include <linux/slab.h>
->> +#include <linux/interconnect.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/regulator/consumer.h>
->> +#include <linux/pm_opp.h>
->> 
->>  #include "sdhci-pltfm.h"
->> 
->> @@ -229,6 +231,14 @@ struct sdhci_msm_variant_info {
->>  	const struct sdhci_msm_offset *offset;
->>  };
->> 
->> +struct sdhci_msm_bus_vote_data {
->> +
-> 
-> Move the { to the empty line.
-> 
-ok.
->> +	struct icc_path *sdhc_to_ddr;
->> +	struct icc_path *cpu_to_sdhc;
->> +	bool skip_bus_bw_voting;
->> +	u32 curr_freq;
->> +};
->> +
->>  struct sdhci_msm_host {
->>  	struct platform_device *pdev;
->>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
->> @@ -255,8 +265,11 @@ struct sdhci_msm_host {
->>  	bool use_cdr;
->>  	u32 transfer_mode;
->>  	bool updated_ddr_cfg;
->> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
->>  };
->> 
->> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 
->> enable);
->> +
->>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct 
->> sdhci_host *host)
->>  {
->>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> @@ -1564,6 +1577,7 @@ static void sdhci_msm_set_clock(struct 
->> sdhci_host *host, unsigned int clock)
->> 
->>  	msm_set_clock_rate_for_bus_mode(host, clock);
->>  out:
->> +	sdhci_msm_bus_voting(host, !!clock);
->>  	__sdhci_msm_set_clock(host, clock);
->>  }
->> 
->> @@ -1685,6 +1699,219 @@ static void 
->> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->>  }
->> 
->> +/*
->> + * Returns required bandwidth in Bytes per Sec
->> + */
->> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
->> +					struct mmc_ios *ios)
->> +{
->> +	unsigned long bw;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +
->> +	bw = msm_host->clk_rate;
->> +
->> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
->> +		bw /= 2;
->> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
->> +		bw /= 8;
->> +
->> +	return bw;
-> 
-> 
-> switch (ios->bus_width) {
-> case MMC_BUS_WIDTH_1:
-> 	return msm_host->clk_rate / 8;
-> case MMC_BUS_WIDTH_4:
-> 	return msm_host->clk_rate / 2;
-> case MMC_BUS_WIDTH_8:
-> 	return msm_host->clk_rate;
-> }
-> 
-ok. i will do this in my next patch.
-
->> +}
->> +
->> +/*
->> + * Helper function to parse the exact OPP node
->> + * Returns OPP pointer on success else NULL on error
->> + */
->> +static struct dev_pm_opp *find_opp_for_freq(struct sdhci_msm_host 
->> *msm_host,
-> 
-> A function with this name doesn't belong in the sdhci-msm driver.
-> 
-ok. i will update the function name accordingly.
-
->> +							unsigned long bw)
->> +{
->> +	struct dev_pm_opp *opp;
->> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
->> +	unsigned int freq = bw;
->> +	struct device *dev = &msm_host->pdev->dev;
->> +
->> +
->> +	if (!freq)
->> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
->> +	else
->> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
->> +
->> +	/* Max Bandwidth vote */
->> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
->> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
->> +
->> +	if (IS_ERR(opp)) {
->> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
->> +				freq, PTR_ERR(opp));
->> +		return NULL;
->> +	}
->> +	return opp;
->> +}
->> +
->> +/*
->> + * This function sets the interconnect bus bandwidth
->> + * vote based on bw (bandwidth) argument.
->> + */
->> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
->> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
->> +						unsigned int bw)
->> +{
->> +	int i;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
->> +	struct dev_pm_opp *opp;
->> +	unsigned long freq = bw;
->> +	unsigned long ib[BUS_INTERCONNECT_PATHS], 
->> ab[BUS_INTERCONNECT_PATHS];
->> +	int ddr_rc = 0, cpu_rc = 0;
->> +
->> +	if (!msm_host->bus_vote_data->sdhc_to_ddr ||
->> +			!msm_host->bus_vote_data->cpu_to_sdhc)
-> 
-> Why not include this check in the calling code, which already checks 
-> for
-> skip_bus_bw_voting?
-> 
-This is actually redundant. This is not required here again. 
-skip_bus_bw_voting will set when
-the handlers are NULL. so i will remove this in my next patch set.
-
->> +		return;
->> +
->> +	if (bw != vote_data->curr_freq) {
-> 
-> if (bw == vote_data->curr_freq)
-> 	return;
-> 
-> Will save you an indentation level in the rest of the function.
-> 
-sure. i will make the change accordingly.
-
->> +		for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
->> +			opp = find_opp_for_freq(msm_host, freq);
->> +			if (opp) {
->> +				ab[i] =	dev_pm_opp_get_bw(opp, &ib[i]);
->> +				freq += 1; /* Next Band width vote */
-> 
-> Why do you request bw for sdhc-ddr and then bw+1 for cpu-sdhc?
-> 
-for sdhci-msm, the OPP's for path sdhc-ddr and cpu-sdhc are same, to 
-avoid
-OPP errors and warnings, i just added +1 for cpu-sdhc to differentiate 
-between
-sdhc-ddr and cpu-sdhc OPPS. This needs to be taken care while adding 
-opp's in dt
-for cpu-sdhc path.
-
-
->> +				dev_pm_opp_put(opp);
->> +			}
->> +		}
->> +		pr_debug("%s: freq:%d sdhc_to_ddr ab:%lu ib:%lu cpu_to_sdhc ab:%lu 
->> ib:%lu\n",
->> +				mmc_hostname(host->mmc), bw, ab[0], ib[0],
->> +				ab[1], ib[1]);
-> 
-> You probably have compiler warnings here as not all code paths will get
-> here with ib and ab initialized.
-> 
-True. i will make the change accordingly.
-
->> +		ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, ib[0]);
->> +		cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, ib[1]);
->> +		if (ddr_rc || cpu_rc) {
->> +			pr_err("%s: icc_set() failed ddr_rc_err:%d cpu_rc_err:%d\n",
-> 
-> dev_err()
-> 
-ok.
-
->> +				mmc_hostname(host->mmc), ddr_rc, cpu_rc);
->> +			return;
->> +		}
->> +		vote_data->curr_freq = bw;
->> +	}
->> +}
->> +
->> +/*
->> + * This function registers the device to OPP framework and
->> + * parses few optional parameters from the device tree node.
->> + * Returns NULL bvd pointer on error else a valid bvd pointer.
->> + */
->> +static struct sdhci_msm_bus_vote_data 
->> *sdhci_msm_get_bus_vote_data(struct device
->> +				       *dev, struct sdhci_msm_host *host)
->> +
->> +{
->> +	struct platform_device *pdev = to_platform_device(dev);
-> 
-> Just pass the platform_device instead of passing &pdev->dev and then
-> container_of() it directly.
-> 
-This function is not required here. i will move the necessary code to 
-the caller fn().
-to look the code more simpler. i will make the changes accordingly in my 
-next patch series.
-
->> +	struct sdhci_msm_bus_vote_data *vote_data = NULL;
->> +	int ret = 0;
-> 
-> No need to initialize either vote_data or ret, given that they are both
-> written before read below.
-> 
-same as above.
-
->> +
->> +	if (!pdev) {
-> 
-> How could this happen?
-> 
-same as above.
->> +		dev_err(dev, "Null platform device!\n");
->> +		return NULL;
->> +	}
->> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
->> +	if (!vote_data)
->> +		return vote_data;
->> +
->> +	ret = dev_pm_opp_of_add_table(dev);
->> +	if (ret) {
->> +		if (ret == -ENODEV || ret == -ENODATA) {
->> +			dev_dbg(dev, "OPP not found. Skip bus voting!!:%d\n",
->> +					ret);
->> +			vote_data->skip_bus_bw_voting = true;
->> +		} else {
->> +			dev_dbg(dev, "OPP regestration failed:%d\n", ret);
->> +			goto err;
->> +		}
->> +	}
->> +
->> +	return vote_data;
->> +err:
->> +	devm_kfree(dev, vote_data);
->> +	vote_data = NULL;
-> 
-> This is a local variable, no need to clear it.
-> 
-same as above.
->> +	return vote_data;
->> +}
->> +
->> +/*
->> + * Helper function to register for OPP and interconnect
->> + * frameworks.
->> + */
->> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
->> +				struct platform_device *pdev)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data;
->> +	struct device *dev = &pdev->dev;
->> +	int ret = 0;
->> +
->> +	vote_data = sdhci_msm_get_bus_vote_data(dev, host);
->> +	if (!vote_data) {
->> +		dev_dbg(&pdev->dev, "Failed to get bus_scale data\n");
->> +		host->bus_vote_data = NULL;
->> +		return -EINVAL;
->> +	}
->> +	host->bus_vote_data = vote_data;
->> +
->> +	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
->> +	if (!vote_data->sdhc_to_ddr) {
->> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
->> +				"sdhc-ddr");
->> +		return -ENOENT;
->> +	} else if (IS_ERR(vote_data->sdhc_to_ddr) {
->> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
->> +				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
->> +		ret = PTR_ERR(vote_data->sdhc_to_ddr);
->> +		vote_data->sdhc_to_ddr = NULL;
->> +		return ret;
->> +	}
->> +	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
->> +	if (!vote_data->cpu_to_sdhc) {
-> 
-> Afaict there's no reason to hold onto sdhc_to_ddr or vote_data itself 
-> if
-> this happens.
-> 
-> I think things would be cleaner if you make this function return the
-> vote_data for success, NULL if the information was omitted or ERR_PTR()
-> in case invalid data was given.
-> 
-> Assign this in the caller, check for IS_ERR() and in the places where
-> you want to know if you are doing bus voting or not you can just check
-> for host->bus_vote_data - no need to check sdhc_to_ddr, cpu_to_sdhc and
-> skip_bus_bw_voting individually..
-> 
-> 
-> And given that it's an both-or-nothing this function would be cleaner 
-> if
-> you of_icc_get() both paths, then do error handling - and then follow 
-> up
-> with the introduction of devm and bulk operations to the icc API.
-> 
-Agree with your suggestions, will make this change in my next patch set.
->> +		dev_dbg(&pdev->dev, "DT property for path %s missing\n",
->> +					"cpu_to_sdhc");
->> +		return -ENOENT;
->> +	} else if (IS_ERR(vote_data->cpu_to_sdhc)) {
->> +		dev_dbg(&pdev->dev, "(%ld): failed getting %s path\n",
->> +				PTR_ERR(vote_data->cpu_to_sdhc), "cpu-sdhc");
->> +		ret = PTR_ERR(vote_data->cpu_to_sdhc);
->> +		vote_data->cpu_to_sdhc = NULL;
->> +		return ret;
->> +	}
->> +	return ret;
->> +}
->> +
->> +static void sdhci_msm_bus_unregister(struct device *dev,
->> +				struct sdhci_msm_host *host)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
->> +
->> +	if (vote_data->skip_bus_bw_voting ||
->> +		!vote_data->sdhc_to_ddr ||
->> +		!vote_data->cpu_to_sdhc)
->> +		return;
->> +
->> +	icc_put(vote_data->sdhc_to_ddr);
->> +	icc_put(vote_data->cpu_to_sdhc);
->> +}
->> +
->> +#define MSM_MMC_BUS_VOTING_DELAY        200 /* msecs */
-> 
-> This is unused.
-> 
-ok. i will remove.
->> +
->> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
-> 
-> Split this in an enable and a disable
-> 
-Why to split into two functions, most of the code is same and would be 
-simpler
-to use with the same name for both enable and disable.
->> +{
->> +	struct mmc_ios *ios = &host->mmc->ios;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	unsigned int bw;
->> +
->> +	if (msm_host->bus_vote_data->skip_bus_bw_voting)
->> +		return;
->> +
->> +	if (enable) {
->> +		bw = sdhci_get_bw_required(host, ios);
->> +		sdhci_msm_bus_set_vote(host, bw);
->> +	} else
->> +		sdhci_msm_bus_set_vote(host, 0);
->> +}
->> +
->>  static const struct sdhci_msm_variant_ops mci_var_ops = {
->>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> 
-> Regards,
-> Bjorn
+                Ilya
