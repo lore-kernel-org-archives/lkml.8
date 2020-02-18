@@ -2,95 +2,136 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB64C3404D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82173C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691312173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582061501;
-	bh=v1ZejpWaMAUjOljhRcr7hWShwy1XLBLAMgNmn6u4JU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R44d2t/o26bFD9IufOtJ8ImGJhwfVy1c4wQsXoGznB7I4YY29fij9XrF+uPQ/wn8Q
-	 95i1oX0kruDa/4Tx0O6bpWVU6LWv5t/Lv+hCdBujUSl5Sd7uHILa8HPXB/nr84mJRS
-	 vNjQp6SsF9CqKQSf0mRo5c/uzQYyMMzM6Eq7rX9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 56B0222B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f5Iuo6bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgBRVbk (ORCPT
+        id S1727836AbgBRVdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:31:40 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45579 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRVbk (ORCPT
+        Tue, 18 Feb 2020 16:33:21 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15423 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgBRVdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:31:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so21035700otp.12;
-        Tue, 18 Feb 2020 13:31:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PyZM4tCjgTwD6aYfoDzIWv9a874H9XwwMkRT7i0BQWE=;
-        b=Su8HnnYm/dGhT/uHPbO4tSkni8uB3PC2CYPVashO8bOXNspZFarxNI8fJUuor257It
-         sYDmaWRFvAmHBwDztj2iT+cfJEyBqc1SCmRe8u1aR61kaKoNJpel2W4qk+bxYDd6nMaF
-         BCUTOYgaSDYc1eGcFqFWZeELQ4r3Q1GIVDRtNNFKiwGOyWwElDDGtBQuu4tthugNd7QD
-         Jr0ibf8JV40W43e/B/qK/IkfcBrbGI04949U7e5WYU+LkZn06uF+t07hlRU5t8bswzzr
-         1npJV8yi8BaMCHwmR1TI5SqsRCuy6yvAMov95J1gt4qY4u3Omgt/CSjNKmHYg+0Ex2zx
-         IBuQ==
-X-Gm-Message-State: APjAAAVci1mFVVXQxG1Mxx9HERMh+7gLkaJpTqswA8WmHC/s3kofFOqD
-        qDj6+xUq+euOb7LbiJ/0Iw==
-X-Google-Smtp-Source: APXvYqzcQ5B6Jqv7ykwcXbxhubiIg4tzjWg968oQFRq7I7DKyRZ7OSbD5dZ/ERQzRBwPGUamWs1Xlw==
-X-Received: by 2002:a9d:48d:: with SMTP id 13mr16210737otm.249.1582061498523;
-        Tue, 18 Feb 2020 13:31:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm29716oij.19.2020.02.18.13.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:31:37 -0800 (PST)
-Received: (nullmailer pid 8809 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:31:37 -0000
-Date:   Tue, 18 Feb 2020 15:31:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, georgi.djakov@linaro.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, Odelu Kukatla <okukatla@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-Message-ID: <20200218213137.GA8767@bogus>
-References: <20200209183411.17195-1-sibis@codeaurora.org>
- <20200209183411.17195-4-sibis@codeaurora.org>
+        Tue, 18 Feb 2020 16:33:21 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c57d90000>; Tue, 18 Feb 2020 13:32:09 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 13:33:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 13:33:20 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
+ 2020 21:33:19 +0000
+Subject: Re: [PATCH v6 02/19] mm: Ignore return value of ->readpages
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-3-willy@infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <ed5b3635-be1b-c290-0e19-b516e7af2aca@nvidia.com>
+Date:   Tue, 18 Feb 2020 13:33:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209183411.17195-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217184613.19668-3-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582061529; bh=RXve5/fUA3oBILhUm8o+y+17c7pBmRijpBQPJAnmP80=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=f5Iuo6blIXbcDZrM05UIgCY8ANT5xW9HB6FXMMGQCfaHMfBnR1DfaWLTMAYIE7XBP
+         B9QOW8wSO4ij5j+4bCfhLlUR2LpeSTGJV0y8tnLGhP+d4at2LBMPXmcd1007q6GV+V
+         F6nXmc1d8pgAlmrCaaR8bklkj+n7DiCZH8Mj9XZsOl6SUYvt06XEAlqdCtbjrJAqsO
+         JEKRbCwBCkx6iNbCJyyfXN8/DDeOTx/qKgkY7yedkT+Pn0V+QFJNvk6ybzosDhS50D
+         pgn5lvAGlEV280+lBsRM1YfSDahNeoARNWUSdQ6PSTGWm5OdOjiCPRr9K7h5I26KXq
+         jvW6k1ji+T2MA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 00:04:08 +0530, Sibi Sankar wrote:
-> From: David Dai <daidavid1@codeaurora.org>
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Redefine the Network-on-Chip devices to more accurately describe
-> the interconnect topology on Qualcomm's SDM845 platform. Each
-> interconnect device can communicate with different instances of the
-> RPMh hardware which are described as RSCs(Resource State Coordinators).
+> We used to assign the return value to a variable, which we then ignored.
+> Remove the pretence of caring.
 > 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  .../bindings/interconnect/qcom,sdm845.yaml    | 49 +++++++++++++++----
->  1 file changed, 40 insertions(+), 9 deletions(-)
-> 
+>  mm/readahead.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looks good,
+
+    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 8ce46d69e6ae..12d13b7792da 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -113,17 +113,16 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+>  
+>  EXPORT_SYMBOL(read_cache_pages);
+>  
+> -static int read_pages(struct address_space *mapping, struct file *filp,
+> +static void read_pages(struct address_space *mapping, struct file *filp,
+>  		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
+>  {
+>  	struct blk_plug plug;
+>  	unsigned page_idx;
+> -	int ret;
+>  
+>  	blk_start_plug(&plug);
+>  
+>  	if (mapping->a_ops->readpages) {
+> -		ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
+> +		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
+>  		/* Clean up the remaining pages */
+>  		put_pages_list(pages);
+>  		goto out;
+> @@ -136,12 +135,9 @@ static int read_pages(struct address_space *mapping, struct file *filp,
+>  			mapping->a_ops->readpage(filp, page);
+>  		put_page(page);
+>  	}
+> -	ret = 0;
+>  
+>  out:
+>  	blk_finish_plug(&plug);
+> -
+> -	return ret;
+>  }
+>  
+>  /*
+> 
