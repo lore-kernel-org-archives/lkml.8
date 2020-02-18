@@ -2,424 +2,169 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BA4C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E7C3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5DB207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JY26Ayiq"
+	by mail.kernel.org (Postfix) with ESMTP id BD11E207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgBRPOh (ORCPT
+        id S1726842AbgBRPP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:14:37 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32943 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgBRPOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:14:36 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so11100430ioh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:14:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L2FFnFM1DUpjnjQEzMQbdUc5PM1wPf8ykgABKUt572M=;
-        b=JY26Ayiq77H5+Xz7xpjZ+lYc8ihPtaG7s5cVgxXstjQcDk/dqGCiwwlHXinPbuYaT2
-         rro9mEldmmqPiM21XA8rpPkhu+M+orkOPYn5RglFho5XHYrySq1Cf5GO0wbm/+7ndL9I
-         +9AlA7z0Cu25wSlg6UrFw3SrUS5MQVGOVr9f+BLoJ1I7972yTLLGdYgC4/fS5BSyLSpc
-         PjdwUemZrRCKjmjOsMgiRoFhYkq7KPyrEXJzGN5j9kK9ebCuZ+alL+3SYLtLbuM5VMLI
-         CiRQ8IaKuTiTL8Ul8j3TOzNkYiYuJFCZ9VtdTRl0XhsKMbVCvpXeRH6sZzLtF+Nf9OnT
-         ffiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L2FFnFM1DUpjnjQEzMQbdUc5PM1wPf8ykgABKUt572M=;
-        b=rdysLTXk8YFFmG4j6h4NYmYaETzg+i9UZSIIc3cEMP+sHvNuQ5a+NT6x3zb6n6d8Iv
-         8eImIZOnAUzKFw3Uam0mrY/v0sVf80NfyBYEBleyUgsrIkG8zdyMF0Hn+q5tLamLrl15
-         GXKliguPDw6PG1ayzHr0b2SE3LNObzQbzEFLS/oxRNmuC5BmzHrc5UA7oHJbA+3KWumq
-         VWn7UpuRSDhwGk6bdk8dBJANNSy9SuwvhIlVNTpN11tAATUhk5uOO1UQ512xpLvntouP
-         GsstUDz2voZ6nI0DpXf7kDKCorcX0NqbGK+gOG0T1l+nhufcs96RWy7GB7ytlOf0RCdB
-         3VWA==
-X-Gm-Message-State: APjAAAX1E7mcGvmby+rCCWKn6VrW2e2QfxTN4nBBpnDVz9vZQZc5Bael
-        Dkc0mh1/+Ixl+lQ7dWiyUQSTALO8ffGB+dQrq9utQA==
-X-Google-Smtp-Source: APXvYqxa3UJpb8Zjq9tm1tWzHjPwcBntQAdTIWzrUU9YlFHVtiKWHt5xSFxN0q3yLRNrVOFRitTAOM+YxqjvhdpuNvc=
-X-Received: by 2002:a02:cf0e:: with SMTP id q14mr16496198jar.82.1582038875443;
- Tue, 18 Feb 2020 07:14:35 -0800 (PST)
+        Tue, 18 Feb 2020 10:15:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:54082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgBRPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:15:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 127B830E;
+        Tue, 18 Feb 2020 07:15:26 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8771B3F703;
+        Tue, 18 Feb 2020 07:15:22 -0800 (PST)
+Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Pankaj Bansal (OSS)" <pankaj.bansal@oss.nxp.com>
+Cc:     Hanjun Guo <guohanjun@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Will Deacon <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <615c6807-c018-92c9-b66a-8afdda183699@huawei.com>
+ <VI1PR04MB513558BF77192255CBE12102B0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2762bb26-967d-3410-d250-a63d8d755d76@arm.com>
+Date:   Tue, 18 Feb 2020 15:15:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200114122738.103344-1-fengping.yu@mediatek.com> <20200114122738.103344-3-fengping.yu@mediatek.com>
-In-Reply-To: <20200114122738.103344-3-fengping.yu@mediatek.com>
-From:   Fabien Parent <fparent@baylibre.com>
-Date:   Tue, 18 Feb 2020 16:14:24 +0100
-Message-ID: <CAOwMV_w=Ad8gt1rftFw_EbtaZ2uCz=oWpm_P5YMHLNpok7Q09Q@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] drivers: input: keyboard: add mtk keypad driver
-To:     "fengping.yu" <fengping.yu@mediatek.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DTML <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 1:39 PM fengping.yu <fengping.yu@mediatek.com> wrote:
->
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
->
-> Add matrix keypad driver for MTK SoC.
->
-> ---
->  arch/arm64/configs/defconfig     |   1 +
->  drivers/input/keyboard/Kconfig   |   8 +
->  drivers/input/keyboard/Makefile  |   1 +
->  drivers/input/keyboard/mtk-kpd.c | 280 +++++++++++++++++++++++++++++++
->  4 files changed, 290 insertions(+)
->  create mode 100644 drivers/input/keyboard/mtk-kpd.c
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 8e05c39eab08..62bed77ec127 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -315,6 +315,7 @@ CONFIG_KEYBOARD_ADC=m
->  CONFIG_KEYBOARD_GPIO=y
->  CONFIG_KEYBOARD_SNVS_PWRKEY=m
->  CONFIG_KEYBOARD_CROS_EC=y
-> +CONFIG_KEYBOARD_MTK=y
->  CONFIG_INPUT_TOUCHSCREEN=y
->  CONFIG_TOUCHSCREEN_ATMEL_MXT=m
->  CONFIG_INPUT_MISC=y
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 8911bc2ec42a..01747a97536b 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -775,4 +775,12 @@ config KEYBOARD_MTK_PMIC
->           To compile this driver as a module, choose M here: the
->           module will be called pmic-keys.
->
-> +config KEYBOARD_MTK
-> +       tristate "MediaTek Keypad Support"
-> +       help
-> +         Say Y here if you want to use the keypad.
-> +         If unuse, say N.
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called mtk-kpd.
-> +
->  endif
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 9510325c0c5d..daa654bcce6e 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)         += matrix_keypad.o
->  obj-$(CONFIG_KEYBOARD_MAX7359)         += max7359_keypad.o
->  obj-$(CONFIG_KEYBOARD_MCS)             += mcs_touchkey.o
->  obj-$(CONFIG_KEYBOARD_MPR121)          += mpr121_touchkey.o
-> +obj-$(CONFIG_KEYBOARD_MTK)             += mtk-kpd.o
->  obj-$(CONFIG_KEYBOARD_MTK_PMIC)        += mtk-pmic-keys.o
->  obj-$(CONFIG_KEYBOARD_NEWTON)          += newtonkbd.o
->  obj-$(CONFIG_KEYBOARD_NOMADIK)         += nomadik-ske-keypad.o
-> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
-> new file mode 100644
-> index 000000000000..e36461c9dd89
-> --- /dev/null
-> +++ b/drivers/input/keyboard/mtk-kpd.c
-> @@ -0,0 +1,280 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + * Author Terry Chang <terry.chang@mediatek.com>
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/fs.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/input/matrix_keypad.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define KPD_NAME       "mtk-kpd"
-> +
-> +#define KP_STA                         0x0000
-> +#define KP_MEM1                                0x0004
-> +#define KP_MEM2                                0x0008
-> +#define KP_MEM3                                0x000c
-> +#define KP_MEM4                                0x0010
-> +#define KP_MEM5                                0x0014
-> +#define KP_DEBOUNCE                    0x0018
-> +#define KP_SEL                         0x0020
-> +#define KP_EN                          0x0024
-> +
-> +#define KP_COL0_SEL            BIT(10)
-> +#define KP_COL1_SEL            BIT(11)
-> +#define KP_COL2_SEL            BIT(12)
-> +
-> +#define KPD_DEBOUNCE_MASK      GENMASK_ULL(13, 0)
-> +
-> +#define KPD_NUM_MEMS   5
-> +#define KPD_MEM5_BITS  8
-> +#define KPD_NUM_KEYS   72      /* 4 * 16 + KPD_MEM5_BITS */
-> +
-> +struct mtk_keypad {
-> +       struct input_dev *input_dev;
-> +       struct clk *clk;
-> +       void __iomem *base;
-> +       unsigned int irqnr;
-> +       bool wakeup;
-> +       u32 key_debounce;
-> +       u32 n_rows;
-> +       u32 n_cols;
-> +       u32 keymap_state[KPD_NUM_MEMS];
-> +};
-> +
-> +static void kpd_get_keymap_state(void __iomem *kp_base, u32 state[])
-> +{
-> +       memset_io(state, 0xff, KPD_NUM_MEMS);
-> +       memcpy_fromio(state, kp_base, KPD_NUM_MEMS);
-> +}
-> +
-> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
-> +{
-> +       /* use _nosync to avoid deadlock */
-> +       struct mtk_keypad *keypad = dev_id;
-> +       unsigned short *keycode = keypad->input_dev->keycode;
-> +       u32 new_state[KPD_NUM_MEMS], mask;
-> +       unsigned long change = 0;
-> +       int bit_nr;
-> +       int pressed;
-> +       u32 row_shift = get_count_order(keypad->n_cols);
-> +       unsigned short code;
-> +       int i;
-> +
-> +       disable_irq_nosync(keypad->irqnr);
-> +
-> +       kpd_get_keymap_state(keypad->base, new_state);
+On 18/02/2020 2:46 pm, Lorenzo Pieralisi wrote:
+> On Tue, Feb 18, 2020 at 12:48:39PM +0000, Pankaj Bansal (OSS) wrote:
+> 
+> [...]
+> 
+>>>> In DT case, we create the domain DOMAIN_BUS_FSL_MC_MSI for MC bus and
+>>> it's children.
+>>>> And then when MC child device is created, we search the "msi-parent"
+>>> property from the MC
+>>>> DT node and get the ITS associated with MC bus. Then we search
+>>> DOMAIN_BUS_FSL_MC_MSI
+>>>> on that ITS. Once we find the domain, we can call msi_domain_alloc_irqs for
+>>> that domain.
+>>>>
+>>>> This is exactly what we tried to do initially with ACPI. But the searching
+>>> DOMAIN_BUS_FSL_MC_MSI
+>>>> associated to an ITS, is something that is part of drivers/acpi/arm64/iort.c.
+>>>> (similar to DOMAIN_BUS_PLATFORM_MSI and DOMAIN_BUS_PCI_MSI)
+>>>
+>>> Can you have a look at mbigen driver (drivers/irqchip/irq-mbigen.c) to see if
+>>> it helps you?
+>>>
+>>> mbigen is an irq converter to convert device's wired interrupts into MSI
+>>> (connecting to ITS), which will alloc a bunch of MSIs from ITS platform MSI
+>>> domain at the setup.
+>>
+>> Unfortunately this is not the same case as ours. As I see Hisilicon IORT table
+>> Is using single id mapping with named components.
+>>
+>> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1616/D05AcpiTables/D05Iort.asl#L300
+>>
+>> while we are not:
+>>
+>> https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platforms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Iort.aslc?h=LX2160_UEFI_ACPI_EAR1#n290
+>>
+>> This is because as I said, we are trying to represent a bus in IORT
+>> via named components and not individual devices connected to that bus.
+> 
+> I had a thorough look into this and strictly speaking there is no
+> *mapping* requirement at all, all you need to know is what ITS the FSL
+> MC bus is mapping MSIs to. Which brings me to the next question (which
+> is orthogonal to how to model FSL MC in IORT, that has to be discussed
+> but I want to have a full picture in mind first).
+> 
+> When you probe the FSL MC as a platform device, the ACPI core,
+> through IORT (if you add the 1:1 mapping as an array of single
+> mappings) already link the platform device to ITS platform
+> device MSI domain (acpi_configure_pmsi_domain()).
+> 
+> The associated fwnode is the *same* (IIUC) as for the
+> DOMAIN_BUS_FSL_MC_MSI and ITS DOMAIN_BUS_NEXUS, so in practice
+> you don't need IORT code to retrieve the DOMAIN_BUS_FSL_MC_MSI
+> domain, the fwnode is the same as the one in the FSL MC platform
+> device IRQ domain->fwnode pointer and you can use it to
+> retrieve the DOMAIN_BUS_FSL_MC_MSI domain through it.
+> 
+> Is my reading correct ?
+> 
+> Overall, DOMAIN_BUS_FSL_MC_MSI is just an MSI layer to override the
+> provide the MSI domain ->prepare hook (ie to stash the MC device id), no
+> more (ie its_fsl_mc_msi_prepare()).
+> 
+> That's it for the MSI layer - I need to figure out whether we *want* to
+> extend IORT (and/or ACPI) to defined bindings for "additional busses",
+> what I write above is a summary of my understanding, I have not made my
+> mind up yet.
 
-kpd_get_keymap_state(keypad->base + KP_MEM1, new_state);
+I'm really not sure we'd need to go near any bindings - the IORT spec 
+*can* reasonably describe "giant black box of DPAA2 stuff" as a single 
+named component, and that's arguably the most accurate abstraction 
+already, even when it comes to the namespace device. This isn't a bus in 
+any traditional sense, it's a set of accelerator components with an 
+interface to dynamically configure them into custom pipelines, and the 
+expected use-case seems to be for userspace to freely reconfigure 
+whatever virtual network adapters it wants at any given time. Thus I 
+don't see that it's logical or even practical for firmware itself to be 
+involved beyond describing "here's your toolbox", and in particular, 
+basing any decisions on the particular way that DPAA2 has been 
+shoehorned into the Linux driver model would almost certainly be a step 
+in the wrong direction.
 
-> +
-> +       for (i = 0; i < KPD_NUM_MEMS; i++) {
-> +               change = new_state[i] ^ keypad->keymap_state[i];
-> +               if (!change)
-> +                       continue;
-> +
-> +               for_each_set_bit(bit_nr, &change, 32) {
-> +                       mask = 1 << bit_nr;
-> +                       pressed = (new_state[i] & mask) == 0U;
-> +                       dev_dbg(&keypad->input_dev->dev,
-> +                               "%s", pressed ? "pressed" : "released");
-> +
-> +                       code = keycode[MATRIX_SCAN_CODE(i, bit_nr, row_shift)];
-> +
-> +                       input_report_key(keypad->input_dev, code, pressed);
-> +                       input_sync(keypad->input_dev);
-> +
-> +                       dev_dbg(&keypad->input_dev->dev,
-> +                               "report Linux keycode = %d\n", code);
-> +               }
-> +       }
-> +
-> +       memcpy(keypad->keymap_state, new_state, sizeof(new_state));
-> +
-> +       enable_irq(keypad->irqnr);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int kpd_get_dts_info(struct mtk_keypad *keypad)
-> +{
-> +       int ret;
-> +       struct device *dev = keypad->input_dev->dev.parent;
-> +       struct device_node *node = dev->of_node;
-> +
-> +       ret = matrix_keypad_parse_properties(dev, &keypad->n_rows,
-> +                                            &keypad->n_cols);
-> +
-> +       if (ret) {
-> +               dev_err(dev, "failed to parse keypad params.\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = of_property_read_u32(node, "mediatek,debounce-us",
-> +                                  &keypad->key_debounce);
-> +       if (ret) {
-> +               pr_debug("read mediatek,debounce-us error.\n");
-> +               return ret;
-> +       }
-> +
-> +       keypad->wakeup = of_property_read_bool(node, "wakeup-source");
-> +
-> +       dev_dbg(dev, "n_row=%d n_col=%d debounce=%d.\n",
-> +               keypad->n_rows, keypad->n_cols,
-> +               keypad->key_debounce);
-> +
-> +       return 0;
-> +}
-> +
-> +static int kpd_gpio_init(struct device *dev)
-> +{
-> +       struct pinctrl *keypad_pinctrl;
-> +       struct pinctrl_state *kpd_default;
-> +
-> +       keypad_pinctrl = devm_pinctrl_get(dev);
-> +       if (IS_ERR(keypad_pinctrl)) {
-> +               dev_err(dev, "Cannot find keypad_pinctrl!\n");
-> +
-> +               return PTR_ERR(keypad_pinctrl);
-> +       }
-> +
-> +       kpd_default = pinctrl_lookup_state(keypad_pinctrl, "default");
-> +       if (IS_ERR(kpd_default)) {
-> +               dev_err(dev, "Cannot find ecall_state!\n");
-> +
-> +               return PTR_ERR(kpd_default);
-> +       }
-> +
-> +       return pinctrl_select_state(keypad_pinctrl, kpd_default);
-> +}
-> +
-> +static int kpd_pdrv_probe(struct platform_device *pdev)
-> +{
-> +       struct mtk_keypad *keypad;
-> +       struct resource *res;
-> +       int err;
-> +
-> +       if (!pdev->dev.of_node) {
-> +               dev_err(&pdev->dev, "No device tree data present.\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       keypad = devm_kzalloc(&pdev->dev, sizeof(*keypad), GFP_KERNEL);
-> +       if (!keypad)
-> +               return -ENOMEM;
-> +
-> +       memset(keypad->keymap_state, 0xff, sizeof(keypad->keymap_state));
-> +
-> +       keypad->input_dev = devm_input_allocate_device(&pdev->dev);
-> +       if (!keypad->input_dev) {
-> +               dev_err(&pdev->dev, "input allocate device fail.\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       keypad->input_dev->name = KPD_NAME;
-> +       keypad->input_dev->id.bustype = BUS_HOST;
-> +       keypad->input_dev->dev.parent = &pdev->dev;
-> +
-> +       err = kpd_get_dts_info(keypad);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "get dts info failed.\n");
-> +               return err;
-> +       }
-> +
-> +       err = matrix_keypad_build_keymap(NULL, NULL,
-> +                                       keypad->n_rows,
-> +                                       keypad->n_cols,
-> +                                       NULL,
-> +                                       keypad->input_dev);
-> +
-> +       if (err) {
-> +               dev_err(&pdev->dev, "build keymap failed.\n");
-> +               return err;
-> +       }
-> +
-> +       input_set_drvdata(keypad->input_dev, keypad);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res) {
-> +               dev_err(&pdev->dev, "get IO memory resource failed.\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       keypad->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(keypad->base)) {
-> +               dev_err(&pdev->dev, "KP iomap failed\n");
-> +               return PTR_ERR(keypad->base);
-> +       }
-> +
-> +       writew((keypad->key_debounce * 32 / 1000 & KPD_DEBOUNCE_MASK),
-> +               keypad->base + KP_DEBOUNCE);
-> +
-> +       keypad->clk = devm_clk_get(&pdev->dev, "kpd");
-> +       if (IS_ERR(keypad->clk)) {
-> +               dev_err(&pdev->dev, "get kpd-clk fail.\n");
-> +               return PTR_ERR(keypad->clk);
-> +       }
-> +
-> +       err = clk_prepare_enable(keypad->clk);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "kpd-clk prepare enable failed.\n");
-> +               return err;
-> +       }
-> +
-> +       err = kpd_gpio_init(&pdev->dev);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "gpio init failed\n");
-> +               return err;
-> +       }
-> +
-> +       keypad->irqnr = platform_get_irq(pdev, 0);
-> +       if (!keypad->irqnr) {
-> +               dev_err(&pdev->dev, "KP get irqnr failed\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       err = devm_request_irq(&pdev->dev, keypad->irqnr,
-> +                               kpd_irq_handler, 0,
-> +                               KPD_NAME, keypad);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "register IRQ failed.\n");
-> +               return err;
-> +       }
-> +
-> +       err = input_register_device(keypad->input_dev);
-> +       if (err) {
-> +               dev_err(&pdev->dev, "register input device failed.\n");
-> +               return err;
-> +       }
-> +
-> +       device_init_wakeup(&pdev->dev, keypad->wakeup);
-> +
-> +       platform_set_drvdata(pdev, keypad);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id kpd_of_match[] = {
-> +       {.compatible = "mediatek,kp"},
-> +       {}
-> +};
-> +
-> +static struct platform_driver kpd_pdrv = {
-> +       .probe = kpd_pdrv_probe,
-> +       .driver = {
-> +                  .name = KPD_NAME,
-> +                  .of_match_table = kpd_of_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(kpd_pdrv);
-> +
-> +MODULE_AUTHOR("Mediatek Corporation");
-> +MODULE_DESCRIPTION("MTK Keypad (KPD) Driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.18.0
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+IMO the scope of this issue belongs entirely within the 
+implementation(s) of Linux's own abstraction layers.
+
+Robin.
+
+> As for the IOMMU code, it seems like the only thing needed i
+> extending named components configuration to child devices,
+> hierarchically.
+> 
+> As Marc already mentioned, IOMMU and IRQ code must be separate for
+> future postings but first we need to find a suitable answer to
+> the problem at hand.
+> 
+> Lorenzo
+> 
