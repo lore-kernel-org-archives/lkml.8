@@ -2,168 +2,251 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D1AC34044
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6240CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413B621D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E87822B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L0pplXre"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rVQswF5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBRQN2 (ORCPT
+        id S1726710AbgBRQNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:13:28 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:49904 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbgBRQN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:13:27 -0500
-Received: from zn.tnic (p200300EC2F0C1F0014C3F76BBACA8B76.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:14c3:f76b:baca:8b76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4CA8C1EC0CE8;
-        Tue, 18 Feb 2020 17:13:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582042404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gK0g9aNgXw+INNWEyqtkjvbY52B+btC+rjGUIGJd4h0=;
-        b=L0pplXre5y5jDvR+LkAlVpEaxzIYoi/nH9H01hGTTnLEYvaVrc472Bygb+98Ql0XwwPjHD
-        q6uyS8RAzM0S030u/0+q1EWmWD2jpLxHCyy+1DGpwOa8wq/fTcLTvPOS3RKD9ZYgNZnee5
-        56GISZiImCW06j2JRcZOgF6bRU8jXCU=
-Date:   Tue, 18 Feb 2020 17:13:19 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
-Message-ID: <20200218161319.GG14449@zn.tnic>
-References: <20200217130659.15895-1-prarit@redhat.com>
+        Tue, 18 Feb 2020 11:13:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44678 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgBRQNu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:13:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2mHR3xMso7wPx9QoGFzx1rwYrTNRCHEQhcUJCVcR0UA=; b=rVQswF5VT6aHITV+WQUJTI3Sz+
+        zyeGRgv7EpRN79/smg6b0KsiaFNp8cz2w9ayvr7zvy0kIym05YzsZ96ljemkKSswVgEtTFy8B/js+
+        RMHOEglvCWUAvrjRhOBvSHoksCz5e8omrZSudJOAymhrgFTP5oDGLhx9D3WKxaqezGQ6YFY4aZQck
+        tEuL6hUTKsUiqbGs4d3jIw7+MGmE7FZ+0OOzyzZIOCTOVEhwJUHhxxXROk1Ce/Pdp+LXknu9Pi9Va
+        djTz61ObHmpvi9D2uCIbaJrqytqtN+DLAMk+ewJWL7KLa2wafgvXByskvEX2et7P3jPN316R1Nxgo
+        cL+/rPoQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j45VN-0002zZ-IR; Tue, 18 Feb 2020 16:13:49 +0000
+Date:   Tue, 18 Feb 2020 08:13:49 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
+Message-ID: <20200218161349.GS7778@bombadil.infradead.org>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-14-willy@infradead.org>
+ <20200214135248.zqcqx3erb4pnlvmu@box>
+ <20200214160342.GA7778@bombadil.infradead.org>
+ <20200218141634.zhhjgtv44ux23l3l@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217130659.15895-1-prarit@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218141634.zhhjgtv44ux23l3l@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 08:06:59AM -0500, Prarit Bhargava wrote:
-> A user has reported that they are seeing spurious corrected errors on
-> their hardware.
+On Tue, Feb 18, 2020 at 05:16:34PM +0300, Kirill A. Shutemov wrote:
+> > +               if (start1 >= PAGE_SIZE) {
+> > +                       start1 -= PAGE_SIZE;
+> > +                       end1 -= PAGE_SIZE;
+> > +                       if (start2) {
+> > +                               start2 -= PAGE_SIZE;
+> > +                               end2 -= PAGE_SIZE;
+> > +                       }
 > 
-> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
-> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
-> with the valid field (bit 63) set, the uncorrected error field (bit 61)
-> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
-> an MCA Error Code (bits [15:0]) of 0x0005."
+> You assume start2/end2 is always after start1/end1 in the page.
+> Is it always true? If so, I would add BUG_ON() for it.
+
+after or zero.  Yes, I should add a BUG_ON to check for that.
+
+> Otherwise, looks good.
+
+Here's what I currently have (I'll add the BUG_ON later):
+
+commit 7fabe16755365cdc6e80343ef994843ecebde60a
+Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+Date:   Sat Feb 1 03:38:49 2020 -0500
+
+    fs: Support THPs in zero_user_segments
+    
+    We can only kmap() one subpage of a THP at a time, so loop over all
+    relevant subpages, skipping ones which don't need to be zeroed.  This is
+    too large to inline when THPs are enabled and we actually need highmem,
+    so put it in highmem.c.
+    
+    Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index ea5cdbd8c2c3..74614903619d 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
+        kunmap_atomic(kaddr);
+ }
+ 
++#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++               unsigned start2, unsigned end2);
++#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ static inline void zero_user_segments(struct page *page,
+-       unsigned start1, unsigned end1,
+-       unsigned start2, unsigned end2)
++               unsigned start1, unsigned end1,
++               unsigned start2, unsigned end2)
+ {
++       unsigned long i;
+        void *kaddr = kmap_atomic(page);
+ 
+-       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
++       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+ 
+        if (end1 > start1)
+                memset(kaddr + start1, 0, end1 - start1);
+@@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
+                memset(kaddr + start2, 0, end2 - start2);
+ 
+        kunmap_atomic(kaddr);
+-       flush_dcache_page(page);
++       for (i = 0; i < hpage_nr_pages(page); i++)
++               flush_dcache_page(page + i);
+ }
++#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ 
+ static inline void zero_user_segment(struct page *page,
+        unsigned start, unsigned end)
+diff --git a/mm/highmem.c b/mm/highmem.c
+index 64d8dea47dd1..3a85c66ef532 100644
+--- a/mm/highmem.c
++++ b/mm/highmem.c
+@@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
+        if (need_wakeup)
+                wake_up(pkmap_map_wait);
+ }
+-
+ EXPORT_SYMBOL(kunmap_high);
+-#endif
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++               unsigned start2, unsigned end2)
++{
++       unsigned int i;
++
++       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
++
++       for (i = 0; i < hpage_nr_pages(page); i++) {
++               void *kaddr;
++               unsigned this_end;
++
++               if (end1 == 0 && start2 >= PAGE_SIZE) {
++                       start2 -= PAGE_SIZE;
++                       end2 -= PAGE_SIZE;
++                       continue;
++               }
++
++               if (start1 >= PAGE_SIZE) {
++                       start1 -= PAGE_SIZE;
++                       end1 -= PAGE_SIZE;
++                       if (start2) {
++                               start2 -= PAGE_SIZE;
++                               end2 -= PAGE_SIZE;
++                       }
++                       continue;
++               }
++
++               kaddr = kmap_atomic(page + i);
++
++               this_end = min_t(unsigned, end1, PAGE_SIZE);
++               if (end1 > start1)
++                       memset(kaddr + start1, 0, this_end - start1);
++               end1 -= this_end;
++               start1 = 0;
++
++               if (start2 >= PAGE_SIZE) {
++                       start2 -= PAGE_SIZE;
++                       end2 -= PAGE_SIZE;
++               } else {
++                       this_end = min_t(unsigned, end2, PAGE_SIZE);
++                       if (end2 > start2)
++                               memset(kaddr + start2, 0, this_end - start2);
++                       end2 -= this_end;
++                       start2 = 0;
++               }
++
++               kunmap_atomic(kaddr);
++               flush_dcache_page(page + i);
++
++               if (!end1 && !end2)
++                       break;
++       }
++
++       BUG_ON((start1 | start2 | end1 | end2) != 0);
++}
++EXPORT_SYMBOL(zero_user_segments);
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++#endif /* CONFIG_HIGHMEM */
+ 
+ #if defined(HASHED_PAGE_VIRTUAL)
+ 
+
+
+
+> > +                       continue;
+> > +               }
+> > +
+> > +               kaddr = kmap_atomic(page + i);
+> > +
+> > +               this_end = min_t(unsigned, end1, PAGE_SIZE);
+> > +               if (end1 > start1)
+> > +                       memset(kaddr + start1, 0, this_end - start1);
+> > +               end1 -= this_end;
+> > +               start1 = 0;
+> > +
+> > +               if (start2 >= PAGE_SIZE) {
+> > +                       start2 -= PAGE_SIZE;
+> > +                       end2 -= PAGE_SIZE;
+> > +               } else {
+> > +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
+> > +                       if (end2 > start2)
+> > +                               memset(kaddr + start2, 0, this_end - start2);
+> > +                       end2 -= this_end;
+> > +                       start2 = 0;
+> > +               }
+> > +
+> > +               kunmap_atomic(kaddr);
+> > +               flush_dcache_page(page + i);
+> > +
+> > +               if (!end1 && !end2)
+> > +                       break;
+> > +       }
+> > +
+> > +       BUG_ON((start1 | start2 | end1 | end2) != 0);
+> >  }
+> > 
+> > I think at this point it has to move out-of-line too.
+> > 
+> > > > +static inline void zero_user_large(struct page *page,
+> > > > +		unsigned start, unsigned size)
+> > > > +{
+> > > > +	unsigned int i;
+> > > > +
+> > > > +	for (i = 0; i < thp_order(page); i++) {
+> > > > +		if (start > PAGE_SIZE) {
+> > > 
+> > > Off-by-one? >= ?
+> > 
+> > Good catch; I'd also noticed that when I came to redo the zero_user_segments().
+> > 
 > 
-> Block these spurious errors from the console and logs.
-> 
-> Links to Intel Specification updates:
-> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
-> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
-> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
-> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
-
-My previous review comment still holds:
-
-Those links tend to get stale with time. If you really want to refer to
-the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
-them there as an attachment and add the link to the entry to the commit
-message.
-
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
-
-WARNING: Co-developed-by: must be immediately followed by Signed-off-by:
-#36:
-
-See Documentation/process/submitting-patches.rst for more detail.
-
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Cc: linux-edac@vger.kernel.org
-> ---
->  arch/x86/kernel/cpu/mce/core.c     |  2 ++
->  arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
->  arch/x86/kernel/cpu/mce/internal.h |  1 +
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 2c4f949611e4..fe3983d551cc 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
->  {
->  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
->  		return amd_filter_mce(m);
-> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
-> +		return intel_filter_mce(m);
->  
->  	return false;
->  }
-> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-> index 5627b1091b85..989148e6746c 100644
-> --- a/arch/x86/kernel/cpu/mce/intel.c
-> +++ b/arch/x86/kernel/cpu/mce/intel.c
-> @@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
->  {
->  	intel_clear_lmce();
->  }
-> +
-> +bool intel_filter_mce(struct mce *m)
-> +{
-> +	struct cpuinfo_x86 *c = &boot_cpu_data;
-> +
-> +	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
-> +	if ((c->x86 == 6) &&
-> +	    ((c->x86_model == INTEL_FAM6_HASWELL) ||
-> +	     (c->x86_model == INTEL_FAM6_HASWELL_L) ||
-> +	     (c->x86_model == INTEL_FAM6_BROADWELL) ||
-> +	     (c->x86_model == INTEL_FAM6_HASWELL_G)) &&
-> +	    (m->bank == 0) &&
-> +	    ((m->status & 0xa0000000ffffffff) == 0x80000000000f0005))
-> +		return true;
-> +
-> +	return false;
-> +}
-> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-> index b785c0d0b590..821faba5b05d 100644
-> --- a/arch/x86/kernel/cpu/mce/internal.h
-> +++ b/arch/x86/kernel/cpu/mce/internal.h
-> @@ -175,5 +175,6 @@ extern bool amd_filter_mce(struct mce *m);
->  #else
->  static inline bool amd_filter_mce(struct mce *m)			{ return false; };
->  #endif
-> +extern bool intel_filter_mce(struct mce *m);
-
-It doesn't even build:
-
-ld: arch/x86/kernel/cpu/mce/core.o: in function `filter_mce':
-/home/boris/kernel/linux/arch/x86/kernel/cpu/mce/core.c:1881: undefined reference to `intel_filter_mce'
-make: *** [Makefile:1077: vmlinux] Error 1
-
-Hint: do it like it is done for amd_filter_mce() but in the respective
-#ifdef CONFIG_X86_MCE_INTEL place.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> -- 
+>  Kirill A. Shutemov
