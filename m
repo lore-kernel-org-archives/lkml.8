@@ -2,71 +2,97 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1DCC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9307FC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F772465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gAaJMjvE"
+	by mail.kernel.org (Postfix) with ESMTP id 5DAB22467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056021;
+	bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TljazeLNqCrFaqsEOxgv8BNiAj/EgA78ieMz7c2sG3MWi1pV/YgwR0JRtLUfDlYzE
+	 F1VXfb6ZSH5+X0+4YdY8D1cSV8fw6njNvektSMM9VVi7SNra1f2tmQVNH2nEAWVpQf
+	 T+Uvfj+R9apZr4yDavHelSeaSo+UqBTCT63/4300=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgBRUAQ (ORCPT
+        id S1728556AbgBRUAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:16 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:55012 "EHLO mail.skyhub.de"
+        Tue, 18 Feb 2020 15:00:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbgBRUAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:12 -0500
-Received: from zn.tnic (p200300EC2F0C1F00DCB96C3517B36067.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:dcb9:6c35:17b3:6067])
+        id S1726620AbgBRUAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4BC741EC0CF3;
-        Tue, 18 Feb 2020 21:00:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582056011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=M7FeIuaaEw2kt/luaqzhrd/OTft0vjwkL2w9pvYIVaA=;
-        b=gAaJMjvEDuDgQZOY7IvD7Bf1WdJ86K66jxhCfQ/JdAHX5bBSXHFTGeHeB8ESBABfGA2Ki8
-        75StIVi7iL0kjYwZvURvM2oMkKnq2ucHLqPcBam5CEk/14o+i+/83J/fvjhO3ctnBcD1y/
-        QLUCfHTsP19UnTygXBBmNrw9/8ulOPI=
-Date:   Tue, 18 Feb 2020 21:00:11 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200218200011.GP14449@zn.tnic>
-References: <20200218173150.GK14449@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
- <20200218195130.GO14449@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F57BD54@ORSMSX115.amr.corp.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E8824677;
+        Tue, 18 Feb 2020 20:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582056012;
+        bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cxQZM8x+j4+PWPB72yarVCbMEsmrmYHCEBolDRB+d1RjQGPlxu2qshYDbX0kdb0Xy
+         uXQ1InjEUL+q7PmEHu50nwlO2rrRlphHiyhGsC0MRgomx+nsumJe3Wy9+8Tbhc+pD6
+         Ewlq9N+aJl3ya2t+3BwMy9dX5EyBuqvZxtO4Ty3c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.4 53/66] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+Date:   Tue, 18 Feb 2020 20:55:20 +0100
+Message-Id: <20200218190432.966572221@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
+References: <20200218190428.035153861@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F57BD54@ORSMSX115.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 07:54:54PM +0000, Luck, Tony wrote:
-> Recoverable machine checks are a normal (hopefully rare) event on a server.  But you wouldn't
-> want to lose tracing capability just because we took a page offline and killed a process to recover.
+From: Mike Jones <michael-a1.jones@analog.com>
 
-Yeah, ok. How do you want to select which ones? What mce_no_way_out()
-says or severity or...?
+commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
 
--- 
-Regards/Gruss,
-    Boris.
+Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
+bits 6/5. This fixs a LTC297X family bug where polling always returns
+not busy even when the part is busy. This fixes a LTC388X and
+LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
+not polled, which can lead to NACKing of commands. LTC388X and
+LTM467X modules now poll BUSY and PEND, increasing reliability by
+eliminating NACKing of commands.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
+Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hwmon/pmbus/ltc2978.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/hwmon/pmbus/ltc2978.c
++++ b/drivers/hwmon/pmbus/ltc2978.c
+@@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+ 
+ #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 
+-#define LTC_NOT_BUSY			BIT(5)
+-#define LTC_NOT_PENDING			BIT(4)
++#define LTC_NOT_BUSY			BIT(6)
++#define LTC_NOT_PENDING			BIT(5)
+ 
+ /*
+  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
+
+
