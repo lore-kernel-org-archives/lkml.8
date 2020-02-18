@@ -2,200 +2,166 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D341C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709CFC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC28F24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444E524125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OHP2T1LV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IeItEZER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgBRXIC (ORCPT
+        id S1727845AbgBRXIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:08:02 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58092 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727463AbgBRXIC (ORCPT
+        Tue, 18 Feb 2020 18:08:51 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6444 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgBRXIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:08:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582067281; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=8iLC/MIWsGLNObQpdCKpF6XJIjNHls01CTFBxBKRpuE=; b=OHP2T1LVYCoaLi0MT+wtrwKN8ZnDthI2j6XFifgmrmZM76enmJ3JEk0+crSgymn8Lg7i2+g+
- daQxZdKGROMFgspXdhChJQ6zDENV8L61UdBr8URTZkBm/1VZFa+rdOzonRefPiPloiUGAOmY
- AqVAeohGWjHdokOBojYyguLxKHs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c6e49.7fa3aefafab0-smtp-out-n02;
- Tue, 18 Feb 2020 23:07:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 58A04C433A2; Tue, 18 Feb 2020 23:07:53 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27CFFC43383;
-        Tue, 18 Feb 2020 23:07:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27CFFC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 18 Feb 2020 16:07:50 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v2] drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP
- buffers
-Message-ID: <20200218230750.GB8715@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-References: <20200218212012.1067236-1-robdclark@gmail.com>
+        Tue, 18 Feb 2020 18:08:50 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c6e740000>; Tue, 18 Feb 2020 15:08:36 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 15:08:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 15:08:49 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
+ 2020 23:08:49 +0000
+Subject: Re: [PATCH v6 05/19] mm: Remove 'page_offset' from readahead loop
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-8-willy@infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <af3a8179-ea65-7a47-3b96-70aeceac0352@nvidia.com>
+Date:   Tue, 18 Feb 2020 15:08:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218212012.1067236-1-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200217184613.19668-8-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582067316; bh=M7N9Wj3+9XwAeFwQi6TOYJxPABg1BqYz4tVXoRpCkIA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IeItEZERl8RgD9gMu8hyrKs9zDAELxc/pcSyWfpoGI0TB2mLKgncHMG394p6px4ju
+         zmtAMOymP1/ZtJoe4HlOHDlOUZc/uVCaP5RY2LCqtWb4PFiTTWf0yQduIPEsPrRM6I
+         7+ZxiupuOA683TN7ev8l4qf1ne9j9TMe9yxP+4Gnp/KCmRvKAlcJ1KhnSHEd/mtvXA
+         kETqqZe9Hl6tljU3UyeJaS2R5RC2d7bjB/6ICvno2hVU7UkwwH0PxFr9ixgVpcc7ww
+         OuFMigzNUu1o/1PB1x64JUqXhqwxHJk3vxspEehlY/0wVnC7QAKbRSRGKmSy0mZ60N
+         Ry89dWBs1XZZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:20:12PM -0800, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Also log buffers with the DUMP flag set, to ensure we capture all useful
-> cmdstream in crashdump state with modern mesa.
+> Eliminate the page_offset variable which was confusing with the
+> 'offset' parameter and record the start of each consecutive run of
+> pages in the readahead_control.
+
+
+...presumably for the benefit of a subsequent patch, since it's not
+consumed in this patch.
+
+Thanks for breaking these up, btw, it really helps.
+
+
 > 
-> Otherwise we miss out on the contents of "state object" cmdstream
-> buffers.
-> 
-> v2: add missing 'inline'
-
-I should have checked my inbox before responding to v1.
-
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  drivers/gpu/drm/msm/msm_gem.h | 10 ++++++++++
->  drivers/gpu/drm/msm/msm_gpu.c | 28 +++++++++++++++++++++++-----
->  drivers/gpu/drm/msm/msm_rd.c  |  8 +-------
->  3 files changed, 34 insertions(+), 12 deletions(-)
+>  mm/readahead.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-> index 9e0953c2b7ce..dcee0e223ed8 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.h
-> +++ b/drivers/gpu/drm/msm/msm_gem.h
-> @@ -160,4 +160,14 @@ struct msm_gem_submit {
->  	} bos[0];
->  };
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 3eca59c43a45..74791b96013f 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -162,6 +162,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	struct readahead_control rac = {
+>  		.mapping = mapping,
+>  		.file = filp,
+> +		._start = offset,
+>  		._nr_pages = 0,
+>  	};
 >  
-> +/* helper to determine of a buffer in submit should be dumped, used for both
-> + * devcoredump and debugfs cmdstream dumping:
-> + */
-> +static inline bool
-> +should_dump(struct msm_gem_submit *submit, int idx)
-> +{
-> +	extern bool rd_full;
-> +	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
-> +}
-> +
->  #endif /* __MSM_GEM_H__ */
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index 18f3a5c53ffb..615c5cda5389 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -355,16 +355,34 @@ static void msm_gpu_crashstate_capture(struct msm_gpu *gpu,
->  	state->cmd = kstrdup(cmd, GFP_KERNEL);
+> @@ -175,12 +176,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	 */
+>  	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
+>  		struct page *page;
+> -		pgoff_t page_offset = offset + page_idx;
+
+
+OK, this is still something I want to mention (I wrote the same thing when reviewing 
+the wrong version of this patch, a moment ago).
+
+You know...this ends up incrementing offset each time through the
+loop, so yes, the behavior is the same as when using "offset + page_idx".
+However, now it's a little harder to see that.
+
+IMHO the page_offset variable is not actually a bad thing, here. I'd rather
+keep it, all other things being equal (and I don't see any other benefits
+here: line count is about the same, for example).
+
+What do you think? (I don't feel strongly about this fine point.)
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+
 >  
->  	if (submit) {
-> -		int i;
-> -
-> -		state->bos = kcalloc(submit->nr_cmds,
-> +		int i, nr = 0;
-> +
-> +		/* count # of buffers to dump: */
-> +		for (i = 0; i < submit->nr_bos; i++)
-> +			if (should_dump(submit, i))
-> +				nr++;
-> +		/* always dump cmd bo's, but don't double count them: */
-> +		for (i = 0; i < submit->nr_cmds; i++)
-> +			if (!should_dump(submit, submit->cmd[i].idx))
-> +				nr++;
-> +
-> +		state->bos = kcalloc(nr,
->  			sizeof(struct msm_gpu_state_bo), GFP_KERNEL);
+> -		if (page_offset > end_index)
+> +		if (offset > end_index)
+>  			break;
 >  
-> +		for (i = 0; i < submit->nr_bos; i++) {
-> +			if (should_dump(submit, i)) {
-> +				msm_gpu_crashstate_get_bo(state, submit->bos[i].obj,
-> +					submit->bos[i].iova, submit->bos[i].flags);
-> +			}
-> +		}
-> +
->  		for (i = 0; state->bos && i < submit->nr_cmds; i++) {
->  			int idx = submit->cmd[i].idx;
->  
-> -			msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
-> -				submit->bos[idx].iova, submit->bos[idx].flags);
-> +			if (!should_dump(submit, submit->cmd[i].idx)) {
-> +				msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
-> +					submit->bos[idx].iova, submit->bos[idx].flags);
-> +			}
->  		}
+> -		page = xa_load(&mapping->i_pages, page_offset);
+> +		page = xa_load(&mapping->i_pages, offset);
+>  		if (page && !xa_is_value(page)) {
+>  			/*
+>  			 * Page already present?  Kick off the current batch
+> @@ -196,16 +196,18 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		page = __page_cache_alloc(gfp_mask);
+>  		if (!page)
+>  			break;
+> -		page->index = page_offset;
+> +		page->index = offset;
+>  		list_add(&page->lru, &page_pool);
+>  		if (page_idx == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		rac._nr_pages++;
+> +		offset++;
+>  		continue;
+>  read:
+>  		if (readahead_count(&rac))
+>  			read_pages(&rac, &page_pool, gfp_mask);
+>  		rac._nr_pages = 0;
+> +		rac._start = ++offset;
 >  	}
 >  
-> diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
-> index af7ceb246c7c..732f65df5c4f 100644
-> --- a/drivers/gpu/drm/msm/msm_rd.c
-> +++ b/drivers/gpu/drm/msm/msm_rd.c
-> @@ -43,7 +43,7 @@
->  #include "msm_gpu.h"
->  #include "msm_gem.h"
->  
-> -static bool rd_full = false;
-> +bool rd_full = false;
->  MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
->  module_param_named(rd_full, rd_full, bool, 0600);
->  
-> @@ -336,12 +336,6 @@ static void snapshot_buf(struct msm_rd_state *rd,
->  	msm_gem_put_vaddr(&obj->base);
->  }
->  
-> -static bool
-> -should_dump(struct msm_gem_submit *submit, int idx)
-> -{
-> -	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
-> -}
-> -
->  /* called under struct_mutex */
->  void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
->  		const char *fmt, ...)
-> -- 
-> 2.24.1
+>  	/*
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
