@@ -2,52 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DEFC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF538C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DE62465D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA00E2465D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056167;
-	bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+	s=default; t=1582056169;
+	bh=AxIFDZl3bXYO08f8cH7vwWk4gl2vtpQa9tmD9xZTEkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UVzVxclFVv1C45Q4nc2SZjDlEh4VhXooIvZZNmqrsbxOazCP6Mtb1xwR7vJVKY57A
-	 aEid0c6BcOHwBZbV1W9Z1BkdLy3VxDZqG0NLIX8LtyVzNiK6AXxjQI6ycHUla51ObI
-	 icjeZ2ynyhFMebeFIU7AuDsTaYIRUA66iqqKbNYw=
+	b=i5667EAPzAgcw1ADajRcPQKJ03WYuYx6FJyBwQENF5DHjk5VMqIGUU15JnbrqXQtQ
+	 g4tCZA5bSHRJAy21gzSFeLB3de/LkIXjxNSZBOpPezZk1hZDXWJnCDTt6awv3ZdbBU
+	 020zi2G2kjLS0n2OiquEQFn+k1sbuQPVvt3L0Czg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgBRUCp (ORCPT
+        id S1729008AbgBRUCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgBRUCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:41 -0500
+        id S1728994AbgBRUCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD24921D56;
-        Tue, 18 Feb 2020 20:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA20924673;
+        Tue, 18 Feb 2020 20:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056161;
-        bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+        s=default; t=1582056164;
+        bh=AxIFDZl3bXYO08f8cH7vwWk4gl2vtpQa9tmD9xZTEkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlGkM1BaWanfDCcnyALzUfR1i0iICQF+KbMAMCFYrbx+QGEJ/u2+aMrYCWKE8E86R
-         nqPXfFcl1WNUan1TMranfLvfgOwq8cUBw1qmLOL/ISYUiva5A255kmUP+pe+nc4ogs
-         mEIXRHDyiwaRmGr/I1S/JoRmHrUO9G1DrpEIzpLQ=
+        b=qyTeGvVSsGl6IgXJUt9QwLBd0Rdjj3Usxxp/OZRm0cha7g+VyUdj31d2R5Ujw4Lb3
+         bmDczcNMP+lUOsuJAdsKgsIUcqVtw9RQXcife/K7YR2imcf+41KUkgLqPuF2jO8MCS
+         6neupaFntrK3d4Sx+opJS4GJnXEbnED6B9mpy7YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.5 58/80] s390/time: Fix clk type in get_tod_clock
-Date:   Tue, 18 Feb 2020 20:55:19 +0100
-Message-Id: <20200218190437.665251078@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.5 59/80] Input: ili210x - fix return value of is_visible function
+Date:   Tue, 18 Feb 2020 20:55:20 +0100
+Message-Id: <20200218190437.752831132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,54 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Luca Weiss <luca@z3ntu.xyz>
 
-commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
+commit fbd1ec000213c8b457dd4fb15b6de9ba02ec5482 upstream.
 
-Clang warns:
+The is_visible function expects the permissions associated with an
+attribute of the sysfs group or 0 if an attribute is not visible.
 
-In file included from ../arch/s390/boot/startup.c:3:
-In file included from ../include/linux/elf.h:5:
-In file included from ../arch/s390/include/asm/elf.h:132:
-In file included from ../include/linux/compat.h:10:
-In file included from ../include/linux/time.h:74:
-In file included from ../include/linux/time32.h:13:
-In file included from ../include/linux/timex.h:65:
-../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-[16]' to parameter of type 'char *' converts between pointers to integer
-types with different sign [-Wpointer-sign]
-        get_tod_clock_ext(clk);
-                          ^~~
-../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-parameter 'clk' here
-static inline void get_tod_clock_ext(char *clk)
-                                           ^
+Change the code to return the attribute permissions when the attribute
+should be visible which resolves the warning:
 
-Change clk's type to just be char so that it matches what happens in
-get_tod_clock_ext.
+  Attribute calibrate: Invalid permissions 01
 
-Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-Link: https://github.com/ClangBuiltLinux/linux/issues/861
-Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: cc12ba1872c6 ("Input: ili210x - optionally show calibrate sysfs attribute")
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Link: https://lore.kernel.org/r/20200209145628.649409-1-luca@z3ntu.xyz
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/timex.h |    2 +-
+ drivers/input/touchscreen/ili210x.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(cha
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -321,7 +321,7 @@ static umode_t ili210x_calibrate_visible
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct ili210x *priv = i2c_get_clientdata(client);
  
- static inline unsigned long long get_tod_clock(void)
- {
--	unsigned char clk[STORE_CLOCK_EXT_SIZE];
-+	char clk[STORE_CLOCK_EXT_SIZE];
+-	return priv->chip->has_calibrate_reg;
++	return priv->chip->has_calibrate_reg ? attr->mode : 0;
+ }
  
- 	get_tod_clock_ext(clk);
- 	return *((unsigned long long *)&clk[1]);
+ static const struct attribute_group ili210x_attr_group = {
 
 
