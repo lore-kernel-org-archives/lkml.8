@@ -2,89 +2,287 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3499C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C7FC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92704208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3899D2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DPideaKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgBRRK4 (ORCPT
+        id S1726735AbgBRRK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:10:56 -0500
-Received: from mga02.intel.com ([134.134.136.20]:33131 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgBRRKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:10:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 09:10:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="408131622"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 18 Feb 2020 09:10:54 -0800
-Date:   Tue, 18 Feb 2020 09:10:52 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200218171052.GE27565@linux.intel.com>
-References: <20200121223157.15263-16-sean.j.christopherson@intel.com>
- <20200206200200.GC700495@xz-x1>
- <20200206212120.GF13067@linux.intel.com>
- <20200206214106.GG700495@xz-x1>
- <20200207194532.GK2401@linux.intel.com>
- <20200208001832.GA823968@xz-x1>
- <20200208004233.GA15581@linux.intel.com>
- <20200208005334.GB823968@xz-x1>
- <20200208012938.GC15581@linux.intel.com>
- <87sgj99q9w.fsf@vitty.brq.redhat.com>
+        Tue, 18 Feb 2020 12:10:28 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47103 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgBRRK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:10:28 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x14so23820946ljd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:10:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eT/SN5oR8qHPpwEwvT6iuViW5jmEYiDg693/zU5SNAg=;
+        b=DPideaKc6XhYHrfdqmi4V+8rc64F/Un2cc960MB+K0JNtI8pF0+oVuz3jr6UBwPjSj
+         EMLUuSTbV0urSh1AhsihcUH584B2F+YpDP89CzrcJOEY0Kw/EXsn9BT7sNrLqPGH/Xnp
+         0AGQU/SbZx74+VvU1j+uQlXwQmkU/vshFLYhLWGL4VJJ120OmmskJaWIQ9C+owkKUL5P
+         0ygdF66U2NQDTToh2eir3vBGTsLY3j7BDiSBqFnerxBcQAd+Uthsld4ugZ3SpKwud/8g
+         EQaZ723iAPF+HYUoZlTFweS1Vhhv+K0PYkPCQAnr8SAZKDs2olZvnX9aSUcgaOiaq0Wl
+         7kpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eT/SN5oR8qHPpwEwvT6iuViW5jmEYiDg693/zU5SNAg=;
+        b=pMw1lA+NSGodd2LG4eur4oeavAmPMms0dc3/V107COYAxBsgL2MPTH2/sixdGTpjUO
+         dxDgXFL0TA5dxVJ7qE3hWBzj9+GJrQr3n0385QMZhJu7efuAi6cQn8nbQfxXqHBE8Qgr
+         Xr0/+BUCY3ghMb53GInSCWf1/uj/A34qMxlev7uJ11VCNQz1whkieKlbxTaOV9w0GwF3
+         yTqsCDKY4DRYtSCdBAveVQxE265N4tzR6E52rOl9XtmxJf5a9CTStKeUGOFeK8OThKB5
+         MBgJmuqqHDHFGGPE9eUHQttBHqvPrbMYhF1Kun+L5ujrt1R6Hl20Q5peoncD3xlQ4BN2
+         Luiw==
+X-Gm-Message-State: APjAAAVTGJu8r1kQX2JWMRYGy00pkQ7/cEAlRwbN2Jrs5kjl0g4K9CWe
+        Ybs4rxrLMIeki5/w3kS+UrDv9d/8blw=
+X-Google-Smtp-Source: APXvYqyTpRJaS4fne7NiUOz22DmT8TIqeKU8alDA7ovxWpU8wfrX3NeC0ZOYQP/eplYqZsXOocoRZw==
+X-Received: by 2002:a2e:9842:: with SMTP id e2mr13545781ljj.293.1582045825346;
+        Tue, 18 Feb 2020 09:10:25 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id p26sm2619929lfh.64.2020.02.18.09.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 09:10:24 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 1BF1D100FA6; Tue, 18 Feb 2020 20:10:52 +0300 (+03)
+Date:   Tue, 18 Feb 2020 20:10:52 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
+Message-ID: <20200218171052.lwd56nr332qjgs5j@box>
+References: <20200212041845.25879-1-willy@infradead.org>
+ <20200212041845.25879-14-willy@infradead.org>
+ <20200214135248.zqcqx3erb4pnlvmu@box>
+ <20200214160342.GA7778@bombadil.infradead.org>
+ <20200218141634.zhhjgtv44ux23l3l@box>
+ <20200218161349.GS7778@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87sgj99q9w.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200218161349.GS7778@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:39:39PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > Unless it's functionally incorrect (Vitaly?), going with option (2) and
-> > naming the hook kvm_arch_flush_remote_tlbs_memslot() seems like the obvious
-> > choice, e.g. the final cleanup gives this diff stat:
+On Tue, Feb 18, 2020 at 08:13:49AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:16:34PM +0300, Kirill A. Shutemov wrote:
+> > > +               if (start1 >= PAGE_SIZE) {
+> > > +                       start1 -= PAGE_SIZE;
+> > > +                       end1 -= PAGE_SIZE;
+> > > +                       if (start2) {
+> > > +                               start2 -= PAGE_SIZE;
+> > > +                               end2 -= PAGE_SIZE;
+> > > +                       }
+> > 
+> > You assume start2/end2 is always after start1/end1 in the page.
+> > Is it always true? If so, I would add BUG_ON() for it.
 > 
-> (I apologize again for not replying in time)
+> after or zero.  Yes, I should add a BUG_ON to check for that.
+> 
+> > Otherwise, looks good.
+> 
+> Here's what I currently have (I'll add the BUG_ON later):
+> 
+> commit 7fabe16755365cdc6e80343ef994843ecebde60a
+> Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Date:   Sat Feb 1 03:38:49 2020 -0500
+> 
+>     fs: Support THPs in zero_user_segments
+>     
+>     We can only kmap() one subpage of a THP at a time, so loop over all
+>     relevant subpages, skipping ones which don't need to be zeroed.  This is
+>     too large to inline when THPs are enabled and we actually need highmem,
+>     so put it in highmem.c.
+>     
+>     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-No worries, didn't hinder me in the slightest as I was buried in other
-stuff last week anyways.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-> I think this is a valid approach and your option (2) would also be my
-> choice. I also don't think there's going to be a problem when (if)
-> Hyper-V adds support for PML (eVMCSv2?).
+> 
+> diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+> index ea5cdbd8c2c3..74614903619d 100644
+> --- a/include/linux/highmem.h
+> +++ b/include/linux/highmem.h
+> @@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
+>         kunmap_atomic(kaddr);
+>  }
+>  
+> +#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+> +void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
+> +               unsigned start2, unsigned end2);
+> +#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
 
-Cool, thanks!
+This is a neat trick. I like it.
+
+Although, it means non-inlined version will never get tested :/
+
+>  static inline void zero_user_segments(struct page *page,
+> -       unsigned start1, unsigned end1,
+> -       unsigned start2, unsigned end2)
+> +               unsigned start1, unsigned end1,
+> +               unsigned start2, unsigned end2)
+>  {
+> +       unsigned long i;
+>         void *kaddr = kmap_atomic(page);
+>  
+> -       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
+> +       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+>  
+>         if (end1 > start1)
+>                 memset(kaddr + start1, 0, end1 - start1);
+> @@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
+>                 memset(kaddr + start2, 0, end2 - start2);
+>  
+>         kunmap_atomic(kaddr);
+> -       flush_dcache_page(page);
+> +       for (i = 0; i < hpage_nr_pages(page); i++)
+> +               flush_dcache_page(page + i);
+>  }
+> +#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+>  
+>  static inline void zero_user_segment(struct page *page,
+>         unsigned start, unsigned end)
+> diff --git a/mm/highmem.c b/mm/highmem.c
+> index 64d8dea47dd1..3a85c66ef532 100644
+> --- a/mm/highmem.c
+> +++ b/mm/highmem.c
+> @@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
+>         if (need_wakeup)
+>                 wake_up(pkmap_map_wait);
+>  }
+> -
+>  EXPORT_SYMBOL(kunmap_high);
+> -#endif
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
+> +               unsigned start2, unsigned end2)
+> +{
+> +       unsigned int i;
+> +
+> +       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+> +
+> +       for (i = 0; i < hpage_nr_pages(page); i++) {
+> +               void *kaddr;
+> +               unsigned this_end;
+> +
+> +               if (end1 == 0 && start2 >= PAGE_SIZE) {
+> +                       start2 -= PAGE_SIZE;
+> +                       end2 -= PAGE_SIZE;
+> +                       continue;
+> +               }
+> +
+> +               if (start1 >= PAGE_SIZE) {
+> +                       start1 -= PAGE_SIZE;
+> +                       end1 -= PAGE_SIZE;
+> +                       if (start2) {
+> +                               start2 -= PAGE_SIZE;
+> +                               end2 -= PAGE_SIZE;
+> +                       }
+> +                       continue;
+> +               }
+> +
+> +               kaddr = kmap_atomic(page + i);
+> +
+> +               this_end = min_t(unsigned, end1, PAGE_SIZE);
+> +               if (end1 > start1)
+> +                       memset(kaddr + start1, 0, this_end - start1);
+> +               end1 -= this_end;
+> +               start1 = 0;
+> +
+> +               if (start2 >= PAGE_SIZE) {
+> +                       start2 -= PAGE_SIZE;
+> +                       end2 -= PAGE_SIZE;
+> +               } else {
+> +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
+> +                       if (end2 > start2)
+> +                               memset(kaddr + start2, 0, this_end - start2);
+> +                       end2 -= this_end;
+> +                       start2 = 0;
+> +               }
+> +
+> +               kunmap_atomic(kaddr);
+> +               flush_dcache_page(page + i);
+> +
+> +               if (!end1 && !end2)
+> +                       break;
+> +       }
+> +
+> +       BUG_ON((start1 | start2 | end1 | end2) != 0);
+> +}
+> +EXPORT_SYMBOL(zero_user_segments);
+> +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+> +#endif /* CONFIG_HIGHMEM */
+>  
+>  #if defined(HASHED_PAGE_VIRTUAL)
+>  
+> 
+> 
+> 
+> > > +                       continue;
+> > > +               }
+> > > +
+> > > +               kaddr = kmap_atomic(page + i);
+> > > +
+> > > +               this_end = min_t(unsigned, end1, PAGE_SIZE);
+> > > +               if (end1 > start1)
+> > > +                       memset(kaddr + start1, 0, this_end - start1);
+> > > +               end1 -= this_end;
+> > > +               start1 = 0;
+> > > +
+> > > +               if (start2 >= PAGE_SIZE) {
+> > > +                       start2 -= PAGE_SIZE;
+> > > +                       end2 -= PAGE_SIZE;
+> > > +               } else {
+> > > +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
+> > > +                       if (end2 > start2)
+> > > +                               memset(kaddr + start2, 0, this_end - start2);
+> > > +                       end2 -= this_end;
+> > > +                       start2 = 0;
+> > > +               }
+> > > +
+> > > +               kunmap_atomic(kaddr);
+> > > +               flush_dcache_page(page + i);
+> > > +
+> > > +               if (!end1 && !end2)
+> > > +                       break;
+> > > +       }
+> > > +
+> > > +       BUG_ON((start1 | start2 | end1 | end2) != 0);
+> > >  }
+> > > 
+> > > I think at this point it has to move out-of-line too.
+> > > 
+> > > > > +static inline void zero_user_large(struct page *page,
+> > > > > +		unsigned start, unsigned size)
+> > > > > +{
+> > > > > +	unsigned int i;
+> > > > > +
+> > > > > +	for (i = 0; i < thp_order(page); i++) {
+> > > > > +		if (start > PAGE_SIZE) {
+> > > > 
+> > > > Off-by-one? >= ?
+> > > 
+> > > Good catch; I'd also noticed that when I came to redo the zero_user_segments().
+> > > 
+> > 
+> > -- 
+> >  Kirill A. Shutemov
+
+-- 
+ Kirill A. Shutemov
