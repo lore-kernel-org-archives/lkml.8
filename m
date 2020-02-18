@@ -2,103 +2,250 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0363C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3265C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A837F206EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ww6tDLwe"
+	by mail.kernel.org (Postfix) with ESMTP id 7095822527
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582018069;
+	bh=JfpnX0/9AXLX0SUbepC6ix94WfC2VqtqT6BShq+yOfY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YhU9hCa9NUrUA/AVHjyXY5/b1s/gUtw97wv9VdBcV1D7rqeONRGt/reBNrHiN9BQs
+	 bKrQhraSv+1CWjxLjZBMbr1T8TeN1BfpKIfsmA16apqZvgroPGiDOeI926NmR0KHPU
+	 I05/BSYph1Tklv/t6e4BhOtziWU+j1Xrg7+PmivI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgBRJ1l (ORCPT
+        id S1726428AbgBRJ1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:27:41 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42239 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726199AbgBRJ1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:27:41 -0500
-X-UUID: f6d3716aafa949aaafbacb9fa00e74e6-20200218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=MIME-Version:Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=uOZO7hmEY6MTMfyO9+ZNVzS/vh4dCpKJJZNw9nfXF/o=;
-        b=Ww6tDLweL2jF1dqoh9Z3D7jjPU8XYoxY/4U9HPKZ4rc9XYkpiLmKAFVswdWchxf/LFF21G0ENMrnknG5N3DJ4Ny/Pf++clI/2up/jSBmv71VLP0GT7Ex77XCMxayXwG4lfZjfrR6i2te3IHJNmEQZCEHwCMcvnUd6BTQv2UypDQ=;
-X-UUID: f6d3716aafa949aaafbacb9fa00e74e6-20200218
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <mac.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 787747047; Tue, 18 Feb 2020 17:27:35 +0800
-Received: from MTKMBS01N1.mediatek.inc (172.21.101.68) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Feb 2020 17:26:24 +0800
-Received: from MTKMBS01N1.mediatek.inc ([fe80::7931:498c:8d17:a7e3]) by
- mtkmbs01n1.mediatek.inc ([fe80::7931:498c:8d17:a7e3%14]) with mapi id
- 15.00.1395.000; Tue, 18 Feb 2020 17:26:24 +0800
-From:   =?utf-8?B?TWFjIEx1ICjnm6flrZ/lvrcp?= <mac.lu@mediatek.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-CC:     =?utf-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
-        <Andrew-CT.Chen@mediatek.com>
-Subject: RE: NVMEM usage consult for device information
-Thread-Topic: NVMEM usage consult for device information
-Thread-Index: AdXmDac8eWqjMQtSTjOqGzetWWZMiP//12mA//95HQA=
-Date:   Tue, 18 Feb 2020 09:26:24 +0000
-Message-ID: <57c79cb8f45449d3ba49609cdd4a0767@mtkmbs01n1.mediatek.inc>
-References: <06d083206a4f4f5981be9d2e628162f8@mtkmbs01n1.mediatek.inc>
- <11b42d7b-ff96-d377-5225-6f9fcd5c57b8@linaro.org>
-In-Reply-To: <11b42d7b-ff96-d377-5225-6f9fcd5c57b8@linaro.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.21.101.239]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 18 Feb 2020 04:27:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbgBRJ1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:27:47 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8FD9206EF;
+        Tue, 18 Feb 2020 09:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582018066;
+        bh=JfpnX0/9AXLX0SUbepC6ix94WfC2VqtqT6BShq+yOfY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i1haDJBjVgMh5Z7iwcxqIPg/WGXs7z0EMLSEMdnH/za4diZ8awNNMtjwGtabI/lIp
+         VqU2FVFh4bDIRMvJpSNwBU0pVTDG/F9SEdf0JMsf1n237Pn+/e0cHW7rCudfCcUM3F
+         UNa9nlJINV2tawUiRWnD29FGW09j4zoy/Fj888bY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j3zAP-006BEh-0t; Tue, 18 Feb 2020 09:27:45 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Feb 2020 09:27:44 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
+ SGI callbacks
+In-Reply-To: <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-9-maz@kernel.org>
+ <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+Message-ID: <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3Jpbmk6DQo+SXMgdGhpcyBkYXRhIHN0b3JlZCBpbiBhIG5vbiB2b2xhdGlsZSBtZW1vcnkg
-b24gdGhlIFNvQz8NCj5pZiB5ZXMsIHRoZW4gd2Ugc2hvdWxkIGhhdmUgYSBwcm9wZXIgbnZtZW0g
-cHJvdmlkZXIgZHJpdmVyLg0KDQpZZXMuIFRoaXMgZGF0YSBpcyBzdG9yZWQgaW4gbm9uIHZvbGF0
-aWxlIG1lbW9yeSBvbiB0aGUgU29DLg0KSXQgd291bGQgYmUgcmVhZCBhdCBib290bG9hZGVyIGFu
-ZCBkZWxpdmVyZWQgdG8ga2VybmVsIGJ5IERUQi4NCg0KDQpUaGFua3MNCk1hYw0KDQotLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogU3Jpbml2YXMgS2FuZGFnYXRsYSBbbWFpbHRvOnNy
-aW5pdmFzLmthbmRhZ2F0bGFAbGluYXJvLm9yZ10gDQpTZW50OiBUdWVzZGF5LCBGZWJydWFyeSAx
-OCwgMjAyMCA1OjE5IFBNDQpUbzogTWFjIEx1ICjnm6flrZ/lvrcpIDxtYWMubHVAbWVkaWF0ZWsu
-Y29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbWVkaWF0ZWtAbGlzdHMu
-aW5mcmFkZWFkLm9yZw0KQ2M6IEFuZHJldy1DVCBDaGVuICjpmbPmmbrov6opIDxBbmRyZXctQ1Qu
-Q2hlbkBtZWRpYXRlay5jb20+DQpTdWJqZWN0OiBSZTogTlZNRU0gdXNhZ2UgY29uc3VsdCBmb3Ig
-ZGV2aWNlIGluZm9ybWF0aW9uDQoNCg0KDQpPbiAxOC8wMi8yMDIwIDA1OjE2LCBNYWMgTHUgKOeb
-p+Wtn+W+tykgd3JvdGU6DQo+IEhlbGxvLA0KPiANCj4gTWVkaWF0ZWvCoGNoaXAgaGF2ZSBzb21l
-IFNPQyBjb25maWd1cmF0aW9ucyBhbmQgc3BlY2lmaWMgZGF0YSB3aGljaCANCj4gd291bGQgYmUg
-ZGVsaXZlcmVkIHRvIGtlcm5lbCBieSBEVEIuDQo+IA0KSXMgdGhpcyBkYXRhIHN0b3JlZCBpbiBh
-IG5vbiB2b2xhdGlsZSBtZW1vcnkgb24gdGhlIFNvQz8NCmlmIHllcywgdGhlbiB3ZSBzaG91bGQg
-aGF2ZSBhIHByb3BlciBudm1lbSBwcm92aWRlciBkcml2ZXIuDQoNCi0tc3JpbmkNCg0KPiBTbyB3
-ZSB3YW50IHRvIGltcGxlbWVudCBhIG5ldyBOVk1FTSBkcml2ZXIgdG8gcmV0cmlldmUgdGhlc2Ug
-ZGF0YSBmb3IgDQo+IHVzZSBieSB0aGUgTlZNRU0gRnJhbWV3b3JrLg0KPiANCj4gRG8geW91IGFn
-cmVlIHdpdGggdGhlIHVzYWdlIGZvciBvdXIgYXBwbGljYXRpb24/DQo+IA0KPiBUaGFua3MNCj4g
-DQo+IE1hYw0KPiANCj4gKioqKioqKioqKioqKiBNRURJQVRFSyBDb25maWRlbnRpYWxpdHkgTm90
-aWNlICoqKioqKioqKioqKioqKioqKioqIFRoZSANCj4gaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
-IHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkNCj4gYXR0YWNobWVudHMpIG1heSBi
-ZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciANCj4gb3RoZXJ3aXNl
-IGV4ZW1wdCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRl
-bmRlZCANCj4gdG8gYmUgY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQo
-cykuIEFueSB1c2UsIA0KPiBkaXNzZW1pbmF0aW9uLCBkaXN0cmlidXRpb24sIHByaW50aW5nLCBy
-ZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIA0KPiBlLW1haWwgKGluY2x1ZGluZyBpdHMNCj4g
-YXR0YWNobWVudHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hp
-Yml0ZWQgYW5kIG1heSANCj4gYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVk
-IHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgDQo+IGJlbGlldmUgdGhhdCB5b3UgaGF2ZSBy
-ZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgDQo+IHNlbmRl
-ciBpbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFu
-ZCBhbGwgDQo+IGNvcGllcyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50
-cykgZnJvbSB5b3VyIHN5c3RlbSwgDQo+IGFuZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnQg
-b2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91IQ0KPiANCg==
+Hi Zenghui,
+
+On 2020-02-18 07:00, Zenghui Yu wrote:
+> Hi Marc,
+> 
+> On 2020/2/14 22:57, Marc Zyngier wrote:
+>> To implement the get/set_irqchip_state callbacks (limited to the
+>> PENDING state), we have to use a particular set of hacks:
+>> 
+>> - Reading the pending state is done by using a pair of new 
+>> redistributor
+>>    registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 
+>> interrupts
+>>    state to be retrieved.
+>> - Setting the pending state is done by generating it as we'd otherwise 
+>> do
+>>    for a guest (writing to GITS_SGIR)
+>> - Clearing the pending state is done by emiting a VSGI command with 
+>> the
+>>    "clear" bit set.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/irqchip/irq-gic-v3-its.c   | 56 
+>> ++++++++++++++++++++++++++++++
+>>   include/linux/irqchip/arm-gic-v3.h | 14 ++++++++
+>>   2 files changed, 70 insertions(+)
+>> 
+>> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+>> b/drivers/irqchip/irq-gic-v3-its.c
+>> index 1e448d9a16ea..a9753435c4ff 100644
+>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> @@ -3915,11 +3915,67 @@ static int its_sgi_set_affinity(struct 
+>> irq_data *d,
+>>   	return -EINVAL;
+>>   }
+>>   +static int its_sgi_set_irqchip_state(struct irq_data *d,
+>> +				     enum irqchip_irq_state which,
+>> +				     bool state)
+>> +{
+>> +	if (which != IRQCHIP_STATE_PENDING)
+>> +		return -EINVAL;
+>> +
+>> +	if (state) {
+>> +		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>> +		struct its_node *its = find_4_1_its();
+>> +		u64 val;
+>> +
+>> +		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
+>> +		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
+>> +		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
+>> +	} else {
+>> +		its_configure_sgi(d, true);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int its_sgi_get_irqchip_state(struct irq_data *d,
+>> +				     enum irqchip_irq_state which, bool *val)
+>> +{
+>> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>> +	void __iomem *base = gic_data_rdist_cpu(vpe->col_idx)->rd_base + 
+>> SZ_128K;
+> 
+> There might be a race on reading the 'vpe->col_idx' against a 
+> concurrent
+> vPE schedule (col_idx will be modified in its_vpe_set_affinity)? Will 
+> we
+> end up accessing the GICR_VSGI* registers of the old redistributor,
+> while the vPE is now resident on the new one? Or is it harmful?
+
+Very well spotted. There is a potential problem if old and new RDs are 
+not part
+of the same CommonLPIAff group.
+
+> The same question for direct_lpi_inv(), where 'vpe->col_idx' will be
+> used in irq_to_cpuid().
+
+Same problem indeed. We need to ensure that no VMOVP operation can occur 
+whilst
+we use col_idx to access a redistributor. This means a vPE lock of some 
+sort
+that will protect the affinity.
+
+But I think there is a slightly more general problem here, which we 
+failed to
+see initially: the same issue exists for physical LPIs, as col_map[] can 
+be
+updated (its_set_affinity()) in parallel with a direct invalidate.
+
+The good old invalidation through the ITS does guarantee that the two 
+operation
+don't overlap, but direct invalidation breaks it.
+
+Let me have a think about it.
+
+> 
+>> +	u32 count = 1000000;	/* 1s! */
+>> +	u32 status;
+>> +
+>> +	if (which != IRQCHIP_STATE_PENDING)
+>> +		return -EINVAL;
+>> +
+>> +	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
+>> +	do {
+>> +		status = readl_relaxed(base + GICR_VSGIPENDR);
+>> +		if (!(status & GICR_VSGIPENDR_BUSY))
+>> +			goto out;
+>> +
+>> +		count--;
+>> +		if (!count) {
+>> +			pr_err_ratelimited("Unable to get SGI status\n");
+>> +			goto out;
+>> +		}
+>> +		cpu_relax();
+>> +		udelay(1);
+>> +	} while(count);
+>> +
+>> +out:
+>> +	*val = !!(status & (1 << d->hwirq));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static struct irq_chip its_sgi_irq_chip = {
+>>   	.name			= "GICv4.1-sgi",
+>>   	.irq_mask		= its_sgi_mask_irq,
+>>   	.irq_unmask		= its_sgi_unmask_irq,
+>>   	.irq_set_affinity	= its_sgi_set_affinity,
+>> +	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+>> +	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
+>>   };
+>>     static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+>> diff --git a/include/linux/irqchip/arm-gic-v3.h 
+>> b/include/linux/irqchip/arm-gic-v3.h
+>> index a89578884263..64da945486ac 100644
+>> --- a/include/linux/irqchip/arm-gic-v3.h
+>> +++ b/include/linux/irqchip/arm-gic-v3.h
+>> @@ -345,6 +345,15 @@
+>>   #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
+>>   #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
+>>   +#define GICR_VSGIR			0x0080
+>> +
+>> +#define GICR_VSGIR_VPEID		GENMASK(15, 0)
+>> +
+>> +#define GICR_VSGIPENDR			0x0088
+>> +
+>> +#define GICR_VSGIPENDR_BUSY		(1U << 31)
+>> +#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
+>> +
+>>   /*
+>>    * ITS registers, offsets from ITS_base
+>>    */
+>> @@ -368,6 +377,11 @@
+>>     #define GITS_TRANSLATER			0x10040
+>>   +#define GITS_SGIR			0x20020
+>> +
+>> +#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
+>> +#define GITS_SGIR_VINTID		GENMASK_ULL(7, 0)
+> 
+> The spec says vINTID field is [3:0] of the GITS_SGIR.
+
+Indeed, well spotted again!
+
+Thanks,
+
+          M.
+-- 
+Jazz is not dead. It just smells funny...
