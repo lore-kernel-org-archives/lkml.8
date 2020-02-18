@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CE5C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6F9C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3304220659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EF724125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056001;
-	bh=/6nAimlRP377wh2bOfy7aMdoEIO9mGJ7voRdBZgSMvQ=;
+	s=default; t=1582056003;
+	bh=lyZsnS0h6TGGW/VfN0c4oQr58ckhLVmklvBo/A/pFM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+8BGAmNzFbP8dNYEJtAFUe1kYEOwZ9zf1p3IjEalk0Mwp3Io1DKtmdXqAPIoA08y
-	 zN2j3guL16Gwjl5kSTDCI7DbMYpfdPC1pzVEk27OI0BRgjabUoEcinhIlwK48WNYCw
-	 4geozN66Z+jt9JAnckmvTaQKXvUh/bbSlqocZ2zw=
+	b=1ge5mb9KQjlBysfS14XNnHpR30m6FXKcxgzijRZZelSQOPEDUExhWP5z5aYb9Rvbg
+	 OWBCBswkCAk+rIpMJdjAcFShcap7Qh33yMBTdavuS7fHOd+Rq6KuQogjzQPzs1ehX/
+	 ptA2FaMe/yN8Cyhb5MkmMFYSgjfNeim9mGTyALv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgBRT77 (ORCPT
+        id S1727875AbgBRUAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38900 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbgBRT75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:57 -0500
+        id S1728205AbgBRUAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1A520659;
-        Tue, 18 Feb 2020 19:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA3E24655;
+        Tue, 18 Feb 2020 19:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055996;
-        bh=/6nAimlRP377wh2bOfy7aMdoEIO9mGJ7voRdBZgSMvQ=;
+        s=default; t=1582055999;
+        bh=lyZsnS0h6TGGW/VfN0c4oQr58ckhLVmklvBo/A/pFM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hz4XfsaF80Z/9YeiDnbzLgeT0O/tZwycIPyHeFrrGwMb6D0tXZE9xvy/JZihVOPWj
-         OevftlCzL0LsOQTNJD70aj2wH5ahUacYHWaHZ20RJZZiCqNvnJh1crGw/lQ65cyxbX
-         XaRspy9Xpk5roIcQy5zhngwv6Lorz2cDSrjHk9Wc=
+        b=qddYIbDF30d4k7Uvw/LvL22SCRduk9+6odpOL49O5H5TEMJ84Dc9PVaPGKBxjdB2N
+         WGh2EnEcxqhpPo0qSSWDTy6nrkFPxMSQo07tH8WAJeeCr+SzRSMP9wIKsuMaD2PcE7
+         Fhi4Xgl4fyg/YMFiLrhwL4tRF02605bKRf8mrXgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 62/66] jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
-Date:   Tue, 18 Feb 2020 20:55:29 +0100
-Message-Id: <20200218190433.925224560@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 63/66] ext4: choose hardlimit when softlimit is larger than hardlimit in ext4_statfs_project()
+Date:   Tue, 18 Feb 2020 20:55:30 +0100
+Message-Id: <20200218190434.030902996@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,92 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-[ Upstream commit c96dceeabf765d0b1b1f29c3bf50a5c01315b820 ]
+[ Upstream commit 57c32ea42f8e802bda47010418e25043e0c9337f ]
 
-Commit 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from
-an older transaction") set the BH_Freed flag when forgetting a metadata
-buffer which belongs to the committing transaction, it indicate the
-committing process clear dirty bits when it is done with the buffer. But
-it also clear the BH_Mapped flag at the same time, which may trigger
-below NULL pointer oops when block_size < PAGE_SIZE.
+Setting softlimit larger than hardlimit seems meaningless
+for disk quota but currently it is allowed. In this case,
+there may be a bit of comfusion for users when they run
+df comamnd to directory which has project quota.
 
-rmdir 1             kjournald2                 mkdir 2
-                    jbd2_journal_commit_transaction
-		    commit transaction N
-jbd2_journal_forget
-set_buffer_freed(bh1)
-                    jbd2_journal_commit_transaction
-                     commit transaction N+1
-                     ...
-                     clear_buffer_mapped(bh1)
-                                               ext4_getblk(bh2 ummapped)
-                                               ...
-                                               grow_dev_page
-                                                init_page_buffers
-                                                 bh1->b_private=NULL
-                                                 bh2->b_private=NULL
-                     jbd2_journal_put_journal_head(jh1)
-                      __journal_remove_journal_head(hb1)
-		       jh1 is NULL and trigger oops
+For example, we set 20M softlimit and 10M hardlimit of
+block usage limit for project quota of test_dir(project id 123).
 
-*) Dir entry block bh1 and bh2 belongs to one page, and the bh2 has
-   already been unmapped.
+[root@hades mnt_ext4]# repquota -P -a
+*** Report for project quotas on device /dev/loop0
+Block grace time: 7days; Inode grace time: 7days
+                        Block limits                File limits
+Project         used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+ 0        --      13       0       0              2     0     0
+ 123      --   10237   20480   10240              5   200   100
 
-For the metadata buffer we forgetting, we should always keep the mapped
-flag and clear the dirty flags is enough, so this patch pick out the
-these buffers and keep their BH_Mapped flag.
+The result of df command as below:
 
-Link: https://lore.kernel.org/r/20200213063821.30455-3-yi.zhang@huawei.com
-Fixes: 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from an older transaction")
+[root@hades mnt_ext4]# df -h test_dir
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/loop0       20M   10M   10M  50% /home/cgxu/test/mnt_ext4
+
+Even though it looks like there is another 10M free space to use,
+if we write new data to diretory test_dir(inherit project id),
+the write will fail with errno(-EDQUOT).
+
+After this patch, the df result looks like below.
+
+[root@hades mnt_ext4]# df -h test_dir
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/loop0       10M   10M  3.0K 100% /home/cgxu/test/mnt_ext4
+
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
 Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20191016022501.760-1-cgxu519@mykernel.net
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ fs/ext4/super.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 7fdb5f130f642..2a42904bcd62c 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -983,12 +983,29 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		 * pagesize and it is attached to the last partial page.
- 		 */
- 		if (buffer_freed(bh) && !jh->b_next_transaction) {
-+			struct address_space *mapping;
-+
- 			clear_buffer_freed(bh);
- 			clear_buffer_jbddirty(bh);
--			clear_buffer_mapped(bh);
--			clear_buffer_new(bh);
--			clear_buffer_req(bh);
--			bh->b_bdev = NULL;
-+
-+			/*
-+			 * Block device buffers need to stay mapped all the
-+			 * time, so it is enough to clear buffer_jbddirty and
-+			 * buffer_freed bits. For the file mapping buffers (i.e.
-+			 * journalled data) we need to unmap buffer and clear
-+			 * more bits. We also need to be careful about the check
-+			 * because the data page mapping can get cleared under
-+			 * out hands, which alse need not to clear more bits
-+			 * because the page and buffers will be freed and can
-+			 * never be reused once we are done with them.
-+			 */
-+			mapping = READ_ONCE(bh->b_page->mapping);
-+			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
-+				clear_buffer_mapped(bh);
-+				clear_buffer_new(bh);
-+				clear_buffer_req(bh);
-+				bh->b_bdev = NULL;
-+			}
- 		}
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 95826bde9025b..914230e630544 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5540,9 +5540,15 @@ static int ext4_statfs_project(struct super_block *sb,
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dquot->dq_dqb_lock);
  
- 		if (buffer_jbddirty(bh)) {
+-	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+-		 dquot->dq_dqb.dqb_bsoftlimit :
+-		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_bsoftlimit &&
++	    (!limit || dquot->dq_dqb.dqb_bsoftlimit < limit))
++		limit = dquot->dq_dqb.dqb_bsoftlimit;
++	if (dquot->dq_dqb.dqb_bhardlimit &&
++	    (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
++		limit = dquot->dq_dqb.dqb_bhardlimit;
++	limit >>= sb->s_blocksize_bits;
++
+ 	if (limit && buf->f_blocks > limit) {
+ 		curblock = (dquot->dq_dqb.dqb_curspace +
+ 			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
+@@ -5552,9 +5558,14 @@ static int ext4_statfs_project(struct super_block *sb,
+ 			 (buf->f_blocks - curblock) : 0;
+ 	}
+ 
+-	limit = dquot->dq_dqb.dqb_isoftlimit ?
+-		dquot->dq_dqb.dqb_isoftlimit :
+-		dquot->dq_dqb.dqb_ihardlimit;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_isoftlimit &&
++	    (!limit || dquot->dq_dqb.dqb_isoftlimit < limit))
++		limit = dquot->dq_dqb.dqb_isoftlimit;
++	if (dquot->dq_dqb.dqb_ihardlimit &&
++	    (!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
++		limit = dquot->dq_dqb.dqb_ihardlimit;
++
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
+ 		buf->f_ffree =
 -- 
 2.20.1
 
