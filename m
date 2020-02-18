@@ -2,49 +2,49 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9C4C34035
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA11C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EF0206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C805206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="RAOJvL8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgBRI1c (ORCPT
+        id S1726852AbgBRI1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:27:32 -0500
-Received: from mga07.intel.com ([134.134.136.100]:18962 "EHLO mga07.intel.com"
+        Tue, 18 Feb 2020 03:27:36 -0500
+Received: from first.geanix.com ([116.203.34.67]:59636 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbgBRI1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:27:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:27:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="235466684"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.151])
-  by orsmga003.jf.intel.com with ESMTP; 18 Feb 2020 00:27:27 -0800
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Feng Tang <feng.tang@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC -V2 5/8] autonuma, memory tiering: Only promote page if accessed twice
-Date:   Tue, 18 Feb 2020 16:26:31 +0800
-Message-Id: <20200218082634.1596727-6-ying.huang@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218082634.1596727-1-ying.huang@intel.com>
-References: <20200218082634.1596727-1-ying.huang@intel.com>
+        id S1726787AbgBRI1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:27:33 -0500
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id E7CDFC003D;
+        Tue, 18 Feb 2020 08:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582014402; bh=mcyrpVEJosKsiGqelCIqxsigtCZWMGpdLaucuK3hISw=;
+        h=From:To:Cc:Subject:Date;
+        b=RAOJvL8GcxLZvkAo0EmlUv8Rv8q999aLFo33ZTs+flGXgHI8kM7kVwaZ9nGFMYfm3
+         vo/iJWK6CIxqsMSQzqyGommdy5D+p45hkMFCh3GIS+RVkiGPpJYIjsihln0+58qOWF
+         osg0/1FMj0FdfTYbl+99BDvd9isbU3tkWLChgchAW1iWGK1SRa38c6K6NiljUHNy+9
+         h7A9/eOsOQYnJ32TJrFhz4ZHwLALNyElNLjMy2fnppI0kEDQgGsSGUPYCkUU5fz47e
+         AJOrQAllgJO3BI5+41A1NORzHEcm38TNwsR/L/zelZtub2UtdVsvqaZT0cdzs/pLeF
+         VFQjLKgutiAYg==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH 7/8] net: ll_temac: Make RX/TX ring sizes configurable
+Date:   Tue, 18 Feb 2020 09:27:29 +0100
+Message-Id: <20200218082729.7626-1-esben@geanix.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,213 +52,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+Add support for setting the RX and TX ring sizes for this driver using
+ethtool. Also increase the default RX ring size as the previous default
+was far too low for good performance in some configurations.
 
-The original assumption of auto NUMA balancing is that the memory
-privately or mainly accessed by the CPUs of a NUMA node (called
-private memory) should fit the memory size of the NUMA node.  So if a
-page is identified to be private memory, it will be migrated to the
-target node immediately.  Eventually all private memory will be
-migrated.
-
-But this assumption isn't true in memory tiering system.  In a typical
-memory tiering system, there are CPUs, fast memory, and slow memory in
-each physical NUMA node.  The CPUs and the fast memory will be put in
-one logical node (called fast memory node), while the slow memory will
-be put in another (faked) logical node (called slow memory node).  To
-take full advantage of the system resources, it's common that the size
-of the private memory of the workload is larger than the memory size
-of the fast memory node.
-
-To resolve the issue, we will try to migrate only the hot pages in the
-private memory to the fast memory node.  A private page that was
-accessed at least twice in the current and the last scanning periods
-will be identified as the hot page and migrated.  Otherwise, the page
-isn't considered hot enough to be migrated.
-
-To record whether a page is accessed in the last scanning period, the
-Accessed bit of the PTE/PMD is used.  When the page tables are scanned
-for autonuma, if the pte_protnone(pte) is true, the page isn't
-accessed in the last scan period, and the Accessed bit will be
-cleared, otherwise the Accessed bit will be kept.  When NUMA page
-fault occurs, if the Accessed bit is set, the page has been accessed
-at least twice in the current and the last scanning period and will be
-migrated.
-
-The Accessed bit of PTE/PMD is used by page reclaiming too.  So the
-conflict is possible.  Considering the following situation,
-
-a) the page is moved from active list to inactive list with Accessed
-   bit cleared
-
-b) the page is accessed, so Accessed bit is set
-
-c) the page table is scanned by autonuma, PTE is set to
-   PROTNONE+Accessed
-
-c) the page isn't accessed
-
-d) the page table is scanned by autonuma again, Accessed is cleared
-
-e) the inactive list is scanned for reclaiming, the page is reclaimed
-   wrongly because Accessed bit is cleared by autonuma
-
-Although the page is reclaimed wrongly, it hasn't been accessed for
-one numa balancing scanning period at least.  So the page isn't so hot
-too.  That is, this shouldn't be a severe issue.
-
-The patch improves the score of pmbench memory accessing benchmark
-with 80:20 read/write ratio and normal access address distribution by
-3.1% on a 2 socket Intel server with Optance DC Persistent Memory.  In
-the test, the number of the promoted pages for autonuma reduces 7.2%
-because the pages fail to pass the twice access checking.
-
-Problems:
-
- - how to adjust scanning period upon hot page identification
-   requirement.  E.g. if the count of page promotion is much larger
-   than free memory, we need to scan faster to identify really hot
-   pages.  But his will trigger too many page faults too.
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
+Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- mm/huge_memory.c | 17 ++++++++++++++++-
- mm/memory.c      | 28 +++++++++++++++-------------
- mm/mprotect.c    | 15 ++++++++++++++-
- 3 files changed, 45 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac.h      |  2 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 96 +++++++++++++++------
+ 2 files changed, 72 insertions(+), 26 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index d45de9b1ead9..8808e50ad921 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1558,6 +1558,10 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	if (unlikely(!pmd_same(pmd, *vmf->pmd)))
- 		goto out_unlock;
+diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
+index 463ef9eaf42d..8777ec6e21c8 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac.h
++++ b/drivers/net/ethernet/xilinx/ll_temac.h
+@@ -369,8 +369,10 @@ struct temac_local {
+ 	/* Buffer descriptors */
+ 	struct cdmac_bd *tx_bd_v;
+ 	dma_addr_t tx_bd_p;
++	u32 tx_bd_num;
+ 	struct cdmac_bd *rx_bd_v;
+ 	dma_addr_t rx_bd_p;
++	u32 rx_bd_num;
+ 	int tx_bd_ci;
+ 	int tx_bd_tail;
+ 	int rx_bd_ci;
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index baf05a2b7551..e3d4857334f3 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -58,8 +58,11 @@
  
-+	/* Only migrate if accessed twice */
-+	if (!pmd_young(*vmf->pmd))
-+		goto out_unlock;
-+
- 	/*
- 	 * If there are potential migrations, wait for completion and retry
- 	 * without disrupting NUMA hinting information. Do not relock and
-@@ -1978,8 +1982,19 @@ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 		if (is_huge_zero_pmd(*pmd))
- 			goto unlock;
+ #include "ll_temac.h"
  
--		if (pmd_protnone(*pmd))
-+		if (pmd_protnone(*pmd)) {
-+			if (!(sysctl_numa_balancing_mode &
-+			      NUMA_BALANCING_MEMORY_TIERING))
-+				goto unlock;
-+
-+			/*
-+			 * PMD young bit is used to record whether the
-+			 * page is accessed in last scan period
-+			 */
-+			if (pmd_young(*pmd))
-+				set_pmd_at(mm, addr, pmd, pmd_mkold(*pmd));
- 			goto unlock;
-+		}
+-#define TX_BD_NUM   64
+-#define RX_BD_NUM   128
++/* Descriptors defines for Tx and Rx DMA */
++#define TX_BD_NUM_DEFAULT		64
++#define RX_BD_NUM_DEFAULT		1024
++#define TX_BD_NUM_MAX			4096
++#define RX_BD_NUM_MAX			4096
  
- 		page = pmd_page(*pmd);
- 		/*
-diff --git a/mm/memory.c b/mm/memory.c
-index 45442d9a4f52..afb4c55cb278 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3811,10 +3811,8 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	 */
- 	vmf->ptl = pte_lockptr(vma->vm_mm, vmf->pmd);
- 	spin_lock(vmf->ptl);
--	if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte))) {
--		pte_unmap_unlock(vmf->pte, vmf->ptl);
--		goto out;
--	}
-+	if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte)))
-+		goto unmap_out;
+ /* ---------------------------------------------------------------------
+  * Low level register access functions
+@@ -301,7 +304,7 @@ static void temac_dma_bd_release(struct net_device *ndev)
+ 	/* Reset Local Link (DMA) */
+ 	lp->dma_out(lp, DMA_CONTROL_REG, DMA_CONTROL_RST);
  
- 	/*
- 	 * Make it present again, Depending on how arch implementes non
-@@ -3828,17 +3826,17 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	ptep_modify_prot_commit(vma, vmf->address, vmf->pte, old_pte, pte);
- 	update_mmu_cache(vma, vmf->address, vmf->pte);
- 
-+	/* Only migrate if accessed twice */
-+	if (!pte_young(old_pte))
-+		goto unmap_out;
-+
- 	page = vm_normal_page(vma, vmf->address, pte);
--	if (!page) {
--		pte_unmap_unlock(vmf->pte, vmf->ptl);
--		return 0;
--	}
-+	if (!page)
-+		goto unmap_out;
- 
- 	/* TODO: handle PTE-mapped THP */
--	if (PageCompound(page)) {
--		pte_unmap_unlock(vmf->pte, vmf->ptl);
--		return 0;
--	}
-+	if (PageCompound(page))
-+		goto unmap_out;
- 
- 	/*
- 	 * Avoid grouping on RO pages in general. RO pages shouldn't hurt as
-@@ -3876,10 +3874,14 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	} else
- 		flags |= TNF_MIGRATE_FAIL;
- 
--out:
- 	if (page_nid != NUMA_NO_NODE)
- 		task_numa_fault(last_cpupid, page_nid, 1, flags);
- 	return 0;
-+
-+unmap_out:
-+	pte_unmap_unlock(vmf->pte, vmf->ptl);
-+out:
-+	return 0;
+-	for (i = 0; i < RX_BD_NUM; i++) {
++	for (i = 0; i < lp->rx_bd_num; i++) {
+ 		if (!lp->rx_skb[i])
+ 			break;
+ 		else {
+@@ -312,12 +315,12 @@ static void temac_dma_bd_release(struct net_device *ndev)
+ 	}
+ 	if (lp->rx_bd_v)
+ 		dma_free_coherent(ndev->dev.parent,
+-				sizeof(*lp->rx_bd_v) * RX_BD_NUM,
+-				lp->rx_bd_v, lp->rx_bd_p);
++				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
++				  lp->rx_bd_v, lp->rx_bd_p);
+ 	if (lp->tx_bd_v)
+ 		dma_free_coherent(ndev->dev.parent,
+-				sizeof(*lp->tx_bd_v) * TX_BD_NUM,
+-				lp->tx_bd_v, lp->tx_bd_p);
++				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
++				  lp->tx_bd_v, lp->tx_bd_p);
  }
  
- static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 7322c98284ac..1948105d23d5 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -83,8 +83,21 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 				int nid;
+ /**
+@@ -330,33 +333,33 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 	dma_addr_t skb_dma_addr;
+ 	int i;
  
- 				/* Avoid TLB flush if possible */
--				if (pte_protnone(oldpte))
-+				if (pte_protnone(oldpte)) {
-+					if (!(sysctl_numa_balancing_mode &
-+					      NUMA_BALANCING_MEMORY_TIERING))
-+						continue;
+-	lp->rx_skb = devm_kcalloc(&ndev->dev, RX_BD_NUM, sizeof(*lp->rx_skb),
+-				  GFP_KERNEL);
++	lp->rx_skb = devm_kcalloc(&ndev->dev, lp->rx_bd_num,
++				  sizeof(*lp->rx_skb), GFP_KERNEL);
+ 	if (!lp->rx_skb)
+ 		goto out;
+ 
+ 	/* allocate the tx and rx ring buffer descriptors. */
+ 	/* returns a virtual address and a physical address. */
+ 	lp->tx_bd_v = dma_alloc_coherent(ndev->dev.parent,
+-					 sizeof(*lp->tx_bd_v) * TX_BD_NUM,
++					 sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
+ 					 &lp->tx_bd_p, GFP_KERNEL);
+ 	if (!lp->tx_bd_v)
+ 		goto out;
+ 
+ 	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
+-					 sizeof(*lp->rx_bd_v) * RX_BD_NUM,
++					 sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+ 					 &lp->rx_bd_p, GFP_KERNEL);
+ 	if (!lp->rx_bd_v)
+ 		goto out;
+ 
+-	for (i = 0; i < TX_BD_NUM; i++) {
++	for (i = 0; i < lp->tx_bd_num; i++) {
+ 		lp->tx_bd_v[i].next = cpu_to_be32(lp->tx_bd_p
+-				+ sizeof(*lp->tx_bd_v) * ((i + 1) % TX_BD_NUM));
++			+ sizeof(*lp->tx_bd_v) * ((i + 1) % lp->tx_bd_num));
+ 	}
+ 
+-	for (i = 0; i < RX_BD_NUM; i++) {
++	for (i = 0; i < lp->rx_bd_num; i++) {
+ 		lp->rx_bd_v[i].next = cpu_to_be32(lp->rx_bd_p
+-				+ sizeof(*lp->rx_bd_v) * ((i + 1) % RX_BD_NUM));
++			+ sizeof(*lp->rx_bd_v) * ((i + 1) % lp->rx_bd_num));
+ 
+ 		skb = netdev_alloc_skb_ip_align(ndev,
+ 						XTE_MAX_JUMBO_FRAME_SIZE);
+@@ -389,7 +392,7 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 	lp->tx_bd_ci = 0;
+ 	lp->tx_bd_tail = 0;
+ 	lp->rx_bd_ci = 0;
+-	lp->rx_bd_tail = RX_BD_NUM - 1;
++	lp->rx_bd_tail = lp->rx_bd_num - 1;
+ 
+ 	/* Enable RX DMA transfers */
+ 	wmb();
+@@ -784,7 +787,7 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 		ndev->stats.tx_bytes += be32_to_cpu(cur_p->len);
+ 
+ 		lp->tx_bd_ci++;
+-		if (lp->tx_bd_ci >= TX_BD_NUM)
++		if (lp->tx_bd_ci >= lp->tx_bd_num)
+ 			lp->tx_bd_ci = 0;
+ 
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
+@@ -810,7 +813,7 @@ static inline int temac_check_tx_bd_space(struct temac_local *lp, int num_frag)
+ 			return NETDEV_TX_BUSY;
+ 
+ 		tail++;
+-		if (tail >= TX_BD_NUM)
++		if (tail >= lp->tx_bd_num)
+ 			tail = 0;
+ 
+ 		cur_p = &lp->tx_bd_v[tail];
+@@ -871,7 +874,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	ptr_to_txbd((void *)skb, cur_p);
+ 
+ 	for (ii = 0; ii < num_frag; ii++) {
+-		if (++lp->tx_bd_tail >= TX_BD_NUM)
++		if (++lp->tx_bd_tail >= lp->tx_bd_num)
+ 			lp->tx_bd_tail = 0;
+ 
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+@@ -881,7 +884,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					      DMA_TO_DEVICE);
+ 		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
+ 			if (--lp->tx_bd_tail < 0)
+-				lp->tx_bd_tail = TX_BD_NUM - 1;
++				lp->tx_bd_tail = lp->tx_bd_num - 1;
+ 			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 			while (--ii >= 0) {
+ 				--frag;
+@@ -890,7 +893,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 						 skb_frag_size(frag),
+ 						 DMA_TO_DEVICE);
+ 				if (--lp->tx_bd_tail < 0)
+-					lp->tx_bd_tail = TX_BD_NUM - 1;
++					lp->tx_bd_tail = lp->tx_bd_num - 1;
+ 				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 			}
+ 			dma_unmap_single(ndev->dev.parent,
+@@ -907,7 +910,7 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	tail_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	lp->tx_bd_tail++;
+-	if (lp->tx_bd_tail >= TX_BD_NUM)
++	if (lp->tx_bd_tail >= lp->tx_bd_num)
+ 		lp->tx_bd_tail = 0;
+ 
+ 	skb_tx_timestamp(skb);
+@@ -927,7 +930,7 @@ static int ll_temac_recv_buffers_available(struct temac_local *lp)
+ 		return 0;
+ 	available = 1 + lp->rx_bd_tail - lp->rx_bd_ci;
+ 	if (available <= 0)
+-		available += RX_BD_NUM;
++		available += lp->rx_bd_num;
+ 	return available;
+ }
+ 
+@@ -996,7 +999,7 @@ static void ll_temac_recv(struct net_device *ndev)
+ 		ndev->stats.rx_bytes += length;
+ 
+ 		rx_bd = lp->rx_bd_ci;
+-		if (++lp->rx_bd_ci >= RX_BD_NUM)
++		if (++lp->rx_bd_ci >= lp->rx_bd_num)
+ 			lp->rx_bd_ci = 0;
+ 	} while (rx_bd != lp->rx_bd_tail);
+ 
+@@ -1027,7 +1030,7 @@ static void ll_temac_recv(struct net_device *ndev)
+ 		dma_addr_t skb_dma_addr;
+ 
+ 		rx_bd = lp->rx_bd_tail + 1;
+-		if (rx_bd >= RX_BD_NUM)
++		if (rx_bd >= lp->rx_bd_num)
+ 			rx_bd = 0;
+ 		bd = &lp->rx_bd_v[rx_bd];
+ 
+@@ -1243,13 +1246,52 @@ static const struct attribute_group temac_attr_group = {
+ 	.attrs = temac_device_attrs,
+ };
+ 
+-/* ethtool support */
++/* ---------------------------------------------------------------------
++ * ethtool support
++ */
 +
-+					/*
-+					 * PTE young bit is used to record
-+					 * whether the page is accessed in
-+					 * last scan period
-+					 */
-+					if (pte_young(oldpte))
-+						set_pte_at(vma->vm_mm, addr, pte,
-+							   pte_mkold(oldpte));
- 					continue;
-+				}
++static void ll_temac_ethtools_get_ringparam(struct net_device *ndev,
++					    struct ethtool_ringparam *ering)
++{
++	struct temac_local *lp = netdev_priv(ndev);
++
++	ering->rx_max_pending = RX_BD_NUM_MAX;
++	ering->rx_mini_max_pending = 0;
++	ering->rx_jumbo_max_pending = 0;
++	ering->tx_max_pending = TX_BD_NUM_MAX;
++	ering->rx_pending = lp->rx_bd_num;
++	ering->rx_mini_pending = 0;
++	ering->rx_jumbo_pending = 0;
++	ering->tx_pending = lp->tx_bd_num;
++}
++
++static int ll_temac_ethtools_set_ringparam(struct net_device *ndev,
++					   struct ethtool_ringparam *ering)
++{
++	struct temac_local *lp = netdev_priv(ndev);
++
++	if (ering->rx_pending > RX_BD_NUM_MAX ||
++	    ering->rx_mini_pending ||
++	    ering->rx_jumbo_pending ||
++	    ering->rx_pending > TX_BD_NUM_MAX)
++		return -EINVAL;
++
++	if (netif_running(ndev))
++		return -EBUSY;
++
++	lp->rx_bd_num = ering->rx_pending;
++	lp->tx_bd_num = ering->tx_pending;
++	return 0;
++}
++
+ static const struct ethtool_ops temac_ethtool_ops = {
+ 	.nway_reset = phy_ethtool_nway_reset,
+ 	.get_link = ethtool_op_get_link,
+ 	.get_ts_info = ethtool_op_get_ts_info,
+ 	.get_link_ksettings = phy_ethtool_get_link_ksettings,
+ 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
++	.get_ringparam	= ll_temac_ethtools_get_ringparam,
++	.set_ringparam	= ll_temac_ethtools_set_ringparam,
+ };
  
- 				page = vm_normal_page(vma, addr, oldpte);
- 				if (!page || PageKsm(page))
+ static int temac_probe(struct platform_device *pdev)
+@@ -1293,6 +1335,8 @@ static int temac_probe(struct platform_device *pdev)
+ 	lp->ndev = ndev;
+ 	lp->dev = &pdev->dev;
+ 	lp->options = XTE_OPTION_DEFAULTS;
++	lp->rx_bd_num = RX_BD_NUM_DEFAULT;
++	lp->tx_bd_num = TX_BD_NUM_DEFAULT;
+ 	spin_lock_init(&lp->rx_lock);
+ 	INIT_DELAYED_WORK(&lp->restart_work, ll_temac_restart_work_func);
+ 
 -- 
-2.24.1
+2.25.0
 
