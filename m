@@ -2,103 +2,198 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ADEC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFA5C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B4F21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582017269;
-	bh=hRw209oKEaCZWoYigJBg7fczTf5My05WHql2Hw28z8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rZPB/GxSZ57yRYLhLBtaLD4tftxgJQjHXJagrKQxm4E2PGXJ40XIz1eWGf6dr/zWG
-	 cgUZmQ6f4pWAEJvH2mCiSwdOjbUep+820KlWuZFMB/z4lNWf2QPVZS0AsSn3KZshp8
-	 9sPwvwH0MLz43JSDordYOHpwUXr221HEpvtC1Sj8=
+	by mail.kernel.org (Postfix) with ESMTP id 9015E21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Wcv8Oo1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgBRJO2 (ORCPT
+        id S1726428AbgBRJQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:14:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgBRJO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:14:28 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1176320659;
-        Tue, 18 Feb 2020 09:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582017268;
-        bh=hRw209oKEaCZWoYigJBg7fczTf5My05WHql2Hw28z8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ajy3HkFdFWng9bLPIdBDSTUY+a9Q087LEQvwAb9hQoRaKk1S2f/KZ60vL5VdR3UtF
-         YGzA0uSe4HGNYCerYkSQ/h9zT2REdDnJoQXGKzI+Ddmv+qCGzDrMkJ7fIyfIwbVNU8
-         bTsxUSp/LdJtoYQu2vaUZR1bNPsh29niWarF4wik=
-Date:   Tue, 18 Feb 2020 17:14:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tony Lindgren <tony@atomide.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
-Message-ID: <20200218091409.GA6075@dragon>
-References: <20200124084359.16817-1-christian.gmeiner@gmail.com>
- <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
- <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
- <CAH9NwWdg5r1T9TkXAe4=3Zui2vMcnOc2UJ=e02NFbiPhb5n48w@mail.gmail.com>
- <20200217041936.GH5395@dragon>
- <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
+        Tue, 18 Feb 2020 04:16:24 -0500
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:6247 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgBRJQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:16:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1582017382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=lcDVb9zXtKxtRtcOkp+nnORggRYgX9o2VvFOkpOp/P8=;
+  b=Wcv8Oo1vNyFtzekkkXrdLKefd1xRdv460LmxJby949OKvkMac/Er3JG3
+   lTs+CjdkJIO8oOYPmh+FPXH7iqdmUBrTnS/bbAt0WbgBDFgygU9H3toEN
+   TRs29hb+u+6WHreqTy9IrLpRoQxg82Gw2ENKMOT5qL5D4R5ZNUZ/izLsb
+   w=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: +NEaIej/3FoAmfEcfZRKSsrlG2EvLazi8i5c8rEat0w9DZFheqa79Nk6lGtTXdWahQxWJl2DCh
+ tlH9OIp4sxxYTLOa3B/zsETTAUK8TdmCfj5QS1nbH7zQdOb38cbTB0gh9TwQ83rCNVxkZpFmoq
+ j1LtHDChEp7jQ9ejWC3CN7k9hxaDnckSFEXLd4lOIy3xb5OQT9MQ0pZkm803x4ik86Fj0f3jA3
+ liTdQc2+rRln3CHugnKLQ5/73TashOzsfWqyviP0SOWxvTvxXsU6PhJjMAiJRq9l7kT8QkhDY2
+ q1o=
+X-SBRS: 2.7
+X-MesageID: 13228854
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,456,1574139600"; 
+   d="scan'208";a="13228854"
+Date:   Tue, 18 Feb 2020 10:16:11 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Anchal Agarwal <anchalag@amazon.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
+        <benh@kernel.crashing.org>
+Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
+ and hibernation
+Message-ID: <20200218091611.GN4679@Air-de-Roger>
+References: <cover.1581721799.git.anchalag@amazon.com>
+ <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
+ <20200217100509.GE4679@Air-de-Roger>
+ <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 01:09:32PM +0100, Christian Gmeiner wrote:
-> Am Mo., 17. Feb. 2020 um 05:19 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
-> >
-> > On Mon, Feb 10, 2020 at 02:30:12PM +0100, Christian Gmeiner wrote:
-> > > Am Mo., 10. Feb. 2020 um 11:58 Uhr schrieb Krzysztof Kozlowski
-> > > <krzk@kernel.org>:
-> > > >
-> > > > On Mon, 10 Feb 2020 at 11:54, Christian Gmeiner
-> > > > <christian.gmeiner@gmail.com> wrote:
-> > > > >
-> > > > > Am Fr., 24. Jan. 2020 um 09:44 Uhr schrieb Christian Gmeiner
-> > > > > <christian.gmeiner@gmail.com>:
-> > > > > >
-> > > > > > Makes it possible to multi v7 defconfig for stm32 and imx based devices with
-> >
-> > What do you mean by stm32 based devices here?
-> >
-> 
-> CONFIG_ARCH_STM32 - I have a STM32MP157C-DK2 in my board farm and
-> would love to use
-> multi_v7 for imx6 and stm32.
+On Mon, Feb 17, 2020 at 11:05:53PM +0000, Anchal Agarwal wrote:
+> On Mon, Feb 17, 2020 at 11:05:09AM +0100, Roger Pau Monné wrote:
+> > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
+> > > From: Munehisa Kamata <kamatam@amazon.com
+> > > 
+> > > Add freeze, thaw and restore callbacks for PM suspend and hibernation
+> > > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
+> > > events, need to implement these xenbus_driver callbacks.
+> > > The freeze handler stops a block-layer queue and disconnect the
+> > > frontend from the backend while freeing ring_info and associated resources.
+> > > The restore handler re-allocates ring_info and re-connect to the
+> > > backend, so the rest of the kernel can continue to use the block device
+> > > transparently. Also, the handlers are used for both PM suspend and
+> > > hibernation so that we can keep the existing suspend/resume callbacks for
+> > > Xen suspend without modification. Before disconnecting from backend,
+> > > we need to prevent any new IO from being queued and wait for existing
+> > > IO to complete.
+> > 
+> > This is different from Xen (xenstore) initiated suspension, as in that
+> > case Linux doesn't flush the rings or disconnects from the backend.
+> Yes, AFAIK in xen initiated suspension backend takes care of it. 
 
-The patch is all about enabling drm-imx driver support.  The commit log
-gives the impression that drm-imx driver also works on stm32 devices.
-Is that the case?
+No, in Xen initiated suspension backend doesn't take care of flushing
+the rings, the frontend has a shadow copy of the ring contents and it
+re-issues the requests on resume.
 
-Shawn
+> > > +static int blkfront_freeze(struct xenbus_device *dev)
+> > > +{
+> > > +	unsigned int i;
+> > > +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
+> > > +	struct blkfront_ring_info *rinfo;
+> > > +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
+> > > +	unsigned int timeout = 5 * HZ;
+> > > +	int err = 0;
+> > > +
+> > > +	info->connected = BLKIF_STATE_FREEZING;
+> > > +
+> > > +	blk_mq_freeze_queue(info->rq);
+> > > +	blk_mq_quiesce_queue(info->rq);
+> > > +
+> > > +	for (i = 0; i < info->nr_rings; i++) {
+> > > +		rinfo = &info->rinfo[i];
+> > > +
+> > > +		gnttab_cancel_free_callback(&rinfo->callback);
+> > > +		flush_work(&rinfo->work);
+> > > +	}
+> > > +
+> > > +	/* Kick the backend to disconnect */
+> > > +	xenbus_switch_state(dev, XenbusStateClosing);
+> > 
+> > Are you sure this is safe?
+> > 
+> In my testing running multiple fio jobs, other test scenarios running
+> a memory loader works fine. I did not came across a scenario that would
+> have failed resume due to blkfront issues unless you can sugest some?
+
+AFAICT you don't wait for the in-flight requests to be finished, and
+just rely on blkback to finish processing those. I'm not sure all
+blkback implementations out there can guarantee that.
+
+The approach used by Xen initiated suspension is to re-issue the
+in-flight requests when resuming. I have to admit I don't think this
+is the best approach, but I would like to keep both the Xen and the PM
+initiated suspension using the same logic, and hence I would request
+that you try to re-use the existing resume logic (blkfront_resume).
+
+> > I don't think you wait for all requests pending on the ring to be
+> > finished by the backend, and hence you might loose requests as the
+> > ones on the ring would not be re-issued by blkfront_restore AFAICT.
+> > 
+> AFAIU, blk_mq_freeze_queue/blk_mq_quiesce_queue should take care of no used
+> request on the shared ring. Also, we I want to pause the queue and flush all
+> the pending requests in the shared ring before disconnecting from backend.
+
+Oh, so blk_mq_freeze_queue does wait for in-flight requests to be
+finished. I guess it's fine then.
+
+> Quiescing the queue seemed a better option here as we want to make sure ongoing
+> requests dispatches are totally drained.
+> I should accept that some of these notion is borrowed from how nvme freeze/unfreeze 
+> is done although its not apple to apple comparison.
+
+That's fine, but I would still like to requests that you use the same
+logic (as much as possible) for both the Xen and the PM initiated
+suspension.
+
+So you either apply this freeze/unfreeze to the Xen suspension (and
+drop the re-issuing of requests on resume) or adapt the same approach
+as the Xen initiated suspension. Keeping two completely different
+approaches to suspension / resume on blkfront is not suitable long
+term.
+
+Thanks, Roger.
