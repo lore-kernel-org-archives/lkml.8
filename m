@@ -2,158 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C08C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D607AC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F7A21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E3940jiG"
+	by mail.kernel.org (Postfix) with ESMTP id AD31221D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582051791;
+	bh=ABB2dablGvaPDjMOY3/xeFSCMH42Xg9ft9gGuhUQo7A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DVwvciH/8T/vuCN26mT5ncc8Qv+9wMFlWuXJQuscbRBZ++7ropDk6mxLTu+nrR8N8
+	 9KvjGYFuW4BNW+Wk9hraed5J+N0jqtcvxu4WX4G9Ut1UbhizvLko5PE7+gl32bx1vs
+	 9NSE3V2Ea99La6WJUSjFfGeqGPpwJUiEddQXpz3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgBRStj (ORCPT
+        id S1726548AbgBRStu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:49:39 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:32985 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRStj (ORCPT
+        Tue, 18 Feb 2020 13:49:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34398 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRStu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:49:39 -0500
-Received: by mail-yw1-f68.google.com with SMTP id 192so9891530ywy.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:49:39 -0800 (PST)
+        Tue, 18 Feb 2020 13:49:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x7so24202108ljc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:49:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rsvcf6nEyweqvzaXVtO81ERnYCMGFqf7irfRI+SZdXk=;
-        b=E3940jiGUF1Uagjna8ef3NgmN+ostg/I0dw5cE1R5zeXMMRWwv1EqbFgbyRLTcKlZF
-         Fzm+K+hrXXQ2VPVx3vG9l4ag3zpMRTwx0Ut5LmBv/acM+dD7ZkP2FKmkH0we1oKBYkaP
-         rXYvmQFRNrKJ/BPTJoCyG2vrN57gEmEeFwgT5SUpSkyWoGZRF5/MSVCwNACq4PQ7Ik8k
-         +rXbZSBQl6NVkEa/4K7Gf6HeHh76j/vcF/X3bjB+DVgi9ARv7qmANY+z2qesaCPkmPOz
-         VFEbQwPaHIQnqUjE7qHL+2Tmku10RGfY4JjZYFDbMWGOmB+AADDSxvZ+nJjBkw5mdoyy
-         z4Qg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K/hRoOXddpf2rg3/iA7HHccAIzHUJB1ObxyUSqAalTY=;
+        b=NZzRuV1ykVa1MAKkVAJ+ayE7uc4yeKrTUPiopFgzMVSDworqehvv6s1IVq73p/Olth
+         xB/LLOUygDjmABRDoAr27sggaJdlNl63J92LiGLxnz84PmCA5tETqhf2S1Vm6zwMxzef
+         51K5GQq09q/p65UvpTOXQtxzKGwp4nzMgihRw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rsvcf6nEyweqvzaXVtO81ERnYCMGFqf7irfRI+SZdXk=;
-        b=DkmHO++CDEFVZDMOGvVMIGEwRUy8lohT/laKPkMJ+iHpAbOWSOArT4hlj4e/1lY3ah
-         wIwF+UI8I4M22qmusuDSWcN1FS+SnKjSnA9+Q59qGtSqUDCJKe2gEySMJLbonTO3VTsn
-         YwepvGEVoxYpWHhpDwKm3uSJEmRxItNmj7pyaUtJZXLMSnOjbgnSrLjiJOa5j1BOkS9J
-         fMK3+gxG05JwMC/HKGoKemHTtzlQvmyYDvqf+A020xacyhcyv2HvR2wZTwPEBoC+JviX
-         lctTBywDKWODpIASChkhH0iuKhqQr+YP4g/zwgBMGuVTSIMAXDFFGClJJOy1FFON6h2v
-         eofg==
-X-Gm-Message-State: APjAAAUFTJQe0uuDB0TMmQC8rgDHE6h8su8/kZIO/EDcmn0Q1590dVZP
-        vMxVkzCa9fdV4ubSYpRtBnThxQ==
-X-Google-Smtp-Source: APXvYqzRCBhILjOad1Afntyy2VV/HNgWp+4H7xiesfGuqB8WMfOpZ7DpnMFd6fDluVqK9E0lOxPYsQ==
-X-Received: by 2002:a81:9bc4:: with SMTP id s187mr18147859ywg.285.1582051778613;
-        Tue, 18 Feb 2020 10:49:38 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id w5sm2308936yww.106.2020.02.18.10.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:49:37 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:49:34 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [PATCH v4 0/5] perf cs-etm: Fix synthesizing instruction samples
-Message-ID: <20200218184934.GA11448@xps15>
-References: <20200213094204.2568-1-leo.yan@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K/hRoOXddpf2rg3/iA7HHccAIzHUJB1ObxyUSqAalTY=;
+        b=mXqdSYO41WXp95tP87/gWrsKY/dxrS4UKtqLJ/fHLfedOCcsfkw7LcRRkRb/OKn30j
+         dyd85ILsrtJ8WBX5uG6OpHiUJPGVNKE8j+C3IrPN1eeitHjGJ21OV+TL2Z8jAIRzSg+n
+         EVeCeJCD+lSJgKYdEVdoXosVNCBD5fMIDQbVCk2iX0H6Z67FsPmzKqMn6IVbDW7pKKzp
+         wCLvsYqgeFX6S4HAzjjRGq9hWHjWnYLOulLN9iXZ6EuYPay2Es8Z/2VZDVSXHDNLGyQ+
+         /Je2WzCC/NZw9LriYZxoLG+8PdMjarxoeCjwkp2kns3ylPNuLJiLEcN5/niOeKCCNzm3
+         k4Iw==
+X-Gm-Message-State: APjAAAXYVwc/zAx+DNGLM2L1wOFbyeQYaWNlDdetANr42xaefRvKHY6F
+        gG9PbFdApW9pYBjSc8z1KxogMx2qj18=
+X-Google-Smtp-Source: APXvYqwXRngoRyq0/lTKFLS989+5zDvvt5iK6aiy6+ZC34wSmGAFy0OiRa1RYDsAuBaAEpm9YueEIw==
+X-Received: by 2002:a2e:8e2a:: with SMTP id r10mr12999821ljk.219.1582051787803;
+        Tue, 18 Feb 2020 10:49:47 -0800 (PST)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id u15sm2697831lfl.87.2020.02.18.10.49.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 10:49:47 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id f24so15290809lfh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:49:46 -0800 (PST)
+X-Received: by 2002:ac2:4839:: with SMTP id 25mr10897394lft.192.1582051786457;
+ Tue, 18 Feb 2020 10:49:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213094204.2568-1-leo.yan@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200217222803.6723-1-idryomov@gmail.com> <202002171546.A291F23F12@keescook>
+ <CAOi1vP-2uAD83Vi=Eebu_GPzq5DUt+z9zogA7BNGF1B1jUgAVw@mail.gmail.com>
+In-Reply-To: <CAOi1vP-2uAD83Vi=Eebu_GPzq5DUt+z9zogA7BNGF1B1jUgAVw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 Feb 2020 10:49:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whj0vMcdVPC0=9aAsN2-tsCyFKF4beb2gohFeFK_Z-Y9g@mail.gmail.com>
+Message-ID: <CAHk-=whj0vMcdVPC0=9aAsN2-tsCyFKF4beb2gohFeFK_Z-Y9g@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: don't obfuscate NULL and error pointers
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Tobin C . Harding" <me@tobin.cc>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 05:41:59PM +0800, Leo Yan wrote:
-> This patch series is to address issues for synthesizing instruction
-> samples, especially when the instruction sample period is small enough,
-> the current logic cannot synthesize multiple instruction samples within
-> one instruction range packet.
-> 
-> Patch 0001 is to swap packets for instruction samples, so this allow
-> option '--itrace=iNNN' can work well.
-> 
-> Patch 0002 avoids to reset the last branches for every instruction
-> sample; if reset the last branches for every time generating sample, the
-> later samples in the same range packet cannot use the last branches
-> anymore.
-> 
-> Patch 0003 is the fixing for handling different instruction periods,
-> especially for small sample period.
-> 
-> Patch 0004 is an optimization for copying last branches; it only copies
-> last branches once if the instruction samples share the same last
-> branches.
-> 
-> Patch 0005 is a minor fix for unsigned variable comparison to zero.
-> 
-> This patch set has been rebased on the latest perf/core branch; and
-> verified on Juno board with below commands:
-> 
->   # perf script --itrace=i2
->   # perf script --itrace=i2il16
->   # perf inject --itrace=i2il16 -i perf.data -o perf.data.new
->   # perf inject --itrace=i100il16 -i perf.data -o perf.data.new
-> 
-> Changes from v3:
-> * Refactored patch 0001 with new function cs_etm__packet_swap() (Mike);
-> * Refined instruction sample generation flow with single while loop,
->   which completely uses Mike's suggestions (Mike);
-> * Added Mike's review tags for patch 01/02/04/05.
-> 
-> Changes from v2:
-> * Added patch 0001 which is to fix swapping packets for instruction
->   samples;
-> * Refined minor commit logs and comments;
-> * Rebased on the latest perf/core branch.
-> 
-> Changes from v1:
-> * Rebased patch set on perf/core branch with latest commit 9fec3cd5fa4a
->   ("perf map: Check if the map still has some refcounts on exit").
-> 
-> 
-> 
-> Leo Yan (5):
->   perf cs-etm: Swap packets for instruction samples
->   perf cs-etm: Continuously record last branch
->   perf cs-etm: Correct synthesizing instruction samples
->   perf cs-etm: Optimize copying last branches
->   perf cs-etm: Fix unsigned variable comparison to zero
+On Mon, Feb 17, 2020 at 4:07 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+>
+> I'm not sure what you mean by efault string.  Are you referring to what
+> %pe is doing?  If so, no -- I would keep %p and %pe separate.
 
-For all the patches in this set:
+Right.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+But bringing up %pe makes me realize that we do odd things for NULL
+for that. We print errors in a nice legible form, but we show NULL as
+a zero value, I think.
 
-Unless Arnaldo says otherwise, I suggest you send a new V5 with Mike's RB for
-patch 3/5 and mine for all of them.  That way he doesn't have to edit the
-patches when applying them.
+So maybe %pe should show NULL as "(null)"? Or even as just "0" to go
+with the error names that just look like the integer error syntax (eg
+"-EINVAL")
 
-Thanks,
-Mathieu
-
-> 
->  tools/perf/util/cs-etm.c | 157 +++++++++++++++++++++++++++------------
->  1 file changed, 111 insertions(+), 46 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+                 Linus
