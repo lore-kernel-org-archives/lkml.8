@@ -2,94 +2,95 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC33CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5ADC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F57320722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582016237;
-	bh=Oosr7exZhuT7/iQ7DfImqXy4BK7Y5vT4H5twup1j31o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ps81mR2cgcQ8BwQqdTYTVM5YsBAnfAGMpKGJKGFEDjCa9Kcaqi8y3hL0Ab+Tt0TQX
-	 6XCPo9f7UMBQYsXjs9h9N5i0M0UUCKAS8iCrmmgHueQz0Uk1/D7M1spjkk7/TI+XEU
-	 cjPSdy9wwhrgMy8yYT64BJ8JH48LH8kScTHHaLHQ=
+	by mail.kernel.org (Postfix) with ESMTP id E7D9620722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgBRI5Q (ORCPT
+        id S1726444AbgBRI51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 03:57:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53018 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgBRI5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:57:15 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2219206E2;
-        Tue, 18 Feb 2020 08:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582016235;
-        bh=Oosr7exZhuT7/iQ7DfImqXy4BK7Y5vT4H5twup1j31o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HFUyiWhi5hiCBPWpiitKj41HumVA0IEmhesanSXeA6225Y0xYwJQk+8bUNO+pIoIx
-         907KubtLQrIt2KH+AvfqsosGgJkAIT56+kVCPmMPsfaTB8m42Lyo0hwXHDUtCVMzY2
-         x8BMWuXeMK4r0No5M/APDoD3S7L/P3DRoMRKUQRA=
-Date:   Tue, 18 Feb 2020 08:57:09 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH 5/5] arm64: Remove TIF_NOHZ
-Message-ID: <20200218085709.GB16828@willie-the-truck>
-References: <20200214152615.25447-1-frederic@kernel.org>
- <20200214152615.25447-6-frederic@kernel.org>
+        id S1726225AbgBRI50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:57:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A92AEADE3;
+        Tue, 18 Feb 2020 08:57:24 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 08:57:21 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC -V2 2/8] autonuma, memory tiering: Rate limit NUMA
+ migration throughput
+Message-ID: <20200218085721.GC3420@suse.de>
+References: <20200218082634.1596727-1-ying.huang@intel.com>
+ <20200218082634.1596727-3-ying.huang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200214152615.25447-6-frederic@kernel.org>
+In-Reply-To: <20200218082634.1596727-3-ying.huang@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 04:26:15PM +0100, Frederic Weisbecker wrote:
-> The syscall slow path is spuriously invoked when context tracking is
-> activated while the entry code calls context tracking from fast path.
+On Tue, Feb 18, 2020 at 04:26:28PM +0800, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
 > 
-> Remove that overhead and the unused flag itself while at it.
+> In autonuma memory tiering mode, the hot PMEM (persistent memory)
+> pages could be migrated to DRAM via autonuma.  But this incurs some
+> overhead too.  So that sometimes the workload performance may be hurt.
+> To avoid too much disturbing to the workload, the migration throughput
+> should be rate-limited.
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> ---
->  arch/arm64/Kconfig                   | 1 -
->  arch/arm64/include/asm/thread_info.h | 4 +---
->  2 files changed, 1 insertion(+), 4 deletions(-)
+> At the other hand, in some situation, for example, some workloads
+> exits, many DRAM pages become free, so that some pages of the other
+> workloads can be migrated to DRAM.  To respond to the workloads
+> changing quickly, it's better to migrate pages faster.
+> 
+> To address the above 2 requirements, a rate limit algorithm as follows
+> is used,
+> 
+> - If there is enough free memory in DRAM node (that is, > high
+>   watermark + 2 * rate limit pages), then NUMA migration throughput will
+>   not be rate-limited to respond to the workload changing quickly.
+> 
+> - Otherwise, counting the number of pages to try to migrate to a DRAM
+>   node via autonuma, if the count exceeds the limit specified by the
+>   users, stop NUMA migration until the next second.
+> 
+> A new sysctl knob kernel.numa_balancing_rate_limit_mbps is added for
+> the users to specify the limit.  If its value is 0, the default
+> value (high watermark) will be used.
+> 
+> TODO: Add ABI document for new sysctl knob.
+> 
 
-Acked-by: Will Deacon <will@kernel.org>
+I very strongly suggest that this only be done as a last resort and with
+supporting data as to why it is necessary. NUMA balancing did have rate
+limiting at one point and it was removed when balancing was smart enough
+to mostly do the right thing without rate limiting. I posted a series
+that reconciled NUMA balancing with the CPU load balancer recently which
+further reduced spurious and unnecessary migrations. I would not like
+to see rate limiting reintroduced unless there is no other way of fixing
+saturation of memory bandwidth due to NUMA balancing. Even if it's
+needed as a stopgap while the feature is finalised, it should be
+introduced late in the series explaining why it's temporarily necessary.
 
-Do you want this to go via the arm64 tree? It looks like it makes sense
-on its own to me, so I could pick it as a fix.
-
-Will
+-- 
+Mel Gorman
+SUSE Labs
