@@ -2,136 +2,96 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75728C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1CFC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57038208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E02208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgBRBjl (ORCPT
+        id S1726283AbgBRBlg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:39:41 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:36215 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbgBRBjl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:39:41 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TqCOUvS_1581989975;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TqCOUvS_1581989975)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Feb 2020 09:39:36 +0800
-Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
- locality info
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal Koutn? <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
- <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
- <20200214151048.GL14914@hirez.programming.kicks-ass.net>
- <20200217115810.GA3420@suse.de>
- <881deb50-163e-442a-41ec-b375cc445e4d@linux.alibaba.com>
- <20200217141616.GB3420@suse.de>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <114519ab-4e9e-996a-67b8-4f5fcecba72a@linux.alibaba.com>
-Date:   Tue, 18 Feb 2020 09:39:35 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Mon, 17 Feb 2020 20:41:36 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2581 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726097AbgBRBlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 20:41:36 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id AA90F4EEC760BFC529C0;
+        Tue, 18 Feb 2020 09:41:33 +0800 (CST)
+Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 18 Feb 2020 09:41:33 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 18 Feb 2020 09:41:33 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Tue, 18 Feb 2020 09:41:33 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: x86: don't notify userspace IOAPIC on edge-triggered
+ interrupt EOI
+Thread-Topic: [PATCH] KVM: x86: don't notify userspace IOAPIC on
+ edge-triggered interrupt EOI
+Thread-Index: AdXl+vxCGIl6i2nBTZGSqb8vkSSkRw==
+Date:   Tue, 18 Feb 2020 01:41:33 +0000
+Message-ID: <edf7454be5a743928cbc1bec5dce238d@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200217141616.GB3420@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>linmiaohe <linmiaohe@huawei.com> writes:
+>
+>> @@ -417,7 +417,7 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+>>  
+>>  			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
+>>  
+>> -			if (irq.level &&
+>> +			if (irq.trig_mode &&
+>>  			    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>>  						irq.dest_id, irq.dest_mode))
+>>  				__set_bit(irq.vector, ioapic_handled_vectors);
+>
+>Assuming Radim's comment (13db77347db1) is correct, the change in
+>3159d36ad799 looks wrong and your patch restores the status quo. Actually, kvm_set_msi_irq() always sets irq->level = 1 so checking it is pointless.
+>
+>Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
+Thanks for review.
 
-On 2020/2/17 下午10:16, Mel Gorman wrote:
-> On Mon, Feb 17, 2020 at 09:23:52PM +0800, ?????? wrote:
-[snip]
->>
->> IMHO the scan period changing should not be a problem now, since the
->> maximum period is defined by user, so monitoring at maximum period
->> on the accumulated page accessing counters is always meaningful, correct?
->>
-> 
-> It has meaning but the scan rate drives the fault rate which is the basis
-> for the stats you accumulate. If the scan rate is high when accesses
-> are local, the stats can be skewed making it appear the task is much
-> more local than it may really is at a later point in time. The scan rate
-> affects the accuracy of the information. The counters have meaning but
-> they needs careful interpretation.
+>
+> (but it is actually possible that there's a buggy userspace out there which expects EOI notifications; we won't find out unless we try to fix the bug).
+>
 
-Yeah, to zip so many information from NUMA Balancing to some statistics
-is a challenge itself, the locality still not so easy to be understood by
-NUMA newbie :-P
+Yeh, there may be a buggy userspace hidden from this unexpected EOI notifications. It may not be worth enough to fix it as we may spend many time
+to catch the bug.
+Perhaps we should only remove the pointless checking of irq->level for cleanup. :)
 
-> 
->> FYI, by monitoring locality, we found that the kvm vcpu thread is not
->> covered by NUMA Balancing, whatever how many maximum period passed, the
->> counters are not increasing, or very slowly, although inside guest we are
->> copying memory.
->>
->> Later we found such task rarely exit to user space to trigger task
->> work callbacks, and NUMA Balancing scan depends on that, which help us
->> realize the importance to enable NUMA Balancing inside guest, with the
->> correct NUMA topo, a big performance risk I'll say :-P
->>
-> 
-> Which is a very interesting corner case in itself but also one that
-> could have potentially have been inferred from monitoring /proc/vmstat
-> numa_pte_updates or on a per-task basis by monitoring /proc/PID/sched and
-> watching numa_scan_seq and total_numa_faults. Accumulating the information
-> on a per-cgroup basis would require a bit more legwork.
-
-That's not working for daily monitoring...
-
-Besides, compared with locality, this require much more deeper understand
-on the implementation, which could even be tough for NUMA developers to
-assemble all these statistics together.
-
-> 
->> Maybe not a good example, but we just try to highlight that NUMA Balancing
->> could have issue in some cases, and we want them to be exposed, somehow,
->> maybe by the locality.
->>
-> 
-> Again, I'm somewhat neutral on the patch simply because I would not use
-> the information for debugging problems with NUMA balancing. I would try
-> using tracepoints and if the tracepoints were not good enough, I'd add or
-> fix them -- similar to what I had to do with sched_stick_numa recently.
-> The caveat is that I mostly look at this sort of problem as a developer.
-> Sysadmins have very different requirements, especially simplicity even
-> if the simplicity in this case is an illusion.
-
-Fair enough, but I guess PeterZ still want your Ack, so neutral means
-refuse in this case :-(
-
-BTW, how do you think about the documentation in second patch?
-
-Do you think it's necessary to have a doc to explain NUMA related statistics?
-
-Regards,
-Michael Wang
-
-> 
