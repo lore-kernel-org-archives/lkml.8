@@ -2,160 +2,101 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0161AC3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0214FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6362176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB77520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQs3yrtv"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AOPn+oWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgBROIn (ORCPT
+        id S1726692AbgBROJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:08:43 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47640 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgBROIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:08:43 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IE8aTe072394;
-        Tue, 18 Feb 2020 08:08:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582034917;
-        bh=4BdW1JJPThl9i4+P6/loVm2QUGqngwrPUTpXVz+GMFI=;
-        h=From:To:CC:Subject:Date;
-        b=ZQs3yrtvLVTRF2HF+1U9f5fNjaCOdQwUWH7+mmvjg7di5RpeS3yZ+vogwfVnmWH+f
-         1Xrjj+HwGGjCn0MetPtQiQ4cN4knFTNR3jCD/bpCC1Tmtgz42JTNJbXqvxgLfoRlbp
-         kEGcIT4ufv893934slXJIA5iBygxezzZ0hqZHPAk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IE8aaE080194
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 08:08:36 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 08:08:36 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 08:08:36 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IE8Xqr096183;
-        Tue, 18 Feb 2020 08:08:34 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <kishon@ti.com>, <tony@atomide.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] mmc: sdhci-omap: Add Support for Suspend/Resume
-Date:   Tue, 18 Feb 2020 19:40:18 +0530
-Message-ID: <20200218141018.24456-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 18 Feb 2020 09:09:33 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:22026 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgBROJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:09:33 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48MN5P33WgzB09bP;
+        Tue, 18 Feb 2020 15:09:29 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=AOPn+oWM; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 9VREczmmUHPK; Tue, 18 Feb 2020 15:09:29 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48MN5P1YPwzB09bM;
+        Tue, 18 Feb 2020 15:09:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582034969; bh=y0KdGp0qsXN/fO5X/jOGmm8GljqKiBvrLqn6qOYtuPc=;
+        h=From:Subject:To:Cc:Date:From;
+        b=AOPn+oWMiQxYwmeYsYE+qk3OW6eZd8/JkxBgdFTec/YioP+t76r37CMV9Vu2Ceh6e
+         yKeqtU6pC0Qct2HN/jPSl+PNLpNfGihvZk8Uz1HJnu8Xyf8SwrxAsMiS9C29xnsnzr
+         rH9OyRC/at+BpqXtaRa2Hh3GIY3ZsSUWslN2/jNQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9B7618B815;
+        Tue, 18 Feb 2020 15:09:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id A5ftenYca6vO; Tue, 18 Feb 2020 15:09:30 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 660D28B814;
+        Tue, 18 Feb 2020 15:09:30 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 182C565314; Tue, 18 Feb 2020 14:09:29 +0000 (UTC)
+Message-Id: <a99fc0ad65b87a1ba51cfa3e0e9034ee294c3e07.1582034961.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/entry: Fix a #if which should be a #ifdef in
+ entry_32.S
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 18 Feb 2020 14:09:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add power management ops which save and restore the driver context and
-facilitate a system suspend and resume.
-
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Fixes: 12c3f1fd87bf ("powerpc/32s: get rid of CPU_FTR_601 feature")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- drivers/mmc/host/sdhci-omap.c | 59 +++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ arch/powerpc/kernel/entry_32.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 882053151a47..a524c01da8de 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -108,6 +108,11 @@ struct sdhci_omap_host {
- 	struct pinctrl		*pinctrl;
- 	struct pinctrl_state	**pinctrl_state;
- 	bool			is_tuning;
-+	/* Omap specific context save */
-+	u32			con;
-+	u32			hctl;
-+	u32			sysctl;
-+	u32			capa;
- };
- 
- static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
-@@ -1233,11 +1238,65 @@ static int sdhci_omap_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void sdhci_omap_context_save(struct sdhci_omap_host *omap_host)
-+{
-+	omap_host->con = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-+	omap_host->hctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_HCTL);
-+	omap_host->sysctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_SYSCTL);
-+	omap_host->capa = sdhci_omap_readl(omap_host, SDHCI_OMAP_CAPA);
-+}
-+
-+static void sdhci_omap_context_restore(struct sdhci_omap_host *omap_host)
-+{
-+	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, omap_host->con);
-+	sdhci_omap_writel(omap_host, SDHCI_OMAP_HCTL, omap_host->hctl);
-+	sdhci_omap_writel(omap_host, SDHCI_OMAP_SYSCTL, omap_host->sysctl);
-+	sdhci_omap_writel(omap_host, SDHCI_OMAP_CAPA, omap_host->capa);
-+}
-+
-+static int __maybe_unused sdhci_omap_suspend(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-+
-+	sdhci_suspend_host(host);
-+
-+	sdhci_omap_context_save(omap_host);
-+
-+	pinctrl_pm_select_idle_state(dev);
-+
-+	pm_runtime_put_sync(dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused sdhci_omap_resume(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-+
-+	pm_runtime_get_sync(dev);
-+
-+	pinctrl_pm_select_default_state(dev);
-+
-+	sdhci_omap_context_restore(omap_host);
-+
-+	sdhci_resume_host(host);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(sdhci_omap_dev_pm_ops, sdhci_omap_suspend,
-+			 sdhci_omap_resume);
-+
- static struct platform_driver sdhci_omap_driver = {
- 	.probe = sdhci_omap_probe,
- 	.remove = sdhci_omap_remove,
- 	.driver = {
- 		   .name = "sdhci-omap",
-+		   .pm = &sdhci_omap_dev_pm_ops,
- 		   .of_match_table = omap_sdhci_match,
- 		  },
- };
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 0713daa651d9..b38e6b549d48 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -783,7 +783,7 @@ fast_exception_return:
+ 1:	lis	r3,exc_exit_restart_end@ha
+ 	addi	r3,r3,exc_exit_restart_end@l
+ 	cmplw	r12,r3
+-#if CONFIG_PPC_BOOK3S_601
++#ifdef CONFIG_PPC_BOOK3S_601
+ 	bge	2b
+ #else
+ 	bge	3f
+@@ -791,7 +791,7 @@ fast_exception_return:
+ 	lis	r4,exc_exit_restart@ha
+ 	addi	r4,r4,exc_exit_restart@l
+ 	cmplw	r12,r4
+-#if CONFIG_PPC_BOOK3S_601
++#ifdef CONFIG_PPC_BOOK3S_601
+ 	blt	2b
+ #else
+ 	blt	3f
 -- 
-2.19.2
+2.25.0
 
