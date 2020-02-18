@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0EC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD16C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C44E24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61672176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gv2OvzIv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rinj2lVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBRURI (ORCPT
+        id S1726508AbgBRUQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:17:08 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52411 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgBRUQS (ORCPT
+        Tue, 18 Feb 2020 15:16:15 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38617 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgBRUQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:18 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so4102462wmc.2;
-        Tue, 18 Feb 2020 12:16:17 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:13 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a9so4329980wmj.3;
+        Tue, 18 Feb 2020 12:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=faBVqPTcYPP2mJjHh2h8k1eNwReQK/o/MeBiESpq7Co=;
-        b=Gv2OvzIvDKL8C1oLMCAExLfw7s1uXTT3LNrkPFqKMKXwvGKdHVIT1c8O/JqoX2e1jL
-         FbvEgOprTF3QVHY59MVQOeXD2JY0nN6946HVq4Ie9YSLpI0YPyThjHdbtvW5bPeoEoIB
-         feodXJDktTZAzvJ02ibilJ/Idf5sb3RGSNTC9NP63HePr80rz66jEbnM31tPDRBlZ609
-         GZbJcqJsLoC7qsHSpZmoj87W0l7xSOYXnUbWQP7JsKoKta0cFJvNmQi+3veWQMSMCZ0Y
-         SRa9oi92JkhNm6KJ8W8sjcSd6aTOPnJG0p8NxMJXc7A3pxEZz10vrDlxCaZ+foWwKz2Y
-         7OfQ==
+        bh=JbsLBIjey08BbMjYFR6nJwXmiiRgfHCLvVuuHl3uFUI=;
+        b=Rinj2lVTWNz7/BNm1zAxBIspri2k1m14YWUmAPlw7jt/8CCHBQSR5Dbk/02hp8P6X9
+         tgJ2kdvS8tG8qqlB0ZjvaayEFISKmKclWsZQkds47pEc4+bKJkZzeeN706uNtH4B03Oe
+         WHJX3/eYAM7VavLRXdpNBS025IBlEkiQVDNQPqD7BAdl2wbNqGpukdIp60clYjW/ugAU
+         Ktq36jx1SiM+3w5TGg3ycKXe+992MGlCeU38o/CP/1ShA4FzOQl0wGxfaOpCN1ZwEs5O
+         LTXU6ytVHGc01+vr7xEX+6UySWu+C1PIyFHJ5Ncj/mtljJMXbyg8py8Rw3G8d7X+yZiS
+         D3AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=faBVqPTcYPP2mJjHh2h8k1eNwReQK/o/MeBiESpq7Co=;
-        b=L0CZrZ++7Qy645IqXkg8WjAo0JjgLCOpAVFppOGNjgLmFUEtWXrUKBtcn+JeaOE2Qg
-         2l+DBVn/VKncnFi+DuMsBNzYZgYg7l4E9EeGxW1s3d56S17BRyodnyMo0TI/aL63pjik
-         dRKhh1RfYSXgKWd4Xpcvlz2MH17hDRsmxKeAN7WNGRJmBZwAp499FG+mSLyPtSqGkyEe
-         NhA64oXAjIMjUtWc2blCjZWSeblhrZWrqOj9yQuIwBNHfmKVIYDeMIDcScd3qFphtQpL
-         auCwOH1ovbzrQeMP7VI/WyJMAmD+VC7vNM/M5FvIU2/FgxC/4NkCegT6AdBwoy8TSKS7
-         r5jg==
-X-Gm-Message-State: APjAAAWwRvNwaL92TS127FVl7Q9O3/QvQomSWKy3baBremoJBmn5YPjQ
-        kpIOYwh4NV5lAgRFJ2S49YawN61b
-X-Google-Smtp-Source: APXvYqwj9n0AWyFCf7wlztQVh7m87fwQMuFHKD3sMCvi3AvICoXSkgax7knIe2MzB3xz8/JcsHTpvw==
-X-Received: by 2002:a1c:ded7:: with SMTP id v206mr5112438wmg.106.1582056976440;
-        Tue, 18 Feb 2020 12:16:16 -0800 (PST)
+        bh=JbsLBIjey08BbMjYFR6nJwXmiiRgfHCLvVuuHl3uFUI=;
+        b=GB5zp7M4NB9kR1Lizs29dWVTxla+yOPXt5U+RRw6Rp2GVmSnZyKg7vB4/4sDvIbJIP
+         Q+chRS8KR+FdKrELGnpXrrxSDk0Pgf2HIGs9T35+6exVvpnvquG17hB5Fgu4OOtqpJ2f
+         bdXIj+NGVFa16bYY08yC+tQrsNyCckdQb3396TzgBaRSsQBIzT5fAhZB2DN8Jhtcndlo
+         eF9Px0J+O87rb66PzDImz06VKt5rt0zIGAzbmJ89SQHkT79oO5C+FRu/evPFq+P4DWMk
+         1EYaAKX/p2vZHzRv20lTh9ew0MwZaIwu0WwJvwSrXIcRnFTqAGBmtLS2+zpnJEylO96Q
+         Ky9g==
+X-Gm-Message-State: APjAAAX85m8ujm75fgRt8rn8MX5CCOOSOkn8BFVgHdX7OSw5GHZFXGFk
+        F2qtFC1Eq5ub6cAqiiVdO5uelPg9
+X-Google-Smtp-Source: APXvYqxI/VJcYjsYm7gpnuCDb5HwGwkesJn3QsGVBgmcDSCjVOiM3MpKgLzznSNQvZjj5YglEYytpw==
+X-Received: by 2002:a1c:a382:: with SMTP id m124mr4906128wme.90.1582056971147;
+        Tue, 18 Feb 2020 12:16:11 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id h128sm5112270wmh.33.2020.02.18.12.16.15
+        by smtp.googlemail.com with ESMTPSA id f8sm7651895wru.12.2020.02.18.12.16.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:16 -0800 (PST)
-Subject: [PATCH net-next v2 08/13] ionic: use new helper tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:10 -0800 (PST)
+Subject: [PATCH net-next v2 03/13] net: atheros: use new helper
+ tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     David Miller <davem@davemloft.net>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <6960380e-cee3-b65c-010f-551635cb3988@gmail.com>
-Date:   Tue, 18 Feb 2020 21:07:16 +0100
+Message-ID: <45c910c2-36ed-2557-ac35-cb978e44cbf4@gmail.com>
+Date:   Tue, 18 Feb 2020 20:59:55 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -84,25 +85,43 @@ Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/ethernet/atheros/alx/main.c         | 5 +----
+ drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 6 ++----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-index e452f4242..020acc300 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-@@ -632,10 +632,7 @@ static int ionic_tx_tcp_pseudo_csum(struct sk_buff *skb)
- 					   ip_hdr(skb)->daddr,
- 					   0, IPPROTO_TCP, 0);
- 	} else if (skb->protocol == cpu_to_be16(ETH_P_IPV6)) {
--		tcp_hdr(skb)->check =
--			~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
--					 &ipv6_hdr(skb)->daddr,
--					 0, IPPROTO_TCP, 0);
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index 1dcbc486e..b9b4edb91 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1416,10 +1416,7 @@ static int alx_tso(struct sk_buff *skb, struct alx_txd *first)
+ 							 0, IPPROTO_TCP, 0);
+ 		first->word1 |= 1 << TPD_IPV4_SHIFT;
+ 	} else if (skb_is_gso_v6(skb)) {
+-		ipv6_hdr(skb)->payload_len = 0;
+-		tcp_hdr(skb)->check = ~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						       &ipv6_hdr(skb)->daddr,
+-						       0, IPPROTO_TCP, 0);
 +		tcp_v6_gso_csum_prep(skb);
- 	}
- 
- 	return 0;
+ 		/* LSOv2: the first TPD only provides the packet length */
+ 		first->adrl.l.pkt_len = skb->len;
+ 		first->word1 |= 1 << TPD_LSO_V2_SHIFT;
+diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
+index 4c0b1f855..0d67b951c 100644
+--- a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
++++ b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
+@@ -2025,10 +2025,8 @@ static int atl1c_tso_csum(struct atl1c_adapter *adapter,
+ 						"IPV6 tso with zero data??\n");
+ 				goto check_sum;
+ 			} else
+-				tcp_hdr(skb)->check = ~csum_ipv6_magic(
+-						&ipv6_hdr(skb)->saddr,
+-						&ipv6_hdr(skb)->daddr,
+-						0, IPPROTO_TCP, 0);
++				tcp_v6_gso_csum_prep(skb);
++
+ 			etpd->word1 |= 1 << TPD_LSO_EN_SHIFT;
+ 			etpd->word1 |= 1 << TPD_LSO_VER_SHIFT;
+ 			etpd->pkt_len = cpu_to_le32(skb->len);
 -- 
 2.25.1
 
