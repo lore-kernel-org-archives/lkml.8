@@ -2,151 +2,124 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C5C34035
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D15DC34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4FC21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562DA21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="j6+aJwtc"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="G4ZUB49J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgBRKWW (ORCPT
+        id S1726556AbgBRKW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:22:22 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39979 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgBRKWV (ORCPT
+        Tue, 18 Feb 2020 05:22:29 -0500
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:46242 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgBRKW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:22:21 -0500
-Received: by mail-qt1-f193.google.com with SMTP id v25so14094553qto.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 02:22:21 -0800 (PST)
+        Tue, 18 Feb 2020 05:22:28 -0500
+Received: by mail-lj1-f178.google.com with SMTP id x14so22260882ljd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 02:22:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jcijWLGUlZ8GgDNFPut3P5OmzC3gncuLiap7isWZjgk=;
-        b=j6+aJwtcULrl6SmiRgNh4CBUBQTOfkxgDzVYO0lJp/vlUKc+7ihhc1hO5Zw8h+HUOi
-         IkRjxilM1shdIt/E4L3TQZcHmnAZ7PLOgAIq6cDwaRUtU1c6i0vw6t/6wZ7oMjGZA3S2
-         Y2yP8kFEjqlMqWEYr7uiM4v9GrmCJ034aYdZlczf1I0RzEiqcsje369Vgj3gtS18REjd
-         DHLDhypnd3RWqdNshdMBRBtKnd/TGoexOPwKiuz8ejc0azD8ScG5cZXA31/GPOvY9hws
-         3WUTT2aWBbPe+JVahGMC1HzFdFnOHhltAAHt14Noch80XBrxQo1GRbjistaNxnIHA51w
-         GHOA==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=W72sztoRh+McmphKRgX4tOdWz/1TaY4NH71C48f69Do=;
+        b=G4ZUB49J3pMicoq7W/iK1YVpTZTH9Z4LyNa1uZLGY/eTKKilcqPAWRNGmf1h1NXJcf
+         QrLjvCrvjaDz8+WlTUj6/Hfpaa0LFJkRBfHF3arTL4sDBATuRHB9zyESubreMSNtSuWx
+         tKylmJtPD41ywj85q+Dg10/WN6XFllZO+lYFnHsjEpb4NkUx+BfNqnWelqLQ54/XKc/x
+         yO7kvZdPCHeTMJubju7OQVWD+ak5O08xiXhpRi0ef9VS8mmk5Cnkgeisuup0OOMAp2LE
+         /Pf6Md6i2jfF60kxqRwzMU/vkRpgFEhVxOrKcy61l0LmYKwnWcf4NK8wd9CmPqaTBzZ3
+         k3fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jcijWLGUlZ8GgDNFPut3P5OmzC3gncuLiap7isWZjgk=;
-        b=MYs9HJd23H9PSLk/iRUOcP2OUp3/k5RATV2ACJKjqLSuHDx4uisvRX19KjBYOiJNF2
-         J0BU7iF8ljuwmE0R3Ifdn3jnh7BdHTwTnzoWDWig/f/IpqtreuNeNEFjf28SMk0hxnA1
-         g+RyZBgiHWtEaLlRePgcWVeeFA6hBMYCbbyi/qkaZe/h/n1j5MZvI8wuB5jztIw2rPD2
-         wVMbnglmiCs4/Mum0Lempb5vHDXj2fRX4GPr4PdKLYoiVErlK0zag+C6PVehJ2Bfd593
-         ZYsDnVliIpsTo7MqyWY2A1642ooYtmhzj9skMgdI3lMYx1jx0JIa36ihdi8CPsmH19il
-         Yl1Q==
-X-Gm-Message-State: APjAAAUYKzHKCB7evP9gIwf7CfGmVNPX+m7a28hye8t/e0bVoeFLOL8G
-        noWtiB210i2cRqSZxUu9wUwFas/RW73TfJjX/3GcVA==
-X-Google-Smtp-Source: APXvYqzWsJO4o+rLLiO9z/NWy6qPc1zKWJBW/rz0AKgMC0f+bsIObg0ctlwu4M5ADLVlloybivZkhN8mEckTRCQpUyA=
-X-Received: by 2002:ac8:7657:: with SMTP id i23mr16804779qtr.197.1582021340839;
- Tue, 18 Feb 2020 02:22:20 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=W72sztoRh+McmphKRgX4tOdWz/1TaY4NH71C48f69Do=;
+        b=WYSNekOnrv+9PdgR+cBMmyfPCLaldp92DmDFdm8XH/31mOhO3F2m7N61iSpUtTGZYt
+         sReQke2zOwTmAX5MD/dvzI9hY9icdCbBffszrBhXk7z/U/t4/WjOkhrisyHbIQ3IwaL3
+         CINj92s91qtmrm28c/bRmzyEhAnO4sc9n4AndJ+HxF+dJrwIEjJzB07vwjmLaNdumT3y
+         9vGObgUHlmL1dDPiwAK6DhlIXvJD7Uup8Erw0hKmxDUXNS/uZCm3wS4PTIY+TZ88jV+p
+         c55RsKjpHZwbiNc16OXiP1NDzdfN9FC2pW8TJ0r4kpmzlfYdbJKXH58A208bfNOxrGHi
+         3AXw==
+X-Gm-Message-State: APjAAAU8cEnTf7zcRgjvzTKVNpQ7AyPL2h/CjA5nu3tWUO91lKPSwEG8
+        nHiFxEVXmsflzjgYQhpaR8cADraHhas=
+X-Google-Smtp-Source: APXvYqzHVkBWWMyB11qGkZJ5O1yDGNinCi2d0MWFVrLqBUQwfpEWBEaci9jMNx2iXoh6EuufcRXiuQ==
+X-Received: by 2002:a2e:5854:: with SMTP id x20mr11740789ljd.287.1582021346380;
+        Tue, 18 Feb 2020 02:22:26 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id m21sm1937481lfb.59.2020.02.18.02.22.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 02:22:25 -0800 (PST)
+Date:   Tue, 18 Feb 2020 11:22:24 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Message-ID: <20200218102224.GA812084@oden.dyn.berto.se>
+References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
+ <20200217101114.GO3013231@oden.dyn.berto.se>
+ <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
+ <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200218094234.23896-1-brgl@bgdev.pl> <20200218094234.23896-3-brgl@bgdev.pl>
- <6e7a5df7-6ded-7777-5552-879934c185ad@linaro.org> <CAMRc=McQ4ESq4g82QGjZiM0+NWUBrjUv71Be7UXzZpSsa9xAig@mail.gmail.com>
- <5f4cf6ca-c5e2-9fd2-b4b8-f99a120e0d4b@linaro.org>
-In-Reply-To: <5f4cf6ca-c5e2-9fd2-b4b8-f99a120e0d4b@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Feb 2020 11:22:10 +0100
-Message-ID: <CAMpxmJXpC+_4Z3T+z01DMr5yxgY0WoBuc_RdszHwnaC42NXu9g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] nvmem: fix another memory leak in error path
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 18 lut 2020 o 11:11 Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
->
->
->
-> On 18/02/2020 10:05, Bartosz Golaszewski wrote:
-> > wt., 18 lut 2020 o 10:56 Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> napisa=C5=82(a):
-> >>
-> >>
-> >>
-> >> On 18/02/2020 09:42, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> The nvmem struct is only freed on the first error check after its
-> >>> allocation and leaked after that. Fix it with a new label.
-> >>>
-> >>> Cc: <stable@vger.kernel.org>
-> >>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>> ---
-> >>>    drivers/nvmem/core.c | 8 ++++----
-> >>>    1 file changed, 4 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> >>> index b0be03d5f240..c9b3f4047154 100644
-> >>> --- a/drivers/nvmem/core.c
-> >>> +++ b/drivers/nvmem/core.c
-> >>> @@ -343,10 +343,8 @@ struct nvmem_device *nvmem_register(const struct=
- nvmem_config *config)
-> >>>                return ERR_PTR(-ENOMEM);
-> >>>
-> >>>        rval  =3D ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
-> >>> -     if (rval < 0) {
-> >>> -             kfree(nvmem);
-> >>> -             return ERR_PTR(rval);
-> >>> -     }
-> >>> +     if (rval < 0)
-> >>> +             goto err_free_nvmem;
-> >>>        if (config->wp_gpio)
-> >>>                nvmem->wp_gpio =3D config->wp_gpio;
-> >>>        else
-> >>> @@ -432,6 +430,8 @@ struct nvmem_device *nvmem_register(const struct =
-nvmem_config *config)
-> >>>        put_device(&nvmem->dev);
-> >>>    err_ida_remove:
-> >>>        ida_simple_remove(&nvmem_ida, nvmem->id);
-> >>> +err_free_nvmem:
-> >>> +     kfree(nvmem);
-> >>
-> >> This is not correct fix to start with, if the device has already been
-> >> intialized before jumping here then nvmem would be freed as part of
-> >> nvmem_release().
-> >>
-> >> So the bug was actually introduced by adding err_ida_remove label.
-> >>
-> >> You can free nvmem at that point but not at any point after that as
-> >> device core would be holding a reference to it.
-> >>
-> >
-> > OK I see - I missed the release() callback assignment. Frankly: I find
-> > this split of resource management responsibility confusing. Since the
-> > users are expected to call nvmem_unregister() anyway - wouldn't it be
-> > more clear to just free all resources there? What is the advantage of
-> > defining the release() callback for device type here?
->
-> Because we are using dev pointer from nvmem structure, and this dev
-> pointer should be valid until release callback is invoked.
->
-> Freeing nvmem at any early stage would make dev pointer invalid and
-> device core would dereference it!
->
+Hello Morimoto-san and Shimoda-san,
 
-Ok, let me brew up a v3 with that in mind.
+Thanks for your feedback.
 
-Bart
+On 2020-02-18 00:11:03 +0000, Yoshihiro Shimoda wrote:
+> Hi Niklas-san,
+> 
+> > From: Kuninori Morimoto, Sent: Tuesday, February 18, 2020 9:01 AM
+> > 
+> > Hi Niklas
+> > 
+> > > > +renesas@???
+> > >
+> > > I have not used the +renesas@ for my other entry in MAINTAINERS for
+> > > R-Car VIN and wish them to be the same. I have do not mind if that is
+> > > with or without the +renesas tag.
+> > >
+> > > @Shimoda-san: What would you and Renesas prefer I use?
+> > 
+> > Please use +renesas@ for Author when you post patches.
+> > We don't mind for other mail address, like MAINTAINERS.
+> 
+> I have the same opinion with Morimoto-san.
+
+Ok thanks, good to know my view align with yours.
+
+Could one or both of you provide an Acked-by tag for this patch to bless 
+it?
+
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > Thank you for your help !!
+> > Best regards
+> > ---
+> > Kuninori Morimoto
+
+-- 
+Regards,
+Niklas Söderlund
