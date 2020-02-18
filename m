@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC74C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F7C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C8D24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0E324125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rXidaeWU"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xQkcyhd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBRTdm (ORCPT
+        id S1726963AbgBRTdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:33:42 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39757 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgBRTde (ORCPT
+        Tue, 18 Feb 2020 14:33:49 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35618 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgBRTdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:33:34 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so4203273wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:33:33 -0800 (PST)
+        Tue, 18 Feb 2020 14:33:33 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so4241241wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:33:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N/BxOSBMeZaNye1MoygZyS5wTUoMQ90aTMHecPnsJPU=;
-        b=rXidaeWUp55RRA4kDzm4Zjydnfv3HOiUvFDIADeJPNx920JX7ff7VJvMbBJ8TLcZAS
-         P70P6YhgdR182/a/jxnxOJ7b+PN7+Ca34GK1v080CSCqVvNFeD0AUXcReChn+VRY/7gt
-         Kvp3BbyB3mBpywJLrhwHcajvmvC2J1okk8E6i4NpjP/e2gK/kjrobHkPlnDyVf/w+Ndv
-         +QfqJVGt8S8dA1nMPd4jgBjxCudtplIKiWxXtoYvZU5MFJ0KNm6A23Wmc83NxvTCvKKx
-         1KB1Elinhg9txI2vUhlprBn65djxajzW63KKnnOFNUR0q6QDayPTKEGLl4MOzjhCqmfb
-         8gMw==
+        bh=Ayr0vaOngDA+VkwhWRpdM5V1skhfB+el5GXKIwRxryc=;
+        b=xQkcyhd9mpgYZo1ph9KEAbwqPZXD3q7Xx5fqMyOGprcnJ5fdXq73iZaS/fQ+qrso1T
+         93FKEqFyelBvQVLjeti8uHKmxCdP6zeXqoOY2zzLQwEp70BQpaxuSVk2MX2WQX0X1RAL
+         LNGQp9YBsRwrdCdhh9ydHE2VSaL1o55fVz0ewVwRo77qpyBXCDcmiWtTL0qt2HWJxkAS
+         P/WJq0lsxEAdVunCc3N3MuNJuc1li4p4oR7/7MTzD4VmeL/gPVf+4LTEH6AYGqnv9bDD
+         CDk+mzo5puPYxdtlOs+lXn0zoA/zKsvce2heh37g6R46RZFknCfkbRmrFAR1tVfc3L9l
+         ze6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=N/BxOSBMeZaNye1MoygZyS5wTUoMQ90aTMHecPnsJPU=;
-        b=ntOO48VrPtjwAD0B7XIad1WlQvf3HXpwCMlRZQzlVT+Ad42/Ow1EkO/hUuCefQt464
-         xh2e2AU9Nj8WCl4H3phhXpNp53qF7EucO+7aSg59C6f0K5u5TB/XHiesaqYUcD/s8FVs
-         atI6YpfIDmC1uCC/dFiFAxwsTzoW90Q6ymjywEP4ftl4NzZ+V0G2Aruf4Z5/xPsAvYa6
-         SKWq+pyhiKdXzHTMYshDYtKiVBb1JAWqY8E2i/Px+RebIZa3Aqh7cnGRZ2DzQrLeEtuE
-         uLPh3rs50Mr8zIOazyLU03xKVf46C6oqCYxVdZcL4KCasBWDRKtS2laSqJ41u4fb6Wow
-         FI6A==
-X-Gm-Message-State: APjAAAV6zMltNgQO2Bt5iDNckPY2VSslda7p4F+QDr3vMPbqWiMzL2vK
-        CWW1IfOkKZt7R7iuzFvGQMow/A==
-X-Google-Smtp-Source: APXvYqx2OzakvxU5+FL/ru47MRsIqww5QrDu9aHWIw0Oi3Ym29k9T249gOsfNdREzGBgqi5TKxRGww==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr5046830wmb.137.1582054412748;
-        Tue, 18 Feb 2020 11:33:32 -0800 (PST)
+        bh=Ayr0vaOngDA+VkwhWRpdM5V1skhfB+el5GXKIwRxryc=;
+        b=uXwH1/HWE+pV2cE4b79v9FIlg9KcI0AXWHi/Db8c8bgzjg0/a9GjJAbqC2scPB+Hn+
+         oXJ9YdTtV0Y/36nsoI3p4/kywvetQv8mGVUqqdgVKx1GWWz5I9Avq5iLnIZCwXHY+4Fi
+         mgUw9o6yyH77naQQ37lcILh4CaAnStruzgP3oGZXYw+4djiWqU1qyjncC02R+hCrZUls
+         zXFiu2wGo5Q3ZwMYwCRhi2foOWQexOOPJD1E4mW7xnwI3nt2crNyAiW4w1pgPAJ5k8Nr
+         DwCp7Uf29/Lcq4VfQlVHjJuhhwmwVtzK0dSV40xkH70mIYzJV+9rgQ6JezRQIRkdwEO4
+         U63A==
+X-Gm-Message-State: APjAAAX6jUiLz3s9WPbBTCwv2u9DTAYsuUiMU/329FWLfJ4PUVhzDxPq
+        0Q+0F2j3dEwZsD4ffFEw2gqwjA==
+X-Google-Smtp-Source: APXvYqzDsjJ38h0gWD0g2s11Gr1Lmz6VBAIYHUJDGPLQPQMDv1f+ZTd+/40BghBPL7gZYdi1jG1GBg==
+X-Received: by 2002:a1c:1d13:: with SMTP id d19mr4920253wmd.163.1582054411665;
+        Tue, 18 Feb 2020 11:33:31 -0800 (PST)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id k16sm7649266wru.0.2020.02.18.11.33.31
+        by smtp.googlemail.com with ESMTPSA id k16sm7649266wru.0.2020.02.18.11.33.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 11:33:32 -0800 (PST)
+        Tue, 18 Feb 2020 11:33:31 -0800 (PST)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     alexandre.belloni@bootlin.com, b-liu@ti.com, balbi@kernel.org,
         gregkh@linuxfoundation.org, ludovic.desroches@microchip.com,
@@ -62,9 +62,9 @@ To:     alexandre.belloni@bootlin.com, b-liu@ti.com, balbi@kernel.org,
         slemieux.tyco@gmail.com, stern@rowland.harvard.edu, vz@mleia.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 19/20] usb: host: xhci-pci: remove useless cast for driver.name
-Date:   Tue, 18 Feb 2020 19:33:02 +0000
-Message-Id: <1582054383-35760-20-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH 18/20] usb: host: uhci-pci: remove useless cast for driver.name
+Date:   Tue, 18 Feb 2020 19:33:01 +0000
+Message-Id: <1582054383-35760-19-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
 References: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
@@ -78,22 +78,22 @@ hcd_name (which is already const char).
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/usb/host/xhci-pci.c | 2 +-
+ drivers/usb/host/uhci-pci.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 5e9b537df631..0715a2e75413 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -549,7 +549,7 @@ MODULE_DEVICE_TABLE(pci, pci_ids);
+diff --git a/drivers/usb/host/uhci-pci.c b/drivers/usb/host/uhci-pci.c
+index 0fa3d72bae26..957c87efc746 100644
+--- a/drivers/usb/host/uhci-pci.c
++++ b/drivers/usb/host/uhci-pci.c
+@@ -294,7 +294,7 @@ static const struct pci_device_id uhci_pci_ids[] = { {
+ MODULE_DEVICE_TABLE(pci, uhci_pci_ids);
  
- /* pci driver glue; this is a "new style" PCI driver module */
- static struct pci_driver xhci_pci_driver = {
--	.name =		(char *) hcd_name,
+ static struct pci_driver uhci_pci_driver = {
+-	.name =		(char *)hcd_name,
 +	.name =		hcd_name,
- 	.id_table =	pci_ids,
+ 	.id_table =	uhci_pci_ids,
  
- 	.probe =	xhci_pci_probe,
+ 	.probe =	usb_hcd_pci_probe,
 -- 
 2.24.1
 
