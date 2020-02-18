@@ -2,213 +2,111 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA7C34044
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4EC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A990B2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493C12176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lEAw20A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgBRPrT (ORCPT
+        id S1726681AbgBRPra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:47:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50102 "EHLO mx2.suse.de"
+        Tue, 18 Feb 2020 10:47:30 -0500
+Received: from mout.gmx.net ([212.227.15.19]:46263 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgBRPrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:47:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C13E1AE2A;
-        Tue, 18 Feb 2020 15:47:15 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
-Date:   Tue, 18 Feb 2020 16:47:12 +0100
-Message-Id: <20200218154712.25490-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        id S1726338AbgBRPr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:47:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582040838;
+        bh=MBOJrFcaXa3Z19n1i45xJXpCvEYvi0ktVJoJ0KCJdaM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=lEAw20A9pa4AMyV2mOHYTAYIhJPNpYHngS5bg8kwJcoVo+iuzPocNOYbDtuBiVWPe
+         ukVY//hBaxNGUw16uGyN9eH1BgJqS7q1OOnNbXVYmA/9Li7vyyTb4y93CZfJx64cPB
+         BKg0V2/7Nb7bycl5dWxxazxRijxtVcdNtnIY5eRM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5QF5-1j3Fbv3L3F-001RAv; Tue, 18
+ Feb 2020 16:47:18 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     netdev@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: broadcom: Fix a typo ("firsly")
+Date:   Tue, 18 Feb 2020 16:47:01 +0100
+Message-Id: <20200218154701.1639-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:c0xLfCruKpO49xdxAJWcPwUZ8C0bEuPdja+hSV//rJgFLlGQLlh
+ 8pHOZUB6UVZ3NDRosEVruEci3mivxKm3kJzTNlbIE9k0GkyMqwOogA7pBas4fzElBwu44Tz
+ 4bENV1Y/kyWD/OWxiZ3wiXAQs+fMAx8/vGwHi6ylP9Ryrrq0AseLtlvPu68ZclCo36cnLj2
+ 3l3QeqP+LupeCUhY42R6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8fOIy8TzPYM=:w3XmnmVGYvahaYGzCVqNwe
+ KLu1WaDDWsLkJqiHw38ffAdHLR3+6mDtbz3UD2EzkCdLt+LMfio1cKeAdqS13UeVyEtHX7RtA
+ qcVOas4Zsjmq09DQnEfQbNDsXoymm8Z7OuQNTPuDWmbrmsMXA1UB3qh1VCxtKkwer+ALaNDFR
+ f7dNZ/lHk3VxRH0oyoHBne25oCs8V2eG/a7TS5Ngt3MvWPbA+TzGui1bjBsK8vupxbGHz/lU+
+ TiGN9ZGBYJwVcVVI1T6C1rRlQ6nSnDdig+2vCX4IIYWiSNkgGqgn+EK2c/BuzAay87vU0x3cK
+ WRRQeJkq7ar66FHcEuR5E/hoeXV9noQh0QxOK3xLwDP+oIxv12YJK5vahXZ6T0aayi/A0Ht+z
+ 7HiiIXmSrwZVsmXBNDScy+jHSMsFLAIuZQrg7DtF+3Ks8AqSUBU47OmyH1vaA4QEGX3ibj8qQ
+ nbmhYSYwbjPTw80OjkoCwlL0Lt9Ef8bI6JStwgseYWrahPN1iBeb2J8aQ1f+yzs0N4ZFn4rKb
+ Abn9sZtNYbY80noibkupgH9SefbQd45K2isMocsFbHGxd59Pyc7mBWwxRYIIjaOcmiEPu5Dzw
+ /2nIp+Per/YJ3Q32sNOQ1P+6XhbXaBGI88V9+unG7C+HkyjIyj4MmD+21iULNA8xX96BuLEsy
+ lSJhuqWHMQ6t7gWV0f9Z3m6GhThiBy1ogKHhdKPXtQht1o09PRz1zeM/UwiLx/v+BsHJScsN0
+ jfpQb9guFZ3Z0hUjqq6tPyHQu3Okv3MeCi8PB8/BLqYMV6x/fHs/JiVGhCEwwA21J/7xo0Cqb
+ 83Ib1x90fNyPLqbqIeXKUM1dBmvyv8+EvfWam/E77qywFbAxLZStqn8N9CZYaQSlOhfegR9hY
+ 8bVdR/S5pE8rdhcOEuOBTEBMxFzNvBBfdFmZyRtDaih2wiuhIA7x60C+OmJ/JlHuzdAL5CLgu
+ HovwOxMAugBVaTDqh43winFahe7o4UvSoeuRcKTKtqpoHKUFKRvXLu6LARuzG/Dwg7aQhgrie
+ yfxgVQgibi5mkDhGQU8VoHXO69TbWiLkMRjGSQemKM0SZVBt3vlq/eHB/55yX3d+UybPsTRAr
+ R6myshlmqp5kBi3qY4Uj3D7ezvIJRGTn3xjjqiorgapIih6NdKNdHY8fe7wSFzlPWyxkX6BOE
+ KIRYv3WkEwwp/iL2XYF4ikS8XDhx4ow7K8ZULjHfSl5fm1nVpFFgC9hkXk9Yg+IPOs8XXQ/KQ
+ ljxVPU7JGkDdVfKOl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control
-ioperm() as well") reworked the iopl syscall to use I/O bitmaps.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/net/phy/broadcom.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Unfortunately this broke Xen PV domains using that syscall as there
-is currently no I/O bitmap support in PV domains.
+diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+index 7d68b28bb893..a62229a8b1a4 100644
+=2D-- a/drivers/net/phy/broadcom.c
++++ b/drivers/net/phy/broadcom.c
+@@ -410,7 +410,7 @@ static int bcm5481_config_aneg(struct phy_device *phyd=
+ev)
+ 	struct device_node *np =3D phydev->mdio.dev.of_node;
+ 	int ret;
 
-Add I/O bitmap support via a new paravirt function update_io_bitmap
-which Xen PV domains can use to update their I/O bitmaps via a
-hypercall.
+-	/* Aneg firsly. */
++	/* Aneg firstly. */
+ 	ret =3D genphy_config_aneg(phydev);
 
-Fixes: 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control ioperm() as well")
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Cc: <stable@vger.kernel.org> # 5.5
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
-Tested-by: Jan Beulich <jbeulich@suse.com>
----
- arch/x86/include/asm/io_bitmap.h      |  9 ++++++++-
- arch/x86/include/asm/paravirt.h       |  7 +++++++
- arch/x86/include/asm/paravirt_types.h |  4 ++++
- arch/x86/kernel/paravirt.c            |  5 +++++
- arch/x86/kernel/process.c             |  2 +-
- arch/x86/xen/enlighten_pv.c           | 25 +++++++++++++++++++++++++
- 6 files changed, 50 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/io_bitmap.h b/arch/x86/include/asm/io_bitmap.h
-index 02c6ef8f7667..07344d82e88e 100644
---- a/arch/x86/include/asm/io_bitmap.h
-+++ b/arch/x86/include/asm/io_bitmap.h
-@@ -19,7 +19,14 @@ struct task_struct;
- void io_bitmap_share(struct task_struct *tsk);
- void io_bitmap_exit(void);
- 
--void tss_update_io_bitmap(void);
-+void native_tss_update_io_bitmap(void);
-+
-+#ifdef CONFIG_PARAVIRT_XXL
-+#include <asm/paravirt.h>
-+#else
-+#define tss_update_io_bitmap native_tss_update_io_bitmap
-+#endif
-+
- #else
- static inline void io_bitmap_share(struct task_struct *tsk) { }
- static inline void io_bitmap_exit(void) { }
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 86e7317eb31f..694d8daf4983 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -295,6 +295,13 @@ static inline void write_idt_entry(gate_desc *dt, int entry, const gate_desc *g)
- 	PVOP_VCALL3(cpu.write_idt_entry, dt, entry, g);
- }
- 
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+static inline void tss_update_io_bitmap(void)
-+{
-+	PVOP_VCALL0(cpu.update_io_bitmap);
-+}
-+#endif
-+
- static inline void paravirt_activate_mm(struct mm_struct *prev,
- 					struct mm_struct *next)
+ 	/* Then we can set up the delay. */
+@@ -463,7 +463,7 @@ static int bcm54616s_config_aneg(struct phy_device *ph=
+ydev)
  {
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index 84812964d3dd..732f62e04ddb 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -140,6 +140,10 @@ struct pv_cpu_ops {
- 
- 	void (*load_sp0)(unsigned long sp0);
- 
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+	void (*update_io_bitmap)(void);
-+#endif
-+
- 	void (*wbinvd)(void);
- 
- 	/* cpuid emulation, mostly so that caps bits can be disabled */
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 789f5e4f89de..c131ba4e70ef 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -30,6 +30,7 @@
- #include <asm/timer.h>
- #include <asm/special_insns.h>
- #include <asm/tlb.h>
-+#include <asm/io_bitmap.h>
- 
- /*
-  * nop stub, which must not clobber anything *including the stack* to
-@@ -341,6 +342,10 @@ struct paravirt_patch_template pv_ops = {
- 	.cpu.iret		= native_iret,
- 	.cpu.swapgs		= native_swapgs,
- 
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+	.cpu.update_io_bitmap	= native_tss_update_io_bitmap,
-+#endif
-+
- 	.cpu.start_context_switch	= paravirt_nop,
- 	.cpu.end_context_switch		= paravirt_nop,
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 839b5244e3b7..3053c85e0e42 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -374,7 +374,7 @@ static void tss_copy_io_bitmap(struct tss_struct *tss, struct io_bitmap *iobm)
- /**
-  * tss_update_io_bitmap - Update I/O bitmap before exiting to usermode
-  */
--void tss_update_io_bitmap(void)
-+void native_tss_update_io_bitmap(void)
- {
- 	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
- 	struct thread_struct *t = &current->thread;
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 1f756ffffe8b..feaf2e68ee5c 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -72,6 +72,9 @@
- #include <asm/mwait.h>
- #include <asm/pci_x86.h>
- #include <asm/cpu.h>
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+#include <asm/io_bitmap.h>
-+#endif
- 
- #ifdef CONFIG_ACPI
- #include <linux/acpi.h>
-@@ -837,6 +840,25 @@ static void xen_load_sp0(unsigned long sp0)
- 	this_cpu_write(cpu_tss_rw.x86_tss.sp0, sp0);
- }
- 
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+static void xen_update_io_bitmap(void)
-+{
-+	struct physdev_set_iobitmap iobitmap;
-+	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-+
-+	native_tss_update_io_bitmap();
-+
-+	iobitmap.bitmap = (uint8_t *)(&tss->x86_tss) +
-+			  tss->x86_tss.io_bitmap_base;
-+	if (tss->x86_tss.io_bitmap_base == IO_BITMAP_OFFSET_INVALID)
-+		iobitmap.nr_ports = 0;
-+	else
-+		iobitmap.nr_ports = IO_BITMAP_BITS;
-+
-+	HYPERVISOR_physdev_op(PHYSDEVOP_set_iobitmap, &iobitmap);
-+}
-+#endif
-+
- static void xen_io_delay(void)
- {
- }
-@@ -1046,6 +1068,9 @@ static const struct pv_cpu_ops xen_cpu_ops __initconst = {
- 	.write_idt_entry = xen_write_idt_entry,
- 	.load_sp0 = xen_load_sp0,
- 
-+#ifdef CONFIG_X86_IOPL_IOPERM
-+	.update_io_bitmap = xen_update_io_bitmap,
-+#endif
- 	.io_delay = xen_io_delay,
- 
- 	/* Xen takes care of %gs when switching to usermode for us */
--- 
-2.16.4
+ 	int ret;
+
+-	/* Aneg firsly. */
++	/* Aneg firstly. */
+ 	if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX)
+ 		ret =3D genphy_c37_config_aneg(phydev);
+ 	else
+=2D-
+2.20.1
 
