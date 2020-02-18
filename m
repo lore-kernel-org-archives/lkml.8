@@ -2,106 +2,148 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C74C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068CDC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9AA20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF45120659
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgBRJJi (ORCPT
+        id S1726402AbgBRJNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:09:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59072 "EHLO mx2.suse.de"
+        Tue, 18 Feb 2020 04:13:24 -0500
+Received: from mga06.intel.com ([134.134.136.31]:19293 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbgBRJJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:09:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9DA2CAF48;
-        Tue, 18 Feb 2020 09:09:35 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 09:09:32 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC -V2 3/8] autonuma, memory tiering: Use kswapd to demote
- cold pages to PMEM
-Message-ID: <20200218090932.GD3420@suse.de>
-References: <20200218082634.1596727-1-ying.huang@intel.com>
- <20200218082634.1596727-4-ying.huang@intel.com>
+        id S1726225AbgBRJNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:13:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 01:13:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="314996167"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 01:13:17 -0800
+Subject: Re: [PATCH V3] mmc: sdhci-msm: Update system suspend/resume callbacks
+ of sdhci-msm platform driver
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     asutoshd@codeaurora.org, swboyd@google.com,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, vbadigan@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+References: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e4424388-2c6c-7736-da45-7b3b20b9ebbd@intel.com>
+Date:   Tue, 18 Feb 2020 11:12:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200218082634.1596727-4-ying.huang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:26:29PM +0800, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
+On 12/02/20 9:31 am, Shaik Sajida Bhanu wrote:
+> The existing suspend/resume callbacks of sdhci-msm driver are just
+> gating/un-gating the clocks. During suspend cycle more can be done
+> like disabling controller, disabling card detection, enabling wake-up events.
 > 
-> In a memory tiering system, if the memory size of the workloads is
-> smaller than that of the faster memory (e.g. DRAM) nodes, all pages of
-> the workloads should be put in the faster memory nodes.  But this
-> makes it unnecessary to use slower memory (e.g. PMEM) at all.
+> So updating the system pm callbacks for performing these extra
+> actions besides controlling the clocks.
 > 
-> So in common cases, the memory size of the workload should be larger
-> than that of the faster memory nodes.  And to optimize the
-> performance, the hot pages should be promoted to the faster memory
-> nodes while the cold pages should be demoted to the slower memory
-> nodes.  To achieve that, we have two choices,
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
 > 
-> a. Promote the hot pages from the slower memory node to the faster
->    memory node.  This will create some memory pressure in the faster
->    memory node, thus trigger the memory reclaiming, where the cold
->    pages will be demoted to the slower memory node.
+> Changes since V2:
+>     Removed disabling/enabling pwr-irq from system pm ops.
 > 
-> b. Demote the cold pages from faster memory node to the slower memory
->    node.  This will create some free memory space in the faster memory
->    node, and the hot pages in the slower memory node could be promoted
->    to the faster memory node.
+> Changes since V1:
+>     Invoking pm_runtime_force_suspend/resume instead of
+>     sdhci_msm_runtime_suepend/resume.
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 41 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 39 insertions(+), 2 deletions(-)
 > 
-> The choice "a" will create the memory pressure in the faster memory
-> node.  If the memory pressure of the workload is high too, the memory
-> pressure may become so high that the memory allocation latency of the
-> workload is influenced, e.g. the direct reclaiming may be triggered.
-> 
-> The choice "b" works much better at this aspect.  If the memory
-> pressure of the workload is high, it will consume the free memory and
-> the hot pages promotion will stop earlier if its allocation watermark
-> is higher than that of the normal memory allocation.
-> 
-> In this patch, choice "b" is implemented.  If memory tiering NUMA
-> balancing mode is enabled, the node isn't the slowest node, and the
-> free memory size of the node is below the high watermark, the kswapd
-> of the node will be waken up to free some memory until the free memory
-> size is above the high watermark + autonuma promotion rate limit.  If
-> the free memory size is below the high watermark, autonuma promotion
-> will stop working.  This avoids to create too much memory pressure to
-> the system.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index c3a160c..fcff3e8 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2159,9 +2159,46 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>  	return 0;
+>  }
+>  
+> +static int sdhci_msm_suspend(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +		ret = cqhci_suspend(host->mmc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = sdhci_suspend_host(host);
+> +	if (ret)
+> +		return ret;
 
-Unfortunately I stopped reading at this point. It depends on another series
-entirely and they really need to be presented together instead of relying
-on searching mail archives to find other patches to try assemble the full
-picture :(. Ideally each stage would have supporting data showing roughly
-how it behaves at each major stage. I know this will be a pain but the
-original NUMA balancing had the same problem and ultimately started with
-one large series that got the basics right followed by other series that
-improved it in stages. That process is *still* ongoing today.
+		goto resume_cqhci;
 
--- 
-Mel Gorman
-SUSE Labs
+> +
+> +	return pm_runtime_force_suspend(dev);
+
+Ideally there should be an error path e.g.
+
+	ret = pm_runtime_force_suspend(dev);
+	if (!ret)
+		return ret;
+
+	sdhci_resume_host()
+resume_cqhci:
+	cqhci_resume()
+	return ret;
+
+> +}
+> +
+> +static int sdhci_msm_resume(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pm_runtime_force_resume(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = sdhci_resume_host(host);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (host->mmc->caps2 & MMC_CAP2_CQE)
+> +		ret = cqhci_resume(host->mmc);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct dev_pm_ops sdhci_msm_pm_ops = {
+> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> -				pm_runtime_force_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
+> +				sdhci_msm_resume)
+>  	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+>  			   sdhci_msm_runtime_resume,
+>  			   NULL)
+> 
+
