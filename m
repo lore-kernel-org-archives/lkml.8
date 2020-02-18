@@ -2,55 +2,55 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7799C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB44BC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FED2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fJZBxTcu"
+	by mail.kernel.org (Postfix) with ESMTP id BDBA8207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgBRHF7 (ORCPT
+        id S1726267AbgBRHMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:05:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58568 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgBRHF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:05:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=0WDK64CvM/aOQVQpYJeiENx5iDKotnOnD6ArMqWTlLE=; b=fJZBxTcuObVqaB4Sl29v/3xeDX
-        6AqALUVY+GjDnDPWVnbDnKpR9cm+PhFZ/rplZOPXo1sbhhixioVCR0qYsolGnfbB647PNW1sKNAwu
-        hdWvGi89OsUnCZBkZv0zTQGcd55gWNBR7PtROfR7PW7sIKJ4CW0GhZgrrcFPQ19UdvlOOL9p/O0pu
-        eYVbFg0nvQpJ3Gn6gV5mNaNJWh61T6oKyZF3IFdRe1IRlQ4gNoMc5n8ncp+ai63HLGJ+9LRpLHufL
-        X1DF7SB0/GqiAR7ejMLmR8YtyzVo0ZPzuAE0K7L90sEz9/cRV2mxNW1azEhE/JOLq1JhQj2Tdsc/p
-        0bN2FsCg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j3wx4-0002kg-Qk; Tue, 18 Feb 2020 07:05:52 +0000
-Subject: Re: linux-next: Tree for Feb 18 (sound/soc/codecs/wm5110.c)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
-References: <20200218152853.67e2482a@canb.auug.org.au>
- <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
-Message-ID: <c2273472-18af-e206-c942-fd460e0d192c@infradead.org>
-Date:   Mon, 17 Feb 2020 23:05:49 -0800
+        Tue, 18 Feb 2020 02:12:20 -0500
+Received: from mga09.intel.com ([134.134.136.24]:61168 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgBRHMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:12:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 23:12:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
+   d="scan'208";a="268657151"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Feb 2020 23:12:15 -0800
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Don't enable PWRSAVE_DLL for certain
+ sdhc hosts
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1581062518-11655-1-git-send-email-vbadigan@codeaurora.org>
+ <1581077075-26011-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <64ca4304-faab-cc82-0c7b-24a7f504bbd7@intel.com>
+Date:   Tue, 18 Feb 2020 09:11:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1581077075-26011-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,29 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[resending to broonie@kernel.org; other email address got message too big for mailbox]
+On 7/02/20 2:04 pm, Veerabhadrarao Badiganti wrote:
+> From: Ritesh Harjani <riteshh@codeaurora.org>
+> 
+> SDHC core with new 14lpp and later tech DLL should not enable
+> PWRSAVE_DLL since such controller's internal gating cannot meet
+> following MCLK requirement:
+> When MCLK is gated OFF, it is not gated for less than 0.5us and MCLK
+> must be switched on for at-least 1us before DATA starts coming.
+> 
+> Adding support for this requirement.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 2/17/20 11:04 PM, Randy Dunlap wrote:
-> On 2/17/20 8:28 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200217:
->>
+> --
 > 
-> on x86_64:
+> Changes since V1:
+>   Condition was not correct in V1, which is corrected in V2
 > 
-> WARNING: unmet direct dependencies detected for SND_SOC_WM5110
->   Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && MFD_WM5110 [=n]
->   Selected by [y]:
->   - SND_SOC_BELLS [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_SAMSUNG [=y] && MFD_ARIZONA [=y] && I2C [=y] && SPI_MASTER [=y] && (MACH_WLF_CRAGG_6410 || COMPILE_TEST [=y])
->   - SND_SOC_SAMSUNG_TM2_WM5110 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_SAMSUNG [=y] && MFD_ARIZONA [=y] && I2C [=y] && SPI_MASTER [=y] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+> --
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> 
-> Full randconfig file is attached.
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index c3a160c..aa5b610 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -977,9 +977,21 @@ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
+>  		goto out;
+>  	}
+>  
+> -	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec3);
+> -	config |= CORE_PWRSAVE_DLL;
+> -	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec3);
+> +	/*
+> +	 * Set CORE_PWRSAVE_DLL bit in CORE_VENDOR_SPEC3.
+> +	 * When MCLK is gated OFF, it is not gated for less than 0.5us
+> +	 * and MCLK must be switched on for at-least 1us before DATA
+> +	 * starts coming. Controllers with 14lpp and later tech DLL cannot
+> +	 * guarantee above requirement. So PWRSAVE_DLL should not be
+> +	 * turned on for host controllers using this DLL.
+> +	 */
+> +	if (!msm_host->use_14lpp_dll_reset) {
+> +		config = readl_relaxed(host->ioaddr +
+> +				msm_offset->core_vendor_spec3);
+> +		config |= CORE_PWRSAVE_DLL;
+> +		writel_relaxed(config, host->ioaddr +
+> +				msm_offset->core_vendor_spec3);
+> +	}
+>  
+>  	/*
+>  	 * Drain writebuffer to ensure above DLL calibration
 > 
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
