@@ -2,101 +2,213 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA18C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0C0C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CF62176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Gob/lHQx"
+	by mail.kernel.org (Postfix) with ESMTP id 8B65C208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582046093;
+	bh=Es9N/A91dwDdIYeYVwDpx/CM30oJw39xtMBR/k8LVOk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SyRTX3qBGe705NTl2u5+/VcH7gVjJ9rA6BWVKkgFp+rO98cX0ZCkjJw4EzxQyY6iF
+	 hdhISjdsGQh7FepeE9Fgtwyi5nlzcBvvedkklA2/+zHs2dfTY0/GCINWOA8ss/0HGZ
+	 2HVXIFk6x6ZknKBJJHJHL7Z/fMt0Lf6TsbQ4cdzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgBRROf (ORCPT
+        id S1726735AbgBRROv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:14:35 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48241 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgBRROe (ORCPT
+        Tue, 18 Feb 2020 12:14:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41620 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgBRRNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:14:34 -0500
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 502F123061;
-        Tue, 18 Feb 2020 18:14:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582046070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=EG871vqJaW3cNhKNjjCIJxzVRrkTjhlNQQtnYP0ziOg=;
-        b=Gob/lHQxEgf/WP4jy+CdsiKc5tH2zI40XyMSCgU9RFo1zcVtAdCAd7t2eZ/ldQpd/+gO0I
-        DJzO8laEUfqxK1vLSat/XhtryjwYKf9xoqFiQvWmwGqXBptQ5yxaM7A9SLY65rPoV9PL1C
-        aePP7ol/Gp302QHIYKgsFA9X1XD6EX8=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 1/2] dt-bindings: spi: Add fsl,ls1028a-dspi compatible
-Date:   Tue, 18 Feb 2020 18:14:17 +0100
-Message-Id: <20200218171418.18297-1-michael@walle.cc>
+        Tue, 18 Feb 2020 12:13:30 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r27so20205783otc.8;
+        Tue, 18 Feb 2020 09:13:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=W1u4wUo3NLYAMgXHhQ1JWTN6DImeyb7sdgcLty9LTVA=;
+        b=pfon4pEJFXFUO0/WW0e/mDSzqxwQbhkJdAEHT5a7xHkvoi1vlN8kOGS7GIGU829JOD
+         +ygDH7eavAPibknYtWBXNd9jH0HwVIj0OyAHtrFUiXi6M0B7xVhslKavM/7uaebmLNOP
+         iBSHcoPArr/kMcFRDT3gLBPcK9jqSCPaLMzQbTkcM8xGr1FPJvWGprIF60Q5dB++fMcc
+         NaVSCHOxgrenzVyUx1tlr40ZkzHQNdOc6jamdBiMmNYip1kR0bQcpTYxIkbcpcJhWIUd
+         kjAw+/zQyUzHoC7kYEBRf7QFNQbVlwIqhtkDt94woigkJhTa97CttC41Z9Brl4zceuTk
+         EKHg==
+X-Gm-Message-State: APjAAAUlzTSO2PKgoKuxg6frM8ruhq1NOg9pBCr4op2XQ3FY5qfCdHJ0
+        Y2ib8BYyVGwd1mWOgM9YYg==
+X-Google-Smtp-Source: APXvYqz9vN5O196Hv3RX5j5QhodRWeWR1h2DBkM3xAqkcK92U7nZEFBLzVra3Zyy0nvATVFM6CGklA==
+X-Received: by 2002:a9d:7a89:: with SMTP id l9mr15588431otn.228.1582046008709;
+        Tue, 18 Feb 2020 09:13:28 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 09:13:28 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [RFC PATCH 03/11] cpuidle: Remove Calxeda driver
+Date:   Tue, 18 Feb 2020 11:13:13 -0600
+Message-Id: <20200218171321.30990-4-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
+References: <20200218171321.30990-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 502F123061
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.492];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-changes since v1:
- - none, this is a new patch
+Do not apply yet.
 
- Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpuidle/Kconfig.arm       |  7 ---
+ drivers/cpuidle/Makefile          |  1 -
+ drivers/cpuidle/cpuidle-calxeda.c | 72 -------------------------------
+ 3 files changed, 80 deletions(-)
+ delete mode 100644 drivers/cpuidle/cpuidle-calxeda.c
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-index 162e024b95a0..a6e4bc5e96db 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-@@ -7,6 +7,7 @@ Required properties:
- 		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
- 		"fsl,ls1012a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
- 		"fsl,ls1088a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
-+		"fsl,ls1028a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain SPI controller interrupt
- - clocks: from common clock binding: handle to dspi clock.
--- 
+diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+index 62272ecfa771..c2830d2ed44a 100644
+--- a/drivers/cpuidle/Kconfig.arm
++++ b/drivers/cpuidle/Kconfig.arm
+@@ -42,13 +42,6 @@ config ARM_CLPS711X_CPUIDLE
+ 	help
+ 	  Select this to enable cpuidle on Cirrus Logic CLPS711X SOCs.
+
+-config ARM_HIGHBANK_CPUIDLE
+-	bool "CPU Idle Driver for Calxeda processors"
+-	depends on ARM_PSCI && !ARM64
+-	select ARM_CPU_SUSPEND
+-	help
+-	  Select this to enable cpuidle on Calxeda processors.
+-
+ config ARM_KIRKWOOD_CPUIDLE
+ 	bool "CPU Idle Driver for Marvell Kirkwood SoCs"
+ 	depends on (MACH_KIRKWOOD || COMPILE_TEST) && !ARM64
+diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+index cc8c769d7fa9..eee5f276edf7 100644
+--- a/drivers/cpuidle/Makefile
++++ b/drivers/cpuidle/Makefile
+@@ -14,7 +14,6 @@ obj-$(CONFIG_HALTPOLL_CPUIDLE)		  += cpuidle-haltpoll.o
+ obj-$(CONFIG_ARM_MVEBU_V7_CPUIDLE) += cpuidle-mvebu-v7.o
+ obj-$(CONFIG_ARM_BIG_LITTLE_CPUIDLE)	+= cpuidle-big_little.o
+ obj-$(CONFIG_ARM_CLPS711X_CPUIDLE)	+= cpuidle-clps711x.o
+-obj-$(CONFIG_ARM_HIGHBANK_CPUIDLE)	+= cpuidle-calxeda.o
+ obj-$(CONFIG_ARM_KIRKWOOD_CPUIDLE)	+= cpuidle-kirkwood.o
+ obj-$(CONFIG_ARM_ZYNQ_CPUIDLE)		+= cpuidle-zynq.o
+ obj-$(CONFIG_ARM_U8500_CPUIDLE)         += cpuidle-ux500.o
+diff --git a/drivers/cpuidle/cpuidle-calxeda.c b/drivers/cpuidle/cpuidle-calxeda.c
+deleted file mode 100644
+index b17d9a8418b0..000000000000
+--- a/drivers/cpuidle/cpuidle-calxeda.c
++++ /dev/null
+@@ -1,72 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright 2012 Calxeda, Inc.
+- *
+- * Based on arch/arm/plat-mxc/cpuidle.c: #v3.7
+- * Copyright 2012 Freescale Semiconductor, Inc.
+- * Copyright 2012 Linaro Ltd.
+- *
+- * Maintainer: Rob Herring <rob.herring@calxeda.com>
+- */
+-
+-#include <linux/cpuidle.h>
+-#include <linux/cpu_pm.h>
+-#include <linux/init.h>
+-#include <linux/mm.h>
+-#include <linux/platform_device.h>
+-#include <linux/psci.h>
+-
+-#include <asm/cpuidle.h>
+-#include <asm/suspend.h>
+-
+-#include <uapi/linux/psci.h>
+-
+-#define CALXEDA_IDLE_PARAM \
+-	((0 << PSCI_0_2_POWER_STATE_ID_SHIFT) | \
+-	 (0 << PSCI_0_2_POWER_STATE_AFFL_SHIFT) | \
+-	 (PSCI_POWER_STATE_TYPE_POWER_DOWN << PSCI_0_2_POWER_STATE_TYPE_SHIFT))
+-
+-static int calxeda_idle_finish(unsigned long val)
+-{
+-	return psci_ops.cpu_suspend(CALXEDA_IDLE_PARAM, __pa(cpu_resume));
+-}
+-
+-static int calxeda_pwrdown_idle(struct cpuidle_device *dev,
+-				struct cpuidle_driver *drv,
+-				int index)
+-{
+-	cpu_pm_enter();
+-	cpu_suspend(0, calxeda_idle_finish);
+-	cpu_pm_exit();
+-
+-	return index;
+-}
+-
+-static struct cpuidle_driver calxeda_idle_driver = {
+-	.name = "calxeda_idle",
+-	.states = {
+-		ARM_CPUIDLE_WFI_STATE,
+-		{
+-			.name = "PG",
+-			.desc = "Power Gate",
+-			.exit_latency = 30,
+-			.power_usage = 50,
+-			.target_residency = 200,
+-			.enter = calxeda_pwrdown_idle,
+-		},
+-	},
+-	.state_count = 2,
+-};
+-
+-static int calxeda_cpuidle_probe(struct platform_device *pdev)
+-{
+-	return cpuidle_register(&calxeda_idle_driver, NULL);
+-}
+-
+-static struct platform_driver calxeda_cpuidle_plat_driver = {
+-        .driver = {
+-                .name = "cpuidle-calxeda",
+-        },
+-        .probe = calxeda_cpuidle_probe,
+-};
+-builtin_platform_driver(calxeda_cpuidle_plat_driver);
+--
 2.20.1
-
