@@ -2,138 +2,115 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09DEC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8CAC3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864632176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y0R0X22d"
+	by mail.kernel.org (Postfix) with ESMTP id 9137A2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgBRORW (ORCPT
+        id S1726647AbgBROSp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:17:22 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35032 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgBRORV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:17:21 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z18so14647100lfe.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:17:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bcfw/WtwA7TkxKO8UeI2AZjb5CE4kKKsLOYA3/v/NYk=;
-        b=y0R0X22df9E5JDDebI/9+dhuUi+bCGARz+i3v9UCdAhzDaXbHdRNxwb6JV8PhHO0QC
-         Z2ZXb4yvZ+JMqwsdcwSk/UeEh3UPWQuLo8Q4yzKNIcOGPD3HzC593vmoYsP4UP+TcvaG
-         OZ4I4gpTv077Xf7SZspcYtnivCbQXGd/M4i++NPG0eM2KqjywO/ZNS7eoZoWLyhx/cCa
-         XkbqLx7AnNVJvPv9aZKa5FEcnROzYKbOCh5nO/Arlb6EE9i8rzb0TPNh8zCJl9QfB1Fo
-         idU3bZirDKoJc1qk3OZNRkpeYSRKl4SIKeVv4ty3blHsqWOG+CTI67LLvIvZHMZzgi6k
-         LYrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bcfw/WtwA7TkxKO8UeI2AZjb5CE4kKKsLOYA3/v/NYk=;
-        b=UwA0giGMRlv16fn7OM+fPfYyoJ046zlPP8607uYHl2mFBZyc9RYpNb2gUUZjmSDxyh
-         XET6ZELNavraF2gDA1u66omWVe5fnR8PF1AYP39pLceeW1ucLFi37ASpvOxImuffrekU
-         Lpv4pYKg+P693N5YmVVEPVp3yOk4S5Qao/4W8SNYeeM6t0Ue7UvCb+IBATfQJbLtN9L9
-         O9PdhvWdrGZAXl5jT4bp+nuSKxPubP8KjcupNVY+M4MLGvP5RQ+/qxsCFrNyMB+PESBN
-         gRpX9GwufQdBsEHtlFxWYrH71XFZcROXM7/qTvtsawjsmxsMq2J9tAre2RtSKRqstWZY
-         ov4g==
-X-Gm-Message-State: APjAAAW4z3pXIfqhCzEMcytMlWEamOKzSLbFkj3phtj7agNZvGgeRA3O
-        cuZjUHoikBVD5KcI47SGKEVs7zqHmkCzv6B06UGhNg==
-X-Google-Smtp-Source: APXvYqyYM5aKaTIZbnjBJk7cvPf+hh1cDE8hbWKUFZnrNneTz6TIGYoJTE/iNm2P4no4DHhhMAjH2fz/RxCQHopvh0Q=
-X-Received: by 2002:ac2:5e9b:: with SMTP id b27mr10933970lfq.184.1582035439659;
- Tue, 18 Feb 2020 06:17:19 -0800 (PST)
+        Tue, 18 Feb 2020 09:18:45 -0500
+Received: from mail-oln040092255071.outbound.protection.outlook.com ([40.92.255.71]:27639
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726445AbgBROSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:18:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C/XRRPcJF7wffdbUZbXFis0SiYssTUl3uX4Uf3/yicaSBvHwiHMf5iAFarPqxs0x0iXNLu8FYgswk+54lSdcvfDQHQxa8mLCLeLZoR7+9UhBuan6actYXxME/nIMTUJR7zQ4V9qoXF8goHeY1hHoNkEJ4ll3DXV6bHMN0bAe5IUMyUlwQDCRmoVMhQa+w3sRTDBBNRvygl0Z/1clirPdjBF17b8AT0G3bz1dVqyqhW8QRFRfpnMUSoeFHBT2RwpwADCXY9KYw8xvcMmTMK3uBZXRTmhR3/cBKxqDYAhCvs7yaoJ+duE19YINjVv81j0xojBoJPF/0xacb3Iqd0qpXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oRSDCrDGEYSSuwEcjqqFVH3Ps7EzVDwMG558kMuSPwM=;
+ b=g6vvSLeUaMdbocUaZKUb3WMUbnyumws88QIdJkF21pAFOELRLQouMewOiQHswg/aAE0cpl0fcqTBM9Emc432OMY5BlB3cw+LnaDU2/MSTYsWLRy+gOyiSEYf+2KgLsJ99rd2dFG0gIImor5esKu+jFHioZJvDXDy67KcqMBaG7SIHsDVyd2/v+s79dO4PSROj3J6y6sya1E4K6JIjBerJUpUOPc4jLi+FXPl0ivd60u+2H5ygZGgI5wxQ2Yh8VI/TOYcWYZo0bpI0rF4XYeazNgNFLzje972M6ysKY1oR86EbPtUkjOsjwE1f2gb29lrLbEPsPvCX/de/YqhOQo2VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT029.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebd::37) by
+ SG2APC01HT095.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::421)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Tue, 18 Feb
+ 2020 14:18:40 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
+ SG2APC01FT029.mail.protection.outlook.com (10.152.250.214) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22 via Frontend Transport; Tue, 18 Feb 2020 14:18:40 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
+ 14:18:40 +0000
+Received: from nicholas-dell-linux (2001:44b8:605d:19:a52b:32b4:97db:591c) by ME2PR01CA0160.ausprd01.prod.outlook.com (2603:10c6:201:2f::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Tue, 18 Feb 2020 14:18:38 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Stack trace when removing Thunderbolt devices while kernel shutting
+ down
+Thread-Topic: Stack trace when removing Thunderbolt devices while kernel
+ shutting down
+Thread-Index: AQHV5mZRaprLG3S8P026BwNeB/+bQA==
+Date:   Tue, 18 Feb 2020 14:18:40 +0000
+Message-ID: <PSXP216MB0438220243C0097569D4B2DB80110@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0160.ausprd01.prod.outlook.com
+ (2603:10c6:201:2f::28) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:95A77B66E62B47898D73F43832FC6F5ED1B1D54D6DBC670E47AC004D4F00B941;UpperCasedChecksum:4740F6B0040AA4C3EB7F2A13CEF1429E3D21ED10CB17EEDE479D2959798B4B98;SizeAsReceived:7673;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [LsHoodef3X6fJDRFC0k6i0n6zxy92qUVLtAZaMmRrhmyuVRJffuuPQ+iE3iOq29i]
+x-microsoft-original-message-id: <20200218141832.GA6749@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 106dcdd8-cd1e-40a5-ddaa-08d7b47d7363
+x-ms-traffictypediagnostic: SG2APC01HT095:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cFVFZUoK0cx3DMLRwnm7MoYgtFwavmlcblqB/PxGgJYNr406lCek5KU4P10aVqRAPRnjN/MIKD/CL3GMxZTRvajvEhyJ7iap8LFuVUpZYcyxJ3ZyluDaXVduaDkoleDlWbbb2ldCANGGayJGCoS/GwmDBsR8We4fO0JiZJZ4xy/WEhD2N2Ut5gFQYgHE/vBa
+x-ms-exchange-antispam-messagedata: YlBqRqLtyWK+yb8+zU5hpRyNc4BvJDOZTD2vb7v/bJu9H6Koypt/ZJ04YOdZyYNaWJ8J9vZIk1gW0z8o9c0XTrvSqEytDcdCkBykkqUB1wbLVcH1we9PiQUqOdQmh0h9riF+XBX1vWNAOSFxZM8MsKM09MgCkkfzP1gEc6QVi5sxhG7Ct+O9jj5hGs+sexk+LpRPDn1rfXsGDa/XxvQdNw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6F4BB3CDFBDFF249B92A82D2771BD2ED@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-3-vincent.guittot@linaro.org> <ecbf5317-e6cf-fc20-9871-4ea06a987952@arm.com>
- <20200218135059.GE3420@suse.de>
-In-Reply-To: <20200218135059.GE3420@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 18 Feb 2020 15:17:08 +0100
-Message-ID: <CAKfTPtA9yOoPRMYgE1V22FJMpo+jr=VS1kQHqYrArG-GXMN18g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 106dcdd8-cd1e-40a5-ddaa-08d7b47d7363
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 14:18:40.2537
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 14:51, Mel Gorman <mgorman@suse.de> wrote:
->
-> On Tue, Feb 18, 2020 at 01:37:45PM +0100, Dietmar Eggemann wrote:
-> > On 14/02/2020 16:27, Vincent Guittot wrote:
-> >
-> > [...]
-> >
-> > >     /*
-> > >      * The load is corrected for the CPU capacity available on each node.
-> > >      *
-> > > @@ -1788,10 +1831,10 @@ static int task_numa_migrate(struct task_struct *p)
-> > >     dist = env.dist = node_distance(env.src_nid, env.dst_nid);
-> > >     taskweight = task_weight(p, env.src_nid, dist);
-> > >     groupweight = group_weight(p, env.src_nid, dist);
-> > > -   update_numa_stats(&env.src_stats, env.src_nid);
-> > > +   update_numa_stats(&env, &env.src_stats, env.src_nid);
-> >
-> > This looks strange. Can you do:
-> >
-> > -static void update_numa_stats(struct task_numa_env *env,
-> > +static void update_numa_stats(unsigned int imbalance_pct,
-> >                               struct numa_stats *ns, int nid)
-> >
-> > -    update_numa_stats(&env, &env.src_stats, env.src_nid);
-> > +    update_numa_stats(env.imbalance_pct, &env.src_stats, env.src_nid);
-> >
->
-> You'd also have to pass in env->p and while it could be done, I do not
-> think its worthwhile.
+Hi Bjorn,
 
-I agree
+If I surprise remove Thunderbolt 3 devices just as the kernel is 
+shutting down, I get stack dumps, when those devices would not normally 
+cause stack dumps if the kernel were not shutting down.
 
->
-> > [...]
-> >
-> > > +static unsigned long cpu_runnable_load(struct rq *rq)
-> > > +{
-> > > +   return cfs_rq_runnable_load_avg(&rq->cfs);
-> > > +}
-> > > +
-> >
-> > Why not remove cpu_runnable_load() in this patch rather moving it?
-> >
-> > kernel/sched/fair.c:5492:22: warning: ???cpu_runnable_load??? defined but
-> > not used [-Wunused-function]
-> >  static unsigned long cpu_runnable_load(struct rq *rq)
-> >
->
-> I took the liberty of addressing that when I picked up Vincent's patches
-> for "Reconcile NUMA balancing decisions with the load balancer v3" to fix
-> a build warning. I did not highlight it when I posted because it was such
-> a trivial change.
+Because the kernel is shutting down, it makes it difficult to capture 
+the logs without a serial console.
 
-yes I have noticed that.
-Thanks
+In your mind, is this cause for concern? There is no harm caused and the 
+kernel still shuts down. The main thing I am worried about is if this 
+means that the locking around the subsystem is not strict enough.
 
->
-> --
-> Mel Gorman
-> SUSE Labs
+If you think this is worth looking into, I will try to learn about how 
+the native interrupts are handled and try to investigate, and I will 
+also try to get my serial console working again to capture the details.
+
+Thank you for any thoughts you may give.
+
+Kind regards,
+Nicholas Johnson.
