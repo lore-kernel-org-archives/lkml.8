@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10705C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D207C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FF324125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EA421D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056398;
-	bh=5KXVAfBd63CuEldh5+IuIGkdm8p6ZP7WJF61mIXofL8=;
+	s=default; t=1582056410;
+	bh=ECGvmFKxD67Z6wpEVJNvoBIaymJUwKg9QKOsMuNJfNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQFeUx8Fg6zWIQJBsVqzanaPRRer35VsMdUwhCBzi9SKW3CcGgNyYfA3qLsikCNBN
-	 shdyxX9AFshzC/4hkdh+heu312N8vpDl3FJiHjcUnSd8LRAxPyOYAYN2DaOMmpHr89
-	 zYv4jMunRV+7rprCWUbbEDK/DGesxoTVumFmPMnM=
+	b=Eb0kUCfSr3lbekb1L4V15HU+uAu9UbgNvchdACdb18IO2+bhoIzdZvBm16zZe8aPv
+	 0uhpxOqZrtFlr7mkOcV+l3HRg4J8M8k+HDqVzgzyFitIH6yOhTWBuH8EJpL6R3X7jJ
+	 upWY0kZgRe5V+SjXD3qh22eGYN5jtkr6CdyJL6zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgBRUAP (ORCPT
+        id S1727864AbgBRUGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39238 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727462AbgBRUAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:08 -0500
+        id S1726801AbgBRT7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2469020659;
-        Tue, 18 Feb 2020 20:00:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8C7524125;
+        Tue, 18 Feb 2020 19:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056007;
-        bh=5KXVAfBd63CuEldh5+IuIGkdm8p6ZP7WJF61mIXofL8=;
+        s=default; t=1582055994;
+        bh=ECGvmFKxD67Z6wpEVJNvoBIaymJUwKg9QKOsMuNJfNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ocfsxao2LaRPAmN/Alpj9Ppyq97gc4wlqL0eHtf8FGGv/JZTpPPl7/ocF7uutzo5W
-         W63dD3YCHY6K1cKoIB0OkFn5usjHa6rK0HUZuFBPDFx16VPae3TPL+iOH84kXimjSc
-         03zvSXnXA5XXP6pJ6DrJX0AC/zLcqoCuSRpeu8/A=
+        b=fetxkM/UFousr1MvFGjWeJ507eBFYoZTm4JkCrYJDEF9VrpNfjo1R43sxqDHfAaC8
+         YUGlLo7D01tokXzqaK6NwsgI5euGXLvpHBlI2E3F0rUVL4CuJzu9zf0KQezjw004n5
+         mZf7Hkfsqb2iGaQjVB/6wIhoTBxx0VfE1RnSkJpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 66/66] mmc: core: Rework wp-gpio handling
-Date:   Tue, 18 Feb 2020 20:55:33 +0100
-Message-Id: <20200218190434.454828706@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 61/66] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
+Date:   Tue, 18 Feb 2020 20:55:28 +0100
+Message-Id: <20200218190433.829638977@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -61,137 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 9073d10b098973519044f5fcdc25586810b435da ]
+[ Upstream commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 ]
 
-Use MMC_CAP2_RO_ACTIVE_HIGH flag as indicator if GPIO line is to be
-inverted compared to DT/platform-specified polarity. The flag is not used
-after init in GPIO mode anyway. No functional changes intended.
+There is no need to delay the clearing of b_modified flag to the
+transaction committing time when unmapping the journalled buffer, so
+just move it to the journal_unmap_buffer().
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/a60f563f11bbff821da2fa2949ca82922b144860.1576031637.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c          |  4 ----
- drivers/mmc/core/host.c            | 11 ++++-------
- drivers/mmc/core/slot-gpio.c       |  3 +++
- drivers/mmc/host/pxamci.c          |  8 ++++----
- drivers/mmc/host/sdhci-esdhc-imx.c |  3 ++-
- 5 files changed, 13 insertions(+), 16 deletions(-)
+ fs/jbd2/commit.c      | 43 +++++++++++++++----------------------------
+ fs/jbd2/transaction.c | 10 ++++++----
+ 2 files changed, 21 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 7ee5b7f53aebe..3ece59185d372 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -146,10 +146,6 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			if (of_property_read_bool(np, "cd-inverted"))
- 				*flags ^= OF_GPIO_ACTIVE_LOW;
- 		}
--		if (!strcmp(propname, "wp-gpios")) {
--			if (of_property_read_bool(np, "wp-inverted"))
--				*flags ^= OF_GPIO_ACTIVE_LOW;
--		}
- 	}
- 	/*
- 	 * Some GPIO fixed regulator quirks.
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 105b7a7c02513..b3484def0a8b0 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -176,7 +176,6 @@ int mmc_of_parse(struct mmc_host *host)
- 	u32 bus_width, drv_type, cd_debounce_delay_ms;
- 	int ret;
- 	bool cd_cap_invert, cd_gpio_invert = false;
--	bool ro_cap_invert, ro_gpio_invert = false;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index c43591cd70f1c..7fdb5f130f642 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -974,34 +974,21 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 		 * it. */
  
- 	if (!dev || !dev_fwnode(dev))
- 		return 0;
-@@ -255,9 +254,11 @@ int mmc_of_parse(struct mmc_host *host)
- 	}
- 
- 	/* Parse Write Protection */
--	ro_cap_invert = device_property_read_bool(dev, "wp-inverted");
- 
--	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, &ro_gpio_invert);
-+	if (device_property_read_bool(dev, "wp-inverted"))
-+		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
-+	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, NULL);
- 	if (!ret)
- 		dev_info(host->parent, "Got WP GPIO\n");
- 	else if (ret != -ENOENT && ret != -ENOSYS)
-@@ -266,10 +267,6 @@ int mmc_of_parse(struct mmc_host *host)
- 	if (device_property_read_bool(dev, "disable-wp"))
- 		host->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
- 
--	/* See the comment on CD inversion above */
--	if (ro_cap_invert ^ ro_gpio_invert)
--		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
--
- 	if (device_property_read_bool(dev, "cap-sd-highspeed"))
- 		host->caps |= MMC_CAP_SD_HIGHSPEED;
- 	if (device_property_read_bool(dev, "cap-mmc-highspeed"))
-diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-index da2596c5fa28d..582ec3d720f64 100644
---- a/drivers/mmc/core/slot-gpio.c
-+++ b/drivers/mmc/core/slot-gpio.c
-@@ -241,6 +241,9 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
- 			return ret;
- 	}
- 
-+	if (host->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
-+		gpiod_toggle_active_low(desc);
-+
- 	if (gpio_invert)
- 		*gpio_invert = !gpiod_is_active_low(desc);
- 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 024acc1b0a2ea..b2bbcb09a49e6 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -740,16 +740,16 @@ static int pxamci_probe(struct platform_device *pdev)
- 			goto out;
+ 		/*
+-		* A buffer which has been freed while still being journaled by
+-		* a previous transaction.
+-		*/
+-		if (buffer_freed(bh)) {
+-			/*
+-			 * If the running transaction is the one containing
+-			 * "add to orphan" operation (b_next_transaction !=
+-			 * NULL), we have to wait for that transaction to
+-			 * commit before we can really get rid of the buffer.
+-			 * So just clear b_modified to not confuse transaction
+-			 * credit accounting and refile the buffer to
+-			 * BJ_Forget of the running transaction. If the just
+-			 * committed transaction contains "add to orphan"
+-			 * operation, we can completely invalidate the buffer
+-			 * now. We are rather through in that since the
+-			 * buffer may be still accessible when blocksize <
+-			 * pagesize and it is attached to the last partial
+-			 * page.
+-			 */
+-			jh->b_modified = 0;
+-			if (!jh->b_next_transaction) {
+-				clear_buffer_freed(bh);
+-				clear_buffer_jbddirty(bh);
+-				clear_buffer_mapped(bh);
+-				clear_buffer_new(bh);
+-				clear_buffer_req(bh);
+-				bh->b_bdev = NULL;
+-			}
++		 * A buffer which has been freed while still being journaled
++		 * by a previous transaction, refile the buffer to BJ_Forget of
++		 * the running transaction. If the just committed transaction
++		 * contains "add to orphan" operation, we can completely
++		 * invalidate the buffer now. We are rather through in that
++		 * since the buffer may be still accessible when blocksize <
++		 * pagesize and it is attached to the last partial page.
++		 */
++		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			clear_buffer_freed(bh);
++			clear_buffer_jbddirty(bh);
++			clear_buffer_mapped(bh);
++			clear_buffer_new(bh);
++			clear_buffer_req(bh);
++			bh->b_bdev = NULL;
  		}
  
-+		if (!host->pdata->gpio_card_ro_invert)
-+			mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
- 		ret = mmc_gpiod_request_ro(mmc, "wp", 0, 0, NULL);
- 		if (ret && ret != -ENOENT) {
- 			dev_err(dev, "Failed requesting gpio_ro\n");
- 			goto out;
+ 		if (buffer_jbddirty(bh)) {
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index bee8498d77929..3930c68a9c204 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2296,14 +2296,16 @@ static int journal_unmap_buffer(journal_t *journal, struct buffer_head *bh,
+ 			return -EBUSY;
  		}
--		if (!ret) {
-+		if (!ret)
- 			host->use_ro_gpio = true;
--			mmc->caps2 |= host->pdata->gpio_card_ro_invert ?
--				0 : MMC_CAP2_RO_ACTIVE_HIGH;
--		}
- 
- 		if (host->pdata->init)
- 			host->pdata->init(dev, pxamci_detect_irq, mmc);
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 1c988d6a24330..dccb4df465126 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1381,13 +1381,14 @@ static int sdhci_esdhc_imx_probe_nondt(struct platform_device *pdev,
- 				host->mmc->parent->platform_data);
- 	/* write_protect */
- 	if (boarddata->wp_type == ESDHC_WP_GPIO) {
-+		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
- 		err = mmc_gpiod_request_ro(host->mmc, "wp", 0, 0, NULL);
- 		if (err) {
- 			dev_err(mmc_dev(host->mmc),
- 				"failed to request write-protect gpio!\n");
- 			return err;
- 		}
--		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
- 	}
- 
- 	/* card_detect */
+ 		/*
+-		 * OK, buffer won't be reachable after truncate. We just set
+-		 * j_next_transaction to the running transaction (if there is
+-		 * one) and mark buffer as freed so that commit code knows it
+-		 * should clear dirty bits when it is done with the buffer.
++		 * OK, buffer won't be reachable after truncate. We just clear
++		 * b_modified to not confuse transaction credit accounting, and
++		 * set j_next_transaction to the running transaction (if there
++		 * is one) and mark buffer as freed so that commit code knows
++		 * it should clear dirty bits when it is done with the buffer.
+ 		 */
+ 		set_buffer_freed(bh);
+ 		if (journal->j_running_transaction && buffer_jbddirty(bh))
+ 			jh->b_next_transaction = journal->j_running_transaction;
++		jh->b_modified = 0;
+ 		jbd2_journal_put_journal_head(jh);
+ 		spin_unlock(&journal->j_list_lock);
+ 		jbd_unlock_bh_state(bh);
 -- 
 2.20.1
 
