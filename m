@@ -2,52 +2,79 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E9DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED43AC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01D320659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FB120659
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JkGobR7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgBRJyQ (ORCPT
+        id S1726449AbgBRJ4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:54:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:48864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgBRJyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:54:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49AB91FB;
-        Tue, 18 Feb 2020 01:54:15 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C04E63F6CF;
-        Tue, 18 Feb 2020 01:54:13 -0800 (PST)
-Subject: Re: [PATCH 1/3] sched/rt: cpupri_find: implement fallback mechanism
- for !fit case
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-2-qais.yousef@arm.com>
- <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
- <20200217234549.rpv3ns7bd7l6twqu@e107158-lin>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <50eee4ae-a733-d8e4-9f57-ab05678545fc@arm.com>
-Date:   Tue, 18 Feb 2020 10:53:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 04:56:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53298 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgBRJ4R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:56:17 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s10so2087265wmh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:56:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UdH2WwRjeP0392FSfzUeJpWFNKo0z7G6MGSSmZM+wnw=;
+        b=JkGobR7ne7hE4lO8Y9G7F0mwGgXu/l74bR/V2dOzMUri9Jndvty2pi+NIGotqZmZ8N
+         HBo97sQj1xBSQSYgD6BbGL3uQe26Q/j1SOWQOxIzG+pfQb8vH1l4UFQ3JnWANsCss2xp
+         l03JegdpvjVjSqzYW43xqrtJgsoFn1uRaRzCabyggFPT8pt6oNXGbn1i6/SKE0/2BDPT
+         BDmIp2NIjiUUtLycIG38oQH0Nv+X0gIASUrKcMtn3hsU7X/ZabQiQ8nEbYxHMFbJ734V
+         FyTj1fNiudVfEVUUGcEfCu6zsPo6BFhbzrQLV8eTj5iXyrei+J1uxqEyJ7aS8tteAG5c
+         3HhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UdH2WwRjeP0392FSfzUeJpWFNKo0z7G6MGSSmZM+wnw=;
+        b=g9pLPPeoChoBTlxNO562euEJUWiiXQd7TIU+6hLX7JVNTZHKAD4RNP/pd/LeJUeP6V
+         517JjG62TTaHWEOtxSbbeWsaTxVDY7iG4jth/oadOeE6X5QKUhtdoupSh8idQK3IaCpe
+         nJVGbiTxbqk+TLAMmcVrlBZTR7lMj6LqFRMEJoj4yMEk3u7u0VoZhHdxiW48wM87i8cC
+         jT18zOB8EK5Wmc9C6uAORJ9EulNPF/894GBqWPoM2Kcm/mQn3zzUitCo9fqRU/qXaOWT
+         OnMJOmS5RoshrYNQiNsYrGSY7EXs74PjSuMi1F0Glqcbo9th2GNyFLRbjJqRA3dxdgWE
+         6www==
+X-Gm-Message-State: APjAAAXQa+ayb75CkKivmqDvhlCARLMgDTeHZyqv6aNEYIGqYG3PZyC6
+        5Eo2qHLarOmwCExyzJuTWUx3xw==
+X-Google-Smtp-Source: APXvYqytGhJ61N7kXx+F6MuGoEGrfZFJgE1ENO08u102dUmJ85nq1PD/yvS6IXqIQnbuVfUdbBqsWQ==
+X-Received: by 2002:a1c:38c7:: with SMTP id f190mr2161681wma.94.1582019774942;
+        Tue, 18 Feb 2020 01:56:14 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id g21sm2835191wmh.17.2020.02.18.01.56.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 01:56:14 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] nvmem: fix another memory leak in error path
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org
+References: <20200218094234.23896-1-brgl@bgdev.pl>
+ <20200218094234.23896-3-brgl@bgdev.pl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6e7a5df7-6ded-7777-5552-879934c185ad@linaro.org>
+Date:   Tue, 18 Feb 2020 09:56:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200217234549.rpv3ns7bd7l6twqu@e107158-lin>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200218094234.23896-3-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,110 +82,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 00:45, Qais Yousef wrote:
-> On 02/17/20 20:09, Dietmar Eggemann wrote:
->> On 14/02/2020 17:39, Qais Yousef wrote:
->>
->> [...]
->>
->>>  /**
->>>   * cpupri_find - find the best (lowest-pri) CPU in the system
->>>   * @cp: The cpupri context
->>> @@ -62,80 +115,72 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
->>>  		struct cpumask *lowest_mask,
->>>  		bool (*fitness_fn)(struct task_struct *p, int cpu))
->>>  {
->>> -	int idx = 0;
->>>  	int task_pri = convert_prio(p->prio);
->>> +	int best_unfit_idx = -1;
->>> +	int idx = 0, cpu;
->>>  
->>>  	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);
->>>  
->>>  	for (idx = 0; idx < task_pri; idx++) {
->>> -		struct cpupri_vec *vec  = &cp->pri_to_cpu[idx];
->>> -		int skip = 0;
->>>  
->>> -		if (!atomic_read(&(vec)->count))
->>> -			skip = 1;
->>> -		/*
->>> -		 * When looking at the vector, we need to read the counter,
->>> -		 * do a memory barrier, then read the mask.
->>> -		 *
->>> -		 * Note: This is still all racey, but we can deal with it.
->>> -		 *  Ideally, we only want to look at masks that are set.
->>> -		 *
->>> -		 *  If a mask is not set, then the only thing wrong is that we
->>> -		 *  did a little more work than necessary.
->>> -		 *
->>> -		 *  If we read a zero count but the mask is set, because of the
->>> -		 *  memory barriers, that can only happen when the highest prio
->>> -		 *  task for a run queue has left the run queue, in which case,
->>> -		 *  it will be followed by a pull. If the task we are processing
->>> -		 *  fails to find a proper place to go, that pull request will
->>> -		 *  pull this task if the run queue is running at a lower
->>> -		 *  priority.
->>> -		 */
->>> -		smp_rmb();
->>> -
->>> -		/* Need to do the rmb for every iteration */
->>> -		if (skip)
->>> -			continue;
->>> -
->>> -		if (cpumask_any_and(p->cpus_ptr, vec->mask) >= nr_cpu_ids)
->>> +		if (!__cpupri_find(cp, p, lowest_mask, idx))
->>>  			continue;
->>>  
->>> -		if (lowest_mask) {
->>> -			int cpu;
->>
->> Shouldn't we add an extra condition here?
->>
->> +               if (!static_branch_unlikely(&sched_asym_cpucapacity))
->> +                       return 1;
->> +
->>
->> Otherwise non-heterogeneous systems have to got through this
->> for_each_cpu(cpu, lowest_mask) further below for no good reason.
+
+
+On 18/02/2020 09:42, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Hmm below is the best solution I can think of at the moment. Works for you?
+> The nvmem struct is only freed on the first error check after its
+> allocation and leaked after that. Fix it with a new label.
 > 
-> It's independent of what this patch tries to fix, so I'll add as a separate
-> patch to the series in the next update.
-
-OK.
-
-Since we can't set it as early as init_sched_rt_class()
-
-root@juno:~# dmesg | grep "\*\*\*"
-[    0.501697] *** set sched_asym_cpucapacity <-- CPU cap asym by uArch
-[    0.505847] *** init_sched_rt_class()
-[    1.796706] *** set sched_asym_cpucapacity <-- CPUfreq kicked in
-
-we probably have to do it either by bailing out of cpupri_find() early
-with this extra condition (above) or by initializing the func pointer
-dynamically (your example).
-
-[...]
-
-> @@ -1708,6 +1710,7 @@ static int find_lowest_rq(struct task_struct *task)
->         struct cpumask *lowest_mask = this_cpu_cpumask_var_ptr(local_cpu_mask);
->         int this_cpu = smp_processor_id();
->         int cpu      = task_cpu(task);
-> +       fitness_fn_t fitness_fn;
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   drivers/nvmem/core.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
->         /* Make sure the mask is initialized first */
->         if (unlikely(!lowest_mask))
-> @@ -1716,8 +1719,17 @@ static int find_lowest_rq(struct task_struct *task)
->         if (task->nr_cpus_allowed == 1)
->                 return -1; /* No other targets possible */
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index b0be03d5f240..c9b3f4047154 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -343,10 +343,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   		return ERR_PTR(-ENOMEM);
+>   
+>   	rval  = ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
+> -	if (rval < 0) {
+> -		kfree(nvmem);
+> -		return ERR_PTR(rval);
+> -	}
+> +	if (rval < 0)
+> +		goto err_free_nvmem;
+>   	if (config->wp_gpio)
+>   		nvmem->wp_gpio = config->wp_gpio;
+>   	else
+> @@ -432,6 +430,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	put_device(&nvmem->dev);
+>   err_ida_remove:
+>   	ida_simple_remove(&nvmem_ida, nvmem->id);
+> +err_free_nvmem:
+> +	kfree(nvmem);
+
+This is not correct fix to start with, if the device has already been 
+intialized before jumping here then nvmem would be freed as part of 
+nvmem_release().
+
+So the bug was actually introduced by adding err_ida_remove label.
+
+You can free nvmem at that point but not at any point after that as 
+device core would be holding a reference to it.
+
+--srini
+
+
+
+>   
+>   	return ERR_PTR(rval);
+>   }
 > 
-> +       /*
-> +        * Help cpupri_find avoid the cost of looking for a fitting CPU when
-> +        * not really needed.
-> +        */
-
-In case the commend is really needed, for me it would work better
-logically inverse.
-
-[...]
