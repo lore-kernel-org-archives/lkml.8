@@ -2,33 +2,32 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D337C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54321C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0C622B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3646422B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgBRXaw (ORCPT
+        id S1728039AbgBRXa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:30:52 -0500
+        Tue, 18 Feb 2020 18:30:59 -0500
 Received: from mga04.intel.com ([192.55.52.120]:38638 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgBRX34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:29:56 -0500
+        id S1727872AbgBRX3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:29:55 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
   by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:55 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="282936650"
+   d="scan'208";a="282936641"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:55 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:54 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -37,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/13] KVM: x86: Move emulation-only helpers to emulate.c
-Date:   Tue, 18 Feb 2020 15:29:43 -0800
-Message-Id: <20200218232953.5724-4-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 01/13] KVM: x86: Refactor I/O emulation helpers to provide vcpu-only variant
+Date:   Tue, 18 Feb 2020 15:29:41 -0800
+Message-Id: <20200218232953.5724-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200218232953.5724-1-sean.j.christopherson@intel.com>
 References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
@@ -50,68 +49,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move ctxt_virt_addr_bits() and emul_is_noncanonical_address() from x86.h
-to emulate.c.  This eliminates all references to struct x86_emulate_ctxt
-from x86.h, and sets the stage for a future patch to stop including
-kvm_emulate.h in asm/kvm_host.h.
+Add variants of the I/O helpers that take a vCPU instead of an emulation
+context.  This will eventually allow KVM to limit use of the emulation
+context to the full emulation path.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/emulate.c | 11 +++++++++++
- arch/x86/kvm/x86.h     | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/kvm/x86.c | 39 ++++++++++++++++++++++++---------------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index ddbc61984227..1e394cb190ce 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -673,6 +673,17 @@ static void set_segment_selector(struct x86_emulate_ctxt *ctxt, u16 selector,
- 	ctxt->ops->set_segment(ctxt, selector, &desc, base3, seg);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fbabb2f06273..6554abef631f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5959,11 +5959,9 @@ static int emulator_pio_in_out(struct kvm_vcpu *vcpu, int size,
+ 	return 0;
  }
  
-+static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
-+{
-+	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
+-static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
+-				    int size, unsigned short port, void *val,
+-				    unsigned int count)
++static int emulator_pio_in(struct kvm_vcpu *vcpu, int size,
++			   unsigned short port, void *val, unsigned int count)
+ {
+-	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+ 	int ret;
+ 
+ 	if (vcpu->arch.pio.count)
+@@ -5983,17 +5981,30 @@ static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
+ 	return 0;
+ }
+ 
+-static int emulator_pio_out_emulated(struct x86_emulate_ctxt *ctxt,
+-				     int size, unsigned short port,
+-				     const void *val, unsigned int count)
++static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
++				    int size, unsigned short port, void *val,
++				    unsigned int count)
+ {
+-	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++	return emulator_pio_in(emul_to_vcpu(ctxt), size, port, val, count);
+ 
 +}
 +
-+static inline bool emul_is_noncanonical_address(u64 la,
-+						struct x86_emulate_ctxt *ctxt)
++static int emulator_pio_out(struct kvm_vcpu *vcpu, int size,
++			    unsigned short port, const void *val,
++			    unsigned int count)
 +{
-+	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
+ 	memcpy(vcpu->arch.pio_data, val, size * count);
+ 	trace_kvm_pio(KVM_PIO_OUT, port, size, count, vcpu->arch.pio_data);
+ 	return emulator_pio_in_out(vcpu, size, port, (void *)val, count, false);
+ }
+ 
++static int emulator_pio_out_emulated(struct x86_emulate_ctxt *ctxt,
++				     int size, unsigned short port,
++				     const void *val, unsigned int count)
++{
++	return emulator_pio_out(emul_to_vcpu(ctxt), size, port, val, count);
 +}
 +
- /*
-  * x86 defines three classes of vector instructions: explicitly
-  * aligned, explicitly unaligned, and the rest, which change behaviour
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 3624665acee4..8409842a25d9 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -149,11 +149,6 @@ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
- 	return kvm_read_cr4_bits(vcpu, X86_CR4_LA57) ? 57 : 48;
- }
- 
--static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
--{
--	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
--}
--
- static inline u64 get_canonical(u64 la, u8 vaddr_bits)
+ static unsigned long get_segment_base(struct kvm_vcpu *vcpu, int seg)
  {
- 	return ((int64_t)la << (64 - vaddr_bits)) >> (64 - vaddr_bits);
-@@ -164,12 +159,6 @@ static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
- 	return get_canonical(la, vcpu_virt_addr_bits(vcpu)) != la;
- }
- 
--static inline bool emul_is_noncanonical_address(u64 la,
--						struct x86_emulate_ctxt *ctxt)
--{
--	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
--}
--
- static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
- 					gva_t gva, gfn_t gfn, unsigned access)
+ 	return kvm_x86_ops->get_segment_base(vcpu, seg);
+@@ -6930,8 +6941,8 @@ static int kvm_fast_pio_out(struct kvm_vcpu *vcpu, int size,
+ 			    unsigned short port)
  {
+ 	unsigned long val = kvm_rax_read(vcpu);
+-	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
+-					    size, port, &val, 1);
++	int ret = emulator_pio_out(vcpu, size, port, &val, 1);
++
+ 	if (ret)
+ 		return ret;
+ 
+@@ -6967,11 +6978,10 @@ static int complete_fast_pio_in(struct kvm_vcpu *vcpu)
+ 	val = (vcpu->arch.pio.size < 4) ? kvm_rax_read(vcpu) : 0;
+ 
+ 	/*
+-	 * Since vcpu->arch.pio.count == 1 let emulator_pio_in_emulated perform
++	 * Since vcpu->arch.pio.count == 1 let emulator_pio_in perform
+ 	 * the copy and tracing
+ 	 */
+-	emulator_pio_in_emulated(&vcpu->arch.emulate_ctxt, vcpu->arch.pio.size,
+-				 vcpu->arch.pio.port, &val, 1);
++	emulator_pio_in(vcpu, vcpu->arch.pio.size, vcpu->arch.pio.port, &val, 1);
+ 	kvm_rax_write(vcpu, val);
+ 
+ 	return kvm_skip_emulated_instruction(vcpu);
+@@ -6986,8 +6996,7 @@ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, int size,
+ 	/* For size less than 4 we merge, else we zero extend */
+ 	val = (size < 4) ? kvm_rax_read(vcpu) : 0;
+ 
+-	ret = emulator_pio_in_emulated(&vcpu->arch.emulate_ctxt, size, port,
+-				       &val, 1);
++	ret = emulator_pio_in(vcpu, size, port, &val, 1);
+ 	if (ret) {
+ 		kvm_rax_write(vcpu, val);
+ 		return ret;
 -- 
 2.24.1
 
