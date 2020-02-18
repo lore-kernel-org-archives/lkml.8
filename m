@@ -2,129 +2,259 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5356C34032
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D7C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CB8207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B9C207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="f/5DW0Qa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N3mWvNpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgBRALH (ORCPT
+        id S1726140AbgBRAUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 19:11:07 -0500
-Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:38421
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbgBRALH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 19:11:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AShLImpaWseK2QjYksQHdQ6bMrpwVCwLNIZq4WkjTqFsdishd5i8D8dF9hVnRC2bSuV9jcKl8s73GGXVhQipfnb3mNyasU4WqNpJXV9dgJP6Q79qgOzkhxoN/hCYk6Jp9zd95ic6V+1boK/y59dBtySr58JHEqBpe8A5rkn5Ms7buT0jA3Mn7fVLsUi6+lVqvEdgQb86GVXL5Y0JwMFFWFIojbw7nKsgfZCGJ13fvG1jQu2xsXGk/GVjRL3A0ReDIe4dXwNGJOpWWV9QAdGspSNDQURmB2dDPTfMvuC7DEDjYWDd2kHoyJboAdmIob4DwtaYwOZaymsDH+ZcoVxG1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ASdxIR7Yzk07fNbtoH1uXp1qjJJ2LqBFdakThHDBlxU=;
- b=VNaOS8FatGYTfZhUhlnsVi1V/oBQqvTTdUIeK9lAxYrd1Kk8ftSeyYYAlJcPp1vivOYB1seG8/MGf2MloVZ5rIE4APF9NTNyc/5pU2Qlr5W9MSfUNqhFFms92DeiOlk19cWNOsHsRsl46IxH8ZP/r+V5HNmzINtb0SCsUIL9e+xLuEiWIY0qk9EOAUbPM6JPaO9Q6z98GyceM1aRNHaMToJJu0xOKWIY4TsVx/JydSFVp/kShocyRLnP2DUZTaGtJtK8dQpXu3ttHv5R9S1BeBNtS8rxsIW09QMzD3++lbbUCP2+xtGGmkm4EHDdWg3rL+cWlCWaYoiLcRey//mR7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Mon, 17 Feb 2020 19:20:22 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36782 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgBRAUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 19:20:22 -0500
+Received: by mail-pf1-f201.google.com with SMTP id 6so12255745pfv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 16:20:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ASdxIR7Yzk07fNbtoH1uXp1qjJJ2LqBFdakThHDBlxU=;
- b=f/5DW0QaI/FLWAE/3Cr2PMkdNdH/MkWgs6W9tHqieRHGIavggt4K7oMwv8l7ytaTu1ZMdzZatnvcPJUvZTUCWtUfNv/mXo4oHu0Kp7uBbVzc5mJMBtExCXb0QhZHi9AdDejYWfqohhafJhVW+Uh2cRQDXZ4AGISNpV4cx1Rz10c=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4799.jpnprd01.prod.outlook.com (20.179.175.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Tue, 18 Feb 2020 00:11:03 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
- 00:11:03 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        =?iso-8859-1?Q?Niklas_S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Thread-Topic: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
-Thread-Index: AQHV5MmmLymxK/lC2USJviU/BgNMZagfB0oAgAAkTgCAAOfAAIAAAoog
-Date:   Tue, 18 Feb 2020 00:11:03 +0000
-Message-ID: <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
-        <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
-        <20200217101114.GO3013231@oden.dyn.berto.se>
- <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b3083474-ced8-4726-5194-08d7b4070ac2
-x-ms-traffictypediagnostic: TYAPR01MB4799:|TYAPR01MB4799:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB47995EDC3A869F675B7BE120D8110@TYAPR01MB4799.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 031763BCAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(189003)(199004)(55236004)(71200400001)(186003)(86362001)(5660300002)(478600001)(4744005)(6506007)(4326008)(52536014)(316002)(33656002)(2906002)(81156014)(76116006)(26005)(110136005)(7696005)(54906003)(66476007)(64756008)(66446008)(66556008)(55016002)(8676002)(66946007)(9686003)(81166006)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4799;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BFbt5w6EyA4+6/G5UDVHNocEOKdX3sYbvfeGXBY+6X0PwKaumieydtDCag8nz/SEjmIuYsXwqrfIzwu+Su9EG+t3vi/s5ELd3Q0ynLTNYeYedctUUp2uKQKOA/9D9hsavLQV54xvZq+eo2ypY+tjo4T2pCHRuArMPD5Wp9pqtbD92E5MofS/Kp6LilQTP+fRWqWAKqGDPy4QxztXTD9TPHmBdkSJzG8qBWuTtALfcNw4mWfAy4ct9rrcDwkTZLjHckfbQY8FTexoGUccJ9Jx9yI+wLwaT/6MbpTzl95neZNqxGTa41jOSIBFyXBOjQUDhtMlwiaUKY8i5EDwXvale5lFN5jn8Tmrj5GGN1BT8IXcuxIdEQRNO4vbjCp1I049q+Xp6OCs3yQegVr4Usdon1VQorBw9GFCJoylevzusEgJOthd/Rn/cgAe2KC1nJme
-x-ms-exchange-antispam-messagedata: FWaZxp6UW3WBpHlHgZdqXEOQmBm+EXKZlaaXjZg+CFtKMK9+x7GNcePBmc8axhQnsyVKNi27CvXvWOEgu6YJ4M5NfbZS2wtR76EfUhJAlcIuCOGAJUxRA44dAnX0sMxXsFbFPUtGb9iw2biaV/f67g==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3083474-ced8-4726-5194-08d7b4070ac2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 00:11:03.2873
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Kb0L9bkRPqhbr6eXPL+5SbFQPEIUWtwsblJff0ErbNcrPql8NIRIa0woxj3PRMPPz+7IM70ut/K27fCgwBU7DKwbOEylGjSJD4Htpu6J6PMI97/IOvySJbmo+lWktMe8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4799
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YRPZpfQbdrPNL4yfIRzFV+frczdg6cm306DfFTZlymM=;
+        b=N3mWvNpKqTQK2/o+g6oZ4VD8DJT/x/hGJV4bTDcyVobhiM3givqkxCx8zZAF/h/6Le
+         dqy5BefW45m2OgYYqdvFfKe27S2kE+kYdAj5hOWqo+ulXZxewvRjY4E3I3i/zK11BtMp
+         UCvrL6Ni52HI/cWegoO+/SJJejNfctRPZJVXU/+s2UWeuEcvBJqdgSxto25Y9ADhKQKL
+         Oc/ZY7hzqZSEO9BxD78eUpoKieHhthE85p3i9DcofrbPYxxmArZlp5irug437honhsTV
+         uMR/sJPCYUxyMV/dFO5dEmk7g02oAIc/PbVtaBZ5VUk2drRMGMNOem2HIv6+hTaHxlhD
+         ubhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YRPZpfQbdrPNL4yfIRzFV+frczdg6cm306DfFTZlymM=;
+        b=RcL5mHgytGX/q4UmCS/QlDaSdloFl7gQNQVKFXvEa92sdrf0+7HX8yIoJzy/rixncc
+         Xk/N6CsZrU+6E9ZGSWJGw9MSJsqO7DEm5+T6J1GIGOAWvzzJfgbujwrxf+GSnaHR01b+
+         7S2nBeB8AolkStKPEmk7Ozgdwvy9pmBSzKDy2jvxhbkOQOjBg8PE0Q6RDeaXtw6wmTFx
+         J3rJLlvHgbA5Z9LEITSGdRk4K2G6LnhdE/TAZCbh4DSi3vcDpHcJu5AUdrtZr5pOsDEi
+         eORC7zwG1Obx8jJZ7kCQK6r8+gdPpChTjGyzeVB9y5umZwP0NPh4Zy0l5ptxbmUnX9nL
+         8p7g==
+X-Gm-Message-State: APjAAAXF97IEWxY5D/j/7DTbcHLYSHpeSalgzhKqF2zfAZTV1NeQLc4e
+        ps7c/PuP+9//pHTruAtH1weEI1q9mxt3f6/E7srmK76bQCRB3SbByHAxJ0wHt9Cl18na8FtclgR
+        EjEIBe7ja9J2U+VBSq/AcLt7pJAE9Cx704V8aTTneta/i13lG4ZySQPMrIUr4lfiOJ2pctA==
+X-Google-Smtp-Source: APXvYqy5t2nHyENXUOrhmE30pbDQhIJQ5dKVPA8HObMKD1RGgLR42mtJYG2ihJpk6LPF5210wnuzcGvgxiY=
+X-Received: by 2002:a65:404d:: with SMTP id h13mr19366231pgp.156.1581985221249;
+ Mon, 17 Feb 2020 16:20:21 -0800 (PST)
+Date:   Mon, 17 Feb 2020 16:20:15 -0800
+Message-Id: <20200218002015.204302-1-lrizzo@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] kretprobe: percpu support
+From:   Luigi Rizzo <lrizzo@google.com>
+To:     linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+        mhiramat@kernel.org, gregkh@linuxfoundation.org
+Cc:     Luigi Rizzo <lrizzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas-san,
+kretprobe uses a list protected by a single lock to allocate a
+kretprobe_instance in pre_handler_kretprobe(). This works poorly with
+concurrent calls.
 
-> From: Kuninori Morimoto, Sent: Tuesday, February 18, 2020 9:01 AM
->=20
-> Hi Niklas
->=20
-> > > +renesas@???
-> >
-> > I have not used the +renesas@ for my other entry in MAINTAINERS for
-> > R-Car VIN and wish them to be the same. I have do not mind if that is
-> > with or without the +renesas tag.
-> >
-> > @Shimoda-san: What would you and Renesas prefer I use?
->=20
-> Please use +renesas@ for Author when you post patches.
-> We don't mind for other mail address, like MAINTAINERS.
+This patch offers a simplified fix: the percpu_instance flag indicates
+that we allocate one instance per CPU, and the allocation is contention
+free, but we allow only have one pending entry per CPU (this could be
+extended to a small constant number without much trouble).
 
-I have the same opinion with Morimoto-san.
+Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+---
+ include/linux/kprobes.h | 10 ++++++++--
+ kernel/kprobes.c        | 40 ++++++++++++++++++++++++++++++++++++++++
+ kernel/test_kprobes.c   | 18 +++++++++++++-----
+ 3 files changed, 61 insertions(+), 7 deletions(-)
 
-Best regards,
-Yoshihiro Shimoda
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 04bdaf01112cb..5c549d6a599b9 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -142,7 +142,8 @@ static inline int kprobe_ftrace(struct kprobe *p)
+  * can be active concurrently.
+  * nmissed - tracks the number of times the probed function's return was
+  * ignored, due to maxactive being too low.
+- *
++ * percpu_instance - if set, uses one instance per cpu instead of allocating
++ * from the list protected by lock.
+  */
+ struct kretprobe {
+ 	struct kprobe kp;
+@@ -151,8 +152,13 @@ struct kretprobe {
+ 	int maxactive;
+ 	int nmissed;
+ 	size_t data_size;
+-	struct hlist_head free_instances;
++	union {
++		struct kretprobe_instance __percpu *pcpu;
++		struct hlist_head free_instances;
++	};
+ 	raw_spinlock_t lock;
++	u32 percpu_instance:1;
++	u32 unused:31;
+ };
+ 
+ struct kretprobe_instance {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2625c241ac00f..590b534ec2bf0 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1184,6 +1184,10 @@ void recycle_rp_inst(struct kretprobe_instance *ri,
+ 	hlist_del(&ri->hlist);
+ 	INIT_HLIST_NODE(&ri->hlist);
+ 	if (likely(rp)) {
++		if (rp->percpu_instance) {
++			ri->rp = NULL;
++			return;
++		}
+ 		raw_spin_lock(&rp->lock);
+ 		hlist_add_head(&ri->hlist, &rp->free_instances);
+ 		raw_spin_unlock(&rp->lock);
+@@ -1274,6 +1278,11 @@ static inline void free_rp_inst(struct kretprobe *rp)
+ 	struct kretprobe_instance *ri;
+ 	struct hlist_node *next;
+ 
++	if (rp->percpu_instance) {
++		free_percpu(rp->pcpu);
++		return;
++	}
++
+ 	hlist_for_each_entry_safe(ri, next, &rp->free_instances, hlist) {
+ 		hlist_del(&ri->hlist);
+ 		kfree(ri);
+@@ -1874,6 +1883,26 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 
+ 	/* TODO: consider to only swap the RA after the last pre_handler fired */
+ 	hash = hash_ptr(current, KPROBE_HASH_BITS);
++	if (rp->percpu_instance) {
++		unsigned long flags;
++
++		local_irq_save(flags);
++		ri = this_cpu_ptr(rp->pcpu);
++		if (!ri || ri->rp) { /* already in use */
++			local_irq_restore(flags);
++			rp->nmissed++;
++			return 0;
++		}
++		ri->rp = rp;
++		ri->task = current;
++		local_irq_restore(flags);
++
++		if (rp->entry_handler && rp->entry_handler(ri, regs)) {
++			ri->rp = NULL;	/* failed */
++			return 0;
++		}
++		goto good;
++	}
+ 	raw_spin_lock_irqsave(&rp->lock, flags);
+ 	if (!hlist_empty(&rp->free_instances)) {
+ 		ri = hlist_entry(rp->free_instances.first,
+@@ -1891,6 +1920,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 			return 0;
+ 		}
+ 
++good:
+ 		arch_prepare_kretprobe(ri, regs);
+ 
+ 		/* XXX(hch): why is there no hlist_move_head? */
+@@ -1951,6 +1981,15 @@ int register_kretprobe(struct kretprobe *rp)
+ 	rp->kp.fault_handler = NULL;
+ 
+ 	/* Pre-allocate memory for max kretprobe instances */
++	if (rp->maxactive < 0) {	/* alloc percpu */
++		rp->pcpu = __alloc_percpu(sizeof(*rp->pcpu) + rp->data_size,
++					  __alignof__(*rp->pcpu));
++		if (rp->pcpu)
++			goto finalize;
++		free_rp_inst(rp);
++		return -ENOMEM;
++	}
++
+ 	if (rp->maxactive <= 0) {
+ #ifdef CONFIG_PREEMPTION
+ 		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
+@@ -1971,6 +2010,7 @@ int register_kretprobe(struct kretprobe *rp)
+ 		hlist_add_head(&inst->hlist, &rp->free_instances);
+ 	}
+ 
++finalize:
+ 	rp->nmissed = 0;
+ 	/* Establish function entry probe point */
+ 	ret = register_kprobe(&rp->kp);
+diff --git a/kernel/test_kprobes.c b/kernel/test_kprobes.c
+index 76c997fdbc9da..22b734fb8bcb2 100644
+--- a/kernel/test_kprobes.c
++++ b/kernel/test_kprobes.c
+@@ -236,31 +236,36 @@ static struct kretprobe rp2 = {
+ 	.kp.symbol_name = "kprobe_target2"
+ };
+ 
+-static int test_kretprobes(void)
++static int test_kretprobes(bool percpu_instance)
+ {
+ 	int ret;
+ 	struct kretprobe *rps[2] = {&rp, &rp2};
++	const char *mode = percpu_instance ? "percpu " : "normal";
+ 
+ 	/* addr and flags should be cleard for reusing kprobe. */
+ 	rp.kp.addr = NULL;
+ 	rp.kp.flags = 0;
++	rp.percpu_instance = percpu_instance;
++	rp2.kp.addr = NULL;
++	rp2.kp.flags = 0;
++	rp2.percpu_instance = percpu_instance;
+ 	ret = register_kretprobes(rps, 2);
+ 	if (ret < 0) {
+-		pr_err("register_kretprobe returned %d\n", ret);
++		pr_err("register_kretprobe mode %s returned %d\n", mode, ret);
+ 		return ret;
+ 	}
+ 
+ 	krph_val = 0;
+ 	ret = target(rand1);
+ 	if (krph_val != rand1) {
+-		pr_err("kretprobe handler not called\n");
++		pr_err("kretprobe handler mode %s not called\n", mode);
+ 		handler_errors++;
+ 	}
+ 
+ 	krph_val = 0;
+ 	ret = target2(rand1);
+ 	if (krph_val != rand1) {
+-		pr_err("kretprobe handler2 not called\n");
++		pr_err("kretprobe handler2 $snot called\n", mode);
+ 		handler_errors++;
+ 	}
+ 	unregister_kretprobes(rps, 2);
+@@ -297,7 +302,10 @@ int init_test_probes(void)
+ 		errors++;
+ 
+ 	num_tests++;
+-	ret = test_kretprobes();
++	ret = test_kretprobes(false);
++	if (ret < 0)
++		errors++;
++	ret = test_kretprobes(true);
+ 	if (ret < 0)
+ 		errors++;
+ #endif /* CONFIG_KRETPROBES */
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-> Thank you for your help !!
-> Best regards
-> ---
-> Kuninori Morimoto
