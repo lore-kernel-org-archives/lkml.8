@@ -2,101 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2D2C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA879C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112992465D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582052600;
-	bh=AOzSoobEDE7EhEFICl1pLxHiCCZDR6d7DRTiE1UV2SM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WEYnARn2yTHe7jtkRy5z5+92Xv83KvWQvrSqE22/4bgkJb7lbZUj/hx4CPszeWP5E
-	 0NwtEm8Fo+md/Kk8BGhf7LwxK1qtFYVJ+1a6vSjYlGmnw33gggMtURVmP7a47g1f7/
-	 H3p0gKcX4wqDaWL0fQj3mL6+E4skK5Rshs2e1klg=
+	by mail.kernel.org (Postfix) with ESMTP id B59562070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bBlb7kK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgBRTDS (ORCPT
+        id S1726427AbgBRTHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:03:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:59188 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgBRTDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:03:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8442831B;
-        Tue, 18 Feb 2020 11:03:16 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07DEC3F703;
-        Tue, 18 Feb 2020 11:03:15 -0800 (PST)
-Date:   Tue, 18 Feb 2020 19:03:14 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Applied "ASoC: core: ensure component names are unique" to the
- asoc tree
-Message-ID: <20200218190314.GM4232@sirena.org.uk>
-References: <20200214134704.342501-1-jbrunet@baylibre.com>
- <applied-20200214134704.342501-1-jbrunet@baylibre.com>
- <1jblpvraho.fsf@starbuckisacylon.baylibre.com>
+        Tue, 18 Feb 2020 14:07:37 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40197 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTHh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:07:37 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y1so8442160plp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:07:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XDlxGgCpGeqU3KzfKq+0G+pODQzyu67LnVcRDv+D+D4=;
+        b=bBlb7kK0umzlqU+tMcH3s28HrHzKVOWGYgR0f+WFk8H08TYaiaZTu70twpujC0wnlL
+         jvPAxB/i9TZ8TfXzYS00HfBLRn4AaFjHwPpED0345d9rY2hlt8VFBYtOMONkmQRbfwLa
+         SfRGM16Ck3w2GMG+0yDfUWHKyfaxFrHzkq4HA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XDlxGgCpGeqU3KzfKq+0G+pODQzyu67LnVcRDv+D+D4=;
+        b=W749PCOdMc4Xd8b0IFB1byaeA8+4MsEfsN/YIFmLPT7erDKzHJqa6N7AkTX/OVZYlz
+         34oGJIlZrplebLwJDMW7a3sYNlF78HkU1Sm/fbUmO7cM+IU18BajLaB9nsUmS2Qa+nbh
+         oiAbVN2WWWNxwqpMvw9ecud6a8I4nV3nCoovf1MAbeR2Sc+LVlxFqlNZy1FGljpWjGG1
+         IWPD6wiuqj3JILKiuJXZZX6wXoy+LBKmblME7ZSgRTC5p1XAFnaE2vukHAfrVRnSvyq8
+         iRoA31HzGuyrj1bDS3ooI0gTaOuFSCNHPeI0ryG+vPmRKWUkw2yqF2HCLagsJI1jVApT
+         qn7A==
+X-Gm-Message-State: APjAAAU+8GGniikwR4qJypxEQY9FB2Tqs+N45i6m5ZssbyJ5L72Ds44k
+        upcj8Ri1Smq15HYhRaKGLI3n9Q==
+X-Google-Smtp-Source: APXvYqzQ9M1KsgU04ibpPhVZLv0ZY49qRY006V1Xcr4FsYN69DcQUVER/9RLVtPWkxP6bYsZHXAfTA==
+X-Received: by 2002:a17:902:b718:: with SMTP id d24mr22854885pls.80.1582052854867;
+        Tue, 18 Feb 2020 11:07:34 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id q25sm5175786pfg.41.2020.02.18.11.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 11:07:33 -0800 (PST)
+Date:   Tue, 18 Feb 2020 11:07:31 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org
+Subject: Re: [PATCH V4 3/3] dt-bindings: geni-se: Add binding for UART pin
+ swap
+Message-ID: <20200218190731.GC15781@google.com>
+References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
+ <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DXTueXWT3Da08pik"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1jblpvraho.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: No alcohol, dogs or horses.
+In-Reply-To: <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Akash,
 
---DXTueXWT3Da08pik
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I didn't see a patch that implements the binding, did you post it?
 
-On Tue, Feb 18, 2020 at 07:55:31PM +0100, Jerome Brunet wrote:
 
-> 1) Multiple components :
-> I found out that in fact it is common for linux devices to register
-> multiple components. For most, it is a combination of the dmaengine
-> generic and the actual device component, but other register more
-> component. Ex:
-> - vc4-hdmi
-> - atmel-classd
-> - atmel-pdmic
-> - cros-ec-codec
-> - mtXXXX-afe-pcm
-> I suspect these trigger the debugfs warning
-> Even dummy register two components :D
+On Mon, Feb 17, 2020 at 03:06:52PM +0530, Akash Asthana wrote:
+> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> index 11530df..7e4b9af 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> @@ -165,6 +165,15 @@ patternProperties:
+>            - description: UART core irq
+>            - description: Wakeup irq (RX GPIO)
+>  
+> +      rx-tx-swap:
+> +        description: RX and TX pins are swap.
 
-I hadn't realized we have so many - I'd have expected the debugfs
-complaints would've been noticable to people, I was hoping based on the
-initial discussion that it was just a couple of quick fixed needed.
-Guess not :/
+s/swap/swapped/
 
-Anyway, I agree that a revert is probably sensible for the time being
-and getting this done is more involved - can you send patches doing the
-revert with a changelog explaining the rationale please?
+> +
+> +      cts-rts-swap:
+> +        description: CTS and RTS pins are swap.
 
---DXTueXWT3Da08pik
-Content-Type: application/pgp-signature; name="signature.asc"
+s/swap/swapped/
 
------BEGIN PGP SIGNATURE-----
+> +
+> +      rx-tx-cts-rts-swap:
+> +        description: RX-TX and CTS-RTS both pairs are swap.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5MNPEACgkQJNaLcl1U
-h9BjvAf+Pmlt7fyU83FfsWzxULYtc7fHXyMM3Gf12+JrIrwu/PfdPt3ip6EdC8Zl
-qK6l8aX76eSj3zVwp8XZtQzqNflip6GgTbIT6eO1JslOAGWXRPbKFs0XAuu5jOMf
-LfNEZoaFYp7FTrgltQsZ9viQyk8oO8/WWFwcomy717MTimKsBCiU8A0itn+0zQj7
-wobZKZ03lqgIaEgwhUdmGhCBZzKNbpAlgN+tFIsYZtm+d3oPHQHO/MG8m1YBjlzs
-UlhBrFJPUp4Wovahwd/OI7frBmGOLX6QhZSm7A0aoVs8c9I+icM73/sbqKSmsqq7
-crR5zlLSQuqvMLLIuX47uaEEcFXSOg==
-=GtzH
------END PGP SIGNATURE-----
+I don't think this option adds much value, if both pairs are swapped
+the above two properties can be set.
 
---DXTueXWT3Da08pik--
+> +
+>      required:
+>        - compatible
+>        - interrupts
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
