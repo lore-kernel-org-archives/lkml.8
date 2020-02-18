@@ -2,67 +2,124 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F8BC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13814C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD8121D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA352070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="toQcBUKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgBRSbz (ORCPT
+        id S1726449AbgBRSet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:31:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:58546 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgBRSbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:31:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 843CF31B;
-        Tue, 18 Feb 2020 10:31:54 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98D963F68F;
-        Tue, 18 Feb 2020 10:31:52 -0800 (PST)
-Subject: Re: drivers/iommu/qcom_iommu.c:348 qcom_iommu_domain_free+0x5c/0x70
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Sasha Levin <sashal@kernel.org>, iommu@lists.linux-foundation.org,
-        robdclark@gmail.com, bjorn.andersson@linaro.org,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-        Will Deacon <will@kernel.org>, joro@8bytes.org,
-        masneyb@onstation.org, lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-References: <CA+G9fYtScOpkLvx=__gP903uJ2v87RwZgkAuL6RpF9_DTDs9Zw@mail.gmail.com>
- <20200218182359.GC2635524@kroah.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <19d57dfd-12df-9237-3576-32b0feef90fa@arm.com>
-Date:   Tue, 18 Feb 2020 18:31:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 13:34:49 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35661 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgBRSet (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:34:49 -0500
+Received: by mail-io1-f65.google.com with SMTP id h8so10991191iob.2;
+        Tue, 18 Feb 2020 10:34:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6utW5zpBGZdkE/X85fwj9ukk+lXXzsfc4fJcknN/FJk=;
+        b=toQcBUKNgScyCDiWdC34axIPqQTZKiFC6SAAtB0u+WJ+ZuStKhtPXSjLiO8H/xXLx5
+         Jh07dsG4hyNZv0NJLSICIrsnmcjoFyJtkQhdPwjMZbY87iR6OA7r6lrL2AByrW3IJfZc
+         ghjwlfaN9yn+xlfe4XjnvDLIHA0OznNAl12wg3fi2AOifDyHkCCu8oi/MxlurwZV8Os3
+         6Uaz831KXQp2FpsKydbPIt2tMJVh8ezHMbQq4Lb+mqAkAmMITFw54ZKRt8hZyB9u/BjM
+         QPEVBu1a1s+YAAD2yZ17exvJ2zVf9oA3d7EeOXeQIJuaJp+gHr3AMeUgDY+zLqQ20HIF
+         qCVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6utW5zpBGZdkE/X85fwj9ukk+lXXzsfc4fJcknN/FJk=;
+        b=SjR9hf95U3+rLtnVMP5e75yp8CNU8ZU/yU6aQ3d8/877rDvVEncIkAiyEt6raAIVAW
+         zWP2xfnTN1DdNTzP8m2iVh1YbetCf5G987oRg34DP7OSWk9wA5TORIhuVhG9uO6aMLUP
+         PQHYAJ1G6gZ3k6sWGLi6gh2Fpihh+dmPtVk0hasJOwBstIgZAAeW34bqFeWeytMKzfcw
+         bfA5OG2WySdj+6WrgzhZ5iRA8X1ajkmll/t3Y2xCxIDRfSa81IeU5KTnrpD0vPRx5Ovk
+         7xUzc65zN9BKL0AYY1vl6xe25NC1eKDXRy97ZeYvoUsrrrX+QW2OGaFx0RQYTYfM9Ckq
+         Wnvg==
+X-Gm-Message-State: APjAAAWByKQ5ugZlatDFiPr7PWQCOYYWKV9xron45kDftKOYWJhNSmeq
+        LCE34Yd5uqg+8zQ0H75kur3jB/bw+fNOavQqDm4=
+X-Google-Smtp-Source: APXvYqzrmTgiAn3qTV4ak/NxkwEw5dKPolvgC/KdPk7W9Fb2Vcgr2yrHz75tj+TGm+xHulsJ2cgO+Lkx7KEmGDGh3SY=
+X-Received: by 2002:a5e:860f:: with SMTP id z15mr16047488ioj.64.1582050888480;
+ Tue, 18 Feb 2020 10:34:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218182359.GC2635524@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com> <9270ae4b-feb1-6a4d-8a22-fbe5e47b7617@gmail.com>
+In-Reply-To: <9270ae4b-feb1-6a4d-8a22-fbe5e47b7617@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 18 Feb 2020 10:34:37 -0800
+Message-ID: <CAKgT0UdP78GGnowWC85YiTAHOr63NiLa25=2TSckKBEzGBdeJA@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/3] net: use new helper tcp_v6_gso_csum_prep
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guo-Fu Tseng <cooldavid@cooldavid.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Timur Tabi <timur@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        linux-hyperv@vger.kernel.org,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 6:23 pm, Greg Kroah-Hartman wrote:
-[...]
-> Can you bisect to find the offending commit?
+On Mon, Feb 17, 2020 at 1:43 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> Use new helper tcp_v6_gso_csum_prep in additional network drivers.
+>
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/net/ethernet/atheros/alx/main.c       |  5 +---
+>  .../net/ethernet/atheros/atl1c/atl1c_main.c   |  6 ++---
+>  drivers/net/ethernet/brocade/bna/bnad.c       |  7 +----
+>  drivers/net/ethernet/cisco/enic/enic_main.c   |  3 +--
+>  drivers/net/ethernet/intel/e1000/e1000_main.c |  6 +----
+>  drivers/net/ethernet/intel/e1000e/netdev.c    |  5 +---
+>  drivers/net/ethernet/jme.c                    |  7 +----
+>  .../net/ethernet/pensando/ionic/ionic_txrx.c  |  5 +---
+>  drivers/net/ethernet/qualcomm/emac/emac-mac.c |  7 ++---
+>  drivers/net/ethernet/socionext/netsec.c       |  6 +----
+>  drivers/net/hyperv/netvsc_drv.c               |  5 +---
+>  drivers/net/usb/r8152.c                       | 26 ++-----------------
+>  drivers/net/vmxnet3/vmxnet3_drv.c             |  5 +---
+>  13 files changed, 16 insertions(+), 77 deletions(-)
+>
 
-This particular presentation appears to be down to the DRM driver 
-starting to call of_platform_depopulate(), but it's merely exposing 
-badness in the IOMMU driver that's been there from day 1. I just sent a 
-fix for that[1].
+It might make sense to break this up into several smaller patches
+based on the maintainers for the various driver bits.
 
-Robin.
+So the changes all look fine to me, but I am not that familiar with
+the non-Intel drivers.
 
-[1] 
-https://lore.kernel.org/linux-iommu/be92829c6e5467634b109add002351e6cf9e18d2.1582049382.git.robin.murphy@arm.com/
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
