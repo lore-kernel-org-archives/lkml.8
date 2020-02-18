@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9307FC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE927C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAB22467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898EF2467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056021;
-	bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+	s=default; t=1582056023;
+	bh=yaJiDeQSI2EMCSVNMIN7LeAM+k+7UbmGAwh6/ahZFPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TljazeLNqCrFaqsEOxgv8BNiAj/EgA78ieMz7c2sG3MWi1pV/YgwR0JRtLUfDlYzE
-	 F1VXfb6ZSH5+X0+4YdY8D1cSV8fw6njNvektSMM9VVi7SNra1f2tmQVNH2nEAWVpQf
-	 T+Uvfj+R9apZr4yDavHelSeaSo+UqBTCT63/4300=
+	b=IerFiXoJWtq6prQfy2Xa0ilHV9kQKmzu23+mYhtoPin6xtzGl+VoEF6obA1/SAr4D
+	 4s5T+crZYcTkKKS5zVjVrjKl4RnsCMEVWcgEFGLd++F0jKL64Qo2piXKlw5Jl8DWju
+	 MpMwEiMQWmQO7CNwaXwqUmGaFZjmK/Ds+vplpqko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgBRUAT (ORCPT
+        id S1728575AbgBRUAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgBRUAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:13 -0500
+        id S1727462AbgBRUAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E8824677;
-        Tue, 18 Feb 2020 20:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85FB824655;
+        Tue, 18 Feb 2020 20:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056012;
-        bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
+        s=default; t=1582056015;
+        bh=yaJiDeQSI2EMCSVNMIN7LeAM+k+7UbmGAwh6/ahZFPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxQZM8x+j4+PWPB72yarVCbMEsmrmYHCEBolDRB+d1RjQGPlxu2qshYDbX0kdb0Xy
-         uXQ1InjEUL+q7PmEHu50nwlO2rrRlphHiyhGsC0MRgomx+nsumJe3Wy9+8Tbhc+pD6
-         Ewlq9N+aJl3ya2t+3BwMy9dX5EyBuqvZxtO4Ty3c=
+        b=MS99XP2ApjmfJMQLGU+ALPmHZ1/AJCK/wtjeIl08sL/A4uvwFuPuQQaC/QFGDZorD
+         0OaEfhtQS59hVB04o3xCXEOJriGE+/hUJlucifDsMS8OTxlvKbyMdU9aPlxGGy/1Vm
+         xMFDAnHGjIImj9gOgrCtTf7nqWCeVOCsHKlfijps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 53/66] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
-Date:   Tue, 18 Feb 2020 20:55:20 +0100
-Message-Id: <20200218190432.966572221@linuxfoundation.org>
+        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 54/66] mac80211: fix quiet mode activation in action frames
+Date:   Tue, 18 Feb 2020 20:55:21 +0100
+Message-Id: <20200218190433.068096153@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,40 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Jones <michael-a1.jones@analog.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
+commit 2bf973ff9b9aeceb8acda629ae65341820d4b35b upstream.
 
-Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
-bits 6/5. This fixs a LTC297X family bug where polling always returns
-not busy even when the part is busy. This fixes a LTC388X and
-LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
-not polled, which can lead to NACKing of commands. LTC388X and
-LTM467X modules now poll BUSY and PEND, increasing reliability by
-eliminating NACKing of commands.
+Previously I intended to ignore quiet mode in probe response, however
+I ended up ignoring it instead for action frames. As a matter of fact,
+this path isn't invoked for probe responses to start with. Just revert
+this patch.
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
-Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 7976b1e9e3bf ("mac80211: ignore quiet mode in probe")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20200131111300.891737-15-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pmbus/ltc2978.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/mlme.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -8,7 +8,7 @@
+  * Copyright 2007, Michael Wu <flamingice@sourmilk.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright (C) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright (C) 2018 - 2019 Intel Corporation
++ * Copyright (C) 2018 - 2020 Intel Corporation
+  */
  
- #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ #include <linux/delay.h>
+@@ -1311,7 +1311,7 @@ ieee80211_sta_process_chanswitch(struct
+ 	if (!res) {
+ 		ch_switch.timestamp = timestamp;
+ 		ch_switch.device_timestamp = device_timestamp;
+-		ch_switch.block_tx =  beacon ? csa_ie.mode : 0;
++		ch_switch.block_tx = csa_ie.mode;
+ 		ch_switch.chandef = csa_ie.chandef;
+ 		ch_switch.count = csa_ie.count;
+ 		ch_switch.delay = csa_ie.max_switch_time;
+@@ -1404,7 +1404,7 @@ ieee80211_sta_process_chanswitch(struct
  
--#define LTC_NOT_BUSY			BIT(5)
--#define LTC_NOT_PENDING			BIT(4)
-+#define LTC_NOT_BUSY			BIT(6)
-+#define LTC_NOT_PENDING			BIT(5)
+ 	sdata->vif.csa_active = true;
+ 	sdata->csa_chandef = csa_ie.chandef;
+-	sdata->csa_block_tx = ch_switch.block_tx;
++	sdata->csa_block_tx = csa_ie.mode;
+ 	ifmgd->csa_ignored_same_chan = false;
  
- /*
-  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
+ 	if (sdata->csa_block_tx)
+@@ -1438,7 +1438,7 @@ ieee80211_sta_process_chanswitch(struct
+ 	 * reset when the disconnection worker runs.
+ 	 */
+ 	sdata->vif.csa_active = true;
+-	sdata->csa_block_tx = ch_switch.block_tx;
++	sdata->csa_block_tx = csa_ie.mode;
+ 
+ 	ieee80211_queue_work(&local->hw, &ifmgd->csa_connection_drop_work);
+ 	mutex_unlock(&local->chanctx_mtx);
 
 
