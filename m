@@ -2,245 +2,458 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95374C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF995C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D984208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA831208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3OcFXYx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZZVbuAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBRRIc (ORCPT
+        id S1726713AbgBRRJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:08:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39165 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726757AbgBRRIb (ORCPT
+        Tue, 18 Feb 2020 12:09:11 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36108 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgBRRJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:08:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582045711;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6V7zDpOQY9QcI4zPVvzGV9kIfcQ6hip+cWutIuPFGeo=;
-        b=a3OcFXYxOWWA27OkgKcpSq8xMem3VE9xbhgn2yCiVhVAXnz/IPI7nk1G4HRN8QuS5vVR92
-        NLQ6vQejDMX8JHBmlCldOkZi5vUrTq9YaHIu3F4lZglcBafA9CRB1XmwD7/A7K+O60dHh9
-        OBSWlBD742Y+ZC3TZP5yiS7NsxXwiz4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-YNV1lRqkMy2rc36AMLl3rA-1; Tue, 18 Feb 2020 12:07:03 -0500
-X-MC-Unique: YNV1lRqkMy2rc36AMLl3rA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9740800D5B;
-        Tue, 18 Feb 2020 17:07:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6683A8B554;
-        Tue, 18 Feb 2020 17:07:00 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 16/19] fsinfo: Provide superblock notification counter [ver
- #16]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Feb 2020 17:06:58 +0000
-Message-ID: <158204561872.3299825.4717297716890589985.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Tue, 18 Feb 2020 12:09:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so23836652ljg.3;
+        Tue, 18 Feb 2020 09:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fnGYIJoqW+7Uo4kRyCUlaXPeyB46pwVY5SkUWWq9P+M=;
+        b=kZZVbuAst5XmdGOKtcppNCrwKidpd04b7lP5H+ehEGV7J/FqpdoAI7AGfEWUBnuUmj
+         Dzmx1+DqGKbjQB6AFOcWTnPaOmt+C+6+IlNz/L/02f66+r5V9Tc6mTsczhNkmZpnIOrP
+         LnRgtgC+4n2aFdj5O9OPX5PD/h2DOvTKRqZrrir6tB+M1VTvqi9Uem+o0yUWVumraDAJ
+         9Lbxdfr1kaYIXRkLWfk5KyW9nfW/wWri0gYTGhOtxfSX9vQS+3l4TkErMBDFS1mW/3a/
+         92jfkgh0Iu2BFOrHmFdKi+m79gd/vCXbW2SA1v6C42iQOA5iraWG7BKw0vEgv4VEdgPh
+         AUig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fnGYIJoqW+7Uo4kRyCUlaXPeyB46pwVY5SkUWWq9P+M=;
+        b=EZ8Jqxm6hlJKXwOj9IFUjijoDWMlYvs+cIJv/TaDPMNIxi1ZS+yK3Nl6YfveulfEo4
+         iVJORyFcVJbBawy3Jsl7fW9qZXO4bxw6Lroet0MQ8szhmWIAzFAYx5NymF7KgF2e3jei
+         eQAFwBZ0Xd9/7jr2E9J8TeuUKmu4am4GUZK7PlJqBZKKNvstdVG0ziKGQF1WWLWOpIZh
+         v659RgkQTq9CL4XSXh0PntbK4M/eR5HRPKHtGNYv2U7ea9+qPYfSh63oeF4DFb3GZJpf
+         nB2QitxOcNwTIiRXa5wJX+IT4JtIM7UrUrKXl3BzgMHVU2+Yz3VRvR+TA1WpRjFBmMl8
+         hQBQ==
+X-Gm-Message-State: APjAAAUfQT7t1t/ln+e9D2yjRWPKXA8z7UPAtxuIXjxyeg93XK1CvpiU
+        pTuwLoItA/BkM/TSk8UVv84=
+X-Google-Smtp-Source: APXvYqyVZnYLFd6MMbQADQ8/orf5Sc8RxYi2udhc++3FYTc13PQ1aWHUwR54/jqhlmf+UfV7TrvCcg==
+X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr13671202lja.200.1582045746268;
+        Tue, 18 Feb 2020 09:09:06 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id p26sm2617919lfh.64.2020.02.18.09.09.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 09:09:05 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 18 Feb 2020 18:08:57 +0100
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200218170857.GA28774@pc636>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217193314.GA12604@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an fsinfo attribute to export the superblock notification counter
-so that it can be polled in the case of a notification buffer overrun.
-This is accessed with:
+On Mon, Feb 17, 2020 at 02:33:14PM -0500, Theodore Y. Ts'o wrote:
+> On Mon, Feb 17, 2020 at 05:08:27PM +0100, Uladzislau Rezki wrote:
+> > Hello, Joel, Paul, Ted. 
+> > 
+> > > 
+> > > Good point!
+> > > 
+> > > Now that kfree_rcu() is on its way to being less of a hack deeply
+> > > entangled into the bowels of RCU, this might be fairly easy to implement.
+> > > It might well be simply a matter of a function pointer and a kvfree_rcu()
+> > > API.  Adding Uladzislau Rezki and Joel Fernandez on CC for their thoughts.
+> > > 
+> > I think it makes sense. For example i see there is a similar demand in
+> > the mm/list_lru.c too. As for implementation, it will not be hard, i think. 
+> > 
+> > The easiest way is to inject kvfree() support directly into existing kfree_call_rcu()
+> > logic(probably will need to rename that function), i.e. to free vmalloc() allocations
+> > only in "emergency path" by just calling kvfree(). So that function in its turn will
+> > figure out if it is _vmalloc_ address or not and trigger corresponding "free" path.
+> 
+> The other difference between ext4_kvfree_array_rcu() and kfree_rcu()
+> is that kfree_rcu() is a magic macro which frees a structure, which
+> has to contain a struct rcu_head.  In this case, I'm freeing a pointer
+> to set of structures, or in another case, a set of buffer_heads, which
+> do *not* have an rcu_head structure.
+> 
+We can implement kvfree_rcu() that will deal with pointer only, it is not
+an issue. I mean without embedding rcu_head to the structure or whatever
+else.
 
-	struct fsinfo_params params = {
-		.request = FSINFO_ATTR_SB_NOTIFICATIONS,
-	};
+I tried to implement it with less number of changes to make it more clear
+and readable. Please have a look:
 
-and returns a structure that looks like:
+<snip>
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 2678a37c3169..9e75c15b53f9 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -805,7 +805,7 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
+ #define __kfree_rcu(head, offset) \
+        do { \  
+                BUILD_BUG_ON(!__is_kfree_rcu_offset(offset)); \
+-               kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset)); \
++               kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset), NULL); \
+        } while (0)
 
-	struct fsinfo_sb_notifications {
-		__u64	watch_id;
-		__u32	notify_counter;
-		__u32	__reserved[1];
-	};
+ /**
+@@ -842,6 +842,14 @@ do {                                                                       \
+                __kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
+ } while (0)
 
-Where watch_id is a number uniquely identifying the superblock in
-notification records and notify_counter is incremented for each
-superblock notification posted.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/fsinfo.c                      |   11 +++++++++++
- include/linux/fs.h               |    4 ++++
- include/uapi/linux/fsinfo.h      |   12 ++++++++++++
- include/uapi/linux/watch_queue.h |    2 +-
- samples/vfs/test-fsinfo.c        |   12 ++++++++++--
- 5 files changed, 38 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-index b57fbcd3a7a5..72fc4f790a5a 100644
---- a/fs/fsinfo.c
-+++ b/fs/fsinfo.c
-@@ -226,6 +226,16 @@ static int fsinfo_generic_volume_id(struct path *path, struct fsinfo_context *ct
- 	return fsinfo_string(path->dentry->d_sb->s_id, ctx);
- }
- 
-+static int fsinfo_generic_sb_notifications(struct path *path, struct fsinfo_context *ctx)
-+{
-+	struct fsinfo_sb_notifications *p = ctx->buffer;
-+	struct super_block *sb = path->dentry->d_sb;
-+
-+	p->watch_id		= sb->s_unique_id;
-+	p->notify_counter	= atomic_read(&sb->s_notify_counter);
-+	return sizeof(*p);
-+}
-+
- static int fsinfo_attribute_info(struct path *path, struct fsinfo_context *ctx)
- {
- 	const struct fsinfo_attribute *attr;
-@@ -292,6 +302,7 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
- 	FSINFO_STRING 	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_SB_NOTIFICATIONS,	fsinfo_generic_sb_notifications),
- 
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_FSINFO,		fsinfo_generic_fsinfo),
- 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, fsinfo_attribute_info),
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 423a6f03cdf8..30b910d591db 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1558,6 +1558,7 @@ struct super_block {
- #ifdef CONFIG_SB_NOTIFICATIONS
- 	struct watch_list	*s_watchers;
- #endif
-+	atomic_t		s_notify_counter;
- } __randomize_layout;
- 
- /* Helper functions so that in most cases filesystems will
-@@ -3677,6 +3678,7 @@ static inline void notify_sb(struct super_block *s,
- 			     u32 info)
- {
- #ifdef CONFIG_SB_NOTIFICATIONS
-+	atomic_inc(&s->s_notify_counter);
- 	if (unlikely(s->s_watchers)) {
- 		struct superblock_notification n = {
- 			.watch.type	= WATCH_TYPE_SB_NOTIFY,
-@@ -3699,6 +3701,7 @@ static inline void notify_sb(struct super_block *s,
- static inline int notify_sb_error(struct super_block *s, int error)
- {
- #ifdef CONFIG_SB_NOTIFICATIONS
-+	atomic_inc(&s->s_notify_counter);
- 	if (unlikely(s->s_watchers)) {
- 		struct superblock_error_notification n = {
- 			.s.watch.type	= WATCH_TYPE_SB_NOTIFY,
-@@ -3722,6 +3725,7 @@ static inline int notify_sb_error(struct super_block *s, int error)
- static inline int notify_sb_EQDUOT(struct super_block *s)
- {
- #ifdef CONFIG_SB_NOTIFICATIONS
-+	atomic_inc(&s->s_notify_counter);
- 	if (unlikely(s->s_watchers)) {
- 		struct superblock_notification n = {
- 			.watch.type	= WATCH_TYPE_SB_NOTIFY,
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index 5926b16aac4e..5467f88ca9b0 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -23,6 +23,7 @@
- #define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
- #define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
- #define FSINFO_ATTR_FEATURES		0x08	/* Filesystem features (bits) */
-+#define FSINFO_ATTR_SB_NOTIFICATIONS	0x09	/* sb_notify() information */
- 
- #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
- #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
-@@ -300,6 +301,17 @@ struct fsinfo_volume_uuid {
- 
- #define FSINFO_ATTR_VOLUME_UUID__STRUCT struct fsinfo_volume_uuid
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_SB_NOTIFICATIONS).
-+ */
-+struct fsinfo_sb_notifications {
-+	__u64		watch_id;	/* Watch ID for superblock. */
-+	__u32		notify_counter;	/* Number of notifications. */
-+	__u32		__reserved[1];
-+};
-+
-+#define FSINFO_ATTR_SB_NOTIFICATIONS__STRUCT struct fsinfo_sb_notifications
++#define kvfree_rcu(ptr)                                                \
++do {                                                                   \
++       typeof (ptr) ___p = (ptr);                                      \
++                                                                       \
++       if (___p)                                                       \
++               kfree_call_rcu(NULL, (rcu_callback_t)(unsigned long)(0), ___p); \
++} while (0)
 +
  /*
-  * Information struct for fsinfo(FSINFO_ATTR_AFS_SERVER_ADDRESSES).
-  *
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
-index 190d27073302..586f4af965ac 100644
---- a/include/uapi/linux/watch_queue.h
-+++ b/include/uapi/linux/watch_queue.h
-@@ -151,7 +151,7 @@ enum superblock_notification_type {
-  */
- struct superblock_notification {
- 	struct watch_notification watch; /* WATCH_TYPE_SB_NOTIFY */
--	__u64	sb_id;			/* 64-bit superblock ID [fsinfo_ids::f_sb_id] */
-+	__u64	sb_id;		/* 64-bit superblock ID [fsinfo_sb_notifications::watch_id] */
- };
- 
- struct superblock_error_notification {
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 6ad0f84c4327..fd425c08b00b 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -306,6 +306,15 @@ static void dump_fsinfo_generic_mount_child(void *reply, unsigned int size)
- 	printf("%8x %8x\n", f->mnt_id, f->change_counter);
+  * Place this after a lock-acquisition primitive to guarantee that
+  * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index 045c28b71f4f..a12ecc1645fa 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -34,7 +34,7 @@ static inline void synchronize_rcu_expedited(void)
+        synchronize_rcu();
+ }
+
+-static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
++static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
+ {
+        call_rcu(head, func);
+ }
+diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
+index 45f3f66bb04d..1e445b566c01 100644
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -33,7 +33,7 @@ static inline void rcu_virt_note_context_switch(int cpu)
  }
  
-+static void dump_fsinfo_generic_sb_notifications(void *reply, unsigned int size)
-+{
-+	struct fsinfo_sb_notifications *f = reply;
+ void synchronize_rcu_expedited(void);
+-void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
++void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr);
+ 
+ void rcu_barrier(void);
+ bool rcu_eqs_special_set(int cpu);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4a885af2ff73..5f22f369cb98 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2746,6 +2746,7 @@ EXPORT_SYMBOL_GPL(call_rcu);
+  * kfree_rcu_bulk_data structure becomes exactly one page.
+  */
+ #define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 3)
++#define KVFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 2)
+ 
+ /**
+  * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
+@@ -2761,6 +2762,12 @@ struct kfree_rcu_bulk_data {
+        struct rcu_head *head_free_debug;
+ };
++struct kvfree_rcu_bulk_data {
++       unsigned long nr_records;
++       void *records[KVFREE_BULK_MAX_ENTR];
++       struct kvfree_rcu_bulk_data *next;
++};
 +
-+	printf("\n");
-+	printf("\twatch_id: %llx\n", (unsigned long long)f->watch_id);
-+	printf("\tnotifs  : %llx\n", (unsigned long long)f->notify_counter);
+ /**
+  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
+@@ -2773,6 +2780,7 @@ struct kfree_rcu_cpu_work {
+        struct rcu_work rcu_work;
+        struct rcu_head *head_free;
+        struct kfree_rcu_bulk_data *bhead_free;
++       struct kvfree_rcu_bulk_data *bvhead_free;
+        struct kfree_rcu_cpu *krcp;
+ };
+ 
+@@ -2796,6 +2804,10 @@ struct kfree_rcu_cpu {
+        struct rcu_head *head;
+        struct kfree_rcu_bulk_data *bhead;
+        struct kfree_rcu_bulk_data *bcached;
++       struct kvfree_rcu_bulk_data *bvhead;
++       struct kvfree_rcu_bulk_data *bvcached;
++
++       /* rename to "free_rcu_cpu_work" */
+        struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
+        spinlock_t lock;
+        struct delayed_work monitor_work;
+@@ -2823,20 +2835,30 @@ static void kfree_rcu_work(struct work_struct *work)
+        unsigned long flags;
+        struct rcu_head *head, *next;
+        struct kfree_rcu_bulk_data *bhead, *bnext;
++       struct kvfree_rcu_bulk_data *bvhead, *bvnext;
+        struct kfree_rcu_cpu *krcp;
+        struct kfree_rcu_cpu_work *krwp;
++       int i;
+        krwp = container_of(to_rcu_work(work),
+                            struct kfree_rcu_cpu_work, rcu_work);
++
+        krcp = krwp->krcp;
+        spin_lock_irqsave(&krcp->lock, flags);
++       /* Channel 1. */
+        head = krwp->head_free;
+        krwp->head_free = NULL;
++
++       /* Channel 2. */
+        bhead = krwp->bhead_free;
+        krwp->bhead_free = NULL;
++
++       /* Channel 3. */
++       bvhead = krwp->bvhead_free;
++       krwp->bvhead_free = NULL;
+        spin_unlock_irqrestore(&krcp->lock, flags);
+ 
+-       /* "bhead" is now private, so traverse locklessly. */
++       /* kmalloc()/kfree_rcu() channel. */
+        for (; bhead; bhead = bnext) {
+                bnext = bhead->next;
+ 
+@@ -2855,6 +2877,21 @@ static void kfree_rcu_work(struct work_struct *work)
+                cond_resched_tasks_rcu_qs();
+        }
+ 
++       /* kvmalloc()/kvfree_rcu() channel. */
++       for (; bvhead; bvhead = bvnext) {
++               bvnext = bvhead->next;
++
++               rcu_lock_acquire(&rcu_callback_map);
++               for (i = 0; i < bvhead->nr_records; i++)
++                       kvfree(bvhead->records[i]);
++               rcu_lock_release(&rcu_callback_map);
++
++               if (cmpxchg(&krcp->bvcached, NULL, bvhead))
++                       free_page((unsigned long) bvhead);
++
++               cond_resched_tasks_rcu_qs();
++       }
++
+        /*
+         * Emergency case only. It can happen under low memory
+         * condition when an allocation gets failed, so the "bulk"
+@@ -2901,7 +2938,8 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+                 * return false to tell caller to retry.
+                 */
+                if ((krcp->bhead && !krwp->bhead_free) ||
+-                               (krcp->head && !krwp->head_free)) {
++                               (krcp->head && !krwp->head_free) ||
++                               (krcp->bvhead && !krwp->bvhead_free)) {
+                        /* Channel 1. */
+                        if (!krwp->bhead_free) {
+                                krwp->bhead_free = krcp->bhead;
+@@ -2914,11 +2952,17 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+                                krcp->head = NULL;
+                        }
+ 
++                       /* Channel 3. */
++                       if (!krwp->bvhead_free) {
++                               krwp->bvhead_free = krcp->bvhead;
++                               krcp->bvhead = NULL;
++                       }
++
+                        /*
+-                        * One work is per one batch, so there are two "free channels",
+-                        * "bhead_free" and "head_free" the batch can handle. It can be
+-                        * that the work is in the pending state when two channels have
+-                        * been detached following each other, one by one.
++                        * One work is per one batch, so there are three "free channels",
++                        * "bhead_free", "head_free" and "bvhead_free" the batch can handle.
++                        * It can be that the work is in the pending state when two channels
++                        * have been detached following each other, one by one.
+                         */
+                        queue_rcu_work(system_wq, &krwp->rcu_work);
+                        queued = true;
+@@ -3010,6 +3054,42 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+        return true;
+ }
+ 
++static inline bool
++kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
++{
++       struct kvfree_rcu_bulk_data *bnode;
++
++       if (unlikely(!krcp->initialized))
++               return false;
++
++       lockdep_assert_held(&krcp->lock);
++
++       if (!krcp->bvhead ||
++                       krcp->bvhead->nr_records == KVFREE_BULK_MAX_ENTR) {
++               bnode = xchg(&krcp->bvcached, NULL);
++               if (!bnode) {
++                       WARN_ON_ONCE(sizeof(struct kvfree_rcu_bulk_data) > PAGE_SIZE);
++
++                       bnode = (struct kvfree_rcu_bulk_data *)
++                               __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
++               }
++
++               if (unlikely(!bnode))
++                       return false;
++
++               /* Initialize the new block. */
++               bnode->nr_records = 0;
++               bnode->next = krcp->bvhead;
++
++               /* Attach it to the bvhead. */
++               krcp->bvhead = bnode;
++       }
++
++       /* Finally insert. */
++       krcp->bvhead->records[krcp->bvhead->nr_records++] = ptr;
++       return true;
 +}
 +
- static void dump_afs_fsinfo_server_address(void *reply, unsigned int size)
+ /*
+  * Queue a request for lazy invocation of kfree_bulk()/kfree() after a grace
+  * period. Please note there are two paths are maintained, one is the main one
+@@ -3022,32 +3102,39 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+  * be free'd in workqueue context. This allows us to: batch requests together to
+  * reduce the number of grace periods during heavy kfree_rcu() load.
+  */
+-void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
++void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr_to_free)
  {
- 	struct fsinfo_afs_server_address *f = reply;
-@@ -416,12 +425,11 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
- 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_NAME,	fsinfo_generic_volume_name),
--
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_SB_NOTIFICATIONS,	fsinfo_generic_sb_notifications),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
- 	FSINFO_STRING	(FSINFO_ATTR_MOUNT_DEVNAME,	fsinfo_generic_mount_devname),
- 	FSINFO_LIST	(FSINFO_ATTR_MOUNT_CHILDREN,	fsinfo_generic_mount_child),
- 	FSINFO_STRING_N	(FSINFO_ATTR_MOUNT_POINT,	fsinfo_generic_mount_point),
--
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_CELL_NAME,	afs_cell_name),
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	afs_server_name),
- 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_address),
+        unsigned long flags;
+        struct kfree_rcu_cpu *krcp;
++       bool skip_call_rcu = true;
+ 
+        local_irq_save(flags);  // For safely calling this_cpu_ptr().
+        krcp = this_cpu_ptr(&krc);
+        if (krcp->initialized)
+                spin_lock(&krcp->lock);
+ 
+-       // Queue the object but don't yet schedule the batch.
+-       if (debug_rcu_head_queue(head)) {
+-               // Probable double kfree_rcu(), just leak.
+-               WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+-                         __func__, head);
+-               goto unlock_return;
+-       }
++       if (ptr_to_free) {
++               skip_call_rcu = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr_to_free);
++               if (!skip_call_rcu)
++                       goto unlock_return;
++       } else {
++               // Queue the object but don't yet schedule the batch.
++               if (debug_rcu_head_queue(head)) {
++                       // Probable double kfree_rcu(), just leak.
++                       WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
++                               __func__, head);
++                       goto unlock_return;
++               }
+ 
+-       /*
+-        * Under high memory pressure GFP_NOWAIT can fail,
+-        * in that case the emergency path is maintained.
+-        */
+-       if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
+-               head->func = func;
+-               head->next = krcp->head;
+-               krcp->head = head;
++               /*
++                * Under high memory pressure GFP_NOWAIT can fail,
++                * in that case the emergency path is maintained.
++                */
++               if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
++                       head->func = func;
++                       head->next = krcp->head;
++                       krcp->head = head;
++               }
+        }
+ 
+        // Set timer to drain after KFREE_DRAIN_JIFFIES.
+@@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+        if (krcp->initialized)
+                spin_unlock(&krcp->lock);
+        local_irq_restore(flags);
++
++       if (!skip_call_rcu) {
++               synchronize_rcu();
++               kvfree(ptr_to_free);
++       }
+ }
+ EXPORT_SYMBOL_GPL(kfree_call_rcu);
 
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 0f1f6b06b7f3..0efb849b4f1f 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -390,14 +390,6 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
+        kvfree(memcg_lrus);
+ }
 
+-static void kvfree_rcu(struct rcu_head *head)
+-{
+-       struct list_lru_memcg *mlru;
+-
+-       mlru = container_of(head, struct list_lru_memcg, rcu);
+-       kvfree(mlru);
+-}
+-
+ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
+                                      int old_size, int new_size)
+ {
+@@ -429,7 +421,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
+        rcu_assign_pointer(nlru->memcg_lrus, new);
+        spin_unlock_irq(&nlru->lock);
+
+-       call_rcu(&old->rcu, kvfree_rcu);
++       kvfree_rcu(old);
+        return 0;
+ }
+<snip>
+
+now it becomes possible to use it like: 
+	...
+	void *p = kvmalloc(PAGE_SIZE);
+	kvfree_rcu(p);
+	...
+also have a look at the example in the mm/list_lru.c diff.
+
+I can send out the RFC/PATCH that implements kvfree_rcu() API without need
+of "rcu_head" structure. 
+
+Paul, Joel what are your thoughts?
+
+Thank you in advance!
+
+--
+Vlad Rezki
