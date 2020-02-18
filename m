@@ -2,169 +2,176 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97E7C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D1EC3403F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD11E207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701E0207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zJ9PC+sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgBRPP1 (ORCPT
+        id S1726852AbgBRPQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:15:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:54082 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgBRPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:15:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 127B830E;
-        Tue, 18 Feb 2020 07:15:26 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8771B3F703;
-        Tue, 18 Feb 2020 07:15:22 -0800 (PST)
-Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Pankaj Bansal (OSS)" <pankaj.bansal@oss.nxp.com>
-Cc:     Hanjun Guo <guohanjun@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>,
-        "stuyoder@gmail.com" <stuyoder@gmail.com>,
-        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Will Deacon <will@kernel.org>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
- <615c6807-c018-92c9-b66a-8afdda183699@huawei.com>
- <VI1PR04MB513558BF77192255CBE12102B0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
- <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2762bb26-967d-3410-d250-a63d8d755d76@arm.com>
-Date:   Tue, 18 Feb 2020 15:15:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        Tue, 18 Feb 2020 10:16:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55782 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgBRPQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:16:18 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IFFmX6090741;
+        Tue, 18 Feb 2020 09:15:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582038948;
+        bh=g7CZ22E9Atxx53T54UZaa8VzKxWPPc31ojdRcNza8bc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zJ9PC+saejh46Of6QW2dFH2redqRaK99p/OiX29Vdpq2bwpD+bHlq+E3Fh8yopM99
+         I/26yU3sNuM0HI+54L04lAYpSpW/EcebdbbpnYSFjq8ocZPAFnrgffwUIOYmM5gpUu
+         Uep1knp/sByK6quH10wI4ngBFPboc5v2sPld0XM4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IFFmUB055288
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 09:15:48 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 09:15:47 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 09:15:47 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IFFi7U067542;
+        Tue, 18 Feb 2020 09:15:44 -0600
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+Date:   Tue, 18 Feb 2020 17:15:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200217232325.GD35972@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 2:46 pm, Lorenzo Pieralisi wrote:
-> On Tue, Feb 18, 2020 at 12:48:39PM +0000, Pankaj Bansal (OSS) wrote:
-> 
-> [...]
-> 
->>>> In DT case, we create the domain DOMAIN_BUS_FSL_MC_MSI for MC bus and
->>> it's children.
->>>> And then when MC child device is created, we search the "msi-parent"
->>> property from the MC
->>>> DT node and get the ITS associated with MC bus. Then we search
->>> DOMAIN_BUS_FSL_MC_MSI
->>>> on that ITS. Once we find the domain, we can call msi_domain_alloc_irqs for
->>> that domain.
+Hi Tony,
+
+On 18/02/2020 1.23, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200214 13:30]:
+>> Hi Tony,
+>>
+>> On 12/02/2020 16.46, Tony Lindgren wrote:
+>>> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 09:18]:
+>>>> On 11/02/2020 20.10, Tony Lindgren wrote:
+>>>>> +static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
+>>>>> +				    unsigned int tx_mask, unsigned int rx_mask,
+>>>>> +				    int slots, int slot_width)
+>>>>> +{
+>>>>> +	struct snd_soc_component *component = dai->component;
+>>>>> +	struct cpcap_audio *cpcap = snd_soc_component_get_drvdata(component);
+>>>>> +	int err, ts_mask, mask;
+>>>>> +	bool voice_call;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Primitive test for voice call, probably needs more checks
+>>>>> +	 * later on for 16-bit calls detected, Bluetooth headset etc.
+>>>>> +	 */
+>>>>> +	if (tx_mask == 0 && rx_mask == 1 && slot_width == 8)
+>>>>> +		voice_call = true;
+>>>>> +	else
+>>>>> +		voice_call = false;
 >>>>
->>>> This is exactly what we tried to do initially with ACPI. But the searching
->>> DOMAIN_BUS_FSL_MC_MSI
->>>> associated to an ITS, is something that is part of drivers/acpi/arm64/iort.c.
->>>> (similar to DOMAIN_BUS_PLATFORM_MSI and DOMAIN_BUS_PCI_MSI)
+>>>> You only have voice call if only rx slot0 is in use?
 >>>
->>> Can you have a look at mbigen driver (drivers/irqchip/irq-mbigen.c) to see if
->>> it helps you?
+>>> Yeah so it seems. Then there's the modem to wlcore bluetooth path that
+>>> I have not looked at. But presumably that's again just configuring some
+>>> tdm slot on the PMIC.
 >>>
->>> mbigen is an irq converter to convert device's wired interrupts into MSI
->>> (connecting to ITS), which will alloc a bunch of MSIs from ITS platform MSI
->>> domain at the setup.
+>>>> If you record mono on the voice DAI, then rx_mask is also 1, no?
+>>>
+>>> It is above :) But maybe I don't follow what you're asking here
 >>
->> Unfortunately this is not the same case as ours. As I see Hisilicon IORT table
->> Is using single id mapping with named components.
+>> If you arecrod -Dvoice_pcm -c1 -fS8 > /dev/null
+>> then it is reasonable that the machine driver will set rx_mask = 1
 >>
->> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1616/D05AcpiTables/D05Iort.asl#L300
+>>> and maybe you have some better check in mind.
 >>
->> while we are not:
->>
->> https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platforms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Iort.aslc?h=LX2160_UEFI_ACPI_EAR1#n290
->>
->> This is because as I said, we are trying to represent a bus in IORT
->> via named components and not individual devices connected to that bus.
+>> Not sure, but relying on set_tdm_slots to decide if we are in a call
+>> case does not sound right.
 > 
-> I had a thorough look into this and strictly speaking there is no
-> *mapping* requirement at all, all you need to know is what ITS the FSL
-> MC bus is mapping MSIs to. Which brings me to the next question (which
-> is orthogonal to how to model FSL MC in IORT, that has to be discussed
-> but I want to have a full picture in mind first).
-> 
-> When you probe the FSL MC as a platform device, the ACPI core,
-> through IORT (if you add the 1:1 mapping as an array of single
-> mappings) already link the platform device to ITS platform
-> device MSI domain (acpi_configure_pmsi_domain()).
-> 
-> The associated fwnode is the *same* (IIUC) as for the
-> DOMAIN_BUS_FSL_MC_MSI and ITS DOMAIN_BUS_NEXUS, so in practice
-> you don't need IORT code to retrieve the DOMAIN_BUS_FSL_MC_MSI
-> domain, the fwnode is the same as the one in the FSL MC platform
-> device IRQ domain->fwnode pointer and you can use it to
-> retrieve the DOMAIN_BUS_FSL_MC_MSI domain through it.
-> 
-> Is my reading correct ?
-> 
-> Overall, DOMAIN_BUS_FSL_MC_MSI is just an MSI layer to override the
-> provide the MSI domain ->prepare hook (ie to stash the MC device id), no
-> more (ie its_fsl_mc_msi_prepare()).
-> 
-> That's it for the MSI layer - I need to figure out whether we *want* to
-> extend IORT (and/or ACPI) to defined bindings for "additional busses",
-> what I write above is a summary of my understanding, I have not made my
-> mind up yet.
+> OK yeah seems at least bluetooth would need to be also handled
+> in the set_tdm_slots.
 
-I'm really not sure we'd need to go near any bindings - the IORT spec 
-*can* reasonably describe "giant black box of DPAA2 stuff" as a single 
-named component, and that's arguably the most accurate abstraction 
-already, even when it comes to the namespace device. This isn't a bus in 
-any traditional sense, it's a set of accelerator components with an 
-interface to dynamically configure them into custom pipelines, and the 
-expected use-case seems to be for userspace to freely reconfigure 
-whatever virtual network adapters it wants at any given time. Thus I 
-don't see that it's logical or even practical for firmware itself to be 
-involved beyond describing "here's your toolbox", and in particular, 
-basing any decisions on the particular way that DPAA2 has been 
-shoehorned into the Linux driver model would almost certainly be a step 
-in the wrong direction.
+set_tdm_slots() is for setting how the TDM slots supposed to be used by
+the component and not really for things to configure different operating
+modes.
 
-IMO the scope of this issue belongs entirely within the 
-implementation(s) of Linux's own abstraction layers.
+If you hardwire things in set_tdm_slots() for the droid4 then how the
+codec driver can be reused in other setups?
 
-Robin.
+>>>> You will also set the sampling rate for voice in
+>>>> cpcap_voice_hw_params(), but that is for normal playback/capture, right?
+>>>
+>>> Yeah so normal playback/capture is already working with cpcap codec driver
+>>> with mainline Linux. The voice call needs to set rate to 8000.
+>>
+>> But if you have a voice call initiated should not the rate be set by the
+>> set_sysclk()?
+> 
+> Hmm does set_sysclk called from modem codec know that cpcap codec
+> is the clock master based on bitclock-master and set the rate
+> for cpcap codec?
 
-> As for the IOMMU code, it seems like the only thing needed i
-> extending named components configuration to child devices,
-> hierarchically.
+Neither component should call set_sysclk, set_tdm_slots. The machine
+driver should as it is the only one who know how things are wired...
+
 > 
-> As Marc already mentioned, IOMMU and IRQ code must be separate for
-> future postings but first we need to find a suitable answer to
-> the problem at hand.
+>>>> It feels like that these should be done via DAPM with codec to codec route?
+>>>
+>>> Sure if you have some better way of doing it :) Do you have an example to
+>>> point me to?
+>>
+>> Something along the lines of:
+>> https://mailman.alsa-project.org/pipermail/alsa-devel/2020-February/162915.html
+>>
+>> The it is a matter of building and connecting the DAPM routes between
+>> the two codec and with a flip of the switch you would have audio flowing
+>> between them.
 > 
-> Lorenzo
+> Sounds good to me.
 > 
+> Tony
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
