@@ -2,76 +2,180 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2597C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B58C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF7721D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BDA2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="K0lsGjlP"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ELdiNAZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgBRTvb (ORCPT
+        id S1726467AbgBRTw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:51:31 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:52812 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgBRTvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:51:31 -0500
-Received: from zn.tnic (p200300EC2F0C1F00DCB96C3517B36067.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:dcb9:6c35:17b3:6067])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BE3431EC0CE8;
-        Tue, 18 Feb 2020 20:51:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582055489;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0X4BxMmr/5PkYvo37a52u/SJVzspvMpEnBA2FEz2mig=;
-        b=K0lsGjlPw9pMCn0iJy/omwGK7TysstVjycoXMHjrsZDFCYtJtvBbifZmPU7GwRy4um0pLH
-        vrC9IiWkn+xtL4MG23P6VqEr0tZ1cdL2uPBzVunSH+bkBO1jmNEpakFJ7J1+GS3SfqulL+
-        JqghHMdo2OFtOxd0tLQ0o/6XC5DOcLU=
-Date:   Tue, 18 Feb 2020 20:51:30 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@kernel.org>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200218195130.GO14449@zn.tnic>
-References: <20200218173150.GK14449@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
+        Tue, 18 Feb 2020 14:52:57 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45246 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTw4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:52:56 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a2so20698782qko.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:52:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IIIglP3lrK/bbp+/obNoUshm2KDGr/A+JSgxj0zWQRM=;
+        b=ELdiNAZK1VKWaWwrqcP20fOHQWrj6DQbxwmx7w0WY0RLNf/+TiQXVgXp1SSUSKJ7Dc
+         kX1M4c0YRCIaN75Ek1yR4KFIY5VdTQfcF9se/BPJhGkT2OPjhWSJQKJhsiCcsh6Eki4s
+         3+SBBD6Kj8S+CT9mZAZRvesFECSrv9uyfF51ktO6kaaXsF9bJblm+VGhyV+zzhmts4tc
+         k+x6QSZV8M/4Qtwim/E8ujQMPG7bhKOnWnqe0puPTTsYp9q8UBjZXBJH1BEizh9M8L65
+         s4DOQB6B2yOIslgio1SC9jx+Hm1muU3oRTPIHTJ4epmQ2XW+bjJA9IgL8jWoqqohTn1R
+         Jhww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IIIglP3lrK/bbp+/obNoUshm2KDGr/A+JSgxj0zWQRM=;
+        b=iHMkDuJ888lCOxUMAIJzsCepSaNzyCs9V3D/4z+JvA4LbIag5xmzLUj5dwlUEmRYli
+         lOMjM57XspAqHBZ3y41TGMsmyZaS7Hf4RRDdaIsr5wgpyYwBJG4SFf2Df+/JPY2Way3Q
+         9Ru+a44K32mkf/0e/vQCW/PKB2fCMdzRJQ9xLASegWv1+Y+CNR8Z79c/5VyJN5voOO2W
+         u9NXxH5018M+4JpoxbYEA0mjCKeJXBohWa+H0EHTKYdY7uQ45mZ6DFuHJs1lBghUba50
+         33uS6nIrj80WDAcxHy/TZNr2AeG5ZdMc85govt5vP+i/vAFW3cCC/JC4eRT08EqjdIdr
+         /Rvw==
+X-Gm-Message-State: APjAAAWM/fo9FQ/XKOUXtVcGqcy28sCPUIWghLK/hyY5tnRJXBKia62J
+        Ye3qITzK9MaPVG0BEMKdjr8kUg==
+X-Google-Smtp-Source: APXvYqyZnf5b/A44XYNB6cKskTQewARfA8b8mZ8AF5A/ycBVB3ulEFtPoltvEGgKlX1y1eqfDAPolA==
+X-Received: by 2002:a05:620a:1586:: with SMTP id d6mr20897459qkk.234.1582055575085;
+        Tue, 18 Feb 2020 11:52:55 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:9742])
+        by smtp.gmail.com with ESMTPSA id p50sm2426635qtf.5.2020.02.18.11.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 11:52:54 -0800 (PST)
+Date:   Tue, 18 Feb 2020 14:52:53 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200218195253.GA13406@cmpxchg.org>
+References: <20200213135348.GF88887@mtj.thefacebook.com>
+ <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
+ <20200213165711.GJ88887@mtj.thefacebook.com>
+ <20200214071537.GL31689@dhcp22.suse.cz>
+ <20200214135728.GK88887@mtj.thefacebook.com>
+ <20200214151318.GC31689@dhcp22.suse.cz>
+ <20200214165311.GA253674@cmpxchg.org>
+ <20200217084100.GE31531@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217084100.GE31531@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 06:20:38PM +0000, Luck, Tony wrote:
-> > Anything else I'm missing? It is likely...
+On Mon, Feb 17, 2020 at 09:41:00AM +0100, Michal Hocko wrote:
+> On Fri 14-02-20 11:53:11, Johannes Weiner wrote:
+> [...]
+> > The proper solution to implement the kind of resource hierarchy you
+> > want to express in cgroup2 is to reflect it in the cgroup tree. Yes,
+> > the_workload might have been started by user 100 in session c2, but in
+> > terms of resources, it's prioritized over system.slice and user.slice,
+> > and so that's the level where it needs to sit:
+> > 
+> >                                root
+> >                        /        |                 \
+> >                system.slice  user.slice       the_workload
+> >                /    |           |
+> >            cron  journal     user-100.slice
+> >                                 |
+> >                              session-c2.scope
+> >                                 |
+> >                              misc
+> > 
+> > Then you can configure not just memory.low, but also a proper io
+> > weight and a cpu weight. And the tree correctly reflects where the
+> > workload is in the pecking order of who gets access to resources.
 > 
-> +	hw_breakpoint_disable();
-> +	static_key_disable(&__tracepoint_read_msr.key);
-> +	tracing_off();
-> +
->  	ist_enter(regs);
-> 
-> How about some code to turn all those back on for a recoverable (where
-> we actually recovered) #MC?
+> I have already mentioned that this would be the only solution when the
+> protection would work, right. But I am also saying that this a trivial
+> example where you simply _can_ move your workload to the 1st level. What
+> about those that need to reflect organization into the hierarchy. Please
+> have a look at http://lkml.kernel.org/r/20200214075916.GM31689@dhcp22.suse.cz
+> Are you saying they are just not supported? Are they supposed to use
+> cgroup v1 for the organization and v2 for the resource control?
 
-The use case being?
+From that email:
 
--- 
-Regards/Gruss,
-    Boris.
+    > Let me give you an example. Say you have a DB workload which is the
+    > primary thing running on your system and which you want to protect from
+    > an unrelated activity (backups, frontends, etc). Running it inside a
+    > cgroup with memory.low while other components in other cgroups without
+    > any protection achieves that. If those cgroups are top level then this
+    > is simple and straightforward configuration.
+    > 
+    > Things would get much more tricky if you want run the same workload
+    > deeper down the hierarchy - e.g. run it in a container. Now your
+    > "root" has to use an explicit low protection as well and all other
+    > potential cgroups that are in the same sub-hierarchy (read in the same
+    > container) need to opt-out from the protection because they are not
+    > meant to be protected.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+You can't prioritize some parts of a cgroup higher than the outside of
+the cgroup, and other parts lower than the outside. That's just not
+something that can be sanely supported from the controller interface.
+
+However, that doesn't mean this usecase isn't supported. You *can*
+always split cgroups for separate resource policies.
+
+And you *can* split cgroups for group labeling purposes too (tracking
+stuff that belongs to a certain user).
+
+So in the scenario where you have an important database and a
+not-so-important secondary workload, and you want them to run them
+containerized, there are two possible scenarios:
+
+- The workloads are co-dependent (e.g. a logging service for the
+  db). In that case you actually need to protect them equally,
+  otherwise you'll have priority inversions, where the primary gets
+  backed up behind the secondary in some form or another.
+
+- The workloads don't interact with each other. In that case, you can
+  create two separate containers, one high-pri, one low-pri, and run
+  them in parallel. They can share filesystem data, page cache
+  etc. where appropriate, so this isn't a problem.
+
+  The fact that they belong to the same team/organization/"user"
+  e.g. is an attribute that can be tracked from userspace and isn't
+  material from a kernel interface POV.
+
+  You just have two cgroups instead of one to track; but those cgroups
+  will still contain stuff like setsid(), setuid() etc. so users
+  cannot escape whatever policy/containment you implement for them.
+
+    > In short we simply have to live with usecases where the cgroup hierarchy
+    > follows the "logical" workload organization at the higher level more
+    > than resource control. This is the case for systemd as well btw.
+    > Workloads are organized into slices and scopes without any direct
+    > relation to resources in mind.
+
+As I said in the previous email: Yes, per default, because it starts
+everything in a single resource domain. But it has all necessary
+support for dividing the tree into disjunct resource domains.
+
+    > Does this make it more clear what I am thinking about? Does it sound
+    > like a legit usecase?
+
+The desired behavior is legit, but you have to split the cgroups on
+conflicting attributes - whether organizational or policy-related -
+for properly expressing what you want from the kernel.
