@@ -2,100 +2,62 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E05C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659B9C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17A72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582058809;
-	bh=ejiCS41yifJLpgW8XpUz8UZsIF6W4WNIg4fCqZi9C28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IRdg9Ai8f9KRnEYOwPitrCeQJLTUvVsPdCzUtSc9ZGxTu6DT/bP4e5/e5krW7eYfL
-	 gLaeg+E2kU8aY5t7ese32dok5WsFyfBIXCvrM8oE9/2G8ZWEaLYIl3eHVuUDUi6UTf
-	 cu+gwsAd5Rrd82F3Mf9DWI3LrO4xTYbhxhhgYo3M=
+	by mail.kernel.org (Postfix) with ESMTP id 44AC02173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgBRUqr (ORCPT
+        id S1727794AbgBRUqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:46:47 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35158 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbgBRUqo (ORCPT
+        Tue, 18 Feb 2020 15:46:51 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37084 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbgBRUqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:46:44 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so21557130oie.2;
-        Tue, 18 Feb 2020 12:46:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FdwqDUwoMmYtSAEuLCPUeBFayG1iXRKqm9tBHfT2PC8=;
-        b=me6yjH7EPvz5heRVnBwHGiP8YAvtSh6G6A3s5rcsKZLUOM5KZmTOqr1ikJrmaqodGQ
-         pknXeFFokBGVto0KvtuG4FLZdblgUAiQHK47T9eXATO1Jd14wm2DAQ5Hf5ypEMh/i1mv
-         CPeQ/VFGF+dgnPvUZ5nRn2//t1ko5MbR1uB5jIPmIwJbc8AkJ4VjdWWDXKGlqIWbRTfy
-         KkiOz4i4Bv0Q3OgRyUrztb8NvghM1LRrTTP3RChrmjQQg6zYt3eZS5pBjV5cZKMqq6CE
-         rhBGoF59kRM033gF7jXhDWxg3zdCsm/aH9xWClsryoI9emNm9nIJZEwpMQ3jHqeCtze3
-         KNtw==
-X-Gm-Message-State: APjAAAVxRJ0BvZ+NH+pGro4mPJuM5coFrilFsvQn26fkrG8VNXcBDYwC
-        3bnO5OtNDJGu8apdusPAyQ==
-X-Google-Smtp-Source: APXvYqznbe8xplYY/4+OhUA9lRm8BnQc3PLmlody7tZmE1B9QJMCd+Clmhs9KI5idHhweVRRpg+e/w==
-X-Received: by 2002:aca:4789:: with SMTP id u131mr2355446oia.43.1582058803756;
-        Tue, 18 Feb 2020 12:46:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm1706747oti.44.2020.02.18.12.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:46:43 -0800 (PST)
-Received: (nullmailer pid 8677 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:46:42 -0000
-Date:   Tue, 18 Feb 2020 14:46:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 07/18] dt-bindings: usb: dwc3: Add a
- gpio-usb-connector example
-Message-ID: <20200218204642.GA8639@bogus>
-References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
- <20200210120723.91794-8-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210120723.91794-8-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 18 Feb 2020 15:46:49 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2F09212446870;
+        Tue, 18 Feb 2020 12:46:48 -0800 (PST)
+Date:   Tue, 18 Feb 2020 12:46:47 -0800 (PST)
+Message-Id: <20200218.124647.1818327768943953431.davem@davemloft.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     pshelar@ovn.org, netdev@vger.kernel.org, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH 3/4] datapath.c: Use built-in RCU list checking
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200218195802.2702-1-madhuparnabhowmik10@gmail.com>
+References: <20200218195802.2702-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Feb 2020 12:46:48 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 12:07:12 +0000, Bryan O'Donoghue wrote:
-> A USB connector should be a child node of the USB controller
-> connector/usb-connector.txt. This patch adds an example of how to do this
-> to the dwc3 binding descriptions.
-> 
-> It is necessary to declare a connector as a child-node of a USB controller
-> for role-switching to work, so this example should be helpful to others
-> implementing that.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Felipe Balbi <balbi@kernel.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+From: madhuparnabhowmik10@gmail.com
+Date: Wed, 19 Feb 2020 01:28:02 +0530
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> hlist_for_each_entry_rcu() has built-in RCU and lock checking.
+> 
+> Pass cond argument to list_for_each_entry_rcu() to silence
+> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> by default.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+
+Applied.
