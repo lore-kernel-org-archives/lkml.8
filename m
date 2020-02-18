@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8439C34032
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98570C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A088320836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6538A214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfQkKQAV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3oSrPHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgBRDNe (ORCPT
+        id S1726641AbgBRDNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 22:13:34 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38057 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgBRDNc (ORCPT
+        Mon, 17 Feb 2020 22:13:41 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35175 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgBRDNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 22:13:32 -0500
-Received: by mail-pg1-f193.google.com with SMTP id d6so10217021pgn.5;
-        Mon, 17 Feb 2020 19:13:32 -0800 (PST)
+        Mon, 17 Feb 2020 22:13:35 -0500
+Received: by mail-pg1-f194.google.com with SMTP id v23so6823853pgk.2;
+        Mon, 17 Feb 2020 19:13:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EQI/kEWqaRT05sdkpbc+otag3aOOl2fGYGdTqjeEub0=;
-        b=RfQkKQAVEtw73teRP3nMOcC+47nA0yiJ4PiE8RrwCmIBAqJpYsq7mu2qzB+46qjTwC
-         1mk9sU9Ne7GvPU88/TiuEHAiMFGe32f/GVMwPwqJQ0EuS44mUrbTgpzW047Ra8mgPQb6
-         IuVthqAfXBWP50mkJhsyYZXlYwREhkaEK5ooDyZxoQOInwm0SGFkP50D3F21MSF1D+42
-         5jywXnyJPJVd7mVLN2cbNIe/OrhrNHr5rgDYe0bGOR4c+nvuVNiQAWpnIGGvkrf1uroE
-         D8GJwoqfLr5rUNAY5Jtp6kW+9VK7CLePxq+ggqtZm5bVCTgd5ab8HyfTbWaQCRPtMuxf
-         kgmA==
+        bh=ZFyQEdWxvwBxjLzrFGGVsFOAAPD8i2AvVgwQpt25K/U=;
+        b=X3oSrPHwn3fmMokFFba0Psbe8GMZM/aNgleo0TXOkMdoeXtWOcmIUiaN48N9xLIRgN
+         +/7TJndN0fzeZchT0RC+V9+oiVP9gQxJZaj8sB1/lY9Z7P/Uj9u6q/nH+saF+TlS1j1m
+         4f1j9YqXpQMqpy5y1jtLa0Z9/NkHgGFCVacAgly/rkKjCfwxQttJhYIxLF6oNRZkGJbz
+         anpuUKGGk6JhsH1q+WNWDfxlSheexwjId/xd214r1gc75NKJnPRlzKtu8BgqC7PkXz4b
+         hQVv48DPxDYLBG4Hed5/t7aSZmawvUEF2PmbUPHWjoHl4q3WlcozknmU4M3PE6cS8kXJ
+         tVEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EQI/kEWqaRT05sdkpbc+otag3aOOl2fGYGdTqjeEub0=;
-        b=I3YWtdHhX1zNlJO0OG4i6bDOiET29Mar87J5VB2JzUqToycUWoHc6zBJo97++Kz0V0
-         pus+1c91GRBQK/yBwphlbpIEXAu0jmZg4cf60L9DutOUNaoOlOAUFfxbJPgFMGoXxaUH
-         qcBrEs5JqHx+QXEzBe/yQqAUAOffuENISremjsTEkQH5fzp2DmYbrKi8sUK/APp205ha
-         vaR7mv6e6xzxheueoq6tYUldlqlTgVyP94jElTqf3O7c7kXX25Ps/Os49u72Vuaa7S6e
-         pjhmt+3G3ArxC77jVY/FjtBmBK5Cs9Q84kKDvtXLsBPiKIAV4ol5oSujncNfeXsVymMP
-         IL6w==
-X-Gm-Message-State: APjAAAWnQtQTreird6RlJow24pUcNetBAg5AKpYYNv7+OnEKKb2OYWVO
-        R+4/Ct/CK6QEwdDNUpYJEqg=
-X-Google-Smtp-Source: APXvYqwnUHiPwKDCgZewpALos3LF//BC5zWLk7GsTKsck7hxFh7pTlxPH2I3QfP2zhB1wSr/zmv7pg==
-X-Received: by 2002:a63:5220:: with SMTP id g32mr20411835pgb.116.1581995612091;
-        Mon, 17 Feb 2020 19:13:32 -0800 (PST)
+        bh=ZFyQEdWxvwBxjLzrFGGVsFOAAPD8i2AvVgwQpt25K/U=;
+        b=kgo465OKQHbWwlJUCeIKRHCCeKsUobjBbSsr16MSi9OKsL5xTG2lJ6FwHcKxWi+oCH
+         MXijQIfXjhkp9Ok21oUkd2RKWeqzhtEbfYNOY9WsZ9eCIvO0W40pJgrZA9YB1J8+NRDf
+         0m+iTzWoneCaGbcgY6sxB51WM+s1qt+PhyHIl9VpkPVDImaBT0Z3XnYJ6j5/wsmf1Q6Y
+         Z9I+2auimBbHaVZ1h8SPuULXiaNnvPvdb6Fnv2UWTvUCbR0D5LXL1jsYNvAkzevPFkLA
+         bnIsGNZD0NoZKujh/FrUDs2GWrDbKxwlxdSi4ObE3g1GvSU1LW3qoa4o/Cp7N53/PE3/
+         FecQ==
+X-Gm-Message-State: APjAAAXdsJnDQDY4OjHEqNDJAxzu0VlI4AxaIbJd98fxMf2SUvmv/4hT
+        gm1aGnExzzL6q+pdOIVLtVY=
+X-Google-Smtp-Source: APXvYqx5X191Us6wKiAbBYcJ+hEwCRwb0WAXLxgCTj5dGYTmWJiFy9sNG10WQKcON5Vp5efq+phbkQ==
+X-Received: by 2002:a63:ae0a:: with SMTP id q10mr20715662pgf.178.1581995613715;
+        Mon, 17 Feb 2020 19:13:33 -0800 (PST)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:180::6f94])
-        by smtp.gmail.com with ESMTPSA id b18sm1812595pfd.63.2020.02.17.19.13.30
+        by smtp.gmail.com with ESMTPSA id b18sm1812595pfd.63.2020.02.17.19.13.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 19:13:31 -0800 (PST)
+        Mon, 17 Feb 2020 19:13:33 -0800 (PST)
 From:   rentao.bupt@gmail.com
 To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -72,9 +72,9 @@ To:     Felipe Balbi <balbi@kernel.org>,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v3 4/5] ARM: dts: aspeed-g5: add vhub port and endpoint properties
-Date:   Mon, 17 Feb 2020 19:13:14 -0800
-Message-Id: <20200218031315.562-5-rentao.bupt@gmail.com>
+Subject: [PATCH v3 5/5] ARM: dts: aspeed-g4: add vhub port and endpoint properties
+Date:   Mon, 17 Feb 2020 19:13:15 -0800
+Message-Id: <20200218031315.562-6-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200218031315.562-1-rentao.bupt@gmail.com>
 References: <20200218031315.562-1-rentao.bupt@gmail.com>
@@ -93,21 +93,21 @@ Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
  No changes in v2/v3.
    - It's given v3 to align with the version of the patch series.
 
- arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
+ arch/arm/boot/dts/aspeed-g4.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index ebec0fa8baa7..f12ec04d3cbc 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -195,6 +195,8 @@
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 807a0fc20670..8e04303e8514 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -164,6 +164,8 @@
  			reg = <0x1e6a0000 0x300>;
  			interrupts = <5>;
  			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
 +			aspeed,vhub-downstream-ports = <5>;
 +			aspeed,vhub-generic-endpoints = <15>;
  			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2ad_default>;
+ 			pinctrl-0 = <&pinctrl_usb2d_default>;
  			status = "disabled";
 -- 
 2.17.1
