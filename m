@@ -2,251 +2,253 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC261C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E74C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BD821D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DD021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y6i/TXAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgBRP2j (ORCPT
+        id S1726632AbgBRP3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:28:39 -0500
-Received: from muru.com ([72.249.23.125]:55906 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgBRP2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:28:39 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6E01B8043;
-        Tue, 18 Feb 2020 15:29:20 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 07:28:33 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200218152833.GH35972@atomide.com>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
+        Tue, 18 Feb 2020 10:29:10 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35953 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgBRP3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:29:10 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so23437029ljg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:29:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nCMSK5qKtWnHvKOE7JodWi5C45C51Cw+Z/kwEVm06II=;
+        b=Y6i/TXAFSDvmAAikQWwpD28/ZbC/9zjGP9BNHYLnqZWl0IFAOm2n7qfGDYJYdtiZzJ
+         gY4hMUyynXtuJbW5UqtyQ7PqUv5Y4WVf4Jb0TPgkZssvAKBtb2+OYoSQZGb8UichIXuR
+         bDbpbfZ+TXVnBvx7L9bGumT7uGNmhx8jR8zcv9FlrmXNbRFKEDeGe0pPlyUO4DVtZt10
+         K/IfD9t9ZQjxaq4S5OsAkExPeVA6OqqSnvsJgDAkiVZicDZJuY/nU+SSWT8DjKoF+R+O
+         yNE4u0LxsDTigmr1OvEAyTKEUIs6gtFVPlQS8gThpNYpGE7LOYrIYbudyZ8dMyN2LH5b
+         5XJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nCMSK5qKtWnHvKOE7JodWi5C45C51Cw+Z/kwEVm06II=;
+        b=IKquUhqsY1PIpZutPoDNohbfX+Z+0HchJJOyVOteXr8pRnTqLeiiRCs2ZH4hnMKzfe
+         dRxpYI/BUw1PaIbeTb8qYKeI2s7eagfu1n7YZukIk/MmBx3hyThiLNTTZApRATrmzQqx
+         5RP6dSQHRkRiGJLQCLjeC+ANGSBrsOsELu9lwT7Dj2eSeVFmYQgeLWKUO7WN6+ir3zo/
+         3r6W9DwaaA9sr9eueiqb6znfc6/XR1i3nn5z7Y2r0YQ9B5rwA6Rut8zHuQKiFY0kBw6H
+         HUjrUbt5/xBTn4q1huAQqUzF7NTpwG7fJMLnGN+KCuJ/+5QSJvGGh6GbEU/+cruM8p+n
+         5kxQ==
+X-Gm-Message-State: APjAAAW/Kmiqtzf/5ewvr1WBEYhKIhnjsOLAVZ4pS341qPjpcAG1FhOB
+        uWu2YwWLE13QEYMAUoAFGCoXiK8qIdwYu9ivoS/ysQ==
+X-Google-Smtp-Source: APXvYqyM4hfVYoDYwfQfVPhbnPFk4I8LKxaCDffZcJwq7fD3GxqUJEH6Udb9zt2BbyK4tPnOr9RKMynt1WyBL89J69U=
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr13116369ljg.151.1582039746654;
+ Tue, 18 Feb 2020 07:29:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-5-vincent.guittot@linaro.org> <5ea96f6e-433e-1520-56dc-a10e9a8e63c7@arm.com>
+In-Reply-To: <5ea96f6e-433e-1520-56dc-a10e9a8e63c7@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 18 Feb 2020 16:28:55 +0100
+Message-ID: <CAKfTPtBn+OG6HDN6prWk+7BNH4Grpc67Mex41-=DumKMogvxpw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200218 12:44]:
-> Hi Tony,
-> 
-> On 18/02/2020 1.10, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [200217 12:10]:
-> >> On 14/02/2020 19.03, Tony Lindgren wrote:
-> >>> But right now in droid4 voice call case mcbsp is just the i2s transport,
-> >>> and everything happens betwee the modem and the cpcap pmic.
-> >>
-> >> Iow you don't need McBSP DAI at all. If you would have added the dummy
-> >> codec to McBSP !3 and use that, it would work in a same way, or to DMIC
-> >> or McPDM...
-> >>
-> >> The McBSP ops are NULL for the dummy dai, so McBSP is turned off.
-> > 
-> > Hmm yeah I don't know if the cpcap codec on the same mcbsp needs
-> > mcbsp for voice call.
-> > 
-> > According to Sebastian sounds like mcbsp can be idle at that point.
-> > 
-> > But what about capture of voice call at the mcbsp from the
-> > TDM slot? In that case mcbsp would be active.
-> 
-> Sure, but with the dummy dai it won't....
+On Tue, 18 Feb 2020 at 15:54, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> On 2/14/20 3:27 PM, Vincent Guittot wrote:
+> > @@ -532,8 +535,8 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
+> >                       cfs_rq->removed.load_avg);
+> >       SEQ_printf(m, "  .%-30s: %ld\n", "removed.util_avg",
+> >                       cfs_rq->removed.util_avg);
+> > -     SEQ_printf(m, "  .%-30s: %ld\n", "removed.runnable_sum",
+> > -                     cfs_rq->removed.runnable_sum);
+>
+> Shouldn't that have been part of patch 3?
 
-Right. I'm not attached to the dummy dai, but looks like currently
-snd-soc-audio-graph-card won't work without it. And we potentially
-do need a place to configure TDM slot specific stuff for mcbsp.
+No this was used to propagate load_avg
 
-> If I understand correctly the HW setup:
-> McBSP2 -> CPCAP_hifi (only playback)
-> 
-> CPCAP_voice is the i2s clock master.
-> McBSP3, CPCAP_voice, MDM6600 and WL1285 are all connected together via
-> i2s lines.
-> 
-> In case of Voice call with analog mic/speaker only CPCAP_voice and
-> MDM6600 is used.
-> In case of Voice call with BT only MDM6600 and WL1285 is used (but
-> CPCAP_voice must provide the clocks?)
+>
+> > +     SEQ_printf(m, "  .%-30s: %ld\n", "removed.runnable_avg",
+> > +                     cfs_rq->removed.runnable_avg);
+> >  #ifdef CONFIG_FAIR_GROUP_SCHED
+> >       SEQ_printf(m, "  .%-30s: %lu\n", "tg_load_avg_contrib",
+> >                       cfs_rq->tg_load_avg_contrib);
+> > @@ -3278,6 +3280,32 @@ update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq
+> >       cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
+> >  }
+> >
+> > +static inline void
+> > +update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> > +{
+> > +     long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
+> > +
+> > +     /* Nothing to update */
+> > +     if (!delta)
+> > +             return;
+> > +
+> > +     /*
+> > +      * The relation between sum and avg is:
+> > +      *
+> > +      *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+> > +      *
+> > +      * however, the PELT windows are not aligned between grq and gse.
+> > +      */
+> > +
+> > +     /* Set new sched_entity's runnable */
+> > +     se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
+> > +     se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
+> > +
+> > +     /* Update parent cfs_rq runnable */
+> > +     add_positive(&cfs_rq->avg.runnable_avg, delta);
+> > +     cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
+> > +}
+> > +
+>
+> Humph, that's an exact copy of update_tg_cfs_util(). FWIW the following
+> eldritch horror compiles...
+>
+> ---
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 99249a2484b4..be796532a2d3 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3254,57 +3254,34 @@ void set_task_rq_fair(struct sched_entity *se,
+>   *
+>   */
+>
+> -static inline void
+> -update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> -{
+> -       long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
+> -
+> -       /* Nothing to update */
+> -       if (!delta)
+> -               return;
+> -
+> -       /*
+> -        * The relation between sum and avg is:
+> -        *
+> -        *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+> -        *
+> -        * however, the PELT windows are not aligned between grq and gse.
+> -        */
+> -
+> -       /* Set new sched_entity's utilization */
+> -       se->avg.util_avg = gcfs_rq->avg.util_avg;
+> -       se->avg.util_sum = se->avg.util_avg * LOAD_AVG_MAX;
+> -
+> -       /* Update parent cfs_rq utilization */
+> -       add_positive(&cfs_rq->avg.util_avg, delta);
+> -       cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
+> -}
+> -
+> -static inline void
+> -update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> -{
+> -       long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
+> -
+> -       /* Nothing to update */
+> -       if (!delta)
+> -               return;
+> -
+> -       /*
+> -        * The relation between sum and avg is:
+> -        *
+> -        *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+> -        *
+> -        * however, the PELT windows are not aligned between grq and gse.
+> -        */
+> -
+> -       /* Set new sched_entity's runnable */
+> -       se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
+> -       se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
+> +#define DECLARE_UPDATE_TG_CFS_SIGNAL(signal)                           \
+> +static inline void                                             \
+> +update_tg_cfs_##signal(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq) \
+> +{                                                              \
+> +       long delta = gcfs_rq->avg.signal##_avg - se->avg.signal##_avg; \
+> +                                                               \
+> +       /* Nothing to update */                                 \
+> +       if (!delta)                                             \
+> +               return;                                         \
+> +                                                               \
+> +       /*                                                                      \
+> +        * The relation between sum and avg is:                                 \
+> +        *                                                                      \
+> +        *   LOAD_AVG_MAX - 1024 + sa->period_contrib                           \
+> +        *                                                                      \
+> +               * however, the PELT windows are not aligned between grq and gse.        \
+> +       */                                                                      \
+> +       /* Set new sched_entity's runnable */                   \
+> +       se->avg.signal##_avg = gcfs_rq->avg.signal##_avg;       \
+> +       se->avg.signal##_sum = se->avg.signal##_avg * LOAD_AVG_MAX; \
+> +                                                               \
+> +       /* Update parent cfs_rq signal## */                     \
+> +       add_positive(&cfs_rq->avg.signal##_avg, delta);         \
+> +       cfs_rq->avg.signal##_sum = cfs_rq->avg.signal##_avg * LOAD_AVG_MAX; \
+> +}                                                              \
+>
+> -       /* Update parent cfs_rq runnable */
+> -       add_positive(&cfs_rq->avg.runnable_avg, delta);
+> -       cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
+> -}
+> +DECLARE_UPDATE_TG_CFS_SIGNAL(util);
+> +DECLARE_UPDATE_TG_CFS_SIGNAL(runnable);
 
-Yes my guess is cpcap voice is the clock master in that case.
-It should show up from the cpcap register dump from Android with
-audio playing to a bluetooth headset.
+TBH, I prefer keeping the current version which is easier to read IMO
 
-> In case you would have any algorithm running on OMAP4 for the calls,
-> then you will have McBSP3 inserted and used between MDM6600 and
-> CPAC_voice/WL1285.
-> Similarly, if you would like to tap in and record the data from the bus
-> you will have McBSP3 enabled.
-> 
-> The simplest use cases you want to support:
-> A. McBSP3 <-> CPCAP_voice (playback/capture)
-> B. MDM6600 <-> CPCAP_voice (handset mic/speaker voice call)
-> C. MDM6600 <-> WL1285 (BT voice call)
-> D. McBSP3 <-> BT (VoIP?)
-> 
-> I would not bother with recording the call as you would need tom
-> reconfigure the McBSP playback pin (is it even possible) as input to
-> OMAP4, I think..
+>
+>  static inline void
+>  update_tg_cfs_load(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> ---
+>
+> >  static inline void
+> >  update_tg_cfs_load(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+> >  {
+> > @@ -3358,6 +3386,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+> >       add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
+> >
+> >       update_tg_cfs_util(cfs_rq, se, gcfs_rq);
+> > +     update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
+> >       update_tg_cfs_load(cfs_rq, se, gcfs_rq);
+> >
+> >       trace_pelt_cfs_tp(cfs_rq);
+> > @@ -3439,7 +3468,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+> >               raw_spin_lock(&cfs_rq->removed.lock);
+> >               swap(cfs_rq->removed.util_avg, removed_util);
+> >               swap(cfs_rq->removed.load_avg, removed_load);
+> > -             swap(cfs_rq->removed.runnable_sum, removed_runnable_sum);
+>
+> Ditto on the stray from patch 3?
 
-Oh, I think there are Android apps to do that though.. Never tried
-if they work on droid4. But if they do, doing a register dump of
-mcbsp3 would show up how it's configured.
-
-> B/C is codec2codec, McBSP3 is not involved at all.
-> A/D is when McBSP3 is used only.
-> 
-> Imho this can be represented as
-> McBSP2: 1 port
-> 	1.1: to CPCAP_hifi
-> 
-> McBSP3: 1 port, 2 endpoint
-> 	2.1: to CPCAP_voice
-> 	2.2: to WL1285
-> CPCAP: 2 ports
-> 	hifi:	3.1: to McBSP2
-> 	voice:	4.1: to McBSP3
-> 		4.2: to MDM6600
-> MDM6600: 2 ports
-> 	5.1: to CPAC_voice
-> 	5.2: to WL1285
-> WL1285: 2 ports
-> 	6.1: to McBSP3
-> 	6.2: to MDM6600
-> 
-> The machine driver should switch between the graph links based on the
-> use case for the interconnected devices:
-> A: 2.2 <-> 4.1
-> B: 4.2 <-> 5.1
-> C: 6.2 <-> 5.1
-> D: 2.2 <-> 6.1
-
-OK
-
-> Can a generic card provide such a functionality?
-
-I think the link for the patches you posted is patching the
-snd-soc-audio-graph-card already?
-
-> In case of B/C you should not have a running stream imho.
-> In all cases CPCAP_voice should be able to run the clocks on i2s, even
-> if it is not used by the audio setup.
-> Not sure if you can just turn Wl1285 as master, but it is possible that
-> it is master, but silent when it is not used?
-
-Yeah, no idea.. But that's easy to configure in the dts based on
-the graph bindings :)
-
-> I'm not sure if we should span out dummy dais for endpoints within a
-> port. Imho the port _is_ the dai. Different endpoints might use
-> different TDM slots on the port (or the same slot, which makes them
-> exclusive).
-
-Right. So right now it seems that for snd-soc-audio-graph-card
-needs the dummy dai, but it's unclear what would need to be
-changed to not use a dummy dai for mcbsp.
-
-The dts snippets I posted earlier do follow the graph bindings
-as far as I know. But just to confirm, do you see any need to
-move things around there?
-
-> >>>>>> I know it was discussed, but can not find the mail:
-> >>>>>> Can you brief again on the audio connection?
-> >>>>>
-> >>>>> Below is a link to a mailing list thread where Sebastian describes
-> >>>>> the audio connection:
-> >>>>>
-> >>>>> https://lkml.org/lkml/2018/3/28/881
-> >>>>
-> >>>> Thanks!
-> >>>>  
-> >>>>>> Do you have branch with working code?
-> >>>>>
-> >>>>> Yeah I have slightly older set of the patches in my droid4-pending-v5.5
-> >>>>> kernel.org git branch with voice calls working.
-> >>>>
-> >>>> I think I should put my droid4 out and try to get it working...
-> >>>> Do you have a link for dummies to follow to get started? ;)
-> >>>
-> >>> Probably the easiest one to use right now is the Maemo-leste devuan based
-> >>> test image using v5.5 kernel + modem and audio patches:
-> >>>
-> >>> https://leste.maemo.org/Motorola_Droid_4
-> >>>
-> >>> Just use a decent speed micro-sd card rated "a1" for example.
-> >>
-> >> Cool. Now I can dual boot the droid4 :D
-> >> I needed to rewrite the /etc/shadow to get a known root password so I
-> >> can log in.
-> > 
-> > Not sure if you mean password for the droid4-kexecboot or the
-> > Linux distro you installed..
-> 
-> It was for the maemo-leste.
-> Bringing up Gentoo will be a bit harder as I don't have wifi stuff in my
-> reference image...
-
-Gentoo cool :)
-
-I've had good luck with just plain alpine armv7 edge, the package
-updates work very fast for a slow system. The musl stuff requires
-running stellarium with 3d acceleration in a minimal devuan or
-whatever chroot environment though for stellarium etc..
-
-> > But for droid4-kexecboot, you
-> > can configure it to automatically download new kernels over wlan.
-> > There's some info on the machine specific password and how to
-> > configure wlan in the droid4-kexecboot buildroot commits here:
-> > 
-> > https://github.com/tmlind/buildroot/commits/droid4-kexecboot-2017.11
-> > 
-> >> Wifi is up, so in theory I can scp kernel/dtb to /boot/boot/ and update
-> >> the /boot/boot/boot.cfg to boot my kernel, right?
-> > 
-> > Yeah you can update kernels and modules over wlan from the distro(s)
-> > you have configured, and also from droid4-kexecboot as above.
-> 
-> I need to try droid4-kexecboot's wifi support then.
-
-Yeah you need to configure wpa_supplicant.conf and wlan.conf or
-whatever it was called. And make sure you have copied the old
-stock v3.0.8 kernel wlan modules and firmware as mentioned in
-the droid4-kexecboot git readme and install files.
-
-Oh, and also read about the flags you need to use for mkfs.ext4 if
-doing mkfs.ext4 on a PC, the old v3.0.8 kernel won't understand
-all the new flags if you want a partition to be readable for the
-droid4-kexecboot bootloader. And also the all the old Android
-distros currently still stuck with the ancient v3.0.8 kernel :p
-
-Regards,
-
-Tony
+same as 1st point above
+>
+> > +             swap(cfs_rq->removed.runnable_avg, removed_runnable);
+> >               cfs_rq->removed.nr = 0;
+> >               raw_spin_unlock(&cfs_rq->removed.lock);
+> >
+> > @@ -3451,7 +3480,16 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+>
