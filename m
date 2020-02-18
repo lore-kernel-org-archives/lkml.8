@@ -2,120 +2,195 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A23C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0C5C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921FF206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582059458;
-	bh=uPhmjrMzElpgjg+mWfS9DJ1xFFC29FeL6qWViNklHrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T4TfbwO5mFi4Zf9xuOVlwGTMglmm5dGrcvw9VRP2TNGBG9gOvEExSbKh1jgC4IZHL
-	 BHhDQ3QCBjzxql9Lwxv76w9ozOcaH4Rk5no0WYV4WDnoxTICnYL8CRI3K04oDFpOun
-	 4YlbEIUe1sMGMHv+szpSC0UGxNeZ6IK6FwtHSF8w=
+	by mail.kernel.org (Postfix) with ESMTP id 4E3522070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="knIApa8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgBRU5h (ORCPT
+        id S1726713AbgBRU5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:57:37 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39386 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRU5h (ORCPT
+        Tue, 18 Feb 2020 15:57:51 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:38284 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgBRU5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:57:37 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z2so21562559oih.6;
-        Tue, 18 Feb 2020 12:57:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8v/Yv2bBz+JS6zS39M7KIp7wfnBe7kSHb1JqlCwBB7A=;
-        b=izN4sOPI5RTmoYowViMX16iWSXL6V+/fK8GhoXMvNb9RcvY29tzUG7qWhFEm/MK2/E
-         X5cQns97EKomPYVnddEpyGAJDB1QbGFWskLJH6W2l5aPCViwUf1UJArHvbXFf1QGi83t
-         7yU60G2kD67fbfQMvUDifOoiIeHKgGF+z+5qPuR+pPYCKH5/yL+7XFrJ1LIFrqf9/2Vw
-         wW2TqaGZPr4yvQVRKGmIP9icSuePzJE5eLlQq444HWMKqeTVYMT2UCZH50oEDRlAwfdA
-         Qdt/lGN+j/zo2nyHW13aAm4u1dMRO22jtYxraisI6XhWv5AI2E5O/e9vVOorMJQa6aSK
-         I5Cw==
-X-Gm-Message-State: APjAAAVQkMk3MOK7UzKqLgH9nNHUOpzO4FXFR8+CR8cMsqtQ0ooyLAQJ
-        ej12xn8xMyzzBhe3iCnh0LVH45k=
-X-Google-Smtp-Source: APXvYqwyCWaIWb/EOivdLe4KzOnlqcCXN5vxUwSFdJZrurWk2pYTTDOa2XCxMjJdbIXHWkszEGMnqA==
-X-Received: by 2002:a54:4106:: with SMTP id l6mr2449018oic.76.1582059456098;
-        Tue, 18 Feb 2020 12:57:36 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d131sm1582039oia.36.2020.02.18.12.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:57:35 -0800 (PST)
-Received: (nullmailer pid 24025 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:57:35 -0000
-Date:   Tue, 18 Feb 2020 14:57:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Joe Perches <joe@perches.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: checkpatch - "DT binding docs and includes should be a separate
- patch"
-Message-ID: <20200218205735.GA9953@bogus>
-References: <20200209081931.GA5321@ravnborg.org>
- <0d0c4ad9e15ce696ad4b470d724fb0d1423f26c0.camel@perches.com>
+        Tue, 18 Feb 2020 15:57:51 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01IKrxQ9031284;
+        Tue, 18 Feb 2020 20:57:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=BtjGqj+3jNiQRHCMij91pFpkChLnYumQhRXFWLWiTKc=;
+ b=knIApa8S39JVJ40ICW9Cl3OBBL1pEfta3YUmcensHG8JUob3YXeVTh1ez5jwgX1DJxuo
+ NfRZzI+s6OCctl4tK3wKYdBs9Qg7LK0q+c6gqxLpSou+OAF0vln2dzJfe0XIkiaOqyVY
+ UyT1wzT1lyLD2OfL4SEjXPqLla0h7Bu9x03zzlxkI9Sl5juEyNY8ylHykH+CnKGuauJO
+ kNp95zuJo+0Ax0cCEwc/bK1nKtxEynhTgSEBxUSnlKJrcW5tHTrk+0AxyDfhrKtYseHC
+ pJ6XkBuyBTNXMgOK6PWbMbdKZ/nRwWxszM3ci0gKeV7q70iFFs66ad30d7J+hDSijhzC lw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y699rruy6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 20:57:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01IKvitU076426;
+        Tue, 18 Feb 2020 20:57:44 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2y6tc32v3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 20:57:44 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01IKvcXk001708;
+        Tue, 18 Feb 2020 20:57:38 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Feb 2020 12:57:37 -0800
+Subject: Re: [PATCH v12 6/9] hugetlb_cgroup: support noreserve mappings
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211213128.73302-6-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <ace490c3-03b3-da85-bbdf-00959a71ff2f@oracle.com>
+Date:   Tue, 18 Feb 2020 12:57:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d0c4ad9e15ce696ad4b470d724fb0d1423f26c0.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200211213128.73302-6-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=2
+ mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=2
+ malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 12:35:26AM -0800, Joe Perches wrote:
-> On Sun, 2020-02-09 at 09:19 +0100, Sam Ravnborg wrote:
-> > Hi Joe.
-> > 
-> > The following warnings triggers on the patch below:
-> > 
-> > c55d0a554843 (HEAD -> drm-misc-next) dt-bindings: panel: Convert orisetech,otm8009a to json-schema
-> > -:15: WARNING:FILE_PATH_CHANGES: added, moved or deleted file(s), does MAINTAINERS need updating?
-> > #15:
-> > deleted file mode 100644
-> > 
-> > -:18: WARNING:DT_SPLIT_BINDING_PATCH: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt
-> > 
-> > -:43: WARNING:DT_SPLIT_BINDING_PATCH: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt
-> > 
-> > total: 0 errors, 3 warnings, 0 checks, 53 lines checked
-> > 
-> > 1)
-> > yaml files include maintainer information in the file.
-> > I dunno if this replaces/overrules MAINTAINERS - so first warning may be
-> > OK. Also because we delete a file it seems semi relevant.
-> > 
-> > 2)
-> > As the patch only touches files in Documentation/devicetree/bindings the
-> > warning about a separate patch seems wrong.
+On 2/11/20 1:31 PM, Mina Almasry wrote:
+> Support MAP_NORESERVE accounting as part of the new counter.
 > 
-> Rob Herring wrote that bit.  He's now cc'd.  lkml too.
-
-Yeah, I'd noticed this, but haven't dug into how to fix it. Given it 
-mainly happens in these schema conversion patches, I haven't been to 
-worried about it. Just 3300 more conversions todo and it will be 
-"fixed".
-
-> > But the general feedback - in this very special case - is that
-> > checkpatch seems a bit too noisy.
-> > 
-> > If we as a bonus could get a warning when new yaml files do not
-> > use:
-> > # SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-> > That would be great.
+> For each hugepage allocation, at allocation time we check if there is
+> a reservation for this allocation or not. If there is a reservation for
+> this allocation, then this allocation was charged at reservation time,
+> and we don't re-account it. If there is no reserevation for this
+> allocation, we charge the appropriate hugetlb_cgroup.
 > 
-> Submitted here:
+> The hugetlb_cgroup to uncharge for this allocation is stored in
+> page[3].private. We use new APIs added in an earlier patch to set this
+> pointer.
 > 
-> https://lkml.org/lkml/2020/1/29/292
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> Changes in v12:
+> - Minor rebase to new interface for readability.
+> 
+> Changes in v10:
+> - Refactored deferred_reserve check.
+> 
+> ---
+>  mm/hugetlb.c | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index a9171c3cbed6b..2d62dd35399db 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1342,6 +1342,8 @@ static void __free_huge_page(struct page *page)
+>  	clear_page_huge_active(page);
+>  	hugetlb_cgroup_uncharge_page(hstate_index(h),
+>  				     pages_per_huge_page(h), page);
+> +	hugetlb_cgroup_uncharge_page_rsvd(hstate_index(h),
+> +					  pages_per_huge_page(h), page);
+>  	if (restore_reserve)
+>  		h->resv_huge_pages++;
+> 
+> @@ -2175,6 +2177,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  	long gbl_chg;
+>  	int ret, idx;
+>  	struct hugetlb_cgroup *h_cg;
+> +	bool deferred_reserve;
+> 
+>  	idx = hstate_index(h);
+>  	/*
+> @@ -2212,9 +2215,19 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  			gbl_chg = 1;
+>  	}
+> 
+> +	/* If this allocation is not consuming a reservation, charge it now.
+> +	 */
+> +	deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
+> +	if (deferred_reserve) {
+> +		ret = hugetlb_cgroup_charge_cgroup_rsvd(
+> +			idx, pages_per_huge_page(h), &h_cg);
+> +		if (ret)
+> +			goto out_subpool_put;
+> +	}
+> +
+>  	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg);
+>  	if (ret)
+> -		goto out_subpool_put;
+> +		goto out_uncharge_cgroup_reservation;
+> 
+>  	spin_lock(&hugetlb_lock);
+>  	/*
+> @@ -2237,6 +2250,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  		/* Fall through */
+>  	}
+>  	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page);
+> +	/* If allocation is not consuming a reservation, also store the
+> +	 * hugetlb_cgroup pointer on the page.
+> +	 */
+> +	if (deferred_reserve) {
+> +		hugetlb_cgroup_commit_charge_rsvd(idx, pages_per_huge_page(h),
+> +						  h_cg, page);
+> +	}
+> +
 
-The bigger review issue is to check the above license is what's used 
-(but not on conversions).
+This started before your new code, but those two cgroup_commit_charge calls
+could/should be done outside the hugetlb_lock.  No need to change as it is
+not a big deal.  Those calls only set fields in the page structs.
 
-Rob
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+
+-- 
+Mike Kravetz
+
+>  	spin_unlock(&hugetlb_lock);
+> 
+>  	set_page_private(page, (unsigned long)spool);
+> @@ -2261,6 +2282,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+> 
+>  out_uncharge_cgroup:
+>  	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg);
+> +out_uncharge_cgroup_reservation:
+> +	if (deferred_reserve)
+> +		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, pages_per_huge_page(h),
+> +						    h_cg);
+>  out_subpool_put:
+>  	if (map_chg || avoid_reserve)
+>  		hugepage_subpool_put_pages(spool, 1);
+> --
+> 2.25.0.225.g125e21ebc7-goog
+> 
