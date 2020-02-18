@@ -2,217 +2,242 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E541EC34044
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C4FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BF922B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="D2Pphpny";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="gB9OaCA9"
+	by mail.kernel.org (Postfix) with ESMTP id F03DD22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgBRQat (ORCPT
+        id S1727589AbgBRQbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:30:49 -0500
-Received: from rcdn-iport-6.cisco.com ([173.37.86.77]:20257 "EHLO
-        rcdn-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgBRQaq (ORCPT
+        Tue, 18 Feb 2020 11:31:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57202 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgBRQaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:30:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2670; q=dns/txt; s=iport;
-  t=1582043445; x=1583253045;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=mTgqRdd/Bs0ck7gsXL9XzqNJSQImHuyRLnV/Kz3yf+A=;
-  b=D2PphpnyJzNuB3a8fY4HvEpA09hD/WITnVqtYNIy4Wwvkw43eF00s5MQ
-   teDZo5/RXzs8XfNLyD0IWHaPumu5Df38C9CELA7B/ZtwsspfpK+4nMuBY
-   y/6jmklvWkNKXIhVv1rlGL+WuzyhJ01jM+6KjLTX2J8UksxXeKZPIPNsO
-   c=;
-IronPort-PHdr: =?us-ascii?q?9a23=3Afx2R4hdYJG58Xu26BLBd1p7/lGMj4e+mNxMJ6p?=
- =?us-ascii?q?chl7NFe7ii+JKnJkHE+PFxlwGQD57D5adCjOzb++D7VGoM7IzJkUhKcYcEFn?=
- =?us-ascii?q?pnwd4TgxRmBceEDUPhK/u/YyU8HclGS1ZN9HCgOk8TE8H7NBXf?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CpAADeEExe/49dJa1mHQEBAQkBEQU?=
- =?us-ascii?q?FAYFoBwELAYFTUAWBRCAECyoKh1ADinqCX48WiHuBLoEkA1QJAQEBDAEBLQI?=
- =?us-ascii?q?EAQGEQAKCAyQ1CA4CAw0BAQUBAQECAQUEbYU3DIVmAQEBAQMSFRMGAQE3AQ8?=
- =?us-ascii?q?CAQgOBgEDCRUQDyMlAgQOBSKFTwMuAQKiCgKBOYhigXQzgn8BAQWFKxiCDAm?=
- =?us-ascii?q?BOAGMIxqBQT+EJD6EIyiFbrAOCoI7lk0oDoI7iBuQQi2KW58jAgQCBAUCDgE?=
- =?us-ascii?q?BBYFUATaBWHAVgydQGA2OHQd7AYJwilN0gSmMfiWBDQGBDwEB?=
-X-IronPort-AV: E=Sophos;i="5.70,456,1574121600"; 
-   d="scan'208";a="726862527"
-Received: from rcdn-core-7.cisco.com ([173.37.93.143])
-  by rcdn-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Feb 2020 16:30:38 +0000
-Received: from XCH-ALN-003.cisco.com (xch-aln-003.cisco.com [173.36.7.13])
-        by rcdn-core-7.cisco.com (8.15.2/8.15.2) with ESMTPS id 01IGUcwR022367
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 16:30:38 GMT
-Received: from xhs-aln-002.cisco.com (173.37.135.119) by XCH-ALN-003.cisco.com
- (173.36.7.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
- 2020 10:30:38 -0600
-Received: from xhs-aln-002.cisco.com (173.37.135.119) by xhs-aln-002.cisco.com
- (173.37.135.119) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
- 2020 10:30:37 -0600
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (173.37.151.57)
- by xhs-aln-002.cisco.com (173.37.135.119) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 18 Feb 2020 10:30:37 -0600
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H4lX4mJkjzqz69Tmvr0mXMSJ7tKaccn+TP/ddRphxnd1cLIkhid5h2gMvTRXZy3Dnh5mmBCtKxV1keGdpPE3AtQeEeBCQkKrUWPe2NkTUQOFg5KIHujajarkEGh0YcnKd7DwnytoUANG4weFTLtNO9VFd2vnFlm43fuIsAObCl6/oo7h1MEIfx5bQG+/8b/WNI6VHu1ytk5Ch5/EfXw9EbbUaaaK058/fy70RO+NUDGEvkIpSV2Bcrdt09wnOT3DDeQ7b1yRBPFOm6GxHWvEOifQnCRGJNlgvH/RE1Wv8Bw5uMFMyS8tfkUA6JvPYbaxqehLS1nTwIabz+ktBFdH0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hV4m5vjm3poI1yQnWcSutMqGGDFkvtpfOOyVXaGT00Q=;
- b=MnqsiUGoxvyhSZTsub6JIK5RoWub5YTX5V3uP/b2vxdx88ZGB4cEBmssmYi7pANeyMChmUeYGa/cY22fjuHDgZv/z5CIZGjpM01YPjqUmSYdN33YtqpES35Lu6tqK9s1WW/4ZilNrjB1NHKa+RGrz/NGin40e+nF7z7l/xGGM0k09timo/Czirh3TBFRt/p3JscIByeX5pJTSHBDh4qKPoaG7a0Ak5wzfFE92HdYSW7BwuogUrcfb2vjJvbuWHrJO4xpG4VK7i/PNzQ4xr1snWdSjCni3Hu7936H3blO5ZfIC5niwlCKiaP8pBOBR3YaDz0YSVqHL+zyIQOS8ARnag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hV4m5vjm3poI1yQnWcSutMqGGDFkvtpfOOyVXaGT00Q=;
- b=gB9OaCA9YRJH1vSODRXxsnFoQDK9qmprWOUjugy1hAPKYfZBkVAAGrLXD9069JeL270dUg+vdugGr3YtaqDCeTbRoexGjOlypTMSPDZPXJXuTxjq1GfnHhupPcnEG3u3L4ulhpY9lnRw1CTZKsGkfswiOKapfb126lCTj1jqZuI=
-Received: from BYAPR11MB3205.namprd11.prod.outlook.com (20.177.187.32) by
- BYAPR11MB2933.namprd11.prod.outlook.com (20.177.227.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Tue, 18 Feb 2020 16:30:36 +0000
-Received: from BYAPR11MB3205.namprd11.prod.outlook.com
- ([fe80::89a6:9355:e6ba:832]) by BYAPR11MB3205.namprd11.prod.outlook.com
- ([fe80::89a6:9355:e6ba:832%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
- 16:30:36 +0000
-From:   "Daniel Walker (danielwa)" <danielwa@cisco.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "zbr@ioremap.net" <zbr@ioremap.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain
- messages
-Thread-Topic: [PATCH] drivers: connector: cn_proc: allow limiting certain
- messages
-Thread-Index: AQHV5ni/yHZMW2wqgkeUEsFC+E+QMQ==
-Date:   Tue, 18 Feb 2020 16:30:36 +0000
-Message-ID: <20200218163030.GR24152@zorba>
-References: <20200217172551.GL24152@zorba>
- <16818701581961475@iva7-8a22bc446c12.qloud-c.yandex.net>
- <20200217175209.GM24152@zorba>
- <20200217.185235.495219494110132658.davem@davemloft.net>
-In-Reply-To: <20200217.185235.495219494110132658.davem@davemloft.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=danielwa@cisco.com; 
-x-originating-ip: [128.107.241.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 78b4ab45-e630-483f-bfcf-08d7b48fe227
-x-ms-traffictypediagnostic: BYAPR11MB2933:
-x-microsoft-antispam-prvs: <BYAPR11MB2933EA0B1D3257214A14F0D0DD110@BYAPR11MB2933.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 031763BCAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(2906002)(5660300002)(6506007)(6916009)(316002)(33716001)(4326008)(1076003)(33656002)(71200400001)(81166006)(81156014)(76116006)(15650500001)(186003)(6486002)(478600001)(54906003)(66446008)(66476007)(66946007)(86362001)(66556008)(8676002)(64756008)(26005)(6512007)(9686003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB2933;H:BYAPR11MB3205.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cisco.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VSsuerhOihi3MT+ow0IqsU4EA6FHKrwwqpFFntVGYkgjXu337oodBMiJonSJMkCTnysJddUJUSZg7DQPo4oCiF46hJePRocmEfkGpG75klzwki+5Iz8JC4kd5MRYLKRFKX0/yr9EwPSvyqEziGQ4k1Lnttg+SaGJcKpj7GJ81LWEv4PqxemHr47igKX++FU3XBhjA2CAcUKRmYBkYdCfWZpdVdJsfhUKrHuwLTInJ4oJHPfLLBfEbaWUdyRuLQozNUs3eG2JVZ+3TmwBzDuuRsdDePJWA7ALkehZP+WaVG/OumWY803NKla8RcouX/5gIzFOt8RoQK1XuUx9Ge+jEnzRgyUTSElkrdoqQ7VB/Lg5ePtRO55pUODWFfGW0kmvHvqEfgytNQrSkq0DMeepTYyUpecaKwlaSv07dS/jL9gR8P5/ytbIXdGgt2wS7OjL
-x-ms-exchange-antispam-messagedata: hATE0pJoapETSt5rokd8RaB7QZ0LlN5QterMNWApq8Ow9eKGEIkxQdIHnkyFL464DFCNXrPltjxxrG1qAxs3nXKkhYLPNLM/oYL6rAI7T25uF4RbVYO5AxSyzyU2ANuLcpZhubLY6swGubUhyi9Q9A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6C431B50AFEE5842BBEB448953213781@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Feb 2020 11:30:09 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j45l8-0003h0-H9; Tue, 18 Feb 2020 16:30:06 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH net-next v3 3/9] sysfs: add sysfs_group{s}_change_owner()
+Date:   Tue, 18 Feb 2020 17:29:37 +0100
+Message-Id: <20200218162943.2488012-4-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78b4ab45-e630-483f-bfcf-08d7b48fe227
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 16:30:36.2164
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: br9JaVMmKyFIxx8kc9LCH+6KC2MWweGGQA/pGZkE8ZQwW5F2NwYIyxwW80uRbylsNihQkkCPJXwLC6Pkl98AeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2933
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.36.7.13, xch-aln-003.cisco.com
-X-Outbound-Node: rcdn-core-7.cisco.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 06:52:35PM -0800, David Miller wrote:
-> From: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-> Date: Mon, 17 Feb 2020 17:52:11 +0000
->=20
-> > On Mon, Feb 17, 2020 at 08:44:35PM +0300, Evgeniy Polyakov wrote:
-> >>    Hi Daniel, David
-> >>    =20
-> >>    17.02.2020, 20:26, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
-> >>    > On Sun, Feb 16, 2020 at 06:44:43PM -0800, David Miller wrote:
-> >>    >>  This is a netlink based facility, therefore please you should a=
-dd
-> >>    filtering
-> >>    >>  capabilities to the netlink configuration and communications pa=
-th.
-> >>    >>
-> >>    >>  Module parameters are quite verboten.
-> >>    >
-> >>    > How about adding in Kconfig options to limit the types of message=
-s? The
-> >>    issue
-> >>    > with this interface is that it's very easy for someone to enable =
-the
-> >>    interface
-> >>    > as a listener, then never turn the interface off. Then it becomes=
- a
-> >>    broadcast
-> >>    > interface. It's desirable to limit the more noisy messages in som=
-e
-> >>    cases.
-> >>    =20
-> >>    =20
-> >>    Compile-time options are binary switches which live forever after k=
-ernel
-> >>    config has been created, its not gonna help those who enabled messa=
-ges.
-> >>    Kernel modules are kind of no-go, since it requires reboot to chang=
-e in
-> >>    some cases.
-> >>    =20
-> >>    Having netlink control from userspace is a nice option, and connect=
-or has
-> >>    simple userspace->kernelspace channel,
-> >>    but it requires additional userspace utils or programming, which is=
- still
-> >>    cumbersome.
-> >>    =20
-> >>    What about sysfs interface with one file per message type?
-> >=20
-> > You mean similar to the module parameters I've done, but thru sysfs ? I=
-t would
-> > work for Cisco. I kind of like Kconfig because it also reduces kernel s=
-ize for
-> > messages you may never want to see.
->=20
-> Even the sysfs has major downsides, as it fails to take the socket contex=
-t into
-> consideration and makes a system wide decision for what should be a per s=
-ervice
-> decision.
+Add helpers to change the owner of sysfs groups.
+This function will be used to correctly account for kobject ownership
+changes, e.g. when moving network devices between network namespaces.
 
-It's multicast and essentially broadcast messages .. So everyone gets every
-message, and once it's on it's likely it won't be turned off. Given that, I=
-t seems
-appropriate that the system administrator has control of what messages if a=
-ny
-are sent, and it should effect all listening for messages.
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add comment how ownership of sysfs object is changed.
 
-I think I would agree with you if this was unicast, and each listener could=
- tailor
-what messages they want to get. However, this interface isn't that, and it =
-would
-be considerable work to convert to that.
+/* v3 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add explicit uid/gid parameters.
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Collapse groups ownership helper patches into a single patch.
+---
+ fs/sysfs/group.c      | 117 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/sysfs.h |  20 ++++++++
+ 2 files changed, 137 insertions(+)
 
-Daniel=
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index c4ab045926b7..bae562d3cba1 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -13,6 +13,7 @@
+ #include <linux/dcache.h>
+ #include <linux/namei.h>
+ #include <linux/err.h>
++#include <linux/fs.h>
+ #include "sysfs.h"
+ 
+ 
+@@ -457,3 +458,119 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+ 	return PTR_ERR_OR_ZERO(link);
+ }
+ EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
++
++static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
++					  const struct attribute_group *grp,
++					  struct iattr *newattrs)
++{
++	struct kernfs_node *kn;
++	int error;
++
++	if (grp->attrs) {
++		struct attribute *const *attr;
++
++		for (attr = grp->attrs; *attr; attr++) {
++			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
++			if (!kn)
++				return -ENOENT;
++
++			error = kernfs_setattr(kn, newattrs);
++			kernfs_put(kn);
++			if (error)
++				return error;
++		}
++	}
++
++	if (grp->bin_attrs) {
++		struct bin_attribute *const *bin_attr;
++
++		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
++			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
++			if (!kn)
++				return -ENOENT;
++
++			error = kernfs_setattr(kn, newattrs);
++			kernfs_put(kn);
++			if (error)
++				return error;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * sysfs_group_change_owner - change owner of an attribute group.
++ * @kobj:	The kobject containing the group.
++ * @grp:	The attribute group.
++ * @kuid:	new owner's kuid
++ * @kgid:	new owner's kgid
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int sysfs_group_change_owner(struct kobject *kobj,
++			     const struct attribute_group *grp, kuid_t kuid,
++			     kgid_t kgid)
++{
++	struct kernfs_node *grp_kn;
++	kuid_t uid;
++	kgid_t gid;
++	int error;
++	struct iattr newattrs = {
++		.ia_valid = ATTR_UID | ATTR_GID,
++	};
++
++	if (!kobj->state_in_sysfs)
++		return -EINVAL;
++
++	if (grp->name) {
++		grp_kn = kernfs_find_and_get(kobj->sd, grp->name);
++	} else {
++		kernfs_get(kobj->sd);
++		grp_kn = kobj->sd;
++	}
++	if (!grp_kn)
++		return -ENOENT;
++
++	newattrs.ia_uid = kuid;
++	newattrs.ia_gid = kgid;
++	error = kernfs_setattr(grp_kn, &newattrs);
++	if (!error)
++		error = sysfs_group_attrs_change_owner(grp_kn, grp, &newattrs);
++
++	kernfs_put(grp_kn);
++
++	return error;
++}
++EXPORT_SYMBOL_GPL(sysfs_group_change_owner);
++
++/**
++ * sysfs_groups_change_owner - change owner of a set of attribute groups.
++ * @kobj:	The kobject containing the groups.
++ * @groups:	The attribute groups.
++ * @kuid:	new owner's kuid
++ * @kgid:	new owner's kgid
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int sysfs_groups_change_owner(struct kobject *kobj,
++			      const struct attribute_group **groups,
++			      kuid_t kuid, kgid_t kgid)
++{
++	int error = 0, i;
++
++	if (!kobj->state_in_sysfs)
++		return -EINVAL;
++
++	if (!groups)
++		return 0;
++
++	for (i = 0; groups[i]; i++) {
++		error = sysfs_group_change_owner(kobj, groups[i], kuid, kgid);
++		if (error)
++			break;
++	}
++
++	return error;
++}
++EXPORT_SYMBOL_GPL(sysfs_groups_change_owner);
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 899500950410..564a2e57b90a 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -315,6 +315,12 @@ int sysfs_file_change_owner_by_name(struct kobject *kobj, const char *name,
+ 				    kuid_t kuid, kgid_t kgid);
+ int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
+ 			    const char *name, kuid_t kuid, kgid_t kgid);
++int sysfs_groups_change_owner(struct kobject *kobj,
++			      const struct attribute_group **groups,
++			      kuid_t kuid, kgid_t kgid);
++int sysfs_group_change_owner(struct kobject *kobj,
++			     const struct attribute_group *groups, kuid_t kuid,
++			     kgid_t kgid);
+ 
+ #else /* CONFIG_SYSFS */
+ 
+@@ -549,6 +555,20 @@ static inline int sysfs_link_change_owner(struct kobject *kobj,
+ 	return 0;
+ }
+ 
++static inline int sysfs_groups_change_owner(struct kobject *kobj,
++			  const struct attribute_group **groups,
++			  kuid_t kuid, kgid_t kgid)
++{
++	return 0;
++}
++
++static inline int sysfs_group_change_owner(struct kobject *kobj,
++			 const struct attribute_group **groups,
++			 kuid_t kuid, kgid_t kgid)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_SYSFS */
+ 
+ static inline int __must_check sysfs_create_file(struct kobject *kobj,
+-- 
+2.25.0
+
