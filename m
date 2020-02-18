@@ -2,232 +2,293 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6404C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E34C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6C2064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4404120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgBRIoR (ORCPT
+        id S1726323AbgBRIrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:44:17 -0500
-Received: from mga18.intel.com ([134.134.136.126]:17737 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgBRIoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:44:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:44:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="224075271"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 18 Feb 2020 00:44:13 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j3yUG-000ITe-PP; Tue, 18 Feb 2020 16:44:12 +0800
-Date:   Tue, 18 Feb 2020 16:43:22 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:lkmm-dev] BUILD SUCCESS
- ad2156069356d48d26a18b50523f569385537654
-Message-ID: <5e4ba3aa.kJuWNrx0T+JP7vs8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 18 Feb 2020 03:47:06 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10634 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726186AbgBRIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:47:05 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 91E34EA84E46E844F2CB;
+        Tue, 18 Feb 2020 16:46:58 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 16:46:51 +0800
+Subject: Re: [PATCH v4 15/20] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-16-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <5e744173-5d7a-98b7-e44d-d1f8c47b3e3c@huawei.com>
+Date:   Tue, 18 Feb 2020 16:46:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200214145736.18550-16-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
-branch HEAD: ad2156069356d48d26a18b50523f569385537654  tools/memory-model: Add recent references
+Hi Marc,
 
-elapsed time: 5133m
+On 2020/2/14 22:57, Marc Zyngier wrote:
+> Most of the GICv3 emulation code that deals with SGIs now has to be
+> aware of the v4.1 capabilities in order to benefit from it.
+> 
+> Add such support, keyed on the interrupt having the hw flag set and
+> being a SGI.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+>   virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
+>   2 files changed, 96 insertions(+), 7 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index ebc218840fc2..de89da76a379 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/irqchip/arm-gic-v3.h>
+>   #include <linux/kvm.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/interrupt.h>
+>   #include <kvm/iodev.h>
+>   #include <kvm/arm_vgic.h>
+>   
+> @@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
+>   		 * generate interrupts of either group.
+>   		 */
+>   		if (!irq->group || allow_group1) {
+> -			irq->pending_latch = true;
+> -			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +			if (!irq->hw) {
+> +				irq->pending_latch = true;
+> +				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +			} else {
+> +				/* HW SGI? Ask the GIC to inject it */
+> +				int err;
+> +				err = irq_set_irqchip_state(irq->host_irq,
+> +							    IRQCHIP_STATE_PENDING,
+> +							    true);
+> +				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			}
+>   		} else {
+>   			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>   		}
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+> index d656ebd5f9d4..0a1fb61e5b89 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
+> @@ -5,6 +5,8 @@
+>   
+>   #include <linux/bitops.h>
+>   #include <linux/bsearch.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>   #include <linux/kvm.h>
+>   #include <linux/kvm_host.h>
+>   #include <kvm/iodev.h>
+> @@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
+>   	return value;
+>   }
+>   
+> +static void vgic_update_vsgi(struct vgic_irq *irq)
+> +{
+> +	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
+> +}
+> +
+>   void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+>   			   unsigned int len, unsigned long val)
+>   {
+> @@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>   		irq->group = !!(val & BIT(i));
+> -		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			vgic_update_vsgi(irq);
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +		} else {
+> +			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+> +		}
+>   
+>   		vgic_put_irq(vcpu->kvm, irq);
+>   	}
+> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
+>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> -		if (vgic_irq_is_mapped_level(irq)) {
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			if (!irq->enabled) {
+> +				struct irq_data *data;
+> +
+> +				irq->enabled = true;
+> +				data = &irq_to_desc(irq->host_irq)->irq_data;
+> +				while (irqd_irq_disabled(data))
+> +					enable_irq(irq->host_irq);
+> +			}
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		} else if (vgic_irq_is_mapped_level(irq)) {
+>   			bool was_high = irq->line_level;
+>   
+>   			/*
+> @@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
+>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
+> +			disable_irq_nosync(irq->host_irq);
+>   
+>   		irq->enabled = false;
+>   
+> @@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
+>   	for (i = 0; i < len * 8; i++) {
+>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>   		unsigned long flags;
+> +		bool val;
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> -		if (irq_is_pending(irq))
+> -			value |= (1U << i);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			int err;
+> +
+> +			val = false;
+> +			err = irq_get_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    &val);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +		} else {
+> +			val = irq_is_pending(irq);
+> +		}
+> +
+> +		value |= ((u32)val << i);
+>   		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>   
+>   		vgic_put_irq(vcpu->kvm, irq);
+> @@ -227,6 +267,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+>   		}
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> +
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			/* HW SGI? Ask the GIC to inject it */
+> +			int err;
+> +			err = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    true);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		}
+> +
+>   		if (irq->hw)
+>   			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
+>   		else
 
-configs tested: 169
-configs skipped: 0
+Should we consider taking the GICv4.1 support into uaccess_{read/write}
+callbacks for GICR_ISPENDR0 so that userspace can properly save/restore
+the pending state of GICv4.1 vSGIs?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I *think* we can do it because on restoration, GICD_CTLR(.nASSGIreq) is
+restored before GICR_ISPENDR0.  So we know whether we're restoring
+pending for vSGIs, and we can restore it to the HW level if v4.1 is
+supported by GIC. Otherwise restore it by the normal way.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-parisc                           allyesconfig
-m68k                          multi_defconfig
-c6x                              allyesconfig
-riscv                             allnoconfig
-powerpc                       ppc64_defconfig
-sh                                allnoconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-i386                             allyesconfig
-i386                              allnoconfig
-csky                                defconfig
-mips                              allnoconfig
-openrisc                    or1ksim_defconfig
-sparc64                           allnoconfig
-um                           x86_64_defconfig
-m68k                           sun3_defconfig
-nios2                         3c120_defconfig
-s390                                defconfig
-m68k                             allmodconfig
-arc                                 defconfig
-parisc                            allnoconfig
-parisc                generic-32bit_defconfig
-riscv                    nommu_virt_defconfig
-alpha                               defconfig
-nds32                               defconfig
-nios2                         10m50_defconfig
-s390                       zfcpdump_defconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-powerpc                           allnoconfig
-riscv                               defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-i386                                defconfig
-s390                             allmodconfig
-s390                              allnoconfig
-sparc64                             defconfig
-i386                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-nds32                             allnoconfig
-h8300                    h8300h-sim_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200215
-x86_64               randconfig-a002-20200215
-x86_64               randconfig-a003-20200215
-i386                 randconfig-a001-20200215
-i386                 randconfig-a002-20200215
-i386                 randconfig-a003-20200215
-alpha                randconfig-a001-20200214
-m68k                 randconfig-a001-20200214
-mips                 randconfig-a001-20200214
-nds32                randconfig-a001-20200214
-parisc               randconfig-a001-20200214
-c6x                  randconfig-a001-20200214
-h8300                randconfig-a001-20200214
-microblaze           randconfig-a001-20200214
-nios2                randconfig-a001-20200214
-sparc64              randconfig-a001-20200214
-csky                 randconfig-a001-20200214
-openrisc             randconfig-a001-20200214
-s390                 randconfig-a001-20200214
-sh                   randconfig-a001-20200214
-xtensa               randconfig-a001-20200214
-x86_64               randconfig-b001-20200214
-x86_64               randconfig-b002-20200214
-x86_64               randconfig-b003-20200214
-i386                 randconfig-b001-20200214
-i386                 randconfig-b002-20200214
-i386                 randconfig-b003-20200214
-x86_64               randconfig-c001-20200215
-x86_64               randconfig-c002-20200215
-x86_64               randconfig-c003-20200215
-i386                 randconfig-c001-20200215
-i386                 randconfig-c002-20200215
-i386                 randconfig-c003-20200215
-x86_64               randconfig-d001-20200213
-x86_64               randconfig-d002-20200213
-x86_64               randconfig-d003-20200213
-i386                 randconfig-d001-20200213
-i386                 randconfig-d002-20200213
-i386                 randconfig-d003-20200213
-x86_64               randconfig-d001-20200214
-x86_64               randconfig-d002-20200214
-x86_64               randconfig-d003-20200214
-i386                 randconfig-d001-20200214
-i386                 randconfig-d002-20200214
-i386                 randconfig-d003-20200214
-x86_64               randconfig-e001-20200214
-x86_64               randconfig-e002-20200214
-x86_64               randconfig-e003-20200214
-i386                 randconfig-e001-20200214
-i386                 randconfig-e002-20200214
-i386                 randconfig-e003-20200214
-x86_64               randconfig-f001-20200214
-x86_64               randconfig-f002-20200214
-x86_64               randconfig-f003-20200214
-i386                 randconfig-f001-20200214
-i386                 randconfig-f002-20200214
-i386                 randconfig-f003-20200214
-x86_64               randconfig-g001-20200214
-x86_64               randconfig-g002-20200214
-x86_64               randconfig-g003-20200214
-i386                 randconfig-g001-20200214
-i386                 randconfig-g002-20200214
-i386                 randconfig-g003-20200214
-x86_64               randconfig-h001-20200214
-x86_64               randconfig-h002-20200214
-x86_64               randconfig-h003-20200214
-i386                 randconfig-h001-20200214
-i386                 randconfig-h002-20200214
-i386                 randconfig-h003-20200214
-arc                  randconfig-a001-20200214
-arm                  randconfig-a001-20200214
-arm64                randconfig-a001-20200214
-ia64                 randconfig-a001-20200214
-powerpc              randconfig-a001-20200214
-sparc                randconfig-a001-20200214
-riscv                            allmodconfig
-riscv                            allyesconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-sh                               allmodconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-um                                  defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+And saving is easy with the get_irqchip_state callback, right?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> @@ -281,6 +336,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+>   
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>   
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +			/* HW SGI? Ask the GIC to inject it */
+
+"Ask the GIC to clear its pending state" :-)
+
+
+Thanks,
+Zenghui
+
+> +			int err;
+> +			err = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    false);
+> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+> +
+> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +
+> +			continue;
+> +		}
+> +
+>   		if (irq->hw)
+>   			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
+>   		else
+> @@ -330,8 +399,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
+>   
+>   	raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>   
+> -	if (irq->hw) {
+> +	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
+>   		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
+> +	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +		/*
+> +		 * GICv4.1 VSGI feature doesn't track an active state,
+> +		 * so let's not kid ourselves, there is nothing we can
+> +		 * do here.
+> +		 */
+> +		irq->active = false;
+>   	} else {
+>   		u32 model = vcpu->kvm->arch.vgic.vgic_model;
+>   		u8 active_source;
+> @@ -505,6 +581,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
+>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>   		/* Narrow the priority range to what we actually support */
+>   		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
+> +		if (irq->hw && vgic_irq_is_sgi(irq->intid))
+> +			vgic_update_vsgi(irq);
+>   		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>   
+>   		vgic_put_irq(vcpu->kvm, irq);
+> 
+
