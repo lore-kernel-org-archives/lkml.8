@@ -2,125 +2,133 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E1C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1078FC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE722070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA942206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DuiKbbx3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AU8BMEdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBRJly (ORCPT
+        id S1726648AbgBRJmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:41:54 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:41726 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgBRJlx (ORCPT
+        Tue, 18 Feb 2020 04:42:09 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38617 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgBRJmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:41:53 -0500
-Received: by mail-wr1-f74.google.com with SMTP id o6so10472848wrp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:41:51 -0800 (PST)
+        Tue, 18 Feb 2020 04:42:09 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so2092651wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:42:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=rkOOsJ3B+WebwmY0ZjWij56PYosAY9ID4DSUuStj67k=;
-        b=DuiKbbx3G+8UCUti23flMr0hIHrRgibO7CnnbD1y3sEYNMn9xexsm5tKWC7sy6d8aM
-         sDeyipO8OHcDkeFOAJ+eZHtCUKGJM84Dfn4H37w7CX+ybmwfG6n4itd0jhj8h6d0gUfj
-         zbZmg7W5PsmU+d6+PoTgJ2fygTI+4dXzeGBgijSKBTSyQr0lIdkqVyNuvA0GOTLP9qMU
-         PhT3BJzbonesgwJenxZaqb2X5+BYWGVG+k/CU/XQxFk1Nhwn4DpKL+py9xrjZFTk4i3M
-         6Lh8hiPgBSGvDY+99KT2CaMTB/uDRUl7z0GzM1MC62Afvk3iq5CNyOGdoypspQ2UwOSO
-         Q2iw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iSpUEW7beHak9UFrM6ih/G70K0ztc6Y3OmsEa5YMS5I=;
+        b=AU8BMEdHS2+zOtGQ5oh+Xfc3PTOg7SSXbjXfZNjvQDQEGL28W3Vzys5I6GuBWU+WzU
+         IRIornPAr3QGw9Fs/tV2y1jjC7nXn1lCWsonLmvTw2grML8+9n/KLfvHeJVt3PYFEYVD
+         hv7v4pnz3i6grhRfKP/20gv3cMmQkw4WFElD3Pibh3Wd9mLUhFjKt4JwrIsfMX2LAzkq
+         GiJ9zKeEvg91pVZbaIRA+kHY4LfgQXbCmA02PlIhViCERfDyxc3nLfc37o0+bt28UkR9
+         WmSNh9UtraWmEHah/zTkR6LkYVuA/Trb8SY4XxRIShbSGdPxRgTcS6UcxuqU91yype3P
+         S1LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=rkOOsJ3B+WebwmY0ZjWij56PYosAY9ID4DSUuStj67k=;
-        b=NwTpa9yX5dIvG9gFxoawhwGNz2pflmtOZ/yq44N5MXIwf1sP0dWDYEjF/qsQ5d/LcK
-         WiS4fefG822ht78Flz3DsTu8xydgHQSd36ShOQXpJknPGObsLq6MCkjCyubQIsb5K5Ew
-         GS1T0GX7Ymm65dbusnRLfoTh7Th0ji/FcAAFhDPaSxtu930lOMbOfvqCta/xpgS6Mi1c
-         k96S4sGN4cpUm1STDtGSarUOg5yLH/aIjKgmOrXsR3XygSnS1mdtpVlY4KYQx9b+Vb8b
-         xSxLqT6VTg2Kz7TCfmHXqJOVFNoKawS2n+Brmlt1CvKofwFAPmO69mq8R97pGC0rfcSt
-         hYjQ==
-X-Gm-Message-State: APjAAAWwGFOkhDFTzog9gFtq33n0hgaXNRkzqZ1cUqW7GHAWlCT1lACw
-        EX2lPr1GYYNxXE9EJtqajk8yapp8c+zT
-X-Google-Smtp-Source: APXvYqzDhSYD+GHuYYP6mN4vmPaPD61VA4K+WkMdE1BxYDoYNf0gJ/ExVqrPf3+eV338d9Gle38b4Cs+POYA
-X-Received: by 2002:adf:fac7:: with SMTP id a7mr309389wrs.299.1582018910624;
- Tue, 18 Feb 2020 01:41:50 -0800 (PST)
-Date:   Tue, 18 Feb 2020 09:41:39 +0000
-In-Reply-To: <20200218094139.78835-1-qperret@google.com>
-Message-Id: <20200218094139.78835-4-qperret@google.com>
-Mime-Version: 1.0
-References: <20200218094139.78835-1-qperret@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v5 3/3] kbuild: generate autoksyms.h early
-From:   Quentin Perret <qperret@google.com>
-To:     masahiroy@kernel.org, nico@fluxnic.net
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com, jeyu@kernel.org,
-        hch@infradead.org, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iSpUEW7beHak9UFrM6ih/G70K0ztc6Y3OmsEa5YMS5I=;
+        b=pBAE3ZowRdbZEhAHO+1bg8dQsMJ/2KJf9d4iz+xN++hKTkGSECkxOyjtCIq/oEEHV+
+         OYw6Ot0c3qP6pEA0c0tGiMnfMaGE6p5UX5IIZPCHAJ6KS7gUhU1SO68raIS3RX7Kly/7
+         lAxPa0yVVXHfxES5T9eUZdDtOnUhJ+tjT3mpFxlC8i+wK5SunFl1Uq5cBkGWlO7/T+Q1
+         mCYSSVeiwO+3kkiwIqQgoLBJ0MTAP3064G6RWkcMhxjPHvw77OsI14aR+s8Rbe9uQ2Nu
+         PtQyvfNE6Ta9FLHOyGbfRjvI0mlQ5ov8jyQooi45v17c7c8R9SE1+bxuR7gc8WYnqPbX
+         tDWw==
+X-Gm-Message-State: APjAAAXY6b6o2GfA6QZKo/zmOqpB4ezrrD+UhzIKAelE/hKcBZsojIXW
+        UK7Hr/a6E1etnyKduzsde9C/Jg==
+X-Google-Smtp-Source: APXvYqwMloa/+poSBCxwhlV66qSC7pyEfKb3TWpN7dVptDyzjqcUEWDGxXop8faC5858jO3UJIYwYQ==
+X-Received: by 2002:a7b:ce18:: with SMTP id m24mr2105877wmc.123.1582018926170;
+        Tue, 18 Feb 2020 01:42:06 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id y17sm5041589wrs.82.2020.02.18.01.42.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 01:42:05 -0800 (PST)
+Subject: Re: [PATCH 2/6] nvmem: fix memory leak in error path
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200217195435.9309-1-brgl@bgdev.pl>
+ <20200217195435.9309-3-brgl@bgdev.pl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <f539c993-52b5-766d-d6e5-51836998f445@linaro.org>
+Date:   Tue, 18 Feb 2020 09:42:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200217195435.9309-3-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing a cold build, autoksyms.h starts empty, and is updated late
-in the build process to have visibility over the symbols used by in-tree
-drivers. But since the symbol whitelist is known upfront, it can be used
-to pre-populate autoksyms.h and maximize the amount of code that can be
-compiled to its final state in a single pass, hence reducing build time.
 
-Do this by using gen_autoksyms.sh to initialize autoksyms.h instead of
-creating an empty file.
 
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
-Tested-by: Matthias Maennich <maennich@google.com>
-Reviewed-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- Makefile                 | 7 +++++--
- scripts/gen_autoksyms.sh | 3 ++-
- 2 files changed, 7 insertions(+), 3 deletions(-)
+On 17/02/2020 19:54, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> We need to remove the ida mapping when returning from nvmem_register()
+> with an error.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Was too quick in my last reply..
 
-diff --git a/Makefile b/Makefile
-index 84b71845c43f..17b7e7f441bd 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1062,9 +1062,12 @@ endif
- 
- autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
- 
-+quiet_cmd_autoksyms_h = GEN     $@
-+      cmd_autoksyms_h = mkdir -p $(dir $@); $(CONFIG_SHELL) \
-+			$(srctree)/scripts/gen_autoksyms.sh $@
-+
- $(autoksyms_h):
--	$(Q)mkdir -p $(dir $@)
--	$(Q)touch $@
-+	$(call cmd,autoksyms_h)
- 
- ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- 
-diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
-index 6c625f52118f..679c9f05e4b4 100755
---- a/scripts/gen_autoksyms.sh
-+++ b/scripts/gen_autoksyms.sh
-@@ -39,7 +39,8 @@ cat > "$output_file" << EOT
- 
- EOT
- 
--sed 's/ko$/mod/' modules.order |
-+[ -f modules.order ] && modlist=modules.order || modlist=/dev/null
-+sed 's/ko$/mod/' $modlist |
- xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
- cat - "$ksym_wl" |
- sort -u |
--- 
-2.25.0.265.gbab2e86ba0-goog
+> ---
+>   drivers/nvmem/core.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index ef326f243f36..b0be03d5f240 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -353,7 +353,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+>   						    GPIOD_OUT_HIGH);
+>   	if (IS_ERR(nvmem->wp_gpio))
+> -		return ERR_CAST(nvmem->wp_gpio);
+> +		goto err_ida_remove;
 
+Looks like this is adding  nvmem leak here.
+May be something like this should help:
+
+
+if (IS_ERR(nvmem->wp_gpio)) {
+	rval =  ERR_CAST(nvmem->wp_gpio);
+	ida_simple_remove(&nvmem_ida, nvmem->id);
+	kfree(nvmem);
+	return rval;
+
+}
+
+--srini
+>   
+>   
+>   	kref_init(&nvmem->refcnt);
+> @@ -430,6 +430,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	device_del(&nvmem->dev);
+>   err_put_device:
+>   	put_device(&nvmem->dev);
+> +err_ida_remove:
+> +	ida_simple_remove(&nvmem_ida, nvmem->id);
+>   
+>   	return ERR_PTR(rval);
+>   }
+> 
