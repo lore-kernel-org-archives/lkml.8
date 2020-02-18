@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7276C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E042BC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7596624654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF5524673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055787;
-	bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
+	s=default; t=1582055788;
+	bh=aZnGtrRD0xllt6GfVbJIYOSiGzO811NtSL+PYF9o81E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XvEn+AAU5cC1YEoyj3C8S6q0tEKlE2yOM2cSTMIJcpvbG6af1oXsKw9gPjYUdnNx
-	 BmRv+p3HO3DL5/Fc1sKFtGuHA4DrSRKH9vYtdF5NuEfPs0GnSwATilijTryGIZDXfj
-	 oa4qSIHEjtDaaZlLLwgz8m+bupzdXHVZDXKfGMng=
+	b=aX+j6q+3Vahpzey9USX9LabEpDSJ6f80Rkikk+is8fUv/ee07gGstWJ1AkcAthRoc
+	 RP6P3A67VzIKjy/K9m+HRE+q0Xrphyat1DQO7U+M0mNEdKx2zFT+ML3qv1GMOzuj/A
+	 qAn2gj1z1F84Kcwfsy665jwIKDf8qHW5FHRIj3jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgBRT40 (ORCPT
+        id S1727274AbgBRT41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:56:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33424 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgBRT4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:24 -0500
+        id S1727187AbgBRT40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8DE24655;
-        Tue, 18 Feb 2020 19:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9457F24654;
+        Tue, 18 Feb 2020 19:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055783;
-        bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
+        s=default; t=1582055786;
+        bh=aZnGtrRD0xllt6GfVbJIYOSiGzO811NtSL+PYF9o81E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0AyYw6PFDoPjqK7BR3sEuvp7A4mHbCWgPLbU5t2DhM9aZHEhoLsZGJDp66eXQRIG
-         HGvXnSm/fkrREbkn5w14LjpUhAC2WabRYoSFsjvfarTsS9PzQeEo6sZdZTCO8P9qAi
-         ljftvaePvJboYTxt2EARRwuL7LIpEOkddwlNGT0E=
+        b=vDncOrb8Hcm0/EMvo0vB8gCSauRirt0FJIJnw2NmEEZhyFUl5a/9ba1iMHpEke0U1
+         lDjc4nUSG2u7VLk3idE0LeWtrBBdvbdGRN0YEPrx0SgNkZKbeUsiPdDgS9dm8HAi/f
+         rSXVYRe7UKMNkyaOWkhXPljMdNEAk8AZrrdUUn7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gaurav Agrawal <agrawalgaurav@gnome.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 02/38] Input: synaptics - enable SMBus on ThinkPad L470
-Date:   Tue, 18 Feb 2020 20:54:48 +0100
-Message-Id: <20200218190418.827696119@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH 4.19 20/38] ARM: npcm: Bring back GPIOLIB support
+Date:   Tue, 18 Feb 2020 20:55:06 +0100
+Message-Id: <20200218190421.085960255@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -59,32 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Agrawal <agrawalgaurav@gnome.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit b8a3d819f872e0a3a0a6db0dbbcd48071042fb98 upstream.
+commit e383e871ab54f073c2a798a9e0bde7f1d0528de8 upstream.
 
-Add touchpad LEN2044 to the list, as it is capable of working with
-psmouse.synaptics_intertouch=1
+The CONFIG_ARCH_REQUIRE_GPIOLIB is gone since commit 65053e1a7743
+("gpio: delete ARCH_[WANTS_OPTIONAL|REQUIRE]_GPIOLIB") and all platforms
+should explicitly select GPIOLIB to have it.
 
-Signed-off-by: Gaurav Agrawal <agrawalgaurav@gnome.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/CADdtggVzVJq5gGNmFhKSz2MBwjTpdN5YVOdr4D3Hkkv=KZRc9g@mail.gmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20200130195525.4525-1-krzk@kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: 65053e1a7743 ("gpio: delete ARCH_[WANTS_OPTIONAL|REQUIRE]_GPIOLIB")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-npcm/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -183,6 +183,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN0097", /* X280 -> ALPS trackpoint */
- 	"LEN009b", /* T580 */
- 	"LEN200f", /* T450s */
-+	"LEN2044", /* L470  */
- 	"LEN2054", /* E480 */
- 	"LEN2055", /* E580 */
- 	"SYN3052", /* HP EliteBook 840 G4 */
+--- a/arch/arm/mach-npcm/Kconfig
++++ b/arch/arm/mach-npcm/Kconfig
+@@ -10,7 +10,7 @@ config ARCH_NPCM7XX
+ 	depends on ARCH_MULTI_V7
+ 	select PINCTRL_NPCM7XX
+ 	select NPCM7XX_TIMER
+-	select ARCH_REQUIRE_GPIOLIB
++	select GPIOLIB
+ 	select CACHE_L2X0
+ 	select ARM_GIC
+ 	select HAVE_ARM_TWD if SMP
 
 
