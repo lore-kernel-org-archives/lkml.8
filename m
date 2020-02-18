@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F22C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47680C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3405C2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C9C2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056501;
-	bh=oHjNPYRc6V5pjSMnY/9ywhh4+Sjp1tPVDNCkJphgWzo=;
+	s=default; t=1582056510;
+	bh=EmGc26XpQQJRxz7sKbnLLn5rH2g2hZ9Ry83rw/3dFPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5uJy65jco/9RY0MWytT1aCvNY2Kv2pJP+E/9Ir2Mn866pbcYKbl74n9rRKlDsmMq
-	 Qfe36dJ/+PjNjB9QDScreFbrQGQztHHRMOAASIPlBKQcOmOjdwgKJnZD88ONQcq8tI
-	 IP3hcfW23+GLpYuFJwynPgzjgLA4GXhVprumtp+A=
+	b=haCLx5SNQzJl36wuq0GaeNrUXiUKFPA7t5NTftYxuUgJQ7/+J1JEpgp6m9sZ6oSJH
+	 dhFz3kssORwivvX/4JAJDQnLtZOCVpZT2+tKpswsfvPYrjJyUAq/T/WBSr+QzU7Mf0
+	 Z8XemPPia2qIfleppY+ZdYyEaOlWNiaudYj90emM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgBRUIT (ORCPT
+        id S1727898AbgBRUI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:08:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:08:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbgBRT6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:05 -0500
+        id S1727232AbgBRT55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2902A20659;
-        Tue, 18 Feb 2020 19:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9F620659;
+        Tue, 18 Feb 2020 19:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055884;
-        bh=oHjNPYRc6V5pjSMnY/9ywhh4+Sjp1tPVDNCkJphgWzo=;
+        s=default; t=1582055877;
+        bh=EmGc26XpQQJRxz7sKbnLLn5rH2g2hZ9Ry83rw/3dFPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8TIB41JmU6qtIbsyR7mUY64+5j+yc4hMJmjPn1DNDf+JEqHMxqFkQuMChHWkLxS/
-         krgUJk1y8VAIflV/juorxwxpNwisW47haMnn9nALQSFP8sSsDQ0Ylh+oEC1o2l/fV9
-         lnEY1WCO3iQfGcdPfgolpzz/pm//USZw9MRcmIsg=
+        b=hlKd5mHPugw/zUM+17umTO3ti0f2tBr3lQNfVDrouSFlyRUTO4hUgR83F4VslJ2Gn
+         TfdKnEzrCTspaRdcOXkPYZmWUVce6ADaEDOUKeAsvDCD3yRwN0zebUCWjxvtrMbYw/
+         oTwDqpoC4oeQ71eUro6F6Iobi68r15K5OsEzMfI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 20/66] btrfs: ref-verify: fix memory leaks
-Date:   Tue, 18 Feb 2020 20:54:47 +0100
-Message-Id: <20200218190429.964168504@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 09/66] ACPI: PM: s2idle: Avoid possible race related to the EC GPE
+Date:   Tue, 18 Feb 2020 20:54:36 +0100
+Message-Id: <20200218190428.963951947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,66 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit f311ade3a7adf31658ed882aaab9f9879fdccef7 upstream.
+commit e3728b50cd9be7d4b1469447cdf1feb93e3b7adb upstream.
 
-In btrfs_ref_tree_mod(), 'ref' and 'ra' are allocated through kzalloc() and
-kmalloc(), respectively. In the following code, if an error occurs, the
-execution will be redirected to 'out' or 'out_unlock' and the function will
-be exited. However, on some of the paths, 'ref' and 'ra' are not
-deallocated, leading to memory leaks. For example, if 'action' is
-BTRFS_ADD_DELAYED_EXTENT, add_block_entry() will be invoked. If the return
-value indicates an error, the execution will be redirected to 'out'. But,
-'ref' is not deallocated on this path, causing a memory leak.
+It is theoretically possible for the ACPI EC GPE to be set after the
+s2idle_ops->wake() called from s2idle_loop() has returned and before
+the subsequent pm_wakeup_pending() check is carried out.  If that
+happens, the resulting wakeup event will cause the system to resume
+even though it may be a spurious one.
 
-To fix the above issues, deallocate both 'ref' and 'ra' before exiting from
-the function when an error is encountered.
+To avoid that race, first make the ->wake() callback in struct
+platform_s2idle_ops return a bool value indicating whether or not
+to let the system resume and rearrange s2idle_loop() to use that
+value instad of the direct pm_wakeup_pending() call if ->wake() is
+present.
 
-CC: stable@vger.kernel.org # 4.15+
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Next, rework acpi_s2idle_wake() to process EC events and check
+pm_wakeup_pending() before re-arming the SCI for system wakeup
+to prevent it from triggering prematurely and add comments to
+that function to explain the rationale for the new code flow.
+
+Fixes: 56b991849009 ("PM: sleep: Simplify suspend-to-idle control flow")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ref-verify.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/acpi/sleep.c    |   46 ++++++++++++++++++++++++++++++++--------------
+ include/linux/suspend.h |    2 +-
+ kernel/power/suspend.c  |    9 +++++----
+ 3 files changed, 38 insertions(+), 19 deletions(-)
 
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -744,6 +744,7 @@ int btrfs_ref_tree_mod(struct btrfs_fs_i
- 		 */
- 		be = add_block_entry(fs_info, bytenr, num_bytes, ref_root);
- 		if (IS_ERR(be)) {
-+			kfree(ref);
- 			kfree(ra);
- 			ret = PTR_ERR(be);
- 			goto out;
-@@ -757,6 +758,8 @@ int btrfs_ref_tree_mod(struct btrfs_fs_i
- 			"re-allocated a block that still has references to it!");
- 			dump_block_entry(fs_info, be);
- 			dump_ref_action(fs_info, ra);
-+			kfree(ref);
-+			kfree(ra);
- 			goto out_unlock;
- 		}
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -977,21 +977,28 @@ static int acpi_s2idle_prepare_late(void
+ 	return 0;
+ }
  
-@@ -819,6 +822,7 @@ int btrfs_ref_tree_mod(struct btrfs_fs_i
- "dropping a ref for a existing root that doesn't have a ref on the block");
- 				dump_block_entry(fs_info, be);
- 				dump_ref_action(fs_info, ra);
-+				kfree(ref);
- 				kfree(ra);
- 				goto out_unlock;
- 			}
-@@ -834,6 +838,7 @@ int btrfs_ref_tree_mod(struct btrfs_fs_i
- "attempting to add another ref for an existing ref on a tree block");
- 			dump_block_entry(fs_info, be);
- 			dump_ref_action(fs_info, ra);
-+			kfree(ref);
- 			kfree(ra);
- 			goto out_unlock;
- 		}
+-static void acpi_s2idle_wake(void)
++static bool acpi_s2idle_wake(void)
+ {
+-	/*
+-	 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
+-	 * not triggered while suspended, so bail out.
+-	 */
+-	if (!acpi_sci_irq_valid() ||
+-	    irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
+-		return;
+-
+-	/*
+-	 * If there are EC events to process, the wakeup may be a spurious one
+-	 * coming from the EC.
+-	 */
+-	if (acpi_ec_dispatch_gpe()) {
++	if (!acpi_sci_irq_valid())
++		return pm_wakeup_pending();
++
++	while (pm_wakeup_pending()) {
++		/*
++		 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the
++		 * SCI has not triggered while suspended, so bail out (the
++		 * wakeup is pending anyway and the SCI is not the source of
++		 * it).
++		 */
++		if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
++			return true;
++
++		/*
++		 * If there are no EC events to process, the wakeup is regarded
++		 * as a genuine one.
++		 */
++		if (!acpi_ec_dispatch_gpe())
++			return true;
++
+ 		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
+@@ -1009,8 +1016,19 @@ static void acpi_s2idle_wake(void)
+ 		acpi_ec_flush_work();
+ 		acpi_os_wait_events_complete(); /* synchronize Notify handling */
+ 
++		/*
++		 * The SCI is in the "suspended" state now and it cannot produce
++		 * new wakeup events till the rearming below, so if any of them
++		 * are pending here, they must be resulting from the processing
++		 * of EC events above or coming from somewhere else.
++		 */
++		if (pm_wakeup_pending())
++			return true;
++
+ 		rearm_wake_irq(acpi_sci_irq);
+ 	}
++
++	return false;
+ }
+ 
+ static void acpi_s2idle_restore_early(void)
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -191,7 +191,7 @@ struct platform_s2idle_ops {
+ 	int (*begin)(void);
+ 	int (*prepare)(void);
+ 	int (*prepare_late)(void);
+-	void (*wake)(void);
++	bool (*wake)(void);
+ 	void (*restore_early)(void);
+ 	void (*restore)(void);
+ 	void (*end)(void);
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -131,11 +131,12 @@ static void s2idle_loop(void)
+ 	 * to avoid them upfront.
+ 	 */
+ 	for (;;) {
+-		if (s2idle_ops && s2idle_ops->wake)
+-			s2idle_ops->wake();
+-
+-		if (pm_wakeup_pending())
++		if (s2idle_ops && s2idle_ops->wake) {
++			if (s2idle_ops->wake())
++				break;
++		} else if (pm_wakeup_pending()) {
+ 			break;
++		}
+ 
+ 		pm_wakeup_clear(false);
+ 
 
 
