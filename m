@@ -2,121 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D407C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8FBC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437F524125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0891F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oI+QH8Md"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STSEWAj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgBRSmb (ORCPT
+        id S1726751AbgBRSmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:42:31 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:45948 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgBRSma (ORCPT
+        Tue, 18 Feb 2020 13:42:44 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44827 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgBRSmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:42:30 -0500
-Received: by mail-pl1-f201.google.com with SMTP id 36so10649782plc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:42:29 -0800 (PST)
+        Tue, 18 Feb 2020 13:42:44 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y5so11076972pfb.11;
+        Tue, 18 Feb 2020 10:42:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=d2wRJbkLFbnX5h47+/KLKTC9EOu1JUk/eVuafQjYbHQ=;
-        b=oI+QH8Mdb2jaFfP3q7AupqB0QhhC5C1B/q18uf5tlCkfj0fGYsfGN3WEhSgn8ktTye
-         UiMgo+VvnJG1h3Bgz5YmaO1VlLK93iihg4L36/gRFJNb2Qd3D5Efu0r8r3znpxP83uCe
-         JHZIezRmf7eCcLSzet3tsvEgcms82qlBc2J8accp8ALlkwXpz+nhXOQ15ndG0JuS9C+j
-         b+vSHiWUr6dM8sbKQEbaEITysRx+/3XJNjx+f35KRLF7cucVH/OoTLPRV0xXAJgaawi1
-         Kbsyhl9TtefwGkKkozcsvWIJnfYrtV9lmiao7Oz6XkOxa83P5/iqajKbDe+n0dWBB0jV
-         2mUw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FRPijcKo7kcY7YCcx2mnm2XntT5PXC3jc8cYZD9bnvc=;
+        b=STSEWAj2mLLdHZrKCoSsV8S5dtobBUHz7/MKp0aKP2JnTSV18tnQhlLbjjBD5wAsyk
+         ePvAISX8FcYTeBxh36DpesEK5H9hLIyHXPCaI53agF7h6zTrNhh3MO1631cf4QqufW42
+         QQkE6llrFzaX0E7sDPbCe7F1FpDG8zHWxqNSBvWm8MucYpATLWu79qFmG5UWT7kRbWSj
+         ltd36F12euAfNFEi+OdRHdpdTBNOQ/c0HHX+mvTuxDbggM8hbFsAOPnqU/edC1lHjvVR
+         12Dux0Qg5EpOjGIdANsYT0hynAY00NrxXqpcQImu6orXAs/FBnK8po4uRFlIkNTmvl5m
+         J4Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=d2wRJbkLFbnX5h47+/KLKTC9EOu1JUk/eVuafQjYbHQ=;
-        b=PuNJQS/hgoRFwRnGrncXMX/01jnTB7JCRFTjZbuZq2DNn0dfn+1261Muh5C+jClooy
-         kCmQmPpexYMTHXvoxqsyNUTerbsumrtKWWyQf6D8y+5ZUYUt8NtpyMc6BTh0slN7z/kg
-         yyrD5bwgWJLW8pzgU6GIFwUBCmCuvFmHeDwP7b1L574Jih7X1ZY+5lfrJTyR7lnyzg9K
-         QONqWR6LdOGdwklU1iRUarD9Gq8cvIHKzJx8dMxzYgfHIgkZVr9+gs2Xdk1GE4pm/k8Z
-         thmAWJ0P18aQneooRKXpNbd2O5uzqMC1AkGb8CRi4lr2V0/K8gnP9T2QPiV+8SOP7gqW
-         yf3Q==
-X-Gm-Message-State: APjAAAXI6P8ToePGW+jNMWWE0hH5Mh+oiCELlRn63o+BSNY94iGim4Tf
-        W9oG44h1pIJkb+U/huhQpIlwL65jGwK9IMw=
-X-Google-Smtp-Source: APXvYqybJhwnaBstjsEqK9dPPh5DMtXVQM3bbQkXsUXhhmQa5y81y2B1B6yYNSTQz30gxNcqcGYiP6k0NLPF8xd5
-X-Received: by 2002:a63:455c:: with SMTP id u28mr24914926pgk.163.1582051348672;
- Tue, 18 Feb 2020 10:42:28 -0800 (PST)
-Date:   Tue, 18 Feb 2020 10:42:16 -0800
-Message-Id: <20200218184220.139656-1-jkardatzke@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v3] media: venus: add support for selection rectangles
-From:   Jeffrey Kardatzke <jkardatzke@google.com>
-To:     linux-media@vger.kernel.org
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Malathi Gottam <mgottam@codeaurora.org>,
-        Jeffrey Kardatzke <jkardatzke@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FRPijcKo7kcY7YCcx2mnm2XntT5PXC3jc8cYZD9bnvc=;
+        b=FvcCwn/jIRk/66QWFCKye09gc+rn1z6cBtVyLonAqASFQlQu4hmm1muddWvNM7Q/Er
+         TvVhCcyDig43j99JyZ5mgDsoziJsgQZWNF8Zt+OY3kBRFnly1iU06a7/k52V02ae2oIS
+         Kvk1fIX3/ZrsZ2orYYT8ylSZ0h5us1QjVygUqlGQ4HkVzzyfaK/8wPvfbnWmQvzqiIy7
+         ZSWjkFYulDlnkb+skB9cjUayTP/47K6OP+PpQLqAYZOxAhHO2eygFX0EdZ9O/IRJk4Aq
+         8eOiccY3IRz4+HJc5FUsds7kciWNu7j3bkgw6hK+Bc6tth5QXjcJf7cMkwgaBgvcnnQO
+         r9Pw==
+X-Gm-Message-State: APjAAAVDWLQxc0yM3UBtvI19rxxyn91pO81XfrvuC/ZQUjxb3/dJjyKD
+        Hb81gGNcaSaOl2ibVp0tNg==
+X-Google-Smtp-Source: APXvYqwl800bbQ26s9xKJZDhrO9PdZlbIcrYNVvwauRbeX7NJfuXFF1uGmSM7zo9LH4rJfVnnVed0w==
+X-Received: by 2002:a63:515d:: with SMTP id r29mr23493038pgl.265.1582051363462;
+        Tue, 18 Feb 2020 10:42:43 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:54c:a276:f869:e1e5:121e:cdbf])
+        by smtp.gmail.com with ESMTPSA id v5sm5526791pgc.11.2020.02.18.10.42.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 10:42:42 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     paul@paul-moore.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] netlabel_domainhash.c: Use built-in RCU list checking
+Date:   Wed, 19 Feb 2020 00:11:32 +0530
+Message-Id: <20200218184132.20363-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malathi Gottam <>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Handles target type crop by setting the new active rectangle
-to hardware. The new rectangle should be within YUV size.
+list_for_each_entry_rcu() has built-in RCU and lock checking.
 
-This was taken from: https://lkml.org/lkml/2018/11/9/899
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+by default.
 
-Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- drivers/media/platform/qcom/venus/venc.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ net/netlabel/netlabel_domainhash.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 453edf966d4f..73b3181eed9a 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -479,10 +479,26 @@ venc_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
- 
- 	switch (s->target) {
- 	case V4L2_SEL_TGT_CROP:
--		if (s->r.width != inst->out_width ||
--		    s->r.height != inst->out_height ||
--		    s->r.top != 0 || s->r.left != 0)
--			return -EINVAL;
-+		if (s->r.left != 0) {
-+			s->r.width += s->r.left;
-+			s->r.left = 0;
-+		}
-+
-+		if (s->r.top != 0) {
-+			s->r.height += s->r.top;
-+			s->r.top = 0;
-+		}
-+
-+		if (s->r.width > inst->width)
-+			s->r.width = inst->width;
-+		else
-+			inst->width = s->r.width;
-+
-+		if (s->r.height > inst->height)
-+			s->r.height = inst->height;
-+		else
-+			inst->height = s->r.height;
-+
- 		break;
- 	default:
- 		return -EINVAL;
+diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
+index f5d34da0646e..a1f2320ecc16 100644
+--- a/net/netlabel/netlabel_domainhash.c
++++ b/net/netlabel/netlabel_domainhash.c
+@@ -143,7 +143,8 @@ static struct netlbl_dom_map *netlbl_domhsh_search(const char *domain,
+ 	if (domain != NULL) {
+ 		bkt = netlbl_domhsh_hash(domain);
+ 		bkt_list = &netlbl_domhsh_rcu_deref(netlbl_domhsh)->tbl[bkt];
+-		list_for_each_entry_rcu(iter, bkt_list, list)
++		list_for_each_entry_rcu(iter, bkt_list, list,
++					lockdep_is_held(&netlbl_domhsh_lock))
+ 			if (iter->valid &&
+ 			    netlbl_family_match(iter->family, family) &&
+ 			    strcmp(iter->domain, domain) == 0)
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.17.1
 
