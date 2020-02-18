@@ -2,179 +2,260 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BD0C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE33C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EB9208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF7622527
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ICU3JWbY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VHjT9YWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgBRQBz (ORCPT
+        id S1726647AbgBRQCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:01:55 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36131 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQBy (ORCPT
+        Tue, 18 Feb 2020 11:02:50 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33870 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgBRQCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:01:54 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so1186758pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:01:54 -0800 (PST)
+        Tue, 18 Feb 2020 11:02:50 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c20so19987397qkm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:02:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=dVP6ZBY2M+JrXuQUqUGK+vQhunheflUolWE45cf3nnw=;
-        b=ICU3JWbYKsPU2LQp9Pckivg7ORJ9M0upNPytjf4vm+H9SRKAwOgapZ9KcctfHeA+cs
-         bywLjK6tFX3QDzLFtM1sM35d6Avu+T7vs11eS+du7H9AHKztudeKBZUXvXWPD7Kay8+j
-         pRyVPOHpuZZGL6M8jVEGkixipV4gSqIIPjICKCo4WZbPC3jmdIs0GKV7DmDtmHxk4ysY
-         sxx4qeEO95aiclgGRrYs01bqfPNlFpsqjLg2Kg6wlkGR+V8asWPf5H/jpTLjx+HsEYtK
-         aNlE8hwR7vOicYF6qRcqXU0BurifiTLUV3w3E3olt8B0VOlDP8EQBx31+blfuU+raNch
-         T9Lw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oto09LwYRX6FYX7brDPiPM4cxtWalpt3QASOWsbUoEE=;
+        b=VHjT9YWf16e0vGy+6PMjeXMEGBDrB+6MVzit7ECRRkGRQZNDuJxA4Oh36+Zt3/HD+N
+         2cCxW0yl3EWIW9smgEJE9YkM8Tkzr948mFUsRte0lgzIPFWx+gZQf95TvhsK3abU2QYN
+         UFGebw2AQsPeXCvXxAxNEhkSsuLSJmZs7uhOdPJte+CIlLJqISzSYEQSh+to4xeNBeGK
+         g0OEeUkueFtOyw0LJlb0ImeIwUgo246HTGxcOOujr2EkAeWNTGtehdQCZTHXuUOxrGYV
+         t1kz47nzFboU4WC9eNgCeHOPKO3PnpX4zvccOYjobtSqmq9kMGJyTN4yrFddIuFT7OTR
+         Z4qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=dVP6ZBY2M+JrXuQUqUGK+vQhunheflUolWE45cf3nnw=;
-        b=IvTkNiKBqAhRBHLnLCwIQjboeY+Zswi5bV/ZJBBfYWW9D4pVHr7j8547zAzZpYwZ3R
-         6sfXgQfrW7/V0SlR+IYQoIUen69y9tJMd/ipShk/jwUObFbAT3GGy9lzHLhXyfp3dyFV
-         5aswAk/dGvwdVINwfl62hKLIHHTt8cbK8VWnRmF+039wqAu6zqlW2XAuhFABm5oWdlQY
-         TzT+ZERrrzUKaWgqWXGrUbDX6zvNjaU/eTXu9sbssHKuo5hEjOhoqrqBuWJV3rN8zwj5
-         KElK6kita4xBA9ogh/aXLpvCP2GvtOt67XTDur5xR6MTla6tX831vYns848T/zcOYbyM
-         9UpA==
-X-Gm-Message-State: APjAAAXEHZO50at/SVepf/8unWCxScm24Mv7fNjuSE9kQ3ZyYNfoHznP
-        HfsmkR++jWDtS/Oldlqkekp4Jw==
-X-Google-Smtp-Source: APXvYqzvg0IX1qJX1aYNAwvN1mdrx8cX2z3C4UiXMydXlRlI5aTm13AWzHtr/FnhIrHybbtSueEusw==
-X-Received: by 2002:a17:902:8c98:: with SMTP id t24mr20343697plo.51.1582041713571;
-        Tue, 18 Feb 2020 08:01:53 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id l10sm3804643pjy.5.2020.02.18.08.01.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 08:01:52 -0800 (PST)
-Subject: Re: [PATCH 2/3] random: rng-seed source is utf-8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Rob Herring <robh@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-References: <158166060044.9887.549561499483343724.stgit@devnote2>
- <158166062748.9887.15284887096084339722.stgit@devnote2>
- <CAL_Jsq+BDfWgGTVtppD-JEFHZRqpc00WaV2N7c6qsPBSaxOEPw@mail.gmail.com>
- <20200214224744.GC439135@mit.edu>
- <f15511bf-b840-0633-3354-506b7b0607fe@android.com>
- <20200215005336.GD439135@mit.edu>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <243ab5a8-2ce1-1465-0175-3f5d483cbde1@android.com>
-Date:   Tue, 18 Feb 2020 08:01:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oto09LwYRX6FYX7brDPiPM4cxtWalpt3QASOWsbUoEE=;
+        b=QouLiGs4naYgWwmGv49GkP44drwjO2xXA7gZt1ybxMMwXeIZt6IkckyDM1/jppBSyM
+         tpQXsfDN8y7128yWEV0EL1zSJC7B0xhQogd/iYehYqE3IUCtcEjXtP9EPfNNEcN6RAhB
+         8OkxAsQzehjEnEpe/QdhDMGXBDD4leVUPFFx/tzYVHe2AcYElUFZMVxzKTCUkGaXMBpH
+         vxan9xUOq7Nqea7plCRMTKAqo7yqTSuzHwqps+D9/J34kOeiIoqpbG4BwvhvTeMwCiK/
+         OW5FcRo/3Vk+SyZy1FwFiKOmnuFSkR58r6ub4lxVzIfAbDSlezsEMD94UYivTELlFFOD
+         gwYQ==
+X-Gm-Message-State: APjAAAUcu2Btcwekpdou/0Ak4GKT7Qdq5H3CiIN3+ZnakXrjtfBRqYvy
+        Wmv3FcISI0fYFb81iNvWu+aBDL6AJk+eOVWk3MkBzg==
+X-Google-Smtp-Source: APXvYqx1VKVH7TrkVD81e10r+yji5B2W/p4EV6EBOujA2z0DjIBcHZQMiD1AiPiYIdZseFjwJmutWED/nwI7yrJKXiE=
+X-Received: by 2002:a37:8343:: with SMTP id f64mr18705569qkd.21.1582041768811;
+ Tue, 18 Feb 2020 08:02:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200215005336.GD439135@mit.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Feb 2020 17:02:37 +0100
+Message-ID: <CAMpxmJUkyaU_W2nuBVkun=Trxzvfo4+L5FV4kvBK_KqRbY-eng@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: xilinx: Add clock adaptation support
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>, git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 4:53 PM, Theodore Y. Ts'o wrote:
-> On Fri, Feb 14, 2020 at 02:55:36PM -0800, Mark Salyzyn wrote:
->>> This is why I really think what gets specified via the boot command
->>> line, or bootconfig, should specify the bits of entropy and the
->>> entropy seed *separately*, so it can be specified explicitly, instead
->>> of assuming that *everyone knows* that rng-seed is either (a) a binary
->>> string, or (b) utf-8, or (c) a hex string.  The fact is, everyone does
->>> *not* know, or everyone will have a different implementation, which
->>> everyone will say is *obviously* the only way to go....
->>>
->> Given that the valid option are between 4 (hex), 6 (utf-8) or 8 (binary), we
->> can either split the difference and accept 6; or take a pass at the values
->> and determine which of the set they belong to [0-9a-fA-F], [!-~] or
->> [\000-\377]  nor need to separately specify.
-> So let's split this up into separate issues.  First of all, from an
-> architectural issue, I really think we need to change
-> add_bootloader_randomness() in drivers/char/random.c so it looks like this:
+pon., 17 lut 2020 o 11:57 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
+=C5=82(a):
 >
-> void add_bootloader_randomness(const void *buf, unsigned int size, unsigned int entropy_bits)
+> Add support of clock adaptation for AXI GPIO driver.
 >
-> That's because this is a general function that could be used by any
-> number of bootloaders.  For example, for the UEFI bootloader, it can
-> use the UEFI call that will return binary bits.  Some other bootloader
-> might use utf-8, etc.  So it would be an abstraction violation to have
-> code in drivers/char/random.c make assumption about how a particular
-> bootloader might be behaving.
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c | 105 +++++++++++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 103 insertions(+), 2 deletions(-)
 >
-> The second question is we are going to be parsing an rng_seed
-> parameter it shows up in bootconfig or in the boot command line, how
-> do we decide how many bits of entropy it actually has.  The advantage
-> of using the boot command line is we don't need to change the rest of
-> the bootloader ecosystem.  But that's also a massive weakness, since
-> apparently some people are already using it, and perhaps not in the
-> same way.
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index a9748b5198e6..26753ae58295 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/slab.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/clk.h>
 >
-> So what I'd really prefer is if we use something new, and we define it
-> in a way that makes as close as possible to "impossible to misuse".
-> (See Rusty Russell's API design manifesto[1]).  So I'm going to
-> propose something different.  Let's use something new, say
-> entropy_seed_hex, and let's say that it *must* be a hex string:
+>  /* Register Offset Definitions */
+>  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
+> @@ -38,6 +40,7 @@
+>   * @gpio_state: GPIO state shadow register
+>   * @gpio_dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+> + * @clk: clock resource for this driver
+>   */
+>  struct xgpio_instance {
+>         struct gpio_chip gc;
+> @@ -45,7 +48,8 @@ struct xgpio_instance {
+>         unsigned int gpio_width[2];
+>         u32 gpio_state[2];
+>         u32 gpio_dir[2];
+> -       spinlock_t gpio_lock[2];
+> +       spinlock_t gpio_lock[2];        /* For serializing operations */
+> +       struct clk *clk;
+>  };
 >
->      entropy_seed_hex=7337db91a4824e3480ba6d2dfaa60bec
+>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+> @@ -255,6 +259,70 @@ static void xgpio_save_regs(struct xgpio_instance *c=
+hip)
+>                        chip->gpio_dir[1]);
+>  }
 >
-> If it is not a valid hex string, it gets zero entropy credit.
+> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       int ret =3D pm_runtime_get_sync(chip->parent);
+> +
+> +       /*
+> +        * If the device is already active pm_runtime_get() will return 1=
+ on
+> +        * success, but gpio_request still needs to return 0.
+> +        */
+> +       return ret < 0 ? ret : 0;
+> +}
+> +
+> +static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       pm_runtime_put(chip->parent);
+> +}
+> +
+> +static int __maybe_unused xgpio_suspend(struct device *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       int irq =3D platform_get_irq(pdev, 0);
+> +       struct irq_data *data =3D irq_get_irq_data(irq);
+> +
+> +       if (!irqd_is_wakeup_set(data))
+> +               return pm_runtime_force_suspend(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_resume(struct device *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       int irq =3D platform_get_irq(pdev, 0);
+> +       struct irq_data *data =3D irq_get_irq_data(irq);
+> +
+> +       if (!irqd_is_wakeup_set(data))
+> +               return pm_runtime_force_resume(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       struct xgpio_instance *gpio =3D platform_get_drvdata(pdev);
+> +
+> +       clk_disable(gpio->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_runtime_resume(struct device *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       struct xgpio_instance *gpio =3D platform_get_drvdata(pdev);
+> +
+> +       return clk_enable(gpio->clk);
+> +}
+> +
+> +static const struct dev_pm_ops xgpio_dev_pm_ops =3D {
+> +       SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
+> +       SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
+> +                          xgpio_runtime_resume, NULL)
+> +};
+> +
+>  /**
+>   * xgpio_of_probe - Probe method for the GPIO device.
+>   * @pdev: pointer to the platform device
+> @@ -323,6 +391,8 @@ static int xgpio_probe(struct platform_device *pdev)
+>         chip->gc.direction_output =3D xgpio_dir_out;
+>         chip->gc.get =3D xgpio_get;
+>         chip->gc.set =3D xgpio_set;
+> +       chip->gc.request =3D xgpio_request;
+> +       chip->gc.free =3D xgpio_free;
+>         chip->gc.set_multiple =3D xgpio_set_multiple;
 >
-> I don't think we really need to worry about efficient encoding of the
-> seed, since 256 bits is only 64 characters using a hex string.  An
-> whether it's 32 characters or 64 characters, the max command line
-> string is 32k, so it's probably not worth it to try to do something
-> more complex.  (And only 128 bits is needed to declare the CRNG to be
-> fully initialized, in which case we're talking about 16 characters
-> versus 32 charaters.)
+>         chip->gc.label =3D dev_name(&pdev->dev);
+> @@ -333,15 +403,45 @@ static int xgpio_probe(struct platform_device *pdev=
+)
+>                 return PTR_ERR(chip->regs);
+>         }
 >
-> [1] http://sweng.the-davies.net/Home/rustys-api-design-manifesto
->
-> 						- Ted
->
-I am additionally concerned about add_bootloader_randomness() because it 
-is possible for it to sleep because of add_hwgenerator_randomness() as 
-once it hits the entropy threshold. As-is it can not be used inside 
-start_kernel() because the sleep would result in a kernel panic, and I 
-suspect its use inside early_init_dt_scan_chosen() for the commit "fdt: 
-add support for rng-seed" might also be problematic since it is 
-effectively called underneath start_kernel() is it not?
+> +       chip->clk =3D devm_clk_get(&pdev->dev, "s_axi_aclk");
+> +       if (IS_ERR(chip->clk)) {
+> +               if (PTR_ERR(chip->clk) !=3D -ENOENT) {
+> +                       if (PTR_ERR(chip->clk) !=3D -EPROBE_DEFER)
+> +                               dev_err(&pdev->dev, "Input clock not foun=
+d\n");
+> +                       return PTR_ERR(chip->clk);
+> +               }
+> +               /*
+> +                * Clock framework support is optional, continue on
+> +                * anyways if we don't find a matching clock.
+> +                */
 
-If add_bootloader_randomness was rewritten to call 
-add_device_randomness() always, and when trusted also called the 
-functionality of the new credit_trusted_entropy_bits (no longer needing 
-to be exported if so), then the function could be used in both 
-start_kernel() and early_init_dt_scan_chosen().
+Why not use devm_clk_get_optional() then?
 
-
--- Mark
-
+> +               chip->clk =3D NULL;
+> +       }
+> +       status =3D clk_prepare_enable(chip->clk);
+> +       if (status < 0) {
+> +               dev_err(&pdev->dev, "Failed to prepare clk\n");
+> +               return status;
+> +       }
+> +       pm_runtime_enable(&pdev->dev);
+> +       status =3D pm_runtime_get_sync(&pdev->dev);
+> +       if (status < 0)
+> +               goto err_unprepare_clk;
+> +
+>         xgpio_save_regs(chip);
+>
+>         status =3D devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+>         if (status) {
+>                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
+> -               return status;
+> +               goto err_pm_put;
+>         }
+>
+> +       pm_runtime_put(&pdev->dev);
+>         return 0;
+> +err_pm_put:
+> +       pm_runtime_put(&pdev->dev);
+> +err_unprepare_clk:
+> +       pm_runtime_disable(&pdev->dev);
+> +       clk_unprepare(chip->clk);
+> +       return status;
+>  }
+>
+>  static const struct of_device_id xgpio_of_match[] =3D {
+> @@ -356,6 +456,7 @@ static struct platform_driver xgpio_plat_driver =3D {
+>         .driver         =3D {
+>                         .name =3D "gpio-xilinx",
+>                         .of_match_table =3D xgpio_of_match,
+> +                       .pm =3D &xgpio_dev_pm_ops,
+>         },
+>  };
+>
+> --
+> 2.7.4
+>
