@@ -2,226 +2,233 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD6C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30996C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B01207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7E620836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VQibAqz3"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LUAekyx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgBRLBP (ORCPT
+        id S1726481AbgBRLE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:01:15 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:34513 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgBRLBP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:01:15 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200218110113epoutp03745076c41398cf90a26998f751a46763~0eiYqITTD2758027580epoutp03F
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:01:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200218110113epoutp03745076c41398cf90a26998f751a46763~0eiYqITTD2758027580epoutp03F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582023673;
-        bh=C6dCAQnEDcW0676qRiZ4sb3/DZNCer6oaAzZ+fq/Yl4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=VQibAqz3BG3SewqHl0+LS1zbta0z51UWEX2PbPnxnXresm21Zy7fi1jWeJG3joxVL
-         Xn3K9zX08A8JxRNuEmjTOORqVuQPuuFDoVCaomamMOmMTUHwCT7xvg3XS0Ry3fG8jF
-         MGK61mW/W20leAdkolRvwnPip7rtVCZ8IvOH9jRQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200218110113epcas1p2cb62f189c469662795272e8f12734d96~0eiYQVgWP1700017000epcas1p2K;
-        Tue, 18 Feb 2020 11:01:13 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48MHw65YXMzMqYlx; Tue, 18 Feb
-        2020 11:01:10 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.AD.51241.6F3CB4E5; Tue, 18 Feb 2020 20:01:10 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200218110110epcas1p49fcb41cb04e4b6b4011c0cf15ecca02b~0eiVvJ6Cw0803508035epcas1p4Q;
-        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200218110110epsmtrp17e0e89a0c4502abd70980dbe3e6ccae0~0eiVt0DB72068620686epsmtrp12;
-        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
-X-AuditID: b6c32a39-163ff7000001c829-06-5e4bc3f62bd0
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FA.0E.10238.6F3CB4E5; Tue, 18 Feb 2020 20:01:10 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200218110110epsmtip2b7a6d99c68f7bd020cfa35d60df4b84a~0eiVigtl42361823618epsmtip2e;
-        Tue, 18 Feb 2020 11:01:10 +0000 (GMT)
-Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns
- -EPROBE_DEFER
-To:     Ladislav Michl <ladis@linux-mips.org>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <34f3cd11-321b-9aab-31a7-a3fb03691980@samsung.com>
-Date:   Tue, 18 Feb 2020 20:09:16 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 18 Feb 2020 06:04:56 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:2547 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbgBRLE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 06:04:56 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48MJ0P1h7Zz9tyN8;
+        Tue, 18 Feb 2020 12:04:53 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LUAekyx6; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 9qsA7p1qtCxC; Tue, 18 Feb 2020 12:04:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48MJ0P0G82z9tyN7;
+        Tue, 18 Feb 2020 12:04:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582023893; bh=IvncdXqvF6Ay4VPFSQXwecooqJD2SMc22e4Bp0u/38U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LUAekyx6RBfBAlGEDrsVr+fOPx6OWmEiUFXBjIMhYmvanjjNv3E11MhoucRbgxkvy
+         2Lde3TwEbH1U63VsLR5aVUmM8f1FBdpA3v4a5nXCP+suYxDyKQMZ7stE12/PfKb/3T
+         tBTj/nLJeQXoGPumh+bJTjppOEDKNFBOjcUiUiH4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C56D98B7F7;
+        Tue, 18 Feb 2020 12:04:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id WVMHyBhVWC-b; Tue, 18 Feb 2020 12:04:50 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5CBF18B7F1;
+        Tue, 18 Feb 2020 12:04:42 +0100 (CET)
+Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
+ real mode
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
+ <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
+ <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
+ <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
+ <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+ <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+ <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
+ <20200218094421.6d402de389ce23a55a3ec084@kernel.org>
+ <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
+ <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <2b3f664e-d4ad-edd3-5bed-a4492f4ed213@c-s.fr>
+Date:   Tue, 18 Feb 2020 12:04:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200218104810.GA194120@lenoch>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfm8Vgt35bLpxGlJ4q0dDvq6lgZRREj+yBFQQXayZ2muBs7
-        U7p9yJqVZlrahaZlZUbaPeYqYwleitldEaI0k0yyi6ZpWQq17Rj57ff+n//D8/7f96EI+WVS
-        SaWbbLzVxBlocoLUVR8RHfWjPjFZXVC+gB12DUnY5qE9bEllsYStHm0m2ZaaUpItuVgoZd9k
-        XyaXB2qv9jUR2sbKaxKtvagmUDto309oC5xVSPv99swkcnPG0jSe0/HWMN6Uatalm/QJdOL6
-        lJUpmoVqJoqJZxfRYSbOyCfQq9YmRa1ON3ivQodlcYZMr5TECQKtWrbUas608WFpZsGWQPMW
-        ncESb4kWOKOQadJHp5qNixm1OkbjNW7NSMvt/S219Ct3uOv1e9FjRR4KogDHwZ/+HiIPTaDk
-        +C6C1sNPCV9BjgcQ7P+8TSz8QHDrREvAv47zg0MBYsGNoL21jRQPfQiaijqkPtdUvAWGi16i
-        PERRITgC2kZVPg+BnyNovHYy0OchcSTUfnxF+jgYh0Pr8HvkYxleBtlVdr8uxXPAvS/Hzwq8
-        ETwu+5hnCnhOd/lnBeEo8HQ/8HsIHAqvu8okIs+CO19L/dkA/ySh8skbUoywCjoarhIiT4VP
-        j5yBIiuhp/DAGO+GSk8DKTYfQuCsfTGWPxZqK4olvmSEN9mNGpUoh8O9kTNIHDwZeofyA3wW
-        wDI4dEAuWmZDy7t2icjTofxgLnkU0Y5xcRzjIjjGRXD8H3YOSavQNN4iGPW8wFg04z/7NvJv
-        aWT8XfTw2do6hClET5IlFaxJlgdwWcJOYx0CiqBDZImhXkmm43bu4q3mFGumgRfqkMb72scI
-        pSLV7N15ky2F0cTExsayccxCDcPQobLOTRHJcqznbHwGz1t4678+CRWk3Iu2H3M7i3cPfAse
-        af4QnmBShE9aUnEq6G3itomuC64jivlWs9J+vXrLpeCcRakjqkLV9/wNBQNXss5mV+VWd39x
-        nqwYbfu1QvjFf+6xxZd9fZVfPtq5fPi+e96Gm5zuiGVw7rqXx/uZDMkt+yZpb7Gnr2vGXPVq
-        x6minIFe6sZNpm0HLRXSOCaSsArcX32U5T+7AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSvO63w95xBj0P+C1+bPvKZHHpa43F
-        7JWTmSy2/rnEZnF51xw2i9lL+lksbjeuYHNg91jz/hSzx9GVa5k8WibtYvf40tLM7NG3ZRWj
-        x+dNcgFsUVw2Kak5mWWpRfp2CVwZne9+sRR8lKrYezi9gfG0aBcjJ4eEgInEwi9fWbsYuTiE
-        BHYzSpxfuYYNIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBILLlxnBqkRFoiW+DHpIiNIjYiApsSd
-        P/ogNcwC5xklDtx4zwjRcJtJ4vqhN2ANbAJaEvtf3ABbwC+gKHH1x2NGEJtXwE6icVULWJxF
-        QFVib1MrmC0qECaxc8ljJogaQYmTM5+wgNicAroSJ5/tA6thFlCX+DPvEjOELS5x68l8Jghb
-        XmL72znMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/d
-        xAiOKi3NHYyXl8QfYhTgYFTi4V0xwStOiDWxrLgy9xCjBAezkgivtzhQiDclsbIqtSg/vqg0
-        J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBkaj+Jl1zS22dgZdr+dMm7rQnWGx
-        7Ze1s57tu/SR4cG584Jv1118nltz4G9tnxrXM1aGv+4xswoPqJqaJ+ebz/xRNK3n1eWu5D39
-        S90ebTr72eTSfW9mERkT9i0y7soF7q83czHEsD65dEXwyLfDr/lv31rt8dPS6fHkjTU1Lbt/
-        miyYJnVvuc5OJZbijERDLeai4kQAGyslV6YCAAA=
-X-CMS-MailID: 20200218110110epcas1p49fcb41cb04e4b6b4011c0cf15ecca02b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2
-References: <CGME20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2@epcas1p3.samsung.com>
-        <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
-        <b2655a58-6541-a2c9-c44d-536e5cef1ee3@samsung.com>
-        <20200218102140.GA193069@lenoch>
-        <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
-        <20200218104810.GA194120@lenoch>
+In-Reply-To: <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 7:48 PM, Ladislav Michl wrote:
-> On Tue, Feb 18, 2020 at 07:35:47PM +0900, Chanwoo Choi wrote:
->> On 2/18/20 7:21 PM, Ladislav Michl wrote:
->>> On Tue, Feb 18, 2020 at 12:28:25PM +0900, Chanwoo Choi wrote:
->>>> On 2/17/20 10:38 PM, H. Nikolaus Schaller wrote:
->>>>> If the gpios are probed after this driver (e.g. if they
->>>>> come from an i2c expander) there is no need to print an
->>>>> error message.
+
+
+Le 18/02/2020 à 11:29, Masami Hiramatsu a écrit :
+> On Tue, 18 Feb 2020 06:58:06 +0100
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>>>>>>
+>>>>>> What do you mean by 'there' ? At the entry of kprobe_handler() ?
+>>>>>>
+>>>>>> That's what my patch does, it checks whether MMU is disabled or not. If
+>>>>>> it is, it converts the address to a virtual address.
+>>>>>>
+>>>>>> Do you mean kprobe_handler() should bail out early as it does when the
+>>>>>> trap happens in user mode ?
 >>>>>
->>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>> ---
->>>>>  drivers/extcon/extcon-palmas.c | 8 ++++++--
->>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>> Yes, that is what I meant.
 >>>>>
->>>>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
->>>>> index edc5016f46f1..cea58d0cb457 100644
->>>>> --- a/drivers/extcon/extcon-palmas.c
->>>>> +++ b/drivers/extcon/extcon-palmas.c
->>>>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
->>>>>  
->>>>>  	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
->>>>>  							GPIOD_IN);
->>>>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
->>>>> +	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
->>>>> +		return -EPROBE_DEFER;
-> 
-> Here we returned...
-
-hmm. you better to suggest the result of cocci script
-to understand why it is matter.
-
-> 
->>>>> +	} else if (IS_ERR(palmas_usb->id_gpiod)) {
-> 
-> How could this else get triggered?
-
-I don't understand your intention. 
-If devm_gpiod_get_optional return the error except of -EPROBE_DEFER,
-it is triggered. Is it wrong?
-
-> 
->>>>>  		dev_err(&pdev->dev, "failed to get id gpio\n");
->>>>>  		return PTR_ERR(palmas_usb->id_gpiod);
->>>>>  	}
->>>>>  
->>>>>  	palmas_usb->vbus_gpiod = devm_gpiod_get_optional(&pdev->dev, "vbus",
->>>>>  							GPIOD_IN);
->>>>> -	if (IS_ERR(palmas_usb->vbus_gpiod)) {
->>>>> +	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
->>>>> +		return -EPROBE_DEFER;
->>>>> +	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
->>>>>  		dev_err(&pdev->dev, "failed to get vbus gpio\n");
->>>>>  		return PTR_ERR(palmas_usb->vbus_gpiod);
->>>>>  	}
+>>>>>> Of course we can do that, I don't know
+>>>>>> enough about kprobe to know if kprobe_handler() should manage events
+>>>>>> that happened in real-mode or just ignore them. But I tested adding an
+>>>>>> event on a function that runs in real-mode, and it (now) works.
+>>>>>>
+>>>>>> So, what should we do really ?
+>>>>>
+>>>>> I'm not sure how the powerpc kernel runs in real mode.
+>>>>> But clearly, at least kprobe event can not handle that case because
+>>>>> it tries to access memory by probe_kernel_read(). Unless that function
+>>>>> correctly handles the address translation, I want to prohibit kprobes
+>>>>> on such address.
+>>>>>
+>>>>> So what I would like to see is, something like below.
+>>>>>
+>>>>> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+>>>>> index 2d27ec4feee4..4771be152416 100644
+>>>>> --- a/arch/powerpc/kernel/kprobes.c
+>>>>> +++ b/arch/powerpc/kernel/kprobes.c
+>>>>> @@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
+>>>>>            unsigned int *addr = (unsigned int *)regs->nip;
+>>>>>            struct kprobe_ctlblk *kcb;
+>>>>>     
+>>>>> -       if (user_mode(regs))
+>>>>> +       if (user_mode(regs) || !(regs->msr & MSR_IR))
+>>>>>                    return 0;
+>>>>>     
+>>>>>            /*
+>>>>>
 >>>>>
 >>>>
->>>> I think that it is enough to handle the -EPROBE_DEFER.
->>>> Also, I prefer to use single if/else statement 
->>>> instead of the nested if/else statement.
+>>>> With this instead change of my patch, I get an Oops everytime a kprobe
+>>>> event occurs in real-mode.
 >>>>
->>>> Applied it.
+>>>> This is because kprobe_handler() is now saying 'this trap doesn't belong
+>>>> to me' for a trap that has been installed by it.
 >>>
->>> Uh... As it is? Then it is matter of time it triggers someones cocci
->>> script pointing to else after return. Could you at least fix this?
+>>> Hmm, on powerpc, kprobes is allowed to probe on the code which runs
+>>> in the real mode? I think we should also prohibit it by blacklisting.
+>>> (It is easy to add blacklist by NOKPROBE_SYMBOL(func))
 >>
->> Sorry. I don't understand. Do you mean that this patch has the
->> some issue of cocci script?
+>> Yes, I see a lot of them tagged with _ASM_NOKPROBE_SYMBOL() on PPC64,
+>> but none on PPC32. I suppose that's missing and have to be added.
 > 
-> Yes.
+> Ah, you are using PPC32.
+> 
+>> Nevertheless, if one symbol has been forgotten in the blacklist, I think
+>> it is a problem if it generate Oopses.
+> 
+> There is a long history also on x86 to make a blacklist. Anyway, how did
+> you get this error on PPC32? Somewhere would you like to probe and
+> it is a real mode function? Or, it happened unexpectedly?
 
-As I said, you better to suggest the result of cocci script.
+The first Oops I got was triggered by a WARN_ON() kind of trap in real 
+mode. The trap exception handler called kprobe_handler() which tried to 
+read the instruction at the trap address (which was a real-mode address) 
+so it triggered a Bad Access Fault.
+
+This was initially the purpose of my patch.
+
+After discussion with you, I started looking at what would be the effect 
+of setting a kprobe event in a function which runs in real mode.
 
 > 
->> I think that it fixes the probe sequence issue
->> between extcon-palmas and gpio driver. It is not related to
->> any result from cocci script. If the extcon-palmas.c has
->> the issue by cocci or checkpatch, anyone can send the other patch
->> for fixup.
+>>
+>>> Or, some parts are possble to run under both real mode and kernel mode?
+>>
+>> I don't think so, at least on PPC32
 > 
-> Do you mean to send fixup to what you just applied? What happened
-> to review process? Nikolaus himself told you patch could be better
-> and we were just waiting which solution you choose to send final patch.
+> OK, that's a good news. Also, are there any independent section where such
+> real mode functions are stored? (I can see start_real_trampolines in
+> sections.h) If that kind of sections are defined, it is easy to make
+> a blacklist in arch_populate_kprobe_blacklist(). See arch/arm64/kernel/probes/kprobes.c.
 
-I has not thought that Nikolaus will send next patch
-when I read this thread.
+Part of them are in .head.text, and this section is already blacklisted 
+throught function arch_within_kprobe_blacklist()
+
+But there are several other functions which are not there. For instance, 
+many things within entry_32.S, and also things in hash_low.S
+On PPC64 (ie in entry_64.S) they were explicitely blacklisted with 
+_ASM_NOKPROBE_SYMBOL(). We have to do the same on PPC64
 
 > 
->> I think that it is enough to fix the issue which is only
->> related to the probe sequence between gpio and extcon-palmas.c
 > 
-> Agree, but look again at the patch.
+>>>> So the 'program check' exception handler doesn't find the owner of the
+>>>> trap hence generate an Oops.
+>>>>
+>>>> Even if we don't want kprobe() to proceed with the event entirely
+>>>> (allthough it works at least for simple events), I'd expect it to fail
+>>>> gracefully.
+>>>
+>>> Agreed. I thought it was easy to identify real mode code. But if it is
+>>> hard, we should apply your first patch and also skip user handlers
+>>> if we are in the real mode (and increment missed count).
+>>
+>> user handlers are already skipped.
 > 
-> 	ladis
-> 
-> 
+> Yes, if you don't put a kprobes on real mode code. However, if user
+> (accidentally) puts a probe on real mode code, it might call a
+> user handler?
+
+Are we talking about the same thing ?
+
+Only kernel code can run in real mode, so the following code at the 
+beginning of kprobe_handler() does the job ?
+
+	if (user_mode(regs))
+		return 0;
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> 
+>>
+>> What do you think about my latest proposal below ? If a trap is
+>> encoutered in real mode, if checks if the matching virtual address
+>> corresponds to a valid kprobe. If it is, it skips it. If not, it returns
+>> 0 to tell "it's no me". You are also talking about incrementing the
+>> missed count. Who do we do that ?
+> 
+> I rather like your first patch. If there is a kprobes, we can not skip
+> the instruction, because there is an instruction which must be executed.
+> (or single-skipped, but I'm not sure the emulator works correctly on
+> real mode)
+
+Oops, yes of course.
+
+Christophe
