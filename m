@@ -2,117 +2,105 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A5CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918F6C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5146E22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD7D22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YIweNER3"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ipsElP0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgBRTN2 (ORCPT
+        id S1726521AbgBRTNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:13:28 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:49009 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgBRTN1 (ORCPT
+        Tue, 18 Feb 2020 14:13:54 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40132 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgBRTNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:13:27 -0500
-Received: by mail-pl1-f202.google.com with SMTP id d20so10690258pls.15
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:13:25 -0800 (PST)
+        Tue, 18 Feb 2020 14:13:53 -0500
+Received: by mail-qk1-f193.google.com with SMTP id b7so20605537qkl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:13:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=LCLnkWXoXz9OcghUi3epooWnoZGfpAtSgZMaGiJOKu8=;
-        b=YIweNER3ez6cX4gaq18ciHLsjwesfuzsnzZUVkEWb1usGcYqij6EvEOSioq9vbcNLG
-         uKFvYE3Xk/a7jQig8xL9EBlN9i8+ihe4RKWXgdJ5nKCYgJXND+u2ZetufpqA9KDrCIFv
-         lvjBXDYLfHfGTMQaLOdbQa87yxio9rdG/JGD07S3w7NgAbjgfOYqzYx7GMRbP9D7GG4x
-         bhpfm915Ho/+44e8OjsBgqnCJILJ5MPkaQ2xBqFr7qkEre01WuEZS4SgALakc2fxFPk+
-         4xhXijqyKnjj0ycBtuXsCdykIer2P2yWy4PgU1uyxuGZR5QyvRmmRGM1UdoUmBpUDcdD
-         EFhg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4MqPI0YZVcJ/M7z1uH3QC/Xv1dQK0BRIdqeCvbipMks=;
+        b=ipsElP0XPsQQ2fPxzFqNikjRhNwB3jhR8D9LakryBAtLieFmRSEEN3+jagsEjoMQ5e
+         lCJ1sUZROrSCcxSV9faAr9kMEi1tZ0c+/PtFSQAdaqUcvNXHmJFBoPxv5uSKmG9k3J54
+         Za7aRdnNTGdBYxCWCrUapOAClMrM7yRNqjIJ+ySmKDFfb+lUcCtOGnUxQInp0nZUjwd+
+         jmc/MfhJKXOFYbtSMcWpKQEZUO+Lro7KKpND/g2He55/48IZXHSLYYTU3lfwvezXuDY2
+         ZfpuWXElO47JbJdVgMOU4Uf550aPd0p6qsdUKOshlZls5t+GRtJxZufgT4xA5X6/OSLg
+         F5Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=LCLnkWXoXz9OcghUi3epooWnoZGfpAtSgZMaGiJOKu8=;
-        b=V1bBKWtzXworvrPuG95+Ugp4zB9srHGGn2T1Zkvp0pHXXP1je73J2ylkAijOctc5Nd
-         gg7pXCmxtQIBgY0jS0FKD71bUaeUeoiaV4S6d8vFg/M0UcO8iUwaxkWCDgzb34NFjN77
-         BpOe0Jepxky78x+PQqVa3frATY1Cme4atF6HptuoqDpfm0n7KoppGGGDZLooVzoWzD+U
-         N4wMtnBeEhjlmRB4iw+/hltRo35CMFoZ1hgpSPTvo0Esj5qstWGgsShf5cCir/2FS+tq
-         zYlz7/gkNm8UDNG0aBO6kuFZdDI0Awn1+Oz0ENJAQd5hwpUbBsXu6XRS/wZeQpktzdXB
-         i6Lw==
-X-Gm-Message-State: APjAAAX2sJ7Xn/Dxm3WaWzKru0gUo7VXEkuR7phljQv2nY+BAaOwmtZS
-        UkDGOmH72n0NFmxwxIWCgGK1yKbR/ZRQMLw=
-X-Google-Smtp-Source: APXvYqw9YyGXQE/cL94lSoCe4U1L2Ew9nOOYDNGW+B885moEiafTKrGvfabznypD6GeZYgyW48nJ3NAelWnoIpaX
-X-Received: by 2002:a63:2a02:: with SMTP id q2mr23581913pgq.198.1582053205231;
- Tue, 18 Feb 2020 11:13:25 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:13:14 -0800
-In-Reply-To: <20200213213007.17023-1-jkardatzke@google.com>
-Message-Id: <20200218191314.157285-1-jkardatzke@google.com>
-Mime-Version: 1.0
-References: <20200213213007.17023-1-jkardatzke@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] media: venus: support frame rate control
-From:   Jeffrey Kardatzke <jkardatzke@google.com>
-To:     linux-media@vger.kernel.org
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        "Mauro Carvalho Chehab )" <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Kardatzke <jkardatzke@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4MqPI0YZVcJ/M7z1uH3QC/Xv1dQK0BRIdqeCvbipMks=;
+        b=a3f4IJJH6wN2W1nT1IS9wz9/kuIL/Jzf77SYr6M+7mG+rjYXiWGOH2zIYrSn/TVXXy
+         fJTghiQYZHWZ53qSx15PhTzIZmjQzIaHhsYJV/JO9siWqqFTFfIbvwYHcyurXZacjBNH
+         IpBIkJS3NeGTfhcsXDNmV7RLlB+r6mugW8xgKxQC/y3f2SdEyF4Rj1tLq1RzciS5cBy6
+         KxOT3xUE84Qan/Y00Rv590R8yaSPMASrw/viteKMhMLrjuGpjQuY5EwCix/fLfKhdYh1
+         mRSCZWXCI8Jwarp4KAgmXHuHj49P+l90L8qYow1z/oUFXsxr0YrJNMv+AMT8M+5vz4x8
+         3TVA==
+X-Gm-Message-State: APjAAAVRu5r7eSdurr7bW1MPdBARW85w0Xa+M/yQEgnY/KSPxZfyhpk7
+        mHPob4kq/mZDFOyjnTIKaM+xpw==
+X-Google-Smtp-Source: APXvYqz8MrchkirmhWmNcA2YqGMSBfxoA932vCwGMydC7f/hhr/dTBtPdloragljniYb2ZhPcJyiRg==
+X-Received: by 2002:a05:620a:999:: with SMTP id x25mr19893529qkx.87.1582053232761;
+        Tue, 18 Feb 2020 11:13:52 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 132sm1953505qkn.109.2020.02.18.11.13.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Feb 2020 11:13:52 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j48Jb-0007dJ-GR; Tue, 18 Feb 2020 15:13:51 -0400
+Date:   Tue, 18 Feb 2020 15:13:51 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, danielj@mellanox.com, danitg@mellanox.com,
+        dledford@redhat.com, leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in rdma_listen (2)
+Message-ID: <20200218191351.GF31668@ziepe.ca>
+References: <00000000000012a4cd05854a1d0a@google.com>
+ <20200218122717.10748-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218122717.10748-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frame rate control is always enabled in this driver, so make it silently
-support the V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE.
+On Tue, Feb 18, 2020 at 08:27:17PM +0800, Hillf Danton wrote:
+> Check if rdma is being reclaimed before listening on device while
+> reclaimer is waiting for rdma to become quiesce.
 
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
----
- drivers/media/platform/qcom/venus/venc_ctrls.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This is the usual syzkaller bug in rdma_cm
 
-diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
-index 877c0b3299e9..15852bc26231 100644
---- a/drivers/media/platform/qcom/venus/venc_ctrls.c
-+++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
-@@ -199,6 +199,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
- 		}
- 		mutex_unlock(&inst->lock);
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
-+		/* Silently ignore, it's always enabled. */
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -214,7 +217,7 @@ int venc_ctrl_init(struct venus_inst *inst)
- {
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 30);
-+	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
- 	if (ret)
- 		return ret;
- 
-@@ -351,6 +354,9 @@ int venc_ctrl_init(struct venus_inst *inst)
- 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
- 			  V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME, 0, 0, 0, 0);
- 
-+	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
-+			  V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
-+
- 	ret = inst->ctrl_handler.error;
- 	if (ret)
- 		goto err;
--- 
-2.25.0.265.gbab2e86ba0-goog
+The test causes rdma_resolve_addr() and rdma_listen() to run
+concurrently.
 
+There is no sane locking, so in turn this causes invariants to become
+violated, in particular, in rdma_listen() we can have !id->device
+but also !cma_any_addr(cma_src_addr(id_priv).
+
+This causes cma_listen_on_all() to wrongly be called and because the
+invariant is screwed up cma_cancel_listens() doesn't undo it.
+
+Thus we fail to list_del id_priv->list from the listen_any_list and
+the next manipulation of the list gets a use-after on the list member
+which was now freed.
+
+The fix is the same as all the others, add some kind of locking
+instead of all this defective cma_comp_exch() thing..
+
+Jason
