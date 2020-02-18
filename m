@@ -2,123 +2,278 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A359FC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A4C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74725206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:39:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KI/aHslK"
+	by mail.kernel.org (Postfix) with ESMTP id 441952070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582018886;
+	bh=pw2K2224fxAUUaU2pI7bCCAGARvYwAr/+j4AL8lzv6w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=N2cAuI/e0plnSU2yUxrlPw2d6GdpkIdrOOuibkQd0kr8mlWwbhzACdWpuiuvkHpje
+	 S3+Yc0rg3jl8j7U4NiEQH9Lw5duj0s/J2iMlM0BIaTcLm78Oil5YTFDE3FJXx9w3Xz
+	 vFT0GT55dsTFcrjv6qQWix0yUpJIs6zZSRKG+1D4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgBRJjy (ORCPT
+        id S1726449AbgBRJlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:39:54 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41089 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgBRJjx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:39:53 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so24046463eds.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:39:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ri50rwS+DwKS+xdiT/P+5HE1fXClWtkp9WTD/LVC98k=;
-        b=KI/aHslK/e7VD/qZEsqk3jaN/3BOu1yhytDSreqQtdWbJRTqjVSjc3qM6Tzuh2zz5i
-         R0fsIro52A0NGmibGj/wVghzgz+NwLLd0gALlAjAbYQyCiuK2d7msEHAJ1X2oH8k3yVt
-         hqbO0jgTLMFp5c0SjbWvorIk/GMYAFoFN96yxpqkblV70wtKw/JLy+beQnJAti3FCimP
-         FQiop4PsagBP/+xGrTI7n7O87WubWDGxR0VZKa2C+jYUYXpjlq7DLCeLZiyW+ncm1Zjc
-         7DIEK47AM4nw4BMDt0ynD4NJjvrOnzfoe6h+gQPROuNdcbx5BSJiOlpnTx2ozKfE4Oq9
-         x8GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ri50rwS+DwKS+xdiT/P+5HE1fXClWtkp9WTD/LVC98k=;
-        b=SQPgZ5DRauBf7BJ2DNx7vPZaa/RaoW+wfx5u/2+wgXmZu7Kq9kR32mgG2B2ss00hai
-         0tuQykZOFG0TOtn/R7zeaps1b8kZQbFUC+kP7FyOr90TbVpXKcQdW829jFQtckfDEqP4
-         yowMcyfz5NAP3+3VZ1FnmKyP15AGPW6BanKknRfKbkM0+DXfhkYDe/d4DsGcHB49pxB6
-         yHquj+GnHvuVubBGyp1uPyVFosQmOq2nDfJSa5szt/eSERQPKFChaGTLh7RXGpRuz4hJ
-         1oLYK2f4N3kLAQL26hzLbTfB/tWFR3REPLaPhjbp4nlPJakL7MHoISWOzGm3LC507nCt
-         igJQ==
-X-Gm-Message-State: APjAAAXG9BYedrGvhaLv1nEQ7gxBPiXbaSFF3M2mGYSV75hSA+ToDJGX
-        HS7Ie5CH3lFCIp7TKrbgAwq/xwV9Xd1EKaoZk2O45A==
-X-Google-Smtp-Source: APXvYqwPmrjtbUt3H2+QDBo0aopxeSgvwYExYKpjl0BM4dpOEKo5xW+lYJ2BY7xMzI3AGGcvU+8a7WhntIWppVfJuzU=
-X-Received: by 2002:aa7:c2cb:: with SMTP id m11mr18480901edp.89.1582018791471;
- Tue, 18 Feb 2020 01:39:51 -0800 (PST)
+        Tue, 18 Feb 2020 04:41:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgBRJlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:41:24 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD0B206E2;
+        Tue, 18 Feb 2020 09:41:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582018883;
+        bh=pw2K2224fxAUUaU2pI7bCCAGARvYwAr/+j4AL8lzv6w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GmI7V+jCtJhHkYvf4HXGGzSEsYsfOzgmCu765k6xM+smhJ7mh6vMw8EYwP4Hsufgn
+         655ZVvHXc6u771KnpaXry8XvfnzEtLmSzU58yi1yCeoAYwpwYC9/PSiGwOH3fhf/bx
+         6NW2F6jvTfBa9qzn2iHs0zd9iTrSYQijRxt5MUPw=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j3zNZ-006BTx-Rj; Tue, 18 Feb 2020 09:41:21 +0000
 MIME-Version: 1.0
-References: <20200218005659.91318-1-lrizzo@google.com> <20200218165529.39e761c4be828285cc060279@kernel.org>
-In-Reply-To: <20200218165529.39e761c4be828285cc060279@kernel.org>
-From:   Luigi Rizzo <lrizzo@google.com>
-Date:   Tue, 18 Feb 2020 01:39:40 -0800
-Message-ID: <CAMOZA0L14CjA97UHj7V1tPuOtesrUykYPj3_vgbF3JQWS3bcaw@mail.gmail.com>
-Subject: Re: [PATCH v3] kretprobe: percpu support
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, David Miller <davem@davemloft.net>,
-        gregkh@linuxfoundation.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Feb 2020 09:41:21 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v4 15/20] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+In-Reply-To: <5e744173-5d7a-98b7-e44d-d1f8c47b3e3c@huawei.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-16-maz@kernel.org>
+ <5e744173-5d7a-98b7-e44d-d1f8c47b3e3c@huawei.com>
+Message-ID: <fb5cd47ffec8db887d442e1e23ffc0db@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 11:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi Luigi,
->
-> On Mon, 17 Feb 2020 16:56:59 -0800
-> Luigi Rizzo <lrizzo@google.com> wrote:
->
-> > kretprobe uses a list protected by a single lock to allocate a
-> > kretprobe_instance in pre_handler_kretprobe(). This works poorly with
-> > concurrent calls.
->
-> Yes, there are several potential performance issue and the recycle
-> instance is one of them. However, I think this spinlock is not so racy,
-> but noisy (especially on many core machine) right?
+On 2020-02-18 08:46, Zenghui Yu wrote:
+> Hi Marc,
+> 
+> On 2020/2/14 22:57, Marc Zyngier wrote:
+>> Most of the GICv3 emulation code that deals with SGIs now has to be
+>> aware of the v4.1 capabilities in order to benefit from it.
+>> 
+>> Add such support, keyed on the interrupt having the hw flag set and
+>> being a SGI.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+>>   virt/kvm/arm/vgic/vgic-mmio.c    | 88 
+>> ++++++++++++++++++++++++++++++--
+>>   2 files changed, 96 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
+>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> index ebc218840fc2..de89da76a379 100644
+>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> @@ -6,6 +6,7 @@
+>>   #include <linux/irqchip/arm-gic-v3.h>
+>>   #include <linux/kvm.h>
+>>   #include <linux/kvm_host.h>
+>> +#include <linux/interrupt.h>
+>>   #include <kvm/iodev.h>
+>>   #include <kvm/arm_vgic.h>
+>>   @@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu 
+>> *vcpu, u64 reg, bool allow_group1)
+>>   		 * generate interrupts of either group.
+>>   		 */
+>>   		if (!irq->group || allow_group1) {
+>> -			irq->pending_latch = true;
+>> -			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+>> +			if (!irq->hw) {
+>> +				irq->pending_latch = true;
+>> +				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+>> +			} else {
+>> +				/* HW SGI? Ask the GIC to inject it */
+>> +				int err;
+>> +				err = irq_set_irqchip_state(irq->host_irq,
+>> +							    IRQCHIP_STATE_PENDING,
+>> +							    true);
+>> +				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+>> +				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>> +			}
+>>   		} else {
+>>   			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>>   		}
+>> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c 
+>> b/virt/kvm/arm/vgic/vgic-mmio.c
+>> index d656ebd5f9d4..0a1fb61e5b89 100644
+>> --- a/virt/kvm/arm/vgic/vgic-mmio.c
+>> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
+>> @@ -5,6 +5,8 @@
+>>     #include <linux/bitops.h>
+>>   #include <linux/bsearch.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irq.h>
+>>   #include <linux/kvm.h>
+>>   #include <linux/kvm_host.h>
+>>   #include <kvm/iodev.h>
+>> @@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu 
+>> *vcpu,
+>>   	return value;
+>>   }
+>>   +static void vgic_update_vsgi(struct vgic_irq *irq)
+>> +{
+>> +	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, 
+>> irq->group));
+>> +}
+>> +
+>>   void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+>>   			   unsigned int len, unsigned long val)
+>>   {
+>> @@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, 
+>> gpa_t addr,
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>>   		irq->group = !!(val & BIT(i));
+>> -		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			vgic_update_vsgi(irq);
+>> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>> +		} else {
+>> +			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+>> +		}
+>>     		vgic_put_irq(vcpu->kvm, irq);
+>>   	}
+>> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu 
+>> *vcpu,
+>>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>> -		if (vgic_irq_is_mapped_level(irq)) {
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			if (!irq->enabled) {
+>> +				struct irq_data *data;
+>> +
+>> +				irq->enabled = true;
+>> +				data = &irq_to_desc(irq->host_irq)->irq_data;
+>> +				while (irqd_irq_disabled(data))
+>> +					enable_irq(irq->host_irq);
+>> +			}
+>> +
+>> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>> +			vgic_put_irq(vcpu->kvm, irq);
+>> +
+>> +			continue;
+>> +		} else if (vgic_irq_is_mapped_level(irq)) {
+>>   			bool was_high = irq->line_level;
+>>     			/*
+>> @@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu 
+>> *vcpu,
+>>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
+>> +			disable_irq_nosync(irq->host_irq);
+>>     		irq->enabled = false;
+>>   @@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct 
+>> kvm_vcpu *vcpu,
+>>   	for (i = 0; i < len * 8; i++) {
+>>   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+>>   		unsigned long flags;
+>> +		bool val;
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>> -		if (irq_is_pending(irq))
+>> -			value |= (1U << i);
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			int err;
+>> +
+>> +			val = false;
+>> +			err = irq_get_irqchip_state(irq->host_irq,
+>> +						    IRQCHIP_STATE_PENDING,
+>> +						    &val);
+>> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+>> +		} else {
+>> +			val = irq_is_pending(irq);
+>> +		}
+>> +
+>> +		value |= ((u32)val << i);
+>>   		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>>     		vgic_put_irq(vcpu->kvm, irq);
+>> @@ -227,6 +267,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu 
+>> *vcpu,
+>>   		}
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>> +
+>> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			/* HW SGI? Ask the GIC to inject it */
+>> +			int err;
+>> +			err = irq_set_irqchip_state(irq->host_irq,
+>> +						    IRQCHIP_STATE_PENDING,
+>> +						    true);
+>> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
+>> +
+>> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+>> +			vgic_put_irq(vcpu->kvm, irq);
+>> +
+>> +			continue;
+>> +		}
+>> +
+>>   		if (irq->hw)
+>>   			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
+>>   		else
+> 
+> Should we consider taking the GICv4.1 support into uaccess_{read/write}
+> callbacks for GICR_ISPENDR0 so that userspace can properly save/restore
+> the pending state of GICv4.1 vSGIs?
+> 
+> I *think* we can do it because on restoration, GICD_CTLR(.nASSGIreq) is
+> restored before GICR_ISPENDR0.  So we know whether we're restoring
+> pending for vSGIs, and we can restore it to the HW level if v4.1 is
+> supported by GIC. Otherwise restore it by the normal way.
+> 
+> And saving is easy with the get_irqchip_state callback, right?
 
-correct, it is especially painful on 2+ sockets and many-core systems
-when attaching kretprobes on otherwise uncontended paths.
+Yes, this should be pretty easy to do, but I haven't completely worked 
+out
+the ordering dependencies (you're way ahead of me here!).
 
->
-> Racy lock is the kretprobe_hash_lock(), I would like to replace it
-> with ftrace's per-task shadow stack. But that will be available
-> only if CONFIG_FUNCTION_GRAPH_TRACER=y (and instance has no own
-> payload).
->
-> > This patch offers a simplified fix: the percpu_instance flag indicates
-> > that we allocate one instance per CPU, and the allocation is contention
-> > free, but we allow only have one pending entry per CPU (this could be
-> > extended to a small constant number without much trouble).
->
-> OK, the percpu instance idea is good to me, and I think it should be
-> default option. Unless user specifies the number of instances, it should
-> choose percpu instance by default.
+There is still a chance that userspace will play with us trying to set 
+and
+reset nASSGIreq, so we need to define what is acceptable...
 
-That was my initial implementation, which would not even need the
-percpu_instance
-flag in struct kretprobe. However, I felt that changing the default
-would have subtle
-side effects (e.g., only one outstanding call per CPU) so I thought it
-would be better
-to leave the default unchanged and make the flag explicit.
+> 
+>> @@ -281,6 +336,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu 
+>> *vcpu,
+>>     		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+>>   +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +			/* HW SGI? Ask the GIC to inject it */
+> 
+> "Ask the GIC to clear its pending state" :-)
 
-> Moreover, this makes things a bit complicated, can you add per-cpu
-> instance array? If it is there, we can remove the old recycle rp insn
-> code.
+One day, I'll ban copy/paste from my editor... ;-)
 
-Can you clarify what you mean by "per-cpu instance array" ?
-Do you mean allowing multiple outstanding entries per cpu?
-
-I will address your code comments in an updated patch.
-
-thanks
-luigi
+         M.
+-- 
+Jazz is not dead. It just smells funny...
