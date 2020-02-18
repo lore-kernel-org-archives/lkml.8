@@ -2,186 +2,178 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E9C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F39C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AD5206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58BF206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HVA6K5DS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e/zJI6BY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgBRUwZ (ORCPT
+        id S1726481AbgBRUwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:52:25 -0500
-Received: from gateway30.websitewelcome.com ([192.185.160.12]:31362 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbgBRUwY (ORCPT
+        Tue, 18 Feb 2020 15:52:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32983 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726383AbgBRUwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:52:24 -0500
-X-Greylist: delayed 1428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 15:52:23 EST
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id A32688460
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:28:34 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 49Tuj8m168vkB49Tuj5WY8; Tue, 18 Feb 2020 14:28:34 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yNvO5nQCXupbNxiTPEhF0b9Zhr1y/1EPEHY68gcTols=; b=HVA6K5DSwDnJ2wcNKVGN3ndT0+
-        xc5xOSjwtCEZsZmQQmmjETJfq6qMBzKdcBIHg1zljNkFqd2mZseSt4k+zQXolEkMVY29c3MeUEBkC
-        yMTuTU/+H3c4SkQ53ncAIHJtGWAQESRUWY7DkvbzKzob8Xbnzo9NxQF8EfuXNGQoX4X4biy5S5JJl
-        jYSNVYBo8dW1FM2POANAJb9sA3mTH5eKNrBPtgplqR/O39q+vuJtyBpnZHhpaOfSXxhv3T5GGNL1U
-        tWjfBQbKDQdmrsbEhyDxiVQJWAkI4KOzvLpVvr3MvJPQTGHnhLd1PSD6Qv/Dyv3vHajRiCb5rgi6A
-        tq/Gkl9g==;
-Received: from [200.68.140.26] (port=8034 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j49Tr-000H4c-J9; Tue, 18 Feb 2020 14:28:31 -0600
-Date:   Tue, 18 Feb 2020 14:31:14 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Boris Pismenny <borisp@mellanox.com>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net/mlx5e: Replace zero-length array with
- flexible-array member
-Message-ID: <20200218203114.GA27096@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.26
-X-Source-L: No
-X-Exim-ID: 1j49Tr-000H4c-J9
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.26]:8034
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Tue, 18 Feb 2020 15:52:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582059151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=8Z3rAyg/3s3JDso9qyfOdLkPHMyZUZ1oO0WcZdzpvp0=;
+        b=e/zJI6BY9UreBOyP8VjpbZw3Qwi7cAnAggXu440f2+YP2yzudk+82Ox3zmrHiuApLRYPip
+        kFNPo4tPXJRi6RLdgdHVGBfa8Lv6b3Qmw9lutUPvsHu2MVUvX1RIXv8b7tC1B/crJKwhPP
+        fO/ohYWWDxSpDrAbidqSm+seXl6pb0g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-5KAsHyhkPuOKiV7aRtLwHw-1; Tue, 18 Feb 2020 15:52:29 -0500
+X-MC-Unique: 5KAsHyhkPuOKiV7aRtLwHw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 022D3101FC60;
+        Tue, 18 Feb 2020 20:52:28 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42AEB5C54A;
+        Tue, 18 Feb 2020 20:52:18 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, eparis@parisplace.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak28 V6] audit: log audit netlink multicast bind and unbind events
+Date:   Tue, 18 Feb 2020 15:51:40 -0500
+Message-Id: <857c76090363b6316a89d292cf9cccd0db54c079.1582058914.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Log information about programs connecting to and disconnecting from the
+audit netlink multicast socket. This is needed so that during
+investigations a security officer can tell who or what had access to the
+audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
+Criteria.  Here is the systemd startup event:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+type=PROCTITLE msg=audit(2020-02-18 15:26:50.775:10) : proctitle=/init
+type=SYSCALL msg=audit(2020-02-18 15:26:50.775:10) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x19 a1=0x55645c369b70 a2=0xc a3=0x7fff9fedec24 items=0 ppid=0 pid=1 auid=unset uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=(none) ses=unset comm=systemd exe=/usr/lib/systemd/systemd subj=kernel key=(null)
+type=UNKNOWN[1335] msg=audit(2020-02-18 15:26:50.775:10) : pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd nl-mcgrp=1 op=connect res=yes
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+And the events from the test suite:
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+type=PROCTITLE msg=audit(2020-02-18 15:28:01.594:307) : proctitle=/usr/bin/perl -w amcast_joinpart/test
+type=SOCKADDR msg=audit(2020-02-18 15:28:01.594:307) : saddr={ saddr_fam=netlink nlnk-fam=16 nlnk-pid=0 }
+type=SYSCALL msg=audit(2020-02-18 15:28:01.594:307) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x7 a1=0x558ebc428be0 a2=0xc a3=0x0 items=0 ppid=642 pid=645 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=1 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null)
+type=UNKNOWN[1335] msg=audit(2020-02-18 15:28:01.594:307) : pid=645 uid=root auid=root tty=ttyS0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=connect res=yes
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.051:295) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes
 
-This issue was found with the help of Coccinelle.
+Please see the upstream issue tracker:
+  https://github.com/linux-audit/audit-kernel/issues/28
+  https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-Socket-Join-Part
+  https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-join
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h          | 2 +-
- drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c  | 2 +-
- drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c | 2 +-
- drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+Note: msg type 1334 was skipped due to BPF accepted in another tree.
+Note: v5 due to previous 2014-10-07, 2015-07-23, 2016-11-30, 2017-10-13
+Note: subj attrs included due to missing syscall record for systemd (audit=1)
+Note: tried refactor of subj attrs, but this is yet another new order.
+---
+ include/uapi/linux/audit.h |  1 +
+ kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 220ef9f06f84..a960099cd7aa 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -204,7 +204,7 @@ struct mlx5e_tx_wqe {
+diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+index a534d71e689a..9b6a973f4cc3 100644
+--- a/include/uapi/linux/audit.h
++++ b/include/uapi/linux/audit.h
+@@ -117,6 +117,7 @@
+ #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
+ #define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
+ #define AUDIT_BPF		1334	/* BPF subsystem */
++#define AUDIT_EVENT_LISTENER	1335	/* Task joined multicast read socket */
  
- struct mlx5e_rx_wqe_ll {
- 	struct mlx5_wqe_srq_next_seg  next;
--	struct mlx5_wqe_data_seg      data[0];
-+	struct mlx5_wqe_data_seg      data[];
- };
+ #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
+ #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 17b0d523afb3..478259f3fa53 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
+ 	audit_ctl_unlock();
+ }
  
- struct mlx5e_rx_wqe_cyc {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-index 4c61d25d2e88..b794888fa3ba 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-@@ -57,7 +57,7 @@ struct mlx5_fpga_ipsec_cmd_context {
- 	struct completion complete;
- 	struct mlx5_fpga_device *dev;
- 	struct list_head list; /* Item in pending_cmds */
--	u8 command[0];
-+	u8 command[];
- };
++/* Log information about who is connecting to the audit multicast socket */
++static void audit_log_multicast_bind(int group, const char *op, int err)
++{
++	const struct cred *cred;
++	struct tty_struct *tty;
++	char comm[sizeof(current->comm)];
++	struct audit_buffer *ab;
++
++	if (!audit_enabled)
++		return;
++
++	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
++	if (!ab)
++		return;
++
++	cred = current_cred();
++	tty = audit_get_tty();
++	audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
++			 task_pid_nr(current),
++			 from_kuid(&init_user_ns, cred->uid),
++			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
++			 tty ? tty_name(tty) : "(none)",
++			 audit_get_sessionid(current));
++	audit_put_tty(tty);
++	audit_log_task_context(ab); /* subj= */
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
++	audit_log_d_path_exe(ab, current->mm); /* exe= */
++	audit_log_format(ab, " nl-mcgrp=%d op=%s res=%d", group, op, !err);
++	audit_log_end(ab);
++}
++
+ /* Run custom bind function on netlink socket group connect or bind requests. */
+-static int audit_bind(struct net *net, int group)
++static int audit_multicast_bind(struct net *net, int group)
+ {
++	int err = 0;
++
+ 	if (!capable(CAP_AUDIT_READ))
+-		return -EPERM;
++		err = -EPERM;
++	audit_log_multicast_bind(group, "connect", err);
++	return err;
++}
  
- struct mlx5_fpga_esp_xfrm;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
-index ab69effb056d..f43caefd07a1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
-@@ -470,7 +470,7 @@ struct mlx5_fc_bulk {
- 	u32 base_id;
- 	int bulk_len;
- 	unsigned long *bitmask;
--	struct mlx5_fc fcs[0];
-+	struct mlx5_fc fcs[];
- };
+-	return 0;
++static void audit_multicast_unbind(struct net *net, int group)
++{
++	audit_log_multicast_bind(group, "disconnect", 0);
+ }
  
- static void mlx5_fc_init(struct mlx5_fc *counter, struct mlx5_fc_bulk *bulk,
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
-index c87962cab921..de7e01a027bb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
-@@ -56,7 +56,7 @@ struct mlx5i_priv {
- 	u32    qkey;
- 	u16    pkey_index;
- 	struct mlx5i_pkey_qpn_ht *qpn_htbl;
--	char  *mlx5e_priv[0];
-+	char  *mlx5e_priv[];
- };
- 
- int mlx5i_create_tis(struct mlx5_core_dev *mdev, u32 underlay_qpn, u32 *tisn);
-@@ -107,7 +107,7 @@ struct mlx5i_tx_wqe {
- 	struct mlx5_wqe_datagram_seg datagram;
- 	struct mlx5_wqe_eth_pad      pad;
- 	struct mlx5_wqe_eth_seg      eth;
--	struct mlx5_wqe_data_seg     data[0];
-+	struct mlx5_wqe_data_seg     data[];
- };
- 
- static inline void mlx5i_sq_fetch_wqe(struct mlx5e_txqsq *sq,
+ static int __net_init audit_net_init(struct net *net)
+ {
+ 	struct netlink_kernel_cfg cfg = {
+ 		.input	= audit_receive,
+-		.bind	= audit_bind,
++		.bind	= audit_multicast_bind,
++		.unbind	= audit_multicast_unbind,
+ 		.flags	= NL_CFG_F_NONROOT_RECV,
+ 		.groups	= AUDIT_NLGRP_MAX,
+ 	};
 -- 
-2.25.0
+1.8.3.1
 
