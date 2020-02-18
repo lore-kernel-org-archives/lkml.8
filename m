@@ -2,215 +2,161 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C93C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F46C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6F321D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0B02176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgBROyn (ORCPT
+        id S1726777AbgBRO4x convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:54:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:53798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgBROyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:54:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89D96328;
-        Tue, 18 Feb 2020 06:54:42 -0800 (PST)
-Received: from [10.1.195.59] (ifrit.cambridge.arm.com [10.1.195.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AF873F703;
-        Tue, 18 Feb 2020 06:54:40 -0800 (PST)
-Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
-To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, hdanton@sina.com
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-5-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <5ea96f6e-433e-1520-56dc-a10e9a8e63c7@arm.com>
-Date:   Tue, 18 Feb 2020 14:54:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 09:56:53 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726540AbgBRO4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:56:53 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IEukCi119500
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:56:51 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dntsxp2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:56:50 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Tue, 18 Feb 2020 14:55:08 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Feb 2020 14:55:03 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IEt2DC51249382
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 14:55:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91C46A4040;
+        Tue, 18 Feb 2020 14:55:02 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0869A4057;
+        Tue, 18 Feb 2020 14:55:01 +0000 (GMT)
+Received: from localhost (unknown [9.199.60.10])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 14:55:01 +0000 (GMT)
+Date:   Tue, 18 Feb 2020 20:25:00 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] powerpc/kprobes: Fix trap address when trap happened
+ in real mode
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org
+References: <0cd6647dae57894f77ceb7d5a48d52fac6c10ca5.1582036047.git.christophe.leroy@c-s.fr>
+In-Reply-To: <0cd6647dae57894f77ceb7d5a48d52fac6c10ca5.1582036047.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200214152729.6059-5-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20021814-0008-0000-0000-000003542617
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021814-0009-0000-0000-00004A752FB5
+Message-Id: <1582037375.4mkd6m1m5m.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=843 clxscore=1011
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 3:27 PM, Vincent Guittot wrote:
-> @@ -532,8 +535,8 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
->  			cfs_rq->removed.load_avg);
->  	SEQ_printf(m, "  .%-30s: %ld\n", "removed.util_avg",
->  			cfs_rq->removed.util_avg);
-> -	SEQ_printf(m, "  .%-30s: %ld\n", "removed.runnable_sum",
-> -			cfs_rq->removed.runnable_sum);
-
-Shouldn't that have been part of patch 3?
-
-> +	SEQ_printf(m, "  .%-30s: %ld\n", "removed.runnable_avg",
-> +			cfs_rq->removed.runnable_avg);
->  #ifdef CONFIG_FAIR_GROUP_SCHED
->  	SEQ_printf(m, "  .%-30s: %lu\n", "tg_load_avg_contrib",
->  			cfs_rq->tg_load_avg_contrib);
-> @@ -3278,6 +3280,32 @@ update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq
->  	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
->  }
->  
-> +static inline void
-> +update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
-> +{
-> +	long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
+Christophe Leroy wrote:
+> When a program check exception happens while MMU translation is
+> disabled, following Oops happens in kprobe_handler() in the following
+> code:
+> 
+> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+> 
+> [   33.098554] BUG: Unable to handle kernel data access on read at 0x0000e268
+> [   33.105091] Faulting instruction address: 0xc000ec34
+> [   33.110010] Oops: Kernel access of bad area, sig: 11 [#1]
+> [   33.115348] BE PAGE_SIZE=16K PREEMPT CMPC885
+> [   33.119540] Modules linked in:
+> [   33.122591] CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
+> [   33.131005] NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
+> [   33.136002] REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
+> [   33.144324] MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
+> [   33.150699] DAR: 0000e268 DSISR: c0000000
+> [   33.150699] GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
+> [   33.150699] GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
+> [   33.150699] GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
+> [   33.150699] GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
+> [   33.188015] NIP [c000ec34] kprobe_handler+0x128/0x290
+> [   33.192989] LR [c000ecd8] kprobe_handler+0x1cc/0x290
+> [   33.197854] Call Trace:
+> [   33.200340] [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
+> [   33.206590] [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
+> [   33.212392] --- interrupt: 700 at 0xe268
+> [   33.270401] Instruction dump:
+> [   33.273335] 913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
+> [   33.280992] 38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
+> [   33.288841] ---[ end trace 5b9152d4cdadd06d ]---
+> 
+> kprobe is not prepared to handle events in real mode and functions
+> running in real mode should have been blacklisted, so kprobe_handler()
+> can safely bail out telling 'this trap is not mine' for any trap that
+> happened while in real-mode.
+> 
+> If the trap happened with MSR_IR cleared, return 0 immediately.
+> 
+> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+> Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
+> Cc: stable@vger.kernel.org
+> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+> ---
+> v2: bailing out instead of converting real-time address to virtual and continuing.
+> 
+> The bug might have existed even before that commit from Naveen.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/kernel/kprobes.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+> index 2d27ec4feee4..673f349662e8 100644
+> --- a/arch/powerpc/kernel/kprobes.c
+> +++ b/arch/powerpc/kernel/kprobes.c
+> @@ -264,6 +264,9 @@ int kprobe_handler(struct pt_regs *regs)
+>  	if (user_mode(regs))
+>  		return 0;
+> 
+> +	if (!(regs->msr & MSR_IR))
+> +		return 0;
 > +
-> +	/* Nothing to update */
-> +	if (!delta)
-> +		return;
-> +
-> +	/*
-> +	 * The relation between sum and avg is:
-> +	 *
-> +	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
-> +	 *
-> +	 * however, the PELT windows are not aligned between grq and gse.
-> +	 */
-> +
-> +	/* Set new sched_entity's runnable */
-> +	se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
-> +	se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
-> +
-> +	/* Update parent cfs_rq runnable */
-> +	add_positive(&cfs_rq->avg.runnable_avg, delta);
-> +	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
-> +}
-> +
 
-Humph, that's an exact copy of update_tg_cfs_util(). FWIW the following
-eldritch horror compiles...
+Should we also check for MSR_DR? Are there scenarios with ppc32 where 
+MSR_IR is on, but MSR_DR is off?
 
----
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 99249a2484b4..be796532a2d3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3254,57 +3254,34 @@ void set_task_rq_fair(struct sched_entity *se,
-  *
-  */
- 
--static inline void
--update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
--{
--	long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
--
--	/* Nothing to update */
--	if (!delta)
--		return;
--
--	/*
--	 * The relation between sum and avg is:
--	 *
--	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
--	 *
--	 * however, the PELT windows are not aligned between grq and gse.
--	 */
--
--	/* Set new sched_entity's utilization */
--	se->avg.util_avg = gcfs_rq->avg.util_avg;
--	se->avg.util_sum = se->avg.util_avg * LOAD_AVG_MAX;
--
--	/* Update parent cfs_rq utilization */
--	add_positive(&cfs_rq->avg.util_avg, delta);
--	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
--}
--
--static inline void
--update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
--{
--	long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
--
--	/* Nothing to update */
--	if (!delta)
--		return;
--
--	/*
--	 * The relation between sum and avg is:
--	 *
--	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
--	 *
--	 * however, the PELT windows are not aligned between grq and gse.
--	 */
--
--	/* Set new sched_entity's runnable */
--	se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
--	se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
-+#define DECLARE_UPDATE_TG_CFS_SIGNAL(signal)				\
-+static inline void						\
-+update_tg_cfs_##signal(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq) \
-+{								\
-+	long delta = gcfs_rq->avg.signal##_avg - se->avg.signal##_avg; \
-+								\
-+	/* Nothing to update */					\
-+	if (!delta)						\
-+		return;						\
-+								\
-+	/*									\
-+	 * The relation between sum and avg is:					\
-+	 *									\
-+	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib				\
-+	 *									\
-+		* however, the PELT windows are not aligned between grq and gse.	\
-+	*/									\
-+	/* Set new sched_entity's runnable */			\
-+	se->avg.signal##_avg = gcfs_rq->avg.signal##_avg;	\
-+	se->avg.signal##_sum = se->avg.signal##_avg * LOAD_AVG_MAX; \
-+								\
-+	/* Update parent cfs_rq signal## */			\
-+	add_positive(&cfs_rq->avg.signal##_avg, delta);		\
-+	cfs_rq->avg.signal##_sum = cfs_rq->avg.signal##_avg * LOAD_AVG_MAX; \
-+}								\
- 
--	/* Update parent cfs_rq runnable */
--	add_positive(&cfs_rq->avg.runnable_avg, delta);
--	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
--}
-+DECLARE_UPDATE_TG_CFS_SIGNAL(util);
-+DECLARE_UPDATE_TG_CFS_SIGNAL(runnable);
- 
- static inline void
- update_tg_cfs_load(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
----
 
->  static inline void
->  update_tg_cfs_load(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
->  {
-> @@ -3358,6 +3386,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
->  	add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
->  
->  	update_tg_cfs_util(cfs_rq, se, gcfs_rq);
-> +	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
->  	update_tg_cfs_load(cfs_rq, se, gcfs_rq);
->  
->  	trace_pelt_cfs_tp(cfs_rq);
-> @@ -3439,7 +3468,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
->  		raw_spin_lock(&cfs_rq->removed.lock);
->  		swap(cfs_rq->removed.util_avg, removed_util);
->  		swap(cfs_rq->removed.load_avg, removed_load);
-> -		swap(cfs_rq->removed.runnable_sum, removed_runnable_sum);
-
-Ditto on the stray from patch 3?
-
-> +		swap(cfs_rq->removed.runnable_avg, removed_runnable);
->  		cfs_rq->removed.nr = 0;
->  		raw_spin_unlock(&cfs_rq->removed.lock);
->  
-> @@ -3451,7 +3480,16 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+- Naveen
 
