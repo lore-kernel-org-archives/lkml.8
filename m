@@ -2,127 +2,82 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B56C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AAAC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0466B24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B542176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBROTJ (ORCPT
+        id S1726700AbgBROU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:19:09 -0500
-Received: from muru.com ([72.249.23.125]:55870 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgBROTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:19:09 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6B43D8043;
-        Tue, 18 Feb 2020 14:19:52 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 06:19:05 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200218141905.GG35972@atomide.com>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <20200214003452.xuadnylj2udqyljs@earth.universe>
- <20200214013454.GX64767@atomide.com>
- <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
- <20200214170946.GB64767@atomide.com>
- <20200218140431.emrxgvckrpltmg2s@earth.universe>
+        Tue, 18 Feb 2020 09:20:26 -0500
+Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:39382 "EHLO
+        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgBROUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:20:25 -0500
+X-Greylist: delayed 3599 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 09:20:25 EST
+Received: from player779.ha.ovh.net (unknown [10.110.208.89])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id CC2AA159157
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:01:09 +0100 (CET)
+Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
+        (Authenticated sender: steve@sk2.org)
+        by player779.ha.ovh.net (Postfix) with ESMTPSA id 35FCDF77769C;
+        Tue, 18 Feb 2020 13:00:57 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v2 8/8] docs: sysctl/kernel: remove rtsig entries
+Date:   Tue, 18 Feb 2020 13:59:23 +0100
+Message-Id: <20200218125923.685-9-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200218125923.685-1-steve@sk2.org>
+References: <20200218125923.685-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218140431.emrxgvckrpltmg2s@earth.universe>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 16146812041506475397
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjeekgdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejjeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Reichel <sebastian.reichel@collabora.com> [200218 06:05]:
-> Hi,
-> 
-> On Fri, Feb 14, 2020 at 09:09:46AM -0800, Tony Lindgren wrote:
-> > * Sebastian Reichel <sre@kernel.org> [200214 13:05]:
-> > > On Thu, Feb 13, 2020 at 05:34:54PM -0800, Tony Lindgren wrote:
-> > > > And bluetooth would be similar to cpcap_audio and mot_mdm6600_audio
-> > > > above.
-> > > 
-> > > My understanding is, that CPU is not involved for calls (except for
-> > > setting up cpcap registers correctly). Basically McBSP3 should
-> > > remain idle for a call and data goes directly from modem to cpcap.
-> > > The same should work for modem <-> BT, except that CPCAP seems to
-> > > always provide the clock. That would imply a direct link between
-> > > modem and codec / BT?
-> > 
-> > Yes the direct link is i2s. I'm ot sure if mcbsp can be idle during
-> > voice call though, I guess it should be doable since mcbsp is not
-> > the clock master :)
-> > 
-> > > > My guess is that only cpcap registers and clock rate needs to be
-> > > > changed for bluetooth audio BTW, so if somebody havs a bluetooth
-> > > > headset just do the following in Android:
-> > > > 
-> > > > # cpcaprw --all > /tmp/before
-> > > > configure bluetooth headset for audio in android and start
-> > > > playing some music or make a phone call
-> > > > ...
-> > > > # cpcaprw --all > /tmp/after
-> > > > stop playing music or phone call
-> > > > ...
-> > > > diff -u /tmp/before /tmp/after
-> > > > 
-> > > > The registers will be different for a bluetooth phone call and
-> > > > playing music.
-> > > 
-> > > I can provider register values once I find some time.
-> 
-> [NI] Normal idle (no BT headset connected)
-> [BI] Bluetooth idle (with BT headset connected)
-> [BC] Bluetooth call in progress
-> [NC] Normal call in progress (BT headset disabled)
-> 
->                      [NI]  =>  [BI]  =>  [BC]  =>  [NC]
-> CPCAP_REG_VAUDIOC   0x0065 => 0x0065 => 0x0065 => 0x0025
-> CPCAP_REG_CC        0x0000 => 0x0000 => 0x6000 => 0x60df
-> CPCAP_REG_CDI       0x0040 => 0x0000 => 0xaa40 => 0xae0a
-> CPCAP_REG_SDAC      -------------- 0x0000 --------------
-> CPCAP_REG_SDACDI    -------------- 0x0004 --------------
-> CPCAP_REG_TXI       0x0804 => 0x0004 => 0x0000 => 0x0cc6
-> CPCAP_REG_TXMP      0x079c => 0x079c => 0x0400 => 0x0673
-> CPCAP_REG_RXOA      0x0000 => 0x0000 => 0x0001 => 0x0001
-> CPCAP_REG_RXVC      0x0d34 => 0x0d34 => 0x0000 => 0x0b2c
-> CPCAP_REG_RXCOA     0x0000 => 0x0000 => 0x0000 => 0x0601
-> CPCAP_REG_RXSDOA    0x0000 => 0x0000 => 0x0600 => 0x0600
-> CPCAP_REG_RXEPOA    -------------- 0x0400 --------------
-> CPCAP_REG_RXLL      -------------- 0x0000 --------------
-> CPCAP_REG_A2LA      -------------- 0x0030 --------------
-> CPCAP_REG_MIPIS1    -------------- 0x0000 --------------
-> CPCAP_REG_MIPIS2    -------------- 0x0000 --------------
-> CPCAP_REG_MIPIS3    -------------- 0x0000 --------------
-> CPCAP_REG_LVAB      -------------- 0x0000 --------------
+These have no corresponding code in the kernel.
 
-Great thanks! Care to do also a dump just playing music to on
-bluetooth headset at some point?
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-Regards,
-
-Tony
-
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 3d21e076aea4..ba4b51bb1f3e 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -902,16 +902,6 @@ ROM/Flash boot loader. Maybe to tell it what to do after
+ rebooting. ???
+ 
+ 
+-rtsig-max & rtsig-nr
+-====================
+-
+-The file rtsig-max can be used to tune the maximum number
+-of POSIX realtime (queued) signals that can be outstanding
+-in the system.
+-
+-rtsig-nr shows the number of RT signals currently queued.
+-
+-
+ sched_energy_aware
+ ==================
+ 
+-- 
+2.20.1
 
