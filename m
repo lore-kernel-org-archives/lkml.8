@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBFC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B20C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8138B24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4950324670
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056106;
-	bh=alfaClgMPQx9gqsYJzeSw3F99GdWFoISOuD0fIcZiQU=;
+	s=default; t=1582056110;
+	bh=oj6uAmJiAijYz3tJYNyBhtgI/KSxiSGRZ0l2McquZKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaAm/jnZJh6H/Ri22B2E5PbKvVevHTM7/81upOSX957eVPBJ+TlrXpD8IoPURigZ1
-	 T4Tx+ooxyr4AlX1O+qvAh6CikC+R40lF9lxZ3N5qu4zS8e5gTadUYxgFcUNrSZQcJX
-	 wwrXE6Tqw/M7yGEBgozOuPw2Mv4hbgOdZLdwsbPE=
+	b=UgGf+tPkfigtqQcZAliiSen8bmaZISnMVPjfzNykgHAMneJRrrUy4fSMhwz7AJ7su
+	 YE1K4yM8vA1q3krfRxCtplu0ppY//byTgdF9U5ydvULL2evGGMy6TQDt2wKoUcVeyp
+	 qw4Gsi7Q3wtaOgQNPWC9UzDGsft551E7sCBerGUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgBRUBp (ORCPT
+        id S1728825AbgBRUBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:01:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:01:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbgBRUBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:01:41 -0500
+        id S1728610AbgBRUBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:01:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9D824125;
-        Tue, 18 Feb 2020 20:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5C832465D;
+        Tue, 18 Feb 2020 20:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056100;
-        bh=alfaClgMPQx9gqsYJzeSw3F99GdWFoISOuD0fIcZiQU=;
+        s=default; t=1582056105;
+        bh=oj6uAmJiAijYz3tJYNyBhtgI/KSxiSGRZ0l2McquZKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mkyl8lxIihl1otb1zUwz5/AwpvXhN84RlK3OBfeYKzvQgEJgmliCtbFdMA4aOiMLU
-         +1Hd5/PWxRFuGRIOwpMpapSKQ2jXjxkPYhLwhYzTbr/M7BMkknMoZtOzTp9Pygw+Kb
-         hApp7tQjkKcMlGF+/jICOkmKlGtYjElvPHBRIZt0=
+        b=ttjLta7YS1lFuOttNX5Ibbn2CfmooAFeqAX7Js7zGuiQxx9E3BuM1OSxRyPkmK++w
+         itmvWYIJEhfOBuy8pZC3QGHHZAhvtQFzDg6e+fmhybRx+YPhn8Bfoe2Ux5OPN/fmfG
+         MRGC1M3Nt2PkWgRUNPxCQajpJdxBRvm6goC1n0Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.5 05/80] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
-Date:   Tue, 18 Feb 2020 20:54:26 +0100
-Message-Id: <20200218190432.579393316@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 07/80] ALSA: usb-audio: Fix UAC2/3 effect unit parsing
+Date:   Tue, 18 Feb 2020 20:54:28 +0100
+Message-Id: <20200218190432.771010418@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,44 +58,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 5179a9dfa9440c1781816e2c9a183d1d2512dc61 upstream.
+commit d75a170fd848f037a1e28893ad10be7a4c51f8a6 upstream.
 
-The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
+We've got a regression report about M-Audio Fast Track C400 device,
+and the git bisection resulted in the commit e0ccdef92653 ("ALSA:
+usb-audio: Clean up check_input_term()").  This commit was about the
+rewrite of the input terminal parser, and it's not too obvious from
+the change what really broke.  The answer is: it's the interpretation
+of UAC2/3 effect units.
 
-Thus, there is no need to create a software top buttons row.
+In the original code, UAC2 effect unit is as if through UAC1
+processing unit because both UAC1 PU and UAC2/3 EU share the same
+number (0x07).  The old code went through a complex switch-case
+fallthrough, finally bailing out in the middle:
 
-However, it seems that the device works under SMBus, so keep it as part
-of the smbus_pnp_ids.
+  if (protocol == UAC_VERSION_2 &&
+      hdr[2] == UAC2_EFFECT_UNIT) {
+         /* UAC2/UAC1 unit IDs overlap here in an
+          * uncompatible way. Ignore this unit for now.
+          */
+         return 0;
+   }
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200115013023.9710-1-benjamin.tissoires@redhat.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+... and this special handling was missing in the new code; the new
+code treats UAC2/3 effect unit as if it were equivalent with the
+processing unit.
+
+Actually, the old code was too confusing.  The effect unit has an
+incompatible unit description with the processing unit, so we
+shouldn't have dealt with EU in the same way.
+
+This patch addresses the regression by changing the effect unit
+handling to the own parser function.  The own parser function makes
+the clear distinct with PU, so it improves the readability, too.
+
+The EU parser just sets the type and the id like the old kernels.
+Once when the proper effect unit support is added, we can revisit this
+parser function, but for now, let's keep this simple setup as is.
+
+Fixes: e0ccdef92653 ("ALSA: usb-audio: Clean up check_input_term()")
+Cc: <stable@vger.kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206147
+Link: https://lore.kernel.org/r/20200211160521.31990-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -146,7 +146,6 @@ static const char * const topbuttonpad_p
- 	"LEN0042", /* Yoga */
- 	"LEN0045",
- 	"LEN0047",
--	"LEN0049",
- 	"LEN2000", /* S540 */
- 	"LEN2001", /* Edge E431 */
- 	"LEN2002", /* Edge E531 */
-@@ -166,6 +165,7 @@ static const char * const smbus_pnp_ids[
- 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras */
- 	"LEN0048", /* X1 Carbon 3 */
- 	"LEN0046", /* X250 */
-+	"LEN0049", /* Yoga 11e */
- 	"LEN004a", /* W541 */
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -897,6 +897,15 @@ static int parse_term_proc_unit(struct m
+ 	return 0;
+ }
+ 
++static int parse_term_effect_unit(struct mixer_build *state,
++				  struct usb_audio_term *term,
++				  void *p1, int id)
++{
++	term->type = UAC3_EFFECT_UNIT << 16; /* virtual type */
++	term->id = id;
++	return 0;
++}
++
+ static int parse_term_uac2_clock_source(struct mixer_build *state,
+ 					struct usb_audio_term *term,
+ 					void *p1, int id)
+@@ -981,8 +990,7 @@ static int __check_input_term(struct mix
+ 						    UAC3_PROCESSING_UNIT);
+ 		case PTYPE(UAC_VERSION_2, UAC2_EFFECT_UNIT):
+ 		case PTYPE(UAC_VERSION_3, UAC3_EFFECT_UNIT):
+-			return parse_term_proc_unit(state, term, p1, id,
+-						    UAC3_EFFECT_UNIT);
++			return parse_term_effect_unit(state, term, p1, id);
+ 		case PTYPE(UAC_VERSION_1, UAC1_EXTENSION_UNIT):
+ 		case PTYPE(UAC_VERSION_2, UAC2_EXTENSION_UNIT_V2):
+ 		case PTYPE(UAC_VERSION_3, UAC3_EXTENSION_UNIT):
 
 
