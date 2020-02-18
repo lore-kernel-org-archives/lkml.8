@@ -2,91 +2,110 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6619CC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA7C3403B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4550E20801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DCF2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="NsCAGbcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgBRNJr (ORCPT
+        id S1726648AbgBRNJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:09:47 -0500
-Received: from 5.mo173.mail-out.ovh.net ([46.105.40.148]:42893 "EHLO
-        5.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgBRNJq (ORCPT
+        Tue, 18 Feb 2020 08:09:51 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:20704 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726623AbgBRNJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:09:46 -0500
-Received: from player779.ha.ovh.net (unknown [10.108.57.226])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id B62E512FC0D
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:00:31 +0100 (CET)
-Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
-        (Authenticated sender: steve@sk2.org)
-        by player779.ha.ovh.net (Postfix) with ESMTPSA id 688AEF7773C0;
-        Tue, 18 Feb 2020 13:00:19 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v2 4/8] docs: add missing IPC documentation in sysctl/kernel.rst
-Date:   Tue, 18 Feb 2020 13:59:19 +0100
-Message-Id: <20200218125923.685-5-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218125923.685-1-steve@sk2.org>
-References: <20200218125923.685-1-steve@sk2.org>
+        Tue, 18 Feb 2020 08:09:50 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ID9UNt031732;
+        Tue, 18 Feb 2020 07:09:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=oDcx9+nhLtRKd/7eK4F56Q9mkdC8+Ult+qCe6UIxF9s=;
+ b=NsCAGbcsw+md0TtFXe9kWes3YmvZFfcZgPP7KR/NsxiVmjwa2j/TPV96ErN5zgQvmMqB
+ jE3ZW+VNL7zyV5M5OHiFfpR1l0rbt6M+tq9a+/vpEnmbJUpzR1Wv0Qe48E3PRS0w/3r4
+ ujHXOCh2LYbC7lv9p8KSmzuWe/2ntWpwbfGHOUalU2/yZAFB5MIgUofbAXrzuZ7ILsRs
+ bUGJ8HosMA4hmNcwmCwXX9s0J1Cf2zglX87HrBSJ+VVWHRRZvGWItCVUdauEMw5ttQiU
+ 0RoSLANukDTLibLcV+1+Rw6sFC0GoxbamC0MNspKK4UTiZZXJFVBqESkkv2KD0aS38jD DQ== 
+Authentication-Results: ppops.net;
+        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2y6ex9c1uc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 18 Feb 2020 07:09:30 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 18 Feb
+ 2020 13:09:25 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 18 Feb 2020 13:09:25 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 401F72DC;
+        Tue, 18 Feb 2020 13:09:25 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 13:09:25 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        <patches@opensource.cirrus.com>, <geert@linux-m68k.org>
+Subject: Re: linux-next: Tree for Feb 18 (sound/soc/codecs/wm5110.c)
+Message-ID: <20200218130925.GG108283@ediswmail.ad.cirrus.com>
+References: <20200218152853.67e2482a@canb.auug.org.au>
+ <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
+ <c2273472-18af-e206-c942-fd460e0d192c@infradead.org>
+ <20200218100959.GD108283@ediswmail.ad.cirrus.com>
+ <20200218113116.GA4232@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16136115993363828101
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrjeekgdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejjeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200218113116.GA4232@sirena.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ adultscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds short descriptions of msgmax, msgmnb, msgmni, and shmmni,
-which were previously listed in kernel.rst but not described.
+On Tue, Feb 18, 2020 at 11:31:16AM +0000, Mark Brown wrote:
+> On Tue, Feb 18, 2020 at 10:09:59AM +0000, Charles Keepax wrote:
+> > 2) We could update the machine drivers to a depends on and make
+> > the CODEC symbols manually selectable. I guess this also has the
+> > advantages that it would be necessary for the simple card stuff
+> > that seems to be everyones first choice for machine drivers these
+> > days.
+> 
+> That's not good, it means people have to know exactly what CODECs and
+> DAIs are on their board to even see the config option.
+> 
+> > Mark do you have any strong feelings on this I am leaning towards
+> > 2?
+> 
+> Why not just continue adding the relevant dependencies to the machine
+> drivers like we've always done?
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hmm... a good point. The machine drivers are already depending
+on MFD_ARIZONA, if we swapped that for the actual CODECs
+involved I guess that should fix the situation as well.
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index d4fa06cab255..76ff10f6f63a 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -409,6 +409,15 @@ to false.  Generally used with the `kexec_load_disabled`_ toggle.
- msgmax, msgmnb, and msgmni
- ==========================
- 
-+``msgmax`` is the maximum size of an IPC message, in bytes. 8192 by
-+default (``MSGMAX``).
-+
-+``msgmnb`` is the maximum size of an IPC queue, in bytes. 16384 by
-+default (``MSGMNB``).
-+
-+``msgmni`` is the maximum number of IPC queues. 32000 by default
-+(``MSGMNI``).
-+
- 
- msg_next_id, sem_next_id, and shm_next_id (System V IPC)
- ========================================================
-@@ -957,6 +966,9 @@ kernel.  This value defaults to ``SHMMAX``.
- shmmni
- ======
- 
-+This value determines the maximum number of shared memory segments.
-+4096 by default (``SHMMNI``).
-+
- 
- shm_rmid_forced
- ===============
--- 
-2.20.1
+I will fire out a patch shortly.
 
+Thanks,
+Charles
