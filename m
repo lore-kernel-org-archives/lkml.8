@@ -2,101 +2,116 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B351BC34045
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC2C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C60621D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sBI24QLX"
+	by mail.kernel.org (Postfix) with ESMTP id C708C24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582042353;
+	bh=awLNWgK3jSpoYCcHsbDIpFWZ3TfC+77EIQEyj8YiqW0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=w5EZ3s7CsZ+Jk2OJZhukN2MJJCZFdLgVO5w+luKtMVidm3VVBQ1R9iWHga0nBPR5A
+	 VXL8KISjtrLF4kw8yxSWdpFCrsCLNTPyeiCaPwh24wyV2+7Jwqwzzd9k1+d/T5k9AG
+	 o5RrturLRogmk0GmTqBBxNqhSo0bMOtfHhwHEfxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgBRQMG (ORCPT
+        id S1726681AbgBRQMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:12:06 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:42036 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgBRQMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:12:06 -0500
-Received: by mail-oi1-f170.google.com with SMTP id j132so20615714oih.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:12:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
-        b=sBI24QLXeAMxnYobfUFiAmd4xR2PTbf+BdHJLpEnENN3qmIvaSodggHdxVC0a8TFor
-         daiCdzzMriYxSKIJDxlEJfBopsHtk8VdOYbkisI/98VtSvYnBm/rESBdpNEJJPXu0FF8
-         0BOofIxPjKHH2UCJaaashNaSc+UrHk7gBR97j07A04GcQwrzuXuIgsQCEq/JmIEOeDi/
-         mfRYWHmCsOX35tJZn56nzIQq+sayeHW3VdvXIXHmKnTOmW5kNVP/nDcGO4e6Plhn6dWU
-         U5qibufJ9kPP1ziTSLn4iP65+lhELzA/Z1ZgW2XEkCMDGEs440z34HMvlcKrmZoj1Nu0
-         Wv2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
-        b=N4IV5YaAXft4rlw536QDO/9lCaSJkbEniB78LB6+8RlqLt2+ue4Qb3ekx4/vz8boVK
-         C+aA4yuUmGAc21dGDJjWZ5chDfwTdLiZp5SajwW2UdsLzJ1NaOWWmjktPRAWooWoup5f
-         /J/9PAXKZVxpzGEZYKGWD5CXuy0iv3SgWtyMAP8MWirGE4EsMtgrBDySDJaNr0nDoEiI
-         ZNcuh8W9D2QUbseb1tJgTT0Dl4RYn/SuI8YzDiLv+wzcZ090cbeu2ylNMjWU/vEnLKC5
-         2qshptTKr7G3VAN2TYzhRE3U9bPbFrzp++ErYnx8/pwA0uSyfvQOtOOhgfpfDr1lTX00
-         T76A==
-X-Gm-Message-State: APjAAAVk6lCFTA7PsFzYrPmbbPU8Wwq7we7WNRZX1KhoffJS1WrQaFjD
-        JTPQcqmQE5vN0TuM5epje4X7m2uj/rZVcpkhmffOBQ==
-X-Google-Smtp-Source: APXvYqyItQcqBDeH/j9bd5sgRpZfMvMbTo7/hzatU4ZDPYxeI+o76a9irGBqbSncYfhrdjrsgUL2OhHxhb9qaNUNIWU=
-X-Received: by 2002:aca:fcc1:: with SMTP id a184mr1665266oii.36.1582042324768;
- Tue, 18 Feb 2020 08:12:04 -0800 (PST)
+        Tue, 18 Feb 2020 11:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbgBRQMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:12:32 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EDB821D56;
+        Tue, 18 Feb 2020 16:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582042351;
+        bh=awLNWgK3jSpoYCcHsbDIpFWZ3TfC+77EIQEyj8YiqW0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0X7a46sIOjECzRz0gSgsb45lVTD4LoFMqM8lAfqw5BBMjeunTIzosKnnh8wvwOgmn
+         dw1c7kHiv4rK+byDki53gflxLqjmyJwI0xy2GTrvm88GH9/2CTmZIfyfhZOwUmQG1E
+         e9w4sDNTWeU7FtqiUtCsTrU+lkaMLAEg8LsZnMpY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4A93D3520365; Tue, 18 Feb 2020 08:12:31 -0800 (PST)
+Date:   Tue, 18 Feb 2020 08:12:31 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200218161231.GD2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200213211930.GG170680@google.com>
+ <20200213163800.5c51a5f1@gandalf.local.home>
+ <20200213215004.GM2935@paulmck-ThinkPad-P72>
+ <20200213170451.690c4e5c@gandalf.local.home>
+ <20200213223918.GN2935@paulmck-ThinkPad-P72>
+ <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
+ <20200215145934.GD2935@paulmck-ThinkPad-P72>
+ <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
+ <20200217163112.GM2935@paulmck-ThinkPad-P72>
+ <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
 MIME-Version: 1.0
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
- <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org> <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
- <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com> <20200215034652.GA19867@ming.t460p>
-In-Reply-To: <20200215034652.GA19867@ming.t460p>
-From:   Jesse Barnes <jsbarnes@google.com>
-Date:   Tue, 18 Feb 2020 08:11:53 -0800
-Message-ID: <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Salman Qazi <sqazi@google.com>, Ming Lei <tom.leiming@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
-> What are the 'other operations'? Are they block IOs?
->
-> If yes, that is why I suggest to fix submit_bio_wait(), which should cover
-> most of sync bio submission.
->
-> Anyway, the fix is simple & generic enough, I'd plan to post a formal
-> patch if no one figures out better doable approaches.
+On Tue, Feb 18, 2020 at 01:33:35PM +0900, Masami Hiramatsu wrote:
+> On Mon, 17 Feb 2020 08:31:12 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > BTW, if you consider the x86 specific code is in the generic file,
+> > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
+> > > (Sorry, I've hit this idea right now)
+> > 
+> > Might this affect other architectures with NMIs and probe-like things?
+> > If so, it might make sense to leave it where it is.
+> 
+> Yes, git grep shows that arm64 is using rcu_nmi_enter() in
+> debug_exception_enter().
+> OK, let's keep it, but maybe it is good to update the comment for
+> arm64 too. What about following?
+> 
+> +/*
+> + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
+> + * marked NOKPROBE before kprobes handler is called.
+> + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
+> + * before kprobes handle happens to call rcu_nmi_enter() which means
+> + * that rcu_nmi_enter() must be marked NOKRPOBE.
+> + */
 
-Yeah I think any block I/O operation that occurs after the
-BLKSECDISCARD is submitted will also potentially be affected by the
-hung task timeouts, and I think your patch will address that.  My only
-concern with it is that it might hide some other I/O "hangs" that are
-due to device misbehavior instead.  Yes driver and device timeouts
-should generally catch those, but with this in place we might miss a
-few bugs.
+Would it work to describe the general problem, then give x86 details
+as a specific example, as follows?
 
-Given the nature of these types of storage devices though, I think
-that's a minor issue and not worth blocking the patch on, given that
-it should prevent a lot of false positive hang reports as Salman
-demonstrated.
+/*
+ * On some architectures, certain exceptions prohibit use of kprobes until
+ * the exception code path reaches a certain point.  For example, on x86 all
+ * functions called by do_int3() must be marked NOKPROBE.  However, once
+ * kprobe_int3_handler() is called, kprobing is permitted.  Specifically,
+ * ist_enter() is called in do_int3() before kprobe_int3_handle().
+ * Furthermore, ist_enter() calls rcu_nmi_enter(), which means that
+ * rcu_nmi_enter() must be marked NOKRPOBE.
+ */
 
-Thanks,
-Jesse
+That way, I don't feel like I need to update the commment each time
+a new architecture adds this capability.  ;-)
+
+							Thanx, Paul
