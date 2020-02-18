@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58723C3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2BCC3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAE120801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C276324654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBROg7 (ORCPT
+        id S1726634AbgBROhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:36:59 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53142 "EHLO
+        Tue, 18 Feb 2020 09:37:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52967 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgBROg5 (ORCPT
+        with ESMTP id S1726569AbgBROfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:36:57 -0500
+        Tue, 18 Feb 2020 09:35:34 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j43yB-0000fF-Br; Tue, 18 Feb 2020 14:35:27 +0000
+        id 1j43xx-0000fF-20; Tue, 18 Feb 2020 14:35:13 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -41,9 +41,9 @@ Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 22/25] devpts: handle fsid mappings
-Date:   Tue, 18 Feb 2020 15:34:08 +0100
-Message-Id: <20200218143411.2389182-23-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 09/25] fs: add is_userns_visible() helper
+Date:   Tue, 18 Feb 2020 15:33:55 +0100
+Message-Id: <20200218143411.2389182-10-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
@@ -54,9 +54,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a uid or gid mount option is specified with devpts have it lookup the
-corresponding kfsids in the fsid mappings. If no fsid mappings are setup the
-behavior is unchanged, i.e. fsids are looked up in the id mappings.
+Introduce a helper which makes it possible to detect fileystems whose
+superblock is visible in multiple user namespace. This currently only
+means proc and sys. Such filesystems usually have special semantics so their
+behavior will not be changed with the introduction of fsid mappings.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
@@ -66,48 +67,23 @@ unchanged
 /* v3 */
 unchanged
 ---
- fs/devpts/inode.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/fs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
-index 42e5a766d33c..139958892572 100644
---- a/fs/devpts/inode.c
-+++ b/fs/devpts/inode.c
-@@ -24,6 +24,7 @@
- #include <linux/parser.h>
- #include <linux/fsnotify.h>
- #include <linux/seq_file.h>
-+#include <linux/fsuidgid.h>
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..fdc8fb2d786b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3651,4 +3651,9 @@ static inline int inode_drain_writes(struct inode *inode)
+ 	return filemap_write_and_wait(inode->i_mapping);
+ }
  
- #define DEVPTS_DEFAULT_MODE 0600
- /*
-@@ -277,7 +278,7 @@ static int parse_mount_options(char *data, int op, struct pts_mount_opts *opts)
- 		case Opt_uid:
- 			if (match_int(&args[0], &option))
- 				return -EINVAL;
--			uid = make_kuid(current_user_ns(), option);
-+			uid = make_kfsuid(current_user_ns(), option);
- 			if (!uid_valid(uid))
- 				return -EINVAL;
- 			opts->uid = uid;
-@@ -286,7 +287,7 @@ static int parse_mount_options(char *data, int op, struct pts_mount_opts *opts)
- 		case Opt_gid:
- 			if (match_int(&args[0], &option))
- 				return -EINVAL;
--			gid = make_kgid(current_user_ns(), option);
-+			gid = make_kfsgid(current_user_ns(), option);
- 			if (!gid_valid(gid))
- 				return -EINVAL;
- 			opts->gid = gid;
-@@ -410,7 +411,7 @@ static int devpts_show_options(struct seq_file *seq, struct dentry *root)
- 			   from_kuid_munged(&init_user_ns, opts->uid));
- 	if (opts->setgid)
- 		seq_printf(seq, ",gid=%u",
--			   from_kgid_munged(&init_user_ns, opts->gid));
-+			   from_kfsgid_munged(&init_user_ns, opts->gid));
- 	seq_printf(seq, ",mode=%03o", opts->mode);
- 	seq_printf(seq, ",ptmxmode=%03o", opts->ptmxmode);
- 	if (opts->max < NR_UNIX98_PTY_MAX)
++static inline bool is_userns_visible(unsigned long iflags)
++{
++	return (iflags & SB_I_USERNS_VISIBLE);
++}
++
+ #endif /* _LINUX_FS_H */
 -- 
 2.25.0
 
