@@ -2,198 +2,92 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A37C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEB7C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FC221D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342B721D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L9ufQZtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgBRVUf convert rfc822-to-8bit (ORCPT
+        id S1727497AbgBRVVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:20:35 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:38502 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgBRVUf (ORCPT
+        Tue, 18 Feb 2020 16:21:16 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59890 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgBRVVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:20:35 -0500
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 9C238CECC6;
-        Tue, 18 Feb 2020 22:29:57 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [Bluez PATCH v1] bluetooth: fix passkey uninitialized when used
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
-Date:   Tue, 18 Feb 2020 22:20:32 +0100
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D9045CD6-997B-4018-8AB0-40F15C71BF5C@holtmann.org>
-References: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
-To:     Howard Chung <howardchung@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Tue, 18 Feb 2020 16:21:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0HtJTFPkdLwAcbGGhAHyzxa8a1mSgpc758IYlfDOg/k=; b=L9ufQZtGybPYd67zmz67Xgy4Tn
+        mZsneK5DIi4+EdZSTDy3qMq6jC4G9yjF4A0m3HKQqgfmPcf89rxgAlz7TflzrDt+lPKQjG8DBB0Nc
+        hFwG4XwkG9NeYBz6KYBZ58AKe0IfPIrYhHeqqinr+nlcKs9GdGtB8jhCcawcvPy3icitqNTTzH4jP
+        ZCAGflog5kL6wL3IvL71BWNMv5PaAXyucj7tYF+EQU4HI4NEjXGWh1T+shXyemzhRpUXmIabqr29C
+        5LaP21DN5DNYTONx+gIE3+S5Zr0Asg51I2iJBLolcYDkCch1kyQ608fu1c/WOZsk9fwFBAcPrEAy8
+        FZTOuLoQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4AIt-0003y5-Bi; Tue, 18 Feb 2020 21:21:15 +0000
+Date:   Tue, 18 Feb 2020 13:21:15 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 01/19] mm: Return void from various readahead functions
+Message-ID: <20200218212115.GG24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-2-willy@infradead.org>
+ <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
-
-> From: "howardchung@google.com" <howardchung@google.com>
-
-any chance you fix your git setting to provide a From: with full name and email like you have in the signed-off-by line.
-
+On Tue, Feb 18, 2020 at 01:05:29PM -0800, John Hubbard wrote:
+> This is an easy review and obviously correct, so:
 > 
-> This issue cause a warning here
-> https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
+>     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+Thanks
+
+> Thoughts for the future of the API:
 > 
-> Signed-off-by: Howard Chung <howardchung@google.com>
-> ---
-> 
-> net/bluetooth/smp.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-> index 50e0ac692ec4..fa40de69e487 100644
-> --- a/net/bluetooth/smp.c
-> +++ b/net/bluetooth/smp.c
-> @@ -2179,10 +2179,12 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
-> 		 */
-> 		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-> 				 hcon->role)) {
-> +			/* Set passkey to 0. The value can be any number since
-> +			 * it'll be ignored anyway.
-> +			 */
-> 			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-> 							hcon->type,
-> -							hcon->dst_type,
-> -							passkey, 1);
-> +							hcon->dst_type, 0, 1);
-> 			if (err)
-> 				return SMP_UNSPECIFIED;
-> 			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+> I will add that I could envision another patchset that went in the
+> opposite direction, and attempted to preserve the information about
+> how many pages were successfully read ahead. And that would be nice
+> to have (at least IMHO), even all the way out to the syscall level,
+> especially for the readahead syscall.
 
-Since I have to look at this again, I wonder if we do this correctly. Either we have a bug there or not enough comments on why the code is correct.
+Right, and that was where I went initially.  It turns out to be a
+non-trivial aount of work to do the book-keeping to find out how many
+pages were _attempted_, and since we don't wait for the I/O to complete,
+we don't know how many _succeeded_, and we also don't know how many
+weren't attempted because they were already there, and how many weren't
+attempted because somebody else has raced with us and is going to attempt
+them themselves, and how many weren't attempted because we just ran out
+of memory, and decided to give up.
 
-        if (hcon->out) {
-                u8 cfm[16];
+Also, we don't know how many pages were successfully read, and then the
+system decided to evict before the program found out how many were read,
+let alone before it did any action based on that.
 
-                err = smp_f4(smp->tfm_cmac, smp->remote_pk, smp->local_pk,
-                             smp->rrnd, 0, cfm);
-                if (err)
-                        return SMP_UNSPECIFIED;
-
-                if (crypto_memneq(smp->pcnf, cfm, 16))
-                        return SMP_CONFIRM_FAILED;
-        } else {
-                smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
-                             smp->prnd);
-                SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
-
-                /* Only Just-Works pairing requires extra checks */
-                if (smp->method != JUST_WORKS)
-                        goto mackey_and_ltk;
-
-                /* If there already exists long term key in local host, leave
-                 * the decision to user space since the remote device could
-                 * be legitimate or malicious.
-                 */
-                if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-                                 hcon->role)) {
-                        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
-                                                        hcon->type,
-                                                        hcon->dst_type,
-                                                        passkey, 1);
-                        if (err)
-                                return SMP_UNSPECIFIED;
-                        set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-                }
-        }
-
-mackey_and_ltk:
-        /* Generate MacKey and LTK */
-        err = sc_mackey_and_ltk(smp, smp->mackey, smp->tk);
-        if (err)
-                return SMP_UNSPECIFIED;
-
-        if (smp->method == JUST_WORKS || smp->method == REQ_OOB) {
-                if (hcon->out) {
-                        sc_dhkey_check(smp);
-                        SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
-                }
-                return 0;
-        }
-
-        err = smp_g2(smp->tfm_cmac, pkax, pkbx, na, nb, &passkey);
-        if (err)
-                return SMP_UNSPECIFIED;
-
-        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
-                                        hcon->dst_type, passkey, 0);
-        if (err)
-                return SMP_UNSPECIFIED;
-
-        set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-
-        return 0;
-}
-
-Since we are already !hcon->out and smp->method == JUST_WORKS, why are we moving into mackey_and_ltk path? If we have already an LTK, then we just should bail out after setting SMP_FLAG_WAIT_USER, right?
-
-@@ -2115,7 +2115,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
-        struct l2cap_chan *chan = conn->smp;
-        struct smp_chan *smp = chan->data;
-        struct hci_conn *hcon = conn->hcon;
--       u8 *pkax, *pkbx, *na, *nb;
-+       u8 *pkax, *pkbx, *na, *nb, confirm_hint;
-        u32 passkey;
-        int err;
- 
-@@ -2179,13 +2179,9 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
-                 */
-                if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
-                                 hcon->role)) {
--                       err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
--                                                       hcon->type,
--                                                       hcon->dst_type,
--                                                       passkey, 1);
--                       if (err)
--                               return SMP_UNSPECIFIED;
--                       set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
-+                       passkey = 0;
-+                       confirm_hint = 1;
-+                       goto confirm;
-                }
-        }
- 
-@@ -2207,8 +2203,11 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
-        if (err)
-                return SMP_UNSPECIFIED;
- 
-+       confirm_hint = 0;
-+
-+confirm:
-        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
--                                       hcon->dst_type, passkey, 0);
-+                                       hcon->dst_type, passkey, confirm_hint);
-        if (err)
-                return SMP_UNSPECIFIED;
-
-So isn’t this the better approach and actually cleaner code? And I would still add a comment above setting passkey = 0.
-
-Am I missing anything?
-
-Regards
-
-Marcel
-
+So, given all that complexity, and the fact that nobody actually does
+anything with the limited and incorrect information we tried to provide
+today, I think it's fair to say that anybody who wants to start to do
+anything with that information can delve into all the complexity around
+"what number should we return, and what does it really mean".  In the
+meantime, let's just ditch the complexity and pretense that this number
+means anything.
