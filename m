@@ -2,137 +2,136 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0329C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B7C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E872173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtjY32mo"
+	by mail.kernel.org (Postfix) with ESMTP id F2A902068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582069996;
+	bh=YjCz20u5qK9/aj8t+FGcAcBFISIhsH0FVDLB4Ogpfeg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FqDRlbnOa8/Da11EKvZmfq0dDkySKPMuGm8ezlRh+EC4zjML2XuCKGwP7U4lcOSro
+	 SGVeiT+7gCA/oO+LoyTys72d2lsEKDK/jGyEscb7RCKnfM0+2jXClWIks8dBykJHSw
+	 H5EkN4zbDFMtdUzTVvVqE1yzSWBEVW7M+PrRi7Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgBRXvM (ORCPT
+        id S1726962AbgBRXxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:51:12 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34826 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbgBRXvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:51:12 -0500
-Received: by mail-pj1-f68.google.com with SMTP id q39so1709473pjc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 15:51:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=H9Vy91VcgS2dfjojUgyTLRgs44OJ1u3F7tZb9F/g2s4=;
-        b=XtjY32moCVDQQioAXHxahEf5oYVhgz+Ms4AFWGGTaFP4778HtoUNBVCZbW/C2qLolT
-         kDIi0JZqXC7NMPPKTviR9qMq/uEd/2YzpTjSe9IaITXu8Pl4JEDP9qbdg7sIIRVZ//1i
-         KtiroPgJmXpywPRGIY+tRmnl8PQ6+OMwaraP1VH0SOJ5WbBohMTNLRPRezZYc2qxq/sa
-         2W6kvsh9Fs6Fpve+mm0yDRQIeZ7choax1gRTSiFCOkog4mfLEzJV9OH+KkcYvUUFNjHX
-         S+Hc+3xvGjLdqBzUhHT2TzNGdEjWroRfLHHYpwd/TbZj2sO/pVmhcBrNVgTGZQBeSp5j
-         XUIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H9Vy91VcgS2dfjojUgyTLRgs44OJ1u3F7tZb9F/g2s4=;
-        b=t5r86UabGsFBt1GT/lDXCtWtR5L7mjN/SM5GkJ6C6LNSsAyFhvZgzWnnagaVdagqNJ
-         4bM35RGiGJRnP9oXPWEnaiPAJW9fmDpLAZH9Ifl0A/f+i4sXyGRvEshAcgk9EK8lXFqm
-         G7WqkHPoN9HpzaWkd02Q5fuA9gjtLVXAEbCdyVyi2C3Rjaearu0f4J9j7UZCLYCGaEO/
-         cYoG4JiPQYBktnWlzms07H+9ntKKUfCzmLya5dCpzSRz7Wjg4NgIGKGps6oemOIaVguk
-         S0X1rCXZrlqcolzixgTkDiHTURgP2oUl9f0JHZUO64WAjU8TfLn+hzX7ZEmRLygKomOJ
-         rK7w==
-X-Gm-Message-State: APjAAAWN6ju81e/K7oiII+YOX1kEz6zkJuNejPvbmlSrr4Lt4ruzA+N3
-        AlvlCwTBHTRATLPFI3CW9b+Z6Rpf9e4=
-X-Google-Smtp-Source: APXvYqxZ65WQ76i7D3Y4yE+ieYshnEw5upVN5/4FZ5xFsoWgY9MsPSPIm9vhiPRL+clNxV3M8q/PVw==
-X-Received: by 2002:a17:90b:1256:: with SMTP id gx22mr5711887pjb.94.1582069871497;
-        Tue, 18 Feb 2020 15:51:11 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id b1sm88455pgs.27.2020.02.18.15.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 15:51:10 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Pratham Pratap <prathampratap@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH] usb: dwc3: gadget: Update chain bit correctly when using sg list
-Date:   Tue, 18 Feb 2020 23:51:04 +0000
-Message-Id: <20200218235104.112323-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Feb 2020 18:53:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbgBRXxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:53:14 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD1B2465A;
+        Tue, 18 Feb 2020 23:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582069993;
+        bh=YjCz20u5qK9/aj8t+FGcAcBFISIhsH0FVDLB4Ogpfeg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IqUkCYBHI1LPGm/S4CRCNpyYKg2J7ClmF4QMfFfjs9V+Ntm9qpfPpnzePIe97WX/K
+         bcUC7dKjkV59OGb7WOp8QSyaYK8WY09lgcNUWb41IdKny223yk2g/H3WwMu5XQW70W
+         Q8zkLqs+mWhtURZYqA/ob4OafZpwrM9rQcUDofQQ=
+Received: by mail-qt1-f177.google.com with SMTP id w47so15906576qtk.4;
+        Tue, 18 Feb 2020 15:53:13 -0800 (PST)
+X-Gm-Message-State: APjAAAX1NtuZgmSFLkF8U0oFBmPrcZls26dXha1ZvaQQ766UqPfD8PuD
+        DmXIWnnoRl3IEvF7NxcLv+02VQCAEYb4NspIBA==
+X-Google-Smtp-Source: APXvYqxrJE335t2FjR4iBtJ6HJAhgu8z5nJYdc9dkse1UfSdNHwsqTSOPIax8IEVjBHsl64ZV1VYXZbERi+/c9/dMys=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr19867956qtc.136.1582069992571;
+ Tue, 18 Feb 2020 15:53:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20200218220748.54823-1-john.stultz@linaro.org>
+ <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com> <CALAqxLUTNq-Dg5Nd4PozCUx3K0hnVEJYmNnkpnGWGhph8vNr8w@mail.gmail.com>
+In-Reply-To: <CALAqxLUTNq-Dg5Nd4PozCUx3K0hnVEJYmNnkpnGWGhph8vNr8w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Feb 2020 17:53:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
+Message-ID: <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
+ to allow EPROBE_DEFER to be returned for longer
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pratham Pratap <prathampratap@codeaurora.org>
+On Tue, Feb 18, 2020 at 5:21 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Tue, Feb 18, 2020 at 2:51 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Feb 18, 2020 at 4:07 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+> > > at the end of initcall"), along with commit 25b4e70dcce9
+> > > ("driver core: allow stopping deferred probe after init") after
+> > > late_initcall, drivers will stop getting EPROBE_DEFER, and
+> > > instead see an error causing the driver to fail to load.
+> > >
+> > > That change causes trouble when trying to use many clk drivers
+> > > as modules, as the clk modules may not load until much later
+> > > after init has started. If a dependent driver loads and gets an
+> > > error instead of EPROBE_DEFER, it won't try to reload later when
+> > > the dependency is met, and will thus fail to load.
+> > >
+> > > This patch reworks some of the logic in
+> > > __driver_deferred_probe_check_state() so that if the
+> > > deferred_probe_timeout value is set, we will return EPROBE_DEFER
+> > > until that timeout expires, which may be after initcalls_done
+> > > is set to true.
+> > >
+> > > Specifically, on db845c, this change (when combined with booting
+> > > using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
+> > > QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
+> > > system, where as without it the display will fail to load.
+> >
+> > I would change the default for deferred_probe_timeout to 30 and then
+> > regulator code can rely on that.
+>
+> That is exactly what I do in the following patch! Let me know if you
+> have further suggestions for it.
 
-If scatter-gather operation is allowed, a large USB request is split
-into multiple TRBs. For preparing TRBs for sg list, driver iterates
-over the list and creates TRB for each sg and mark the chain bit to
-false for the last sg. The current IOMMU driver is clubbing the list
-of sgs which shares a page boundary into one and giving it to USB driver.
-With this the number of sgs mapped it not equal to the the number of sgs
-passed. Because of this USB driver is not marking the chain bit to false
-since it couldn't iterate to the last sg. This patch addresses this issue
-by marking the chain bit to false if it is the last mapped sg.
+Indeed.
 
-At a practical level, this patch resolves USB transfer stalls
-seen with adb on dwc3 based db845c, pixel3 and other qcom
-hardware after functionfs gadget added scatter-gather support
-around v4.20.
+Between the above comment and this comment in patch 2:
+/* preserve 30 second interval if deferred_probe_timeout=-1 */
 
-Credit also to Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-who implemented a very similar fix to this issue.
+...I was confused.
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Pratham Pratap <prathampratap@codeaurora.org>
-[jstultz: Slight tweak to remove sg_is_last() usage, reworked
-          commit message, minor comment tweak]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/usb/dwc3/gadget.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> > Curious, why 30 sec is fine now when
+> > you originally had 2 min? I'd just pick what you think is best. I
+> > doubt Mark had any extensive experiments to come up with 30sec.
+>
+> I had two minutes initially as, due to other delays I still have to
+> chase, booting all the way to UI on the db845c can sometimes take
+> almost a minute. So it was just a rough safety estimate. But in v2, I
+> tested with the 30 second time used by the regulator code, and that
+> seemed to work ok.
+>
+> As long as 30 seconds is working well, I'm ok with it for now (and it
+> can be overrided via boot arg). Though from past experience with
+> enterprise distros running on servers with tons of disks (which might
+> take many minutes to initialize), I'd suspect its likely some
+> environments may need much longer.
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 1b8014ab0b25..10aa511051e8 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1071,7 +1071,14 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
- 		unsigned int rem = length % maxp;
- 		unsigned chain = true;
- 
--		if (sg_is_last(s))
-+		/*
-+		 * IOMMU driver is coalescing the list of sgs which shares a
-+		 * page boundary into one and giving it to USB driver. With
-+		 * this the number of sgs mapped it not equal to the the number
-+		 * of sgs passed. Mark the chain bit to false if it is the last
-+		 * mapped sg.
-+		 */
-+		if ((i == remaining - 1))
- 			chain = false;
- 
- 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
--- 
-2.17.1
+Those systems aren't going to have a pinctrl or clock driver sitting
+in an encrypted RAID partition either. :)
 
+Rob
