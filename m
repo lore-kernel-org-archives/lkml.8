@@ -2,91 +2,142 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E4C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5363C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0B7207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C2D207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQHiDiSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgBRPvv (ORCPT
+        id S1726594AbgBRPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:51:51 -0500
-Received: from mga09.intel.com ([134.134.136.24]:47243 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgBRPvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:51:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 07:51:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="382490238"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 18 Feb 2020 07:51:46 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j45A4-0035xT-CI; Tue, 18 Feb 2020 17:51:48 +0200
-Date:   Tue, 18 Feb 2020 17:51:48 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     "fengping.yu" <fengping.yu@mediatek.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DTML <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V3 2/2] drivers: input: keyboard: add mtk keypad driver
-Message-ID: <20200218155148.GJ10400@smile.fi.intel.com>
-References: <20200114122738.103344-1-fengping.yu@mediatek.com>
- <20200114122738.103344-3-fengping.yu@mediatek.com>
- <CAOwMV_w=Ad8gt1rftFw_EbtaZ2uCz=oWpm_P5YMHLNpok7Q09Q@mail.gmail.com>
+        Tue, 18 Feb 2020 10:53:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54050 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726373AbgBRPxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:53:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582041203;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=Q+LvgNaJ530nPcNkzsaYj3wiY+FNtaDd/w1XVB2i/Z8=;
+        b=RQHiDiSJKdxFItonq5XUCHEVV+fB+qM38c9nBpBfGwU7gRbG4uJxcTdQxbcemzU7RiZEDZ
+        KrDBCazsbfUY57AtC/ipE8yO+f9yEveVjV5syrKeYY+69qBsG0Ej8H1K3HdNaKkm75Efke
+        9gcdt5v2UOdTXskOqgmE6yjuSne5ksk=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-393-szdE0gK1MwSFkEVpoRqaOg-1; Tue, 18 Feb 2020 10:53:14 -0500
+X-MC-Unique: szdE0gK1MwSFkEVpoRqaOg-1
+Received: by mail-qt1-f197.google.com with SMTP id x8so13379677qtq.14
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:53:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Q+LvgNaJ530nPcNkzsaYj3wiY+FNtaDd/w1XVB2i/Z8=;
+        b=clYN3Eo3Mm9Jw7sx+CJ71msHIKYROcQe4Xyprx3PhgFibOQFUoxFLA/+PDid1wZydo
+         AyS9yaGRJ54A0o/cIE2y/2MoJ28BbZ5s+KppBnfC4o5DI4X4XVWqVXnN7zM+YYmoIQTC
+         54W7GhStlBlgP0kbQeZHrQ7NRHtKW/SsoTWEzkW51/2kdsNAhPCqp7H66Lgwf3naTQ7L
+         3FkSen5ZEUXzDcvhWwlqzNQ7jfYIPYfxqrUz0ClcYOss2JkUGD187Ls4Q2t+U1ePPI1H
+         lw/y1t6nh64yBx22j5oj2nV5FwHkOAGZ0b5hD1xhYAeHCB27bfDdzzGmcVlAtfKWGA0s
+         1jSw==
+X-Gm-Message-State: APjAAAXU+ylo1G7agnl7QpJTKcHyAokOsU4QnO88TUKtce67YBY49dh4
+        jX2r/UrwOruMEfHhv2eui+mZNeZCKV38bz1RagiKUQHaNhjg/qSFq4aoZ8WQiyXqMgvhU9Y9Dq8
+        /n4Pkk4WPmHb5QUEKeRfBFEJF
+X-Received: by 2002:ac8:2a55:: with SMTP id l21mr18262804qtl.111.1582041193920;
+        Tue, 18 Feb 2020 07:53:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxx86PkNdwWLfRNVUu9A9AJPwjH27gBb/xg1DG+ZjwS9PDON2cDdI1BbzPHkVEt5g0bAtA72w==
+X-Received: by 2002:ac8:2a55:: with SMTP id l21mr18262775qtl.111.1582041193542;
+        Tue, 18 Feb 2020 07:53:13 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id x3sm2037808qts.35.2020.02.18.07.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 07:53:12 -0800 (PST)
+Date:   Tue, 18 Feb 2020 08:53:11 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, jroedel@suse.de,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5 v2] iommu/vt-d: Do deferred attachment in
+ iommu_need_mapping()
+Message-ID: <20200218155311.kt6fd25odl2gzu2t@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, jroedel@suse.de,
+        David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
+References: <20200217193858.26990-1-joro@8bytes.org>
+ <20200217193858.26990-4-joro@8bytes.org>
+ <83b21e50-9097-06db-d404-8fe400134bac@linux.intel.com>
+ <20200218092827.tp3pq67adzr56k7e@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAOwMV_w=Ad8gt1rftFw_EbtaZ2uCz=oWpm_P5YMHLNpok7Q09Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200218092827.tp3pq67adzr56k7e@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:14:24PM +0100, Fabien Parent wrote:
-> On Tue, Jan 14, 2020 at 1:39 PM fengping.yu <fengping.yu@mediatek.com> wrote:
+On Tue Feb 18 20, Joerg Roedel wrote:
+>Hi Baolu,
+>
+>On Tue, Feb 18, 2020 at 10:38:14AM +0800, Lu Baolu wrote:
+>> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> > index 42cdcce1602e..32f43695a22b 100644
+>> > --- a/drivers/iommu/intel-iommu.c
+>> > +++ b/drivers/iommu/intel-iommu.c
+>> > @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
+>> >   static struct dmar_domain *deferred_attach_domain(struct device *dev)
+>> >   {
+>> > -	if (unlikely(attach_deferred(dev)))
+>> > -		do_deferred_attach(dev);
+>> > -
+>>
+>> This should also be moved to the call place of deferred_attach_domain()
+>> in bounce_map_single().
+>>
+>> bounce_map_single() assumes that devices always use DMA domain, so it
+>> doesn't call iommu_need_mapping(). We could do_deferred_attach() there
+>> manually.
+>
+>Good point, thanks for your review. Updated patch below.
+>
+>From 3a5b8a66d288d86ac1fd45092e7d96f842d0cccf Mon Sep 17 00:00:00 2001
+>From: Joerg Roedel <jroedel@suse.de>
+>Date: Mon, 17 Feb 2020 17:20:59 +0100
+>Subject: [PATCH 3/5] iommu/vt-d: Do deferred attachment in
+> iommu_need_mapping()
+>
+>The attachment of deferred devices needs to happen before the check
+>whether the device is identity mapped or not. Otherwise the check will
+>return wrong results, cause warnings boot failures in kdump kernels, like
+>
+>	WARNING: CPU: 0 PID: 318 at ../drivers/iommu/intel-iommu.c:592 domain_get_iommu+0x61/0x70
+>
+>	[...]
+>
+>	 Call Trace:
+>	  __intel_map_single+0x55/0x190
+>	  intel_alloc_coherent+0xac/0x110
+>	  dmam_alloc_attrs+0x50/0xa0
+>	  ahci_port_start+0xfb/0x1f0 [libahci]
+>	  ata_host_start.part.39+0x104/0x1e0 [libata]
+>
+>With the earlier check the kdump boot succeeds and a crashdump is written.
+>
+>Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
-...
-
-> > +#define KP_STA                         0x0000
-> > +#define KP_MEM1                                0x0004
-> > +#define KP_MEM2                                0x0008
-> > +#define KP_MEM3                                0x000c
-> > +#define KP_MEM4                                0x0010
-> > +#define KP_MEM5                                0x0014
-> > +#define KP_DEBOUNCE                    0x0018
-> > +#define KP_SEL                         0x0020
-> > +#define KP_EN                          0x0024
-
-...
-
-> > +#define KPD_NUM_MEMS   5
-> > +#define KPD_MEM5_BITS  8
-> > +#define KPD_NUM_KEYS   72      /* 4 * 16 + KPD_MEM5_BITS */
-
-> > +       kpd_get_keymap_state(keypad->base, new_state);
-> 
-> kpd_get_keymap_state(keypad->base + KP_MEM1, new_state);
-
-Why?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
