@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8614C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C41C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8086224125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082A42176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK8w573e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRUEd5Ys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgBRUQY (ORCPT
+        id S1727755AbgBRUQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:16:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42445 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgBRUQP (ORCPT
+        Tue, 18 Feb 2020 15:16:59 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39906 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgBRUQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k11so25506900wrd.9;
-        Tue, 18 Feb 2020 12:16:14 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:20 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so4322051wme.4;
+        Tue, 18 Feb 2020 12:16:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uCOvUqXndu0FXRimsvIZXqxdLu4CTTZ92HjAKcokS0g=;
-        b=UK8w573eUVjtwrWFsyz+LRkruPH1ZBEFG92oeS90NlT2H9eI86fHr+n42dWQwzuwkq
-         K1L/tvXNu4okKMwz1PdlBzJIRoIfHCBXmYBAVSKviCEpdTFZHhht9QqeWBYfKNkM9Gwv
-         FaMPp6JgMBIZviyMpe59eFnStTn6AgVzxpiAKWnHbPRu6tDgDla/c3HDymmu59AVH5rx
-         /K07yVjVpP244IAWXLmhOzbX9xuJs1CPwl9cy5NJ+Iu/t1itOj4XtSNvH5SIWaHDg5d2
-         Ja/YqDtFLp60T4EszVW16eRm9lluQ9WtUNS2hgI6w/L8rOCGjh1Svg1Rb6EwM8Zcj1Yg
-         /Drw==
+        bh=KO1P8TdhCF+ETf7N0G7DCO6PDxSuep8oXUSJME3PY5U=;
+        b=rRUEd5Ys244cV+9+fCeybZ3/qRaIGZIc7ZgqLnxKXfVDeSOycb7xNY9gHTVqdy4PxD
+         sjiStvp9luDgLGIrPuR5Y8BZk27Bmpl3UXL9DIXo60G1YPQtITRxt7BIDoNQoB22dHqS
+         xf9ObloDWjAPR7C2GU9UZj8o+LWZbq/4GuQP3mzaWy0s/jxnVMUlVHTe3W/bZzvMBnXX
+         7kvVmPCcjjWP+U+NqhHMAjQcxVs66vXFjJHnUnCKY9Yt1uNWrrK2LusEaUar+Wazcx9k
+         v1BK/lgU8oy2Uh5zN6tUfg4hEKSq+0gtXisPxzZpPAgXLOB9YgCQUCSpJjFaYVwtCjvB
+         G8CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uCOvUqXndu0FXRimsvIZXqxdLu4CTTZ92HjAKcokS0g=;
-        b=Kk6f7rX/P00/eLNyKEuAMtCdi373H/GFX1ikmhH13nb59x6+FtIT2ia0Eh1jrcuGen
-         qM4tIo04JIzilLYf0VgANEgimB7QCW3n9fwf5E9dR0zBZ6plnzARb52CfyufgBk41Lmi
-         xe/QHeizBnWySAl3AWUpvJuyVIHpwG+4hCmRO29SKexfeITKKu1qdP+XgUCChil+apYf
-         mnAmMfpAbKh8P70qEWXSSV88+Mi7Jaaw5/XmE9YzdqL7LsBAIqYiFfDMJ5+X2YdGozqQ
-         IME5gZXyXZo86Ac3XTb7NPW/4vaKcTX17xRlhVPtG+JMpdhD5tqKkFopiC6SMRayZ8k6
-         8xsA==
-X-Gm-Message-State: APjAAAU2gwG34v8+VcAuS7x2o26p7O22DsKgpRnbzoXq8S7Vui2G9nti
-        Oz+eko8SOSpFvAKALIMsiUFbYxv4
-X-Google-Smtp-Source: APXvYqygRztvLJ4KgoREMpd3P1KMgN7wV0tLI3gbOARfAosvcRH5DEZHla6u1s7G53VyLEaAsnL++A==
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr31684406wrv.9.1582056973305;
-        Tue, 18 Feb 2020 12:16:13 -0800 (PST)
+        bh=KO1P8TdhCF+ETf7N0G7DCO6PDxSuep8oXUSJME3PY5U=;
+        b=h0IJSaBh2t+MqqqzWU/MWitaQ7qwDdslPSwGHELRQD5eqAC2VFgaQjMhoDFlT+O3C+
+         PP0H8e6vKOHge549ZSeS2zr45q/yH5K0eMaCCAC/J+oU9qdpp/CMT0jZiN3YVNUezBJ5
+         fQEPDuEjGlrYEO6bdcfw9JaBxEYVm7JXFgAqSHAGZdmAFMoenRkaRVqHS1TYY24elaCj
+         fhtBazmn/cwa11AhxFmezyhst5Z84eoe60enwNE1s5Z/Lm3PPKREPxODMYeTCsUH88P8
+         B7dbLtoS1WP+RDgJWh02NF2rWInss/Enxr6vQrvDD1KGCUSdS5vtzspuyeuVzY5Ic24t
+         oE9w==
+X-Gm-Message-State: APjAAAUgNUJjCRikZXU8gMEZYz++dtFNIshWaIDHzfX0B0ArGmiZ5Vtd
+        sU8tNmIpRK/duxXvLm/xEOOBbAw0
+X-Google-Smtp-Source: APXvYqxFvQJshXF+hlst3EZZ7WhubwUoRajwaHk+PuguQm/0lfFRnmjnP3Y7G2aeGeyOP/0tRzQHvw==
+X-Received: by 2002:a05:600c:10d2:: with SMTP id l18mr4855422wmd.122.1582056978481;
+        Tue, 18 Feb 2020 12:16:18 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id o77sm4907924wme.34.2020.02.18.12.16.12
+        by smtp.googlemail.com with ESMTPSA id p5sm7485636wrt.79.2020.02.18.12.16.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:12 -0800 (PST)
-Subject: [PATCH net-next v2 05/13] enic: use new helper tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:18 -0800 (PST)
+Subject: [PATCH net-next v2 10/13] net: socionext: use new helper
+ tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     David Miller <davem@davemloft.net>,
-        Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <f5b68c9f-ecdc-004d-b493-e0a7009ab5dd@gmail.com>
-Date:   Tue, 18 Feb 2020 21:02:26 +0100
+Message-ID: <6f02ce1c-aef7-6127-1724-72f7eee56810@gmail.com>
+Date:   Tue, 18 Feb 2020 21:09:17 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -85,23 +85,26 @@ Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index ddf60dc9a..3fc858b2c 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -696,8 +696,7 @@ static void enic_preload_tcp_csum(struct sk_buff *skb)
- 		tcp_hdr(skb)->check = ~csum_tcpudp_magic(ip_hdr(skb)->saddr,
- 			ip_hdr(skb)->daddr, 0, IPPROTO_TCP, 0);
- 	} else if (skb->protocol == cpu_to_be16(ETH_P_IPV6)) {
--		tcp_hdr(skb)->check = ~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
--			&ipv6_hdr(skb)->daddr, 0, IPPROTO_TCP, 0);
-+		tcp_v6_gso_csum_prep(skb);
- 	}
- }
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index e8224b543..6266926fe 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -1148,11 +1148,7 @@ static netdev_tx_t netsec_netdev_start_xmit(struct sk_buff *skb,
+ 				~tcp_v4_check(0, ip_hdr(skb)->saddr,
+ 					      ip_hdr(skb)->daddr, 0);
+ 		} else {
+-			ipv6_hdr(skb)->payload_len = 0;
+-			tcp_hdr(skb)->check =
+-				~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						 &ipv6_hdr(skb)->daddr,
+-						 0, IPPROTO_TCP, 0);
++			tcp_v6_gso_csum_prep(skb);
+ 		}
  
+ 		tx_ctrl.tcp_seg_offload_flag = true;
 -- 
 2.25.1
 
