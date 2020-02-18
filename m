@@ -2,245 +2,149 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99915C3403A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE01DC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C7D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5AB2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="chFZvMok"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="E8o1r3gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgBRMoc (ORCPT
+        id S1726655AbgBRMpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:44:32 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35564 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgBRMoc (ORCPT
+        Tue, 18 Feb 2020 07:45:02 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23974 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726512AbgBRMpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:44:32 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IChFUY016476;
-        Tue, 18 Feb 2020 06:43:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582029795;
-        bh=ta+i5kdqlBabGZiL7sfQra7k6ZhyhgsMg6lC7O4YRD4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=chFZvMokcZf3+ThmhqogSYcURzUmjtM+mSxFkhhuLBLvJ5HeogjpZH8LIk93wfSAz
-         FDDhnTTRIOIdNddPOnaH3ZvulVWD5JJRLbqL7Z9kSAng1sfyoc8S6vmUaMvXhiuuGH
-         se9vRKHuocyxMXT5XN2s5iUB0WE6QiRv2SnuAGhA=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IChFi1081232
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 06:43:15 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 06:43:14 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 06:43:14 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IChA0F048688;
-        Tue, 18 Feb 2020 06:43:11 -0600
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
-Date:   Tue, 18 Feb 2020 14:43:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 07:45:01 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IChkDH012049;
+        Tue, 18 Feb 2020 13:44:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=k7lT4JiHZjcRlL3CLHgK7w2auTnnYEAi4jW68DE+cfg=;
+ b=E8o1r3gsaX8mHd0y2t0TyuE1YwyIXuKXSSifnj2CiBekDyLskriStwD3xeko0q0nlref
+ Wx5e6Z+A9z10Ah8naTvk8CmrvNOdF9g01ZzvkJlkjIN7lZy5qwPIHvfC9CMht76Eq0s/
+ 1k0RiBqlA2RnqD386uDBq+jfB45TsEicf05/4mrLy/CzXp5Gv/nHCeh2AjheY1uaK4Gu
+ WqubKHhCZV5D8v56t8m0j35cTA+4ezfZHbpi2jfp8CE/OrJuf3vW/BId/PlJGArbQqY/
+ j2U8pSBOwZm1xGTHXPqz8BOjOe+FULizj1EoPELsfhJMFqeMUjv7yWNKcKoDTG6Digo9 dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y6705t52s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 13:44:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10D10100034;
+        Tue, 18 Feb 2020 13:44:54 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 06FC82AEFF4;
+        Tue, 18 Feb 2020 13:44:54 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 18 Feb
+ 2020 13:44:53 +0100
+Subject: Re: [PATCH] phy: core: Fix phy_get() to not return error on link
+ creation failure
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, youling257 <youling257@gmail.com>
+References: <20200218121418.6292-1-kishon@ti.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <9051ea53-29d4-bd7a-675b-9c534794b7af@st.com>
+Date:   Tue, 18 Feb 2020 13:44:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200217231001.GC35972@atomide.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200218121418.6292-1-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+Hi Kishon
 
-On 18/02/2020 1.10, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200217 12:10]:
->> On 14/02/2020 19.03, Tony Lindgren wrote:
->>> But right now in droid4 voice call case mcbsp is just the i2s transport,
->>> and everything happens betwee the modem and the cpcap pmic.
->>
->> Iow you don't need McBSP DAI at all. If you would have added the dummy
->> codec to McBSP !3 and use that, it would work in a same way, or to DMIC
->> or McPDM...
->>
->> The McBSP ops are NULL for the dummy dai, so McBSP is turned off.
+On 2/18/20 1:14 PM, Kishon Vijay Abraham I wrote:
+> commit 987351e1ea77 ("phy: core: Add consumer device link support")
+> added device link support between PHY consumer and PHY provider.
+> However certain peripherals (DWC3 ULPI) have cyclic dependency
+> between the PHY provider and PHY consumer causing the device link
+> creation to fail.
 > 
-> Hmm yeah I don't know if the cpcap codec on the same mcbsp needs
-> mcbsp for voice call.
+> Instead of erroring out on failure to create device link, only add a
+> debug print to indicate device link creation failed to get USB
+> working again in multiple platforms.
 > 
-> According to Sebastian sounds like mcbsp can be idle at that point.
+> Fixes: 987351e1ea77 ("phy: core: Add consumer device link support")
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+
+I was close to send it also :). Thanks for it.
+
+Reviewed-by: Alexandre TORGUE <alexandre.torgue@st.com>
+
+Thanks
+Alex
+
+>   drivers/phy/phy-core.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
 > 
-> But what about capture of voice call at the mcbsp from the
-> TDM slot? In that case mcbsp would be active.
-
-Sure, but with the dummy dai it won't....
-
-If I understand correctly the HW setup:
-McBSP2 -> CPCAP_hifi (only playback)
-
-CPCAP_voice is the i2s clock master.
-McBSP3, CPCAP_voice, MDM6600 and WL1285 are all connected together via
-i2s lines.
-
-In case of Voice call with analog mic/speaker only CPCAP_voice and
-MDM6600 is used.
-In case of Voice call with BT only MDM6600 and WL1285 is used (but
-CPCAP_voice must provide the clocks?)
-In case you would have any algorithm running on OMAP4 for the calls,
-then you will have McBSP3 inserted and used between MDM6600 and
-CPAC_voice/WL1285.
-Similarly, if you would like to tap in and record the data from the bus
-you will have McBSP3 enabled.
-
-The simplest use cases you want to support:
-A. McBSP3 <-> CPCAP_voice (playback/capture)
-B. MDM6600 <-> CPCAP_voice (handset mic/speaker voice call)
-C. MDM6600 <-> WL1285 (BT voice call)
-D. McBSP3 <-> BT (VoIP?)
-
-I would not bother with recording the call as you would need tom
-reconfigure the McBSP playback pin (is it even possible) as input to
-OMAP4, I think..
-
-B/C is codec2codec, McBSP3 is not involved at all.
-A/D is when McBSP3 is used only.
-
-Imho this can be represented as
-McBSP2: 1 port
-	1.1: to CPCAP_hifi
-
-McBSP3: 1 port, 2 endpoint
-	2.1: to CPCAP_voice
-	2.2: to WL1285
-CPCAP: 2 ports
-	hifi:	3.1: to McBSP2
-	voice:	4.1: to McBSP3
-		4.2: to MDM6600
-MDM6600: 2 ports
-	5.1: to CPAC_voice
-	5.2: to WL1285
-WL1285: 2 ports
-	6.1: to McBSP3
-	6.2: to MDM6600
-
-The machine driver should switch between the graph links based on the
-use case for the interconnected devices:
-A: 2.2 <-> 4.1
-B: 4.2 <-> 5.1
-C: 6.2 <-> 5.1
-D: 2.2 <-> 6.1
-
-Can a generic card provide such a functionality?
-In case of B/C you should not have a running stream imho.
-In all cases CPCAP_voice should be able to run the clocks on i2s, even
-if it is not used by the audio setup.
-Not sure if you can just turn Wl1285 as master, but it is possible that
-it is master, but silent when it is not used?
-
-I'm not sure if we should span out dummy dais for endpoints within a
-port. Imho the port _is_ the dai. Different endpoints might use
-different TDM slots on the port (or the same slot, which makes them
-exclusive).
-
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index cd5a6c95dbdc..a27b8d578d7f 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -688,11 +688,9 @@ struct phy *phy_get(struct device *dev, const char *string)
+>   	get_device(&phy->dev);
+>   
+>   	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+> -	if (!link) {
+> -		dev_err(dev, "failed to create device link to %s\n",
+> +	if (!link)
+> +		dev_dbg(dev, "failed to create device link to %s\n",
+>   			dev_name(phy->dev.parent));
+> -		return ERR_PTR(-EINVAL);
+> -	}
+>   
+>   	return phy;
+>   }
+> @@ -803,11 +801,9 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+>   	}
+>   
+>   	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+> -	if (!link) {
+> -		dev_err(dev, "failed to create device link to %s\n",
+> +	if (!link)
+> +		dev_dbg(dev, "failed to create device link to %s\n",
+>   			dev_name(phy->dev.parent));
+> -		return ERR_PTR(-EINVAL);
+> -	}
+>   
+>   	return phy;
+>   }
+> @@ -852,11 +848,9 @@ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
+>   	devres_add(dev, ptr);
+>   
+>   	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+> -	if (!link) {
+> -		dev_err(dev, "failed to create device link to %s\n",
+> +	if (!link)
+> +		dev_dbg(dev, "failed to create device link to %s\n",
+>   			dev_name(phy->dev.parent));
+> -		return ERR_PTR(-EINVAL);
+> -	}
+>   
+>   	return phy;
+>   }
 > 
->>>>>> I know it was discussed, but can not find the mail:
->>>>>> Can you brief again on the audio connection?
->>>>>
->>>>> Below is a link to a mailing list thread where Sebastian describes
->>>>> the audio connection:
->>>>>
->>>>> https://lkml.org/lkml/2018/3/28/881
->>>>
->>>> Thanks!
->>>>  
->>>>>> Do you have branch with working code?
->>>>>
->>>>> Yeah I have slightly older set of the patches in my droid4-pending-v5.5
->>>>> kernel.org git branch with voice calls working.
->>>>
->>>> I think I should put my droid4 out and try to get it working...
->>>> Do you have a link for dummies to follow to get started? ;)
->>>
->>> Probably the easiest one to use right now is the Maemo-leste devuan based
->>> test image using v5.5 kernel + modem and audio patches:
->>>
->>> https://leste.maemo.org/Motorola_Droid_4
->>>
->>> Just use a decent speed micro-sd card rated "a1" for example.
->>
->> Cool. Now I can dual boot the droid4 :D
->> I needed to rewrite the /etc/shadow to get a known root password so I
->> can log in.
-> 
-> Not sure if you mean password for the droid4-kexecboot or the
-> Linux distro you installed..
-
-It was for the maemo-leste.
-Bringing up Gentoo will be a bit harder as I don't have wifi stuff in my
-reference image...
-
-> But for droid4-kexecboot, you
-> can configure it to automatically download new kernels over wlan.
-> There's some info on the machine specific password and how to
-> configure wlan in the droid4-kexecboot buildroot commits here:
-> 
-> https://github.com/tmlind/buildroot/commits/droid4-kexecboot-2017.11
-> 
->> Wifi is up, so in theory I can scp kernel/dtb to /boot/boot/ and update
->> the /boot/boot/boot.cfg to boot my kernel, right?
-> 
-> Yeah you can update kernels and modules over wlan from the distro(s)
-> you have configured, and also from droid4-kexecboot as above.
-
-I need to try droid4-kexecboot's wifi support then.
-
-> And note that kexecboot looks for a boot/boot.cfg file to use on
-> every usable parition it finds and uses all the found entries
-> based on the priority configured for the boot.cfg entry.
-
-OK, thanks!
-
-> 
-> Regards,
-> 
-> Tony
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
