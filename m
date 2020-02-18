@@ -2,197 +2,173 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E00C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ED4C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60CB22527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01B82176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="QinxkUM/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wj2hN1Ys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBRPld (ORCPT
+        id S1726645AbgBRPmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:41:33 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40087 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgBRPld (ORCPT
+        Tue, 18 Feb 2020 10:42:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36464 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgBRPmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:41:33 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n18so23476009ljo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:41:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1prNYVi8te7tpWxKFgmK7lDkMWxtco2vgGigTJkyqhk=;
-        b=QinxkUM/O6Civ5jQpx/cuVNRO8J5+mvs4duVtsr3xz9OrwvnLc9JOcvO6b31sBwh5m
-         HZdxicIZPBgdplsEFqpPqBDAx7PMuK8KJe84FhsQ/nH1OxAC0bzLqimtyli5Gmy9wcGA
-         47/hc/xCOk8pTbcfL8fVKVf/M3a4YLzIyhX8Vq+nyG/1Ux0XmTrXwbZkxxiTmZ/1qyUZ
-         N7jZqgWGM/FxrBvEEIsy/c9VIELiYV6+KzSNNgMudKPN0zT7rCvqbdk75w77kXu1mG8A
-         BN9eGYn7q15twXvI7aLSaKQoZEhJdNplhvwvqpeUudiziyCVyzNvmTHsbenQr4yhWu4g
-         X1sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1prNYVi8te7tpWxKFgmK7lDkMWxtco2vgGigTJkyqhk=;
-        b=MKIxRgdmJ79VQEsqRmCpFKJdQr0YaBLIZmhFcFATbkxsEs2RUkBiL7wGJ6omslgIrR
-         JlyZMz25pTgDobh1CLevOoPavota38hayKFlA2mqW5MTby4hz/RldNYkLyRsH5+VQ79K
-         Jbm30CD+r9DCs/5l0Q0bKDbIplhRXa1nbr5JZQ5OXg9mXELIQ+hODqqI6SYsCk3yAHy+
-         s87goj0eZAPXFVNPCLuNicahDJnVdbaQjI3IyOhI+SyAMMoqaTCvlI830HABKwCovooy
-         NQqBLPjcLKPUeOu6t5P19pNlE6wMcUYyKuJsLRoVduSgAmD3Cd6Tc4H3CnTDyWyFYvYU
-         bCcw==
-X-Gm-Message-State: APjAAAV2gpeQ1ZetYNfSz0m36SYor+FLWKtKpG2oiIq4zQkl7EX/9inc
-        8KvbJQq8n4vATGXPTGEgtiJv+gWK3vk=
-X-Google-Smtp-Source: APXvYqy02bAtARqs+xW5We+9JpED8EM7JDMzMhWAW6eWMmMGlvg2dNW69eQ4eWi532XnQLXF9CeDTA==
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr12507646ljg.154.1582040489372;
-        Tue, 18 Feb 2020 07:41:29 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id b1sm2932370ljp.72.2020.02.18.07.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 07:41:28 -0800 (PST)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 5F99E100FA3; Tue, 18 Feb 2020 18:41:56 +0300 (+03)
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Justin He <Justin.He@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: [PATCH] mm: Avoid data corruption on CoW fault into PFN-mapped VMA
-Date:   Tue, 18 Feb 2020 18:41:51 +0300
-Message-Id: <20200218154151.13349-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 18 Feb 2020 10:42:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oQ+wHGdx1ULBXPBam1g8Uipf1yyfaaqxmlrcZ982o9k=; b=Wj2hN1Ys6lneGYnt6lyt28p7dX
+        xcPHY3DggtQF0V8rHudxsyMEruSBB+yksYd5K4jTPpH1Sb6FwieHFjL9L4y2tE2u/FKfJKGHM07zk
+        7aVuKRme2EL4Yz9RAVR+an3Misj05c3UKPtIB2h8TZRI5Is3OFhiQdPCfewKzO/jjjB0pr4J84clk
+        JoeAVeGLWbHKY/xgLceP9WBHTLk19SxEnQx8FM7lcnxbWFWqoM7F8w+JhQvm0Ci7daJwE+nGYHtn3
+        +8vcZGb7YOcxncpzTgWcLFEqCwt6gz/YgXx5oaJ9EhecdpELGPuj8YQkK5ZbDKGuAWwReHfNZzohN
+        EfWd+hMA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j450w-0007Ik-FJ; Tue, 18 Feb 2020 15:42:22 +0000
+Date:   Tue, 18 Feb 2020 07:42:22 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
+Message-ID: <20200218154222.GQ7778@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-12-willy@infradead.org>
+ <20200218061459.GM10776@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218061459.GM10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff Moyer has reported that one of xfstests triggers a warning when run
-on DAX-enabled filesystem:
+On Tue, Feb 18, 2020 at 05:14:59PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:45:52AM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > At allocation time, put the pages in the cache unless we're using
+> > ->readpages.  Add the readahead_for_each() iterator for the benefit of
+> > the ->readpage fallback.  This iterator supports huge pages, even though
+> > none of the filesystems to be converted do yet.
+> 
+> This could be better written - took me some time to get my head
+> around it and the code.
+> 
+> "When populating the page cache for readahead, mappings that don't
+> use ->readpages need to have their pages added to the page cache
+> before ->readpage is called. Do this insertion earlier so that the
+> pages can be looked up immediately prior to ->readpage calls rather
+> than passing them on a linked list. This early insert functionality
+> is also required by the upcoming ->readahead method that will
+> replace ->readpages.
+> 
+> Optimise and simplify the readpage loop by adding a
+> readahead_for_each() iterator to provide the pages we need to read.
+> This iterator also supports huge pages, even though none of the
+> filesystems have been converted to use them yet."
 
-	WARNING: CPU: 76 PID: 51024 at mm/memory.c:2317 wp_page_copy+0xc40/0xd50
-	...
-	wp_page_copy+0x98c/0xd50 (unreliable)
-	do_wp_page+0xd8/0xad0
-	__handle_mm_fault+0x748/0x1b90
-	handle_mm_fault+0x120/0x1f0
-	__do_page_fault+0x240/0xd70
-	do_page_fault+0x38/0xd0
-	handle_page_fault+0x10/0x30
+Thanks, I'll use that.
 
-The warning happens on failed __copy_from_user_inatomic() which tries to
-copy data into a CoW page.
+> > +static inline struct page *readahead_page(struct readahead_control *rac)
+> > +{
+> > +	struct page *page;
+> > +
+> > +	if (!rac->_nr_pages)
+> > +		return NULL;
+> 
+> Hmmmm.
+> 
+> > +
+> > +	page = xa_load(&rac->mapping->i_pages, rac->_start);
+> > +	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> > +	rac->_batch_count = hpage_nr_pages(page);
+> 
+> So we could have rac->_nr_pages = 2, and then we get an order 2
+> large page returned, and so rac->_batch_count = 4.
 
-This happens because of race between MADV_DONTNEED and CoW page fault:
+Well, no, we couldn't.  rac->_nr_pages is incremented by 4 when we add
+an order-2 page to the readahead.  I can put a
+	BUG_ON(rac->_batch_count > rac->_nr_pages)
+in here to be sure to catch any logic error like that.
 
-	CPU0					CPU1
- handle_mm_fault()
-   do_wp_page()
-     wp_page_copy()
-       do_wp_page()
-					madvise(MADV_DONTNEED)
-					  zap_page_range()
-					    zap_pte_range()
-					      ptep_get_and_clear_full()
-					      <TLB flush>
-	 __copy_from_user_inatomic()
-	 sees empty PTE and fails
-	 WARN_ON_ONCE(1)
-	 clear_page()
+> > @@ -159,6 +152,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+> >  	unsigned long i;
+> >  	loff_t isize = i_size_read(inode);
+> >  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> > +	bool use_list = mapping->a_ops->readpages;
+> >  	struct readahead_control rac = {
+> >  		.mapping = mapping,
+> >  		.file = filp,
+> 
+> [ I do find these unstructured mixes of declarations and
+> initialisations dense and difficult to read.... ]
 
-The solution is to re-try __copy_from_user_inatomic() under PTL after
-checking that PTE is matches the orig_pte.
+Fair ... although I didn't create this mess, I can tidy it up a bit.
 
-The second copy attempt can still fail, like due to non-readable PTE,
-but there's nothing reasonable we can do about, except clearing the CoW
-page.
+> > -		page->index = offset;
+> > -		list_add(&page->lru, &page_pool);
+> > +		if (use_list) {
+> > +			page->index = offset;
+> > +			list_add(&page->lru, &page_pool);
+> > +		} else if (add_to_page_cache_lru(page, mapping, offset,
+> > +					gfp_mask) < 0) {
+> > +			put_page(page);
+> > +			goto read;
+> > +		}
+> 
+> Ok, so that's why you put read code at the end of the loop. To turn
+> the code into spaghetti :/
+> 
+> How much does this simplify down when we get rid of ->readpages and
+> can restructure the loop? This really seems like you're trying to
+> flatten two nested loops into one by the use of goto....
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-and-tested-by: Jeff Moyer <jmoyer@redhat.com>
----
- mm/memory.c | 35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
+I see it as having two failure cases in this loop.  One for "page is
+already present" (which already existed) and one for "allocated a page,
+but failed to add it to the page cache" (which used to be done later).
+I didn't want to duplicate the "call read_pages()" code.  So I reshuffled
+the code rather than add a nested loop.  I don't think the nested loop
+is easier to read (we'll be at 5 levels of indentation for some statements).
+Could do it this way ...
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 0bccc622e482..e8bfdf0d9d1d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2257,7 +2257,7 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
- 	bool ret;
- 	void *kaddr;
- 	void __user *uaddr;
--	bool force_mkyoung;
-+	bool locked = false;
- 	struct vm_area_struct *vma = vmf->vma;
- 	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long addr = vmf->address;
-@@ -2282,11 +2282,11 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
- 	 * On architectures with software "accessed" bits, we would
- 	 * take a double page fault, so mark it accessed here.
- 	 */
--	force_mkyoung = arch_faults_on_old_pte() && !pte_young(vmf->orig_pte);
--	if (force_mkyoung) {
-+	if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
- 		pte_t entry;
+@@ -218,18 +218,17 @@ void page_cache_readahead_limit(struct address_space *mapping,
+                } else if (add_to_page_cache_lru(page, mapping, offset,
+                                        gfp_mask) < 0) {
+                        put_page(page);
+-                       goto read;
++read:
++                       if (readahead_count(&rac))
++                               read_pages(&rac, &page_pool);
++                       rac._nr_pages = 0;
++                       rac._start = ++offset;
++                       continue;
+                }
+                if (i == nr_to_read - lookahead_size)
+                        SetPageReadahead(page);
+                rac._nr_pages++;
+                offset++;
+-               continue;
+-read:
+-               if (readahead_count(&rac))
+-                       read_pages(&rac, &page_pool);
+-               rac._nr_pages = 0;
+-               rac._start = ++offset;
+        }
  
- 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-+		locked = true;
- 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
- 			/*
- 			 * Other thread has already handled the fault
-@@ -2310,18 +2310,37 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
- 	 * zeroes.
- 	 */
- 	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-+		if (locked)
-+			goto warn;
-+
-+		/* Re-validate under PTL if the page is still mapped */
-+		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-+		locked = true;
-+		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-+			/* The PTE changed under us. Retry page fault. */
-+			ret = false;
-+			goto pte_unlock;
-+		}
-+
- 		/*
--		 * Give a warn in case there can be some obscure
--		 * use-case
-+		 * The same page can be mapped back since last copy attampt.
-+		 * Try to copy again under PTL.
- 		 */
--		WARN_ON_ONCE(1);
--		clear_page(kaddr);
-+		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-+			/*
-+			 * Give a warn in case there can be some obscure
-+			 * use-case
-+			 */
-+warn:
-+			WARN_ON_ONCE(1);
-+			clear_page(kaddr);
-+		}
- 	}
- 
- 	ret = true;
- 
- pte_unlock:
--	if (force_mkyoung)
-+	if (locked)
- 		pte_unmap_unlock(vmf->pte, vmf->ptl);
- 	kunmap_atomic(kaddr);
- 	flush_dcache_page(dst);
--- 
-2.25.1
+        /*
 
+but I'm not sure that's any better.
