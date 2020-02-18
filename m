@@ -2,153 +2,166 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD3FC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B204C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A4820836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F2E20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RtOguG0s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAo7jbuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgBRFlo (ORCPT
+        id S1726206AbgBRFn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:41:44 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41956 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgBRFln (ORCPT
+        Tue, 18 Feb 2020 00:43:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:56028 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgBRFn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:41:43 -0500
-Received: by mail-pf1-f195.google.com with SMTP id j9so10048556pfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 21:41:42 -0800 (PST)
+        Tue, 18 Feb 2020 00:43:27 -0500
+Received: by mail-pj1-f65.google.com with SMTP id d5so512171pjz.5;
+        Mon, 17 Feb 2020 21:43:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=esjIwXMBf/hgdFfGBIjggPZwNclD7vRz+/fGr5r+Z2E=;
-        b=RtOguG0sNrSmHKOP6ewO8LT+ei2pgaBCnqI0Sa3rNdfs8HCP6LII4+OueoQw83a3VK
-         j40L1T/Pf5byRFDukW/msBNJ+loNhBNgVRAMHc3bLny4aOd/MWF+PxHyusUToa0F210C
-         NZ3HGDQeFT33d96fHhZqPTmIlr7x+grAu/9sZNSdEQwAUP53vz+LKKfk6+3vR4yr6KZ/
-         2A2lFsrM1NyeatXa/yRCULqvBVuK0wY9uDfHsC3JhtTyGKhE4oYXuuib7mPH81oADaTD
-         zss65SrCuaScvuvCmZzFmouw79wZi9eMDB741ilsfMj1E8jc+XsfESiUDOA8U7/VXxTQ
-         tk+A==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=WEpfeOp5vZhDYg4OxZGgpOVUu6OTNleZynBaicYdCeM=;
+        b=KAo7jbuPiacrEd6LJdarm48YnC0xplHogBHcaipVbzri/Gf5EslQOdJtcB9sPEn1tc
+         FCNw02PIEUpK2GqA5mvEOtVcNYM8eouQSqpH/mqfne0DV+I1mlxYO9X08MDWY7VJf5I5
+         Poea88dwhMk4kfK9VKZB64vhEQjAN8XFHkYpE8hSA61Ap93DWrc4cg840jhgCHyQbgtT
+         l0YCysWVj616uMKRAYtcltUMf2RhH06BupNjlXZIwZvs0FLoWFDkZUqBBNd/UeCLjDBw
+         CVNdVyc2fthpNPqqbBy/zbaEFPLAD28JUusn4Mo+VO7LrP8toj+7w//y2xltkySs2vQj
+         AGhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=esjIwXMBf/hgdFfGBIjggPZwNclD7vRz+/fGr5r+Z2E=;
-        b=R6rUZHriP3Etn1iVAgZB3tiPsdG1tEp6U+D6QuRFGJ/1TXm52JbbfuF261RBLuvu1e
-         jmCbyq4tLb+g7kpslB9SiOgabmgr1DPB2OgY9oCOyIS7bnY9tqiaKhtM0SESSV9ITQ2g
-         eQPaLvpchGKiGDahBNHyhP7FX1ALsglXA/Hi0pWHztI+Jxj5p2+9jJwKVCj2jEvH9knS
-         LsYUaytcnEETMzndcDqZ5mcZxH0g8dMWOW179T9N1RonFTAivz22ghE5SqsiezfT/ZuH
-         DUBC26na+QjFReAlAByLB8LMcTnfWx4TdctNtN+AfQDoPNk4eRKov2wGh9CWcidL3pRQ
-         3vIw==
-X-Gm-Message-State: APjAAAWUHXpPIDLAP7byVpY239pRmNOxD+P5rVkasQG8vFZZdRitxRfT
-        NV1mmM4vHxUH4dQt9K6FrwQHYQ==
-X-Google-Smtp-Source: APXvYqzs308xRKAwyAmQ7Qew/TEy0TtQ8KfvWXBSdmvdvthEHpFolOD3XpfjaX7qYllV6Lt78Mk+iw==
-X-Received: by 2002:a63:ed49:: with SMTP id m9mr20824593pgk.304.1582004501721;
-        Mon, 17 Feb 2020 21:41:41 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id f3sm2731827pga.38.2020.02.17.21.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 21:41:41 -0800 (PST)
-Date:   Mon, 17 Feb 2020 21:41:40 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jeremy Cline <jcline@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [patch] mm, thp: track fallbacks due to failed memcg charges
- separately
-Message-ID: <alpine.DEB.2.21.2002172139310.152060@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WEpfeOp5vZhDYg4OxZGgpOVUu6OTNleZynBaicYdCeM=;
+        b=GRQnHTtqdZJFbeIiF4QIiOmdm7bh+24zg+5MSm5bKWyNzC+qA/Fi2SGAVZ4O0U8ms+
+         qvqoxlS8Ay/8Ypu2HHC8J/pNDgv338sGWmcyM31P1ZZ9/HnXbMtqs4MKKjBNNb9VliX8
+         r9iPwGo4rU4M/Yrq+3OtYlYk4oF55oh4Xz1XN2Ict9Q7u3eEX59LXMUiUuyG6bLAOr49
+         o9nqNECWUOJdeLui0L6eWeYm7G5Lak7kZKYRw9cIQdCm3YGMTCbItk3Ixcac2GAIFqtb
+         uifv8E4tdHxb9SzcMGcKRWgD+OnCBKSdbz0Bl4Rze/yhztC6geEZih5rCzm1mF4pGhgk
+         G4MQ==
+X-Gm-Message-State: APjAAAUIKmG0Sq630nR1XSiymqPWa3ak3MHpsMLLDNZtl1GoIL/2NXwN
+        19dXzissJTbgh7ByX5Wzxh0=
+X-Google-Smtp-Source: APXvYqxgoCOWtjTsIGW4bU5shwQO55FQSXikBaj4lrwMfTVwCeCN3H9Ietu8EChSfkmoDUEW3CJwOQ==
+X-Received: by 2002:a17:90a:3745:: with SMTP id u63mr594668pjb.123.1582004606378;
+        Mon, 17 Feb 2020 21:43:26 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id l29sm2658748pgb.86.2020.02.17.21.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 21:43:25 -0800 (PST)
+Subject: Re: general protection fault in l2cap_sock_getsockopt
+To:     syzbot <syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com>,
+        davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+References: <0000000000007838f1059ed1cea5@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <1a4385eb-ddae-5411-786d-e818f91dbb7c@gmail.com>
+Date:   Mon, 17 Feb 2020 21:43:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <0000000000007838f1059ed1cea5@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The thp_fault_fallback stat in either /proc/vmstat is incremented if 
-either the hugepage allocation fails through the page allocator or the 
-hugepage charge fails through mem cgroup.
 
-This patch leaves this field untouched but adds a new field,
-thp_fault_fallback_charge, which is incremented only when the mem cgroup
-charge fails.
 
-This distinguishes between faults that want to be backed by hugepages but
-fail due to fragmentation (or low memory conditions) and those that fail
-due to mem cgroup limits.  That can be used to determine the impact of 
-fragmentation on the system by excluding faults that failed due to memcg 
-usage.
+On 2/17/20 8:07 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    c25a951c Add linux-next specific files for 20200217
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=171b1a29e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6446a589a5ca34dd6e8b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10465579e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16dabb11e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com
+> 
+> general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> CPU: 0 PID: 9844 Comm: syz-executor679 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
+> Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
+> RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
+> RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
+> RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
+> R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
+> R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
+> FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  __sys_getsockopt+0x16d/0x310 net/socket.c:2175
+>  __do_sys_getsockopt net/socket.c:2190 [inline]
+>  __se_sys_getsockopt net/socket.c:2187 [inline]
+>  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2187
+>  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440149
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffcb256f088 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440149
+> RDX: 000000000000000e RSI: 0000000000000112 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000020000140 R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019d0
+> R13: 0000000000401a60 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 63f0b6416dbaab7d ]---
+> RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
+> Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
+> RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
+> RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
+> RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
+> R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
+> R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
+> FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
 
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- Documentation/admin-guide/mm/transhuge.rst | 5 +++++
- include/linux/vm_event_item.h              | 1 +
- mm/huge_memory.c                           | 2 ++
- mm/vmstat.c                                | 1 +
- 4 files changed, 9 insertions(+)
+Probably caused by commit eab2404ba798a8efda2a970f44071c3406d94e57
+Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Date:   Fri Feb 14 10:08:57 2020 -0800
 
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -310,6 +310,11 @@ thp_fault_fallback
- 	is incremented if a page fault fails to allocate
- 	a huge page and instead falls back to using small pages.
- 
-+thp_fault_fallback_charge
-+	is incremented if a page fault fails to charge a huge page and
-+	instead falls back to using small pages even through the
-+	allocation was successful.
-+
- thp_collapse_alloc_failed
- 	is incremented if khugepaged found a range
- 	of pages that should be collapsed into one huge page but failed
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -73,6 +73,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 		THP_FAULT_ALLOC,
- 		THP_FAULT_FALLBACK,
-+		THP_FAULT_FALLBACK_CHARGE,
- 		THP_COLLAPSE_ALLOC,
- 		THP_COLLAPSE_ALLOC_FAILED,
- 		THP_FILE_ALLOC,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -597,6 +597,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
- 	if (mem_cgroup_try_charge_delay(page, vma->vm_mm, gfp, &memcg, true)) {
- 		put_page(page);
- 		count_vm_event(THP_FAULT_FALLBACK);
-+		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
- 		return VM_FAULT_FALLBACK;
- 	}
- 
-@@ -1406,6 +1407,7 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
- 			put_page(page);
- 		ret |= VM_FAULT_FALLBACK;
- 		count_vm_event(THP_FAULT_FALLBACK);
-+		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
- 		goto out;
- 	}
- 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1254,6 +1254,7 @@ const char * const vmstat_text[] = {
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	"thp_fault_alloc",
- 	"thp_fault_fallback",
-+	"thp_fault_fallback_charge",
- 	"thp_collapse_alloc",
- 	"thp_collapse_alloc_failed",
- 	"thp_file_alloc",
+    Bluetooth: Add BT_PHY socket option
+
