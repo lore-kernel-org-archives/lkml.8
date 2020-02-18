@@ -2,118 +2,97 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277A2C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4213C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0153520801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDA822B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046547;
-	bh=EGhAsUkIvhU8WDm8JZDsTO+dlMNKBMhJZr/j8/uNxQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O2h2LI4kpCfJHSlIolJOOpEBsCKLpOvCRatHkh2qPaLbwC/AzVKfLlYMPz1V3ioJT
-	 +A5d+zrpP/BhuvZ4XyQnT5opFkVuZO36rj7aukWoLBdG4RZGMLnG1dvwlPdnRYZLg+
-	 8JiqbSmLpzTmm94fx/WqaPMySV9wijHNhNIkxBLA=
+	s=default; t=1582046586;
+	bh=j2Iac1zey820mNpdh5yJdPFMBBkcx1p+/nwylqP9Bj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BNUeHS3NZdC/WfGEKz52dvyRf/VLg72qebRV5CJzSeccvBrI2iERR0yjiqp4AshK0
+	 OgjZ7cDClnjWk+d16im5VXlfv0s20wj9Pb/0FeowyXD9kalQfpLadWMg6zwlZJNZRB
+	 j6DZJ0Y0UlTB9ypNj1DfOYWNXXXmiDs0j+Vc6FtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgBRRWZ (ORCPT
+        id S1726783AbgBRRXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:22:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 12:23:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgBRRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:22:24 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726605AbgBRRXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:23:05 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F6A324658;
-        Tue, 18 Feb 2020 17:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5306F20801;
+        Tue, 18 Feb 2020 17:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582046543;
-        bh=EGhAsUkIvhU8WDm8JZDsTO+dlMNKBMhJZr/j8/uNxQ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SHCfUCqZlmGLZTpPu00SQWJCY5DLhEaTqcB7D3s+7ICahxrwiGfONT9z9IS49hboB
-         2rDjl9aYLZD5+YTld9acSdIYX1LKa5lUfNh2F9VGOUfIyW8KZ4P5hWbtCe20OB2jiv
-         fPm/KkQMpCIlI8I1eKtWs8Kc9mAbEUv/tblrSG2s=
-Received: by mail-qt1-f172.google.com with SMTP id l21so15047675qtr.8;
-        Tue, 18 Feb 2020 09:22:23 -0800 (PST)
-X-Gm-Message-State: APjAAAUbViOiZoRA6FWWMzWLkR+mrqIa9/38umzkIsQbRkis6VAS64ux
-        uF8YWLzGC0lgPr2Ac189RZiFhcuwjkof9jzkSg==
-X-Google-Smtp-Source: APXvYqzvomkaq2cYvIcbqCikDarF6HVBOijnl9/y9umpypDYM660czkdGk1ZNY/7srJxC52TnjBfWf7DCNwvoDl6UZo=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr18308325qtp.224.1582046542695;
- Tue, 18 Feb 2020 09:22:22 -0800 (PST)
-MIME-Version: 1.0
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com> <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
- <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com> <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
- <20200217132133.GA27134@lst.de> <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
-In-Reply-To: <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 18 Feb 2020 11:22:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
-Message-ID: <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
+        s=default; t=1582046584;
+        bh=j2Iac1zey820mNpdh5yJdPFMBBkcx1p+/nwylqP9Bj4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pGRedyRNM0efhtBXW3mukIv+0Uyx6UFrCDbXNxScGGlS2kUHuf6Z9u5cvnGH2VWIy
+         VkGS9156ykY8H/gDdmCTkV+MFWiVdh3DiGfyr7ajOhFrJqs4dkwqrQ6H6z1Yn7urSI
+         cJWxWOtaqgY9/KrBPR/ucs/jZ3LiWrbmvtYMmeq8=
+Date:   Tue, 18 Feb 2020 17:22:56 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Robin Murphy <robin.murphy@arm.com>,
-        =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 11/11] dt-bindings: Remove Calxeda platforms bindings
+Message-ID: <20200218172255.GG1133@willie-the-truck>
+References: <20200218171321.30990-1-robh@kernel.org>
+ <20200218171321.30990-12-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218171321.30990-12-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 2:28 AM Roger Quadros <rogerq@ti.com> wrote:
->
-> Chrishtoph,
->
-> The branch works fine for SATA on DRA7 with CONFIG_LPAE once I
-> have the below DT fix.
->
-> Do you intend to send these fixes to -stable?
->
-> ------------------------- arch/arm/boot/dts/dra7.dtsi -------------------------
-> index d78b684e7fca..853ecf3cfb37 100644
-> @@ -645,6 +645,8 @@
->                 sata: sata@4a141100 {
->                         compatible = "snps,dwc-ahci";
->                         reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-> +                       #size-cells = <2>;
-> +                       dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;
+On Tue, Feb 18, 2020 at 11:13:21AM -0600, Rob Herring wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/calxeda.yaml      | 22 ----------
+>  .../devicetree/bindings/arm/calxeda/l2ecc.txt | 15 -------
+>  .../devicetree/bindings/ata/sata_highbank.txt | 44 -------------------
+>  .../devicetree/bindings/clock/calxeda.txt     | 17 -------
+>  .../memory-controllers/calxeda-ddr-ctrlr.txt  | 16 -------
+>  .../devicetree/bindings/net/calxeda-xgmac.txt | 18 --------
+>  .../bindings/phy/calxeda-combophy.txt         | 17 -------
 
-dma-ranges should be in the parent (bus) node, not the device node.
+You can drop the "calxeda,smmu-secure-config-access" from the Arm SMMU
+binding doc too (either here, or as part of the other patch).
 
->                         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->                         phys = <&sata_phy>;
->                         phy-names = "sata-phy";
->
->
-> cheers,
-> -roger
->
-> On 17/02/2020 15:21, Christoph Hellwig wrote:
-> > Roger,
-> >
-> > can you try the branch below and check if that helps?
-> >
-> >      git://git.infradead.org/users/hch/misc.git arm-dma-bus-limit
-> >
-> > Gitweb:
-> >
-> >      http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/arm-dma-bus-limit
-> >
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Will
