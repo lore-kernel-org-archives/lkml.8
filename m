@@ -2,52 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D207C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4127AC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EA421D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BADA22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056410;
-	bh=ECGvmFKxD67Z6wpEVJNvoBIaymJUwKg9QKOsMuNJfNg=;
+	s=default; t=1582056417;
+	bh=whexkQU7G08k/GzfraOa3Wa/oXtPc+ny3/A8osupSgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eb0kUCfSr3lbekb1L4V15HU+uAu9UbgNvchdACdb18IO2+bhoIzdZvBm16zZe8aPv
-	 0uhpxOqZrtFlr7mkOcV+l3HRg4J8M8k+HDqVzgzyFitIH6yOhTWBuH8EJpL6R3X7jJ
-	 upWY0kZgRe5V+SjXD3qh22eGYN5jtkr6CdyJL6zY=
+	b=i5w/70rVlTn2fLBjU4p2DmRCt27hMXWBVxr/NsUdrUli98lIkfjnYhvdJAi0zPR3q
+	 ehIgrwgpH/pgWxvLrGQQpO/BzuonBsJgIOTnB0JBENFo0RHNhpY6eCoom4NjnQ4cOk
+	 nxKpuyI96FzgjnoRdRue/FVOkvqwmoge9PjQs4wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBRUGs (ORCPT
+        id S1728453AbgBRT7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:06:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38836 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbgBRT7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:55 -0500
+        id S1728069AbgBRT7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8C7524125;
-        Tue, 18 Feb 2020 19:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0F820659;
+        Tue, 18 Feb 2020 19:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055994;
-        bh=ECGvmFKxD67Z6wpEVJNvoBIaymJUwKg9QKOsMuNJfNg=;
+        s=default; t=1582055976;
+        bh=whexkQU7G08k/GzfraOa3Wa/oXtPc+ny3/A8osupSgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fetxkM/UFousr1MvFGjWeJ507eBFYoZTm4JkCrYJDEF9VrpNfjo1R43sxqDHfAaC8
-         YUGlLo7D01tokXzqaK6NwsgI5euGXLvpHBlI2E3F0rUVL4CuJzu9zf0KQezjw004n5
-         mZf7Hkfsqb2iGaQjVB/6wIhoTBxx0VfE1RnSkJpE=
+        b=kVeX2UiDUbYxys+8CDFSskJX+yeEPtwpZLFFqDMs3IbMoOLTmAvMd+QG8yXGzUyvA
+         FcIHI/bhUU9CsU3+1Y8Eefxf835P9salB4oCDftxlDf5esLkAifyWyB2SnBEuulkdR
+         F49dgosDrVz0lGc+S6Z+gGNd3NIDvxDreP2xVlOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 61/66] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
-Date:   Tue, 18 Feb 2020 20:55:28 +0100
-Message-Id: <20200218190433.829638977@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.4 16/66] ext4: fix checksum errors with indexed dirs
+Date:   Tue, 18 Feb 2020 20:54:43 +0100
+Message-Id: <20200218190429.586626139@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,106 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 ]
+commit 48a34311953d921235f4d7bbd2111690d2e469cf upstream.
 
-There is no need to delay the clearing of b_modified flag to the
-transaction committing time when unmapping the journalled buffer, so
-just move it to the journal_unmap_buffer().
+DIR_INDEX has been introduced as a compat ext4 feature. That means that
+even kernels / tools that don't understand the feature may modify the
+filesystem. This works because for kernels not understanding indexed dir
+format, internal htree nodes appear just as empty directory entries.
+Index dir aware kernels then check the htree structure is still
+consistent before using the data. This all worked reasonably well until
+metadata checksums were introduced. The problem is that these
+effectively made DIR_INDEX only ro-compatible because internal htree
+nodes store checksums in a different place than normal directory blocks.
+Thus any modification ignorant to DIR_INDEX (or just clearing
+EXT4_INDEX_FL from the inode) will effectively cause checksum mismatch
+and trigger kernel errors. So we have to be more careful when dealing
+with indexed directories on filesystems with checksumming enabled.
 
-Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+1) We just disallow loading any directory inodes with EXT4_INDEX_FL when
+DIR_INDEX is not enabled. This is harsh but it should be very rare (it
+means someone disabled DIR_INDEX on existing filesystem and didn't run
+e2fsck), e2fsck can fix the problem, and we don't want to answer the
+difficult question: "Should we rather corrupt the directory more or
+should we ignore that DIR_INDEX feature is not set?"
+
+2) When we find out htree structure is corrupted (but the filesystem and
+the directory should in support htrees), we continue just ignoring htree
+information for reading but we refuse to add new entries to the
+directory to avoid corrupting it more.
+
+Link: https://lore.kernel.org/r/20200210144316.22081-1-jack@suse.cz
+Fixes: dbe89444042a ("ext4: Calculate and verify checksums for htree nodes")
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/jbd2/commit.c      | 43 +++++++++++++++----------------------------
- fs/jbd2/transaction.c | 10 ++++++----
- 2 files changed, 21 insertions(+), 32 deletions(-)
+ fs/ext4/dir.c   |   14 ++++++++------
+ fs/ext4/ext4.h  |    5 ++++-
+ fs/ext4/inode.c |   12 ++++++++++++
+ fs/ext4/namei.c |    7 +++++++
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index c43591cd70f1c..7fdb5f130f642 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -974,34 +974,21 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		 * it. */
- 
- 		/*
--		* A buffer which has been freed while still being journaled by
--		* a previous transaction.
--		*/
--		if (buffer_freed(bh)) {
--			/*
--			 * If the running transaction is the one containing
--			 * "add to orphan" operation (b_next_transaction !=
--			 * NULL), we have to wait for that transaction to
--			 * commit before we can really get rid of the buffer.
--			 * So just clear b_modified to not confuse transaction
--			 * credit accounting and refile the buffer to
--			 * BJ_Forget of the running transaction. If the just
--			 * committed transaction contains "add to orphan"
--			 * operation, we can completely invalidate the buffer
--			 * now. We are rather through in that since the
--			 * buffer may be still accessible when blocksize <
--			 * pagesize and it is attached to the last partial
--			 * page.
--			 */
--			jh->b_modified = 0;
--			if (!jh->b_next_transaction) {
--				clear_buffer_freed(bh);
--				clear_buffer_jbddirty(bh);
--				clear_buffer_mapped(bh);
--				clear_buffer_new(bh);
--				clear_buffer_req(bh);
--				bh->b_bdev = NULL;
--			}
-+		 * A buffer which has been freed while still being journaled
-+		 * by a previous transaction, refile the buffer to BJ_Forget of
-+		 * the running transaction. If the just committed transaction
-+		 * contains "add to orphan" operation, we can completely
-+		 * invalidate the buffer now. We are rather through in that
-+		 * since the buffer may be still accessible when blocksize <
-+		 * pagesize and it is attached to the last partial page.
-+		 */
-+		if (buffer_freed(bh) && !jh->b_next_transaction) {
-+			clear_buffer_freed(bh);
-+			clear_buffer_jbddirty(bh);
-+			clear_buffer_mapped(bh);
-+			clear_buffer_new(bh);
-+			clear_buffer_req(bh);
-+			bh->b_bdev = NULL;
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -130,12 +130,14 @@ static int ext4_readdir(struct file *fil
+ 		if (err != ERR_BAD_DX_DIR) {
+ 			return err;
  		}
+-		/*
+-		 * We don't set the inode dirty flag since it's not
+-		 * critical that it get flushed back to the disk.
+-		 */
+-		ext4_clear_inode_flag(file_inode(file),
+-				      EXT4_INODE_INDEX);
++		/* Can we just clear INDEX flag to ignore htree information? */
++		if (!ext4_has_metadata_csum(sb)) {
++			/*
++			 * We don't set the inode dirty flag since it's not
++			 * critical that it gets flushed back to the disk.
++			 */
++			ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++		}
+ 	}
  
- 		if (buffer_jbddirty(bh)) {
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index bee8498d77929..3930c68a9c204 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2296,14 +2296,16 @@ static int journal_unmap_buffer(journal_t *journal, struct buffer_head *bh,
- 			return -EBUSY;
- 		}
- 		/*
--		 * OK, buffer won't be reachable after truncate. We just set
--		 * j_next_transaction to the running transaction (if there is
--		 * one) and mark buffer as freed so that commit code knows it
--		 * should clear dirty bits when it is done with the buffer.
-+		 * OK, buffer won't be reachable after truncate. We just clear
-+		 * b_modified to not confuse transaction credit accounting, and
-+		 * set j_next_transaction to the running transaction (if there
-+		 * is one) and mark buffer as freed so that commit code knows
-+		 * it should clear dirty bits when it is done with the buffer.
- 		 */
- 		set_buffer_freed(bh);
- 		if (journal->j_running_transaction && buffer_jbddirty(bh))
- 			jh->b_next_transaction = journal->j_running_transaction;
-+		jh->b_modified = 0;
- 		jbd2_journal_put_journal_head(jh);
- 		spin_unlock(&journal->j_list_lock);
- 		jbd_unlock_bh_state(bh);
--- 
-2.20.1
-
+ 	if (ext4_has_inline_data(inode)) {
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2476,8 +2476,11 @@ void ext4_insert_dentry(struct inode *in
+ 			struct ext4_filename *fname);
+ static inline void ext4_update_dx_flag(struct inode *inode)
+ {
+-	if (!ext4_has_feature_dir_index(inode->i_sb))
++	if (!ext4_has_feature_dir_index(inode->i_sb)) {
++		/* ext4_iget() should have caught this... */
++		WARN_ON_ONCE(ext4_has_feature_metadata_csum(inode->i_sb));
+ 		ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++	}
+ }
+ static const unsigned char ext4_filetype_table[] = {
+ 	DT_UNKNOWN, DT_REG, DT_DIR, DT_CHR, DT_BLK, DT_FIFO, DT_SOCK, DT_LNK
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4972,6 +4972,18 @@ struct inode *__ext4_iget(struct super_b
+ 		ret = -EFSCORRUPTED;
+ 		goto bad_inode;
+ 	}
++	/*
++	 * If dir_index is not enabled but there's dir with INDEX flag set,
++	 * we'd normally treat htree data as empty space. But with metadata
++	 * checksumming that corrupts checksums so forbid that.
++	 */
++	if (!ext4_has_feature_dir_index(sb) && ext4_has_metadata_csum(sb) &&
++	    ext4_test_inode_flag(inode, EXT4_INODE_INDEX)) {
++		ext4_error_inode(inode, function, line, 0,
++			 "iget: Dir with htree data on filesystem without dir_index feature.");
++		ret = -EFSCORRUPTED;
++		goto bad_inode;
++	}
+ 	ei->i_disksize = inode->i_size;
+ #ifdef CONFIG_QUOTA
+ 	ei->i_reserved_quota = 0;
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2205,6 +2205,13 @@ static int ext4_add_entry(handle_t *hand
+ 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
+ 		if (!retval || (retval != ERR_BAD_DX_DIR))
+ 			goto out;
++		/* Can we just ignore htree data? */
++		if (ext4_has_metadata_csum(sb)) {
++			EXT4_ERROR_INODE(dir,
++				"Directory has corrupted htree index.");
++			retval = -EFSCORRUPTED;
++			goto out;
++		}
+ 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
+ 		dx_fallback++;
+ 		ext4_mark_inode_dirty(handle, dir);
 
 
