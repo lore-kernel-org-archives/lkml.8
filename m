@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F38C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C497DC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C298E2464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F55924655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055991;
-	bh=+Hqck7iMxhv+AYtxEiIKQUM4VhzIE+JRj/EC+OoUySc=;
+	s=default; t=1582055994;
+	bh=KDjerKczOZHWwPnuBGNxgXOG0D9QiJQCmyfpxvInpYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U05qiD/UUHe0rJfAK90z4HqI9ffNt06QfdqB3aqNIrUruaq+MytlfZ0jCxtN8Xubg
-	 +8GTccHedXApgKjiy3+qPUZlrmhUk+DqnxdVcj2LvbqJ/BSG0cr4ssUEWU7wURA+Rw
-	 G+KG8biVt1r/UoCXo+a6jtXmx++NLEgf7QKPkzUk=
+	b=ksZvLBBoD8J87USWUPkNMnLEjFJd6L+o7XQYoA9yvg67q3UVlu/NQC6m30kmN4PBS
+	 AZXx/uehiQn85eh6gr09+G0u6HsDpvhtcuodnCzY4iV2n5KtGU7EXpC0pT2rZMRV4i
+	 q/o0IwLFXMlCunKKNBnWMkjThRkfRokS9aPnFP4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgBRT7u (ORCPT
+        id S1727709AbgBRT7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38668 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgBRT7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:47 -0500
+        id S1728483AbgBRT7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D3A2464E;
-        Tue, 18 Feb 2020 19:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB1072464E;
+        Tue, 18 Feb 2020 19:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055987;
-        bh=+Hqck7iMxhv+AYtxEiIKQUM4VhzIE+JRj/EC+OoUySc=;
+        s=default; t=1582055989;
+        bh=KDjerKczOZHWwPnuBGNxgXOG0D9QiJQCmyfpxvInpYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjN6+XsvQu5wQ4UodbjT/ie9Kdv4nFnEv/p3EOZyRXCQs4C5zCYdJnQwK9NaUF600
-         2oQ3bDPdMemo1xfBEdHYqWgbhroq5mzbwUAyNyULljcKujbAD92ndFqAW7+WYO7y4L
-         nlPQX+dP8rALSgi5e5TMS3qWPs6AJ8hJozchpekM=
+        b=tOtbGxPjdKhJeRJh5hreSYAfyyVGSpXTYcffSic8TIGxPoJjrqJeVEslpUoKfl9/b
+         W8TnXGLwUjLTpVaRvHNMKmwuyQNB0GoLdvzhZpfrvyGa6zJkk+8LXItK0tgKpCNJuA
+         owOVZaW3/Xtukmd+wPRb4Pl47mmXByT4/tiyBiq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 10/66] ACPICA: Introduce acpi_any_gpe_status_set()
-Date:   Tue, 18 Feb 2020 20:54:37 +0100
-Message-Id: <20200218190429.046627339@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 51/66] spmi: pmic-arb: Set lockdep class for hierarchical irq domains
+Date:   Tue, 18 Feb 2020 20:55:18 +0100
+Message-Id: <20200218190432.763926947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,173 +64,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-commit ea128834dd76f9a72a35d011c651fa96658f06a7 upstream.
+commit 2d5a2f913b658a7ae984773a63318ed4daadf4af upstream.
 
-Introduce a new helper function, acpi_any_gpe_status_set(), for
-checking the status bits of all enabled GPEs in one go.
+I see the following lockdep splat in the qcom pinctrl driver when
+attempting to suspend the device.
 
-It is needed to distinguish spurious SCIs from genuine ones when
-deciding whether or not to wake up the system from suspend-to-idle.
+ WARNING: possible recursive locking detected
+ 5.4.11 #3 Tainted: G        W
+ --------------------------------------------
+ cat/3074 is trying to acquire lock:
+ ffffff81f49804c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
 
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ but task is already holding lock:
+ ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   lock(&irq_desc_lock_class);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 6 locks held by cat/3074:
+  #0: ffffff81f01d9420 (sb_writers#7){.+.+}, at: vfs_write+0xd0/0x1a4
+  #1: ffffff81bd7d2080 (&of->mutex){+.+.}, at: kernfs_fop_write+0x12c/0x1fc
+  #2: ffffff81f4c322f0 (kn->count#337){.+.+}, at: kernfs_fop_write+0x134/0x1fc
+  #3: ffffffe411a41d60 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x348
+  #4: ffffff81f1c5e970 (&dev->mutex){....}, at: __device_suspend+0x168/0x41c
+  #5: ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+
+ stack backtrace:
+ CPU: 5 PID: 3074 Comm: cat Tainted: G        W         5.4.11 #3
+ Hardware name: Google Cheza (rev3+) (DT)
+ Call trace:
+  dump_backtrace+0x0/0x174
+  show_stack+0x20/0x2c
+  dump_stack+0xc8/0x124
+  __lock_acquire+0x460/0x2388
+  lock_acquire+0x1cc/0x210
+  _raw_spin_lock_irqsave+0x64/0x80
+  __irq_get_desc_lock+0x64/0x94
+  irq_set_irq_wake+0x40/0x144
+  qpnpint_irq_set_wake+0x28/0x34
+  set_irq_wake_real+0x40/0x5c
+  irq_set_irq_wake+0x70/0x144
+  pm8941_pwrkey_suspend+0x34/0x44
+  platform_pm_suspend+0x34/0x60
+  dpm_run_callback+0x64/0xcc
+  __device_suspend+0x310/0x41c
+  dpm_suspend+0xf8/0x298
+  dpm_suspend_start+0x84/0xb4
+  suspend_devices_and_enter+0xbc/0x620
+  pm_suspend+0x210/0x348
+  state_store+0xb0/0x108
+  kobj_attr_store+0x14/0x24
+  sysfs_kf_write+0x4c/0x64
+  kernfs_fop_write+0x15c/0x1fc
+  __vfs_write+0x54/0x18c
+  vfs_write+0xe4/0x1a4
+  ksys_write+0x7c/0xe4
+  __arm64_sys_write+0x20/0x2c
+  el0_svc_common+0xa8/0x160
+  el0_svc_handler+0x7c/0x98
+  el0_svc+0x8/0xc
+
+Set a lockdep class when we map the irq so that irq_set_wake() doesn't
+warn about a lockdep bug that doesn't exist.
+
+Fixes: 12a9eeaebba3 ("spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips")
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20200121183748.68662-1-swboyd@chromium.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpica/achware.h |    2 +
- drivers/acpi/acpica/evxfgpe.c |   32 ++++++++++++++++++
- drivers/acpi/acpica/hwgpe.c   |   71 ++++++++++++++++++++++++++++++++++++++++++
- include/acpi/acpixf.h         |    1 
- 4 files changed, 106 insertions(+)
+ drivers/spmi/spmi-pmic-arb.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/acpi/acpica/achware.h
-+++ b/drivers/acpi/acpica/achware.h
-@@ -101,6 +101,8 @@ acpi_status acpi_hw_enable_all_runtime_g
- 
- acpi_status acpi_hw_enable_all_wakeup_gpes(void);
- 
-+u8 acpi_hw_check_all_gpes(void);
-+
- acpi_status
- acpi_hw_enable_runtime_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
- 				 struct acpi_gpe_block_info *gpe_block,
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -795,6 +795,38 @@ acpi_status acpi_enable_all_wakeup_gpes(
- 
- ACPI_EXPORT_SYMBOL(acpi_enable_all_wakeup_gpes)
- 
-+/******************************************************************************
-+ *
-+ * FUNCTION:    acpi_any_gpe_status_set
-+ *
-+ * PARAMETERS:  None
-+ *
-+ * RETURN:      Whether or not the status bit is set for any GPE
-+ *
-+ * DESCRIPTION: Check the status bits of all enabled GPEs and return TRUE if any
-+ *              of them is set or FALSE otherwise.
-+ *
-+ ******************************************************************************/
-+u32 acpi_any_gpe_status_set(void)
-+{
-+	acpi_status status;
-+	u8 ret;
-+
-+	ACPI_FUNCTION_TRACE(acpi_any_gpe_status_set);
-+
-+	status = acpi_ut_acquire_mutex(ACPI_MTX_EVENTS);
-+	if (ACPI_FAILURE(status)) {
-+		return (FALSE);
-+	}
-+
-+	ret = acpi_hw_check_all_gpes();
-+	(void)acpi_ut_release_mutex(ACPI_MTX_EVENTS);
-+
-+	return (ret);
-+}
-+
-+ACPI_EXPORT_SYMBOL(acpi_any_gpe_status_set)
-+
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_install_gpe_block
---- a/drivers/acpi/acpica/hwgpe.c
-+++ b/drivers/acpi/acpica/hwgpe.c
-@@ -446,6 +446,53 @@ acpi_hw_enable_wakeup_gpe_block(struct a
- 
- /******************************************************************************
-  *
-+ * FUNCTION:    acpi_hw_get_gpe_block_status
-+ *
-+ * PARAMETERS:  gpe_xrupt_info      - GPE Interrupt info
-+ *              gpe_block           - Gpe Block info
-+ *
-+ * RETURN:      Success
-+ *
-+ * DESCRIPTION: Produce a combined GPE status bits mask for the given block.
-+ *
-+ ******************************************************************************/
-+
-+static acpi_status
-+acpi_hw_get_gpe_block_status(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
-+			     struct acpi_gpe_block_info *gpe_block,
-+			     void *ret_ptr)
-+{
-+	struct acpi_gpe_register_info *gpe_register_info;
-+	u64 in_enable, in_status;
-+	acpi_status status;
-+	u8 *ret = ret_ptr;
-+	u32 i;
-+
-+	/* Examine each GPE Register within the block */
-+
-+	for (i = 0; i < gpe_block->register_count; i++) {
-+		gpe_register_info = &gpe_block->register_info[i];
-+
-+		status = acpi_hw_read(&in_enable,
-+				      &gpe_register_info->enable_address);
-+		if (ACPI_FAILURE(status)) {
-+			continue;
-+		}
-+
-+		status = acpi_hw_read(&in_status,
-+				      &gpe_register_info->status_address);
-+		if (ACPI_FAILURE(status)) {
-+			continue;
-+		}
-+
-+		*ret |= in_enable & in_status;
-+	}
-+
-+	return (AE_OK);
-+}
-+
-+/******************************************************************************
-+ *
-  * FUNCTION:    acpi_hw_disable_all_gpes
-  *
-  * PARAMETERS:  None
-@@ -510,4 +557,28 @@ acpi_status acpi_hw_enable_all_wakeup_gp
- 	return_ACPI_STATUS(status);
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -731,6 +731,7 @@ static int qpnpint_irq_domain_translate(
+ 	return 0;
  }
  
-+/******************************************************************************
-+ *
-+ * FUNCTION:    acpi_hw_check_all_gpes
-+ *
-+ * PARAMETERS:  None
-+ *
-+ * RETURN:      Combined status of all GPEs
-+ *
-+ * DESCRIPTION: Check all enabled GPEs in all GPE blocks and return TRUE if the
-+ *              status bit is set for at least one of them of FALSE otherwise.
-+ *
-+ ******************************************************************************/
-+
-+u8 acpi_hw_check_all_gpes(void)
-+{
-+	u8 ret = 0;
-+
-+	ACPI_FUNCTION_TRACE(acpi_hw_check_all_gpes);
-+
-+	(void)acpi_ev_walk_gpe_list(acpi_hw_get_gpe_block_status, &ret);
-+
-+	return (ret != 0);
-+}
-+
- #endif				/* !ACPI_REDUCED_HARDWARE */
---- a/include/acpi/acpixf.h
-+++ b/include/acpi/acpixf.h
-@@ -748,6 +748,7 @@ ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_disable_all_gpes(void))
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_runtime_gpes(void))
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_wakeup_gpes(void))
-+ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(void))
++static struct lock_class_key qpnpint_irq_lock_class, qpnpint_irq_request_class;
  
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
- 				acpi_get_gpe_device(u32 gpe_index,
+ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
+ 				   struct irq_domain *domain, unsigned int virq,
+@@ -746,6 +747,9 @@ static void qpnpint_irq_domain_map(struc
+ 	else
+ 		handler = handle_level_irq;
+ 
++
++	irq_set_lockdep_class(virq, &qpnpint_irq_lock_class,
++			      &qpnpint_irq_request_class);
+ 	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
+ 			    handler, NULL, NULL);
+ }
 
 
