@@ -2,952 +2,299 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21014C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7918C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E1A24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE9D24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KWL5MIR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgBRJDb (ORCPT
+        id S1726415AbgBRJDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:03:31 -0500
-Received: from mga18.intel.com ([134.134.136.126]:19090 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbgBRJDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:03:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 01:03:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="asc'?scan'208";a="282736268"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.14])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 01:03:21 -0800
-Date:   Tue, 18 Feb 2020 16:50:28 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        thomas.prescher@cyberus-technology.de,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hang.yuan@intel.com, Zhenyu Wang <zhenyuw@linux.intel.com>,
-        zhiyuan.lv@intel.com
-Subject: Re: [PATCH v2 RESEND] drm/i915/gvt: make gvt oblivious of kvmgt data
- structures
-Message-ID: <20200218085028.GA31442@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20200217163858.26496-1-julian.stecklina@cyberus-technology.de>
+        Tue, 18 Feb 2020 04:03:47 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:47951 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726193AbgBRJDr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:03:47 -0500
+X-UUID: ee8eb1f503454e779ba3fac8aea5c13c-20200218
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=hp14eaxDN44Qpgi9FnlDryjalZhUF51GZ0if2Ng4jkQ=;
+        b=KWL5MIR7ZXzO11+QIpcf04X+HlOu23aMZrNoKU0dLAwmxM7yhv0ONPipVJzq6QH2S84R8yLSFhWUFzl6R6kEi+g3Z4Qjd0GA5HXvpyhPbNtj289D8kGYvjjvf37bxrc5uqs5+lzz/3tyWzpduLl1avmBqoGjflK+fyIwiT3cO2U=;
+X-UUID: ee8eb1f503454e779ba3fac8aea5c13c-20200218
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 855133698; Tue, 18 Feb 2020 17:03:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 18 Feb 2020 17:01:51 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 18 Feb 2020 17:01:35 +0800
+From:   <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v1 1/2] pinctrl: make MediaTek pinctrl v2 driver ready for buidling loadable module
+Date:   Tue, 18 Feb 2020 17:03:33 +0800
+Message-ID: <1582016614-20728-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
-Content-Disposition: inline
-In-Reply-To: <20200217163858.26496-1-julian.stecklina@cyberus-technology.de>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KR29vZ2xlIHBs
+YW4gdG8gbWFrZSBwbGF0Zm9ybSBkcml2ZXIgYXMga2VybmVsIG1vZHVsZSBmb3IgZnV0dXJlDQpB
+bmRyaW9kIGtlcm5lbC4gVGhpcyBwYXRjaCBtYWtlIHBpbmN0cmwtcGFyaXMuYyByZWFkeSBmb3Ig
+YnVpbGRpbmcgYXMNCmxvYWRhYmxlIG1vZHVsZS4gQmVzaWRlcywgbXRrLWVpbnQuYyBhbmQgcGlu
+Y3RybC1tdGstY29tbW9uLXYyLmMsDQp0aGUgZGVwZW5kZW50IG9iamVjdHMgb2YgcGluY3RybC1w
+YXJpcy5jLCBhcmUgbWFkZSB0byBiZSByZWFkeSBmb3INCmJ1aWxkaW5nIGFzIGxvYWRhYmxlIG1v
+ZHVsZS4NCg0KVGhlIGZvbGxvd2luZyBpcyB0aGUgcmF0aW9uYWxlIGZvciBkZXRlcm1pbmluZyB3
+aGV0aGVyIG10ay1laW50LmMsDQpwaW5jdHJsLW10ay1jb21tb24tdjIuYywgYW5kIHBpbmN0cmwt
+cGFyaXMuYyBhcmUgYnVpbHQgYXMgbG9hZGFibGUgbW9kdWxlOg0KDQoxLiBkcml2ZXJzL3BpbmN0
+cmwvbWVkaWF0ZWsvS2NvbmZpZzoNCjEuMSBQSU5DVFJMX01UWFhYWDogY2hhbmdlIGZyb20gYm9v
+bCB0byB0cmlzdGF0ZS4gSXQgaXMgc3BlY2lmaWVkIGluDQogICAgICAgIGRlZmNvbmZpZyBmaWxl
+LiBNVFhYWFggY2FuIG9ubHkgYmUgdGhlIHVzZXIgb2YgcGluY3RybC1wYXJpcywNCiAgICAgICAg
+d2hpY2ggY2FuIE1UNjc2NSBvciBNVDgxODMuIFRoZSBwYXRjaCBmb3IgY2hhbmdpbmcNCiAgICAg
+ICAgUElOQ1RSTF9NVDY3NjUgZnJvbSBib29sIHRvIHRyaXN0YXRlIHdpbGwgYmUgZ2l2ZW4gYXMg
+dGhlIG5leHQNCiAgICAgICAgcGF0Y2ggb2YgdGhlIHBhdGNoIHNlcmllcy4NCjEuMiBQSU5DVFJM
+X01US19QQVJJUzogY2hhbmdlIGZyb20gYm9vbCB0byB0cmlzdGF0ZSBhbmQgc2VsZWN0DQogICAg
+ICAgIFBJTkNUUkxfTVRLX1YyLiBObyBuZWVkIHRvIHNwZWNpZnkgaW4gZGVmY29uZmlnIGZpbGUu
+DQogICAgICAqIFBJTkNUUkxfTVRLX1BBUklTIHdpbGwgYmUgeSBpZiBhbnkgUElOQ1RSTF9NVFhY
+WFggc2VsZWN0aW5nDQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGlzIHkuDQogICAgICAqIFBJ
+TkNUUkxfTVRLX1BBUklTIHdpbGwgYmUgbiBpZiBhbGwgUElOQ1RSTF9NVFhYWFggc2VsZWN0aW5n
+DQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGlzIG4uDQogICAgICAqIFBJTkNUUkxfTVRLX1BB
+UklTIHdpbGwgYmUgbSBpZiBzb21lIFBJTkNUUkxfTVRYWFhYIHNlbGVjdGluZw0KICAgICAgICBQ
+SU5DVFJMX01US19QQVJJUyBhcmUgbSBhbmQgb3RoZXIgUElOQ1RSTF9NVFhYWFggc2VsZWN0aW5n
+DQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGFyZSBuLg0KMS4zIFBJTkNUUkxfTVRLX01PT1JF
+OiBzZWxlY3QgRUlOVF9NVEsgYW5kIFBJTkNUUkxfTVRLX1YyLiBJdCBpcyBtYWtlDQogICAgICAg
+IHRvIGJlIHJlYWR5IGZvciBidWlsZGluZyBhcyBsb2FkYWJsZSBrZXJuZWwgbW9kdWxlIGJlY2F1
+c2UgaXQNCiAgICAgICAgaXMgbm90IHVzZWQgb24gQW5kcm9pZCBrZXJuZWwuDQoxLjQgUElOQ1RS
+TF9NVEtfVjI6IGFkZCB0aGlzIHRyaXN0YXRlIGNvbmZpZyB3aGljaCBkZXBlbmRzIG9uDQogICAg
+ICAgIFBJTkNUUkxfTVRLX1BBUklTIGFuZCBQSU5DVFJMX01US19NT09SRS4gTm8gbmVlZCB0byBz
+cGVjaWZ5IGluDQogICAgICAgIGRlZmNvbmZpZyBmaWxlLg0KICAgICAgKiBQSU5DVFJMX01US19W
+MiB3aWxsIGJlIHkgaWYgZWl0aGVyIFBJTkNUUkxfTVRLX1BBUklTIG9yDQogICAgICAgIFBJTkNU
+UkxfTVRLX01PT1JFIGlzIHkuDQogICAgICAqIFBJTkNUUkxfTVRLX1YyIHdpbGwgYmUgbiBpZiBi
+b3RoIFBJTkNUUkxfTVRLX1BBUklTIGFuZA0KICAgICAgICBQSU5DVFJMX01US19NT09SRSBhcmUg
+bi4NCiAgICAgICogUElOQ1RSTF9NVEtfVjIgd2lsbCBiZSBtIGlmIFBJTkNUUkxfTVRLX1BBUklT
+IGlzIG0gYW5kDQogICAgICAgIFBJTkNUUkxfTVRLX01PT1JFIGlzIG4uDQoxLjUgRUlOVF9NVEs6
+IGNoYW5nZSBmcm9tIGJvb2wgdG8gdHJpc3RhdGUgYW5kIGFkZCBydWxlIGZvciBkZWZhdWx0Lg0K
+ICAgICAgICBObyBuZWVkIHRvIHNwZWNpZnkgaW4gZGVmY29uZmlnIGZpbGUuDQogICAgICAqIEZp
+cnN0IHJ1bGU6IGRldGVybWluZSBpZiBFSU5UX01USyBpcyB5IG9yIG4gYWNjb3JkaW5nIHRvDQog
+ICAgICAgIHNlbGVjdGlvbiBvZiBQSU5DVFJMX01USyBvciBQSU5DVFJMX01US19NT1JFLg0KICAg
+ICAgKiBTZWNvbmQgcnVsZTogZGV0ZXJtaW5lIGlmIEVJTlRfTVRLIGlzIHksIG0sIG9yIG4gYWNj
+b3JkaW5nIHRvDQogICAgICAgIHNlbGVjdGlvbiBvZiBQSU5DVFJMX01US19QQVJJUy4NCg0KMi4g
+ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlOiBVc2UgUElOQ1RSTF9NVEtfVjIgdG8g
+ZGV0ZXJtaW5lDQogICAgICAgIGlmIHBpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIGlzIGJ1aWx0IGFz
+IGxvYWRhYmxlIG1vZHVsZSBvcg0KICAgICAgICBidWlsdC1pbi4NCg0KU2lnbmVkLW9mZi1ieTog
+TGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGlu
+Y3RybC9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAgICAgICB8IDEzICsrKysrKysrKysrLS0N
+CiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgNSAr
+KystLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5jICAgICAgICAgICAgICB8
+ICA5ICsrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21t
+b24tdjIuYyB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9t
+ZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAgICB8ICA1ICsrKysrDQogZHJpdmVycy9waW5j
+dHJsL3BpbmNvbmYtZ2VuZXJpYy5jICAgICAgICAgICAgICAgIHwgIDEgKw0KIDYgZmlsZXMgY2hh
+bmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVr
+L0tjb25maWcNCmluZGV4IDcwMWY5YWYuLjRjZDExMDkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Bp
+bmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
+b25maWcNCkBAIC0zLDEwICszLDEyIEBAIG1lbnUgIk1lZGlhVGVrIHBpbmN0cmwgZHJpdmVycyIN
+CiAJZGVwZW5kcyBvbiBBUkNIX01FRElBVEVLIHx8IENPTVBJTEVfVEVTVA0KIA0KIGNvbmZpZyBF
+SU5UX01USw0KLQlib29sICJNZWRpYVRlayBFeHRlcm5hbCBJbnRlcnJ1cHQgU3VwcG9ydCINCisJ
+dHJpc3RhdGUgIk1lZGlhVGVrIEV4dGVybmFsIEludGVycnVwdCBTdXBwb3J0Ig0KIAlkZXBlbmRz
+IG9uIFBJTkNUUkxfTVRLIHx8IFBJTkNUUkxfTVRLX01PT1JFIHx8IFBJTkNUUkxfTVRLX1BBUklT
+IHx8IENPTVBJTEVfVEVTVA0KIAlzZWxlY3QgR1BJT0xJQg0KIAlzZWxlY3QgSVJRX0RPTUFJTg0K
+KwlkZWZhdWx0IHkgaWYgUElOQ1RSTF9NVEsgfHwgUElOQ1RSTF9NVEtfTU9PUkUNCisJZGVmYXVs
+dCBQSU5DVFJMX01US19QQVJJUw0KIA0KIGNvbmZpZyBQSU5DVFJMX01USw0KIAlib29sDQpAQCAt
+MTcsMjMgKzE5LDMwIEBAIGNvbmZpZyBQSU5DVFJMX01USw0KIAlzZWxlY3QgRUlOVF9NVEsNCiAJ
+c2VsZWN0IE9GX0dQSU8NCiANCitjb25maWcgUElOQ1RSTF9NVEtfVjINCisJdHJpc3RhdGUNCisJ
+ZGVwZW5kcyBvbiBQSU5DVFJMX01US19NT09SRSB8fCBQSU5DVFJMX01US19QQVJJUw0KKw0KIGNv
+bmZpZyBQSU5DVFJMX01US19NT09SRQ0KIAlib29sDQogCWRlcGVuZHMgb24gT0YNCiAJc2VsZWN0
+IEdFTkVSSUNfUElOQ09ORg0KIAlzZWxlY3QgR0VORVJJQ19QSU5DVFJMX0dST1VQUw0KIAlzZWxl
+Y3QgR0VORVJJQ19QSU5NVVhfRlVOQ1RJT05TDQorCXNlbGVjdCBFSU5UX01USw0KIAlzZWxlY3Qg
+R1BJT0xJQg0KIAlzZWxlY3QgT0ZfR1BJTw0KKwlzZWxlY3QgUElOQ1RSTF9NVEtfVjINCiANCiBj
+b25maWcgUElOQ1RSTF9NVEtfUEFSSVMNCi0JYm9vbA0KKwl0cmlzdGF0ZQ0KIAlkZXBlbmRzIG9u
+IE9GDQogCXNlbGVjdCBQSU5NVVgNCiAJc2VsZWN0IEdFTkVSSUNfUElOQ09ORg0KIAlzZWxlY3Qg
+R1BJT0xJQg0KIAlzZWxlY3QgRUlOVF9NVEsNCiAJc2VsZWN0IE9GX0dQSU8NCisJc2VsZWN0IFBJ
+TkNUUkxfTVRLX1YyDQogDQogIyBGb3IgQVJNdjcgU29Dcw0KIGNvbmZpZyBQSU5DVFJMX01UMjcw
+MQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZSBiL2RyaXZl
+cnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZQ0KaW5kZXggYTc0MzI1YS4uNGI3MTMyOCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZQ0KKysrIGIvZHJpdmVy
+cy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlDQpAQCAtMiw4ICsyLDkgQEANCiAjIENvcmUNCiBv
+YmotJChDT05GSUdfRUlOVF9NVEspCQkrPSBtdGstZWludC5vDQogb2JqLSQoQ09ORklHX1BJTkNU
+UkxfTVRLKQkrPSBwaW5jdHJsLW10ay1jb21tb24ubw0KLW9iai0kKENPTkZJR19QSU5DVFJMX01U
+S19NT09SRSkgKz0gcGluY3RybC1tb29yZS5vIHBpbmN0cmwtbXRrLWNvbW1vbi12Mi5vDQotb2Jq
+LSQoQ09ORklHX1BJTkNUUkxfTVRLX1BBUklTKSArPSBwaW5jdHJsLXBhcmlzLm8gcGluY3RybC1t
+dGstY29tbW9uLXYyLm8NCitvYmotJChDT05GSUdfUElOQ1RSTF9NVEtfVjIpCSs9IHBpbmN0cmwt
+bXRrLWNvbW1vbi12Mi5vDQorb2JqLSQoQ09ORklHX1BJTkNUUkxfTVRLX01PT1JFKSArPSBwaW5j
+dHJsLW1vb3JlLm8NCitvYmotJChDT05GSUdfUElOQ1RSTF9NVEtfUEFSSVMpICs9IHBpbmN0cmwt
+cGFyaXMubw0KIA0KICMgU29DIERyaXZlcnMNCiBvYmotJChDT05GSUdfUElOQ1RSTF9NVDI3MDEp
+CSs9IHBpbmN0cmwtbXQyNzAxLm8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
+ZWsvbXRrLWVpbnQuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5jDQppbmRl
+eCA3ZTUyNmJjZi4uOTk3MDNhOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9tdGstZWludC5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvbXRrLWVpbnQuYw0K
+QEAgLTksNiArOSw3IEBADQogICoNCiAgKi8NCiANCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
+DQogI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KICNp
+bmNsdWRlIDxsaW51eC9ncGlvL2RyaXZlci5oPg0KQEAgLTM3OSw2ICszODAsNyBAQCBpbnQgbXRr
+X2VpbnRfZG9fc3VzcGVuZChzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQpDQogDQogCXJldHVybiAwOw0K
+IH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfZWludF9kb19zdXNwZW5kKTsNCiANCiBpbnQgbXRr
+X2VpbnRfZG9fcmVzdW1lKHN0cnVjdCBtdGtfZWludCAqZWludCkNCiB7DQpAQCAtMzg2LDYgKzM4
+OCw3IEBAIGludCBtdGtfZWludF9kb19yZXN1bWUoc3RydWN0IG10a19laW50ICplaW50KQ0KIA0K
+IAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfZG9fcmVzdW1lKTsN
+CiANCiBpbnQgbXRrX2VpbnRfc2V0X2RlYm91bmNlKHN0cnVjdCBtdGtfZWludCAqZWludCwgdW5z
+aWduZWQgbG9uZyBlaW50X251bSwNCiAJCQkgIHVuc2lnbmVkIGludCBkZWJvdW5jZSkNCkBAIC00
+NDAsNiArNDQzLDcgQEAgaW50IG10a19laW50X3NldF9kZWJvdW5jZShzdHJ1Y3QgbXRrX2VpbnQg
+KmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9udW0sDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBP
+UlRfU1lNQk9MX0dQTChtdGtfZWludF9zZXRfZGVib3VuY2UpOw0KIA0KIGludCBtdGtfZWludF9m
+aW5kX2lycShzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uKQ0KIHsN
+CkBAIC00NTEsNiArNDU1LDcgQEAgaW50IG10a19laW50X2ZpbmRfaXJxKHN0cnVjdCBtdGtfZWlu
+dCAqZWludCwgdW5zaWduZWQgbG9uZyBlaW50X24pDQogDQogCXJldHVybiBpcnE7DQogfQ0KK0VY
+UE9SVF9TWU1CT0xfR1BMKG10a19laW50X2ZpbmRfaXJxKTsNCiANCiBpbnQgbXRrX2VpbnRfZG9f
+aW5pdChzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQpDQogew0KQEAgLTQ5NSwzICs1MDAsNyBAQCBpbnQg
+bXRrX2VpbnRfZG9faW5pdChzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQpDQogDQogCXJldHVybiAwOw0K
+IH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfZWludF9kb19pbml0KTsNCisNCitNT0RVTEVfTElD
+RU5TRSgiR1BMIHYyIik7DQorTU9EVUxFX0RFU0NSSVBUSU9OKCJNZWRpYVRlayBFSU5UIERyaXZl
+ciIpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1j
+b21tb24tdjIuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24t
+djIuYw0KaW5kZXggMWRhOTQyNS4uY2RmMmQ2OSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3Ry
+bC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYw0KKysrIGIvZHJpdmVycy9waW5jdHJs
+L21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQpAQCAtNiw2ICs2LDcgQEANCiAgKg0K
+ICAqLw0KIA0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8ZHQtYmluZGlu
+Z3MvcGluY3RybC9tdDY1eHguaD4NCiAjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+DQogI2luY2x1
+ZGUgPGxpbnV4L2Vyci5oPg0KQEAgLTIwNiw2ICsyMDcsNyBAQCBpbnQgbXRrX2h3X3NldF92YWx1
+ZShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNj
+LA0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2h3X3NldF92YWx1
+ZSk7DQogDQogaW50IG10a19od19nZXRfdmFsdWUoc3RydWN0IG10a19waW5jdHJsICpodywgY29u
+c3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywNCiAJCSAgICAgaW50IGZpZWxkLCBpbnQgKnZh
+bHVlKQ0KQEAgLTIyNSw2ICsyMjcsNyBAQCBpbnQgbXRrX2h3X2dldF92YWx1ZShzdHJ1Y3QgbXRr
+X3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KIA0KIAlyZXR1
+cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2h3X2dldF92YWx1ZSk7DQogDQogc3Rh
+dGljIGludCBtdGtfeHRfZmluZF9laW50X251bShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCB1bnNp
+Z25lZCBsb25nIGVpbnRfbikNCiB7DQpAQCAtMzYzLDYgKzM2Niw3IEBAIGludCBtdGtfYnVpbGRf
+ZWludChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQ0KIA0KIAlyZXR1cm4gbXRrX2VpbnRfZG9faW5pdChody0+ZWludCk7DQogfQ0KK0VYUE9SVF9T
+WU1CT0xfR1BMKG10a19idWlsZF9laW50KTsNCiANCiAvKiBSZXZpc2lvbiAwICovDQogaW50IG10
+a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCkBAIC0z
+ODIsNiArMzg2LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXQoc3RydWN0IG10
+a19waW5jdHJsICpodywNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10
+a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXQpOw0KIA0KIGludCBtdGtfcGluY29uZl9iaWFzX2Rp
+c2FibGVfZ2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogCQkJCSBjb25zdCBzdHJ1Y3QgbXRr
+X3Bpbl9kZXNjICpkZXNjLCBpbnQgKnJlcykNCkBAIC00MDQsNiArNDA5LDcgQEAgaW50IG10a19w
+aW5jb25mX2JpYXNfZGlzYWJsZV9nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0
+dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9n
+ZXQpOw0KIA0KIGludCBtdGtfcGluY29uZl9iaWFzX3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3
+LA0KIAkJCSBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBib29sIHB1bGx1cCkNCkBA
+IC00MjMsNiArNDI5LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfc2V0KHN0cnVjdCBtdGtfcGlu
+Y3RybCAqaHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGlu
+Y29uZl9iaWFzX3NldCk7DQogDQogaW50IG10a19waW5jb25mX2JpYXNfZ2V0KHN0cnVjdCBtdGtf
+cGluY3RybCAqaHcsDQogCQkJIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGJvb2wg
+cHVsbHVwLCBpbnQgKnJlcykNCkBAIC00NDIsNiArNDQ5LDcgQEAgaW50IG10a19waW5jb25mX2Jp
+YXNfZ2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBP
+UlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX2dldCk7DQogDQogLyogUmV2aXNpb24gMSAq
+Lw0KIGludCBtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVfc2V0X3JldjEoc3RydWN0IG10a19waW5j
+dHJsICpodywNCkBAIC00NTYsNiArNDY0LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfZGlzYWJs
+ZV9zZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1cm4gMDsNCiB9DQor
+RVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX3NldF9yZXYxKTsNCiAN
+CiBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3Ry
+bCAqaHcsDQogCQkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGludCAq
+cmVzKQ0KQEAgLTQ3Myw2ICs0ODIsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX2dl
+dF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBP
+UlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVfZ2V0X3JldjEpOw0KIA0KIGlu
+dCBtdGtfcGluY29uZl9iaWFzX3NldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogCQkJ
+ICAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgYm9vbCBwdWxsdXApDQpAQCAt
+NDkyLDYgKzUwMiw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX3NldF9yZXYxKHN0cnVjdCBtdGtf
+cGluY3RybCAqaHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtf
+cGluY29uZl9iaWFzX3NldF9yZXYxKTsNCiANCiBpbnQgbXRrX3BpbmNvbmZfYmlhc19nZXRfcmV2
+MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGlu
+X2Rlc2MgKmRlc2MsIGJvb2wgcHVsbHVwLA0KQEAgLTUxNyw2ICs1MjgsNyBAQCBpbnQgbXRrX3Bp
+bmNvbmZfYmlhc19nZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1cm4g
+MDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYmlhc19zZXRfZ2V2MSk7DQog
+DQogLyogQ29tYm8gZm9yIHRoZSBmb2xsb3dpbmcgcHVsbCByZWdpc3RlciB0eXBlOg0KICAqIDEu
+IFBVICsgUEQNCkBAIC03MTcsNiArNzI5LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfc2V0X2Nv
+bWJvKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogb3V0Og0KIAlyZXR1cm4gZXJyOw0KIH0NCitF
+WFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX3NldF9jb21ibyk7DQogDQogaW50IG10
+a19waW5jb25mX2JpYXNfZ2V0X2NvbWJvKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogCQkJICAg
+ICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywNCkBAIC03MzcsNiArNzUwLDcgQEAg
+aW50IG10a19waW5jb25mX2JpYXNfZ2V0X2NvbWJvKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQog
+b3V0Og0KIAlyZXR1cm4gZXJyOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9i
+aWFzX2dldF9jb21ibyk7DQogDQogLyogUmV2aXNpb24gMCAqLw0KIGludCBtdGtfcGluY29uZl9k
+cml2ZV9zZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCkBAIC03NjYsNiArNzgwLDcgQEAgaW50
+IG10a19waW5jb25mX2RyaXZlX3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1
+cm4gZXJyOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9zZXQpOw0K
+IA0KIGludCBtdGtfcGluY29uZl9kcml2ZV9nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJ
+CQkgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGludCAqdmFsKQ0KQEAgLTc5MCw2
+ICs4MDUsNyBAQCBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfZ2V0KHN0cnVjdCBtdGtfcGluY3RybCAq
+aHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9k
+cml2ZV9nZXQpOw0KIA0KIC8qIFJldmlzaW9uIDEgKi8NCiBpbnQgbXRrX3BpbmNvbmZfZHJpdmVf
+c2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCkBAIC04MTEsNiArODI3LDcgQEAgaW50
+IG10a19waW5jb25mX2RyaXZlX3NldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQog
+CXJldHVybiBlcnI7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2RyaXZlX3Nl
+dF9yZXYxKTsNCiANCiBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfZ2V0X3JldjEoc3RydWN0IG10a19w
+aW5jdHJsICpodywNCiAJCQkgICAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywg
+aW50ICp2YWwpDQpAQCAtODI4LDE4ICs4NDUsMjEgQEAgaW50IG10a19waW5jb25mX2RyaXZlX2dl
+dF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBP
+UlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9nZXRfcmV2MSk7DQogDQogaW50IG10a19w
+aW5jb25mX2RyaXZlX3NldF9yYXcoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkgICAgICAg
+Y29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgdTMyIGFyZykNCiB7DQogCXJldHVybiBt
+dGtfaHdfc2V0X3ZhbHVlKGh3LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfRFJWLCBhcmcpOw0KIH0N
+CitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9zZXRfcmF3KTsNCiANCiBpbnQg
+bXRrX3BpbmNvbmZfZHJpdmVfZ2V0X3JhdyhzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAg
+ICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBpbnQgKnZhbCkNCiB7DQogCXJl
+dHVybiBtdGtfaHdfZ2V0X3ZhbHVlKGh3LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfRFJWLCB2YWwp
+Ow0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9nZXRfcmF3KTsNCiAN
+CiBpbnQgbXRrX3BpbmNvbmZfYWR2X3B1bGxfc2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQog
+CQkJICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBib29sIHB1bGx1cCwNCkBA
+IC04ODAsNiArOTAwLDcgQEAgaW50IG10a19waW5jb25mX2Fkdl9wdWxsX3NldChzdHJ1Y3QgbXRr
+X3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1cm4gZXJyOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTCht
+dGtfcGluY29uZl9hZHZfcHVsbF9zZXQpOw0KIA0KIGludCBtdGtfcGluY29uZl9hZHZfcHVsbF9n
+ZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGlu
+X2Rlc2MgKmRlc2MsIGJvb2wgcHVsbHVwLA0KQEAgLTkyMiw2ICs5NDMsNyBAQCBpbnQgbXRrX3Bp
+bmNvbmZfYWR2X3B1bGxfZ2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiAw
+Ow0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9hZHZfcHVsbF9nZXQpOw0KIA0K
+IGludCBtdGtfcGluY29uZl9hZHZfZHJpdmVfc2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQog
+CQkJICAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgdTMyIGFyZykNCkBAIC05
+NDgsNiArOTcwLDcgQEAgaW50IG10a19waW5jb25mX2Fkdl9kcml2ZV9zZXQoc3RydWN0IG10a19w
+aW5jdHJsICpodywNCiANCiAJcmV0dXJuIGVycjsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRr
+X3BpbmNvbmZfYWR2X2RyaXZlX3NldCk7DQogDQogaW50IG10a19waW5jb25mX2Fkdl9kcml2ZV9n
+ZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bp
+bl9kZXNjICpkZXNjLCB1MzIgKnZhbCkNCkBAIC05NzEsMyArOTk0LDQgQEAgaW50IG10a19waW5j
+b25mX2Fkdl9kcml2ZV9nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0dXJuIDA7
+DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2Fkdl9kcml2ZV9nZXQpOw0KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgYi9kcml2
+ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQppbmRleCA4M2JmMjljLi5hZjk3
+Nzk0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMu
+Yw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KQEAgLTks
+NiArOSw3IEBADQogICoJICAgSG9uZ3pob3UuWWFuZyA8aG9uZ3pob3UueWFuZ0BtZWRpYXRlay5j
+b20+DQogICovDQogDQorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KICNpbmNsdWRlIDxsaW51
+eC9ncGlvL2RyaXZlci5oPg0KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9waW5jdHJsL210NjV4eC5o
+Pg0KICNpbmNsdWRlICJwaW5jdHJsLXBhcmlzLmgiDQpAQCAtMTAzNywzICsxMDM4LDcgQEAgc3Rh
+dGljIGludCBtdGtfcGFyaXNfcGluY3RybF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2aWNlKQ0K
+IAkuc3VzcGVuZF9ub2lycSA9IG10a19wYXJpc19waW5jdHJsX3N1c3BlbmQsDQogCS5yZXN1bWVf
+bm9pcnEgPSBtdGtfcGFyaXNfcGluY3RybF9yZXN1bWUsDQogfTsNCitFWFBPUlRfU1lNQk9MX0dQ
+TChtdGtfcGFyaXNfcGluY3RybF9wcm9iZSk7DQorDQorTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIp
+Ow0KK01PRFVMRV9ERVNDUklQVElPTigiTWVkaWFUZWsgUGluY3RybCBDb21tb24gRHJpdmVyIFYy
+IFBhcmlzIik7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5j
+IGIvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jDQppbmRleCA5ZWI4NjMwLi5kZmVm
+NDcxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jDQorKysg
+Yi9kcml2ZXJzL3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmMNCkBAIC0yODYsNiArMjg2LDcgQEAg
+aW50IHBpbmNvbmZfZ2VuZXJpY19wYXJzZV9kdF9jb25maWcoc3RydWN0IGRldmljZV9ub2RlICpu
+cCwNCiAJa2ZyZWUoY2ZnKTsNCiAJcmV0dXJuIHJldDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwo
+cGluY29uZl9nZW5lcmljX3BhcnNlX2R0X2NvbmZpZyk7DQogDQogaW50IHBpbmNvbmZfZ2VuZXJp
+Y19kdF9zdWJub2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQogCQlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKm5wLCBzdHJ1Y3QgcGluY3RybF9tYXAgKiptYXAsDQotLSANCjEuOC4x
+LjEuZGlydHkNCg==
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020.02.17 17:38:58 +0100, Julian Stecklina wrote:
-> Instead of defining KVMGT per-device state in struct intel_vgpu
-> directly, add an indirection. This makes the GVT code oblivious of
-> what state KVMGT needs to keep.
->=20
-> The intention here is to eventually make it possible to build
-> hypervisor backends for the mediator, without having to touch the
-> mediator itself. This is a first step.
->=20
-> v2:
-> - rebased onto gvt-staging (no conflicts)
->
-
-Looks this needs some backmerge first to apply, I'll include this
-for -next pull later.
-
-Thanks for resend.
-
-> Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-> Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-> ---
->  drivers/gpu/drm/i915/gvt/gvt.h   |  32 +---
->  drivers/gpu/drm/i915/gvt/kvmgt.c | 287 +++++++++++++++++++------------
->  2 files changed, 184 insertions(+), 135 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
-t.h
-> index 9fe9decc0d86..8cf292a8d6bd 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.h
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
-> @@ -196,31 +196,8 @@ struct intel_vgpu {
-> =20
->  	struct dentry *debugfs;
-> =20
-> -#if IS_ENABLED(CONFIG_DRM_I915_GVT_KVMGT)
-> -	struct {
-> -		struct mdev_device *mdev;
-> -		struct vfio_region *region;
-> -		int num_regions;
-> -		struct eventfd_ctx *intx_trigger;
-> -		struct eventfd_ctx *msi_trigger;
-> -
-> -		/*
-> -		 * Two caches are used to avoid mapping duplicated pages (eg.
-> -		 * scratch pages). This help to reduce dma setup overhead.
-> -		 */
-> -		struct rb_root gfn_cache;
-> -		struct rb_root dma_addr_cache;
-> -		unsigned long nr_cache_entries;
-> -		struct mutex cache_lock;
-> -
-> -		struct notifier_block iommu_notifier;
-> -		struct notifier_block group_notifier;
-> -		struct kvm *kvm;
-> -		struct work_struct release_work;
-> -		atomic_t released;
-> -		struct vfio_device *vfio_device;
-> -	} vdev;
-> -#endif
-> +	/* Hypervisor-specific device state. */
-> +	void *vdev;
-> =20
->  	struct list_head dmabuf_obj_list_head;
->  	struct mutex dmabuf_lock;
-> @@ -229,6 +206,11 @@ struct intel_vgpu {
->  	u32 scan_nonprivbb;
->  };
-> =20
-> +static inline void *intel_vgpu_vdev(struct intel_vgpu *vgpu)
-> +{
-> +	return vgpu->vdev;
-> +}
-> +
->  /* validating GM healthy status*/
->  #define vgpu_is_vm_unhealthy(ret_val) \
->  	(((ret_val) =3D=3D -EBADRQC) || ((ret_val) =3D=3D -EFAULT))
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/=
-kvmgt.c
-> index 85e59c502ab5..9a435bc1a2f0 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -108,6 +108,36 @@ struct gvt_dma {
->  	struct kref ref;
->  };
-> =20
-> +struct kvmgt_vdev {
-> +	struct intel_vgpu *vgpu;
-> +	struct mdev_device *mdev;
-> +	struct vfio_region *region;
-> +	int num_regions;
-> +	struct eventfd_ctx *intx_trigger;
-> +	struct eventfd_ctx *msi_trigger;
-> +
-> +	/*
-> +	 * Two caches are used to avoid mapping duplicated pages (eg.
-> +	 * scratch pages). This help to reduce dma setup overhead.
-> +	 */
-> +	struct rb_root gfn_cache;
-> +	struct rb_root dma_addr_cache;
-> +	unsigned long nr_cache_entries;
-> +	struct mutex cache_lock;
-> +
-> +	struct notifier_block iommu_notifier;
-> +	struct notifier_block group_notifier;
-> +	struct kvm *kvm;
-> +	struct work_struct release_work;
-> +	atomic_t released;
-> +	struct vfio_device *vfio_device;
-> +};
-> +
-> +static inline struct kvmgt_vdev *kvmgt_vdev(struct intel_vgpu *vgpu)
-> +{
-> +	return intel_vgpu_vdev(vgpu);
-> +}
-> +
->  static inline bool handle_valid(unsigned long handle)
->  {
->  	return !!(handle & ~0xff);
-> @@ -129,7 +159,7 @@ static void gvt_unpin_guest_page(struct intel_vgpu *v=
-gpu, unsigned long gfn,
->  	for (npage =3D 0; npage < total_pages; npage++) {
->  		unsigned long cur_gfn =3D gfn + npage;
-> =20
-> -		ret =3D vfio_unpin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1);
-> +		ret =3D vfio_unpin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1=
-);
->  		WARN_ON(ret !=3D 1);
->  	}
->  }
-> @@ -152,7 +182,7 @@ static int gvt_pin_guest_page(struct intel_vgpu *vgpu=
-, unsigned long gfn,
->  		unsigned long cur_gfn =3D gfn + npage;
->  		unsigned long pfn;
-> =20
-> -		ret =3D vfio_pin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1,
-> +		ret =3D vfio_pin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1,
->  				     IOMMU_READ | IOMMU_WRITE, &pfn);
->  		if (ret !=3D 1) {
->  			gvt_vgpu_err("vfio_pin_pages failed for gfn 0x%lx, ret %d\n",
-> @@ -219,7 +249,7 @@ static void gvt_dma_unmap_page(struct intel_vgpu *vgp=
-u, unsigned long gfn,
->  static struct gvt_dma *__gvt_cache_find_dma_addr(struct intel_vgpu *vgpu,
->  		dma_addr_t dma_addr)
->  {
-> -	struct rb_node *node =3D vgpu->vdev.dma_addr_cache.rb_node;
-> +	struct rb_node *node =3D kvmgt_vdev(vgpu)->dma_addr_cache.rb_node;
->  	struct gvt_dma *itr;
-> =20
->  	while (node) {
-> @@ -237,7 +267,7 @@ static struct gvt_dma *__gvt_cache_find_dma_addr(stru=
-ct intel_vgpu *vgpu,
-> =20
->  static struct gvt_dma *__gvt_cache_find_gfn(struct intel_vgpu *vgpu, gfn=
-_t gfn)
->  {
-> -	struct rb_node *node =3D vgpu->vdev.gfn_cache.rb_node;
-> +	struct rb_node *node =3D kvmgt_vdev(vgpu)->gfn_cache.rb_node;
->  	struct gvt_dma *itr;
-> =20
->  	while (node) {
-> @@ -258,6 +288,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, g=
-fn_t gfn,
->  {
->  	struct gvt_dma *new, *itr;
->  	struct rb_node **link, *parent =3D NULL;
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> =20
->  	new =3D kzalloc(sizeof(struct gvt_dma), GFP_KERNEL);
->  	if (!new)
-> @@ -270,7 +301,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, g=
-fn_t gfn,
->  	kref_init(&new->ref);
-> =20
->  	/* gfn_cache maps gfn to struct gvt_dma. */
-> -	link =3D &vgpu->vdev.gfn_cache.rb_node;
-> +	link =3D &vdev->gfn_cache.rb_node;
->  	while (*link) {
->  		parent =3D *link;
->  		itr =3D rb_entry(parent, struct gvt_dma, gfn_node);
-> @@ -281,11 +312,11 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu,=
- gfn_t gfn,
->  			link =3D &parent->rb_right;
->  	}
->  	rb_link_node(&new->gfn_node, parent, link);
-> -	rb_insert_color(&new->gfn_node, &vgpu->vdev.gfn_cache);
-> +	rb_insert_color(&new->gfn_node, &vdev->gfn_cache);
-> =20
->  	/* dma_addr_cache maps dma addr to struct gvt_dma. */
->  	parent =3D NULL;
-> -	link =3D &vgpu->vdev.dma_addr_cache.rb_node;
-> +	link =3D &vdev->dma_addr_cache.rb_node;
->  	while (*link) {
->  		parent =3D *link;
->  		itr =3D rb_entry(parent, struct gvt_dma, dma_addr_node);
-> @@ -296,46 +327,51 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu,=
- gfn_t gfn,
->  			link =3D &parent->rb_right;
->  	}
->  	rb_link_node(&new->dma_addr_node, parent, link);
-> -	rb_insert_color(&new->dma_addr_node, &vgpu->vdev.dma_addr_cache);
-> +	rb_insert_color(&new->dma_addr_node, &vdev->dma_addr_cache);
-> =20
-> -	vgpu->vdev.nr_cache_entries++;
-> +	vdev->nr_cache_entries++;
->  	return 0;
->  }
-> =20
->  static void __gvt_cache_remove_entry(struct intel_vgpu *vgpu,
->  				struct gvt_dma *entry)
->  {
-> -	rb_erase(&entry->gfn_node, &vgpu->vdev.gfn_cache);
-> -	rb_erase(&entry->dma_addr_node, &vgpu->vdev.dma_addr_cache);
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> +
-> +	rb_erase(&entry->gfn_node, &vdev->gfn_cache);
-> +	rb_erase(&entry->dma_addr_node, &vdev->dma_addr_cache);
->  	kfree(entry);
-> -	vgpu->vdev.nr_cache_entries--;
-> +	vdev->nr_cache_entries--;
->  }
-> =20
->  static void gvt_cache_destroy(struct intel_vgpu *vgpu)
->  {
->  	struct gvt_dma *dma;
->  	struct rb_node *node =3D NULL;
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> =20
->  	for (;;) {
-> -		mutex_lock(&vgpu->vdev.cache_lock);
-> -		node =3D rb_first(&vgpu->vdev.gfn_cache);
-> +		mutex_lock(&vdev->cache_lock);
-> +		node =3D rb_first(&vdev->gfn_cache);
->  		if (!node) {
-> -			mutex_unlock(&vgpu->vdev.cache_lock);
-> +			mutex_unlock(&vdev->cache_lock);
->  			break;
->  		}
->  		dma =3D rb_entry(node, struct gvt_dma, gfn_node);
->  		gvt_dma_unmap_page(vgpu, dma->gfn, dma->dma_addr, dma->size);
->  		__gvt_cache_remove_entry(vgpu, dma);
-> -		mutex_unlock(&vgpu->vdev.cache_lock);
-> +		mutex_unlock(&vdev->cache_lock);
->  	}
->  }
-> =20
->  static void gvt_cache_init(struct intel_vgpu *vgpu)
->  {
-> -	vgpu->vdev.gfn_cache =3D RB_ROOT;
-> -	vgpu->vdev.dma_addr_cache =3D RB_ROOT;
-> -	vgpu->vdev.nr_cache_entries =3D 0;
-> -	mutex_init(&vgpu->vdev.cache_lock);
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> +
-> +	vdev->gfn_cache =3D RB_ROOT;
-> +	vdev->dma_addr_cache =3D RB_ROOT;
-> +	vdev->nr_cache_entries =3D 0;
-> +	mutex_init(&vdev->cache_lock);
->  }
-> =20
->  static void kvmgt_protect_table_init(struct kvmgt_guest_info *info)
-> @@ -409,16 +445,18 @@ static void kvmgt_protect_table_del(struct kvmgt_gu=
-est_info *info,
->  static size_t intel_vgpu_reg_rw_opregion(struct intel_vgpu *vgpu, char *=
-buf,
->  		size_t count, loff_t *ppos, bool iswrite)
->  {
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	unsigned int i =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
->  			VFIO_PCI_NUM_REGIONS;
-> -	void *base =3D vgpu->vdev.region[i].data;
-> +	void *base =3D vdev->region[i].data;
->  	loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
-> =20
-> -	if (pos >=3D vgpu->vdev.region[i].size || iswrite) {
-> +
-> +	if (pos >=3D vdev->region[i].size || iswrite) {
->  		gvt_vgpu_err("invalid op or offset for Intel vgpu OpRegion\n");
->  		return -EINVAL;
->  	}
-> -	count =3D min(count, (size_t)(vgpu->vdev.region[i].size - pos));
-> +	count =3D min(count, (size_t)(vdev->region[i].size - pos));
->  	memcpy(buf, base + pos, count);
-> =20
->  	return count;
-> @@ -512,7 +550,7 @@ static size_t intel_vgpu_reg_rw_edid(struct intel_vgp=
-u *vgpu, char *buf,
->  	unsigned int i =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
->  			VFIO_PCI_NUM_REGIONS;
->  	struct vfio_edid_region *region =3D
-> -		(struct vfio_edid_region *)vgpu->vdev.region[i].data;
-> +		(struct vfio_edid_region *)kvmgt_vdev(vgpu)->region[i].data;
->  	loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
-> =20
->  	if (pos < region->vfio_edid_regs.edid_offset) {
-> @@ -544,32 +582,34 @@ static int intel_vgpu_register_reg(struct intel_vgp=
-u *vgpu,
->  		const struct intel_vgpu_regops *ops,
->  		size_t size, u32 flags, void *data)
->  {
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	struct vfio_region *region;
-> =20
-> -	region =3D krealloc(vgpu->vdev.region,
-> -			(vgpu->vdev.num_regions + 1) * sizeof(*region),
-> +	region =3D krealloc(vdev->region,
-> +			(vdev->num_regions + 1) * sizeof(*region),
->  			GFP_KERNEL);
->  	if (!region)
->  		return -ENOMEM;
-> =20
-> -	vgpu->vdev.region =3D region;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].type =3D type;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].subtype =3D subtype;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].ops =3D ops;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].size =3D size;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].flags =3D flags;
-> -	vgpu->vdev.region[vgpu->vdev.num_regions].data =3D data;
-> -	vgpu->vdev.num_regions++;
-> +	vdev->region =3D region;
-> +	vdev->region[vdev->num_regions].type =3D type;
-> +	vdev->region[vdev->num_regions].subtype =3D subtype;
-> +	vdev->region[vdev->num_regions].ops =3D ops;
-> +	vdev->region[vdev->num_regions].size =3D size;
-> +	vdev->region[vdev->num_regions].flags =3D flags;
-> +	vdev->region[vdev->num_regions].data =3D data;
-> +	vdev->num_regions++;
->  	return 0;
->  }
-> =20
->  static int kvmgt_get_vfio_device(void *p_vgpu)
->  {
->  	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> =20
-> -	vgpu->vdev.vfio_device =3D vfio_device_get_from_dev(
-> -		mdev_dev(vgpu->vdev.mdev));
-> -	if (!vgpu->vdev.vfio_device) {
-> +	vdev->vfio_device =3D vfio_device_get_from_dev(
-> +		mdev_dev(vdev->mdev));
-> +	if (!vdev->vfio_device) {
->  		gvt_vgpu_err("failed to get vfio device\n");
->  		return -ENODEV;
->  	}
-> @@ -637,10 +677,12 @@ static int kvmgt_set_edid(void *p_vgpu, int port_nu=
-m)
-> =20
->  static void kvmgt_put_vfio_device(void *vgpu)
->  {
-> -	if (WARN_ON(!((struct intel_vgpu *)vgpu)->vdev.vfio_device))
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev((struct intel_vgpu *)vgpu);
-> +
-> +	if (WARN_ON(!vdev->vfio_device))
->  		return;
-> =20
-> -	vfio_device_put(((struct intel_vgpu *)vgpu)->vdev.vfio_device);
-> +	vfio_device_put(vdev->vfio_device);
->  }
-> =20
->  static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *m=
-dev)
-> @@ -669,9 +711,9 @@ static int intel_vgpu_create(struct kobject *kobj, st=
-ruct mdev_device *mdev)
->  		goto out;
->  	}
-> =20
-> -	INIT_WORK(&vgpu->vdev.release_work, intel_vgpu_release_work);
-> +	INIT_WORK(&kvmgt_vdev(vgpu)->release_work, intel_vgpu_release_work);
-> =20
-> -	vgpu->vdev.mdev =3D mdev;
-> +	kvmgt_vdev(vgpu)->mdev =3D mdev;
->  	mdev_set_drvdata(mdev, vgpu);
-> =20
->  	gvt_dbg_core("intel_vgpu_create succeeded for mdev: %s\n",
-> @@ -696,9 +738,10 @@ static int intel_vgpu_remove(struct mdev_device *mde=
-v)
->  static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
->  				     unsigned long action, void *data)
->  {
-> -	struct intel_vgpu *vgpu =3D container_of(nb,
-> -					struct intel_vgpu,
-> -					vdev.iommu_notifier);
-> +	struct kvmgt_vdev *vdev =3D container_of(nb,
-> +					       struct kvmgt_vdev,
-> +					       iommu_notifier);
-> +	struct intel_vgpu *vgpu =3D vdev->vgpu;
-> =20
->  	if (action =3D=3D VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
->  		struct vfio_iommu_type1_dma_unmap *unmap =3D data;
-> @@ -708,7 +751,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_=
-block *nb,
->  		iov_pfn =3D unmap->iova >> PAGE_SHIFT;
->  		end_iov_pfn =3D iov_pfn + unmap->size / PAGE_SIZE;
-> =20
-> -		mutex_lock(&vgpu->vdev.cache_lock);
-> +		mutex_lock(&vdev->cache_lock);
->  		for (; iov_pfn < end_iov_pfn; iov_pfn++) {
->  			entry =3D __gvt_cache_find_gfn(vgpu, iov_pfn);
->  			if (!entry)
-> @@ -718,7 +761,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_=
-block *nb,
->  					   entry->size);
->  			__gvt_cache_remove_entry(vgpu, entry);
->  		}
-> -		mutex_unlock(&vgpu->vdev.cache_lock);
-> +		mutex_unlock(&vdev->cache_lock);
->  	}
-> =20
->  	return NOTIFY_OK;
-> @@ -727,16 +770,16 @@ static int intel_vgpu_iommu_notifier(struct notifie=
-r_block *nb,
->  static int intel_vgpu_group_notifier(struct notifier_block *nb,
->  				     unsigned long action, void *data)
->  {
-> -	struct intel_vgpu *vgpu =3D container_of(nb,
-> -					struct intel_vgpu,
-> -					vdev.group_notifier);
-> +	struct kvmgt_vdev *vdev =3D container_of(nb,
-> +					       struct kvmgt_vdev,
-> +					       group_notifier);
-> =20
->  	/* the only action we care about */
->  	if (action =3D=3D VFIO_GROUP_NOTIFY_SET_KVM) {
-> -		vgpu->vdev.kvm =3D data;
-> +		vdev->kvm =3D data;
-> =20
->  		if (!data)
-> -			schedule_work(&vgpu->vdev.release_work);
-> +			schedule_work(&vdev->release_work);
->  	}
-> =20
->  	return NOTIFY_OK;
-> @@ -745,15 +788,16 @@ static int intel_vgpu_group_notifier(struct notifie=
-r_block *nb,
->  static int intel_vgpu_open(struct mdev_device *mdev)
->  {
->  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	unsigned long events;
->  	int ret;
-> =20
-> -	vgpu->vdev.iommu_notifier.notifier_call =3D intel_vgpu_iommu_notifier;
-> -	vgpu->vdev.group_notifier.notifier_call =3D intel_vgpu_group_notifier;
-> +	vdev->iommu_notifier.notifier_call =3D intel_vgpu_iommu_notifier;
-> +	vdev->group_notifier.notifier_call =3D intel_vgpu_group_notifier;
-> =20
->  	events =3D VFIO_IOMMU_NOTIFY_DMA_UNMAP;
->  	ret =3D vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY, &even=
-ts,
-> -				&vgpu->vdev.iommu_notifier);
-> +				&vdev->iommu_notifier);
->  	if (ret !=3D 0) {
->  		gvt_vgpu_err("vfio_register_notifier for iommu failed: %d\n",
->  			ret);
-> @@ -762,7 +806,7 @@ static int intel_vgpu_open(struct mdev_device *mdev)
-> =20
->  	events =3D VFIO_GROUP_NOTIFY_SET_KVM;
->  	ret =3D vfio_register_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY, &even=
-ts,
-> -				&vgpu->vdev.group_notifier);
-> +				&vdev->group_notifier);
->  	if (ret !=3D 0) {
->  		gvt_vgpu_err("vfio_register_notifier for group failed: %d\n",
->  			ret);
-> @@ -781,50 +825,52 @@ static int intel_vgpu_open(struct mdev_device *mdev)
-> =20
->  	intel_gvt_ops->vgpu_activate(vgpu);
-> =20
-> -	atomic_set(&vgpu->vdev.released, 0);
-> +	atomic_set(&vdev->released, 0);
->  	return ret;
-> =20
->  undo_group:
->  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
-> -					&vgpu->vdev.group_notifier);
-> +					&vdev->group_notifier);
-> =20
->  undo_iommu:
->  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-> -					&vgpu->vdev.iommu_notifier);
-> +					&vdev->iommu_notifier);
->  out:
->  	return ret;
->  }
-> =20
->  static void intel_vgpu_release_msi_eventfd_ctx(struct intel_vgpu *vgpu)
->  {
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	struct eventfd_ctx *trigger;
-> =20
-> -	trigger =3D vgpu->vdev.msi_trigger;
-> +	trigger =3D vdev->msi_trigger;
->  	if (trigger) {
->  		eventfd_ctx_put(trigger);
-> -		vgpu->vdev.msi_trigger =3D NULL;
-> +		vdev->msi_trigger =3D NULL;
->  	}
->  }
-> =20
->  static void __intel_vgpu_release(struct intel_vgpu *vgpu)
->  {
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	struct kvmgt_guest_info *info;
->  	int ret;
-> =20
->  	if (!handle_valid(vgpu->handle))
->  		return;
-> =20
-> -	if (atomic_cmpxchg(&vgpu->vdev.released, 0, 1))
-> +	if (atomic_cmpxchg(&vdev->released, 0, 1))
->  		return;
-> =20
->  	intel_gvt_ops->vgpu_release(vgpu);
-> =20
-> -	ret =3D vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_IOMMU_=
-NOTIFY,
-> -					&vgpu->vdev.iommu_notifier);
-> +	ret =3D vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_IOMMU_NOTIF=
-Y,
-> +					&vdev->iommu_notifier);
->  	WARN(ret, "vfio_unregister_notifier for iommu failed: %d\n", ret);
-> =20
-> -	ret =3D vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_GROUP_=
-NOTIFY,
-> -					&vgpu->vdev.group_notifier);
-> +	ret =3D vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_GROUP_NOTIF=
-Y,
-> +					&vdev->group_notifier);
->  	WARN(ret, "vfio_unregister_notifier for group failed: %d\n", ret);
-> =20
->  	/* dereference module reference taken at open */
-> @@ -835,7 +881,7 @@ static void __intel_vgpu_release(struct intel_vgpu *v=
-gpu)
-> =20
->  	intel_vgpu_release_msi_eventfd_ctx(vgpu);
-> =20
-> -	vgpu->vdev.kvm =3D NULL;
-> +	vdev->kvm =3D NULL;
->  	vgpu->handle =3D 0;
->  }
-> =20
-> @@ -848,10 +894,10 @@ static void intel_vgpu_release(struct mdev_device *=
-mdev)
-> =20
->  static void intel_vgpu_release_work(struct work_struct *work)
->  {
-> -	struct intel_vgpu *vgpu =3D container_of(work, struct intel_vgpu,
-> -					vdev.release_work);
-> +	struct kvmgt_vdev *vdev =3D container_of(work, struct kvmgt_vdev,
-> +					       release_work);
-> =20
-> -	__intel_vgpu_release(vgpu);
-> +	__intel_vgpu_release(vdev->vgpu);
->  }
-> =20
->  static u64 intel_vgpu_get_bar_addr(struct intel_vgpu *vgpu, int bar)
-> @@ -933,12 +979,13 @@ static ssize_t intel_vgpu_rw(struct mdev_device *md=
-ev, char *buf,
->  			size_t count, loff_t *ppos, bool is_write)
->  {
->  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	unsigned int index =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos);
->  	u64 pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
->  	int ret =3D -EINVAL;
-> =20
-> =20
-> -	if (index >=3D VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions) {
-> +	if (index >=3D VFIO_PCI_NUM_REGIONS + vdev->num_regions) {
->  		gvt_vgpu_err("invalid index: %u\n", index);
->  		return -EINVAL;
->  	}
-> @@ -967,11 +1014,11 @@ static ssize_t intel_vgpu_rw(struct mdev_device *m=
-dev, char *buf,
->  	case VFIO_PCI_ROM_REGION_INDEX:
->  		break;
->  	default:
-> -		if (index >=3D VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions)
-> +		if (index >=3D VFIO_PCI_NUM_REGIONS + vdev->num_regions)
->  			return -EINVAL;
-> =20
->  		index -=3D VFIO_PCI_NUM_REGIONS;
-> -		return vgpu->vdev.region[index].ops->rw(vgpu, buf, count,
-> +		return vdev->region[index].ops->rw(vgpu, buf, count,
->  				ppos, is_write);
->  	}
-> =20
-> @@ -1224,7 +1271,7 @@ static int intel_vgpu_set_msi_trigger(struct intel_=
-vgpu *vgpu,
->  			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
->  			return PTR_ERR(trigger);
->  		}
-> -		vgpu->vdev.msi_trigger =3D trigger;
-> +		kvmgt_vdev(vgpu)->msi_trigger =3D trigger;
->  	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count)
->  		intel_vgpu_release_msi_eventfd_ctx(vgpu);
-> =20
-> @@ -1276,6 +1323,7 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
-ev, unsigned int cmd,
->  			     unsigned long arg)
->  {
->  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
->  	unsigned long minsz;
-> =20
->  	gvt_dbg_core("vgpu%d ioctl, cmd: %d\n", vgpu->id, cmd);
-> @@ -1294,7 +1342,7 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
-ev, unsigned int cmd,
->  		info.flags =3D VFIO_DEVICE_FLAGS_PCI;
->  		info.flags |=3D VFIO_DEVICE_FLAGS_RESET;
->  		info.num_regions =3D VFIO_PCI_NUM_REGIONS +
-> -				vgpu->vdev.num_regions;
-> +				vdev->num_regions;
->  		info.num_irqs =3D VFIO_PCI_NUM_IRQS;
-> =20
->  		return copy_to_user((void __user *)arg, &info, minsz) ?
-> @@ -1385,22 +1433,22 @@ static long intel_vgpu_ioctl(struct mdev_device *=
-mdev, unsigned int cmd,
->  					.header.version =3D 1 };
-> =20
->  				if (info.index >=3D VFIO_PCI_NUM_REGIONS +
-> -						vgpu->vdev.num_regions)
-> +						vdev->num_regions)
->  					return -EINVAL;
->  				info.index =3D
->  					array_index_nospec(info.index,
->  							VFIO_PCI_NUM_REGIONS +
-> -							vgpu->vdev.num_regions);
-> +							vdev->num_regions);
-> =20
->  				i =3D info.index - VFIO_PCI_NUM_REGIONS;
-> =20
->  				info.offset =3D
->  					VFIO_PCI_INDEX_TO_OFFSET(info.index);
-> -				info.size =3D vgpu->vdev.region[i].size;
-> -				info.flags =3D vgpu->vdev.region[i].flags;
-> +				info.size =3D vdev->region[i].size;
-> +				info.flags =3D vdev->region[i].flags;
-> =20
-> -				cap_type.type =3D vgpu->vdev.region[i].type;
-> -				cap_type.subtype =3D vgpu->vdev.region[i].subtype;
-> +				cap_type.type =3D vdev->region[i].type;
-> +				cap_type.subtype =3D vdev->region[i].subtype;
-> =20
->  				ret =3D vfio_info_add_capability(&caps,
->  							&cap_type.header,
-> @@ -1740,13 +1788,15 @@ static int kvmgt_guest_init(struct mdev_device *m=
-dev)
->  {
->  	struct kvmgt_guest_info *info;
->  	struct intel_vgpu *vgpu;
-> +	struct kvmgt_vdev *vdev;
->  	struct kvm *kvm;
-> =20
->  	vgpu =3D mdev_get_drvdata(mdev);
->  	if (handle_valid(vgpu->handle))
->  		return -EEXIST;
-> =20
-> -	kvm =3D vgpu->vdev.kvm;
-> +	vdev =3D kvmgt_vdev(vgpu);
-> +	kvm =3D vdev->kvm;
->  	if (!kvm || kvm->mm !=3D current->mm) {
->  		gvt_vgpu_err("KVM is required to use Intel vGPU\n");
->  		return -ESRCH;
-> @@ -1774,7 +1824,7 @@ static int kvmgt_guest_init(struct mdev_device *mde=
-v)
->  	info->debugfs_cache_entries =3D debugfs_create_ulong(
->  						"kvmgt_nr_cache_entries",
->  						0444, vgpu->debugfs,
-> -						&vgpu->vdev.nr_cache_entries);
-> +						&vdev->nr_cache_entries);
->  	return 0;
->  }
-> =20
-> @@ -1791,9 +1841,17 @@ static bool kvmgt_guest_exit(struct kvmgt_guest_in=
-fo *info)
->  	return true;
->  }
-> =20
-> -static int kvmgt_attach_vgpu(void *vgpu, unsigned long *handle)
-> +static int kvmgt_attach_vgpu(void *p_vgpu, unsigned long *handle)
->  {
-> -	/* nothing to do here */
-> +	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
-> +
-> +	vgpu->vdev =3D kzalloc(sizeof(struct kvmgt_vdev), GFP_KERNEL);
-> +
-> +	if (!vgpu->vdev)
-> +		return -ENOMEM;
-> +
-> +	kvmgt_vdev(vgpu)->vgpu =3D vgpu;
-> +
->  	return 0;
->  }
-> =20
-> @@ -1801,29 +1859,34 @@ static void kvmgt_detach_vgpu(void *p_vgpu)
->  {
->  	int i;
->  	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
-> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
-> =20
-> -	if (!vgpu->vdev.region)
-> +	if (!vdev->region)
->  		return;
-> =20
-> -	for (i =3D 0; i < vgpu->vdev.num_regions; i++)
-> -		if (vgpu->vdev.region[i].ops->release)
-> -			vgpu->vdev.region[i].ops->release(vgpu,
-> -					&vgpu->vdev.region[i]);
-> -	vgpu->vdev.num_regions =3D 0;
-> -	kfree(vgpu->vdev.region);
-> -	vgpu->vdev.region =3D NULL;
-> +	for (i =3D 0; i < vdev->num_regions; i++)
-> +		if (vdev->region[i].ops->release)
-> +			vdev->region[i].ops->release(vgpu,
-> +					&vdev->region[i]);
-> +	vdev->num_regions =3D 0;
-> +	kfree(vdev->region);
-> +	vdev->region =3D NULL;
-> +
-> +	kfree(vdev);
->  }
-> =20
->  static int kvmgt_inject_msi(unsigned long handle, u32 addr, u16 data)
->  {
->  	struct kvmgt_guest_info *info;
->  	struct intel_vgpu *vgpu;
-> +	struct kvmgt_vdev *vdev;
-> =20
->  	if (!handle_valid(handle))
->  		return -ESRCH;
-> =20
->  	info =3D (struct kvmgt_guest_info *)handle;
->  	vgpu =3D info->vgpu;
-> +	vdev =3D kvmgt_vdev(vgpu);
-> =20
->  	/*
->  	 * When guest is poweroff, msi_trigger is set to NULL, but vgpu's
-> @@ -1834,10 +1897,10 @@ static int kvmgt_inject_msi(unsigned long handle,=
- u32 addr, u16 data)
->  	 * enabled by guest. so if msi_trigger is null, success is still
->  	 * returned and don't inject interrupt into guest.
->  	 */
-> -	if (vgpu->vdev.msi_trigger =3D=3D NULL)
-> +	if (vdev->msi_trigger =3D=3D NULL)
->  		return 0;
-> =20
-> -	if (eventfd_signal(vgpu->vdev.msi_trigger, 1) =3D=3D 1)
-> +	if (eventfd_signal(vdev->msi_trigger, 1) =3D=3D 1)
->  		return 0;
-> =20
->  	return -EFAULT;
-> @@ -1863,26 +1926,26 @@ static unsigned long kvmgt_gfn_to_pfn(unsigned lo=
-ng handle, unsigned long gfn)
->  static int kvmgt_dma_map_guest_page(unsigned long handle, unsigned long =
-gfn,
->  		unsigned long size, dma_addr_t *dma_addr)
->  {
-> -	struct kvmgt_guest_info *info;
->  	struct intel_vgpu *vgpu;
-> +	struct kvmgt_vdev *vdev;
->  	struct gvt_dma *entry;
->  	int ret;
-> =20
->  	if (!handle_valid(handle))
->  		return -EINVAL;
-> =20
-> -	info =3D (struct kvmgt_guest_info *)handle;
-> -	vgpu =3D info->vgpu;
-> +	vgpu =3D ((struct kvmgt_guest_info *)handle)->vgpu;
-> +	vdev =3D kvmgt_vdev(vgpu);
-> =20
-> -	mutex_lock(&info->vgpu->vdev.cache_lock);
-> +	mutex_lock(&vdev->cache_lock);
-> =20
-> -	entry =3D __gvt_cache_find_gfn(info->vgpu, gfn);
-> +	entry =3D __gvt_cache_find_gfn(vgpu, gfn);
->  	if (!entry) {
->  		ret =3D gvt_dma_map_page(vgpu, gfn, dma_addr, size);
->  		if (ret)
->  			goto err_unlock;
-> =20
-> -		ret =3D __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
-> +		ret =3D __gvt_cache_add(vgpu, gfn, *dma_addr, size);
->  		if (ret)
->  			goto err_unmap;
->  	} else if (entry->size !=3D size) {
-> @@ -1894,7 +1957,7 @@ static int kvmgt_dma_map_guest_page(unsigned long h=
-andle, unsigned long gfn,
->  		if (ret)
->  			goto err_unlock;
-> =20
-> -		ret =3D __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
-> +		ret =3D __gvt_cache_add(vgpu, gfn, *dma_addr, size);
->  		if (ret)
->  			goto err_unmap;
->  	} else {
-> @@ -1902,19 +1965,20 @@ static int kvmgt_dma_map_guest_page(unsigned long=
- handle, unsigned long gfn,
->  		*dma_addr =3D entry->dma_addr;
->  	}
-> =20
-> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
-> +	mutex_unlock(&vdev->cache_lock);
->  	return 0;
-> =20
->  err_unmap:
->  	gvt_dma_unmap_page(vgpu, gfn, *dma_addr, size);
->  err_unlock:
-> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
-> +	mutex_unlock(&vdev->cache_lock);
->  	return ret;
->  }
-> =20
->  static int kvmgt_dma_pin_guest_page(unsigned long handle, dma_addr_t dma=
-_addr)
->  {
->  	struct kvmgt_guest_info *info;
-> +	struct kvmgt_vdev *vdev;
->  	struct gvt_dma *entry;
->  	int ret =3D 0;
-> =20
-> @@ -1922,14 +1986,15 @@ static int kvmgt_dma_pin_guest_page(unsigned long=
- handle, dma_addr_t dma_addr)
->  		return -ENODEV;
-> =20
->  	info =3D (struct kvmgt_guest_info *)handle;
-> +	vdev =3D kvmgt_vdev(info->vgpu);
-> =20
-> -	mutex_lock(&info->vgpu->vdev.cache_lock);
-> +	mutex_lock(&vdev->cache_lock);
->  	entry =3D __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
->  	if (entry)
->  		kref_get(&entry->ref);
->  	else
->  		ret =3D -ENOMEM;
-> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
-> +	mutex_unlock(&vdev->cache_lock);
-> =20
->  	return ret;
->  }
-> @@ -1945,19 +2010,21 @@ static void __gvt_dma_release(struct kref *ref)
-> =20
->  static void kvmgt_dma_unmap_guest_page(unsigned long handle, dma_addr_t =
-dma_addr)
->  {
-> -	struct kvmgt_guest_info *info;
-> +	struct intel_vgpu *vgpu;
-> +	struct kvmgt_vdev *vdev;
->  	struct gvt_dma *entry;
-> =20
->  	if (!handle_valid(handle))
->  		return;
-> =20
-> -	info =3D (struct kvmgt_guest_info *)handle;
-> +	vgpu =3D ((struct kvmgt_guest_info *)handle)->vgpu;
-> +	vdev =3D kvmgt_vdev(vgpu);
-> =20
-> -	mutex_lock(&info->vgpu->vdev.cache_lock);
-> -	entry =3D __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
-> +	mutex_lock(&vdev->cache_lock);
-> +	entry =3D __gvt_cache_find_dma_addr(vgpu, dma_addr);
->  	if (entry)
->  		kref_put(&entry->ref, __gvt_dma_release);
-> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
-> +	mutex_unlock(&vdev->cache_lock);
->  }
-> =20
->  static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
-> --=20
-> 2.24.1
->=20
-> _______________________________________________
-> intel-gvt-dev mailing list
-> intel-gvt-dev@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
-
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXkulVAAKCRCxBBozTXgY
-J9SwAJ9cBNFMpkgvq+U+o5y0MrD7gqWmYgCfb6EkXIqPlG9o5xlf1EVP+XHg3pQ=
-=B1Q9
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
