@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357FDC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E88C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C7C24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1DF24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055862;
-	bh=FTkTj5MSQJ93p85m2u0gptLel5AoLasvSC6c9NVykF8=;
+	s=default; t=1582055865;
+	bh=alfaClgMPQx9gqsYJzeSw3F99GdWFoISOuD0fIcZiQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esQWs4yuwDlzx47U8LjAL062yz9ax8VtLZtXzFjpssOl0gleAk7P8rY63AceKqvsm
-	 PCX3iugE8+DbrsRdkaOSDwndSiYD0O7EPLuy4vldDE+rSu2JFCzNWAJXBV9B/wCjwV
-	 YeOK1xLWKjvdcKBmkr6GyL5jeNyy+YDwElO2dnQY=
+	b=vi0WYZ2zRRjz3JqvwpQ3YL4qvUOmj99qqZhPgBTFK707ROJs79B+rTeVIBhMrnO3n
+	 CWmMeMMJ/diK/feUzOsEIidMVsjEWdSWvuqquiJa64DQifPzf21x+hE8ZR65UdZKpt
+	 OsWiO//lfPaqbZoUHXlYHxJcBg9TpW+h/nsC52iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgBRT5k (ORCPT
+        id S1728002AbgBRT5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35006 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbgBRT5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:36 -0500
+        id S1726911AbgBRT5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E190124670;
-        Tue, 18 Feb 2020 19:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD24024655;
+        Tue, 18 Feb 2020 19:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055856;
-        bh=FTkTj5MSQJ93p85m2u0gptLel5AoLasvSC6c9NVykF8=;
+        s=default; t=1582055861;
+        bh=alfaClgMPQx9gqsYJzeSw3F99GdWFoISOuD0fIcZiQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9oBvVMgZdsV6qsc/qBHVDYVmCIYW/uuQ4Y1xDEY5HpxinlLFmfnXH/sirg2zssA9
-         kWmMe48X1LuMd/KTrQnQGYzu68PvJcgW1Ah2yYth3ISHzIbQ0fknJuUqd+Ky0gZpzC
-         Pk7ly9WjD3TaSI5ZaFKbHw4Hm80g/EZeyAoI2O7Q=
+        b=wh0Kj+PI/NPO72b7UZemIrKnd4jCOqa13GE2qXg2/BPHyuQXrUL6+AFRezp/vBC9Z
+         sSKdcaG8zS13HHEHEyF60EE0sLgplBBSFZxh8LxUXLUspNvHii0xDEBMj/cnpgq/xS
+         THB+aLjBKa+mdPnrQVPe/4y1kssU4+cc2wQ2/B8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 01/66] Input: synaptics - switch T470s to RMI4 by default
-Date:   Tue, 18 Feb 2020 20:54:28 +0100
-Message-Id: <20200218190428.191414167@linuxfoundation.org>
+Subject: [PATCH 5.4 03/66] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+Date:   Tue, 18 Feb 2020 20:54:30 +0100
+Message-Id: <20200218190428.388256110@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,32 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-commit bf502391353b928e63096127e5fd8482080203f5 upstream.
+commit 5179a9dfa9440c1781816e2c9a183d1d2512dc61 upstream.
 
-This supports RMI4 and everything seems to work, including the touchpad
-buttons. So, let's enable this by default.
+The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
+Thus, there is no need to create a software top buttons row.
+
+However, it seems that the device works under SMBus, so keep it as part
+of the smbus_pnp_ids.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200204194322.112638-1-lyude@redhat.com
+Link: https://lore.kernel.org/r/20200115013023.9710-1-benjamin.tissoires@redhat.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/mouse/synaptics.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/input/mouse/synaptics.c
 +++ b/drivers/input/mouse/synaptics.c
-@@ -169,6 +169,7 @@ static const char * const smbus_pnp_ids[
+@@ -146,7 +146,6 @@ static const char * const topbuttonpad_p
+ 	"LEN0042", /* Yoga */
+ 	"LEN0045",
+ 	"LEN0047",
+-	"LEN0049",
+ 	"LEN2000", /* S540 */
+ 	"LEN2001", /* Edge E431 */
+ 	"LEN2002", /* Edge E531 */
+@@ -166,6 +165,7 @@ static const char * const smbus_pnp_ids[
+ 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras */
+ 	"LEN0048", /* X1 Carbon 3 */
+ 	"LEN0046", /* X250 */
++	"LEN0049", /* Yoga 11e */
  	"LEN004a", /* W541 */
  	"LEN005b", /* P50 */
  	"LEN005e", /* T560 */
-+	"LEN006c", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 
 
