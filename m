@@ -2,113 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F6EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E0C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2F521D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721FC21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582051716;
+	bh=BldLJUMeLfjzF7LWWWVI8kglnk/rWLvFMyWyQafRjYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VwCP1TjKWyNWfL67kqUTug4R35d1c3OkneGN9XW5RA2E9gmgRLv6VJ5BuZ65HMjWs
+	 CPj+MBgKEPlKko689LyBou1voFoHNh8U7K4ZMwmtLsxpcNEKO7/my5UeJAH1msveVG
+	 7KlMTqy6dmFw9oz1amTs7omhH/BhT964A6NSzI9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgBRSsE (ORCPT
+        id S1726492AbgBRSsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:48:04 -0500
-Received: from mga04.intel.com ([192.55.52.120]:18818 "EHLO mga04.intel.com"
+        Tue, 18 Feb 2020 13:48:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:58880 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgBRSsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:48:03 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 10:48:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,457,1574150400"; 
-   d="scan'208";a="435949765"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Feb 2020 10:48:02 -0800
-Date:   Tue, 18 Feb 2020 10:48:02 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Erwan Velu <e.velu@criteo.com>
-Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-Message-ID: <20200218184802.GC28156@linux.intel.com>
-References: <20200214143035.607115-1-e.velu@criteo.com>
- <20200214170508.GB20690@linux.intel.com>
- <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
+        id S1726225AbgBRSsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:48:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CC9731B;
+        Tue, 18 Feb 2020 10:48:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3DC53F703;
+        Tue, 18 Feb 2020 10:48:33 -0800 (PST)
+Date:   Tue, 18 Feb 2020 18:48:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: tas2562: Return invalid for when bitwidth is
+ invalid
+Message-ID: <20200218184832.GL4232@sirena.org.uk>
+References: <20200218174706.27309-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0qVF/w3MHQqLSynd"
 Content-Disposition: inline
-In-Reply-To: <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200218174706.27309-1-dmurphy@ti.com>
+X-Cookie: No alcohol, dogs or horses.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:28:49PM +0100, Erwan Velu wrote:
-> On 14/02/2020 18:05, Sean Christopherson wrote:
-> >This has come up before[*].  Using _once() doesn't fully solve the issue
-> >when KVM is built as a module.  The spam is more than likely a userspace
-> >bug, i.e. userspace is probing KVM on every CPU.
-> 
-> I made some progress on this.
-> 
-> 
-> That's "/usr/bin/udevadm trigger --type=devices --action=add" the culprit.
-> 
-> It does echo "add" in /sys/devices/system/cpu/cpu<x>/uevent
-> 
-> For the each cpu, it does the 'add' which trigger the "disabled by bios"
-> message from kvm_arch_init.
-> 
-> Note that doing a "add" on the same processor will trigger the same message
-> at every "add" event.
-> 
-> 
-> So I tried the patch of using pr_err_once() instead of printk() and the
-> behavior is fine : despite the number of "add" generated, there is a single
-> line being printed out.
-> 
-> Without the patch, every "add" generates the "disabled by bios" message.
 
-That's a sort of unintentional side effect of KVM being split into two
-modules, kvm and kvm_{intel,amd}.  E.g. if userspace did 'rmmod kvm' on
-failure of 'modprobe kvm_intel' then using _*once() would be ineffective.
- 
-> So the question is : do we want to handle the case where a possible bios
-> missed the configuration of some cores ?
+--0qVF/w3MHQqLSynd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's a question for AMD/SVM.  Starting with kernel 5.6, Intel/VMX checks
-for BIOS enabling on all CPUs.
+On Tue, Feb 18, 2020 at 11:47:06AM -0600, Dan Murphy wrote:
+> If the bitwidth passed in to the set_bitwidth function is not supported
+> then return an error.
+>=20
+> Fixes: 29b74236bd57 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  scripts/conmakehash        | Bin 0 -> 13120 bytes
+>  scripts/sortextable        | Bin 0 -> 18040 bytes
+>  sound/soc/codecs/tas2562.c |   3 ++-
+>  3 files changed, 2 insertions(+), 1 deletion(-)
+>  create mode 100755 scripts/conmakehash
+>  create mode 100755 scripts/sortextable
+>=20
+> diff --git a/scripts/conmakehash b/scripts/conmakehash
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..17eec37019b8ae45f42f3c820=
+46d1a55a6f69cb3
+> GIT binary patch
+> literal 13120
+> zcmeHOeQ;D&mcN}25CU`u1i`Q23C#=3Dv(j@XB0Wx-n4!le?@~!SFHl6fK(rc$X+x=3DRD
 
-That being said, checking for correct BIOS configuration on all CPUs is
-orthogonal to this print statement issue.  Probing kvm_intel on every CPU
-doesn't do anything to address a misoncifgured BIOS, e.g. if VMX/SVM is
-fully supported on CPU0 then additional probes of kvm_{intel,amd} are nops,
-they don't actually check for support on other CPUs.
+This is...  fun?  I'm guessing it's not intentional, it's certainly a
+little difficult to review.  :)
 
-> If no, then the patch is fine and could be submitted. I don't see the need
-> of printing this message at every call as it pollute the kernel log.
-> 
-> If yes, then we need to keep a trace of the number of enabled/disabled cores
-> so we can report a mismatch. As this message seems printed per cpu, that
-> would kind of mean a global variable right ?
->
-> What are your recommendations on this ?
+--0qVF/w3MHQqLSynd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fix userspace to only do the "add" on one CPU.
+-----BEGIN PGP SIGNATURE-----
 
-Changing kvm_arch_init() to use pr_err_once() for the disabled_by_bios()
-case "works", but it's effectively a hack to workaround a flawed userspace.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5MMX8ACgkQJNaLcl1U
+h9AE1Qf/Zp6m3NI0e0rXFXTJ2XbGhyY0eb9a56oQ6NAH8Cxv75wmSpRtYY56PGpK
+XgBcQN67E9zoR9G+t8WS3t60tOmLAOyAVVDNQ4llIzUsl5oq0zcN5QZhG0GeDPwF
+gfKhGhyKgyZ7cNY0IJETfg9kgF+zvUq49Dh9APTHkBr4OMd0XDJxuBSc2+oCFeAb
+ozO7V5pje1NZe3zcwJY7ZvrjJ+MXnwevO+V9r+1QpFXS6als6G+JC3nChaDBHT7P
+3rQJVO1Wtbl9m9cN2zUj18Zbg5dYjGQLr2ak91NLBjeawlzVSCQucidm0rAaGL4H
+BrBsxv18mqZb8bouvke9jMA+15ovmw==
+=piVj
+-----END PGP SIGNATURE-----
+
+--0qVF/w3MHQqLSynd--
