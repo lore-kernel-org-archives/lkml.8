@@ -2,98 +2,76 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B77C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECEAC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823FE207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:29:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qAjSUVMa"
+	by mail.kernel.org (Postfix) with ESMTP id D0FB2207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgBRF3H (ORCPT
+        id S1726225AbgBRFdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:29:07 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57758 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgBRF3G (ORCPT
+        Tue, 18 Feb 2020 00:33:24 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50773 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725878AbgBRFdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:29:06 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I5NTrW073469;
-        Tue, 18 Feb 2020 05:28:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=MtAT876Wha/hdIaooyO8b902mzV/sFHIOF+uSDIp0ok=;
- b=qAjSUVMacqRVg/m1izgaXPvZK2R/D4kbhcZkjs9V4ohjhVx24lP5tYhptyW7gz4rQRDl
- ia0dX2KB0X7PMmkfG4/7jYWs86JgjYEYoQPCGMIMYhSATnxPDvCZAgHAjhHKkzsFo7eS
- TBlgdIZ605g1aBl+uyDVsaalaVQrkK7LabI5kPpkTLDplf8xe7UpKdj8FFoJ3f/U+K0H
- Src6Pp5yX5RZhNCi3brOdENlP8Imh1XSwEqTpUsHSdSche/bLINmpGwb7VHo9nVlaPHO
- 6FK6Ri9//hXlUqo4RjrrbKQUuvsn4f8A97yTp1hc6tkJGUBSADgrQ1WPokvhqkAPZuJF aw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2y68kqu8fe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 05:28:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I5S1PW047996;
-        Tue, 18 Feb 2020 05:28:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y6t4he75d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 05:28:40 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01I5SaH0013705;
-        Tue, 18 Feb 2020 05:28:37 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Feb 2020 21:28:36 -0800
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: advansys: Replace zero-length array with flexible-array member
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200213000211.GA23171@embeddedor.com>
-Date:   Tue, 18 Feb 2020 00:28:34 -0500
-In-Reply-To: <20200213000211.GA23171@embeddedor.com> (Gustavo A. R. Silva's
-        message of "Wed, 12 Feb 2020 18:02:11 -0600")
-Message-ID: <yq15zg4mpkt.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 18 Feb 2020 00:33:24 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8B4E77EA1B5;
+        Tue, 18 Feb 2020 16:33:20 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3vVX-00063Y-Ld; Tue, 18 Feb 2020 16:33:19 +1100
+Date:   Tue, 18 Feb 2020 16:33:19 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v6 06/19] mm: rename readahead loop variable to 'i'
+Message-ID: <20200218053319.GL10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-10-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=440 phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180043
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=510 malwarescore=0 priorityscore=1501
- clxscore=1011 mlxscore=0 suspectscore=0 impostorscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180043
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-10-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=Ikd4Dj_1AAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=hst_v9hiAf68Pp7nMRMA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 10:45:50AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Change the type of page_idx to unsigned long, and rename it -- it's
+> just a loop counter, not a page index.
+> 
+> Suggested-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  mm/readahead.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Gustavo,
+Looks fine.
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-
-Applied to 5.7/scsi-queue, thanks!
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Dave Chinner
+david@fromorbit.com
