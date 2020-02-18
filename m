@@ -2,184 +2,298 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78179C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D58C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BC620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E7D2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="rvM+uTtY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C2X155Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBROQM (ORCPT
+        id S1726751AbgBROQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:16:12 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44197 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgBROQL (ORCPT
+        Tue, 18 Feb 2020 09:16:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48456 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgBROQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:16:11 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so23076923ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:16:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DrqryinCHE3R7/2tc3p+dbFE1V3J/tIWBiDcCxcBwPc=;
-        b=rvM+uTtYcGhHZ+WHLx8oGBbpf1TICugbYiei2nvci6ZwQkMA9VZjYDMEfliNiJ7eb4
-         2/VmsxdyYR1TPgRwPNKxJ9gj17sc1Fvn61NEBh7rzlOaCxPCCSgfVos8wJ/nsBmzS/i6
-         JMTCQbN4wS3+XoSTG8Q+XlSxjfzXnSKAb68Rq1M8KMx+YI+5G4kPuw6FuM+CSscyjYgS
-         AmMEz3Ow/16C/zWTxJV+MOSpHNgbXVKmIeBKyhrNBdtpAJTpC2kaYtjUkLKIpAZv3pm3
-         gyuBowbTttkFmf9D0Ug45JowMXsEdT/gcWQfw5+Oq1YqVTo5uT85Z7PZY6YfAakSyiAq
-         V3tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DrqryinCHE3R7/2tc3p+dbFE1V3J/tIWBiDcCxcBwPc=;
-        b=SGfqebUvtLH1Gu5NSnhg8Xw5RY7MXPT4mAQwDmamz083T1HEpLU6pb82f1CZhNU/+t
-         oRWBxVHenjKVJbjq2yAp140V0eNUUUoXqC+RdFR/fKrjIeWKzpJTq5nPfZwT+NsTuata
-         9xaqcTCBkv+k1+k16TjLHnhKkX0gfLcl5u+CkWAnMPJb/8nH8dAi7jlw36Tft/qtkdTu
-         kMNXvP95QcA+LG/nArdewygC1FaEcV7d1rAFdncIArjj5JSxKai/EtTRMZYtR26yQWmP
-         v/HeQI2AQ1TSyBzx7047hdrQYZv0CFNcknMLti91Y8D0xnQK+V0Ohl5XQYROjgtV+bDp
-         vh4w==
-X-Gm-Message-State: APjAAAXYeI/yMNjWB3pWPHx/pFpbtQoHDFDEIoMupe7+nypzu6QUJ1Tb
-        1vV/5Y/jpDgA3ws3AkQkyILtlthyYfI=
-X-Google-Smtp-Source: APXvYqzjNYwKgBp80JN3m6/5g5w6xv2WayWUy4GM1ntmp8uClVmyjfzC/fK+c2QkCKfLr3TMKpLlNw==
-X-Received: by 2002:a2e:1459:: with SMTP id 25mr13376746lju.189.1582035367727;
-        Tue, 18 Feb 2020 06:16:07 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id o19sm2978073lji.54.2020.02.18.06.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 06:16:06 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 22631100FA3; Tue, 18 Feb 2020 17:16:34 +0300 (+03)
-Date:   Tue, 18 Feb 2020 17:16:34 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/25] fs: Add zero_user_large
-Message-ID: <20200218141634.zhhjgtv44ux23l3l@box>
-References: <20200212041845.25879-1-willy@infradead.org>
- <20200212041845.25879-14-willy@infradead.org>
- <20200214135248.zqcqx3erb4pnlvmu@box>
- <20200214160342.GA7778@bombadil.infradead.org>
+        Tue, 18 Feb 2020 09:16:22 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IEGEsE074273;
+        Tue, 18 Feb 2020 08:16:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582035374;
+        bh=n2KrMiBAVRvNdjvVSSSf2VgxPh00qjT1MxIsx1Js1bc=;
+        h=From:To:CC:Subject:Date;
+        b=C2X155UeR3DePPy2KyaY05jG+tv6Is1x6lU0t+7bN0kz5Jv8h+7L728qp3zd7co2Q
+         bX6tCUoDYqCoZnQ6rXRAO8e1YdeVS72qbsMl1f1myn9PsYpvdMDkwDW9wRVRcxOxES
+         34jks0T40/qeLocpvAIzkTalfZegurFcSbSTjI/4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IEGEgY020868
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 08:16:14 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 08:16:13 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 08:16:13 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IEGDMk085215;
+        Tue, 18 Feb 2020 08:16:13 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
+CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v3] net: phy: dp83867: Add speed optimization feature
+Date:   Tue, 18 Feb 2020 08:11:30 -0600
+Message-ID: <20200218141130.28825-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214160342.GA7778@bombadil.infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 08:03:42AM -0800, Matthew Wilcox wrote:
-> On Fri, Feb 14, 2020 at 04:52:48PM +0300, Kirill A. Shutemov wrote:
-> > On Tue, Feb 11, 2020 at 08:18:33PM -0800, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > We can't kmap() a THP, so add a wrapper around zero_user() for large
-> > > pages.
-> > 
-> > I would rather address it closer to the root: make zero_user_segments()
-> > handle compound pages.
-> 
-> Hah.  I ended up doing that, but hadn't sent it out.  I don't like
-> how ugly it is:
-> 
-> @@ -219,18 +219,57 @@ static inline void zero_user_segments(struct page *page,
->         unsigned start1, unsigned end1,
->         unsigned start2, unsigned end2)
->  {
-> -       void *kaddr = kmap_atomic(page);
-> -
-> -       BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
-> -
-> -       if (end1 > start1)
-> -               memset(kaddr + start1, 0, end1 - start1);
-> -
-> -       if (end2 > start2)
-> -               memset(kaddr + start2, 0, end2 - start2);
-> -
-> -       kunmap_atomic(kaddr);
-> -       flush_dcache_page(page);
-> +       unsigned int i;
-> +
-> +       BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
-> +
-> +       for (i = 0; i < hpage_nr_pages(page); i++) {
-> +               void *kaddr;
-> +               unsigned this_end;
-> +
-> +               if (end1 == 0 && start2 >= PAGE_SIZE) {
-> +                       start2 -= PAGE_SIZE;
-> +                       end2 -= PAGE_SIZE;
-> +                       continue;
-> +               }
-> +
-> +               if (start1 >= PAGE_SIZE) {
-> +                       start1 -= PAGE_SIZE;
-> +                       end1 -= PAGE_SIZE;
-> +                       if (start2) {
-> +                               start2 -= PAGE_SIZE;
-> +                               end2 -= PAGE_SIZE;
-> +                       }
+Set the speed optimization bit on the DP83867 PHY.
+This feature can also be strapped on the 64 pin PHY devices
+but the 48 pin devices do not have the strap pin available to enable
+this feature in the hardware.  PHY team suggests to have this bit set.
 
-You assume start2/end2 is always after start1/end1 in the page.
-Is it always true? If so, I would add BUG_ON() for it.
+With this bit set the PHY will auto negotiate and report the link
+parameters in the PHYSTS register.  This register provides a single
+location within the register set for quick access to commonly accessed
+information.
 
-Otherwise, looks good.
+In this case when auto negotiation is on the PHY core reads the bits
+that have been configured or if auto negotiation is off the PHY core
+reads the BMCR register and sets the phydev parameters accordingly.
 
-> +                       continue;
-> +               }
-> +
-> +               kaddr = kmap_atomic(page + i);
-> +
-> +               this_end = min_t(unsigned, end1, PAGE_SIZE);
-> +               if (end1 > start1)
-> +                       memset(kaddr + start1, 0, this_end - start1);
-> +               end1 -= this_end;
-> +               start1 = 0;
-> +
-> +               if (start2 >= PAGE_SIZE) {
-> +                       start2 -= PAGE_SIZE;
-> +                       end2 -= PAGE_SIZE;
-> +               } else {
-> +                       this_end = min_t(unsigned, end2, PAGE_SIZE);
-> +                       if (end2 > start2)
-> +                               memset(kaddr + start2, 0, this_end - start2);
-> +                       end2 -= this_end;
-> +                       start2 = 0;
-> +               }
-> +
-> +               kunmap_atomic(kaddr);
-> +               flush_dcache_page(page + i);
-> +
-> +               if (!end1 && !end2)
-> +                       break;
-> +       }
-> +
-> +       BUG_ON((start1 | start2 | end1 | end2) != 0);
->  }
-> 
-> I think at this point it has to move out-of-line too.
-> 
-> > > +static inline void zero_user_large(struct page *page,
-> > > +		unsigned start, unsigned size)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i = 0; i < thp_order(page); i++) {
-> > > +		if (start > PAGE_SIZE) {
-> > 
-> > Off-by-one? >= ?
-> 
-> Good catch; I'd also noticed that when I came to redo the zero_user_segments().
-> 
+This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+4-wire cable.  If this should occur the PHYSTS register contains the
+current negotiated speed and duplex mode.
 
+In overriding the genphy_read_status the dp83867_read_status will do a
+genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+register is read and the phydev speed and duplex mode settings are
+updated.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+
+v3 - Add the tunable feature into the driver for downshift.  Change speed optimization
+nomenclature to dwonshift
+
+ drivers/net/phy/dp83867.c | 150 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 967f57ed0b65..13f7f2d5a2ea 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -14,6 +14,7 @@
+ #include <linux/delay.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
++#include <linux/bitfield.h>
+ 
+ #include <dt-bindings/net/ti-dp83867.h>
+ 
+@@ -21,6 +22,7 @@
+ #define DP83867_DEVADDR		0x1f
+ 
+ #define MII_DP83867_PHYCTRL	0x10
++#define MII_DP83867_PHYSTS	0x11
+ #define MII_DP83867_MICR	0x12
+ #define MII_DP83867_ISR		0x13
+ #define DP83867_CFG2		0x14
+@@ -118,6 +120,24 @@
+ #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+ #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+ 
++/* PHY STS bits */
++#define DP83867_PHYSTS_1000			BIT(15)
++#define DP83867_PHYSTS_100			BIT(14)
++#define DP83867_PHYSTS_DUPLEX			BIT(13)
++#define DP83867_PHYSTS_LINK			BIT(10)
++
++/* CFG2 bits */
++#define DP83867_DOWNSHIFT_EN		(BIT(8) | BIT(9))
++#define DP83867_DOWNSHIFT_ATTEMPT_MASK	(BIT(10) | BIT(11))
++#define DP83867_DOWNSHIFT_1_COUNT_VAL	0
++#define DP83867_DOWNSHIFT_2_COUNT_VAL	1
++#define DP83867_DOWNSHIFT_4_COUNT_VAL	2
++#define DP83867_DOWNSHIFT_8_COUNT_VAL	3
++#define DP83867_DOWNSHIFT_1_COUNT	1
++#define DP83867_DOWNSHIFT_2_COUNT	2
++#define DP83867_DOWNSHIFT_4_COUNT	4
++#define DP83867_DOWNSHIFT_8_COUNT	8
++
+ /* CFG3 bits */
+ #define DP83867_CFG3_INT_OE			BIT(7)
+ #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+@@ -287,6 +307,126 @@ static int dp83867_config_intr(struct phy_device *phydev)
+ 	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+ }
+ 
++static int dp83867_read_status(struct phy_device *phydev)
++{
++	int status = phy_read(phydev, MII_DP83867_PHYSTS);
++	int ret;
++
++	ret = genphy_read_status(phydev);
++	if (ret)
++		return ret;
++
++	if (status < 0)
++		return status;
++
++	if (status & DP83867_PHYSTS_DUPLEX)
++		phydev->duplex = DUPLEX_FULL;
++	else
++		phydev->duplex = DUPLEX_HALF;
++
++	if (status & DP83867_PHYSTS_1000)
++		phydev->speed = SPEED_1000;
++	else if (status & DP83867_PHYSTS_100)
++		phydev->speed = SPEED_100;
++	else
++		phydev->speed = SPEED_10;
++
++	return 0;
++}
++
++static int dp83867_get_downshift(struct phy_device *phydev, u8 *data)
++{
++	int val, cnt, enable, count;
++
++	val = phy_read(phydev, DP83867_CFG2);
++	if (val < 0)
++		return val;
++
++	enable = FIELD_GET(DP83867_DOWNSHIFT_EN, val);
++	cnt = FIELD_GET(DP83867_DOWNSHIFT_ATTEMPT_MASK, val);
++
++	switch (cnt) {
++	case DP83867_DOWNSHIFT_1_COUNT_VAL:
++		count = DP83867_DOWNSHIFT_1_COUNT;
++		break;
++	case DP83867_DOWNSHIFT_2_COUNT_VAL:
++		count = DP83867_DOWNSHIFT_2_COUNT;
++		break;
++	case DP83867_DOWNSHIFT_4_COUNT_VAL:
++		count = DP83867_DOWNSHIFT_4_COUNT;
++		break;
++	case DP83867_DOWNSHIFT_8_COUNT_VAL:
++		count = DP83867_DOWNSHIFT_8_COUNT;
++		break;
++	default:
++		return -EINVAL;
++	};
++
++	*data = enable ? count : DOWNSHIFT_DEV_DISABLE;
++
++	return 0;
++}
++
++static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
++{
++	int val, count;
++
++	if (cnt > DP83867_DOWNSHIFT_8_COUNT)
++		return -E2BIG;
++
++	if (!cnt)
++		return phy_clear_bits(phydev, DP83867_CFG2,
++				      DP83867_DOWNSHIFT_EN);
++
++	switch (cnt) {
++		case DP83867_DOWNSHIFT_1_COUNT:
++			count = DP83867_DOWNSHIFT_1_COUNT_VAL;
++			break;
++		case DP83867_DOWNSHIFT_2_COUNT:
++			count = DP83867_DOWNSHIFT_2_COUNT_VAL;
++			break;
++		case DP83867_DOWNSHIFT_4_COUNT:
++			count = DP83867_DOWNSHIFT_4_COUNT_VAL;
++			break;
++		case DP83867_DOWNSHIFT_8_COUNT:
++			count = DP83867_DOWNSHIFT_8_COUNT_VAL;
++			break;
++		default:
++			phydev_err(phydev,
++				   "Downshift count must be 1, 2, 4 or 8\n");
++			return -EINVAL;
++	};
++
++	val = DP83867_DOWNSHIFT_EN;
++	val |= FIELD_PREP(DP83867_DOWNSHIFT_ATTEMPT_MASK, count);
++
++	return phy_modify(phydev, DP83867_CFG2,
++			  DP83867_DOWNSHIFT_EN | DP83867_DOWNSHIFT_ATTEMPT_MASK,
++			  val);
++}
++
++static int dp83867_get_tunable(struct phy_device *phydev,
++				struct ethtool_tunable *tuna, void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return dp83867_get_downshift(phydev, data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int dp83867_set_tunable(struct phy_device *phydev,
++				struct ethtool_tunable *tuna, const void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return dp83867_set_downshift(phydev, *(const u8 *)data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static int dp83867_config_port_mirroring(struct phy_device *phydev)
+ {
+ 	struct dp83867_private *dp83867 =
+@@ -467,6 +607,12 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 	int ret, val, bs;
+ 	u16 delay;
+ 
++	/* Force speed optimization for the PHY even if it strapped */
++	ret = phy_modify(phydev, DP83867_CFG2, DP83867_DOWNSHIFT_EN,
++			 DP83867_DOWNSHIFT_EN);
++	if (ret)
++		return ret;
++
+ 	ret = dp83867_verify_rgmii_cfg(phydev);
+ 	if (ret)
+ 		return ret;
+@@ -655,6 +801,10 @@ static struct phy_driver dp83867_driver[] = {
+ 		.config_init	= dp83867_config_init,
+ 		.soft_reset	= dp83867_phy_reset,
+ 
++		.read_status	= dp83867_read_status,
++		.get_tunable	= dp83867_get_tunable,
++		.set_tunable	= dp83867_set_tunable,
++
+ 		.get_wol	= dp83867_get_wol,
+ 		.set_wol	= dp83867_set_wol,
+ 
 -- 
- Kirill A. Shutemov
+2.25.0
+
