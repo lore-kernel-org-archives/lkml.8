@@ -2,164 +2,141 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1034C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE126C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2D520801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A707220801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GwuqgV7d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jb2+luyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgBRN4R (ORCPT
+        id S1726770AbgBRN4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:56:17 -0500
-Received: from mail-eopbgr20079.outbound.protection.outlook.com ([40.107.2.79]:23742
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726582AbgBRN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:56:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P+pyMp88oZKIN8Hzn7aeUQcNPdIcxmhxwMGc2/fU9DpFqpVGRx6TbTrso8DdJ3vrCOulWSGPTu8Z2R2m/e9ew3nV3D5s3XpcEFQWaJmF0/3tG0EfhCfqh7J6YrRZVNgA4n+rAHtm8gRUM0ldggRgfr76YpHxYfvxyBOlCDAluYsCFYcFTy+Gx4UoXDLHFQvOftzYfCQCQgGt9EqRrc8oGeHQzoI8fTyErbyWE59gvD0HmaKvIlOvsMokwNNg90/vp/OIK7V2K596hhyyjvFuXDuCrDZ6lcuA197MquD0rrzeJ88f9mZqF5oDHSNcIWxk/Nt5hSFHyW9PQi3GoT8MPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=maFn4RFzaNi815Hh3PxnLpr3qN/Luvk0149mJSNSCe4=;
- b=Rt5Kwk2Za3Xi/rwixJXp71TtSz65w9/PynpYTlpkgL4+sjdkDDkc7h6ahywwBmFli9WlVsl8buCtQSYZwAUUWGs64TxTGvgT5u724RwbxrvFzlUFDBvQGm758MhKK66Bmh2FUVFX/u9ea9ZMnd0uGbZKxo5YUp58sryB/Ira24ZaJy59lWhPqTEMkWmDZEel0FgDtqxvjV0lCZiN62npgkMqMsQznrkthxI+tZBN3CxX/g/WjDogUi+uvIeJ6J3zUkHSh+vbqizsF/3Q0RitvsGznqJCqWI55U2d5BARbVeikuKCHD66NxaqfNBd2sR3i+vJaaO57mxuoYosQE1kBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=maFn4RFzaNi815Hh3PxnLpr3qN/Luvk0149mJSNSCe4=;
- b=GwuqgV7dtf2brUaOHZVWuPXvIt0Nlo+iNVraVMkVf0fXUKV5pM8vkIysE+r9psxIAgayq343AQYW0ta1IxhSEU+92Mzs8H4yEcgrXHP0hoHjEq2PQiapt+qBy89XgAOxj133uDW7WmmUGWnvpploFiiAkBGlKzUkZ5upGTyuaWs=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5918.eurprd05.prod.outlook.com (20.178.126.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Tue, 18 Feb 2020 13:56:12 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
- 13:56:12 +0000
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR14CA0006.namprd14.prod.outlook.com (2603:10b6:208:23e::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend Transport; Tue, 18 Feb 2020 13:56:11 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j43M8-0002h5-9S; Tue, 18 Feb 2020 09:56:08 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-CC:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH V2 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHV38asJrupyM4st0u+LnLMVE2dj6gWBCEAgAEv6YCAAFKZAIAA9rcAgACprgCAABWWAIAAAfIAgADOIICAAK/EAIAENTiAgAIVHQA=
-Date:   Tue, 18 Feb 2020 13:56:12 +0000
-Message-ID: <20200218135608.GS4271@mellanox.com>
-References: <20200211134746.GI4271@mellanox.com>
- <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <8b3e6a9c-8bfd-fb3c-12a8-2d6a3879f1ae@redhat.com>
- <20200214135232.GB4271@mellanox.com>
- <01c86ebb-cf4b-691f-e682-2d6f93ddbcf7@redhat.com>
-In-Reply-To: <01c86ebb-cf4b-691f-e682-2d6f93ddbcf7@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR14CA0006.namprd14.prod.outlook.com
- (2603:10b6:208:23e::11) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.68.57.212]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7604cef4-cb39-495b-9819-08d7b47a500c
-x-ms-traffictypediagnostic: VI1PR05MB5918:|VI1PR05MB5918:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB5918CD3ACFCA91AD10215909CF110@VI1PR05MB5918.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 031763BCAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(8676002)(33656002)(54906003)(8936002)(6666004)(316002)(4326008)(7416002)(9786002)(81156014)(26005)(1076003)(5660300002)(66446008)(64756008)(2616005)(66946007)(9746002)(66476007)(81166006)(186003)(66556008)(71200400001)(4744005)(36756003)(966005)(52116002)(2906002)(478600001)(86362001)(6916009)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5918;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Tsx07X9JHj26sipFLqHPJ5MkFK7bAlhozKrErwU4s+Oc3auwrQh1HhzYqDwW/JdtLsMwRdrx06pcnwVrkGq66Tl05voxaqt8Jd5u1ebxQyS9LFFRnidXXBm62TGKlJgcRyajoMP5eb6euONSGcR2QskdkILdxIglw7X283QDqg6ACdU3JBmeR0YCblnKuFnQeZS0kKU352bc2aC8cJZR2/IAzWGbTnu6k/SwvDHZuWSDbCAGLobyidUGpUpOFkJM72btiaujr6ZdLmXWZtkuOgkEIkYef5eyyDEGOQSQaVQKcPOOnL32ODOh5xrcwAu8WEs2XlkQ+dW+3+wjxWo8Q8rCppWUsK8Qs5yjZaKcBLHJtfTyajladW8dj3aqz5MNHx+ijm4KwcrkReAi6Q3vTahQv1d6dNJf5e+q+WQbQliWrmPv6H6HdT2tevmAZCKQJveiH/o/YzruEoyNEzAIb5GSmc5vYOP535tLj2rJCpFoOZfA7jYVt3n6bJtqI5JtyvOySwcZdk2DL3tA8ODZlyY+0C/vEV9xGcSYQWWX8FCYgDLE4kvhHDmXQLkXQpIKk/H3F3+aNnylk48HwdrgfA==
-x-ms-exchange-antispam-messagedata: eQp/Q00Tmt9N+AcvTTj7wNGg/V1ahBinAUAZJxNFFawgROsTwUUrJLUl4NjWAZljJDaJDTv1sOJcsfFv++il9h6x4hqk1oex0Gd2J4aUOH0oNJ97Rm+y5JYhJOkDVqK/Vsz9iuITuWV8evuykL8NJw==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CFAA87160CBAF244B86C490A3BEFC428@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Feb 2020 08:56:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56880 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBRN4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:56:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QWm+MsHkSRgQJK1eFxqCcWrvQ90y26mjyjBOZ11Iwkk=; b=jb2+luyxr+xSioYyaBNa3dAEcG
+        HSkNE/u4FRJRlH9iJvfMy5PCbL6cVJNDiZN1T+0cd1NFPBhswNdJGqv4MI+l2rK+i+tYpDmuT8Bqa
+        v4kTQEGSXMc95ruYcJyKvonnTr8/VCdmBG1QzESKMSk9lJUywki+bnjFt/A2gjwlx0PFneQN6p+Z8
+        w8PFnDecZukQL71k/MfBJQ4M0XvKWkJLm4emA2PDAS90/6wmUKCMv8DC2uYB8tZIweEjrWjDvK1i9
+        ARqcVs4oiBQgZVdD9JO7vnPU+QZg8rs4gj+Y0mapS7yUw3ZxNuiOhm4hApWihKBeAmYq71FGdgE8W
+        1g9mrcqA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j43MI-0000Q8-5H; Tue, 18 Feb 2020 13:56:18 +0000
+Date:   Tue, 18 Feb 2020 05:56:18 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
+Message-ID: <20200218135618.GO7778@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-4-willy@infradead.org>
+ <20200218050300.GI10776@dread.disaster.area>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7604cef4-cb39-495b-9819-08d7b47a500c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 13:56:12.1974
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JbcQEUBlLgXjLVGAyDtF5h5en7Ncnd/3fCgi0YDztLjJ/o7pVwMrewTsXeL7VgQZRJMBvkFCL8ajrwiGYQKUVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5918
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218050300.GI10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 02:08:03PM +0800, Jason Wang wrote:
+On Tue, Feb 18, 2020 at 04:03:00PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:45:44AM -0800, Matthew Wilcox wrote:
+> > +static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> > +		gfp_t gfp)
+> >  {
+> > +	const struct address_space_operations *aops = rac->mapping->a_ops;
+> >  	struct blk_plug plug;
+> >  	unsigned page_idx;
+> 
+> Splitting out the aops rather than the mapping here just looks
+> weird, especially as you need the mapping later in the function.
+> Using aops doesn't even reduce the code side....
 
-> I thought you were copied in the patch [1], maybe we can move vhost relat=
-ed
-> discussion there to avoid confusion.
->
-> [1] https://lwn.net/Articles/811210/
+It does in subsequent patches ... I agree it looks a little weird here,
+but I think in the final form, it makes sense:
 
-Wow, that is .. confusing.
+static void read_pages(struct readahead_control *rac, struct list_head *pages)
+{
+        const struct address_space_operations *aops = rac->mapping->a_ops;
+        struct page *page;
+        struct blk_plug plug;
 
-So this is supposed to duplicate the uAPI of vhost-user? But it is
-open coded and duplicated because .. vdpa?
+        blk_start_plug(&plug);
 
-> So it's cheaper and simpler to introduce a new bus instead of refactoring=
- a
-> well known bus and API where brunches of drivers and devices had been
-> implemented for years.
+        if (aops->readahead) {
+                aops->readahead(rac);
+                readahead_for_each(rac, page) {
+                        unlock_page(page);
+                        put_page(page);
+                }
+        } else if (aops->readpages) {
+                aops->readpages(rac->file, rac->mapping, pages,
+                                readahead_count(rac));
+                /* Clean up the remaining pages */
+                put_pages_list(pages);
+        } else {
+                readahead_for_each(rac, page) {
+                        aops->readpage(rac->file, page);
+                        put_page(page);
+                }
+        }
 
-If you reason for this approach is to ease the implementation then you
-should talk about it in the cover letters/etc
+        blk_finish_plug(&plug);
+}
 
-Maybe it is reasonable to do this because the rework is too great, I
-don't know, but to me this whole thing looks rather messy.=20
+It'll look even better once ->readpages goes away.
 
-Remember this stuff is all uAPI as it shows up in sysfs, so you can
-easilly get stuck with it forever.
+> > @@ -155,9 +158,13 @@ void __do_page_cache_readahead(struct address_space *mapping,
+> >  	unsigned long end_index;	/* The last page we want to read */
+> >  	LIST_HEAD(page_pool);
+> >  	int page_idx;
+> > -	unsigned int nr_pages = 0;
+> >  	loff_t isize = i_size_read(inode);
+> >  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> > +	struct readahead_control rac = {
+> > +		.mapping = mapping,
+> > +		.file = filp,
+> > +		._nr_pages = 0,
+> > +	};
+> 
+> No need to initialise _nr_pages to zero, leaving it out will do the
+> same thing.
 
-Jason
+Yes, it does, but I wanted to make it explicit here.
+
+> > +			if (readahead_count(&rac))
+> > +				read_pages(&rac, &page_pool, gfp_mask);
+> > +			rac._nr_pages = 0;
+> 
+> Hmmm. Wondering ig it make sense to move the gfp_mask to the readahead
+> control structure - if we have to pass the gfp_mask down all the
+> way along side the rac, then I think it makes sense to do that...
+
+So we end up removing it later on in this series, but I do wonder if
+it would make sense anyway.  By the end of the series, we still have
+this in iomap:
+
+                if (ctx->rac) /* same as readahead_gfp_mask */
+                        gfp |= __GFP_NORETRY | __GFP_NOWARN;
+
+and we could get rid of that by passing gfp flags down in the rac.  On the
+other hand, I don't know why it doesn't just use readahead_gfp_mask()
+here anyway ... Christoph?
