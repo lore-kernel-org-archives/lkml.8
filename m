@@ -2,101 +2,339 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117EAC3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E58C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB38207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F9A20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QgZ4EvQk"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OFFqnTCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgBRPUl (ORCPT
+        id S1726863AbgBRPYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:20:41 -0500
-Received: from mout.gmx.net ([212.227.17.20]:34235 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgBRPUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:20:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582039215;
-        bh=YhImMGYbcuWObc/HIX9Fh3xzoRfBdQCW4zGMAPs01B8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=QgZ4EvQkvC6QJg9OKShSkwuTDe5Q15IBF4VjI8YAG6IE3KFLrOLZl6cJVe/qBJCq3
-         oLUNvtDiSGKs16WQV3AYj1c4dI3V5+qGIGm6MofOZsMSaWZnohKNp/ETV+RfvjCy9L
-         9mf1Hj+9+AaQtlgvv9cS6msO6U3oDfIB4+eWgjeI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MIdeX-1jGVOU0Zm9-00Ecvi; Tue, 18
- Feb 2020 16:20:15 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Xiong <xndchn@gmail.com>, Stephen Boyd <sboyd@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>
-Subject: [PATCH] scripts/spelling.txt: Add syfs/sysfs pattern
-Date:   Tue, 18 Feb 2020 16:20:08 +0100
-Message-Id: <20200218152010.27349-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Feb 2020 10:24:12 -0500
+Received: from mail-eopbgr20074.outbound.protection.outlook.com ([40.107.2.74]:31710
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726761AbgBRPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:24:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GfRN1N0pQPzgP5Fdn6VBaTlUkljwesv//+b2yH9qRNFLpCtTEy84j8dV2CmXcbcgkDmJvNCOlbF7dIar4UHISb1GMmctLoz4zlRWDIMHWiRG8vMiZvWQ7UCF7Y6iW766CDBCXDfo8hYNt2HZGkPAnik3JvAoESYL07WkFnl7Vxl5h8r3deqQ2H9b+nXejqXXReJe++GBx54mDhvPFPNMhJj6XE2wHdn2g63z3atXixEYTktkG5HneyNYBtTH8tuyoOceAP26k85L2Evp+QJ/Hz6utRVLOJmTQiPYKLSnW5jd2WlrJ0cP6cefYtXXIlFSX1IoZbWzjnSk6XU21gt2mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GOVkb87yXurJu/NDHR+/f4K9MwtrB6LX0JSkHaZDOoA=;
+ b=ml3h+X/Tx5c2f8IaX6jaoYLgSA5amyXeRrBjSWPiGj7iCPSZQW+x2lUrA/BM+h0gKQNDo5+LB637CYoSqTj8CjT/lZfWFrqmRmmAFqFIoa1VEtsVBEcCjDxt4sr6vRD5/An1aX+ZrPk8XSpzTCFOKRsyaJVqeGnbWXiORWLBBbdyey5Uq/AZ1Wc6CqHte4odx37iori88mb7STJM2Or0roLtfTIL1+3rUE6aq9BEWoJAaxdRbRKTmPrbRce9UP85XSBq/2AXCNHHUDRyJ23o975MZEgL3ufoX2xeWzsy8CP+O3lUXTDS9V23GL19NfrVADgS4c7j7D7umQgT562Vhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GOVkb87yXurJu/NDHR+/f4K9MwtrB6LX0JSkHaZDOoA=;
+ b=OFFqnTCfRCY4903djiILYQjN6LZugqwrg0tNi/88Nt3bsTatuBZOtYWjvih1omQ1t9+BFaJ01S36WDvVeqe7Kg10HOtHuPBN6obvIH4ArvhPVxUlkbS3zWTOOHrRV6q2hk8wmezWaA9KbdD0ENyXPizMwqwnGYTBBMM7FtVNz6Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=diana.craciun@oss.nxp.com; 
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com (10.172.255.144) by
+ VI1PR0402MB2879.eurprd04.prod.outlook.com (10.175.24.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Tue, 18 Feb 2020 15:24:07 +0000
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::a8ee:1b0f:6b3e:4682]) by VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::a8ee:1b0f:6b3e:4682%12]) with mapi id 15.20.2729.032; Tue, 18 Feb
+ 2020 15:24:06 +0000
+Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Pankaj Bansal (OSS)" <pankaj.bansal@oss.nxp.com>
+Cc:     Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+References: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <615c6807-c018-92c9-b66a-8afdda183699@huawei.com>
+ <VI1PR04MB513558BF77192255CBE12102B0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+ <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
+From:   Diana Craciun OSS <diana.craciun@oss.nxp.com>
+Message-ID: <e566692c-9b2e-ab56-29db-465d3232d50d@oss.nxp.com>
+Date:   Tue, 18 Feb 2020 17:24:02 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <20200218144653.GA4286@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM5P189CA0028.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:206:15::41) To VI1PR0402MB2815.eurprd04.prod.outlook.com
+ (2603:10a6:800:ae::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TkCqogpvjeqc2kwA0Pwv/hL3fl37AUqYTTUwr6HbiWSaHld1OwR
- Xo0X9Uw2D8+Hsr4PdPr+X4Nr9KUcS1EBGgkg3j05Oil2Y9srxO0OZmOQ3ATOdFrMT7g/MRr
- C/+uCS1Abgble1rvPNIlP/0dAyixLY0Lx5vjbJZtdn8uAFhWxUZ5OJvv6tQaTM28Bcb44Eo
- Wpwq5bUKFrKxfJWSGpWXA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AY8hb9fYS9U=:zDnbtpz+5/YrqWQ6ExKvMI
- bZNsH9KW0/QLr5jx/7IQZ4QUE840MyO3Ff02pvwaRUhsUlXxdkTqqQH8jnIa3rWttv24rexNx
- SPXJkWqJHxIe+j5/8EUflYVb35AvFeGNY4jRk8KG9/a6dDIqguR+himXavVTlKT09CoNG5PSh
- E1FAdesOuvYUtJ/c8GITzMdcmfFncvrFzd0aX0qiuFWv7fKaxADNc0BmDtO3RU2K7vFs4pg/Z
- JcO8VVCDxwMJnycpiJEJ8SVuVHcuIHxeZluQAInSa/WDz2P17Fn48dmoeBFhiBjaCcbRsmLsY
- yjDiStxw6TfaSbD+23cy7Pf/INOt71eCyqhiwFj7oUMHE9jHy0v8kI9udSVMQKw6y62x9Bf+c
- NlQOvw2ZGSC8MPGAmmVQf2SEignfLKgDR8wduypOTBhnZ2iCSrQRSz5NyQTXZE7MO/RA2o7g0
- DGPycBKPlfFOTrw+A4pDxWt/ellbNriL/nqMbXjQyBcGkzKlYDKSl9NQZ4vE4EaPa8gmiu9/h
- kemxas0DsMfnO2qM92d92oTfUChaonMWXoqXqKnURY3Q+cvkCij4GF4YtIR0G5Rmif8VAFtl4
- rESxzpbm8ioIPmvuWGmrkSsNVPjn3L4hplyKnFaqRY/QDHa6mAiBkS0ktgXZ8YQ+5n9IheTEh
- Q8tsKVg/8l7a5x10Z7cvKecR8LnulEzJ9SZ884W6MkjEknPEqiUOaKYrdCkOtrjnjQo3it9rS
- hG2DeJV81VxQTKKKXIHGRmea4FIhWulODB2FHk7uHWOT9eQdNDgTcRbZs9H4OzC1aVeR1FR4K
- 4fcuOMF3gCZcKBDaXuKLO+e5K/a6ryUBELl/SSi0mfLe9qxR3khC1YPpNa1LLxzEj10mfxs3M
- 2f4LMHkaoXrpbeQIL11TzTb1RW6scVNO5Obb/y0myrPdgoE8/IW1Ifqnhtb2A/Vg65z91wZOm
- 5DWDr9LYsEBP2/MpW3mIxHrxrUJf+PPYhG4tEuXmvC5pfg2FK/28rOTqR3tKoufvYonznG1YS
- wHLkMpKWZpHrVdA5jT2q4HkdKNMpLQj0pn1uhb05B3x49QVGnEFLXSnTkRDKtDXM3ViE/KAWT
- 8bGSulfTOFwtebl8ucf90CVQ2Afp1/G8scNZIn6CmvH1OK+bmPhC2vCTNP0q2OzkOTxxb+HLS
- hMU+2H6NlRVJaVgtVYU5xG1VReQfeCu9JjfcGLMx7ECoObd6z5SYMWqugNRJSxLxPXcaiXAJu
- pt/qNJrz3ZCq1Ys5R
+Received: from [10.171.73.123] (212.146.100.6) by AM5P189CA0028.EURP189.PROD.OUTLOOK.COM (2603:10a6:206:15::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24 via Frontend Transport; Tue, 18 Feb 2020 15:24:04 +0000
+X-Originating-IP: [212.146.100.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8aa3dfd3-52de-4151-aa54-08d7b4869801
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB2879:|VI1PR0402MB2879:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB2879BD20249E814F3FF35DD8BE110@VI1PR0402MB2879.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 031763BCAF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(52116002)(54906003)(86362001)(8676002)(4326008)(7416002)(81166006)(81156014)(31696002)(66946007)(110136005)(186003)(8936002)(66556008)(53546011)(16526019)(31686004)(2616005)(66476007)(26005)(956004)(2906002)(6486002)(6636002)(966005)(16576012)(478600001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2879;H:VI1PR0402MB2815.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w0HsRxWqJbTuuzZOH9PYA31jCQ2g1WoL4Dzo0FyRpTVq4+5lsZkOo0UXpPkbVn8ixGMrehzOjieRWzk5w1n8dh4cGpoQV1ZvKGIZzhvu9MROKT10xQ9yJ2FnWGzBV0wOhcAF3I23HfRPtJgpCAcyoBnX8I+nwguNUjNYdS5EddNCcqAIiQjES76sjh59EUDq0N0/nGOwJkJlUp0oCkiHWIoGXvJ12ioXbdu2FUyniYSDsGiKvVEzCI5Fpy6dc700n/TQYtoNzSXpoH9YLF4odm1nz5l/Ho50+bJWquIwAiZK4shlgcBcBKdOPZ8SGVh8lmVR+ESR2ctrfpm9Ikxz+FC3gBXq1dlYTlYl8vFd0dLvsO+lZWkvpKExpS2SU/28S7U7BzQPHyurexeIVIZqk+t5TtiXqP0zOvPw7/S5cbE6h6jtW1Dwfy/0HgYpU9pgePrXNJF1Mgzb/OCrbxPipMzAXDz8L4cX4VlmiSPMgnWljOrN0b5pErniIL5FNKrp9ULX4ZkRtHKdhRxOFFmVWA==
+X-MS-Exchange-AntiSpam-MessageData: D+3ABepQNKo5212AlTwFc72wwJzqyblz1eRARjqgJv4sJ6QTm2+APQ7ecblzdksds8LWl68sFpPYKhENJFSRLneAvm4cLPjYZO0Faa21BZG1KpOUdJwziPqgRbZ1nCHecHQx1SfJGGXpRRmFVlHo+g==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8aa3dfd3-52de-4151-aa54-08d7b4869801
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2020 15:24:06.9056
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V4+aR5IHZLwljR2xsIlE4rxTz2vkeL7Df3bpRSXfOJukyT6gr+rk/6QgACQuEIfMmTM2CQDVPPLYlF5ajNRTmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2879
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few cases in the tree where "sysfs" is misspelled as "syfs".
+Hi Lorenzo,
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- scripts/spelling.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 2/18/2020 4:46 PM, Lorenzo Pieralisi wrote:
+> On Tue, Feb 18, 2020 at 12:48:39PM +0000, Pankaj Bansal (OSS) wrote:
+>
+> [...]
+>
+>>>> In DT case, we create the domain DOMAIN_BUS_FSL_MC_MSI for MC bus and
+>>> it's children.
+>>>> And then when MC child device is created, we search the "msi-parent"
+>>> property from the MC
+>>>> DT node and get the ITS associated with MC bus. Then we search
+>>> DOMAIN_BUS_FSL_MC_MSI
+>>>> on that ITS. Once we find the domain, we can call msi_domain_alloc_irqs for
+>>> that domain.
+>>>> This is exactly what we tried to do initially with ACPI. But the searching
+>>> DOMAIN_BUS_FSL_MC_MSI
+>>>> associated to an ITS, is something that is part of drivers/acpi/arm64/iort.c.
+>>>> (similar to DOMAIN_BUS_PLATFORM_MSI and DOMAIN_BUS_PCI_MSI)
+>>> Can you have a look at mbigen driver (drivers/irqchip/irq-mbigen.c) to see if
+>>> it helps you?
+>>>
+>>> mbigen is an irq converter to convert device's wired interrupts into MSI
+>>> (connecting to ITS), which will alloc a bunch of MSIs from ITS platform MSI
+>>> domain at the setup.
+>> Unfortunately this is not the same case as ours. As I see Hisilicon IORT table
+>> Is using single id mapping with named components.
+>>
+>> https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Hisilicon/Hi1616/D05AcpiTables/D05Iort.asl#L300
+>>
+>> while we are not:
+>>
+>> https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platforms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Iort.aslc?h=LX2160_UEFI_ACPI_EAR1#n290
+>>
+>> This is because as I said, we are trying to represent a bus in IORT
+>> via named components and not individual devices connected to that bus.
+> I had a thorough look into this and strictly speaking there is no
+> *mapping* requirement at all, all you need to know is what ITS the FSL
+> MC bus is mapping MSIs to. Which brings me to the next question (which
+> is orthogonal to how to model FSL MC in IORT, that has to be discussed
+> but I want to have a full picture in mind first).
+>
+> When you probe the FSL MC as a platform device, the ACPI core,
+> through IORT (if you add the 1:1 mapping as an array of single
+> mappings) already link the platform device to ITS platform
+> device MSI domain (acpi_configure_pmsi_domain()).
+>
+> The associated fwnode is the *same* (IIUC) as for the
+> DOMAIN_BUS_FSL_MC_MSI and ITS DOMAIN_BUS_NEXUS, so in practice
+> you don't need IORT code to retrieve the DOMAIN_BUS_FSL_MC_MSI
+> domain, the fwnode is the same as the one in the FSL MC platform
+> device IRQ domain->fwnode pointer and you can use it to
+> retrieve the DOMAIN_BUS_FSL_MC_MSI domain through it.
+>
+> Is my reading correct ?
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index ffa838f3a2b5..6d5243904e76 100644
-=2D-- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -1328,6 +1328,7 @@ swithcing||switching
- swithed||switched
- swithing||switching
- swtich||switch
-+syfs||sysfs
- symetric||symmetric
- synax||syntax
- synchonized||synchronized
-=2D-
-2.20.1
+Thank you very much for your effort! Really appreciated! Yes, the 
+understanding is correct. I have prototyped this idea for DT, see below [1].
+So, I get the fwnode from the platform device domain (because they are 
+the same with the devices underneath the MC-BUS bridge) and use the 
+fwnode to retrieve the MC-BUS domain.
+
+>
+> Overall, DOMAIN_BUS_FSL_MC_MSI is just an MSI layer to override the
+> provide the MSI domain ->prepare hook (ie to stash the MC device id), no
+> more (ie its_fsl_mc_msi_prepare()).
+>
+> That's it for the MSI layer - I need to figure out whether we *want* to
+> extend IORT (and/or ACPI) to defined bindings for "additional busses",
+> what I write above is a summary of my understanding, I have not made my
+> mind up yet.
+>
+> As for the IOMMU code, it seems like the only thing needed is
+> extending named components configuration to child devices,
+> hierarchically.
+
+Laurentiu used a similar approach for DMA configuration (again 
+prototyped for DT). [2]
+It involves wiring up a custom .dma_configure for our devices as anyway, 
+it made little sense to pretend that these devices are platform devices 
+and trick the DT or ACPI layers into that. As a nice side effect, this 
+will allow to get rid of our existing hooks in the DT generic code.
+
+>
+> As Marc already mentioned, IOMMU and IRQ code must be separate for
+> future postings but first we need to find a suitable answer to
+> the problem at hand.
+>
+> Lorenzo
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+[1] MSI configuration
+
+  drivers/bus/fsl-mc/fsl-mc-msi.c | 11 +++++++++--
+  1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c 
+b/drivers/bus/fsl-mc/fsl-mc-msi.c
+index 8b9c66d7c4ff..674f5a60109b 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -182,16 +182,23 @@ int fsl_mc_find_msi_domain(struct device 
+*mc_platform_dev,
+  {
+      struct irq_domain *msi_domain;
+      struct device_node *mc_of_node = mc_platform_dev->of_node;
++    struct fwnode_handle *fwnode;
+
+-    msi_domain = of_msi_get_domain(mc_platform_dev, mc_of_node,
+-                       DOMAIN_BUS_FSL_MC_MSI);
++    msi_domain = dev_get_msi_domain(mc_platform_dev);
+      if (!msi_domain) {
+          pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
+                 mc_of_node);
+
+          return -ENOENT;
+      }
++    fwnode = msi_domain->fwnode;
++    msi_domain = irq_find_matching_fwnode(fwnode, DOMAIN_BUS_FSL_MC_MSI);
++    if (!msi_domain) {
++        pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
++              mc_of_node);
+
++        return -ENOENT;
++    }
+      *mc_msi_domain = msi_domain;
+      return 0;
+  }
+-- 
+2.17.1
+
+
+
+[2] DMA configuration
+
+  drivers/bus/fsl-mc/fsl-mc-bus.c | 42 ++++++++++++++++++++++++++++++++-
+  1 file changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c 
+b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index f9bc9c384ab5..5c6021a13612 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -132,11 +132,51 @@ static int fsl_mc_bus_uevent(struct device *dev, 
+struct kobj_uevent_env *env)
+  static int fsl_mc_dma_configure(struct device *dev)
+  {
+      struct device *dma_dev = dev;
++    struct iommu_fwspec *fwspec;
++    const struct iommu_ops *iommu_ops;
++    struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
++    int ret;
++    u32 icid;
+
+      while (dev_is_fsl_mc(dma_dev))
+          dma_dev = dma_dev->parent;
+
+-    return of_dma_configure(dev, dma_dev->of_node, 0);
++    fwspec = dev_iommu_fwspec_get(dma_dev);
++    if (!fwspec) {
++        dev_err(dev, "%s: null fwspec\n", __func__);
++        return -ENODEV;
++    }
++    iommu_ops = iommu_ops_from_fwnode(fwspec->iommu_fwnode);
++    if (!iommu_ops) {
++        dev_err(dev, "%s: null iommu ops\n", __func__);
++        return -ENODEV;
++    }
++
++    ret = iommu_fwspec_init(dev, fwspec->iommu_fwnode, iommu_ops);
++    if (ret) {
++        dev_err(dev, "%s: iommu_fwspec_init failed with %d\n", 
+__func__, ret);
++        return ret;
++    }
++
++    icid = mc_dev->icid;
++    ret = iommu_fwspec_add_ids(dev, &icid, 1);
++    if (ret) {
++        dev_err(dev, "%s: iommu_fwspec_add_ids failed with %d\n", 
+__func__, ret);
++        return ret;
++    }
++
++    if (!device_iommu_mapped(dev)) {
++        ret = iommu_probe_device(dev);
++        if (ret) {
++            dev_err(dev, "%s: iommu_fwspec_add_ids failed with %d\n", 
+__func__, ret);
++            return ret;
++        }
++    }
++
++    arch_setup_dma_ops(dev, 0, *dma_dev->dma_mask + 1,
++                iommu_ops, true);
++
++    return 0;
+  }
+
+  static ssize_t modalias_show(struct device *dev, struct 
+device_attribute *attr,
+-- 
+2.17.1
+
+Regards,
+Diana
 
