@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF47C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A990C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B00424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C50C24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055782;
-	bh=aUIcPKNkgWofmymkuG85iqkUPquJCtLTBUfq2D6RgSg=;
+	s=default; t=1582055784;
+	bh=18mLaI5oH1cn24V355OtSxSgMyY35q/E06ZDv5eECW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+MpypP939W6HSl9uHiRPjH55SR7b3sgiEUPKOwr2uaAaLDVkOPrADtRVTn/i9N4t
-	 kFEyyZDctxTMIZGDLqI/mfdu773NU7GAl3E7FJnGC5GnSD3lPsv7qTQcJYOHoOtSS+
-	 Phog642FCa18MB8082oI4jKXW+YWw0XC7D1aFHX8=
+	b=fNWCEeX/Rpf7tOzGbc/w/ATCoF8se80/ZehU9D0LW5v3CQTzcH9jc0bra7drLidbT
+	 CEWBskouriJLz4MSSE2di7Co27uTAhmCrsGyO1c5V8PN3PEbYrc1CULm3T3rSllmkr
+	 XOJqWy2ljAIUA/aHyTeb9/hdpXuMhqE2x4U028yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgBRT4V (ORCPT
+        id S1727125AbgBRT4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33318 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgBRT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:18 -0500
+        id S1727046AbgBRT4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C0B24125;
-        Tue, 18 Feb 2020 19:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58B124654;
+        Tue, 18 Feb 2020 19:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055778;
-        bh=aUIcPKNkgWofmymkuG85iqkUPquJCtLTBUfq2D6RgSg=;
+        s=default; t=1582055781;
+        bh=18mLaI5oH1cn24V355OtSxSgMyY35q/E06ZDv5eECW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUGHWDIkWzm6x1ipJ+oownpW3Kk7q5h88Yl99agyTCZlbR0SpWXrniEoKz8dWuqLD
-         d4cD2XUMtwy1O/7peL/AcX6+alnzxVdnGFcSv6+FPpaxRLrZ9JJUGzY6X+L5PJSJ5W
-         7bXoNM76e/vdChWgo7c3XIHe0nzXJZvjykcaZb2Q=
+        b=0G4VSJAXKR/RZIbnpEwbwXZN4iaYCxrEil1uKse1YxVQDYSr8imNy4/mUNfas1CCR
+         IJ5oZFtdoxr7JFzchHUCGuaOw/TtbMZrXnPUPMXCnKQuV2vnFlY6ZrdjHU2+DodmvJ
+         zTliYzJjEU7Nd2K6ohpuL1lVqQoaXWJZsbuIXdTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
-        Anand Jain <anand.jain@oracle.com>,
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 18/38] btrfs: print message when tree-log replay starts
-Date:   Tue, 18 Feb 2020 20:55:04 +0100
-Message-Id: <20200218190420.788165830@linuxfoundation.org>
+Subject: [PATCH 4.19 19/38] btrfs: log message when rw remount is attempted with unclean tree-log
+Date:   Tue, 18 Feb 2020 20:55:05 +0100
+Message-Id: <20200218190420.954317732@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -63,13 +62,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Sterba <dsterba@suse.com>
 
-commit e8294f2f6aa6208ed0923aa6d70cea3be178309a upstream.
+commit 10a3a3edc5b89a8cd095bc63495fb1e0f42047d9 upstream.
 
-There's no logged information about tree-log replay although this is
-something that points to previous unclean unmount. Other filesystems
-report that as well.
+A remount to a read-write filesystem is not safe when there's tree-log
+to be replayed. Files that could be opened until now might be affected
+by the changes in the tree-log.
 
-Suggested-by: Chris Murphy <lists@colorremedies.com>
+A regular mount is needed to replay the log so the filesystem presents
+the consistent view with the pending changes included.
+
 CC: stable@vger.kernel.org # 4.4+
 Reviewed-by: Anand Jain <anand.jain@oracle.com>
 Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
@@ -77,18 +78,19 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/super.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3117,6 +3117,7 @@ retry_root_backup:
- 	/* do not make disk changes in broken FS or nologreplay is given */
- 	if (btrfs_super_log_root(disk_super) != 0 &&
- 	    !btrfs_test_opt(fs_info, NOLOGREPLAY)) {
-+		btrfs_info(fs_info, "start tree-log replay");
- 		ret = btrfs_replay_log(fs_info, fs_devices);
- 		if (ret) {
- 			err = ret;
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1857,6 +1857,8 @@ static int btrfs_remount(struct super_bl
+ 		}
+ 
+ 		if (btrfs_super_log_root(fs_info->super_copy) != 0) {
++			btrfs_warn(fs_info,
++		"mount required to replay tree-log, cannot remount read-write");
+ 			ret = -EINVAL;
+ 			goto restore;
+ 		}
 
 
