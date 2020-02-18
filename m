@@ -2,133 +2,221 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF345C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0124AC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73C12173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VfUuBat9"
+	by mail.kernel.org (Postfix) with ESMTP id CA44D24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgBRXnV (ORCPT
+        id S1726820AbgBRXod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:43:21 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58074 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRXnV (ORCPT
+        Tue, 18 Feb 2020 18:44:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8792 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726641AbgBRXod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:43:21 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01INhCcV136753;
-        Tue, 18 Feb 2020 23:43:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=0m00BguRlLekOA8EI0mqAMtdAPqsM6dw3X+VwmV1jKU=;
- b=VfUuBat95GLBnl5Z0MvUS0geiN7taCy0N45hIa6gtaEbyeak1SvFKOOnFA9exgIZL3ah
- PT8jtQd1wC2kv9ZBc6pkGrZOJS3OlH3iXmlGbSAqDKNgFvZRlALIfm4bIgvFZx8PzD5M
- m+c8KBsuMeYP68QLynXnnrxX1lOrLFSs4gEbmD54qHNNXw6wid8IMUQGFa3se9To7Rgy
- 3uwzk3Xm/eZnvHVHam5VyHut89CKYltM5H8rrDlB/Ujh16MhsCOr5dh44NeYOr5Sq35y
- GThuOCNTfOavz9NJhO8HEhPEfQxv66Hy+un8DXCD3hJQ/Lb8c9cirs2Nxry2JJbH0TZ8 fg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2y8e1hn2ja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 23:43:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01INgA4b071778;
-        Tue, 18 Feb 2020 23:43:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2y6tetf960-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 23:43:14 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01INhCCS018965;
-        Tue, 18 Feb 2020 23:43:12 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 15:43:12 -0800
-Subject: Re: [PATCH -next] mm/hugetlb: Fix file_region entry allocations
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-References: <20200218222658.132101-1-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <67aa82a8-3c8d-d1eb-7e83-4f722b1eeb2a@oracle.com>
-Date:   Tue, 18 Feb 2020 15:43:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 18:44:33 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01INhn28184196
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:44:32 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6cbb2s76-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:44:32 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 18 Feb 2020 23:44:29 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Feb 2020 23:44:21 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01INiKuw32571890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 23:44:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE065A405B;
+        Tue, 18 Feb 2020 23:44:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B470A4054;
+        Tue, 18 Feb 2020 23:44:20 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 23:44:20 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A1042A00DF;
+        Wed, 19 Feb 2020 10:44:15 +1100 (AEDT)
+Subject: Re: [PATCH v2 05/27] powerpc: Map & release OpenCAPI LPC memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 19 Feb 2020 10:44:18 +1100
+In-Reply-To: <85e5a3d4-bac2-a8fc-8fc7-865be539dc3c@linux.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-6-alastair@au1.ibm.com>
+         <85e5a3d4-bac2-a8fc-8fc7-865be539dc3c@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200218222658.132101-1-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 bulkscore=0
- suspectscore=2 mlxscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002180161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 phishscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021823-0016-0000-0000-000002E8165D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021823-0017-0000-0000-0000334B2C77
+Message-Id: <91440c75bacf29ac7423e67b71199695ebf636d0.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 suspectscore=2 impostorscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015 phishscore=0
+ mlxscore=0 mlxlogscore=667 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002180161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 2:26 PM, Mina Almasry wrote:
-> Commit a9e443086489e ("hugetlb: disable region_add file_region
-> coalescing") introduced a bug with adding file_region entries
-> that is fixed here:
+On Fri, 2020-02-14 at 12:09 +0100, Frederic Barrat wrote:
 > 
-> 1. Refactor file_region entry allocation logic into 1 function called
->    from region_add and region_chg since the code is now identical.
-> 2. region_chg only modifies resv->adds_in_progress after the regions
->    have been allocated. In the past it used to increment
->    adds_in_progress and then drop the lock, which would confuse racing
->    region_add calls into thinking they need to allocate entries when
->    they are not allowed.
-> 3. In region_add, only try to allocate regions when
->    actual_regions_needed > in_regions_needed. This is not causing a bug
->    but is better for cleanliness and reasoning about the code.
+> Le 03/12/2019 à 04:46, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch adds platform support to map & release LPC memory.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
+> >   arch/powerpc/platforms/powernv/ocxl.c | 42
+> > +++++++++++++++++++++++++++
+> >   2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
+> > b/arch/powerpc/include/asm/pnv-ocxl.h
+> > index 7de82647e761..f8f8ffb48aa8 100644
+> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> > @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void
+> > *platform_data, int pe_handle)
+> >   
+> >   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> >   extern void pnv_ocxl_free_xive_irq(u32 irq);
+> > +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64
+> > size);
+> > +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+> >   
+> >   #endif /* _ASM_PNV_OCXL_H */
+> > diff --git a/arch/powerpc/platforms/powernv/ocxl.c
+> > b/arch/powerpc/platforms/powernv/ocxl.c
+> > index 8c65aacda9c8..b56a48daf48c 100644
+> > --- a/arch/powerpc/platforms/powernv/ocxl.c
+> > +++ b/arch/powerpc/platforms/powernv/ocxl.c
+> > @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
+> >   }
+> >   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
+> >   
+> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	u32 bdfn = pci_dev_id(pdev);
+> > +	__be64 base_addr_be64;
+> > +	u64 base_addr;
+> > +	int rc;
+> > +
+> > +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size,
+> > &base_addr_be64);
+> > +	if (rc) {
+> > +		dev_warn(&pdev->dev,
+> > +			 "OPAL could not allocate LPC memory, rc=%d\n",
+> > rc);
+> > +		return 0;
+> > +	}
+> > +
+> > +	base_addr = be64_to_cpu(base_addr_be64);
+> > +
+> > +	rc = check_hotplug_memory_addressable(base_addr >> PAGE_SHIFT,
+> > +					      size >> PAGE_SHIFT);
 > 
-> Tested using ltp hugemmap0* tests, and libhugetlbfs tests.
+> check_hotplug_memory_addressable() is only declared if 
+> CONFIG_MEMORY_HOTPLUG_SPARSE is selected.
+> I think we also need a #ifdef here.
 > 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Fixes: Commit a9e443086489e ("hugetlb: disable region_add file_region
-> coalescing")
-> 
-> ---
->  mm/hugetlb.c | 149 +++++++++++++++++++++++++--------------------------
->  1 file changed, 74 insertions(+), 75 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 8171d2211be77..3d5b48ae8971f 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -439,6 +439,66 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->  	return add;
->  }
-> 
-> +/* Must be called with resv->lock acquired. Will drop lock to allocate entries.
-> + */
-> +static int allocate_file_region_entries(struct resv_map *resv,
-> +					int regions_needed)
-> +{
 
-I think this is going to need annotation for the lock or sparse is going
-throw a warning.  See,
+Agreed. I think that since any actual use of the memory is going to be
+dependant on both hotplug & sparse, moving the ifdef to wrap the
+functions & declarations makes sense.
 
-https://lore.kernel.org/linux-mm/20200214204741.94112-7-jbi.octave@gmail.com/
 
-Other than that, looks good.  Sorry I missed that race in the review.
+>    Fred
+> 
+> 
+> > +	if (rc)
+> > +		return 0;
+> > +
+> > +	return base_addr;
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
+> > +
+> > +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	u32 bdfn = pci_dev_id(pdev);
+> > +	int rc;
+> > +
+> > +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
+> > +	if (rc)
+> > +		dev_warn(&pdev->dev,
+> > +			 "OPAL reported rc=%d when releasing LPC
+> > memory\n", rc);
+> > +}
+> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
+> > +
+> > +
+> >   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
+> > pe_handle)
+> >   {
+> >   	struct spa_data *data = (struct spa_data *) platform_data;
+> > 
 -- 
-Mike Kravetz
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
