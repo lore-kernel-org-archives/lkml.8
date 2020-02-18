@@ -2,105 +2,106 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91382C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C8CC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C19206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D1320836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581993704;
+	bh=XH5iB9f1dmERpE6xdcPaepbwbKEyA9Sq6atMt4Jc9js=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zA7hI5bMYPALlKDuNrE7pUPVW7aCqcKMGyyzKaGivaVZcoyeDi1CkUKr+pyQtUMlX
+	 /LQ+fRhe57D0Wfa/RLDFps0LDLDIXHeiiFobNRg3PXMHfjMCww8zsCWxatUkGlGcnE
+	 zv4STYHsHJ6yklH/ZUsZ3+0WgDDQlaeCmMuQ7ZSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgBRCkB (ORCPT
+        id S1726339AbgBRCln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 21:40:01 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:48680 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgBRCkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 21:40:00 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j3snj-0002JE-BO; Mon, 17 Feb 2020 19:39:55 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j3sni-0005j8-H3; Mon, 17 Feb 2020 19:39:55 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers <containers@lists.linux-foundation.org>,
-        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
-        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
-References: <874kvossh4.fsf@nanos.tec.linutronix.de>
-Date:   Mon, 17 Feb 2020 20:37:55 -0600
-In-Reply-To: <874kvossh4.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
-        message of "Tue, 18 Feb 2020 00:29:27 +0100")
-Message-ID: <87lfp0boxo.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 17 Feb 2020 21:41:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgBRClm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 21:41:42 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E26206D5;
+        Tue, 18 Feb 2020 02:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581993702;
+        bh=XH5iB9f1dmERpE6xdcPaepbwbKEyA9Sq6atMt4Jc9js=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UnY/+E4Ldu8G9sVcA6fZyfX+dYMIySUwAKeiVaVF6gDNz3FdmCLBjd/xgpKLsIJQ4
+         zRR0cftWN/TBKIJDT5zSJi/MtQyq9cle3iRO9n7dwz4RtAlC241tW9jpOPZzhU0qaT
+         vLMtFekaazLY+MJMG/oY6MFeORvQwsfnnDx2yFb8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     mingo@kernel.org, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@redhat.com,
+        alexey.budankov@linux.intel.com, songliubraving@fb.com,
+        acme@redhat.com, allison@lohutok.net,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 00/11] Fix up liblockdep for 5.6-rc
+Date:   Mon, 17 Feb 2020 21:41:22 -0500
+Message-Id: <20200218024133.5059-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j3sni-0005j8-H3;;;mid=<87lfp0boxo.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX188tyzk0ONX2b2vqwoFCe9Sq5pQxsGyBLU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+Ingo,
 
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
->> On Mon, Feb 17, 2020 at 10:47:53PM +0100, Michael Kerrisk (man-pages) wrote:
->>> Actually, I think the alternative you propose just here is better. I
->>> imagine there are times when one will want to create multiple
->>> namespaces with a single call to clone3(), including a time namespace.
->>> I think this should be allowed by the API. And, otherwise, clone3()
->>> becomes something of a second-class citizen for creating namespaces.
->>> (I don't really get the "less invasive" argument. Implementing this is
->>> just a piece of kernel to code to make user-space's life a bit simpler
->>> and more consistent.)
->>
->> I don't particularly mind either way. If there's actual users that need
->> to set it at clone3() time then we can extend it. So I'd like to hear
->> what Adrian, Dmitry, and Thomas think since they are well-versed how
->> this will be used in the wild. I'm weary of exposing a whole new uapi
->> struct and extending clone3() without any real use-case but I'm happy to
->> if there is!
->
-> I really have no clue. I merily helped getting this in shape without
-> creating havoc for timekeeping and VDSO. I have to punt to the container
-> wizards.
+I'm sorry for taking so long on this.
 
-Short version.  If you are going to do migration of a container with
-CRIU you want the time namespace in your container.  Possibly you can
-avoid creating the time namespace until restore, but I don't think so.
+This series fixes up most of liblockdep to work with the recent kernel
+changes. There is another failure with threaded lockup detection that
+I'll work on fixing this week.
 
-Without the time namespace you get all kinds of applications that use
-monotonic timers that will see their timers be ill behaved (probably
-going backwards) over a checkpoint-restart event.
+Also available via git-pull:
 
-Eric
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
+
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/sashal/linux.git liblockdep-fixes
+
+Sasha Levin (11):
+  tools headers: Add kprobes.h header
+  tools headers: Add rcupdate.h header
+  tools/kernel.h: extend with dummy RCU functions
+  tools bitmap: add bitmap_andnot definition
+  tools/lib/lockdep: add definition required for IRQ flag tracing
+  tools/kernel.h: add BUILD_BUG_ON_NOT_POWER_OF_2 macro
+  tools bitmap: add bitmap_clear definition
+  tools/lib/lockdep: Hook up vsprintf, find_bit, hweight libraries
+  tools/lib/lockdep: Enable building with CONFIG_TRACE_IRQFLAGS
+  tools/lib/lockdep: New stacktrace API
+  tools/lib/lockdep: call lockdep_init_task on init
+
+ tools/include/linux/bitmap.h     | 10 +++++++++
+ tools/include/linux/kernel.h     | 13 ++++++++++++
+ tools/include/linux/kprobes.h    |  7 +++++++
+ tools/include/linux/lockdep.h    |  8 ++++++++
+ tools/include/linux/rcupdate.h   | 12 +++++++++++
+ tools/include/linux/stacktrace.h |  8 ++++++++
+ tools/lib/bitmap.c               | 35 ++++++++++++++++++++++++++++++++
+ tools/lib/lockdep/Build          |  2 +-
+ tools/lib/lockdep/Makefile       |  2 +-
+ tools/lib/lockdep/lockdep.c      |  4 ++--
+ tools/lib/lockdep/preload.c      |  4 ++++
+ 11 files changed, 101 insertions(+), 4 deletions(-)
+ create mode 100644 tools/include/linux/kprobes.h
+ create mode 100644 tools/include/linux/rcupdate.h
+
+-- 
+2.20.1
+
