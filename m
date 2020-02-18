@@ -2,206 +2,167 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11F3C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8254FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A72624654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7EC2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qx/Ndevz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dd9R74vF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgBRQvd (ORCPT
+        id S1726672AbgBRQwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:51:33 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37452 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBRQvd (ORCPT
+        Tue, 18 Feb 2020 11:52:47 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35937 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgBRQwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:51:33 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b15so15046137lfc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:51:31 -0800 (PST)
+        Tue, 18 Feb 2020 11:52:46 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so17915098iln.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:52:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=f5zZ75K1w4t2h/6FHw5+qkGDgcX0ElQAs8/WEopDoc0=;
-        b=Qx/Ndevzjm6AQqQl0JlGZ/D9FIhWS2JKw/YZNWKSqCqptoZ2SPo32DPkmTsvLXYajh
-         txOx5GWT9abYHj4mdgeuN9V3zuv3zIdLzGV1qMFLg6yPi64miygWVSbXYCU2bmiIv4lN
-         VXbjmepNbPYMKXI7ttnVgDcmBbVti5dEbtcIFt6DevKG1wXIcRBdscs8+5z7mcC/fZKo
-         EhdTJ2Jf5R7fVyoeT1yGniWRdf2vHeezuHzGO+x8KfxhJ+GClpI/F8yQEhYGmjVUQkho
-         D1iij6h2pB0Q8QtA5n8cylT+oTiA1jVnoRdE3BRCoS70PMcddEXCH8vl8wmzPjFUEZ5g
-         khMA==
+        bh=p0fkl9Uzjvd3+WRgDhEFvb5mku/9M7bl3Tq60YNDT/A=;
+        b=Dd9R74vFY8XS/S+w0Y6unMczYIsI66Q07QH2IgANqOiXC0pEUPyBNl+kG52Av/fUSz
+         CdrR69dTJ44steJ4WnF8tX2hA5d8+I6ewvazMQllAJY8kSzOKtnKExR5GxWUElqp16G5
+         OT/RxIdkO4pKiAlC0G2kUsI4LKGwfsdgp89HY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=f5zZ75K1w4t2h/6FHw5+qkGDgcX0ElQAs8/WEopDoc0=;
-        b=EcJl9DuFQ/ueQQugQlsmxezPfZqG7HddWbdxZhcmffvHnaKmUauXHBK5MENl3qbMsy
-         QuI9AWCkBhbYWHQLz1ZF/VGk3JoBJXEke5GxuDz2mKxWgAZ5E83ijcvzeHuaIGc0QiGm
-         ccA9ZTsWILxeLJgUkNwtdo5m2t/yO5cdQesY9Hwvm1MdEJF9YYHzBQb7AyMp7ZDleSvB
-         kmtoIW7+q9YNnW5X3HE697n5fS0Y8T8pYVoOXP5V+s6CsbBW5xKpVaytTmQ7a9g/8seS
-         D0zZe7DQNzEM8ADgxdaN6v0SaGmFXq8+fpfZo3K4SMAfa7zA8hEvLcoBMcCmMn4zCpc5
-         Gnaw==
-X-Gm-Message-State: APjAAAXbRejn9tm3WbUlPuoRAJ3gVkLAr1iRnaOqW9TieD8Wwjqkczw1
-        8nNjbvrCNIu2ZT94lBcPSHsLd5LL1RqSKsRCoZdMEA==
-X-Google-Smtp-Source: APXvYqzEUZOWLFX7pzHXY0easL1vehb6ONtaxCBUvYOfCQl9UOcMfrAB1kIkkF1eUrzfhIU5fb1RtDbMELf46llfjH4=
-X-Received: by 2002:a19:5504:: with SMTP id n4mr10335948lfe.25.1582044689196;
- Tue, 18 Feb 2020 08:51:29 -0800 (PST)
+        bh=p0fkl9Uzjvd3+WRgDhEFvb5mku/9M7bl3Tq60YNDT/A=;
+        b=LMiNtwCJavkFSxYDuHdzmVO2RlJP08xDY+SyZjgQQalsJwo6/Pp1GX0/fY9N3nwH62
+         k5tDvlLZ344xLuf8nuZHbO7sTR6fk7YZTmeir/H5XtUapjoyhpK/8tEN0xSJNhgL0b1J
+         6c6pXDl2A5VFb769RsftXfdTECHAoStQTaPHHC/ssA5r92guSJHjvSltut4Q62Kuma90
+         TZTZwoJ+waZP2lUe3mR3zz/JfoDEh0phTgxeNfBq4X0hd/IP1hnD0U5kDKynqKfOuWNk
+         61kn/Bz+sTYZmB+4+ZdeAACvuH9OKm9KV1WdRXTCk0UinxE5uqnmBY3c05nuCMNrsrm3
+         TfLA==
+X-Gm-Message-State: APjAAAWPDWcQW5J5K2IYJ1GU2E2f6i6JNl7rPoWx8UdJ6Kdr4D8z+/44
+        Igg7t3Y/+/y8nt1JgXnBYdXjPPxsj0XtyKJILH7n8w==
+X-Google-Smtp-Source: APXvYqwweWZEL08yiHntB60lwMDPipKRE4zbu6p4on2cRYdzLYfnMWh8srysRNrqrHm3fle6Do0l5tq3x8H+qOlYX7o=
+X-Received: by 2002:a92:5d88:: with SMTP id e8mr20676161ilg.106.1582044765519;
+ Tue, 18 Feb 2020 08:52:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-3-vincent.guittot@linaro.org> <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
- <20200218153801.GF3420@suse.de>
-In-Reply-To: <20200218153801.GF3420@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 18 Feb 2020 17:51:17 +0100
-Message-ID: <CAKfTPtCjXhjb3_Qpd3UBDx43FwE-7Vh=yDFfWuBGM6MdN9_n9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+References: <158166060044.9887.549561499483343724.stgit@devnote2>
+ <158166062748.9887.15284887096084339722.stgit@devnote2> <CAL_Jsq+BDfWgGTVtppD-JEFHZRqpc00WaV2N7c6qsPBSaxOEPw@mail.gmail.com>
+ <20200214224744.GC439135@mit.edu> <f15511bf-b840-0633-3354-506b7b0607fe@android.com>
+ <20200215005336.GD439135@mit.edu> <243ab5a8-2ce1-1465-0175-3f5d483cbde1@android.com>
+In-Reply-To: <243ab5a8-2ce1-1465-0175-3f5d483cbde1@android.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 19 Feb 2020 00:52:19 +0800
+Message-ID: <CAJMQK-j8w5++R-CCAVVupba96JRVJ+O91J=O-MT3nep+rx1Yzw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] random: rng-seed source is utf-8
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Rob Herring <robh@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 16:38, Mel Gorman <mgorman@suse.de> wrote:
+On Wed, Feb 19, 2020 at 12:01 AM Mark Salyzyn <salyzyn@android.com> wrote:
 >
-> On Tue, Feb 18, 2020 at 02:54:14PM +0000, Valentin Schneider wrote:
-> > On 2/14/20 3:27 PM, Vincent Guittot wrote:
-> > > @@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
-> > >            group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
-> > >  }
-> > >
-> > > -static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
-> > > -
-> > > -static unsigned long cpu_runnable_load(struct rq *rq)
-> > > -{
-> > > -   return cfs_rq_runnable_load_avg(&rq->cfs);
-> > > -}
-> > > +/*
-> > > + * 'numa_type' describes the node at the moment of load balancing.
-> > > + */
-> > > +enum numa_type {
-> > > +   /* The node has spare capacity that can be used to run more tasks.  */
-> > > +   node_has_spare = 0,
-> > > +   /*
-> > > +    * The node is fully used and the tasks don't compete for more CPU
-> > > +    * cycles. Nevertheless, some tasks might wait before running.
-> > > +    */
-> > > +   node_fully_busy,
-> > > +   /*
-> > > +    * The node is overloaded and can't provide expected CPU cycles to all
-> > > +    * tasks.
-> > > +    */
-> > > +   node_overloaded
-> > > +};
+> On 2/14/20 4:53 PM, Theodore Y. Ts'o wrote:
+> > On Fri, Feb 14, 2020 at 02:55:36PM -0800, Mark Salyzyn wrote:
+> >>> This is why I really think what gets specified via the boot command
+> >>> line, or bootconfig, should specify the bits of entropy and the
+> >>> entropy seed *separately*, so it can be specified explicitly, instead
+> >>> of assuming that *everyone knows* that rng-seed is either (a) a binary
+> >>> string, or (b) utf-8, or (c) a hex string.  The fact is, everyone does
+> >>> *not* know, or everyone will have a different implementation, which
+> >>> everyone will say is *obviously* the only way to go....
+> >>>
+> >> Given that the valid option are between 4 (hex), 6 (utf-8) or 8 (binary), we
+> >> can either split the difference and accept 6; or take a pass at the values
+> >> and determine which of the set they belong to [0-9a-fA-F], [!-~] or
+> >> [\000-\377]  nor need to separately specify.
+> > So let's split this up into separate issues.  First of all, from an
+> > architectural issue, I really think we need to change
+> > add_bootloader_randomness() in drivers/char/random.c so it looks like this:
 > >
-> > Could we reuse group_type instead? The definitions are the same modulo
-> > s/group/node/.
+> > void add_bootloader_randomness(const void *buf, unsigned int size, unsigned int entropy_bits)
 > >
->
-> I kept the naming because there is the remote possibility that NUMA
-> balancing will deviate in some fashion. Right now, it's harmless.
-
-+1
-This 1st round mainly aims to align NUMA way of working with load
-balance but we can imagine using some NUMA or memory specific
-information to create new state
-
->
-> > >
-> > >  /* Cached statistics for all CPUs within a node */
-> > >  struct numa_stats {
-> > >     unsigned long load;
-> > > -
-> > > +   unsigned long util;
-> > >     /* Total compute capacity of CPUs on a node */
-> > >     unsigned long compute_capacity;
-> > > +   unsigned int nr_running;
-> > > +   unsigned int weight;
-> > > +   enum numa_type node_type;
-> > >  };
-> > >
-> > > -/*
-> > > - * XXX borrowed from update_sg_lb_stats
-> > > - */
-> > > -static void update_numa_stats(struct numa_stats *ns, int nid)
-> > > -{
-> > > -   int cpu;
-> > > -
-> > > -   memset(ns, 0, sizeof(*ns));
-> > > -   for_each_cpu(cpu, cpumask_of_node(nid)) {
-> > > -           struct rq *rq = cpu_rq(cpu);
-> > > -
-> > > -           ns->load += cpu_runnable_load(rq);
-> > > -           ns->compute_capacity += capacity_of(cpu);
-> > > -   }
-> > > -
-> > > -}
-> > > -
-> > >  struct task_numa_env {
-> > >     struct task_struct *p;
-> > >
-> > > @@ -1521,6 +1518,47 @@ struct task_numa_env {
-> > >     int best_cpu;
-> > >  };
-> > >
-> > > +static unsigned long cpu_load(struct rq *rq);
-> > > +static unsigned long cpu_util(int cpu);
-> > > +
-> > > +static inline enum
-> > > +numa_type numa_classify(unsigned int imbalance_pct,
-> > > +                    struct numa_stats *ns)
-> > > +{
-> > > +   if ((ns->nr_running > ns->weight) &&
-> > > +       ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
-> > > +           return node_overloaded;
-> > > +
-> > > +   if ((ns->nr_running < ns->weight) ||
-> > > +       ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
-> > > +           return node_has_spare;
-> > > +
-> > > +   return node_fully_busy;
-> > > +}
-> > > +
+> > That's because this is a general function that could be used by any
+> > number of bootloaders.  For example, for the UEFI bootloader, it can
+> > use the UEFI call that will return binary bits.  Some other bootloader
+> > might use utf-8, etc.  So it would be an abstraction violation to have
+> > code in drivers/char/random.c make assumption about how a particular
+> > bootloader might be behaving.
 > >
-> > As Mel pointed out, this is group_is_overloaded() and group_has_capacity().
-> > @Mel, you mentioned having a common helper, do you have that laying around?
-> > I haven't seen it in your reconciliation series.
+> > The second question is we are going to be parsing an rng_seed
+> > parameter it shows up in bootconfig or in the boot command line, how
+> > do we decide how many bits of entropy it actually has.  The advantage
+> > of using the boot command line is we don't need to change the rest of
+> > the bootloader ecosystem.  But that's also a massive weakness, since
+> > apparently some people are already using it, and perhaps not in the
+> > same way.
 > >
->
-> I didn't merge that part of the first version of my series. I was
-> waiting to see how the implementation for allowing a small degree of
-> imbalance looks like. If it's entirely confined in adjust_numa_balance
-> then I'll create the common helper at the same time. For now, I left the
-> possibility open that numa_classify would use something different than
-> group_is_overloaded or group_has_capacity even if I find that hard to
-> imagine at the moment.
->
-> > What I'm naively thinking here is that we could have either move the whole
-> > thing to just sg_lb_stats (AFAICT the fields of numa_stats are a subset of it),
-> > or if we really care about the stack we could tweak the ordering to ensure
-> > we can cast one into the other (not too enticed by that one though).
+> > So what I'd really prefer is if we use something new, and we define it
+> > in a way that makes as close as possible to "impossible to misuse".
+> > (See Rusty Russell's API design manifesto[1]).  So I'm going to
+> > propose something different.  Let's use something new, say
+> > entropy_seed_hex, and let's say that it *must* be a hex string:
 > >
+> >      entropy_seed_hex=7337db91a4824e3480ba6d2dfaa60bec
+> >
+> > If it is not a valid hex string, it gets zero entropy credit.
+> >
+> > I don't think we really need to worry about efficient encoding of the
+> > seed, since 256 bits is only 64 characters using a hex string.  An
+> > whether it's 32 characters or 64 characters, the max command line
+> > string is 32k, so it's probably not worth it to try to do something
+> > more complex.  (And only 128 bits is needed to declare the CRNG to be
+> > fully initialized, in which case we're talking about 16 characters
+> > versus 32 charaters.)
+> >
+> > [1] http://sweng.the-davies.net/Home/rustys-api-design-manifesto
+> >
+> >                                               - Ted
+> >
+> I am additionally concerned about add_bootloader_randomness() because it
+> is possible for it to sleep because of add_hwgenerator_randomness() as
+> once it hits the entropy threshold. As-is it can not be used inside
+> start_kernel() because the sleep would result in a kernel panic, and I
+> suspect its use inside early_init_dt_scan_chosen() for the commit "fdt:
+> add support for rng-seed" might also be problematic since it is
+> effectively called underneath start_kernel() is it not?
 >
-> Yikes, no I'd rather not do that. Basically all I did before was create
-> a common helper like __lb_has_capacity that only took basic types as
-> parameters. group_has_capacity and numa_has_capacity were simple wrappers
-> that read the correct fields from their respective stats structures.
+> If add_bootloader_randomness was rewritten to call
+> add_device_randomness() always, and when trusted also called the
+> functionality of the new credit_trusted_entropy_bits (no longer needing
+> to be exported if so), then the function could be used in both
+> start_kernel() and early_init_dt_scan_chosen().
 >
-> --
-> Mel Gorman
-> SUSE Labs
+I tested 64 bytes rng-seed previously so didn't hit the threshold that
+makes it suspend. Thanks for pointing this out.
++1 for changing the add_bootloader_randomness() function as you
+suggested to avoid this issue. But besides credit_entropy_bits(), they
+are also different on crng_init (crng_fast_load/crng_slow_load).
