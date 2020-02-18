@@ -2,142 +2,117 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31725C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4DCC3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08329207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC72207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XSgImk4I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoN26OTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgBRWwh (ORCPT
+        id S1727078AbgBRWyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:52:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36008 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgBRWwh (ORCPT
+        Tue, 18 Feb 2020 17:54:46 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37735 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgBRWyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:52:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bnOD/kBvTil/QNFSgjm+GLp6zzWRAz3n6ij6d1hLGNY=; b=XSgImk4I4CPrF8cILzjHDscRop
-        CKntSzDwT1ij4BALLtjNwmBKi3i+1IfSXkAQaoPfXtf07eWDDoH7YFsWdXgnyLOpzGMqaqq2CRFub
-        BZHy/x7PNm6BUzKjUiVDBLzmlxGBQpmjsP1NCuIzQrq8LqeZQW+ZRvlEfOloZaYFkmTHi+0rwO9Zv
-        Ddu6JQ1JidbbVmRq+Q5xXd42Gwb0b3Po5UprxnNSbBfzob2/ZnHN+sTLNiMTHuCydAiddiVUs3MxX
-        OG1nnPjL5NZvf9Cd8Z/nKdIJ16rUosUsXRSn5/mrWjW4457q5JqxRPamjp6r4bhX8SSwQUCeBucUW
-        P3njQkwQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4BjH-0004Ih-9n; Tue, 18 Feb 2020 22:52:35 +0000
-Date:   Tue, 18 Feb 2020 14:52:35 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
-Message-ID: <20200218225235.GH24185@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-4-willy@infradead.org>
- <20200218050300.GI10776@dread.disaster.area>
- <20200218135618.GO7778@bombadil.infradead.org>
- <20200218224610.GT10776@dread.disaster.area>
+        Tue, 18 Feb 2020 17:54:45 -0500
+Received: by mail-pj1-f68.google.com with SMTP id m13so1652604pjb.2;
+        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
+        b=RoN26OTSoD8xQPX8Ejb8azpPGaUfxPDvq/VvNyKPUXC02u6KESX4+KewWJ0C3B6BvY
+         Qe1m2IweSiLDlgWK90aBCD09mUr1arr5/A8ACf2W+VfYSIlOLRZM9GnqkYCH1Hk9Agoj
+         +PNGQbijasxynJv26p7N5IwUoW2ory/yMjEaGzcnvWGXZ9Ty/Y4qskG2oDvwhP9uGs4U
+         7/Vzvi4mr8AnPcRhPfuz+jTCNtKEXjzqK2+uZ5DD5xXRui0DuhY8RuP2kRy9664Z9xkn
+         Ajfm5wDf5zrloWSVfa/c1AYPhfG8K/6YjkD/0dfA1novKrcoPB8Ky47OKjgh6sc2gsXF
+         GXwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DLcO2DKWECMZLG1IHbpSAq+iosbKYeAAnLf8zJftE2I=;
+        b=MbT2RWCqmBBkJ42x+7Teut1a4S/gQhjz4Yunw2/mtV1WOdKpekVBIX8KbXwzy2D5fW
+         HAl6bDtDRet/MKxIn+VvPDw9oeb0pVVS9+EJKN4eTWX5ih5DS4PdJllXmzf9T5lRJxXb
+         inge/9zLoa5Obezo9N0H88dtZ9uCt12vMaZ+Lrm8Y6+5mWOKNurd1qSV5SaZJ9XkP8EQ
+         f2o1bwT3fdMA9y+bUKx0TiG/NBmZ6lsbRPS5UXsyfi8JbP4Y6UDtKciZm5LhIE7FJfKS
+         Nztr9uHgEgvqfn+aSp/g1N8rATrYWm3eP5ghbnnjGIlLD9BPuoEiTuec7YJts67XBPOy
+         BGLw==
+X-Gm-Message-State: APjAAAWjEZ7efmpTPbZQaagIqS5Ib4x1dEotrUcI3cFMKdA3Rzbx8Opn
+        uqrJTH+zmDzkqMnGTzYFe0w=
+X-Google-Smtp-Source: APXvYqxKyKfvB6gUIxasXk+3gpb22DtW5pbbJzCinqep7l23wSdhHK6tbwkFTvHB8sVofima6J/cHw==
+X-Received: by 2002:a17:90a:cc16:: with SMTP id b22mr5326984pju.65.1582066485149;
+        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id i2sm4403pjs.21.2020.02.18.14.54.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Feb 2020 14:54:45 -0800 (PST)
+Date:   Tue, 18 Feb 2020 14:54:54 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] ASoC: dt-bindings: fsl_easrc: Add document for
+ EASRC
+Message-ID: <20200218225454.GA32720@Asurada-Nvidia.nvidia.com>
+References: <cover.1582007379.git.shengjiu.wang@nxp.com>
+ <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218224610.GT10776@dread.disaster.area>
+In-Reply-To: <a02af544c73914fe3a5ab2f35eb237ef68ee29e7.1582007379.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:46:10AM +1100, Dave Chinner wrote:
-> On Tue, Feb 18, 2020 at 05:56:18AM -0800, Matthew Wilcox wrote:
-> > On Tue, Feb 18, 2020 at 04:03:00PM +1100, Dave Chinner wrote:
-> > > On Mon, Feb 17, 2020 at 10:45:44AM -0800, Matthew Wilcox wrote:
-> > > > +static void read_pages(struct readahead_control *rac, struct list_head *pages,
-> > > > +		gfp_t gfp)
-> > > >  {
-> > > > +	const struct address_space_operations *aops = rac->mapping->a_ops;
-> > > >  	struct blk_plug plug;
-> > > >  	unsigned page_idx;
-> > > 
-> > > Splitting out the aops rather than the mapping here just looks
-> > > weird, especially as you need the mapping later in the function.
-> > > Using aops doesn't even reduce the code side....
-> > 
-> > It does in subsequent patches ... I agree it looks a little weird here,
-> > but I think in the final form, it makes sense:
+On Tue, Feb 18, 2020 at 02:39:36PM +0800, Shengjiu Wang wrote:
+> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
+> IP module found on i.MX8MN.
 > 
-> Ok. Perhaps just an additional commit comment to say "read_pages() is
-> changed to be aops centric as @rac abstracts away all other
-> implementation details by the end of the patchset."
-
-ACK, will add.
-
-> > > > +			if (readahead_count(&rac))
-> > > > +				read_pages(&rac, &page_pool, gfp_mask);
-> > > > +			rac._nr_pages = 0;
-> > > 
-> > > Hmmm. Wondering ig it make sense to move the gfp_mask to the readahead
-> > > control structure - if we have to pass the gfp_mask down all the
-> > > way along side the rac, then I think it makes sense to do that...
-> > 
-> > So we end up removing it later on in this series, but I do wonder if
-> > it would make sense anyway.  By the end of the series, we still have
-> > this in iomap:
-> > 
-> >                 if (ctx->rac) /* same as readahead_gfp_mask */
-> >                         gfp |= __GFP_NORETRY | __GFP_NOWARN;
-> > 
-> > and we could get rid of that by passing gfp flags down in the rac.  On the
-> > other hand, I don't know why it doesn't just use readahead_gfp_mask()
-> > here anyway ... Christoph?
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/fsl,easrc.txt   | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.txt
 > 
-> mapping->gfp_mask is awful. Is it a mask, or is it a valid set of
-> allocation flags? Or both?  Some callers to mapping_gfp_constraint()
-> uses it as a mask, some callers to mapping_gfp_constraint() use it
-> as base flags that context specific flags get masked out of,
-> readahead_gfp_mask() callers use it as the entire set of gfp flags
-> for allocation.
-> 
-> That whole API sucks - undocumented as to what it's suposed to do
-> and how it's supposed to be used. Hence it's difficult to use
-> correctly or understand whether it's being used correctly. And
-> reading callers only leads to more confusion and crazy code like in
-> do_mpage_readpage() where readahead returns a mask that are used as
-> base flags and normal reads return a masked set of base flags...
-> 
-> The iomap code is obviously correct when it comes to gfp flag
-> manipulation. We start with GFP_KERNEL context, then constrain it
-> via the mask held in mapping->gfp_mask, then if it's readahead we
-> allow the allocation to silently fail.
-> 
-> Simple to read and understand code, versus having weird code that
-> requires the reader to decipher an undocumented and inconsistent API
-> to understand how the gfp flags have been calculated and are valid.
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.txt b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> new file mode 100644
+> index 000000000000..0e8153165e3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.txt
+> @@ -0,0 +1,57 @@
+> +NXP Asynchronous Sample Rate Converter (ASRC) Controller
 
-I think a lot of this is not so much a criticism of mapping->gfp_mask
-as a criticism of the whole GFP flags concept.  Some of the flags make
-allocations more likely to succeed, others make them more likely to
-fail.  Some of them allow the allocator to do more things; some prevent
-the allocator from doing things it would otherwise do.  Some of them
-aren't flags at all.  Some of them are mutually incompatible (and will
-be warned about if set in combination), some of them will silently win
-over other flags.
+Missing "Enhanced", I guess.
 
-I think they made a certain amount of clunky sense when they were added,
-but they've grown to a point where they don't make sense any more and
-partly that's because there's nobody standing over the allocator with
-a flaming sword promising certain death to anyone who adds a new flag
-without thoroughly documenting its interactions with every other flag.
+And "ASRC" => "EASRC"
 
-I am no longer a fan of GFP flags ;-)
+> +The Asynchronous Sample Rate Converter (ASRC) converts the sampling rate of a
+
+Ditto
+
+> +signal associated with an input clock into a signal associated with a different
+> +output clock. The driver currently works as a Front End of DPCM with other Back
+> +Ends Audio controller such as ESAI, SSI and SAI. It has four context to support
+
+"context" => "contexts"
+
+Btw, what's the definition of this "context"?
+
+And, is SSI still available on imx8mn?
