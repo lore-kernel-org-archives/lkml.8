@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAE8C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F3EC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F97624655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D2B22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgBRXab (ORCPT
+        id S1728211AbgBRXal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:30:31 -0500
+        Tue, 18 Feb 2020 18:30:41 -0500
 Received: from mga04.intel.com ([192.55.52.120]:38638 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgBRX35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728039AbgBRX35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 18:29:57 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:57 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:29:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="282936677"
+   d="scan'208";a="282936663"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:57 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Feb 2020 15:29:56 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/13] KVM: x86: Move kvm_emulate.h into KVM's private directory
-Date:   Tue, 18 Feb 2020 15:29:49 -0800
-Message-Id: <20200218232953.5724-10-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 06/13] KVM: x86: Refactor emulate tracepoint to explicitly take context
+Date:   Tue, 18 Feb 2020 15:29:46 -0800
+Message-Id: <20200218232953.5724-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200218232953.5724-1-sean.j.christopherson@intel.com>
 References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
@@ -49,90 +49,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the emulation context is dynamically allocated and not embedded
-in struct kvm_vcpu, move its header, kvm_emulate.h, out of the public
-asm directory and into KVM's private x86 directory.
+Explicitly pass the emulation context to the emulate tracepoint in
+preparation of dynamically allocation the emulation context.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h             | 5 ++++-
- arch/x86/kvm/emulate.c                      | 2 +-
- arch/x86/{include/asm => kvm}/kvm_emulate.h | 0
- arch/x86/kvm/mmu/mmu.c                      | 1 +
- arch/x86/kvm/x86.c                          | 1 +
- arch/x86/kvm/x86.h                          | 1 +
- 6 files changed, 8 insertions(+), 2 deletions(-)
- rename arch/x86/{include/asm => kvm}/kvm_emulate.h (100%)
+ arch/x86/kvm/trace.h | 22 +++++++++++-----------
+ arch/x86/kvm/x86.c   | 13 ++++++++-----
+ 2 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e069f71667b1..0dfe11f30d7f 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -182,7 +182,10 @@ enum exit_fastpath_completion {
- 	EXIT_FASTPATH_SKIP_EMUL_INS,
- };
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index f194dd058470..5605000ca5f6 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -731,8 +731,9 @@ TRACE_EVENT(kvm_skinit,
+ 	})
  
--#include <asm/kvm_emulate.h>
-+struct x86_emulate_ctxt;
-+struct x86_exception;
-+enum x86_intercept;
-+enum x86_intercept_stage;
+ TRACE_EVENT(kvm_emulate_insn,
+-	TP_PROTO(struct kvm_vcpu *vcpu, __u8 failed),
+-	TP_ARGS(vcpu, failed),
++	TP_PROTO(struct kvm_vcpu *vcpu, struct x86_emulate_ctxt *ctxt,
++		 __u8 failed),
++	TP_ARGS(vcpu, ctxt, failed),
  
- #define KVM_NR_MEM_OBJS 40
+ 	TP_STRUCT__entry(
+ 		__field(    __u64, rip                       )
+@@ -745,13 +746,10 @@ TRACE_EVENT(kvm_emulate_insn,
  
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index 1e394cb190ce..0bceb3f71220 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -20,7 +20,7 @@
+ 	TP_fast_assign(
+ 		__entry->csbase = kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS);
+-		__entry->len = vcpu->arch.emulate_ctxt.fetch.ptr
+-			       - vcpu->arch.emulate_ctxt.fetch.data;
+-		__entry->rip = vcpu->arch.emulate_ctxt._eip - __entry->len;
+-		memcpy(__entry->insn,
+-		       vcpu->arch.emulate_ctxt.fetch.data,
+-		       15);
+-		__entry->flags = kei_decode_mode(vcpu->arch.emulate_ctxt.mode);
++		__entry->len = ctxt->fetch.ptr - ctxt->fetch.data;
++		__entry->rip = ctxt->_eip - __entry->len;
++		memcpy(__entry->insn, ctxt->fetch.data, 15);
++		__entry->flags = kei_decode_mode(ctxt->mode);
+ 		__entry->failed = failed;
+ 		),
  
- #include <linux/kvm_host.h>
- #include "kvm_cache_regs.h"
--#include <asm/kvm_emulate.h>
-+#include "kvm_emulate.h"
- #include <linux/stringify.h>
- #include <asm/fpu/api.h>
- #include <asm/debugreg.h>
-diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/kvm/kvm_emulate.h
-similarity index 100%
-rename from arch/x86/include/asm/kvm_emulate.h
-rename to arch/x86/kvm/kvm_emulate.h
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7011a4e54866..d9064be28089 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -19,6 +19,7 @@
- #include "mmu.h"
- #include "x86.h"
- #include "kvm_cache_regs.h"
-+#include "kvm_emulate.h"
- #include "cpuid.h"
+@@ -764,8 +762,10 @@ TRACE_EVENT(kvm_emulate_insn,
+ 		)
+ 	);
  
- #include <linux/kvm_host.h>
+-#define trace_kvm_emulate_insn_start(vcpu) trace_kvm_emulate_insn(vcpu, 0)
+-#define trace_kvm_emulate_insn_failed(vcpu) trace_kvm_emulate_insn(vcpu, 1)
++#define trace_kvm_emulate_insn_start(vcpu, ctxt)	\
++	trace_kvm_emulate_insn(vcpu, ctxt, 0)
++#define trace_kvm_emulate_insn_failed(vcpu, ctxt)	\
++	trace_kvm_emulate_insn(vcpu, ctxt, 1)
+ 
+ TRACE_EVENT(
+ 	vcpu_match_mmio,
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5ab7d4283185..370af9fe0f5b 100644
+index 79d1113ad6e7..69d3dd64d90c 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -22,6 +22,7 @@
- #include "i8254.h"
- #include "tss.h"
- #include "kvm_cache_regs.h"
-+#include "kvm_emulate.h"
- #include "x86.h"
- #include "cpuid.h"
- #include "pmu.h"
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 8409842a25d9..f3c6e55eb5d9 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -5,6 +5,7 @@
- #include <linux/kvm_host.h>
- #include <asm/pvclock.h>
- #include "kvm_cache_regs.h"
-+#include "kvm_emulate.h"
+@@ -6460,10 +6460,13 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
+ }
+ EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
  
- #define KVM_DEFAULT_PLE_GAP		128
- #define KVM_VMX_DEFAULT_PLE_WINDOW	4096
+-static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
++static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
++				    int emulation_type)
+ {
++	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++
+ 	++vcpu->stat.insn_emulation_fail;
+-	trace_kvm_emulate_insn_failed(vcpu);
++	trace_kvm_emulate_insn_failed(vcpu, ctxt);
+ 
+ 	if (emulation_type & EMULTYPE_VMWARE_GP) {
+ 		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
+@@ -6788,7 +6791,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 
+ 		r = x86_decode_insn(ctxt, insn, insn_len);
+ 
+-		trace_kvm_emulate_insn_start(vcpu);
++		trace_kvm_emulate_insn_start(vcpu, ctxt);
+ 		++vcpu->stat.insn_emulation;
+ 		if (r != EMULATION_OK)  {
+ 			if ((emulation_type & EMULTYPE_TRAP_UD) ||
+@@ -6810,7 +6813,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 				inject_emulated_exception(ctxt);
+ 				return 1;
+ 			}
+-			return handle_emulation_failure(vcpu, emulation_type);
++			return handle_emulation_failure(ctxt, emulation_type);
+ 		}
+ 	}
+ 
+@@ -6856,7 +6859,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 					emulation_type))
+ 			return 1;
+ 
+-		return handle_emulation_failure(vcpu, emulation_type);
++		return handle_emulation_failure(ctxt, emulation_type);
+ 	}
+ 
+ 	if (ctxt->have_exception) {
 -- 
 2.24.1
 
