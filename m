@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5005DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF47C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2731C24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B00424655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055780;
-	bh=1EFulnPCHgMnVTH9lfMBF8UDwfE32KxlB9KmML0iR7I=;
+	s=default; t=1582055782;
+	bh=aUIcPKNkgWofmymkuG85iqkUPquJCtLTBUfq2D6RgSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fhJ5j4oJnioEYwWZc6OlhrXV/suwt3Kh/opc5rUxNNa1a9zqfDCKKk5EVTV/FEFJx
-	 ol4GVXbRuM4Dxz0ZJnQGd/SDbrKkt5g+oaR/sUlUM9iU5y/JCvFNht0JIa4ppg6Mz1
-	 Tzenun1trM3bBYDAQr3Fg0JzM0tPd1LPGQbH8LLc=
+	b=X+MpypP939W6HSl9uHiRPjH55SR7b3sgiEUPKOwr2uaAaLDVkOPrADtRVTn/i9N4t
+	 kFEyyZDctxTMIZGDLqI/mfdu773NU7GAl3E7FJnGC5GnSD3lPsv7qTQcJYOHoOtSS+
+	 Phog642FCa18MB8082oI4jKXW+YWw0XC7D1aFHX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgBRT4S (ORCPT
+        id S1727021AbgBRT4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbgBRT4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:16 -0500
+        id S1726927AbgBRT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69A5724654;
-        Tue, 18 Feb 2020 19:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9C0B24125;
+        Tue, 18 Feb 2020 19:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055775;
-        bh=1EFulnPCHgMnVTH9lfMBF8UDwfE32KxlB9KmML0iR7I=;
+        s=default; t=1582055778;
+        bh=aUIcPKNkgWofmymkuG85iqkUPquJCtLTBUfq2D6RgSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nlm9hlNxX0kvEg/KRt0MH3/XJuHxMIv4qYVXGYzBCJlGXpP9Ep+LwBDFyMtXC67rT
-         p1+v3IyCtQmkDXH3YIBxwIj68fgufAive2Q2b182x2h88hvBrcNb+puwBuUFks2GxU
-         R0o4Xm4dRVLK3PMyqeCSCOY+p8Zza4/v6EQSXcLA=
+        b=PUGHWDIkWzm6x1ipJ+oownpW3Kk7q5h88Yl99agyTCZlbR0SpWXrniEoKz8dWuqLD
+         d4cD2XUMtwy1O/7peL/AcX6+alnzxVdnGFcSv6+FPpaxRLrZ9JJUGzY6X+L5PJSJ5W
+         7bXoNM76e/vdChWgo7c3XIHe0nzXJZvjykcaZb2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 17/38] btrfs: ref-verify: fix memory leaks
-Date:   Tue, 18 Feb 2020 20:55:03 +0100
-Message-Id: <20200218190420.636463914@linuxfoundation.org>
+Subject: [PATCH 4.19 18/38] btrfs: print message when tree-log replay starts
+Date:   Tue, 18 Feb 2020 20:55:04 +0100
+Message-Id: <20200218190420.788165830@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -59,66 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: David Sterba <dsterba@suse.com>
 
-commit f311ade3a7adf31658ed882aaab9f9879fdccef7 upstream.
+commit e8294f2f6aa6208ed0923aa6d70cea3be178309a upstream.
 
-In btrfs_ref_tree_mod(), 'ref' and 'ra' are allocated through kzalloc() and
-kmalloc(), respectively. In the following code, if an error occurs, the
-execution will be redirected to 'out' or 'out_unlock' and the function will
-be exited. However, on some of the paths, 'ref' and 'ra' are not
-deallocated, leading to memory leaks. For example, if 'action' is
-BTRFS_ADD_DELAYED_EXTENT, add_block_entry() will be invoked. If the return
-value indicates an error, the execution will be redirected to 'out'. But,
-'ref' is not deallocated on this path, causing a memory leak.
+There's no logged information about tree-log replay although this is
+something that points to previous unclean unmount. Other filesystems
+report that as well.
 
-To fix the above issues, deallocate both 'ref' and 'ra' before exiting from
-the function when an error is encountered.
-
-CC: stable@vger.kernel.org # 4.15+
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Suggested-by: Chris Murphy <lists@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ref-verify.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/disk-io.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -747,6 +747,7 @@ int btrfs_ref_tree_mod(struct btrfs_root
- 		 */
- 		be = add_block_entry(root->fs_info, bytenr, num_bytes, ref_root);
- 		if (IS_ERR(be)) {
-+			kfree(ref);
- 			kfree(ra);
- 			ret = PTR_ERR(be);
- 			goto out;
-@@ -760,6 +761,8 @@ int btrfs_ref_tree_mod(struct btrfs_root
- 			"re-allocated a block that still has references to it!");
- 			dump_block_entry(fs_info, be);
- 			dump_ref_action(fs_info, ra);
-+			kfree(ref);
-+			kfree(ra);
- 			goto out_unlock;
- 		}
- 
-@@ -822,6 +825,7 @@ int btrfs_ref_tree_mod(struct btrfs_root
- "dropping a ref for a existing root that doesn't have a ref on the block");
- 				dump_block_entry(fs_info, be);
- 				dump_ref_action(fs_info, ra);
-+				kfree(ref);
- 				kfree(ra);
- 				goto out_unlock;
- 			}
-@@ -837,6 +841,7 @@ int btrfs_ref_tree_mod(struct btrfs_root
- "attempting to add another ref for an existing ref on a tree block");
- 			dump_block_entry(fs_info, be);
- 			dump_ref_action(fs_info, ra);
-+			kfree(ref);
- 			kfree(ra);
- 			goto out_unlock;
- 		}
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3117,6 +3117,7 @@ retry_root_backup:
+ 	/* do not make disk changes in broken FS or nologreplay is given */
+ 	if (btrfs_super_log_root(disk_super) != 0 &&
+ 	    !btrfs_test_opt(fs_info, NOLOGREPLAY)) {
++		btrfs_info(fs_info, "start tree-log replay");
+ 		ret = btrfs_replay_log(fs_info, fs_devices);
+ 		if (ret) {
+ 			err = ret;
 
 
