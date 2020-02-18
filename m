@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B58C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B385C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADF324125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D6C24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056342;
-	bh=agkkRnC9VxzpqWk4k6i0GzTEtQhweZ/ZVibTQ5oxqp0=;
+	s=default; t=1582056350;
+	bh=ZNoFQhqDJF5StAaTMZ9SrcEr4X4SKy8i2lcFlXd0zBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sutOxo/ovwfaZNa6C0xrAxu0GuRv0xB0PmuYCGHO996MAaYO/eXdlY5RNmM0oSYlB
-	 Ex35sjvYxzwLn1m5qCmCZR+t3x14DeHCgTeLEW4n5mBdqp+862hCts5tSMI/BG5jVf
-	 eJ921XxcU17D3M1JKO4Ka1u2Dmy9BUhZYTuI4uSA=
+	b=Z/vAHvO611U8uvubjOmJmEy7qiTxqf36m4WDeXxkeiYIzO50E7pTUbLFI/BbKpRXO
+	 jFAODaAX0UqkQ7BE7CRqijxp3LoFW+KQZzPn38InLx1k24IpYUbtCayNNL1w33sIZd
+	 aeJYCsuL0WNkMF3rbKTi6uLeL6twNpjD/5aDBD/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgBRUFl (ORCPT
+        id S1728732AbgBRUBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:05:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:01:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbgBRUBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:01:32 -0500
+        id S1727656AbgBRUBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:01:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264022465D;
-        Tue, 18 Feb 2020 20:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D445F24676;
+        Tue, 18 Feb 2020 20:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056091;
-        bh=agkkRnC9VxzpqWk4k6i0GzTEtQhweZ/ZVibTQ5oxqp0=;
+        s=default; t=1582056071;
+        bh=ZNoFQhqDJF5StAaTMZ9SrcEr4X4SKy8i2lcFlXd0zBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fc3abyduhJgnFSiy7DPwedN8b9cnkgsMUEhN6YhLmVsG6OoAy52YuyQB+JGKB4D8h
-         K5C6Q1i0N8VWPJ4+wOPkjHTKKFjwixk4oz8UtCzhdOghtk9Z7C5S2kBiP95rdD7vZ6
-         NHL0Nkcc03JShNY/yQ70mYuDbZxxXWsuXGuumcOs=
+        b=c0WgyTH8AuMdnBWHVwG9ClB771v0ZY2NuwenjHtW/J/0IErrSYgRLtsaidLWID/JI
+         1pn0lF4JFU/elFpbCT4PJfaTzMk18Re4+MzxogCYrbOY6J3PdBCMbrvRqEBdDeFV2j
+         YdgnL86AKG4FubWRekgzonT3QZag2c129qBEPt6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.5 30/80] cifs: make sure we do not overflow the max EA buffer size
-Date:   Tue, 18 Feb 2020 20:54:51 +0100
-Message-Id: <20200218190435.332718029@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 23/80] btrfs: print message when tree-log replay starts
+Date:   Tue, 18 Feb 2020 20:54:44 +0100
+Message-Id: <20200218190434.586993436@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,77 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: David Sterba <dsterba@suse.com>
 
-commit 85db6b7ae65f33be4bb44f1c28261a3faa126437 upstream.
+commit e8294f2f6aa6208ed0923aa6d70cea3be178309a upstream.
 
-RHBZ: 1752437
+There's no logged information about tree-log replay although this is
+something that points to previous unclean unmount. Other filesystems
+report that as well.
 
-Before we add a new EA we should check that this will not overflow
-the maximum buffer we have available to read the EAs back.
-Otherwise we can get into a situation where the EAs are so big that
-we can not read them back to the client and thus we can not list EAs
-anymore or delete them.
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Suggested-by: Chris Murphy <lists@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |   35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1115,7 +1115,8 @@ smb2_set_ea(const unsigned int xid, stru
- 	void *data[1];
- 	struct smb2_file_full_ea_info *ea = NULL;
- 	struct kvec close_iov[1];
--	int rc;
-+	struct smb2_query_info_rsp *rsp;
-+	int rc, used_len = 0;
- 
- 	if (smb3_encryption_required(tcon))
- 		flags |= CIFS_TRANSFORM_REQ;
-@@ -1138,6 +1139,38 @@ smb2_set_ea(const unsigned int xid, stru
- 							     cifs_sb);
- 			if (rc == -ENODATA)
- 				goto sea_exit;
-+		} else {
-+			/* If we are adding a attribute we should first check
-+			 * if there will be enough space available to store
-+			 * the new EA. If not we should not add it since we
-+			 * would not be able to even read the EAs back.
-+			 */
-+			rc = smb2_query_info_compound(xid, tcon, utf16_path,
-+				      FILE_READ_EA,
-+				      FILE_FULL_EA_INFORMATION,
-+				      SMB2_O_INFO_FILE,
-+				      CIFSMaxBufSize -
-+				      MAX_SMB2_CREATE_RESPONSE_SIZE -
-+				      MAX_SMB2_CLOSE_RESPONSE_SIZE,
-+				      &rsp_iov[1], &resp_buftype[1], cifs_sb);
-+			if (rc == 0) {
-+				rsp = (struct smb2_query_info_rsp *)rsp_iov[1].iov_base;
-+				used_len = le32_to_cpu(rsp->OutputBufferLength);
-+			}
-+			free_rsp_buf(resp_buftype[1], rsp_iov[1].iov_base);
-+			resp_buftype[1] = CIFS_NO_BUFFER;
-+			memset(&rsp_iov[1], 0, sizeof(rsp_iov[1]));
-+			rc = 0;
-+
-+			/* Use a fudge factor of 256 bytes in case we collide
-+			 * with a different set_EAs command.
-+			 */
-+			if(CIFSMaxBufSize - MAX_SMB2_CREATE_RESPONSE_SIZE -
-+			   MAX_SMB2_CLOSE_RESPONSE_SIZE - 256 <
-+			   used_len + ea_name_len + ea_value_len + 1) {
-+				rc = -ENOSPC;
-+				goto sea_exit;
-+			}
- 		}
- 	}
- 
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3164,6 +3164,7 @@ int __cold open_ctree(struct super_block
+ 	/* do not make disk changes in broken FS or nologreplay is given */
+ 	if (btrfs_super_log_root(disk_super) != 0 &&
+ 	    !btrfs_test_opt(fs_info, NOLOGREPLAY)) {
++		btrfs_info(fs_info, "start tree-log replay");
+ 		ret = btrfs_replay_log(fs_info, fs_devices);
+ 		if (ret) {
+ 			err = ret;
 
 
