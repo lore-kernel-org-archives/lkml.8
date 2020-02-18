@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF294C34045
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA3C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B043F24658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C195E24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgBRQaO (ORCPT
+        id S1727107AbgBRQaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:30:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:57224 "EHLO
+        Tue, 18 Feb 2020 11:30:25 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57249 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgBRQaL (ORCPT
+        with ESMTP id S1726802AbgBRQaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:30:11 -0500
+        Tue, 18 Feb 2020 11:30:14 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j45l9-0003h0-N6; Tue, 18 Feb 2020 16:30:07 +0000
+        id 1j45lC-0003h0-V7; Tue, 18 Feb 2020 16:30:11 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -35,9 +35,9 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-pm@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH net-next v3 5/9] device: add device_change_owner()
-Date:   Tue, 18 Feb 2020 17:29:39 +0100
-Message-Id: <20200218162943.2488012-6-christian.brauner@ubuntu.com>
+Subject: [PATCH net-next v3 9/9] net: fix sysfs permssions when device changes network namespace
+Date:   Tue, 18 Feb 2020 17:29:43 +0100
+Message-Id: <20200218162943.2488012-10-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
 References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
@@ -48,11 +48,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to change the owner of a device's sysfs entries. This
-needs to happen when the ownership of a device is changed, e.g. when
-moving network devices between network namespaces.
-This function will be used to correctly account for ownership changes,
-e.g. when moving network devices between network namespaces.
+Now that we moved all the helpers in place and make use netdev_change_owner()
+to fixup the permissions when moving network devices between network
+namespaces.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
@@ -60,116 +58,45 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 unchanged
 
 /* v3 */
--  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-   - Add explicit uid/gid parameters.
+unchanged
 ---
- drivers/base/core.c    | 80 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h |  1 +
- 2 files changed, 81 insertions(+)
+ net/core/dev.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 42a672456432..ec0d5e8cfd0f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3458,6 +3458,86 @@ int device_move(struct device *dev, struct device *new_parent,
- }
- EXPORT_SYMBOL_GPL(device_move);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index a69e8bd7ed74..0f9c4684fcbd 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -10016,6 +10016,7 @@ EXPORT_SYMBOL(unregister_netdev);
  
-+static int device_attrs_change_owner(struct device *dev, kuid_t kuid,
-+				     kgid_t kgid)
-+{
-+	struct kobject *kobj = &dev->kobj;
-+	struct class *class = dev->class;
-+	const struct device_type *type = dev->type;
-+	int error;
+ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char *pat)
+ {
++	struct net *net_old = dev_net(dev);
+ 	int err, new_nsid, new_ifindex;
+ 
+ 	ASSERT_RTNL();
+@@ -10031,7 +10032,7 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
+ 
+ 	/* Get out if there is nothing todo */
+ 	err = 0;
+-	if (net_eq(dev_net(dev), net))
++	if (net_eq(net_old, net))
+ 		goto out;
+ 
+ 	/* Pick the destination device name, and ensure
+@@ -10107,6 +10108,12 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
+ 	err = device_rename(&dev->dev, dev->name);
+ 	WARN_ON(err);
+ 
++	/* Adapt owner in case owning user namespace of target network
++	 * namespace is different from the original one.
++	 */
++	err = netdev_change_owner(dev, net_old, net);
++	WARN_ON(err);
 +
-+	if (class) {
-+		error = sysfs_groups_change_owner(kobj, class->dev_groups, kuid,
-+						  kgid);
-+		if (error)
-+			return error;
-+	}
-+
-+	if (type) {
-+		error = sysfs_groups_change_owner(kobj, type->groups, kuid,
-+						  kgid);
-+		if (error)
-+			return error;
-+	}
-+
-+	error = sysfs_groups_change_owner(kobj, dev->groups, kuid, kgid);
-+	if (error)
-+		return error;
-+
-+	if (device_supports_offline(dev) && !dev->offline_disabled) {
-+		error = sysfs_file_change_owner_by_name(
-+			kobj, dev_attr_online.attr.name, kuid, kgid);
-+		if (error)
-+			return error;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * device_change_owner - change the owner of an existing device.
-+ * @dev: device.
-+ * @kuid: new owner's kuid
-+ * @kgid: new owner's kgid
-+ */
-+int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-+{
-+	int error;
-+	struct kobject *kobj = &dev->kobj;
-+
-+	dev = get_device(dev);
-+	if (!dev)
-+		return -EINVAL;
-+
-+	error = sysfs_change_owner(kobj, kuid, kgid);
-+	if (error)
-+		goto out;
-+
-+	error = sysfs_file_change_owner_by_name(kobj, dev_attr_uevent.attr.name,
-+						kuid, kgid);
-+	if (error)
-+		goto out;
-+
-+	error = device_attrs_change_owner(dev, kuid, kgid);
-+	if (error)
-+		goto out;
-+
-+#ifdef CONFIG_BLOCK
-+	if (sysfs_deprecated && dev->class == &block_class)
-+		goto out;
-+#endif
-+
-+	error = sysfs_link_change_owner(&dev->class->p->subsys.kobj, &dev->kobj,
-+					dev_name(dev), kuid, kgid);
-+	if (error)
-+		goto out;
-+
-+out:
-+	put_device(dev);
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(device_change_owner);
-+
- /**
-  * device_shutdown - call ->shutdown() on each device to shutdown.
-  */
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0cd7c647c16c..3e40533d2037 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -817,6 +817,7 @@ extern struct device *device_find_child_by_name(struct device *parent,
- extern int device_rename(struct device *dev, const char *new_name);
- extern int device_move(struct device *dev, struct device *new_parent,
- 		       enum dpm_order dpm_order);
-+extern int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
- extern const char *device_get_devnode(struct device *dev,
- 				      umode_t *mode, kuid_t *uid, kgid_t *gid,
- 				      const char **tmp);
+ 	/* Add the device back in the hashes */
+ 	list_netdevice(dev);
+ 
 -- 
 2.25.0
 
