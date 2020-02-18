@@ -2,143 +2,160 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2F7C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0161AC3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFA820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6362176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQs3yrtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgBROHD convert rfc822-to-8bit (ORCPT
+        id S1726666AbgBROIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:07:03 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28682 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbgBROHC (ORCPT
+        Tue, 18 Feb 2020 09:08:43 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47640 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgBROIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:07:02 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IDvoo3133991
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:07:01 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6cbakmq7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:07:01 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Tue, 18 Feb 2020 14:06:58 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 14:06:54 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IE6rt919398782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 14:06:53 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2328A4C050;
-        Tue, 18 Feb 2020 14:06:53 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B43B94C04E;
-        Tue, 18 Feb 2020 14:06:52 +0000 (GMT)
-Received: from localhost (unknown [9.199.60.10])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 14:06:52 +0000 (GMT)
-Date:   Tue, 18 Feb 2020 19:36:51 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Anil =?iso-8859-1?q?S=0A?= Keshavamurthy 
-        <anil.s.keshavamurthy@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, stable@kernel.vger.org
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
-        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
-        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
-        <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
-        <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
-        <20200218094421.6d402de389ce23a55a3ec084@kernel.org>
-        <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
-        <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
-        <2b3f664e-d4ad-edd3-5bed-a4492f4ed213@c-s.fr>
-        <20200218213317.533c78753cefb05bd42cc6ad@kernel.org>
-In-Reply-To: <20200218213317.533c78753cefb05bd42cc6ad@kernel.org>
+        Tue, 18 Feb 2020 09:08:43 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IE8aTe072394;
+        Tue, 18 Feb 2020 08:08:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582034917;
+        bh=4BdW1JJPThl9i4+P6/loVm2QUGqngwrPUTpXVz+GMFI=;
+        h=From:To:CC:Subject:Date;
+        b=ZQs3yrtvLVTRF2HF+1U9f5fNjaCOdQwUWH7+mmvjg7di5RpeS3yZ+vogwfVnmWH+f
+         1Xrjj+HwGGjCn0MetPtQiQ4cN4knFTNR3jCD/bpCC1Tmtgz42JTNJbXqvxgLfoRlbp
+         kEGcIT4ufv893934slXJIA5iBygxezzZ0hqZHPAk=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IE8aaE080194
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 08:08:36 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 08:08:36 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 08:08:36 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IE8Xqr096183;
+        Tue, 18 Feb 2020 08:08:34 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
+        <kishon@ti.com>, <tony@atomide.com>, <faiz_abbas@ti.com>
+Subject: [PATCH] mmc: sdhci-omap: Add Support for Suspend/Resume
+Date:   Tue, 18 Feb 2020 19:40:18 +0530
+Message-ID: <20200218141018.24456-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20021814-4275-0000-0000-000003A32911
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021814-4276-0000-0000-000038B73025
-Message-Id: <1582033782.f2l6jsd36b.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015 phishscore=0
- mlxscore=0 mlxlogscore=971 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180110
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami, Christophe,
-Apologies for pitching in late here...
+Add power management ops which save and restore the driver context and
+facilitate a system suspend and resume.
 
-Masami Hiramatsu wrote:
-> On Tue, 18 Feb 2020 12:04:41 +0100
-> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> 
->> >> Nevertheless, if one symbol has been forgotten in the blacklist, I think
->> >> it is a problem if it generate Oopses.
->> > 
->> > There is a long history also on x86 to make a blacklist. Anyway, how did
->> > you get this error on PPC32? Somewhere would you like to probe and
->> > it is a real mode function? Or, it happened unexpectedly?
->> 
->> The first Oops I got was triggered by a WARN_ON() kind of trap in real 
->> mode. The trap exception handler called kprobe_handler() which tried to 
->> read the instruction at the trap address (which was a real-mode address) 
->> so it triggered a Bad Access Fault.
->> 
->> This was initially the purpose of my patch.
-> 
-> OK, then filtering the trap reason in kprobe handler is a bit strange.
-> It should be done in the previous stage (maybe in trap.c)
-> Can we filter it by exception flag or only by checking the instruction
-> which causes the exception, or needs get_kprobe()...?
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ drivers/mmc/host/sdhci-omap.c | 59 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-I think Masami's earlier patch proposal to bail out early from 
-kprobe_handler() is appropriate here. We don't support kprobe in real 
-mode since we don't have a way to ensure that the pre/post handlers work 
-properly.
-
-We will obviously also have to blacklist some of the real mode code from 
-being probed to begin with. In addition, we will also have to blacklist 
-any location where we can't take a trap (MSR_RI being unset, as an 
-example)
-
-Christophe,
-See some of the below patch series:
-https://patchwork.ozlabs.org/patch/752336/
-https://patchwork.ozlabs.org/patch/752333/
-https://patchwork.ozlabs.org/patch/782399/
-
-
-- Naveen
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index 882053151a47..a524c01da8de 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -108,6 +108,11 @@ struct sdhci_omap_host {
+ 	struct pinctrl		*pinctrl;
+ 	struct pinctrl_state	**pinctrl_state;
+ 	bool			is_tuning;
++	/* Omap specific context save */
++	u32			con;
++	u32			hctl;
++	u32			sysctl;
++	u32			capa;
+ };
+ 
+ static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
+@@ -1233,11 +1238,65 @@ static int sdhci_omap_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void sdhci_omap_context_save(struct sdhci_omap_host *omap_host)
++{
++	omap_host->con = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
++	omap_host->hctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_HCTL);
++	omap_host->sysctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_SYSCTL);
++	omap_host->capa = sdhci_omap_readl(omap_host, SDHCI_OMAP_CAPA);
++}
++
++static void sdhci_omap_context_restore(struct sdhci_omap_host *omap_host)
++{
++	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, omap_host->con);
++	sdhci_omap_writel(omap_host, SDHCI_OMAP_HCTL, omap_host->hctl);
++	sdhci_omap_writel(omap_host, SDHCI_OMAP_SYSCTL, omap_host->sysctl);
++	sdhci_omap_writel(omap_host, SDHCI_OMAP_CAPA, omap_host->capa);
++}
++
++static int __maybe_unused sdhci_omap_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
++
++	sdhci_suspend_host(host);
++
++	sdhci_omap_context_save(omap_host);
++
++	pinctrl_pm_select_idle_state(dev);
++
++	pm_runtime_put_sync(dev);
++
++	return 0;
++}
++
++static int __maybe_unused sdhci_omap_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
++
++	pm_runtime_get_sync(dev);
++
++	pinctrl_pm_select_default_state(dev);
++
++	sdhci_omap_context_restore(omap_host);
++
++	sdhci_resume_host(host);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(sdhci_omap_dev_pm_ops, sdhci_omap_suspend,
++			 sdhci_omap_resume);
++
+ static struct platform_driver sdhci_omap_driver = {
+ 	.probe = sdhci_omap_probe,
+ 	.remove = sdhci_omap_remove,
+ 	.driver = {
+ 		   .name = "sdhci-omap",
++		   .pm = &sdhci_omap_dev_pm_ops,
+ 		   .of_match_table = omap_sdhci_match,
+ 		  },
+ };
+-- 
+2.19.2
 
