@@ -2,87 +2,133 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E0BC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C83DC3403A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52658207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806A62173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgBRMZv (ORCPT
+        id S1726648AbgBRM0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:25:51 -0500
-Received: from mga07.intel.com ([134.134.136.100]:36582 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgBRMZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:25:50 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 04:25:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="348688175"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 18 Feb 2020 04:25:46 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 18 Feb 2020 14:25:45 +0200
-Date:   Tue, 18 Feb 2020 14:25:45 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bin Liu <b-liu@ti.com>, Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 5/9] usb: roles: Provide the switch drivers handle to the
- switch in the API
-Message-ID: <20200218122545.GF28776@kuha.fi.intel.com>
-References: <20200213132428.53374-1-heikki.krogerus@linux.intel.com>
- <20200213132428.53374-6-heikki.krogerus@linux.intel.com>
- <20200213133239.GN1498@kuha.fi.intel.com>
- <20200218072341.GA30350@b29397-desktop>
+        Tue, 18 Feb 2020 07:26:19 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10638 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726422AbgBRM0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 07:26:18 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D4EEA935B4138836A188;
+        Tue, 18 Feb 2020 20:25:07 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 20:24:58 +0800
+Subject: Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     "Pankaj Bansal (OSS)" <pankaj.bansal@oss.nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        "Will Deacon" <will@kernel.org>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        "Russell King" <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <615c6807-c018-92c9-b66a-8afdda183699@huawei.com>
+Date:   Tue, 18 Feb 2020 20:24:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218072341.GA30350@b29397-desktop>
+In-Reply-To: <VI1PR04MB5135D7D8597D33DB76DA05BDB0110@VI1PR04MB5135.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Pankaj,
 
-On Tue, Feb 18, 2020 at 07:23:41AM +0000, Peter Chen wrote:
-> > > @@ -1118,6 +1119,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
-> > >  	}
-> > >  
-> > >  	if (ci_role_switch.fwnode) {
-> > > +		ci_role_switch.driver_data = ci;
-> > >  		ci->role_switch = usb_role_switch_register(dev,
-> > >  					&ci_role_switch);
+On 2020/2/18 16:00, Pankaj Bansal (OSS) wrote:
+[...]
+>>>> Side note: would you mind removing the email headers (as above) in your
+>>>> replies please ?
+>>
+>> Read the question above please.
+>>
+>> [...]
+>>
+>>>>> As stated above, in Linux MC is a bus (just like PCI bus, AMBA bus etc)
+>>>>> There can be multiple devices attached to this bus. Moreover, we can
+>>>> dynamically create/destroy these devices.
+>>>>> Now, we want to represent this BUS (not individual devices connected to
+>> bus)
+>>>> in IORT table.
+>>>>> The only possible way right now we see is that we describe it as Named
+>>>> components having a pool of ID mappings.
+>>>>> As and when devices are created and attached to bus, we sift through this
+>> pool
+>>>> to correctly determine the output ID for the device.
+>>>>> Now the input ID that we provide, can come from device itself.
+>>>>> Then we can use the Platform MSI framework for MC bus devices.
+>>>>
+>>>> So are you asking me if that's OK ? Or there is something you can't
+>>>> describe with IORT ?
+>>>
+>>> I am asking if that would be acceptable?
+>>> i.e. we represent MC bus as Named component is IORT table with a pool of IDs
+>> (without single ID mapping flag)
+>>> and then we use the Platform MSI framework for all children devices of MC
+>> bus.
+>>> Note that it would require the Platform MSI layer to correctly pass an input id
+>> for a platform device to IORT layer.
+>>
+>> How is this solved in DT ? You don't seem to need any DT binding on top
+>> of the msi-parent property, which is equivalent to IORT single mappings
+>> AFAICS so I would like to understand the whole DT flow (so that I
+>> understand how this FSL bus works) before commenting any further.
 > 
-> Why the struct usb_role_switch_desc needs drvdata, the struct
-> usb_role_switch has already one?
+> In DT case, we create the domain DOMAIN_BUS_FSL_MC_MSI for MC bus and it's children.
+> And then when MC child device is created, we search the "msi-parent" property from the MC
+> DT node and get the ITS associated with MC bus. Then we search DOMAIN_BUS_FSL_MC_MSI
+> on that ITS. Once we find the domain, we can call msi_domain_alloc_irqs for that domain.
+> 
+> This is exactly what we tried to do initially with ACPI. But the searching DOMAIN_BUS_FSL_MC_MSI
+> associated to an ITS, is something that is part of drivers/acpi/arm64/iort.c.
+> (similar to DOMAIN_BUS_PLATFORM_MSI and DOMAIN_BUS_PCI_MSI)
 
-I'm assuming that you are asking why not just register the switch,
-and then call usb_role_switch_set_drvdata(), right?
+Can you have a look at mbigen driver (drivers/irqchip/irq-mbigen.c) to see if
+it helps you?
 
-That may create a race condition where the switch is accessed before
-the driver data is available. That can happen for example if the
-switch is exposed to the user space.
+mbigen is an irq converter to convert device's wired interrupts into MSI
+(connecting to ITS), which will alloc a bunch of MSIs from ITS platform MSI
+domain at the setup.
 
-To play it safe, supplying the driver data as part of the descriptor.
-That way we can be sure that the driver data is always available
-the moment the switch is registered.
+Thanks
+Hanjun
 
-thanks,
-
--- 
-heikki
