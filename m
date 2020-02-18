@@ -2,164 +2,106 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6817EC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07FEC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F6C22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056545;
-	bh=YsUAoqFLDYdV+2dulnURG+0+0deDRpiA7VAIMBWwO9g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FZqwog5zIzsrqKTSoXzEjx982j0dSok+GT0vMFUbS11O1wTk7T+/zdrtx7BRoSikD
-	 GcGnAF+0CsIIqWLaxUfK1nkj0On8Av5PIw2OWQB2VYyJO2gkTf0fcism6XGb5XHgX8
-	 LEQdKq/sxfnXTWXimTTTATtp/kS1DkF7CFpKbC5w=
+	by mail.kernel.org (Postfix) with ESMTP id AA5762067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hXAdbJg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgBRUJE (ORCPT
+        id S1728145AbgBRUJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727934AbgBRT53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89EA2465A;
-        Tue, 18 Feb 2020 19:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055848;
-        bh=YsUAoqFLDYdV+2dulnURG+0+0deDRpiA7VAIMBWwO9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CChIMgbNQex/DU+R2KYDWUrKaugaXZ20LkBkzzkOlWVLtLXUdTddPMUm22YaFyxbm
-         tf4iujF8dwxeVgnaY6epbdgGBI0HK7y9L7ktyvdN/My6ezDvF0OqkT1hj4mAoJ14JC
-         kYTLSOS19tlJVoM3HeXKeSSpTCYykpBH9zTRgRa4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/38] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
-Date:   Tue, 18 Feb 2020 20:55:22 +0100
-Message-Id: <20200218190422.713559950@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
-References: <20200218190418.536430858@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 15:09:11 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55893 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBRUJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:09:09 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so4051932wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 12:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=4O8UBMcWrJ0vW2xCQ1w086ifQXzUq/0Zcfzr3vmxCmU=;
+        b=hXAdbJg9t7Ac7RWs2LVmLNuhUWu7hjBhe1Z8zVbgf5MTlBwdMbUrvJRzRAOAQsDc0I
+         EUM8+Gww5mrY84CsItT7dvGCd3oXCNqqoUvzcU5nXhvJvaTEvmA+kvxVEYOxAXv/gGdc
+         ictOXLSgaUbnju48nPm5bLTfBSOlaU6fSu4BQuHA9qtPpiUYlr2FjaFJJxAGFqWrNmgb
+         lWogUfBylpH6gHl/gxg5kggzq3YYcAbCIskV+OYW2tTWvcOGoRDbwc4nk8AIafQpWExb
+         rHYi6sQSgdrP+P2gduAztJFiiVWpU0wOBi2rxLbXy04ZQ//c1jLI1VSRMmqBODLmu4bS
+         KxUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4O8UBMcWrJ0vW2xCQ1w086ifQXzUq/0Zcfzr3vmxCmU=;
+        b=rXaxK6+GVQBJaDKkhR1EetUb0JRG7h9rdphIs6+MeMrrhnPkPDe2V3ZWpfQc37q6vi
+         clM3ADVmQ6uK+iqw8obNmIKpM7EAgES7BHHgerOASZVh4JtP0I1y9y0SfzjVK9eM3cwx
+         BpDcVmaxSpRX8NH7G4YzZjVmO4we8ti3n0zn6oEZJLpzCTXDi39w1nIFCupuDTHraU8a
+         +hUV44uaLUdY6tOZq2WvYJW+aMI5GSkZfCJfEy6rxla5uzjIPPyA4aLhrbwM6S89Sd/Z
+         bdfpvJoKt+cgBKU8ynyD/Dj05oPBjJ21/e/NWPh1khCBXyIO0K7kDQ6rr7loLBRyTebk
+         rOkQ==
+X-Gm-Message-State: APjAAAXkMcphlVjA2ESp85jmzjw/Wt4VmQ7ZZbeU1JWRd6HusUTrQJLs
+        rLWdK2PsZBBLdQI3IqjQp6pLog==
+X-Google-Smtp-Source: APXvYqyz8XCmBJQazBT3WrJL/40oe8aCs3Awx1JIxQFwy+25m3+8OEWhpJq7d8e2b6HSlTLRNYWFWA==
+X-Received: by 2002:a1c:1dc7:: with SMTP id d190mr5026741wmd.48.1582056546861;
+        Tue, 18 Feb 2020 12:09:06 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id c74sm5043017wmd.26.2020.02.18.12.09.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 18 Feb 2020 12:09:06 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     lee.jones@linaro.org, tony@atomide.com
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] mfd: omap: remove useless cast for driver.name
+Date:   Tue, 18 Feb 2020 20:09:01 +0000
+Message-Id: <1582056541-16973-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+device_driver name is const char pointer, so it not useful to cast
+xx_driver_name (which is already const char).
 
-[ Upstream commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 ]
-
-There is no need to delay the clearing of b_modified flag to the
-transaction committing time when unmapping the journalled buffer, so
-just move it to the journal_unmap_buffer().
-
-Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- fs/jbd2/commit.c      | 43 +++++++++++++++----------------------------
- fs/jbd2/transaction.c | 10 ++++++----
- 2 files changed, 21 insertions(+), 32 deletions(-)
+ drivers/mfd/omap-usb-host.c | 2 +-
+ drivers/mfd/omap-usb-tll.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 020bd7a0d8e03..3fe9b7c27ce82 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -971,34 +971,21 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 		 * it. */
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 4798d9f3f9d5..1f4f01b02d98 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -840,7 +840,7 @@ MODULE_DEVICE_TABLE(of, usbhs_omap_dt_ids);
  
- 		/*
--		* A buffer which has been freed while still being journaled by
--		* a previous transaction.
--		*/
--		if (buffer_freed(bh)) {
--			/*
--			 * If the running transaction is the one containing
--			 * "add to orphan" operation (b_next_transaction !=
--			 * NULL), we have to wait for that transaction to
--			 * commit before we can really get rid of the buffer.
--			 * So just clear b_modified to not confuse transaction
--			 * credit accounting and refile the buffer to
--			 * BJ_Forget of the running transaction. If the just
--			 * committed transaction contains "add to orphan"
--			 * operation, we can completely invalidate the buffer
--			 * now. We are rather through in that since the
--			 * buffer may be still accessible when blocksize <
--			 * pagesize and it is attached to the last partial
--			 * page.
--			 */
--			jh->b_modified = 0;
--			if (!jh->b_next_transaction) {
--				clear_buffer_freed(bh);
--				clear_buffer_jbddirty(bh);
--				clear_buffer_mapped(bh);
--				clear_buffer_new(bh);
--				clear_buffer_req(bh);
--				bh->b_bdev = NULL;
--			}
-+		 * A buffer which has been freed while still being journaled
-+		 * by a previous transaction, refile the buffer to BJ_Forget of
-+		 * the running transaction. If the just committed transaction
-+		 * contains "add to orphan" operation, we can completely
-+		 * invalidate the buffer now. We are rather through in that
-+		 * since the buffer may be still accessible when blocksize <
-+		 * pagesize and it is attached to the last partial page.
-+		 */
-+		if (buffer_freed(bh) && !jh->b_next_transaction) {
-+			clear_buffer_freed(bh);
-+			clear_buffer_jbddirty(bh);
-+			clear_buffer_mapped(bh);
-+			clear_buffer_new(bh);
-+			clear_buffer_req(bh);
-+			bh->b_bdev = NULL;
- 		}
+ static struct platform_driver usbhs_omap_driver = {
+ 	.driver = {
+-		.name		= (char *)usbhs_driver_name,
++		.name		= usbhs_driver_name,
+ 		.pm		= &usbhsomap_dev_pm_ops,
+ 		.of_match_table = usbhs_omap_dt_ids,
+ 	},
+diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+index 265f5e350e1c..72f5a1cf867a 100644
+--- a/drivers/mfd/omap-usb-tll.c
++++ b/drivers/mfd/omap-usb-tll.c
+@@ -304,7 +304,7 @@ MODULE_DEVICE_TABLE(of, usbtll_omap_dt_ids);
  
- 		if (buffer_jbddirty(bh)) {
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 911ff18249b75..97ffe12a22624 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2228,14 +2228,16 @@ static int journal_unmap_buffer(journal_t *journal, struct buffer_head *bh,
- 			return -EBUSY;
- 		}
- 		/*
--		 * OK, buffer won't be reachable after truncate. We just set
--		 * j_next_transaction to the running transaction (if there is
--		 * one) and mark buffer as freed so that commit code knows it
--		 * should clear dirty bits when it is done with the buffer.
-+		 * OK, buffer won't be reachable after truncate. We just clear
-+		 * b_modified to not confuse transaction credit accounting, and
-+		 * set j_next_transaction to the running transaction (if there
-+		 * is one) and mark buffer as freed so that commit code knows
-+		 * it should clear dirty bits when it is done with the buffer.
- 		 */
- 		set_buffer_freed(bh);
- 		if (journal->j_running_transaction && buffer_jbddirty(bh))
- 			jh->b_next_transaction = journal->j_running_transaction;
-+		jh->b_modified = 0;
- 		jbd2_journal_put_journal_head(jh);
- 		spin_unlock(&journal->j_list_lock);
- 		jbd_unlock_bh_state(bh);
+ static struct platform_driver usbtll_omap_driver = {
+ 	.driver = {
+-		.name		= (char *)usbtll_driver_name,
++		.name		= usbtll_driver_name,
+ 		.of_match_table = usbtll_omap_dt_ids,
+ 	},
+ 	.probe		= usbtll_omap_probe,
 -- 
-2.20.1
-
-
+2.24.1
 
