@@ -2,143 +2,96 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43F4C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F80DC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828912176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFCD2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582060288;
+	bh=mxBoyumA/SPpB6gvQAWzyTZ4mag/AAtpDukJzGyElVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rhszBidmMkOX3tlGTbCHLrYILSjgoPaL1VCLj1fl7Sebhl3wlFmEnyy5B4oPglhcC
+	 1tFGgjH9rLkKyO7P8Z0yVHJOFxWRfh8r7tOuDrs1XhSPw8fSHs1aB8VtkOkzVePerz
+	 yL4OoeA8hybAL1EcmtmO944mNDSN89YSoLQRHwjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgBRVHp (ORCPT
+        id S1727213AbgBRVL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:07:45 -0500
-Received: from mga07.intel.com ([134.134.136.100]:6395 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgBRVHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:07:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 13:07:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,457,1574150400"; 
-   d="scan'208";a="253856397"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 18 Feb 2020 13:07:44 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: [PATCH v6 02/22] KVM: Reinstall old memslots if arch preparation fails
-Date:   Tue, 18 Feb 2020 13:07:16 -0800
-Message-Id: <20200218210736.16432-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218210736.16432-1-sean.j.christopherson@intel.com>
-References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
+        Tue, 18 Feb 2020 16:11:26 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42916 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgBRVL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:11:26 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so20978837otd.9;
+        Tue, 18 Feb 2020 13:11:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JLj5MuG39X7ohvdGwz68k7hpK4bGkAF6LlKwMzI17fY=;
+        b=cG+CeNo49EJxj5IVLB7T4jroy16d3Cban2zFWV9nUD651ikmNVaMbV7HS5m/Rhq8pt
+         S8jAyrdpEKFMAEPEEAb8DxQxcAjC7VFw7kNQnW/vzBwSH/NAssvuAI3J27LtFMorxJGo
+         eEhY7cH/GKN37PakbdBl5SLnSAwZRL0aZjq3XqlzCTQJJkOwcRv7ICXRuRJCRCVZYdIV
+         8FaiYMHw68pXWg63uoHbZ9+Jgihn/EOzwXvnxi7zJ2NupHGSydXcwOURas9C7Bcmi6i5
+         rUOGa7toDOOxj58qbZnk4U+0M7TBALKFw+2KCzb9+C2FKQQxQUhzXyp5aNA9h/JTnscO
+         FFjw==
+X-Gm-Message-State: APjAAAUZjtusudsDD8RmtPy2iamt52T8xG8LZCM4YzRNP2s1xC3H2hly
+        PgbZ4HEGb7QeWVTqTAvErg==
+X-Google-Smtp-Source: APXvYqyvDWo4AalFirW/wiyW+z0rlSsdM7ILddVe9R02+u1l0aKDD+QFfJX6c1Cxuf/5hwFswmpkPg==
+X-Received: by 2002:a9d:4f02:: with SMTP id d2mr2472350otl.368.1582060285321;
+        Tue, 18 Feb 2020 13:11:25 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p83sm3813oia.51.2020.02.18.13.11.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 13:11:24 -0800 (PST)
+Received: (nullmailer pid 11759 invoked by uid 1000);
+        Tue, 18 Feb 2020 21:11:23 -0000
+Date:   Tue, 18 Feb 2020 15:11:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, sriram.dash@samsung.com,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v4 1/2] dt-bindinsg: net: can: Convert can-transceiver to
+ json-schema
+Message-ID: <20200218211123.GA11668@bogus>
+References: <20200207100306.20997-1-benjamin.gaignard@st.com>
+ <20200207100306.20997-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207100306.20997-2-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reinstall the old memslots if preparing the new memory region fails
-after invalidating a to-be-{re}moved memslot.
+On Fri, 7 Feb 2020 11:03:05 +0100, Benjamin Gaignard wrote:
+> Convert can-transceiver property to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> version 4:
+> - no change
+> 
+> version 3:
+> - only declare max-bitrate property in can-transceiver.yaml
+> 
+>  .../bindings/net/can/can-transceiver.txt           | 24 ----------------------
+>  .../bindings/net/can/can-transceiver.yaml          | 18 ++++++++++++++++
+>  2 files changed, 18 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+> 
 
-Remove the superfluous 'old_memslots' variable so that it's somewhat
-clear that the error handling path needs to free the unused memslots,
-not simply the 'old' memslots.
+Applied, thanks.
 
-Fixes: bc6678a33d9b9 ("KVM: introduce kvm->srcu and convert kvm_set_memory_region to SRCU update")
-Reviewed-by: Christoffer Dall <christoffer.dall@arm.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- virt/kvm/kvm_main.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 67ae2d5c37b2..ac9c7c103453 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -999,7 +999,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	unsigned long npages;
- 	struct kvm_memory_slot *slot;
- 	struct kvm_memory_slot old, new;
--	struct kvm_memslots *slots = NULL, *old_memslots;
-+	struct kvm_memslots *slots;
- 	int as_id, id;
- 	enum kvm_mr_change change;
- 
-@@ -1107,7 +1107,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 		slot = id_to_memslot(slots, id);
- 		slot->flags |= KVM_MEMSLOT_INVALID;
- 
--		old_memslots = install_new_memslots(kvm, as_id, slots);
-+		/*
-+		 * We can re-use the old memslots, the only difference from the
-+		 * newly installed memslots is the invalid flag, which will get
-+		 * dropped by update_memslots anyway.  We'll also revert to the
-+		 * old memslots if preparing the new memory region fails.
-+		 */
-+		slots = install_new_memslots(kvm, as_id, slots);
- 
- 		/* From this point no new shadow pages pointing to a deleted,
- 		 * or moved, memslot will be created.
-@@ -1117,13 +1123,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 		 *	- kvm_is_visible_gfn (mmu_check_root)
- 		 */
- 		kvm_arch_flush_shadow_memslot(kvm, slot);
--
--		/*
--		 * We can re-use the old_memslots from above, the only difference
--		 * from the currently installed memslots is the invalid flag.  This
--		 * will get overwritten by update_memslots anyway.
--		 */
--		slots = old_memslots;
- 	}
- 
- 	r = kvm_arch_prepare_memory_region(kvm, &new, mem, change);
-@@ -1137,15 +1136,17 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	}
- 
- 	update_memslots(slots, &new, change);
--	old_memslots = install_new_memslots(kvm, as_id, slots);
-+	slots = install_new_memslots(kvm, as_id, slots);
- 
- 	kvm_arch_commit_memory_region(kvm, mem, &old, &new, change);
- 
- 	kvm_free_memslot(kvm, &old, &new);
--	kvfree(old_memslots);
-+	kvfree(slots);
- 	return 0;
- 
- out_slots:
-+	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
-+		slots = install_new_memslots(kvm, as_id, slots);
- 	kvfree(slots);
- out_free:
- 	kvm_free_memslot(kvm, &new, &old);
--- 
-2.24.1
-
+Rob
