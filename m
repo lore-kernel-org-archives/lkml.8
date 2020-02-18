@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D1C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB24C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4754B2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3982067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056475;
-	bh=CzlmSGaA+mX1PY2yfsgk4tX4jQQvo9lrCAaFtqbHJfA=;
+	s=default; t=1582056479;
+	bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCeUx8m0djkJnpF6zO+vjK8/kouGm0Zg3KUnyFzBCSqAztMnzoMqVqcjzyQMLI6iG
-	 +WedrDbqMLFx5tHOOOkFKOMZyV9I00+304Gmpf+q+rVTuELVMgct+yCX6u9HFrdjkX
-	 MYZT/fXMokAGewBoqNryWz1CqVJJdvsrHMdX/reo=
+	b=FrmJD4WfA8KGNttrNYuWsLr+VrtvKr7Du5Skc8Tqju+gz45LLpbToPhtCOpal+eYL
+	 bRyTO2wkXcYiy8kZOZHuWHXfrA85Y1+rMy3QDF7+lNHza2UZPOunft1cU+wEp0nWQa
+	 qJqhZdIec5DKED0Y1X1Mmni0QdPoIhqKQcmeV/kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgBRUHx (ORCPT
+        id S1728245AbgBRT6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:07:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:58:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727666AbgBRT6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:43 -0500
+        id S1728203AbgBRT6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B13620659;
-        Tue, 18 Feb 2020 19:58:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 424F424125;
+        Tue, 18 Feb 2020 19:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055922;
-        bh=CzlmSGaA+mX1PY2yfsgk4tX4jQQvo9lrCAaFtqbHJfA=;
+        s=default; t=1582055909;
+        bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RbaZLUmplanotqf45snaMafrFHMi5Q6aH3aWRYfywWflI3zGBIDZLu/K56BlEIGEC
-         m6VEQc8m51bv1l7PYrjZN6z1OY/0NTvHuNWi+XmsosrKMppRksZCV9B0XrufsR6ERM
-         mDVdyV03BrbPGRL9sNw64HbcPJPSwCHOLu5SSZGw=
+        b=TgSRUfSvXZQtBz3N0gnamkpv9aczV4NUZZN4LtnNT5uww8UyQWeX45UnFx7M/DHz6
+         NFsg2SSYguua6Euk7c1AR0bcQQe3aVEkcCzTl8o14sUip203ao6hk6+E9k3EDVKWOj
+         dt4gPXeR1ddcTN8zSB+SAkWqPyNQ0NxVJHDVX2yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Christian Rund <RUNDC@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 32/66] s390/pkey: fix missing length of protected key on return
-Date:   Tue, 18 Feb 2020 20:54:59 +0100
-Message-Id: <20200218190431.033107790@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH 5.4 28/66] EDAC/sysfs: Remove csrow objects on errors
+Date:   Tue, 18 Feb 2020 20:54:55 +0100
+Message-Id: <20200218190430.669318831@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -62,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Robert Richter <rrichter@marvell.com>
 
-commit aab73d278d49c718b722ff5052e16c9cddf144d4 upstream.
+commit 4d59588c09f2a2daedad2a544d4d1b602ab3a8af upstream.
 
-The pkey ioctl call PKEY_SEC2PROTK updates a struct pkey_protkey
-on return. The protected key is stored in, the protected key type
-is stored in but the len information was not updated. This patch
-now fixes this and so the len field gets an update to refrect
-the actual size of the protected key value returned.
+All created csrow objects must be removed in the error path of
+edac_create_csrow_objects(). The objects have been added as devices.
 
-Fixes: efc598e6c8a9 ("s390/zcrypt: move cca misc functions to new code file")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reported-by: Christian Rund <RUNDC@de.ibm.com>
-Suggested-by: Ingo Franzki <ifranzki@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+They need to be removed by doing a device_del() *and* put_device() call
+to also free their memory. The missing put_device() leaves a memory
+leak. Use device_unregister() instead of device_del() which properly
+unregisters the device doing both.
+
+Fixes: 7adc05d2dc3a ("EDAC/sysfs: Drop device references properly")
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: John Garry <john.garry@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200212120340.4764-4-rrichter@marvell.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/crypto/pkey_api.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/edac_mc_sysfs.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -794,7 +794,7 @@ static long pkey_unlocked_ioctl(struct f
- 			return -EFAULT;
- 		rc = cca_sec2protkey(ksp.cardnr, ksp.domain,
- 				     ksp.seckey.seckey, ksp.protkey.protkey,
--				     NULL, &ksp.protkey.type);
-+				     &ksp.protkey.len, &ksp.protkey.type);
- 		DEBUG_DBG("%s cca_sec2protkey()=%d\n", __func__, rc);
- 		if (rc)
- 			break;
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -447,8 +447,7 @@ error:
+ 		csrow = mci->csrows[i];
+ 		if (!nr_pages_per_csrow(csrow))
+ 			continue;
+-
+-		device_del(&mci->csrows[i]->dev);
++		device_unregister(&mci->csrows[i]->dev);
+ 	}
+ 
+ 	return err;
 
 
