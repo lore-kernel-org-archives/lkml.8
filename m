@@ -2,52 +2,85 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644ECC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7799C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD7624656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FED2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fJZBxTcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgBRHFR (ORCPT
+        id S1726403AbgBRHF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:05:17 -0500
-Received: from n7.nabble.com ([162.253.133.57]:64303 "EHLO n7.nabble.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgBRHFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:05:17 -0500
-X-Greylist: delayed 547 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 02:05:17 EST
-Received: from n7.nabble.com (localhost [127.0.0.1])
-        by n7.nabble.com (Postfix) with ESMTP id B326213C78940
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 23:56:04 -0700 (MST)
-Date:   Mon, 17 Feb 2020 23:56:04 -0700 (MST)
-From:   "mac.lu" <mac.lu@mediatek.com>
-To:     linux-kernel@vger.kernel.org
-Message-ID: <1582008964730-0.post@n7.nabble.com>
-Subject: NVMEM usage consult for device information
+        Tue, 18 Feb 2020 02:05:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58568 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgBRHF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:05:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=0WDK64CvM/aOQVQpYJeiENx5iDKotnOnD6ArMqWTlLE=; b=fJZBxTcuObVqaB4Sl29v/3xeDX
+        6AqALUVY+GjDnDPWVnbDnKpR9cm+PhFZ/rplZOPXo1sbhhixioVCR0qYsolGnfbB647PNW1sKNAwu
+        hdWvGi89OsUnCZBkZv0zTQGcd55gWNBR7PtROfR7PW7sIKJ4CW0GhZgrrcFPQ19UdvlOOL9p/O0pu
+        eYVbFg0nvQpJ3Gn6gV5mNaNJWh61T6oKyZF3IFdRe1IRlQ4gNoMc5n8ncp+ai63HLGJ+9LRpLHufL
+        X1DF7SB0/GqiAR7ejMLmR8YtyzVo0ZPzuAE0K7L90sEz9/cRV2mxNW1azEhE/JOLq1JhQj2Tdsc/p
+        0bN2FsCg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j3wx4-0002kg-Qk; Tue, 18 Feb 2020 07:05:52 +0000
+Subject: Re: linux-next: Tree for Feb 18 (sound/soc/codecs/wm5110.c)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
+References: <20200218152853.67e2482a@canb.auug.org.au>
+ <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
+Message-ID: <c2273472-18af-e206-c942-fd460e0d192c@infradead.org>
+Date:   Mon, 17 Feb 2020 23:05:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-Mediatek chip have some SOC configurations and specific data which would be
-delivered to kernel by DTB.
-So we want to implement a new NVMEM driver to retrieve these data for use by
-the NVMEM Framework.
-Do you agree with the usage for our application? 
+[resending to broonie@kernel.org; other email address got message too big for mailbox]
 
 
-Thanks
-Mac
+On 2/17/20 11:04 PM, Randy Dunlap wrote:
+> On 2/17/20 8:28 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200217:
+>>
+> 
+> on x86_64:
+> 
+> WARNING: unmet direct dependencies detected for SND_SOC_WM5110
+>   Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && MFD_WM5110 [=n]
+>   Selected by [y]:
+>   - SND_SOC_BELLS [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_SAMSUNG [=y] && MFD_ARIZONA [=y] && I2C [=y] && SPI_MASTER [=y] && (MACH_WLF_CRAGG_6410 || COMPILE_TEST [=y])
+>   - SND_SOC_SAMSUNG_TM2_WM5110 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_SAMSUNG [=y] && MFD_ARIZONA [=y] && I2C [=y] && SPI_MASTER [=y] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+> 
+> 
+> Full randconfig file is attached.
+> 
 
 
-
---
-Sent from: http://linux-kernel.2935.n7.nabble.com/
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
