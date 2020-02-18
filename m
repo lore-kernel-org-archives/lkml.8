@@ -2,104 +2,82 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2618C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7CDC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D0C24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C9021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="J7z9dmYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgBRThy (ORCPT
+        id S1726446AbgBRTiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:37:54 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726339AbgBRThy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:37:54 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IJXws6193719
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:37:53 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8hwnj1fq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:37:52 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 18 Feb 2020 19:37:50 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 19:37:47 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IJbkch43188450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 19:37:46 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1278552050;
-        Tue, 18 Feb 2020 19:37:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.154.230])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AA5985204F;
-        Tue, 18 Feb 2020 19:37:44 +0000 (GMT)
-Subject: Re: [PATCH v4 1/3] IMA: Update KBUILD_MODNAME for IMA files to ima
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
-        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 18 Feb 2020 14:37:42 -0500
-In-Reply-To: <857c8dc6-d09c-423e-c520-53bb85c6d46c@linux.microsoft.com>
-References: <20200215014709.3006-1-tusharsu@linux.microsoft.com>
-         <20200215014709.3006-2-tusharsu@linux.microsoft.com>
-         <857c8dc6-d09c-423e-c520-53bb85c6d46c@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021819-0016-0000-0000-000002E80C3E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021819-0017-0000-0000-0000334B21B2
-Message-Id: <1582054662.5067.15.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_06:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=967 spamscore=0 malwarescore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180132
+        Tue, 18 Feb 2020 14:38:55 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:51126 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgBRTiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:38:55 -0500
+Received: from zn.tnic (p200300EC2F0C1F00DCB96C3517B36067.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:dcb9:6c35:17b3:6067])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C8E811EC0CAA;
+        Tue, 18 Feb 2020 20:38:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582054733;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=OqGTJVey3byW94WtpQyLsVkrLrmmQJ80pToxR9gFeiQ=;
+        b=J7z9dmYhf7IzQqjnoQHTCWGHR8Mp2FhwWctywz8TfsvzgctyrV4/VDYY9+U664shF/G1yP
+        fCNukwh/2Quqx3JGYD05dPyC3N4B/1e0YgKqdJf5CCt2lyqgV5arkMLme2vTujLISY4AAx
+        P8LLsMFJ+EyfB39w3OsaAR0Nx0Q4Nro=
+Date:   Tue, 18 Feb 2020 20:38:50 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
+Message-ID: <20200218193850.GM14449@zn.tnic>
+References: <20200206175858.GG9741@zn.tnic>
+ <20200207114617.3bda49673175d3fa33cbe85e@kernel.org>
+ <20200207114122.GB24074@zn.tnic>
+ <20200208000648.3383f991fee68af5ee229d65@kernel.org>
+ <20200210112512.GA29627@zn.tnic>
+ <20200211001007.62290c743e049b231bdd7052@kernel.org>
+ <20200210174053.GD29627@zn.tnic>
+ <20200211110207.7e0f1b048cc207e1a31ddd31@kernel.org>
+ <20200218132724.GC14449@zn.tnic>
+ <20200218125748.5085929c@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200218125748.5085929c@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-18 at 11:25 -0800, Tushar Sugandhi wrote:
-> Hi Mimi,
+On Tue, Feb 18, 2020 at 12:57:48PM -0500, Steven Rostedt wrote:
+> OK, what if we put it as default 'n' but we still check if "bootconfig"
+> is on the command line. And if it is, we warn with something like:
 > 
-> On 2020-02-14 5:47 p.m., Tushar Sugandhi wrote:
-> > The kbuild Makefile specifies object files for vmlinux in the $(obj-y)
-> > lists. These lists depend on the kernel configuration[1].
-> > 
-> > The kbuild Makefile for IMA combines the object files for IMA into a
-> > single object file namely ima.o. All the object files for IMA should be
-> > combined into ima.o. But certain object files are being added to their
-> > own $(obj-y). This results in the log messages from those modules getting
-> > prefixed with their respective base file name, instead of "ima". This is
-> > inconsistent with the log messages from the IMA modules that are combined
-> > into ima.o.
-> > 
-> > This change fixes the above issue.
-> > 
-> > [1] Documentation\kbuild\makefiles.rst
-> > 
-> Is there any feedback on this patch description?
-> I can address it in the next iteration.
+> #ifndef CONFIG_BOOTCONFIG
+> 	pr_err("WARNING: 'bootconfig' found on the kernel command line but CONFIG_BOOTCONFIG is not set in this kernel\n");
+> #endif
 
-No, it looks good to me.
+Sure, makes sense to me. And all the code that requires it, can simply
+select BOOTCONFIG.
 
-Mimi
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
