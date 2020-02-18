@@ -2,110 +2,122 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1ABC34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72F7C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B6B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB00206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wCt6Xy7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgBRJou (ORCPT
+        id S1726599AbgBRJpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:44:50 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:35304 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgBRJot (ORCPT
+        Tue, 18 Feb 2020 04:45:04 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37547 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgBRJpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:44:49 -0500
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id D0C3967A8C4;
-        Tue, 18 Feb 2020 10:44:46 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 18 Feb
- 2020 10:44:46 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 18 Feb 2020 10:44:46 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH 0/2] serial: imx: Backport fixes for irq handling to v4.14
-Thread-Topic: [PATCH 0/2] serial: imx: Backport fixes for irq handling to
- v4.14
-Thread-Index: AQHV5ZuphrtwteBzhkWCeOYI46C5s6ggUc4AgAAlLACAAAQRAIAAKRSA
-Date:   Tue, 18 Feb 2020 09:44:46 +0000
-Message-ID: <e71d11c4-b2e6-d923-337e-1378e1cf64c5@kontron.de>
-References: <20200217140740.29743-1-frieder.schrempf@kontron.de>
- <20200218045008.GA2049358@kroah.com>
- <20200218070310.ibv2m2f7ihfaevrp@pengutronix.de>
- <20200218071744.GA2087281@kroah.com>
-In-Reply-To: <20200218071744.GA2087281@kroah.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <00443668C1DDC642A055DA2A7D544E78@snt-world.com>
-Content-Transfer-Encoding: base64
+        Tue, 18 Feb 2020 04:45:04 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c188so18876581qkg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9XVsQps1/vECfqy4vvjUlJkB0Wdi1HRB2ynEm0uGvLU=;
+        b=wCt6Xy7h7SLxMTWAHkvasgiQNxbFwovHBFNKQFIKvB2x+m3gdr49sdpintVS6KM6Tz
+         spDJfjHnmeq1y0mZ2osVbQUwL/iipt7Xbb6Q9g8e70iWgEewAnTkOTtxBbL/AngrNVBp
+         2fkDuTN+f7hCMQswtvGn4/rpUU5M3LzfNPwuLAPTyevugM8tc61RL3Xlvhwb0GVWkwhu
+         CaEpiGguPy3Sfc9/PzMLxYHikY8U4t3lxf8dV2vCNHKOmty1orsnat70eEdafafMWTCa
+         z6p/+kyK+5VD9EwEwWUG6KAdugsep1U9qM6SMEvAoRZoff4Y3vWqBkuziQ+QmXpk++XL
+         taRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9XVsQps1/vECfqy4vvjUlJkB0Wdi1HRB2ynEm0uGvLU=;
+        b=LhIY7P+eQ0YnUZiqrJfzdS+U9/bOLEDfN5b7s4i9pOuZIPeL/ZILayM80mn01ZsGsS
+         +3uWv4jPlzOXaaIdXASYAZWAGOVR5PH+hsbNZ6tN1HZeazLeDP3kz7wFcXADvpU8Alx1
+         v1VcHwe9sYyZCd9pNpdN0Dt0fFVcMO9WfdUNvjzgwMGT0obhzWm3+/v3kY4QD8x99qbF
+         Cu4OfNZdhkX9BsQFen7g7w5uWKm2ZSoW0RsFoYwvZD9uVXeLHn7tCsViSZdnvXfFwWzH
+         3DeW9+9LzQridH6XncjBl0QwGg5wVShij0J14xMr9JjX+dFTQgMXyNB+BHdJJctHNE1b
+         WNNQ==
+X-Gm-Message-State: APjAAAXjk19nmoZsFZMG8dcUmcpw2HMXbROabz6CNGYjd4Nmkmk+U9Zl
+        EomRWHWMeAAXfQQOOvHpyxGoXjTxjref+SPiC8bOvg==
+X-Google-Smtp-Source: APXvYqzS+gppcwwBIOn4U7HU8L6ESgFTX05wkRhJ5CnsoiW6Z/UTtG9SC8kuoyJt2sd8jC+QAFbM+0jly8VHAmp3KqQ=
+X-Received: by 2002:a37:8343:: with SMTP id f64mr17248561qkd.21.1582019102971;
+ Tue, 18 Feb 2020 01:45:02 -0800 (PST)
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: D0C3967A8C4.AF249
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        shawnguo@kernel.org, stable@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de
+References: <20200217195435.9309-1-brgl@bgdev.pl> <20200217195435.9309-3-brgl@bgdev.pl>
+ <f539c993-52b5-766d-d6e5-51836998f445@linaro.org>
+In-Reply-To: <f539c993-52b5-766d-d6e5-51836998f445@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Feb 2020 10:44:52 +0100
+Message-ID: <CAMpxmJUxj2+u8_Dh4tGbA44-9oBuRXP6PEdW=X0u02E2Fv3fjw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] nvmem: fix memory leak in error path
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTguMDIuMjAgMDg6MTcsIGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnIHdyb3RlOg0KPiBP
-biBUdWUsIEZlYiAxOCwgMjAyMCBhdCAwODowMzoxMEFNICswMTAwLCBVd2UgS2xlaW5lLUvDtm5p
-ZyB3cm90ZToNCj4+IE9uIFR1ZSwgRmViIDE4LCAyMDIwIGF0IDA1OjUwOjA4QU0gKzAxMDAsIGdy
-ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnIHdyb3RlOg0KPj4+IE9uIE1vbiwgRmViIDE3LCAyMDIw
-IGF0IDAyOjA4OjAwUE0gKzAwMDAsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+Pj4+IEZyb206
-IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+Pj4NCj4+
-Pj4gQSBjdXN0b21lciBvZiBvdXJzIGhhcyBwcm9ibGVtcyB3aXRoIFJTNDg1IG9uIGkuTVg2VUwg
-d2l0aCB0aGUgbGF0ZXN0IHY0LjE0DQo+Pj4+IGtlcm5lbC4gVGhleSBnZXQgYW4gZXhjZXB0aW9u
-IGxpa2UgYmVsb3cgZnJvbSB0aW1lIHRvIHRpbWUgKHRoZSB0cmFjZSBpcw0KPj4+PiBmcm9tIGFu
-IG9sZGVyIGtlcm5lbCwgYnV0IHRoZSBwcm9ibGVtIGFsc28gZXhpc3RzIGluIHY0LjE0LjE3MCku
-DQo+Pj4+DQo+Pj4+IEFzIHRoZSBjcHVpZGxlIHN0YXRlIDIgY2F1c2VzIGxhcmdlIGRlbGF5cyBm
-b3IgdGhlIGludGVycnVwdCB0aGF0IGNvbnRyb2xzIHRoZQ0KPj4+PiBSUzQ4NSBSVFMgc2lnbmFs
-ICh3aGljaCBjYW4gbGVhZCB0byBjb2xsaXNpb25zIG9uIHRoZSBidXMpLCBjcHVpZGxlIHN0YXRl
-IDIgd2FzDQo+Pj4+IGRpc2FibGVkIG9uIHRoaXMgc3lzdGVtLiBUaGlzIGFzcGVjdCBtaWdodCBj
-YXVzZSB0aGUgZXhjZXB0aW9uIGhhcHBlbmluZyBtb3JlDQo+Pj4+IG9mdGVuIG9uIHRoaXMgc3lz
-dGVtIHRoYW4gb24gb3RoZXIgc3lzdGVtcyB3aXRoIGRlZmF1bHQgY3B1aWRsZSBzZXR0aW5ncy4N
-Cj4+Pj4NCj4+Pj4gTG9va2luZyBmb3Igc29sdXRpb25zIEkgZm91bmQgVXdlJ3MgcGF0Y2hlcyB0
-aGF0IHdlcmUgYXBwbGllZCBpbiB2NC4xNyBiZWluZw0KPj4+PiBtZW50aW9uZWQgaGVyZSBbMV0g
-YW5kIGhlcmUgWzJdLiBJbiBbMV0gVXdlIG5vdGVzIHRoYXQgYmFja3BvcnRpbmcgdGhlc2UgZml4
-ZXMNCj4+Pj4gdG8gdjQuMTQgbWlnaHQgbm90IGJlIHRyaXZpYWwsIGJ1dCBJIHRyaWVkIGFuZCBp
-biBteSBvcGluaW9uIGZvdW5kIGl0IG5vdCB0byBiZQ0KPj4+PiB0b28gcHJvYmxlbWF0aWMgZWl0
-aGVyLg0KPj4+Pg0KPj4+PiBXaXRoIHRoZSBiYWNrcG9ydGVkIHBhdGNoZXMgYXBwbGllZCwgb3Vy
-IGN1c3RvbWVyIHJlcG9ydHMgdGhhdCB0aGUgZXhjZXB0aW9ucw0KPj4+PiBzdG9wcGVkIG9jY3Vy
-aW5nLiBHaXZlbiB0aGlzIGFuZCB0aGUgZmFjdCB0aGF0IHRoZSBwcm9ibGVtIHNlZW1zIHRvIGJl
-IGtub3duDQo+Pj4+IGFuZCBxdWl0ZSBjb21tb24sIGl0IHdvdWxkIGJlIG5pY2UgdG8gZ2V0IHRo
-aXMgaW50byB0aGUgdjQuMTQgc3RhYmxlIHRyZWUuDQo+Pj4NCj4+PiBUaGFua3MgZm9yIHRoZSBi
-YWNrcG9ydHMsIGJvdGggbm93IHF1ZXVlZCB1cC4NCj4+DQo+PiBUbyBjb21wbGV0ZSB0aGVzZSBm
-aXhlcyB5b3UgYWxzbyB3YW50IHRvIGJhY2twb3J0DQo+Pg0KPj4gCTEwMWFhNDZiZDIyMSBzZXJp
-YWw6IGlteDogZml4IGEgcmFjZSBjb25kaXRpb24gaW4gcmVjZWl2ZSBwYXRoDQo+IA0KPiBJZiBz
-bywgaXQgbmVlZHMgdG8gYWxzbyBnbyB0byA0LjE5LnksIGFuZCBzb21lb25lIG5lZWRzIHRvIHBy
-b3ZpZGUgYQ0KPiB3b3JraW5nIGJhY2twb3J0IGZvciBib3RoIHBsYWNlcyA6KQ0KDQpJIGNhbiB0
-cnkgdG8gY29tZSB1cCB3aXRoIHNvbWV0aGluZy4gQnV0IEkgZG9uJ3QgaGF2ZSBhIHN5c3RlbSB0
-aGF0IGlzIA0KYWZmZWN0ZWQgYnkgdGhpcyAob25seSBzaW5nbGUgY29yZSkgdG8gdGVzdC4NCg0K
-QmVzdCByZWdhcmRzLA0KRnJpZWRlcg==
+wt., 18 lut 2020 o 10:42 Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
+>
+>
+>
+> On 17/02/2020 19:54, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > We need to remove the ida mapping when returning from nvmem_register()
+> > with an error.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Was too quick in my last reply..
+>
+> > ---
+> >   drivers/nvmem/core.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> > index ef326f243f36..b0be03d5f240 100644
+> > --- a/drivers/nvmem/core.c
+> > +++ b/drivers/nvmem/core.c
+> > @@ -353,7 +353,7 @@ struct nvmem_device *nvmem_register(const struct nv=
+mem_config *config)
+> >               nvmem->wp_gpio =3D gpiod_get_optional(config->dev, "wp",
+> >                                                   GPIOD_OUT_HIGH);
+> >       if (IS_ERR(nvmem->wp_gpio))
+> > -             return ERR_CAST(nvmem->wp_gpio);
+> > +             goto err_ida_remove;
+>
+> Looks like this is adding  nvmem leak here.
+> May be something like this should help:
+>
+>
+> if (IS_ERR(nvmem->wp_gpio)) {
+>         rval =3D  ERR_CAST(nvmem->wp_gpio);
+>         ida_simple_remove(&nvmem_ida, nvmem->id);
+>         kfree(nvmem);
+>         return rval;
+>
+> }
+>
+
+Srinivas,
+
+I just sent a v2 of this series that addresses it as well. Please
+don't apply v1 yet.
+
+Bartosz
