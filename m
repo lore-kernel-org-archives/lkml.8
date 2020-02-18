@@ -2,99 +2,72 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169BDC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E192C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D7320836
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582000424;
-	bh=s+gskoGNYaBnlzh7fx25t6Ans0EyhxUhO9bArhIyTuM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DVFL3wJmbatFPBhaZoHciZtn3JKMMFrNCjwJfEvUBpEt+WtXIQKZJnyD5L1QyQYoN
-	 BjH9a8A6pdprZtyg764yU7UqrFteoImHYVlkI/HUl/QeB15JMnGtlK895xcLMXi/XH
-	 gF77RINI0l8myDqhMzLT1oPp5WGcljCI2wwG0lNs=
+	by mail.kernel.org (Postfix) with ESMTP id 06F5520836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgBREdl (ORCPT
+        id S1726340AbgBRErg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 23:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbgBREdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 23:33:41 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7112820801;
-        Tue, 18 Feb 2020 04:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582000420;
-        bh=s+gskoGNYaBnlzh7fx25t6Ans0EyhxUhO9bArhIyTuM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qJXMQ5WuA0eI3rEIph5GUoTErtBNjlf9KXjTuL6c45YT7UDTh4GZWFEtvgcR6g14m
-         I4WhG2roOoqMXQQDcTgAeR1QR9IdG8DSaipc3iVKNigkik3KSANhxlZTUBR18SZrwm
-         z7GdcQiko55sStsAdhpS2GXJKem071HKn9ixdzWA=
-Date:   Tue, 18 Feb 2020 13:33:35 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     paulmck@kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-Id: <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
-In-Reply-To: <20200217163112.GM2935@paulmck-ThinkPad-P72>
-References: <20200213204444.GA94647@google.com>
-        <20200213205442.GK2935@paulmck-ThinkPad-P72>
-        <20200213211930.GG170680@google.com>
-        <20200213163800.5c51a5f1@gandalf.local.home>
-        <20200213215004.GM2935@paulmck-ThinkPad-P72>
-        <20200213170451.690c4e5c@gandalf.local.home>
-        <20200213223918.GN2935@paulmck-ThinkPad-P72>
-        <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
-        <20200215145934.GD2935@paulmck-ThinkPad-P72>
-        <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
-        <20200217163112.GM2935@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Feb 2020 23:47:36 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33849 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbgBRErf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 23:47:35 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D76033A19D6;
+        Tue, 18 Feb 2020 15:47:31 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3unC-0005hw-70; Tue, 18 Feb 2020 15:47:30 +1100
+Date:   Tue, 18 Feb 2020 15:47:30 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 01/19] mm: Return void from various readahead functions
+Message-ID: <20200218044730.GF10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-2-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-2-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=XMwvCbM7UuQ64GsG45gA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 08:31:12 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Mon, Feb 17, 2020 at 10:45:42AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> > BTW, if you consider the x86 specific code is in the generic file,
-> > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
-> > (Sorry, I've hit this idea right now)
+> ondemand_readahead has two callers, neither of which use the return value.
+> That means that both ra_submit and __do_page_cache_readahead() can return
+> void, and we don't need to worry that a present page in the readahead
+> window causes us to return a smaller nr_pages than we ought to have.
 > 
-> Might this affect other architectures with NMIs and probe-like things?
-> If so, it might make sense to leave it where it is.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Yes, git grep shows that arm64 is using rcu_nmi_enter() in
-debug_exception_enter().
-OK, let's keep it, but maybe it is good to update the comment for
-arm64 too. What about following?
+Looks good.
 
-+/*
-+ * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
-+ * marked NOKPROBE before kprobes handler is called.
-+ * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
-+ * before kprobes handle happens to call rcu_nmi_enter() which means
-+ * that rcu_nmi_enter() must be marked NOKRPOBE.
-+ */
-
-Thank you,
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Dave Chinner
+david@fromorbit.com
