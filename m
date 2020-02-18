@@ -2,45 +2,133 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C80C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8E8C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE752067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839CB2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056471;
+	bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RlduRjqBfuYUmI3OYPbVchTMBTQATuKQgxg1Yuq58Rg25hw2/UH5GnZ5/INebRktb
+	 SUXb8G1YDYWYnNtPuEYWoolWTEqAOTRuOxvy+TQO37sZGGGByBvhAcEN+piKdpAXvv
+	 w3WLZkSx3gQE2axsNm9bqj0E9fvFapq1Qd8LwsII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgBRUHq (ORCPT
+        id S1727370AbgBRT6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:07:46 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57704 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728167AbgBRUHo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:07:44 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j499i-00EtDJ-L6; Tue, 18 Feb 2020 20:07:42 +0000
-Date:   Tue, 18 Feb 2020 20:07:42 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tmpfs: deny and force are not huge mount options
-Message-ID: <20200218200742.GK23230@ZenIV.linux.org.uk>
-References: <alpine.LSU.2.11.2002171959001.1412@eggly.anvils>
+        Tue, 18 Feb 2020 14:58:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728243AbgBRT6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A14CF24125;
+        Tue, 18 Feb 2020 19:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582055920;
+        bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QmDIRf4P+RGpeCiNM9/rSQ3TUciYEiYq8TPwzukSSCb+NPhseIl3AhCPzYFcnh2Tw
+         K/yG/Prgz2TE8MlucO8nbFu9f12rS8+6mQGZudE/XhirA8TvK9uLBz5AU/3SyJ4hBF
+         gYg7poKiC+ftPUX0H58AkBf1byelIaI6LAWPBtSw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 31/66] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
+Date:   Tue, 18 Feb 2020 20:54:58 +0100
+Message-Id: <20200218190430.947195319@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
+References: <20200218190428.035153861@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2002171959001.1412@eggly.anvils>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 08:04:19PM -0800, Hugh Dickins wrote:
-> 5.6-rc1 commit 2710c957a8ef ("fs_parse: get rid of ->enums") regressed
-> the huge tmpfs mount options to an earlier state: "deny" and "force"
-> are not valid there, and can crash the kernel.  Delete those lines.
+From: Kim Phillips <kim.phillips@amd.com>
 
-Applied to #fixes, will send to Linus tonight.
+commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
+
+Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+claimed L2 misses were unsupported, due to them not being found in its
+referenced documentation, whose link has now moved [1].
+
+That old documentation listed PMCx064 unit mask bit 3 as:
+
+    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
+
+and bit 0 as:
+
+    "IcFillMiss: IC Fill Miss"
+
+We now have new public documentation [2] with improved descriptions, that
+clearly indicate what events those unit mask bits represent:
+
+Bit 3 now clearly states:
+
+    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
+
+and bit 0 is:
+
+    "IcFillMiss: Instruction Cache Req Miss in L2."
+
+So we can now add support for L2 misses in perf's genericised events as
+PMCx064 with both the above unit masks.
+
+[1] The commit's original documentation reference, "Processor Programming
+    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
+    originally available here:
+
+        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+    is now available here:
+
+        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
+    Revision B0 Processors", available here:
+
+	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
+
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
+Reported-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/events/amd/core.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -246,6 +246,7 @@ static const u64 amd_f17h_perfmon_event_
+ 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
+ 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
+
+
