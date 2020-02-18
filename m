@@ -2,110 +2,154 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB94CC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBF2C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CAC22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:50:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="D6s6qOgH"
+	by mail.kernel.org (Postfix) with ESMTP id 0B053207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582066314;
+	bh=JVw1/p6FsCoqbFDqyFKAI1rqvqyAc6BMfIKN4ddINoY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W1SsYysNgE7wvh9S+6s61G2AQ7X659msLhIt3V96RuOh8rZ2x2sdk385ziO6fQF2D
+	 qSpoNzln8QWOhTdmD0DFZzPXUOIbbFaYhec44R+5Cj916VHffYewBZSLJxaAVICY/z
+	 UZQ4HqnkLIDOdqyM+6eZEHw4jQUiNd3EgRhcr7zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBRWu1 (ORCPT
+        id S1726852AbgBRWvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:50:27 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33865 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgBRWu0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:50:26 -0500
-Received: by mail-ed1-f68.google.com with SMTP id r18so26766068edl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:50:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=41cGzlU4cjOdIvYsB+FQ4XEqSVKoQUwQYSLczOx+4g8=;
-        b=D6s6qOgHjccdc5oGSjGRqwxlUW6kIZZPog/sURVbWHbS3Cb2XZFtNtalcUDhRwfi6c
-         KMZWzKfrC9mjM8IfBy+t8tO2xdGQO+8QNww/Q4b2NHygytY/qtPrMxTkYbL31pcagluO
-         5zNenTvZ3/qZYgulcelTOG5nWniaGs4zafcOmLeLMRy2p4ka8WukVSjL2QbDzZoR7r2o
-         G4BZaqyM+UQLcIWT4GWLsdbZuUM0A0rLKMIi8L4q3+EFdxfNpMA7fI42E44VacWDurBQ
-         ym1Xbj1x8Si0Qj39ehvo8PwoG3gAd3+PghuaUB5/p8U6zX+Gq6Uq67SUYkmfbAPYZszj
-         0S8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=41cGzlU4cjOdIvYsB+FQ4XEqSVKoQUwQYSLczOx+4g8=;
-        b=KCJ8PBMyAdL/0xo8TwRyKjdmc3yVA9eZFM113MVloIQ9D6E3lYALdiNyzIO+j5ogXm
-         YCU4jiqp2LOdNHYiaOp5v9rNAOI5ibFvanca5c+qH/Br0ibo0hWFaAPA77gf7dlEhgIr
-         dXNmfbRv9WciLv/8PB4pXvtWBWaDgRa3SYWgPylRfCOPC/ECiz4cPcYKZsVnTqAnJDLt
-         r4XpSlPjGy8dH5N0P6FCL7rc5/0CGbklFm6PQg1Mzjvt0f8KLk6UO7fyg7taSvOP5dYk
-         uI60ne5UC6c9vmBMAl8eBmQpxcexxY2KTa0Uty/vQcdTEoU9IR5AOTtX2kO7akcMCDO0
-         UUHg==
-X-Gm-Message-State: APjAAAX9xKgWT6cjpNsdF0IRokHkTsn134OWX8/rJ4/8yirNOq2b0bMa
-        yWaQo22niCk+dkDeKUhmmH44ZZGFk+siWt538kgu
-X-Google-Smtp-Source: APXvYqyhhYGjJi44BuMzGcIPQERfVr3yRw9OSPDNrlzTgybuGmGK43HZ9IiGu1tLojzYp++JzNqAIROsoipZq7DV9xU=
-X-Received: by 2002:a17:906:198b:: with SMTP id g11mr21930378ejd.271.1582066224967;
- Tue, 18 Feb 2020 14:50:24 -0800 (PST)
+        Tue, 18 Feb 2020 17:51:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbgBRWvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:51:52 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5598024670;
+        Tue, 18 Feb 2020 22:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582066311;
+        bh=JVw1/p6FsCoqbFDqyFKAI1rqvqyAc6BMfIKN4ddINoY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YpnOCoaOARlUo9rIPwheEZK5IyhakaAX1XnEh505iecYtcQ8SEISOzJujPOHQCZX3
+         daj+f64uNxcQzCzerBrnps0WKfP99Ga1Bqur6KfuBteNP9UnGYYKo7mGTEnjt6bh/M
+         VYXbuJCthr56ppJQ896BnSJN2rz8/bewhbTUR+9M=
+Received: by mail-qk1-f174.google.com with SMTP id u124so20746845qkh.13;
+        Tue, 18 Feb 2020 14:51:51 -0800 (PST)
+X-Gm-Message-State: APjAAAVMS5VXyubtyunRMRv/Az822nPf2t2DpP68anXRnEcuyuHW8Qpn
+        Sg0hfgZLVyLd/HEyGPhk2LqzRiguvfs+RlIffg==
+X-Google-Smtp-Source: APXvYqzOycS54fdMe+Mi6jmD1eUPFXsnxiEYEUbIZ2YhQGSynwd5BRWP7iCohzeOF1d0omgODT8b2Ln6vs5ynpThWSg=
+X-Received: by 2002:a37:5347:: with SMTP id h68mr20566408qkb.393.1582066310364;
+ Tue, 18 Feb 2020 14:51:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200218184132.20363-1-madhuparnabhowmik10@gmail.com>
-In-Reply-To: <20200218184132.20363-1-madhuparnabhowmik10@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 18 Feb 2020 17:50:14 -0500
-Message-ID: <CAHC9VhShJnD-YnGNN7eYK3k5B3uJd7KVmG4oATboqWGXvFuv5w@mail.gmail.com>
-Subject: Re: [PATCH] netlabel_domainhash.c: Use built-in RCU list checking
-To:     madhuparnabhowmik10@gmail.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+References: <20200218220748.54823-1-john.stultz@linaro.org>
+In-Reply-To: <20200218220748.54823-1-john.stultz@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Feb 2020 16:51:39 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com>
+Message-ID: <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
+ to allow EPROBE_DEFER to be returned for longer
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 1:42 PM <madhuparnabhowmik10@gmail.com> wrote:
+On Tue, Feb 18, 2020 at 4:07 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+> at the end of initcall"), along with commit 25b4e70dcce9
+> ("driver core: allow stopping deferred probe after init") after
+> late_initcall, drivers will stop getting EPROBE_DEFER, and
+> instead see an error causing the driver to fail to load.
 >
-> list_for_each_entry_rcu() has built-in RCU and lock checking.
+> That change causes trouble when trying to use many clk drivers
+> as modules, as the clk modules may not load until much later
+> after init has started. If a dependent driver loads and gets an
+> error instead of EPROBE_DEFER, it won't try to reload later when
+> the dependency is met, and will thus fail to load.
 >
-> Pass cond argument to list_for_each_entry_rcu() to silence
-> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-> by default.
+> This patch reworks some of the logic in
+> __driver_deferred_probe_check_state() so that if the
+> deferred_probe_timeout value is set, we will return EPROBE_DEFER
+> until that timeout expires, which may be after initcalls_done
+> is set to true.
 >
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> Specifically, on db845c, this change (when combined with booting
+> using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
+> QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
+> system, where as without it the display will fail to load.
+
+I would change the default for deferred_probe_timeout to 30 and then
+regulator code can rely on that. Curious, why 30 sec is fine now when
+you originally had 2 min? I'd just pick what you think is best. I
+doubt Mark had any extensive experiments to come up with 30sec.
+
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
->  net/netlabel/netlabel_domainhash.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-
-Same as with the other patch.
-
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
-> index f5d34da0646e..a1f2320ecc16 100644
-> --- a/net/netlabel/netlabel_domainhash.c
-> +++ b/net/netlabel/netlabel_domainhash.c
-> @@ -143,7 +143,8 @@ static struct netlbl_dom_map *netlbl_domhsh_search(const char *domain,
->         if (domain != NULL) {
->                 bkt = netlbl_domhsh_hash(domain);
->                 bkt_list = &netlbl_domhsh_rcu_deref(netlbl_domhsh)->tbl[bkt];
-> -               list_for_each_entry_rcu(iter, bkt_list, list)
-> +               list_for_each_entry_rcu(iter, bkt_list, list,
-> +                                       lockdep_is_held(&netlbl_domhsh_lock))
->                         if (iter->valid &&
->                             netlbl_family_match(iter->family, family) &&
->                             strcmp(iter->domain, domain) == 0)
+> v2:
+> * Add calls to driver_deferred_probe_trigger() after the two minute timeout,
+>   as suggested by Bjorn
+> * Minor whitespace cleanups
+> * Switch to 30 second timeout to match what the regulator code is doing as
+>   suggested by Rob.
+> v3:
+> * Rework to reuse existing deferred_probe_timeout value, suggested by Rob
+> * Dropped Fixes: tags as Rob requested (Not my hill to die on :)
+> ---
+>  drivers/base/dd.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b25bcab2a26b..9d916a7b56a6 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>
+>  static int __driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -       if (!initcalls_done)
+> -               return -EPROBE_DEFER;
+> -
+> -       if (!deferred_probe_timeout) {
+> +       if (initcalls_done && !deferred_probe_timeout) {
+>                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+>                 return -ETIMEDOUT;
+>         }
+> +       if (!initcalls_done || deferred_probe_timeout > 0)
+> +               return -EPROBE_DEFER;
+>
+>         return 0;
+>  }
 > --
 > 2.17.1
-
--- 
-paul moore
-www.paul-moore.com
+>
