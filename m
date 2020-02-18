@@ -2,293 +2,137 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E34C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A654FC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4404120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A9D21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBRIrG (ORCPT
+        id S1726399AbgBRIr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:47:06 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726186AbgBRIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:47:05 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 91E34EA84E46E844F2CB;
-        Tue, 18 Feb 2020 16:46:58 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
- 16:46:51 +0800
-Subject: Re: [PATCH v4 15/20] KVM: arm64: GICv4.1: Add direct injection
- capability to SGI registers
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-16-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <5e744173-5d7a-98b7-e44d-d1f8c47b3e3c@huawei.com>
-Date:   Tue, 18 Feb 2020 16:46:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 18 Feb 2020 03:47:56 -0500
+Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:36934 "EHLO
+        outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbgBRIrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:47:55 -0500
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id 0DEB498B43
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:47:53 +0000 (GMT)
+Received: (qmail 31332 invoked from network); 18 Feb 2020 08:47:52 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 18 Feb 2020 08:47:52 -0000
+Date:   Tue, 18 Feb 2020 08:47:50 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/13] sched/numa: Use similar logic to the load balancer
+ for moving between domains with spare capacity
+Message-ID: <20200218084750.GM3466@techsingularity.net>
+References: <20200217104402.11643-1-mgorman@techsingularity.net>
+ <20200217132019.6684-1-hdanton@sina.com>
+ <20200218033244.6860-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214145736.18550-16-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200218033244.6860-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/2/14 22:57, Marc Zyngier wrote:
-> Most of the GICv3 emulation code that deals with SGIs now has to be
-> aware of the v4.1 capabilities in order to benefit from it.
+On Tue, Feb 18, 2020 at 11:32:44AM +0800, Hillf Danton wrote:
 > 
-> Add such support, keyed on the interrupt having the hw flag set and
-> being a SGI.
+> On Mon, 17 Feb 2020 15:06:15 +0000 Mel Gorman wrote:
+> > On Mon, Feb 17, 2020 at 09:20:19PM +0800, Hillf Danton wrote:
+> > > >  	/*
+> > > > -	 * If the improvement from just moving env->p direction is better
+> > > > -	 * than swapping tasks around, check if a move is possible.
+> > > > +	 * If dst node has spare capacity, then check if there is an
+> > > > +	 * imbalance that would be overruled by the load balancer.
+> > > >  	 */
+> > > > -	maymove = !load_too_imbalanced(src_load, dst_load, env);
+> > > > +	if (env->dst_stats.node_type == node_has_spare) {
+> > > 
+> > > so maymove should be true here.
+> > > 
+> > 
+> > Performance suffers on numerous workloads that way.
+> > 
+> Suspect you are meaning something like
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
->   virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
->   2 files changed, 96 insertions(+), 7 deletions(-)
+> 		maymove = adjust_numa_imbalance(true,
+> 						env->src_stats.nr_running);
 > 
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> index ebc218840fc2..de89da76a379 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> @@ -6,6 +6,7 @@
->   #include <linux/irqchip/arm-gic-v3.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
-> +#include <linux/interrupt.h>
->   #include <kvm/iodev.h>
->   #include <kvm/arm_vgic.h>
->   
-> @@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
->   		 * generate interrupts of either group.
->   		 */
->   		if (!irq->group || allow_group1) {
-> -			irq->pending_latch = true;
-> -			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +			if (!irq->hw) {
-> +				irq->pending_latch = true;
-> +				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +			} else {
-> +				/* HW SGI? Ask the GIC to inject it */
-> +				int err;
-> +				err = irq_set_irqchip_state(irq->host_irq,
-> +							    IRQCHIP_STATE_PENDING,
-> +							    true);
-> +				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			}
->   		} else {
->   			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->   		}
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-> index d656ebd5f9d4..0a1fb61e5b89 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
-> @@ -5,6 +5,8 @@
->   
->   #include <linux/bitops.h>
->   #include <linux/bsearch.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
->   #include <kvm/iodev.h>
-> @@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
->   	return value;
->   }
->   
-> +static void vgic_update_vsgi(struct vgic_irq *irq)
-> +{
-> +	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
-> +}
-> +
->   void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
->   			   unsigned int len, unsigned long val)
->   {
-> @@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->   		irq->group = !!(val & BIT(i));
-> -		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			vgic_update_vsgi(irq);
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +		} else {
-> +			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
-> +		}
->   
->   		vgic_put_irq(vcpu->kvm, irq);
->   	}
-> @@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
->   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> -		if (vgic_irq_is_mapped_level(irq)) {
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			if (!irq->enabled) {
-> +				struct irq_data *data;
-> +
-> +				irq->enabled = true;
-> +				data = &irq_to_desc(irq->host_irq)->irq_data;
-> +				while (irqd_irq_disabled(data))
-> +					enable_irq(irq->host_irq);
-> +			}
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		} else if (vgic_irq_is_mapped_level(irq)) {
->   			bool was_high = irq->line_level;
->   
->   			/*
-> @@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
->   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
-> +			disable_irq_nosync(irq->host_irq);
->   
->   		irq->enabled = false;
->   
-> @@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
->   	for (i = 0; i < len * 8; i++) {
->   		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
->   		unsigned long flags;
-> +		bool val;
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> -		if (irq_is_pending(irq))
-> -			value |= (1U << i);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			int err;
-> +
-> +			val = false;
-> +			err = irq_get_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    &val);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +		} else {
-> +			val = irq_is_pending(irq);
-> +		}
-> +
-> +		value |= ((u32)val << i);
->   		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->   
->   		vgic_put_irq(vcpu->kvm, irq);
-> @@ -227,6 +267,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
->   		}
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> +
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			/* HW SGI? Ask the GIC to inject it */
-> +			int err;
-> +			err = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    true);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		}
-> +
->   		if (irq->hw)
->   			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
->   		else
-
-Should we consider taking the GICv4.1 support into uaccess_{read/write}
-callbacks for GICR_ISPENDR0 so that userspace can properly save/restore
-the pending state of GICv4.1 vSGIs?
-
-I *think* we can do it because on restoration, GICD_CTLR(.nASSGIreq) is
-restored before GICR_ISPENDR0.  So we know whether we're restoring
-pending for vSGIs, and we can restore it to the HW level if v4.1 is
-supported by GIC. Otherwise restore it by the normal way.
-
-And saving is easy with the get_irqchip_state callback, right?
-
-> @@ -281,6 +336,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->   
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			/* HW SGI? Ask the GIC to inject it */
-
-"Ask the GIC to clear its pending state" :-)
-
-
-Thanks,
-Zenghui
-
-> +			int err;
-> +			err = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    false);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		}
-> +
->   		if (irq->hw)
->   			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
->   		else
-> @@ -330,8 +399,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
->   
->   	raw_spin_lock_irqsave(&irq->irq_lock, flags);
->   
-> -	if (irq->hw) {
-> +	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
->   		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
-> +	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +		/*
-> +		 * GICv4.1 VSGI feature doesn't track an active state,
-> +		 * so let's not kid ourselves, there is nothing we can
-> +		 * do here.
-> +		 */
-> +		irq->active = false;
->   	} else {
->   		u32 model = vcpu->kvm->arch.vgic.vgic_model;
->   		u8 active_source;
-> @@ -505,6 +581,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->   		/* Narrow the priority range to what we actually support */
->   		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid))
-> +			vgic_update_vsgi(irq);
->   		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
->   
->   		vgic_put_irq(vcpu->kvm, irq);
+> given dst node's spare capacity.
 > 
 
+Given that adjust_numa_imbalance takes the imbalance as the first
+parameter, not a boolean and it's not unconditionally true, I don't
+get what you mean. Can you propose a patch on top of the entire series
+explaining what you suggest please?
+
+> > > > +		unsigned int imbalance;
+> > > > +		int src_running, dst_running;
+> > > > +
+> > > > +		/* Would movement cause an imbalance? */
+> > > > +		src_running = env->src_stats.nr_running - 1;
+> > > > +		dst_running = env->dst_stats.nr_running + 1;
+> > > > +		imbalance = max(0, dst_running - src_running);
+> > > > +		imbalance = adjust_numa_imbalance(imbalance, src_running);
+> > > > +
+> > > The imbalance could be ignored if src domain is idle enough, and no move
+> > > could be expected.
+> > > 
+> > 
+> > Again, it hits corner cases. While there is scope for allowing some
+> > degree of imbalance, it needs to be a separate patch on top of this.
+> > It's something I intend to examine but only once this series is out of
+> > the way because the NUMA and load balancer do need to be using similar
+> > logic first or it gets a bit fragile.
+> > 
+> Add this to log or comment.
+> 
+
+It's somewhat codified by the general comment "Would movement cause an
+imbalance?". The hint is that any change in the NUMA balancer should check
+whether it is in conflict with the load balancer. Being specific runs the
+risk that the comment gets stale which may be dangerously misleading if
+it's later wrong and a developer trusts the comment instead of checking the
+code. Generally I do try to explain fully what is happening in comments but
+this is a case where I really want developers to check the load balancer
+code if they are updating the NUMA balancer.
+
+> > With this patch, and the series in general, it does mean that some tasks
+> > fail to migrate to a CPU local to the memory being accessed even though
+> > there are CPUs available but having the NUMA balancer and load balancer
+> > override each other is not free either.
+> >
+>
+> Ditto
+> 
+
+I can update the changelog if there is a v4 release, right now there are
+no substantial changes suggested by review. That may change depending on
+other review feedback and what you think the call to adjust_numa_imbalance
+should look like. Also bear in mind that the changelog wil become stale
+if/when adjust_numa_imbalance is altered to allow a small imbalance between
+NUMA nodes. While I plan to do that, this series should be finalised first.
+
+-- 
+Mel Gorman
+SUSE Labs
