@@ -8,66 +8,68 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57154C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C8FC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF362176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3452176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOSx8qaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoWNbnGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgBRUQn (ORCPT
+        id S1727333AbgBRUQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:16:43 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51737 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgBRUQX (ORCPT
+        Tue, 18 Feb 2020 15:16:27 -0500
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:34486 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgBRUQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:23 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t23so4100778wmi.1;
-        Tue, 18 Feb 2020 12:16:21 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:16 -0500
+Received: by mail-wm1-f41.google.com with SMTP id s144so2976779wme.1;
+        Tue, 18 Feb 2020 12:16:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j9++cZ/IP+wbbDCQ64mmb3OUnzsqMjEjsl1uqLXQ9Hc=;
-        b=WOSx8qaaGWz+JOaf5TSGTQ1tPjayIZ97VF3VmkCbwIm2Q0NJ8Ai7xUpq1PRwlGi9UH
-         bluLaY8ZYv50q0quvdJCyLERldS3GSXemhexxoRNuZkwGiKy1vfXHTWpzJ3HMA1cKszL
-         EnfhyuHkx37MwBFiN6qQA+kA8Kc13B1NeYrpv+G4Gl3Gq/UIwrCDc7xN1VejAF4ib2Ba
-         K8uy4p87L3lUsxTTeJP4RSFlGQnA2IUlO40lqt1FBw9AaMRdMCcqxP3R8eQ25nRfQf0I
-         haPjy6FFzIPgMK/QOdYA94GU9qoSnU+TveQ6hN1RqyVHPjvXNM8g5AXEFrYV4vERxVqG
-         kD9g==
+        bh=VoDwB16SuE+XESOylFdFbMZhtyxQWDEo3Kn2cQMk/Ig=;
+        b=XoWNbnGUmMt7KBVCcRP8yGX41WtBvXyiboHO/jy+N3jroImZcunKYAoAuJSra87Q3P
+         j2VdKbgAwAqnw6B89KGRGq8M0vgWAsYh1liL1GbMzhZ0f70ywzJutu8dPXtH+kgQJkV4
+         FFJxdCmE56e4tCORta8UcnK//R+EzxED0gPkTigLOmzvfuSm3k34HBFq6DtTWJ6ztKYn
+         Tko81Rj4CK8oG4qiWLWw5I+A2R08QdV/cvS0cL+Z1ewxeiveY/Ad+mYi5V81DM6HFGBB
+         r6iQ3tcDSltQOYu4GZqMN73d6fvb/G3oBDgwnkPoE7ze8eNubuO80ZG05Ajx14vv76p0
+         LnnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=j9++cZ/IP+wbbDCQ64mmb3OUnzsqMjEjsl1uqLXQ9Hc=;
-        b=sqS5483YEwaEJEzLYN9G0M2OUIWrIuC7mSA5zbPARpW4Y95EP93sNDCU5pv653F+A3
-         KjONvx2pdoPXWY3SdRpHN20L61dPGKjOHaPJJIV5rW+79qJBu1ojqZn0JMYC91oO/3fJ
-         aGGC8EEeVaxRdhmNNc/0T1/7UGcuV+LoZT9+vHbBrMF9fQJmi8YXSEoSPUeHwHaYY3D2
-         6lGn6ThyxYEtYBShOOeO0WAnOjhnXtf13GmyHb/0p3P6qY0KejgFbjXvQ6CkrPkKaMcP
-         n3dKKa0p7BuEfT3sgFUSXhDOAHz715/alxbwmwYES9Af4ucwEMOMqjFMFg6EX32Ya/D5
-         q37w==
-X-Gm-Message-State: APjAAAXfI/GMtguvZ6YNxQ+8esB05d8oZt72TP8u8KAqAZZtcugZsQZY
-        AndNyMaZx3KkralWme+0lPHPd/V7
-X-Google-Smtp-Source: APXvYqwssbUYngfobHc+Zd32PF8GyLWgR88HwW/3rHhOxchbGNWeIvyapBtxQhYHOPHxemQgyUkLhg==
-X-Received: by 2002:a1c:1f56:: with SMTP id f83mr4832027wmf.93.1582056980798;
-        Tue, 18 Feb 2020 12:16:20 -0800 (PST)
+        bh=VoDwB16SuE+XESOylFdFbMZhtyxQWDEo3Kn2cQMk/Ig=;
+        b=SqBmGcRYd5SF43uu9uCD/26iRZtmWMQjgYmpCt13+oJSiKwn3AtmFAjbAeKG5B8HK4
+         +HGWfcZQvhgZnp9j6wsWdYc/8GcZwoLZq7QPOf67So6j1AThcd1jPT8IlEZYg/umujcW
+         w0LKn4xObWi0hLczbxp3Jf3m3867tIacrvklUreWmVf5xp4oWdM7qwqltj/ZMcHpkc9J
+         agGocBzqOyTqIl3tuDovF3N0wweu9Txl8vgrrx+cz0qaqX0cNkCB143We1GZVJ7+7XkF
+         ktk9Yw/mz28NJD6LcYmEO8LQLe4j8I65jgngkf9+jEMn4fTQYC2PIMC/FvxeQ8v4NrWG
+         UceA==
+X-Gm-Message-State: APjAAAVQqAmd+85j7nDjNvwK9ANq6NgXybmiQPfCMAX3xHp7EqkttcGD
+        yUhOZhNTrOU15X+KGX+TYOvkQypc
+X-Google-Smtp-Source: APXvYqz0iJyVWhzS3TWEjb0aiPmNZmsAU5SGBiGEo9x49CTL1lE3vcUUYblewvTLfkUE/5/XnzabnA==
+X-Received: by 2002:a05:600c:114d:: with SMTP id z13mr460488wmz.105.1582056974499;
+        Tue, 18 Feb 2020 12:16:14 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id j15sm8120513wrp.9.2020.02.18.12.16.20
+        by smtp.googlemail.com with ESMTPSA id f1sm7668322wro.85.2020.02.18.12.16.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:20 -0800 (PST)
-Subject: [PATCH net-next v2 12/13] r8152: use new helper tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:14 -0800 (PST)
+Subject: [PATCH net-next v2 06/13] e1000(e): use new helper
+ tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     David Miller <davem@davemloft.net>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <1dd1668a-b3c6-d441-681d-6cbe3ab22fa4@gmail.com>
-Date:   Tue, 18 Feb 2020 21:12:52 +0100
+Message-ID: <47621909-1b75-e8d1-cf32-857c1601e0af@gmail.com>
+Date:   Tue, 18 Feb 2020 21:05:02 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -83,57 +85,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- drivers/net/usb/r8152.c | 26 ++------------------------
- 1 file changed, 2 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 6 +-----
+ drivers/net/ethernet/intel/e1000e/netdev.c    | 5 +----
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 78ddbaf64..709578f4d 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -1948,29 +1948,6 @@ static void r8152_csum_workaround(struct r8152 *tp, struct sk_buff *skb,
- 	}
- }
- 
--/* msdn_giant_send_check()
-- * According to the document of microsoft, the TCP Pseudo Header excludes the
-- * packet length for IPv6 TCP large packets.
-- */
--static int msdn_giant_send_check(struct sk_buff *skb)
--{
--	const struct ipv6hdr *ipv6h;
--	struct tcphdr *th;
--	int ret;
--
--	ret = skb_cow_head(skb, 0);
--	if (ret)
--		return ret;
--
--	ipv6h = ipv6_hdr(skb);
--	th = tcp_hdr(skb);
--
--	th->check = 0;
--	th->check = ~tcp_v6_check(0, &ipv6h->saddr, &ipv6h->daddr, 0);
--
--	return ret;
--}
--
- static inline void rtl_tx_vlan_tag(struct tx_desc *desc, struct sk_buff *skb)
- {
- 	if (skb_vlan_tag_present(skb)) {
-@@ -2016,10 +1993,11 @@ static int r8152_tx_csum(struct r8152 *tp, struct tx_desc *desc,
- 			break;
- 
- 		case htons(ETH_P_IPV6):
--			if (msdn_giant_send_check(skb)) {
-+			if (skb_cow_head(skb, 0)) {
- 				ret = TX_CSUM_TSO;
- 				goto unavailable;
- 			}
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 2bced34c1..f7103356e 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -2715,11 +2715,7 @@ static int e1000_tso(struct e1000_adapter *adapter,
+ 			cmd_length = E1000_TXD_CMD_IP;
+ 			ipcse = skb_transport_offset(skb) - 1;
+ 		} else if (skb_is_gso_v6(skb)) {
+-			ipv6_hdr(skb)->payload_len = 0;
+-			tcp_hdr(skb)->check =
+-				~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						 &ipv6_hdr(skb)->daddr,
+-						 0, IPPROTO_TCP, 0);
 +			tcp_v6_gso_csum_prep(skb);
- 			opts1 |= GTSENDV6;
- 			break;
- 
+ 			ipcse = 0;
+ 		}
+ 		ipcss = skb_network_offset(skb);
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 0f02c7a5e..74379d2e9 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5461,10 +5461,7 @@ static int e1000_tso(struct e1000_ring *tx_ring, struct sk_buff *skb,
+ 		cmd_length = E1000_TXD_CMD_IP;
+ 		ipcse = skb_transport_offset(skb) - 1;
+ 	} else if (skb_is_gso_v6(skb)) {
+-		ipv6_hdr(skb)->payload_len = 0;
+-		tcp_hdr(skb)->check = ~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						       &ipv6_hdr(skb)->daddr,
+-						       0, IPPROTO_TCP, 0);
++		tcp_v6_gso_csum_prep(skb);
+ 		ipcse = 0;
+ 	}
+ 	ipcss = skb_network_offset(skb);
 -- 
 2.25.1
 
