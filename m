@@ -2,149 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B51CC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D407C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DE721D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437F524125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nnl03IJE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oI+QH8Md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgBRSmO (ORCPT
+        id S1726651AbgBRSmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:42:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48732 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgBRSmN (ORCPT
+        Tue, 18 Feb 2020 13:42:31 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:45948 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgBRSma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:42:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=jqbI93a3yxdc0ao0130GGCEXVWckV3ZL1Y/tigDybE0=; b=Nnl03IJEq5Qpcswxni7luOuStD
-        tuO1aTfL02GJrMl0QJrVRVNdZw8xPwhBe1DBz2GsRg+jZkYBmIKR3OwEfPtBEIg4mF9lfq5yeZy64
-        zOfxror/NH8pW7sdFQBVJsK/hadyRMiP9IyK7fZs/o6ZVjS4PRtHu1fD5ckH0bLfcQKraIU1wQR0p
-        K4TIIwtyMD5j4k0WZ5fnCDtfLUSPdETDnILGv8om/KHAlypLtlBlwARtnA9xKRqs/L+XgoVS9UUkb
-        215AnnAuevSpGvFQHXJM3nOMK1B5EGV6i4d/G+6YbNHFrBPFYyiVXfw0wY+qSPneOpZ5/LnCrk7/a
-        e5ZwxNQA==;
-Received: from [199.255.44.128] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j47ou-000390-KX; Tue, 18 Feb 2020 18:42:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] ARM/dma-mapping: merge __dma_supported into arm_dma_supported
-Date:   Tue, 18 Feb 2020 10:41:03 -0800
-Message-Id: <20200218184103.35932-4-hch@lst.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218184103.35932-1-hch@lst.de>
-References: <20200218184103.35932-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tue, 18 Feb 2020 13:42:30 -0500
+Received: by mail-pl1-f201.google.com with SMTP id 36so10649782plc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=d2wRJbkLFbnX5h47+/KLKTC9EOu1JUk/eVuafQjYbHQ=;
+        b=oI+QH8Mdb2jaFfP3q7AupqB0QhhC5C1B/q18uf5tlCkfj0fGYsfGN3WEhSgn8ktTye
+         UiMgo+VvnJG1h3Bgz5YmaO1VlLK93iihg4L36/gRFJNb2Qd3D5Efu0r8r3znpxP83uCe
+         JHZIezRmf7eCcLSzet3tsvEgcms82qlBc2J8accp8ALlkwXpz+nhXOQ15ndG0JuS9C+j
+         b+vSHiWUr6dM8sbKQEbaEITysRx+/3XJNjx+f35KRLF7cucVH/OoTLPRV0xXAJgaawi1
+         Kbsyhl9TtefwGkKkozcsvWIJnfYrtV9lmiao7Oz6XkOxa83P5/iqajKbDe+n0dWBB0jV
+         2mUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=d2wRJbkLFbnX5h47+/KLKTC9EOu1JUk/eVuafQjYbHQ=;
+        b=PuNJQS/hgoRFwRnGrncXMX/01jnTB7JCRFTjZbuZq2DNn0dfn+1261Muh5C+jClooy
+         kCmQmPpexYMTHXvoxqsyNUTerbsumrtKWWyQf6D8y+5ZUYUt8NtpyMc6BTh0slN7z/kg
+         yyrD5bwgWJLW8pzgU6GIFwUBCmCuvFmHeDwP7b1L574Jih7X1ZY+5lfrJTyR7lnyzg9K
+         QONqWR6LdOGdwklU1iRUarD9Gq8cvIHKzJx8dMxzYgfHIgkZVr9+gs2Xdk1GE4pm/k8Z
+         thmAWJ0P18aQneooRKXpNbd2O5uzqMC1AkGb8CRi4lr2V0/K8gnP9T2QPiV+8SOP7gqW
+         yf3Q==
+X-Gm-Message-State: APjAAAXI6P8ToePGW+jNMWWE0hH5Mh+oiCELlRn63o+BSNY94iGim4Tf
+        W9oG44h1pIJkb+U/huhQpIlwL65jGwK9IMw=
+X-Google-Smtp-Source: APXvYqybJhwnaBstjsEqK9dPPh5DMtXVQM3bbQkXsUXhhmQa5y81y2B1B6yYNSTQz30gxNcqcGYiP6k0NLPF8xd5
+X-Received: by 2002:a63:455c:: with SMTP id u28mr24914926pgk.163.1582051348672;
+ Tue, 18 Feb 2020 10:42:28 -0800 (PST)
+Date:   Tue, 18 Feb 2020 10:42:16 -0800
+Message-Id: <20200218184220.139656-1-jkardatzke@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v3] media: venus: add support for selection rectangles
+From:   Jeffrey Kardatzke <jkardatzke@google.com>
+To:     linux-media@vger.kernel.org
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Malathi Gottam <mgottam@codeaurora.org>,
+        Jeffrey Kardatzke <jkardatzke@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge __dma_supported into its only caller, and move the resulting
-function so that it doesn't need a forward declaration.  Also mark
-it static as there are no callers outside of dma-mapping.c.
+From: Malathi Gottam <>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Handles target type crop by setting the new active rectangle
+to hardware. The new rectangle should be within YUV size.
+
+This was taken from: https://lkml.org/lkml/2018/11/9/899
+
+Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
 ---
- arch/arm/include/asm/dma-iommu.h |  2 --
- arch/arm/mm/dma-mapping.c        | 41 +++++++++++++-------------------
- 2 files changed, 17 insertions(+), 26 deletions(-)
+ drivers/media/platform/qcom/venus/venc.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/include/asm/dma-iommu.h b/arch/arm/include/asm/dma-iommu.h
-index 772f48ef84b7..86405cc81385 100644
---- a/arch/arm/include/asm/dma-iommu.h
-+++ b/arch/arm/include/asm/dma-iommu.h
-@@ -33,7 +33,5 @@ int arm_iommu_attach_device(struct device *dev,
- 					struct dma_iommu_mapping *mapping);
- void arm_iommu_detach_device(struct device *dev);
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 453edf966d4f..73b3181eed9a 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -479,10 +479,26 @@ venc_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
  
--int arm_dma_supported(struct device *dev, u64 mask);
--
- #endif /* __KERNEL__ */
- #endif
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 87aba505554a..8a8949174b1c 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -179,6 +179,23 @@ static void arm_dma_sync_single_for_device(struct device *dev,
- 	__dma_page_cpu_to_dev(page, offset, size, dir);
- }
- 
-+/*
-+ * Return whether the given device DMA address mask can be supported
-+ * properly.  For example, if your device can only drive the low 24-bits
-+ * during bus mastering, then you would pass 0x00ffffff as the mask
-+ * to this function.
-+ */
-+static int arm_dma_supported(struct device *dev, u64 mask)
-+{
-+	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
+ 	switch (s->target) {
+ 	case V4L2_SEL_TGT_CROP:
+-		if (s->r.width != inst->out_width ||
+-		    s->r.height != inst->out_height ||
+-		    s->r.top != 0 || s->r.left != 0)
+-			return -EINVAL;
++		if (s->r.left != 0) {
++			s->r.width += s->r.left;
++			s->r.left = 0;
++		}
 +
-+	/*
-+	 * Translate the device's DMA mask to a PFN limit.  This
-+	 * PFN number includes the page which we can DMA to.
-+	 */
-+	return dma_to_pfn(dev, mask) >= max_dma_pfn;
-+}
++		if (s->r.top != 0) {
++			s->r.height += s->r.top;
++			s->r.top = 0;
++		}
 +
- const struct dma_map_ops arm_dma_ops = {
- 	.alloc			= arm_dma_alloc,
- 	.free			= arm_dma_free,
-@@ -219,19 +236,6 @@ const struct dma_map_ops arm_coherent_dma_ops = {
- };
- EXPORT_SYMBOL(arm_coherent_dma_ops);
- 
--static int __dma_supported(struct device *dev, u64 mask)
--{
--	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
--
--	/*
--	 * Translate the device's DMA mask to a PFN limit.  This
--	 * PFN number includes the page which we can DMA to.
--	 */
--	if (dma_to_pfn(dev, mask) < max_dma_pfn)
--		return 0;
--	return 1;
--}
--
- static void __dma_clear_buffer(struct page *page, size_t size, int coherent_flag)
- {
- 	/*
-@@ -1054,17 +1058,6 @@ void arm_dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
- 					    dir);
- }
- 
--/*
-- * Return whether the given device DMA address mask can be supported
-- * properly.  For example, if your device can only drive the low 24-bits
-- * during bus mastering, then you would pass 0x00ffffff as the mask
-- * to this function.
-- */
--int arm_dma_supported(struct device *dev, u64 mask)
--{
--	return __dma_supported(dev, mask);
--}
--
- static const struct dma_map_ops *arm_get_dma_map_ops(bool coherent)
- {
- 	/*
++		if (s->r.width > inst->width)
++			s->r.width = inst->width;
++		else
++			inst->width = s->r.width;
++
++		if (s->r.height > inst->height)
++			s->r.height = inst->height;
++		else
++			inst->height = s->r.height;
++
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
-2.24.1
+2.25.0.265.gbab2e86ba0-goog
 
