@@ -2,102 +2,152 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B72C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC43DC3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0C1206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847EF207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="d8rO57ZZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRtKjPvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgBRWHY (ORCPT
+        id S1726645AbgBRWH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:07:24 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:39748 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgBRWHX (ORCPT
+        Tue, 18 Feb 2020 17:07:57 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38358 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgBRWH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:07:23 -0500
-Received: by mail-qk1-f182.google.com with SMTP id a141so11284504qkg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:07:22 -0800 (PST)
+        Tue, 18 Feb 2020 17:07:56 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j17so1601915pjz.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:07:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NQRm1HKqg4sASSbmlX3eEfnpvyJBvoOvTDtyKNLsJkE=;
-        b=d8rO57ZZm8lN08wS4tLy2bFm+IjvouIwk9nD2MtDefIhDnAvgZKD06Lg+ScC9+1hTu
-         Y9ZofnZg4TZHRXc+UlhawT32J7WHc1KlTUIIeJsB8/GVhqi23XnAKZBIDU4T9RBVhquC
-         A8+l/wkkph4Rg8o73Z6EHG9VLGEMbuJTfhVCc=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pIQXW5hE1+eSM3lLosf+UpP271pqaf4+040KGno05/4=;
+        b=SRtKjPviRKEjd1+AkFb+3aF7EF0gSfjDVNUnYCbnP61y6zy0QwngTevwCuBByt54RM
+         NCBHDna6P/lH3I12T466ZtCwtuM3bL81j8Uy+J97lb9E9xMz3su4W67vNe2Jm5/uwg29
+         rWrp3OcLGEcuwRD3jzS3Ue8q5WiwOrS/I6S+FJIdHWs8nru69mBWX99SxoTIRV2XX0Kj
+         Bg8lf2AdIscIqA9ls5CJ25PKrG+53/wJ4wkJXaftY2kDv1zU+/Ps4cXP4hpKNIepM5jB
+         JaxySFOiycK1STIlUc0//eNyy07OTqRm4DvoYZ1TIJN0FvYwqkz3iAsBNmbYXjeR5Nvy
+         Bqlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NQRm1HKqg4sASSbmlX3eEfnpvyJBvoOvTDtyKNLsJkE=;
-        b=rL2Lg7Zy6jLf6CDMesYLlJqL3h77zoWLsSkceb8yWO7RMUlL1WFjZRg37kEhRx2V6f
-         lfKA1ok2+cQxQVgq0gXbr+IGSOyXXufAHE7qu1XKkCCfuHgLubPz1FylKmWrY2S3GX9n
-         NKGCSsgZfZvou2h29LBE6pREfiPphdSQinQVLC3kNknMF5pt/MgCzPO9ikcKo3oqom7h
-         ThKELxOxfU+ctuTo6zW/zPf85jBMduL5k6EnilsjOVQ+g8BqvnuI8WvU8t05GWRJu1Q/
-         uMq+rB8MrcmpiWI39cawYE37oLDMlbAe1O+dP4XAvMvuUUpMKbIDJAkYwfi7aVCFfCUo
-         glQg==
-X-Gm-Message-State: APjAAAXLPfIjLUdgglmo5E833aYDgqkSSMMWHkqzzHX6S4Ek4g7U8XHK
-        LZhaBtSFs4xkjUvFIZnOegeDl2NEz7g7JXbEbgAV5axQ
-X-Google-Smtp-Source: APXvYqx/RloPJi6yib7qwQgKX9OKaGanXcj5DEfO+iW1+CzNRhjO4luAjNZw4R5G3xGJlYxiCra2h09Tch8/cnbf1XA=
-X-Received: by 2002:a37:717:: with SMTP id 23mr17581705qkh.34.1582063642335;
- Tue, 18 Feb 2020 14:07:22 -0800 (PST)
-MIME-Version: 1.0
-References: <CABWYdi1eOUD1DHORJxTsWPMT3BcZhz++xP1pXhT=x4SgxtgQZA@mail.gmail.com>
- <20200211101627.GJ3466@techsingularity.net> <CABWYdi36O_Gd6=CVZkxY6RR8r4EKzEngScngT5VZc9-x4TB=3w@mail.gmail.com>
- <20200212235525.GU3466@techsingularity.net>
-In-Reply-To: <20200212235525.GU3466@techsingularity.net>
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Tue, 18 Feb 2020 14:07:11 -0800
-Message-ID: <CABWYdi2sZGEEY-T=qyFOrtEGqo6+_Do+bfUJDSAcGhdJv1h0Ow@mail.gmail.com>
-Subject: Re: Reclaim regression after 1c30844d2dfe
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-mm@kvack.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pIQXW5hE1+eSM3lLosf+UpP271pqaf4+040KGno05/4=;
+        b=CnyT57U1xuSfudH1biaxWgW32FsJX04owR86eD9VxolviQQugqdMcSqcW9LbwuoscW
+         +iL1EYeXMmN2VxW3TxFmbTrn1ZwbTUzSwmhGFgpTeTEJKNYqGopVMlUKecCoJmMuXSIr
+         oRl5PLIEzG7sIhYMX9ulao5+L2B80y3d22eIV5r8m0yq10htkHsDzt5TQwXwodlOhaP3
+         Iekdw0vAaAd2mLPZe+31rLy9iEH7TNfB071IQIY0NAR0+iniVMRIEWCC19CYEeYmFGUp
+         edsYvI507D48uahQXZ4UmwdvQGpD3llJlmZUg9C8m32qoxBAmK7K0uxM7cQQozAWuX/D
+         Vyeg==
+X-Gm-Message-State: APjAAAXX2YigI4Ip3szg0V4ooLQv4p9Nn7VxCG3DxFH3NR0LvWkAfdhL
+        +axYGQNYCOPay1vq9vCbkD8v2dpPmo4=
+X-Google-Smtp-Source: APXvYqyCxijq9UmWFDyySgQnBxHFONgdNjoM9hfMVUkV+GEVmtIRioztxSn530rGJVEEY1Mr5+8f5A==
+X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr5390408pjo.86.1582063674983;
+        Tue, 18 Feb 2020 14:07:54 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id d69sm5485229pfd.72.2020.02.18.14.07.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 14:07:54 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state to allow EPROBE_DEFER to be returned for longer
+Date:   Tue, 18 Feb 2020 22:07:47 +0000
+Message-Id: <20200218220748.54823-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I won't have time to try the patch for the next three weeks or so, sorry.
+Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+at the end of initcall"), along with commit 25b4e70dcce9
+("driver core: allow stopping deferred probe after init") after
+late_initcall, drivers will stop getting EPROBE_DEFER, and
+instead see an error causing the driver to fail to load.
 
-On Wed, Feb 12, 2020 at 3:55 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Wed, Feb 12, 2020 at 02:45:39PM -0800, Ivan Babrou wrote:
-> > Here's a typical graph: https://imgur.com/a/n03x5yH
-> >
-> > * Green (numa0) and blue (numa1) for 4.19
-> > * Yellow (numa0) and orange (numa1) for 5.4
-> >
-> > These downward slopes on numa0 on 5.4 are somewhat typical to the
-> > worst case scenario.
-> >
-> > If I try to clean up data a bit from a bunch of machines, this is how
-> > numa0 compares to numa1 with 1h average values of free memory above
-> > 5GiB:
-> >
-> > * https://imgur.com/a/6T4rRzi
-> >
-> > I think it's safe to say that numa0 is much much worse, but I cannot
-> > be 100% sure that numa1 is free from adverse effects, they may be just
-> > hiding in the noise caused by rolling reboots.
-> >
->
-> Ok, while I expected node 0 to be worse in general, a runaway boost due
-> to constant fragmentation would be a problem in general. In either case,
-> the patch should reduce the damage. Is there any chance that the patch
-> can be tested or would it be disruptive for you?
->
-> --
-> Mel Gorman
-> SUSE Labs
+That change causes trouble when trying to use many clk drivers
+as modules, as the clk modules may not load until much later
+after init has started. If a dependent driver loads and gets an
+error instead of EPROBE_DEFER, it won't try to reload later when
+the dependency is met, and will thus fail to load.
+
+This patch reworks some of the logic in
+__driver_deferred_probe_check_state() so that if the
+deferred_probe_timeout value is set, we will return EPROBE_DEFER
+until that timeout expires, which may be after initcalls_done
+is set to true.
+
+Specifically, on db845c, this change (when combined with booting
+using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
+QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
+system, where as without it the display will fail to load.
+
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2:
+* Add calls to driver_deferred_probe_trigger() after the two minute timeout,
+  as suggested by Bjorn
+* Minor whitespace cleanups
+* Switch to 30 second timeout to match what the regulator code is doing as
+  suggested by Rob.
+v3:
+* Rework to reuse existing deferred_probe_timeout value, suggested by Rob
+* Dropped Fixes: tags as Rob requested (Not my hill to die on :)
+---
+ drivers/base/dd.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index b25bcab2a26b..9d916a7b56a6 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+ 
+ static int __driver_deferred_probe_check_state(struct device *dev)
+ {
+-	if (!initcalls_done)
+-		return -EPROBE_DEFER;
+-
+-	if (!deferred_probe_timeout) {
++	if (initcalls_done && !deferred_probe_timeout) {
+ 		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+ 		return -ETIMEDOUT;
+ 	}
++	if (!initcalls_done || deferred_probe_timeout > 0)
++		return -EPROBE_DEFER;
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
+
