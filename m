@@ -2,116 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3440CC34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E67C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D45A24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SI/uH1xI"
+	by mail.kernel.org (Postfix) with ESMTP id 5C3662464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgBRR2p (ORCPT
+        id S1727171AbgBRR2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:28:45 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34386 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgBRR2p (ORCPT
+        Tue, 18 Feb 2020 12:28:48 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726411AbgBRR2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:28:45 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s144so2681076wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:28:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oxzxVwtma/sV1OQLWFOvLbYDQnp164egmH9oHWBKQVY=;
-        b=SI/uH1xIfGPD62vOdOEf7CHgVLuavz+9UnHb0QSFE1QC7srr+PLLyPC4Wouwv/q3wb
-         EghJWSRtEEmtL06aNjYJVegEuXoSCBPSXvT3hz3216Jrcleq1EXIeFyThIdSwhUGjg7s
-         lakD2jP63CuPYBsWpVDEOLF2orsp6BAHUtYZ4Jl+QY89p7I+M9n6X24EPrZxgCgvvbv6
-         2SGkyWXj8erV/x2GssFTXboxcMLFMuxpAdTa/8mAdRc5h2Q/TjPTkdA3YODmdPinCsRj
-         J/pLbAl0iEq8OrEsBQSsZkb6Gl5CoLoZzsnVOPM6qnVstc1X9cZth1qHLRtNCEhdrG6F
-         Yd1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oxzxVwtma/sV1OQLWFOvLbYDQnp164egmH9oHWBKQVY=;
-        b=k6+nLHlR8TESDamaARWGAh3TAF+sbAq0P8cX5PifMoktNG/lKi0DyoeZpvWhQsTrvU
-         WhoGJUH8aP0m3zFfPpMR99aAGNCjtr63650ULQNK40bIHrt1Z58BcO7Y/1NlqO/4SWl2
-         ipnzNw/alUMOtuAz/gKidFflDvHdHRxuA+jWWgQnWQPo0C0TJjR5Mv9T7f+nLm0bfJoh
-         G36LANiPlZtr18JSi9dPi0g1rSm1ROIRxM14hM0DY6L9FtDAT4vm1xQZfTsxaFa2Ivru
-         zIOXKstLnJa570t+q5r0TECev4jrJ4vAQwtP0lRy5e72Rtt+SbeLZue0xPSUj/wCbR5f
-         stEg==
-X-Gm-Message-State: APjAAAWtVTWNhN7G7whHeBQsuNJb894iFH1Kw5k98gPiOAd2+wTSq44v
-        RYPNUEIT7KOcraSJrOXySp8=
-X-Google-Smtp-Source: APXvYqzYLL3egDD8D+n9GtknUJLIOCGz2zsS+wJ285OUyyD0DtU9qnJklm62Ceb7raBfb6FtI0omRw==
-X-Received: by 2002:a1c:a952:: with SMTP id s79mr4442372wme.83.1582046923100;
-        Tue, 18 Feb 2020 09:28:43 -0800 (PST)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id t13sm6998757wrw.19.2020.02.18.09.28.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:28:42 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     linux+etnaviv@armlinux.org.uk, l.stach@pengutronix.de,
-        christian.gmeiner@gmail.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: [PATCH] drm/etnaviv: remove check for return value of drm_debugfs function
-Date:   Tue, 18 Feb 2020 20:28:15 +0300
-Message-Id: <20200218172821.18378-4-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200218172821.18378-1-wambui.karugax@gmail.com>
-References: <20200218172821.18378-1-wambui.karugax@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 12:28:47 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IHRWQu123691;
+        Tue, 18 Feb 2020 12:28:40 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6bunre2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 12:28:39 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01IHSCR2021160;
+        Tue, 18 Feb 2020 17:28:38 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2y6896twjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 17:28:38 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IHSbYs53018988
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 17:28:37 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1F1878063;
+        Tue, 18 Feb 2020 17:28:37 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78BCA7805C;
+        Tue, 18 Feb 2020 17:28:35 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.237.10])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 17:28:35 +0000 (GMT)
+Message-ID: <1582046914.16681.11.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Merlijn Wajer <merlijn@archive.org>, merlijn@wizzup.org,
+        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Date:   Tue, 18 Feb 2020 09:28:34 -0800
+In-Reply-To: <20200218172347.GA3020@infradead.org>
+References: <20200218143918.30267-1-merlijn@archive.org>
+         <20200218171259.GA6724@infradead.org>
+         <1582046428.16681.7.camel@linux.ibm.com>
+         <20200218172347.GA3020@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_05:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ adultscore=0 suspectscore=0 mlxlogscore=718 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As there is no need to check the return value if
-drm_debugfs_create_files, remove the check and error handling in
-etnaviv_debugfs_init and have the function return 0 directly.
+On Tue, 2020-02-18 at 09:23 -0800, Christoph Hellwig wrote:
+> On Tue, Feb 18, 2020 at 09:20:28AM -0800, James Bottomley wrote:
+> > > > Replace the global mutex with per-sr-device mutex.
+> > > 
+> > > Do we actually need the lock at all?  What is protected by it?
+> > 
+> > We do at least for cdrom_open.  It modifies the cdi structure with
+> > no other protection and concurrent modification would at least
+> > screw up the use counter which is not atomic.  Same reasoning for
+> > cdrom_release.
+> 
+> Wouldn't the right fix to add locking to cdrom_open/release instead
+> of having an undocumented requirement for the callers?
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Yes ... but that's somewhat of a bigger patch because you now have to
+reason about the callbacks within cdrom.  There's also the question of
+whether you can assume ops->generic_packet() has its own concurrency
+protections ... it's certainly true for SCSI, but is it for anything
+else?  Although I suppose you can just not care and run the internal
+lock over it anyway.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 6b43c1c94e8f..a65d30a48a9d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -233,19 +233,11 @@ static struct drm_info_list etnaviv_debugfs_list[] = {
- 
- static int etnaviv_debugfs_init(struct drm_minor *minor)
- {
--	struct drm_device *dev = minor->dev;
--	int ret;
--
--	ret = drm_debugfs_create_files(etnaviv_debugfs_list,
--			ARRAY_SIZE(etnaviv_debugfs_list),
--			minor->debugfs_root, minor);
-+	drm_debugfs_create_files(etnaviv_debugfs_list,
-+				 ARRAY_SIZE(etnaviv_debugfs_list),
-+				 minor->debugfs_root, minor);
- 
--	if (ret) {
--		dev_err(dev->dev, "could not install etnaviv_debugfs_list\n");
--		return ret;
--	}
--
--	return ret;
-+	return 0;
- }
- #endif
- 
--- 
-2.25.0
+James
 
