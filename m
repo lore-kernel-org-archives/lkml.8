@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C34AC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4FFC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7379324672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DC621D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056202;
-	bh=YF3VbNLAWeFow/GX9TNsqGP4ZhMFgY7IC8NXxq8Ui1I=;
+	s=default; t=1582056206;
+	bh=wodGM8W2lZ3V+l7YnowsX037qcTzS6mHOEXUUECqf9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3IHzmHNQ1ENmWgW6jxowAaFaY1PaI2tAlVOoWxzU1he7Bf33T0dKr6B0XWq1vE38
-	 Zbs8C6euZzVbpjVDpXzfJjggPCmtXujtwz2MOMwUwmgMfhADCM1EEwoHaDP+jJ16Dd
-	 R03HvbtJxbnCVmw3bG1nDajEMl54uVa51XbZaozA=
+	b=ClrrkuPAvkHXPaii3kvjnr7M4NLRUcWo/rB2m8wm4mGbIjd1gUsxvXhlZ2Kn1k6pz
+	 QZ1CQD+cn3TAXS/j6V5OKD/iWKVRiGIV5Uiu+W2exTzrZCD4mT+j+dFrvV3gY7jHFO
+	 W0tdoNkzkoB41Mvb93XiGXZehZOW00zO4AiGHJmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBRUDV (ORCPT
+        id S1728885AbgBRUDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbgBRUDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:16 -0500
+        id S1726539AbgBRUDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBAF2467C;
-        Tue, 18 Feb 2020 20:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA15B21D56;
+        Tue, 18 Feb 2020 20:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056195;
-        bh=YF3VbNLAWeFow/GX9TNsqGP4ZhMFgY7IC8NXxq8Ui1I=;
+        s=default; t=1582056200;
+        bh=wodGM8W2lZ3V+l7YnowsX037qcTzS6mHOEXUUECqf9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t6624u/OinVmb7i5KQG5nY0BBDtmF0XU9Jl7Hnk3znJIAQY5QRygy4dl6bZwL/JJW
-         g27MvwSU2KTDXtGdIS6oO8M1xm3vQ0/8JCg3FY6uQSK9+PpugMNrscBGC5IOWmgCnA
-         VUpl4w2J7ZqyDxIs3d3BiCh2LqaStoHboFFRes2I=
+        b=uDicv9P0OzMcv6VLhZvnXkDkR2PyFYlbvOQUN6h0tAkZXmdBuEhjqq8LJKEwrtRrJ
+         Kk0WiRyVcR05q19yzxZzcLjK09PkZ5jMILglyXFjqZ1K5PvTufxKS0aOk/xqNi26qB
+         LvGftjOYyV5010oT9Mf7sEtc2upIafqwmc3WrNac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 70/80] KVM: nVMX: Handle pending #DB when injecting INIT VM-exit
-Date:   Tue, 18 Feb 2020 20:55:31 +0100
-Message-Id: <20200218190438.602113447@linuxfoundation.org>
+Subject: [PATCH 5.5 36/80] KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+Date:   Tue, 18 Feb 2020 20:54:57 +0100
+Message-Id: <20200218190435.889374913@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,67 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 684c0422da71da0cd81319c90b8099b563b13da4 upstream.
+commit f6ab0107a4942dbf9a5cf0cca3f37e184870a360 upstream.
 
-SDM 27.3.4 states that the 'pending debug exceptions' VMCS field will
-be populated if a VM-exit caused by an INIT signal takes priority over a
-debug-trap. Emulate this behavior when synthesizing an INIT signal
-VM-exit into L1.
+Define PT_MAX_FULL_LEVELS as PT64_ROOT_MAX_LEVEL, i.e. 5, to fix shadow
+paging for 5-level guest page tables.  PT_MAX_FULL_LEVELS is used to
+size the arrays that track guest pages table information, i.e. using a
+"max levels" of 4 causes KVM to access garbage beyond the end of an
+array when querying state for level 5 entries.  E.g. FNAME(gpte_changed)
+will read garbage and most likely return %true for a level 5 entry,
+soft-hanging the guest because FNAME(fetch) will restart the guest
+instead of creating SPTEs because it thinks the guest PTE has changed.
 
-Fixes: 4b9852f4f389 ("KVM: x86: Fix INIT signal handling in various CPU states")
-Signed-off-by: Oliver Upton <oupton@google.com>
+Note, KVM doesn't yet support 5-level nested EPT, so PT_MAX_FULL_LEVELS
+gets to stay "4" for the PTTYPE_EPT case.
+
+Fixes: 855feb673640 ("KVM: MMU: Add 5 level EPT & Shadow page table support.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/x86/kvm/mmu/paging_tmpl.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3583,6 +3583,33 @@ static void nested_vmx_inject_exception_
- 	nested_vmx_vmexit(vcpu, EXIT_REASON_EXCEPTION_NMI, intr_info, exit_qual);
- }
- 
-+/*
-+ * Returns true if a debug trap is pending delivery.
-+ *
-+ * In KVM, debug traps bear an exception payload. As such, the class of a #DB
-+ * exception may be inferred from the presence of an exception payload.
-+ */
-+static inline bool vmx_pending_dbg_trap(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.exception.pending &&
-+			vcpu->arch.exception.nr == DB_VECTOR &&
-+			vcpu->arch.exception.payload;
-+}
-+
-+/*
-+ * Certain VM-exits set the 'pending debug exceptions' field to indicate a
-+ * recognized #DB (data or single-step) that has yet to be delivered. Since KVM
-+ * represents these debug traps with a payload that is said to be compatible
-+ * with the 'pending debug exceptions' field, write the payload to the VMCS
-+ * field if a VM-exit is delivered before the debug trap.
-+ */
-+static void nested_vmx_update_pending_dbg(struct kvm_vcpu *vcpu)
-+{
-+	if (vmx_pending_dbg_trap(vcpu))
-+		vmcs_writel(GUEST_PENDING_DBG_EXCEPTIONS,
-+			    vcpu->arch.exception.payload);
-+}
-+
- static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -3595,6 +3622,7 @@ static int vmx_check_nested_events(struc
- 		test_bit(KVM_APIC_INIT, &apic->pending_events)) {
- 		if (block_nested_events)
- 			return -EBUSY;
-+		nested_vmx_update_pending_dbg(vcpu);
- 		clear_bit(KVM_APIC_INIT, &apic->pending_events);
- 		nested_vmx_vmexit(vcpu, EXIT_REASON_INIT_SIGNAL, 0, 0);
- 		return 0;
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -33,7 +33,7 @@
+ 	#define PT_GUEST_ACCESSED_SHIFT PT_ACCESSED_SHIFT
+ 	#define PT_HAVE_ACCESSED_DIRTY(mmu) true
+ 	#ifdef CONFIG_X86_64
+-	#define PT_MAX_FULL_LEVELS 4
++	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
+ 	#define CMPXCHG cmpxchg
+ 	#else
+ 	#define CMPXCHG cmpxchg64
 
 
