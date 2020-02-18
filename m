@@ -2,116 +2,168 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC2C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D1AC34044
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C708C24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582042353;
-	bh=awLNWgK3jSpoYCcHsbDIpFWZ3TfC+77EIQEyj8YiqW0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=w5EZ3s7CsZ+Jk2OJZhukN2MJJCZFdLgVO5w+luKtMVidm3VVBQ1R9iWHga0nBPR5A
-	 VXL8KISjtrLF4kw8yxSWdpFCrsCLNTPyeiCaPwh24wyV2+7Jwqwzzd9k1+d/T5k9AG
-	 o5RrturLRogmk0GmTqBBxNqhSo0bMOtfHhwHEfxY=
+	by mail.kernel.org (Postfix) with ESMTP id 413B621D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L0pplXre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBRQMc (ORCPT
+        id S1726648AbgBRQN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:12:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 11:13:28 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:49904 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgBRQMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:12:32 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726360AbgBRQN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:13:27 -0500
+Received: from zn.tnic (p200300EC2F0C1F0014C3F76BBACA8B76.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:14c3:f76b:baca:8b76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EDB821D56;
-        Tue, 18 Feb 2020 16:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582042351;
-        bh=awLNWgK3jSpoYCcHsbDIpFWZ3TfC+77EIQEyj8YiqW0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0X7a46sIOjECzRz0gSgsb45lVTD4LoFMqM8lAfqw5BBMjeunTIzosKnnh8wvwOgmn
-         dw1c7kHiv4rK+byDki53gflxLqjmyJwI0xy2GTrvm88GH9/2CTmZIfyfhZOwUmQG1E
-         e9w4sDNTWeU7FtqiUtCsTrU+lkaMLAEg8LsZnMpY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4A93D3520365; Tue, 18 Feb 2020 08:12:31 -0800 (PST)
-Date:   Tue, 18 Feb 2020 08:12:31 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200218161231.GD2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200213211930.GG170680@google.com>
- <20200213163800.5c51a5f1@gandalf.local.home>
- <20200213215004.GM2935@paulmck-ThinkPad-P72>
- <20200213170451.690c4e5c@gandalf.local.home>
- <20200213223918.GN2935@paulmck-ThinkPad-P72>
- <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
- <20200215145934.GD2935@paulmck-ThinkPad-P72>
- <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
- <20200217163112.GM2935@paulmck-ThinkPad-P72>
- <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4CA8C1EC0CE8;
+        Tue, 18 Feb 2020 17:13:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582042404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gK0g9aNgXw+INNWEyqtkjvbY52B+btC+rjGUIGJd4h0=;
+        b=L0pplXre5y5jDvR+LkAlVpEaxzIYoi/nH9H01hGTTnLEYvaVrc472Bygb+98Ql0XwwPjHD
+        q6uyS8RAzM0S030u/0+q1EWmWD2jpLxHCyy+1DGpwOa8wq/fTcLTvPOS3RKD9ZYgNZnee5
+        56GISZiImCW06j2JRcZOgF6bRU8jXCU=
+Date:   Tue, 18 Feb 2020 17:13:19 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
+Message-ID: <20200218161319.GG14449@zn.tnic>
+References: <20200217130659.15895-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200217130659.15895-1-prarit@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:33:35PM +0900, Masami Hiramatsu wrote:
-> On Mon, 17 Feb 2020 08:31:12 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> > > BTW, if you consider the x86 specific code is in the generic file,
-> > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
-> > > (Sorry, I've hit this idea right now)
-> > 
-> > Might this affect other architectures with NMIs and probe-like things?
-> > If so, it might make sense to leave it where it is.
+On Mon, Feb 17, 2020 at 08:06:59AM -0500, Prarit Bhargava wrote:
+> A user has reported that they are seeing spurious corrected errors on
+> their hardware.
 > 
-> Yes, git grep shows that arm64 is using rcu_nmi_enter() in
-> debug_exception_enter().
-> OK, let's keep it, but maybe it is good to update the comment for
-> arm64 too. What about following?
+> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
+> with the valid field (bit 63) set, the uncorrected error field (bit 61)
+> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+> an MCA Error Code (bits [15:0]) of 0x0005."
 > 
-> +/*
-> + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
-> + * marked NOKPROBE before kprobes handler is called.
-> + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
-> + * before kprobes handle happens to call rcu_nmi_enter() which means
-> + * that rcu_nmi_enter() must be marked NOKRPOBE.
-> + */
+> Block these spurious errors from the console and logs.
+> 
+> Links to Intel Specification updates:
+> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
+> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
+> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
+> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
 
-Would it work to describe the general problem, then give x86 details
-as a specific example, as follows?
+My previous review comment still holds:
 
-/*
- * On some architectures, certain exceptions prohibit use of kprobes until
- * the exception code path reaches a certain point.  For example, on x86 all
- * functions called by do_int3() must be marked NOKPROBE.  However, once
- * kprobe_int3_handler() is called, kprobing is permitted.  Specifically,
- * ist_enter() is called in do_int3() before kprobe_int3_handle().
- * Furthermore, ist_enter() calls rcu_nmi_enter(), which means that
- * rcu_nmi_enter() must be marked NOKRPOBE.
- */
+Those links tend to get stale with time. If you really want to refer to
+the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
+them there as an attachment and add the link to the entry to the commit
+message.
 
-That way, I don't feel like I need to update the commment each time
-a new architecture adds this capability.  ;-)
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
 
-							Thanx, Paul
+WARNING: Co-developed-by: must be immediately followed by Signed-off-by:
+#36:
+
+See Documentation/process/submitting-patches.rst for more detail.
+
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: linux-edac@vger.kernel.org
+> ---
+>  arch/x86/kernel/cpu/mce/core.c     |  2 ++
+>  arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
+>  arch/x86/kernel/cpu/mce/internal.h |  1 +
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 2c4f949611e4..fe3983d551cc 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
+>  {
+>  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
+>  		return amd_filter_mce(m);
+> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
+> +		return intel_filter_mce(m);
+>  
+>  	return false;
+>  }
+> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+> index 5627b1091b85..989148e6746c 100644
+> --- a/arch/x86/kernel/cpu/mce/intel.c
+> +++ b/arch/x86/kernel/cpu/mce/intel.c
+> @@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+>  {
+>  	intel_clear_lmce();
+>  }
+> +
+> +bool intel_filter_mce(struct mce *m)
+> +{
+> +	struct cpuinfo_x86 *c = &boot_cpu_data;
+> +
+> +	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
+> +	if ((c->x86 == 6) &&
+> +	    ((c->x86_model == INTEL_FAM6_HASWELL) ||
+> +	     (c->x86_model == INTEL_FAM6_HASWELL_L) ||
+> +	     (c->x86_model == INTEL_FAM6_BROADWELL) ||
+> +	     (c->x86_model == INTEL_FAM6_HASWELL_G)) &&
+> +	    (m->bank == 0) &&
+> +	    ((m->status & 0xa0000000ffffffff) == 0x80000000000f0005))
+> +		return true;
+> +
+> +	return false;
+> +}
+> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+> index b785c0d0b590..821faba5b05d 100644
+> --- a/arch/x86/kernel/cpu/mce/internal.h
+> +++ b/arch/x86/kernel/cpu/mce/internal.h
+> @@ -175,5 +175,6 @@ extern bool amd_filter_mce(struct mce *m);
+>  #else
+>  static inline bool amd_filter_mce(struct mce *m)			{ return false; };
+>  #endif
+> +extern bool intel_filter_mce(struct mce *m);
+
+It doesn't even build:
+
+ld: arch/x86/kernel/cpu/mce/core.o: in function `filter_mce':
+/home/boris/kernel/linux/arch/x86/kernel/cpu/mce/core.c:1881: undefined reference to `intel_filter_mce'
+make: *** [Makefile:1077: vmlinux] Error 1
+
+Hint: do it like it is done for amd_filter_mce() but in the respective
+#ifdef CONFIG_X86_MCE_INTEL place.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
