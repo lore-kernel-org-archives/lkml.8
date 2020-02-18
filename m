@@ -2,128 +2,111 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E05C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723F7C34044
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267AF2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2AB2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zIDHrQxr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZlGkVPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgBRQZe (ORCPT
+        id S1726703AbgBRQZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:25:34 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:55722 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgBRQZe (ORCPT
+        Tue, 18 Feb 2020 11:25:38 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45341 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726399AbgBRQZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:25:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TuGSrvtELJKmIcTw7/lXFrOIqywCrRTKxNNZt6j2szI=; b=zIDHrQxrA7hSQMKjFT/5Wgaky
-        YJVsedvMcMrIA0Oq186C6D6WsSc6xdXZxOwNN39v6eZiw08CVhMZN5/6QACTXqSm7vg7by/N7I6Bi
-        vLhz1Nk5dweWrxImvZQiH6vUAFT7AS5gjk08k8lL/4gcDyu901t/qejvUJJNrHC/ZxY8trbhoTNi5
-        SYocZZ5ESMMe9zGRVYEjjORsEY8iopdR6/KKfN6EQsFsi3WUbQ3SImgbsCWnlF1EtSxscDVOVC3HO
-        HKCSnVq3VWfHE8kssCu2auajXwVflDXCJe+I7p86tisIojWRpOA4tWotZ8chWqDA649LJSeKPx7iu
-        IznYaGVMQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42040)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j45gb-0008FW-QW; Tue, 18 Feb 2020 16:25:25 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j45gY-0000ZK-Ex; Tue, 18 Feb 2020 16:25:22 +0000
-Date:   Tue, 18 Feb 2020 16:25:22 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, andrew@lunn.ch,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-Message-ID: <20200218162522.GH25745@shell.armlinux.org.uk>
-References: <20200204181319.27381-1-dmurphy@ti.com>
- <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
- <170d6518-ea82-08d3-0348-228c72425e64@ti.com>
- <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
- <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
- <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
- <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
+        Tue, 18 Feb 2020 11:25:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582043134;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5ZaVBnl5LTDIz8p3MqR4G5st87wrZLl8IZBtXDiurEw=;
+        b=ZZlGkVPJvcqDkdNLMQvpOKseAp5dr1cbAvs04pUD/Ho9KKirY1qVOdTl2UClGA8WwB4hSO
+        2Twj/gyUpGN8HkiH3KREi/BonJlRc9XshiRuCcieIe7P5YVhG+uFZUw0D1Ugq4TFB6qfoq
+        H7epsavkYXVZuctUSzN2YMsnmigl00g=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255--kEA2dkuOd6oU1ZPiGfp2Q-1; Tue, 18 Feb 2020 11:25:26 -0500
+X-MC-Unique: -kEA2dkuOd6oU1ZPiGfp2Q-1
+Received: by mail-wr1-f71.google.com with SMTP id d7so688486wrx.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:25:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5ZaVBnl5LTDIz8p3MqR4G5st87wrZLl8IZBtXDiurEw=;
+        b=fQdd3GcdMbNDrK255aqQcnriTVwHcWMxioXLVNAaMpVEv89OKJ9ZO07qVdX+87gQmw
+         BYReOKZtRJFNGXryY4Rvj9j6yQ8M4dHM+InZa9d3U1CpzzuwFy8zRBBSrHiDi7Rwwy/6
+         +9cwko7Hi8+buZqcDY43LvAPEJbNy/ZCNpUMY6SWdx6stpgj2NuCpGBOOdz2QQyrbL82
+         vQ5y4OiIUPvKxJROSAb/IURy3GiT35paz/yWman7nyQ1D1sljcj6J592hnLtdMfoxzAD
+         d+oL0gJ/dEMA9way7vBsvXx4KiDIduRN6goPfl2QBQCufkAOCIE/vZpwWBXtBHC3GExt
+         Uc1w==
+X-Gm-Message-State: APjAAAXbNIjLMcMzpA8kb8trdgQ9QRVtGRSw9km8fVfk2U//k9MGwrSf
+        ArJ0zkbXWdd+4HLSWhGFc/+t6b5JDOYf8urlwnAuuupdXPqeGBZai7FnpBLSI6IlJCqNdOVvO/2
+        Ck4tOXp4ju6ORa5tlJqEvwoeI
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr29533055wrm.349.1582043125163;
+        Tue, 18 Feb 2020 08:25:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwNLjKGcihL8iLl16MvvwxIr4m9OPysTo+s7RHCHBY/nU4biCD6WeXWya+F/KA6iuYQonH+9Q==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr29533023wrm.349.1582043124928;
+        Tue, 18 Feb 2020 08:25:24 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:59c7:c3ee:2dec:d2b4? ([2001:b07:6468:f312:59c7:c3ee:2dec:d2b4])
+        by smtp.gmail.com with ESMTPSA id x6sm4075105wmi.44.2020.02.18.08.25.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 08:25:24 -0800 (PST)
+Subject: Re: [PATCH] KVM: VMX: replace "fall through" with "return true" to
+ indicate different case
+To:     Joe Perches <joe@perches.com>, linmiaohe <linmiaohe@huawei.com>,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1581997168-20350-1-git-send-email-linmiaohe@huawei.com>
+ <0e28c46fe2361f0bedf438818eb7bfd1197706e2.camel@perches.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <013d2bbc-6948-ab49-71ca-25da77915f63@redhat.com>
+Date:   Tue, 18 Feb 2020 17:25:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0e28c46fe2361f0bedf438818eb7bfd1197706e2.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 12:31:52PM -0600, Dan Murphy wrote:
-> Grygorii
+On 18/02/20 04:42, Joe Perches wrote:
+> On Tue, 2020-02-18 at 11:39 +0800, linmiaohe wrote:
+>> The second "/* fall through */" in rmode_exception() makes code harder to
+>> read. Replace it with "return true" to indicate they are different cases
+>> and also this improves the readability.
+> []
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> []
+>> @@ -4495,7 +4495,7 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
+>>  		if (vcpu->guest_debug &
+>>  			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
+>>  			return false;
+>> -		/* fall through */
+>> +		return true;
 > 
-> On 2/14/20 12:32 PM, Grygorii Strashko wrote:
-> > I think it's good idea to have this message as just wrong cable might be
-> > used.
-> > 
-> > But this notifier make no sense in it current form - it will produce
-> > noise in case of forced 100m/10M.
-> > 
-> > FYI. PHY sequence to update link:
-> > phy_state_machine()
-> > |-phy_check_link_status()
-> >   |-phy_link_down/up()
-> >     |- .phy_link_change()->phy_link_change()
-> >     |-adjust_link() ----> netdev callback
-> > |-phydev->drv->link_change_notify(phydev);
-> > 
-> > So, log output has to be done or in .read_status() or
-> > some info has to be saved in .read_status() and then re-used in
-> > .link_change_notify().
-> > 
-> OK I will try to find a way to give some sort of message.
+> perhaps
+> 		return !(vcpu->guest_debug & (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP));
 
-How do you know the speed that the PHY downshifted to?
+Nice, thanks Joe.
 
-If the speed and duplex are available in some PHY specific status
-register, then one way you can detect downshift is to decode the
-negotiated speed/duplex from the advertisements (specifically the LPA
-read from the registers and the advertisement that we should be
-advertising - some PHYs modify their registers when downshifting) and
-check whether it matches the negotiated parameters in the PHY
-specific status register.
+Paolo
 
-Alternatively, if the PHY modifies the advertisement register on
-downshift, comparing the advertisement register with what it should
-be will tell you if downshift has occurred.
-
-Note, however, that if both ends of the link are capable of
-downshift, and they downshift at the same time, it can be difficult
-to reliably tell whether the downshift was performed by the local
-PHY or the remote PHY - even if the local PHY gives you status bits
-for downshift, you won't know if the remote end downshifted instead.
-
-It's a bit like auto MDI/MDIX - if pairswap is needed, either end
-may do it, and which end does it may change each time the link comes
-up.
-
-So, reporting downshift in the kernel log may not be all that useful,
-it may be more suited to being reported through a future ethtool
-interface just like MDI/MDIX.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
