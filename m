@@ -2,189 +2,150 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4407BC3403C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE2AC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDA520801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="fmakFKkv"
+	by mail.kernel.org (Postfix) with ESMTP id 3075F20801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgBROCY (ORCPT
+        id S1726725AbgBROEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:02:24 -0500
-Received: from UPDC19PA22.eemsg.mail.mil ([214.24.27.197]:42176 "EHLO
-        UPDC19PA22.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgBROCX (ORCPT
+        Tue, 18 Feb 2020 09:04:35 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52598 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgBROEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:02:23 -0500
-X-EEMSG-check-017: 59495269|UPDC19PA22_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,456,1574121600"; 
-   d="scan'208";a="59495269"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UPDC19PA22.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 18 Feb 2020 14:02:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1582034533; x=1613570533;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=BAxsEBtDEJviZluZ3jqeYHvGG1lj7nXMWftotAly9Io=;
-  b=fmakFKkv5ErS+mpsto9JhWrYtPojns3/v7AxJpRglTWaavQB1NasBY7N
-   ClRLoVG31N71y+CYgcV4oR+lu0p179MWUpuaXnM/Zx1uPxoHPsiaHLH29
-   CQHAu0ynROj39wvTz49z3k2f1UsnTUcFNFn8IriC6dm3aMYE9hbllpcWk
-   fLAOVfJR379lr0cl4RVc95VB6U6ctob5UGnaiKrTEK25uZaIuC0lR4s7+
-   uVrtWexUJmIdpJY7E5L/woXiSq7Lrh8EB8qMlu+RsSHrNfehahPlVRBp6
-   WwCTZP7fGwbkORql1fmkaBZQJNEwDMoguB6y/BobSFLpbqzJ7ttq9QqO1
-   A==;
-X-IronPort-AV: E=Sophos;i="5.70,456,1574121600"; 
-   d="scan'208";a="39219569"
-IronPort-PHdr: =?us-ascii?q?9a23=3AB7XrfRN939Fsew6EXHQl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0K/rzoMbcNUDSrc9gkEXOFd2Cra4d16yJ4+u9CSQp2tWojjMrSNR0TR?=
- =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
- =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vIxi6twfcu8oZjYZiKas61w?=
- =?us-ascii?q?fErGZPd+lKymxkIk6ekQzh7cmq5p5j9CpQu/Ml98FeVKjxYro1Q79FAjk4Km?=
- =?us-ascii?q?45/MLkuwXNQguJ/XscT34ZkgFUDAjf7RH1RYn+vy3nvedgwiaaPMn2TbcpWT?=
- =?us-ascii?q?S+6qpgVRHlhDsbOzM/7WrakdJ7gr5Frx29phx/24/Ub5+TNPpiZaPWYNcWSX?=
- =?us-ascii?q?NcUspNSyBNB4WxYIUVD+oFIO1WsY/zqVUTphe6HAWgGefixjpOi3Tr36M1zv?=
- =?us-ascii?q?4hHBnb0gI+EdIAsHfaotv7O6gdU++60KbGwC7fb/5Uwzrx9JTEfx4jrPyKQL?=
- =?us-ascii?q?l+cdDRyU4qFw7dk1uQtZLqPyuV1usTtWiQ8vduVee1hG4jrwF+vDiuzdorh4?=
- =?us-ascii?q?nSm40V0UvJ9Tl5wYkpJd24T1R3Ydi/EJRKrS2aOIx2Qt07TmxupS00yaUGtI?=
- =?us-ascii?q?amcCUFx5kr3R7SZ+Gdf4SW7R/vSvydLSp+iXl4YrywnQyy/lKlyuDkU8m010?=
- =?us-ascii?q?tFoTRdn9nXs3ANywTT6s+aSvth5kuh2SiA1wTU6uxcPUA7j7DbK588wr4rjJ?=
- =?us-ascii?q?YTsELDHiHxmEXtkqCZal8o+vSo6uv7YrXmoYWQN4lohQHlLqsigMm/AeU8Mg?=
- =?us-ascii?q?QWXmib//qz1KH78EHkT7hHgec6n6nEvJzAO8gWqbC1DxVI3oo77hawFTam0N?=
- =?us-ascii?q?AWnXkdK1JFfQqKj5P0NFHVO/34Efe+jEiskDds3fzGOKbhDY/XInjMl7fhY6?=
- =?us-ascii?q?5x61RAxwor0dBf+5VUB6kbIP3uR0/xstjYAQUhMwGvwubnDtt91pkEVm2SHK?=
- =?us-ascii?q?CWKr7dvUWP5uI1LOmGfJUVtyrlK/g5+/7uimc0mVscfamvwJsWZ2m0Hvd4LE?=
- =?us-ascii?q?WDZ3rjnNMBHHwUvgoxUuPqkkeOUT1NaHaoWaIz+DU7BJihDYfZSYCnmKaB0z?=
- =?us-ascii?q?ujHp1KemBGDUiBEXPpd4WCRvcNZzueItR/nTMYSLihUY4h1Q2utQPjzrpnKf?=
- =?us-ascii?q?fb+jActZ39z9V1+eLTmg8o9TBuDMSSzXuNT2dqkWMMXTM227p/oUNlwFeZza?=
- =?us-ascii?q?d4m+BYFcBU5/5RUAc6Mp7cz+pgB9DwXQLBfs2GSFC9Qtq4BzE8Vc4+zMUIY0?=
- =?us-ascii?q?Z6HdWijwzM0DCuA7MPi7OLA5k0+LrG33ftP8Z912rG1K45glklXMRAK3amib?=
- =?us-ascii?q?J49wjUBI7EiFmWl6awdaQb2S7N9XqDzW+UsEFfSg5wXr3PXWoDaUvOsdT5+k?=
- =?us-ascii?q?TCQqerCbQgKAtB1cmCKq1PatDykVpGRO3jONPbY2KwhmewAAyExrSWbIrlY2?=
- =?us-ascii?q?8dxjnSCFAYkwAP+naLLQo+BiKmo2LEFjxuFEnvbljq8eZkrXO0UE40wxuNb0?=
- =?us-ascii?q?172Lq/4gQViuCES/MPwrIEvz8sqy5qE1an0NLZFcGNpwp7c6VYZdM84FFH2X?=
- =?us-ascii?q?jFuAx6O5yqN7piiUIGcwRro0Pu0A16Cp1ansg3qHMn1xJyJriF0FNFbj+Y2J?=
- =?us-ascii?q?fwOrrNKmbs5hygd6nW2lTG2taM5qgP8Og4q0nkvAyxCEUi629o08NU03uH/Z?=
- =?us-ascii?q?jKFBAdUYjwUkYs7xh6o6vVbTUj6I/O0n1sK6a0uCfY2901HOsl1gqgf9BHPa?=
- =?us-ascii?q?yYDgDyCNMVBsi1Jewxh1epbggLPP1c9K4wIcymbeKK17KxM+p6gD2mimFH6p?=
- =?us-ascii?q?hn0k2Q7yp8VvLI35EdzvGExASHVCnzg0q7vcD0n4BJfjcSHnajySf5HoFRer?=
- =?us-ascii?q?d9cZwXBmepOcG3xM1+jYb3W3FE7F6jG08G2MixdBqKcVP92wJQ1VkWoXyhgC?=
- =?us-ascii?q?e4zCJ7kysvrqWB2CzD2OXieAMDOm5MWmltk03gIZOugNAZQUiodRImmAGj5U?=
- =?us-ascii?q?nk3aRbprx/fCHvRhJydi76PilOT620v6LKN9RD9ZUsuD1/UeKye1mWR7fx5R?=
- =?us-ascii?q?wA3HWnV0994RRzIzWrvIjp2h93kmSQKF5to3fDP8J93xHS4JrbX/EHmnICRS?=
- =?us-ascii?q?9lmXzMC1OhJdi17JCRkJvetu32A2agUIBDNDLmxp6atTeqoGhtDQC7ktitld?=
- =?us-ascii?q?D9Vws3yyn2059tTyqe/zjmZYy+7Li3KeJqeAFTAVb478drUtVlnpAYmIAb2X?=
- =?us-ascii?q?9cgI6cu3UAjzGgYp1gxaviYS9VFnYwyNnP7V2ggRQyIw=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CFAgD77Ute/wHyM5BmHAEBAQEBBwEBEQEEBAEBgXuBf?=
- =?us-ascii?q?YFtIBIqhBSJA4ZhBoE3iXCRSgkBAQEBAQEBAQE3BAEBhEACgic4EwIQAQEBB?=
- =?us-ascii?q?QEBAQEBBQMBAWyFQ4I7KQGDAQEBAQEDIxVBEAsOBwMCAiYCAlcGAQwGAgEBg?=
- =?us-ascii?q?mM/glclq1F1gTKFSoNqgT6BDiqMPnmBB4E4D4JdPoQSg0mCPCIEkCKHMEaXc?=
- =?us-ascii?q?oJFglCUAwYchw+UFy2OQJ1PIoFYKwgCGAghD4MnUBgNnQEjAzANjj2CQwEB?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 18 Feb 2020 14:02:01 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 01IE0hBe258104;
-        Tue, 18 Feb 2020 09:00:45 -0500
-Subject: Re: [RFC PATCH] security: <linux/lsm_hooks.h>: fix all kernel-doc
- warnings
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Cc:     John Johansen <john.johansen@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Micah Morton <mortonm@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-References: <fb2c98bd-b579-6ad0-721a-56a4f81f0d6e@infradead.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <ec4e5117-08b6-d4df-fb08-deb553ebdc73@tycho.nsa.gov>
-Date:   Tue, 18 Feb 2020 09:03:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 09:04:35 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A615629138B
+Received: by earth.universe (Postfix, from userid 1000)
+        id F10E93C0C81; Tue, 18 Feb 2020 15:04:31 +0100 (CET)
+Date:   Tue, 18 Feb 2020 15:04:31 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200218140431.emrxgvckrpltmg2s@earth.universe>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <20200214003452.xuadnylj2udqyljs@earth.universe>
+ <20200214013454.GX64767@atomide.com>
+ <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
+ <20200214170946.GB64767@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <fb2c98bd-b579-6ad0-721a-56a4f81f0d6e@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7l4uy2pkqo77ymf7"
+Content-Disposition: inline
+In-Reply-To: <20200214170946.GB64767@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/16/20 2:08 AM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix all kernel-doc warnings in <linux/lsm_hooks.h>.
-> Fixes the following warnings:
-> 
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'quotactl' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'quota_on' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_free_mnt_opts' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_eat_lsm_opts' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_kern_mount' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_show_options' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'sb_add_mnt_opt' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'd_instantiate' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'getprocattr' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'setprocattr' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'locked_down' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_open' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_alloc' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_free' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_read' not described in 'security_list_options'
-> ../include/linux/lsm_hooks.h:1830: warning: Function parameter or member 'perf_event_write' not described in 'security_list_options'
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: John Johansen <john.johansen@canonical.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Micah Morton <mortonm@chromium.org>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-security-module@vger.kernel.org
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: Stephen Smalley <sds@tycho.nsa.gov>
-> Cc: Eric Paris <eparis@parisplace.org>
-> Cc: Casey Schaufler <casey@schaufler-ca.com>
-> Cc: Kentaro Takeda <takedakn@nttdata.co.jp>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
-> Notes:
-> a. The location for some of these might need to be modified.
-> b. 'locked_down' was just missing a final ':'.
-> c. Added a new section: Security hooks for perf events.
-> 
->   include/linux/lsm_hooks.h |   36 +++++++++++++++++++++++++++++++++++-
->   1 file changed, 35 insertions(+), 1 deletion(-)
-> 
-> --- lnx-56-rc1.orig/include/linux/lsm_hooks.h
-> +++ lnx-56-rc1/include/linux/lsm_hooks.h
-> @@ -136,6 +140,10 @@
->    *	@sb superblock being remounted
->    *	@data contains the filesystem-specific data.
->    *	Return 0 if permission is granted.
-> + * @sb_kern_mount:
-> + * 	Mount this @sb if allowed by permissions.
-> + * @sb_show_options:
-> + * 	Show (print on @m) mount options for this @sb.
->    * @sb_umount:
->    *	Check permission before the @mnt file system is unmounted.
->    *	@mnt contains the mounted file system.
 
-Thanks for doing this.  Note that some of the existing kernel-doc 
-comments for these hooks include a separate line describing each 
-parameter (not just embedded in the function description) and a line 
-describing the return value.  Is that optional for kernel-doc? 
-Obviously what you have added here is an improvement, just wondering 
-whether it suffices or needs further augmentation.
+--7l4uy2pkqo77ymf7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Feb 14, 2020 at 09:09:46AM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@kernel.org> [200214 13:05]:
+> > On Thu, Feb 13, 2020 at 05:34:54PM -0800, Tony Lindgren wrote:
+> > > And bluetooth would be similar to cpcap_audio and mot_mdm6600_audio
+> > > above.
+> >=20
+> > My understanding is, that CPU is not involved for calls (except for
+> > setting up cpcap registers correctly). Basically McBSP3 should
+> > remain idle for a call and data goes directly from modem to cpcap.
+> > The same should work for modem <-> BT, except that CPCAP seems to
+> > always provide the clock. That would imply a direct link between
+> > modem and codec / BT?
+>=20
+> Yes the direct link is i2s. I'm ot sure if mcbsp can be idle during
+> voice call though, I guess it should be doable since mcbsp is not
+> the clock master :)
+>=20
+> > > My guess is that only cpcap registers and clock rate needs to be
+> > > changed for bluetooth audio BTW, so if somebody havs a bluetooth
+> > > headset just do the following in Android:
+> > >=20
+> > > # cpcaprw --all > /tmp/before
+> > > configure bluetooth headset for audio in android and start
+> > > playing some music or make a phone call
+> > > ...
+> > > # cpcaprw --all > /tmp/after
+> > > stop playing music or phone call
+> > > ...
+> > > diff -u /tmp/before /tmp/after
+> > >=20
+> > > The registers will be different for a bluetooth phone call and
+> > > playing music.
+> >=20
+> > I can provider register values once I find some time.
+
+[NI] Normal idle (no BT headset connected)
+[BI] Bluetooth idle (with BT headset connected)
+[BC] Bluetooth call in progress
+[NC] Normal call in progress (BT headset disabled)
+
+                     [NI]  =3D>  [BI]  =3D>  [BC]  =3D>  [NC]
+CPCAP_REG_VAUDIOC   0x0065 =3D> 0x0065 =3D> 0x0065 =3D> 0x0025
+CPCAP_REG_CC        0x0000 =3D> 0x0000 =3D> 0x6000 =3D> 0x60df
+CPCAP_REG_CDI       0x0040 =3D> 0x0000 =3D> 0xaa40 =3D> 0xae0a
+CPCAP_REG_SDAC      -------------- 0x0000 --------------
+CPCAP_REG_SDACDI    -------------- 0x0004 --------------
+CPCAP_REG_TXI       0x0804 =3D> 0x0004 =3D> 0x0000 =3D> 0x0cc6
+CPCAP_REG_TXMP      0x079c =3D> 0x079c =3D> 0x0400 =3D> 0x0673
+CPCAP_REG_RXOA      0x0000 =3D> 0x0000 =3D> 0x0001 =3D> 0x0001
+CPCAP_REG_RXVC      0x0d34 =3D> 0x0d34 =3D> 0x0000 =3D> 0x0b2c
+CPCAP_REG_RXCOA     0x0000 =3D> 0x0000 =3D> 0x0000 =3D> 0x0601
+CPCAP_REG_RXSDOA    0x0000 =3D> 0x0000 =3D> 0x0600 =3D> 0x0600
+CPCAP_REG_RXEPOA    -------------- 0x0400 --------------
+CPCAP_REG_RXLL      -------------- 0x0000 --------------
+CPCAP_REG_A2LA      -------------- 0x0030 --------------
+CPCAP_REG_MIPIS1    -------------- 0x0000 --------------
+CPCAP_REG_MIPIS2    -------------- 0x0000 --------------
+CPCAP_REG_MIPIS3    -------------- 0x0000 --------------
+CPCAP_REG_LVAB      -------------- 0x0000 --------------
+
+-- Sebastian
+
+--7l4uy2pkqo77ymf7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5L7ukACgkQ2O7X88g7
++poophAApJAJiKd6MJhkOGd7eW5g2hWtYr0qp9cVC99Z6POxm8vqSPa1uQvF6oz+
+WpT4x0lPj1qTxQJvcsm2MS+HHi3fMdodtfI96kXUxC/owAem23WGtIdggLvsna28
+uVoCqRrAVriUsqfyTZDIw7FQNe9rxfOLMilYLQz9KrPF+j+witt2i5hwKAQemXke
+wLpTEH3uaT1GgSEsXyu/YUlAY8f5f6lSkQgodG1sLbhrR16MUPDCrlmrHgNI07IK
+sXT/wm9urqjkBo5/KWVuLhmXR87TgY6RPx0UEDOSuz2k2a85CoX0dH9Of6dBexj1
+eQyOxQZQo+u2cBzBGqZFL9TaW9slOqfbFn8sV3i50sG/0B0UAyfvgtRdJpuZw9Y8
+hXuDeyhQ1fj7E2/GmH4+EJhgQ+9xYw8t1oqRDR9LxvtCzi8Kcf9wFRbGpEhunvUQ
+kG3HJfOwTtN/fyqkqrIkwxVvvVG0qMNheIsPXMswnYwRTySHypzzsYV+pxe1yxXt
+DZiHCB+yydiUzFOOec31nK/O29A5gdsLAtLk715eU75UbB5xz4zBcW+Jx9hnqVgd
+CZeolty1OMmDQBfWRlQEs75CAx6aSbWY4kANpxCc0WCq++HnG75m5sgSA2QGucfl
+2gCXCdMQoJxTOd+WptS0Hzv0Z8agrMJETT31lvgjXJ7ZH3MIz/w=
+=0V6p
+-----END PGP SIGNATURE-----
+
+--7l4uy2pkqo77ymf7--
