@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B792BC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE234C3403F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0652464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B4920801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgBROg2 (ORCPT
+        id S1727880AbgBROgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:36:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53041 "EHLO
+        Tue, 18 Feb 2020 09:36:36 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53123 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgBROfj (ORCPT
+        with ESMTP id S1726700AbgBROgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:35:39 -0500
+        Tue, 18 Feb 2020 09:36:35 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j43xw-0000fF-2o; Tue, 18 Feb 2020 14:35:12 +0000
+        id 1j43yC-0000fF-K3; Tue, 18 Feb 2020 14:35:28 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -41,9 +41,9 @@ Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 08/25] cred: add kfs{g,u}id
-Date:   Tue, 18 Feb 2020 15:33:54 +0100
-Message-Id: <20200218143411.2389182-9-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 23/25] keys: handle fsid mappings
+Date:   Tue, 18 Feb 2020 15:34:09 +0100
+Message-Id: <20200218143411.2389182-24-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
@@ -54,50 +54,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the introduction of fsid mappings we need to carefully handle
-single-superblock filesystems that are visible in user namespaces. This
-specifically concerns proc and sysfs. For those filesystems we want to continue
-looking up fsid in the id mappings of the relevant user namespace. We can
-either do this by dynamically translating between these fsids or we simply keep
-them around with the other creds. The latter option is not just simpler but
-also more performant since we don't need to do the translation from fsid
-mappings into id mappings on the fly.
+Similar to proc and sysfs let keys use kfsids which are always mapped according
+to id mappings.
 
-Link: https://lore.kernel.org/r/20200212145149.zohmc6d3x52bw6j6@wittgenstein
-Cc: Jann Horn <jannh@google.com>
+Suggested-by: Jann Horn <jannh@google.com>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v2 */
-patch added
+patch not present
 
 /* v3 */
-unchanged
+patch added
+- Jann Horn <jannh@google.com>:
+  - Add patch to handle the keyrings.
 ---
- include/linux/cred.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ security/keys/key.c              |  2 +-
+ security/keys/permission.c       |  4 ++--
+ security/keys/process_keys.c     |  6 ++++--
+ security/keys/request_key.c      | 10 +++++-----
+ security/keys/request_key_auth.c |  2 +-
+ 5 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/cred.h b/include/linux/cred.h
-index 18639c069263..604914d3fd51 100644
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -125,6 +125,8 @@ struct cred {
- 	kgid_t		egid;		/* effective GID of the task */
- 	kuid_t		fsuid;		/* UID for VFS ops */
- 	kgid_t		fsgid;		/* GID for VFS ops */
-+	kuid_t		kfsuid;		/* UID for VFS ops for userns visible filesystems */
-+	kgid_t		kfsgid;		/* GID for VFS ops for userns visible filesystems */
- 	unsigned	securebits;	/* SUID-less security management */
- 	kernel_cap_t	cap_inheritable; /* caps our children can inherit */
- 	kernel_cap_t	cap_permitted;	/* caps we're permitted */
-@@ -384,6 +386,8 @@ static inline void put_cred(const struct cred *_cred)
- #define current_sgid()		(current_cred_xxx(sgid))
- #define current_fsuid() 	(current_cred_xxx(fsuid))
- #define current_fsgid() 	(current_cred_xxx(fsgid))
-+#define current_kfsuid() 	(current_cred_xxx(kfsuid))
-+#define current_kfsgid() 	(current_cred_xxx(kfsgid))
- #define current_cap()		(current_cred_xxx(cap_effective))
- #define current_user()		(current_cred_xxx(user))
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 718bf7217420..bfb17e8210d7 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -923,7 +923,7 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
  
+ 	/* allocate a new key */
+ 	key = key_alloc(index_key.type, index_key.description,
+-			cred->fsuid, cred->fsgid, cred, perm, flags, NULL);
++			cred->kfsuid, cred->kfsgid, cred, perm, flags, NULL);
+ 	if (IS_ERR(key)) {
+ 		key_ref = ERR_CAST(key);
+ 		goto error_link_end;
+diff --git a/security/keys/permission.c b/security/keys/permission.c
+index 085f907b64ac..847187ca6b41 100644
+--- a/security/keys/permission.c
++++ b/security/keys/permission.c
+@@ -33,7 +33,7 @@ int key_task_permission(const key_ref_t key_ref, const struct cred *cred,
+ 	key = key_ref_to_ptr(key_ref);
+ 
+ 	/* use the second 8-bits of permissions for keys the caller owns */
+-	if (uid_eq(key->uid, cred->fsuid)) {
++	if (uid_eq(key->uid, cred->kfsuid)) {
+ 		kperm = key->perm >> 16;
+ 		goto use_these_perms;
+ 	}
+@@ -41,7 +41,7 @@ int key_task_permission(const key_ref_t key_ref, const struct cred *cred,
+ 	/* use the third 8-bits of permissions for keys the caller has a group
+ 	 * membership in common with */
+ 	if (gid_valid(key->gid) && key->perm & KEY_GRP_ALL) {
+-		if (gid_eq(key->gid, cred->fsgid)) {
++		if (gid_eq(key->gid, cred->kfsgid)) {
+ 			kperm = key->perm >> 8;
+ 			goto use_these_perms;
+ 		}
+diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+index 09541de31f2f..32376f0fbb42 100644
+--- a/security/keys/process_keys.c
++++ b/security/keys/process_keys.c
+@@ -379,7 +379,7 @@ void key_fsuid_changed(struct cred *new_cred)
+ 	/* update the ownership of the thread keyring */
+ 	if (new_cred->thread_keyring) {
+ 		down_write(&new_cred->thread_keyring->sem);
+-		new_cred->thread_keyring->uid = new_cred->fsuid;
++		new_cred->thread_keyring->uid = new_cred->kfsuid;
+ 		up_write(&new_cred->thread_keyring->sem);
+ 	}
+ }
+@@ -392,7 +392,7 @@ void key_fsgid_changed(struct cred *new_cred)
+ 	/* update the ownership of the thread keyring */
+ 	if (new_cred->thread_keyring) {
+ 		down_write(&new_cred->thread_keyring->sem);
+-		new_cred->thread_keyring->gid = new_cred->fsgid;
++		new_cred->thread_keyring->gid = new_cred->kfsgid;
+ 		up_write(&new_cred->thread_keyring->sem);
+ 	}
+ }
+@@ -923,10 +923,12 @@ void key_change_session_keyring(struct callback_head *twork)
+ 	new-> euid	= old-> euid;
+ 	new-> suid	= old-> suid;
+ 	new->fsuid	= old->fsuid;
++	new->kfsuid	= old->kfsuid;
+ 	new->  gid	= old->  gid;
+ 	new-> egid	= old-> egid;
+ 	new-> sgid	= old-> sgid;
+ 	new->fsgid	= old->fsgid;
++	new->kfsgid	= old->kfsgid;
+ 	new->user	= get_uid(old->user);
+ 	new->user_ns	= get_user_ns(old->user_ns);
+ 	new->group_info	= get_group_info(old->group_info);
+diff --git a/security/keys/request_key.c b/security/keys/request_key.c
+index 957b9e3e1492..254a7c2f3fde 100644
+--- a/security/keys/request_key.c
++++ b/security/keys/request_key.c
+@@ -134,7 +134,7 @@ static int call_sbin_request_key(struct key *authkey, void *aux)
+ 	sprintf(desc, "_req.%u", key->serial);
+ 
+ 	cred = get_current_cred();
+-	keyring = keyring_alloc(desc, cred->fsuid, cred->fsgid, cred,
++	keyring = keyring_alloc(desc, cred->kfsuid, cred->kfsgid, cred,
+ 				KEY_POS_ALL | KEY_USR_VIEW | KEY_USR_READ,
+ 				KEY_ALLOC_QUOTA_OVERRUN, NULL, NULL);
+ 	put_cred(cred);
+@@ -149,8 +149,8 @@ static int call_sbin_request_key(struct key *authkey, void *aux)
+ 		goto error_link;
+ 
+ 	/* record the UID and GID */
+-	sprintf(uid_str, "%d", from_kuid(&init_user_ns, cred->fsuid));
+-	sprintf(gid_str, "%d", from_kgid(&init_user_ns, cred->fsgid));
++	sprintf(uid_str, "%d", from_kuid(&init_user_ns, cred->kfsuid));
++	sprintf(gid_str, "%d", from_kgid(&init_user_ns, cred->kfsgid));
+ 
+ 	/* we say which key is under construction */
+ 	sprintf(key_str, "%d", key->serial);
+@@ -390,7 +390,7 @@ static int construct_alloc_key(struct keyring_search_context *ctx,
+ 		perm |= KEY_POS_WRITE;
+ 
+ 	key = key_alloc(ctx->index_key.type, ctx->index_key.description,
+-			ctx->cred->fsuid, ctx->cred->fsgid, ctx->cred,
++			ctx->cred->kfsuid, ctx->cred->kfsgid, ctx->cred,
+ 			perm, flags, NULL);
+ 	if (IS_ERR(key))
+ 		goto alloc_failed;
+@@ -490,7 +490,7 @@ static struct key *construct_key_and_link(struct keyring_search_context *ctx,
+ 	if (ret)
+ 		goto error;
+ 
+-	user = key_user_lookup(current_fsuid());
++	user = key_user_lookup(current_kfsuid());
+ 	if (!user) {
+ 		ret = -ENOMEM;
+ 		goto error_put_dest_keyring;
+diff --git a/security/keys/request_key_auth.c b/security/keys/request_key_auth.c
+index ecba39c93fd9..26808146897c 100644
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -215,7 +215,7 @@ struct key *request_key_auth_new(struct key *target, const char *op,
+ 	sprintf(desc, "%x", target->serial);
+ 
+ 	authkey = key_alloc(&key_type_request_key_auth, desc,
+-			    cred->fsuid, cred->fsgid, cred,
++			    cred->kfsuid, cred->kfsgid, cred,
+ 			    KEY_POS_VIEW | KEY_POS_READ | KEY_POS_SEARCH | KEY_POS_LINK |
+ 			    KEY_USR_VIEW, KEY_ALLOC_NOT_IN_QUOTA, NULL);
+ 	if (IS_ERR(authkey)) {
 -- 
 2.25.0
 
