@@ -2,102 +2,84 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8FBC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6232C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0891F24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STSEWAj2"
+	by mail.kernel.org (Postfix) with ESMTP id 8823124125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582051439;
+	bh=aTM86BoyrTwzruHENYmelIh0HzLGd9t+clXn5N5NwmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W68kWjhFFVxZY5MdWDF8FyjAdzoJKZWpeLWJm+MHPb9J+WVEWtJJU1wf8vxFdCCw0
+	 As//E9KxEdOHnvEWFye81xr/bYtfnHbJKeEebEZfrZmBo+MpnyPYIwhRfgCbkgyzOt
+	 jgOEa4h2hhVteU83mYReEKGECCZ8cSLml9vdCF/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgBRSmo (ORCPT
+        id S1726477AbgBRSn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:42:44 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44827 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgBRSmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:42:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y5so11076972pfb.11;
-        Tue, 18 Feb 2020 10:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FRPijcKo7kcY7YCcx2mnm2XntT5PXC3jc8cYZD9bnvc=;
-        b=STSEWAj2mLLdHZrKCoSsV8S5dtobBUHz7/MKp0aKP2JnTSV18tnQhlLbjjBD5wAsyk
-         ePvAISX8FcYTeBxh36DpesEK5H9hLIyHXPCaI53agF7h6zTrNhh3MO1631cf4QqufW42
-         QQkE6llrFzaX0E7sDPbCe7F1FpDG8zHWxqNSBvWm8MucYpATLWu79qFmG5UWT7kRbWSj
-         ltd36F12euAfNFEi+OdRHdpdTBNOQ/c0HHX+mvTuxDbggM8hbFsAOPnqU/edC1lHjvVR
-         12Dux0Qg5EpOjGIdANsYT0hynAY00NrxXqpcQImu6orXAs/FBnK8po4uRFlIkNTmvl5m
-         J4Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FRPijcKo7kcY7YCcx2mnm2XntT5PXC3jc8cYZD9bnvc=;
-        b=FvcCwn/jIRk/66QWFCKye09gc+rn1z6cBtVyLonAqASFQlQu4hmm1muddWvNM7Q/Er
-         TvVhCcyDig43j99JyZ5mgDsoziJsgQZWNF8Zt+OY3kBRFnly1iU06a7/k52V02ae2oIS
-         Kvk1fIX3/ZrsZ2orYYT8ylSZ0h5us1QjVygUqlGQ4HkVzzyfaK/8wPvfbnWmQvzqiIy7
-         ZSWjkFYulDlnkb+skB9cjUayTP/47K6OP+PpQLqAYZOxAhHO2eygFX0EdZ9O/IRJk4Aq
-         8eOiccY3IRz4+HJc5FUsds7kciWNu7j3bkgw6hK+Bc6tth5QXjcJf7cMkwgaBgvcnnQO
-         r9Pw==
-X-Gm-Message-State: APjAAAVDWLQxc0yM3UBtvI19rxxyn91pO81XfrvuC/ZQUjxb3/dJjyKD
-        Hb81gGNcaSaOl2ibVp0tNg==
-X-Google-Smtp-Source: APXvYqwl800bbQ26s9xKJZDhrO9PdZlbIcrYNVvwauRbeX7NJfuXFF1uGmSM7zo9LH4rJfVnnVed0w==
-X-Received: by 2002:a63:515d:: with SMTP id r29mr23493038pgl.265.1582051363462;
-        Tue, 18 Feb 2020 10:42:43 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:54c:a276:f869:e1e5:121e:cdbf])
-        by smtp.gmail.com with ESMTPSA id v5sm5526791pgc.11.2020.02.18.10.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:42:42 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     paul@paul-moore.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] netlabel_domainhash.c: Use built-in RCU list checking
-Date:   Wed, 19 Feb 2020 00:11:32 +0530
-Message-Id: <20200218184132.20363-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Feb 2020 13:43:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgBRSn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:43:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B49D21D56;
+        Tue, 18 Feb 2020 18:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582051437;
+        bh=aTM86BoyrTwzruHENYmelIh0HzLGd9t+clXn5N5NwmU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aeSF1kbpSuMsqrTZUpJzF+HqiFCrZm5kUT9u57IYv1q39pXmT+2BrqVI2hf5DKLXA
+         epCfw1GrXEu6qEY5A5zKMtJbwO7H29wZ9a8h3Kls71uSiVYmpwc6GbGjJMXnQRfjij
+         35R+hM6tCfRbjenUY/talvCHn83IQagI4rKaIhpM=
+Date:   Tue, 18 Feb 2020 19:43:55 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org, robdclark@gmail.com,
+        bjorn.andersson@linaro.org,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        Will Deacon <will@kernel.org>, joro@8bytes.org,
+        masneyb@onstation.org, lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: drivers/iommu/qcom_iommu.c:348 qcom_iommu_domain_free+0x5c/0x70
+Message-ID: <20200218184355.GA2667975@kroah.com>
+References: <CA+G9fYtScOpkLvx=__gP903uJ2v87RwZgkAuL6RpF9_DTDs9Zw@mail.gmail.com>
+ <20200218182359.GC2635524@kroah.com>
+ <19d57dfd-12df-9237-3576-32b0feef90fa@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19d57dfd-12df-9237-3576-32b0feef90fa@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Tue, Feb 18, 2020 at 06:31:51PM +0000, Robin Murphy wrote:
+> On 18/02/2020 6:23 pm, Greg Kroah-Hartman wrote:
+> [...]
+> > Can you bisect to find the offending commit?
+> 
+> This particular presentation appears to be down to the DRM driver starting
+> to call of_platform_depopulate(), but it's merely exposing badness in the
+> IOMMU driver that's been there from day 1. I just sent a fix for that[1].
+> 
+> Robin.
+> 
+> [1] https://lore.kernel.org/linux-iommu/be92829c6e5467634b109add002351e6cf9e18d2.1582049382.git.robin.murphy@arm.com/
 
-list_for_each_entry_rcu() has built-in RCU and lock checking.
+Can you also add a cc: stable tag to it so that I know to pick it up?
 
-Pass cond argument to list_for_each_entry_rcu() to silence
-false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-by default.
+thanks,
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- net/netlabel/netlabel_domainhash.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
-index f5d34da0646e..a1f2320ecc16 100644
---- a/net/netlabel/netlabel_domainhash.c
-+++ b/net/netlabel/netlabel_domainhash.c
-@@ -143,7 +143,8 @@ static struct netlbl_dom_map *netlbl_domhsh_search(const char *domain,
- 	if (domain != NULL) {
- 		bkt = netlbl_domhsh_hash(domain);
- 		bkt_list = &netlbl_domhsh_rcu_deref(netlbl_domhsh)->tbl[bkt];
--		list_for_each_entry_rcu(iter, bkt_list, list)
-+		list_for_each_entry_rcu(iter, bkt_list, list,
-+					lockdep_is_held(&netlbl_domhsh_lock))
- 			if (iter->valid &&
- 			    netlbl_family_match(iter->family, family) &&
- 			    strcmp(iter->domain, domain) == 0)
--- 
-2.17.1
-
+greg k-h
