@@ -2,51 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F84C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4750C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB92524672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898C424673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056126;
-	bh=yZYak2tDGAyXioyAn/oqvdhOUDgNJyA3joLyhTJ0PQo=;
+	s=default; t=1582056130;
+	bh=ThgjNCU+8MS+eBKTclwmfynFRyuPnapydKLL6JZ7fXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kTTEBi4gk3xoO+mFn6JXCM9k9Lisr7ccjtFBu2bhV0JUc7U3JrkrpkbpNjZv5cAA+
-	 YI06AlV9fX3Dfkf+ZRgNzmLucopL+OcD+n7e+bFsobZEuWc8PF1q8dnTFgHUzHyoth
-	 W23ep8jrDPBJ0h42qd6qtN1ZqRmPACjwn4PTh2J0=
+	b=hZog2p+2xPOObyDp0GdkfT7gXr5cnuW/L1MPW74s47Xb2PLJTRaQboBGb2jlrJR/+
+	 4KW6XCQouWSi7JOu123UR9di+t5j91s8iVQq1Wdpk4XSKSEfaaUPR8sGpbAhXW1zG5
+	 ciuP/m5HSUmuK4nGenvIZIQoERrtcRA4yXdcpwSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgBRUCF (ORCPT
+        id S1728866AbgBRUCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:02:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgBRUCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:01 -0500
+        id S1727785AbgBRUCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2013B24672;
-        Tue, 18 Feb 2020 20:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A4A2465D;
+        Tue, 18 Feb 2020 20:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056120;
-        bh=yZYak2tDGAyXioyAn/oqvdhOUDgNJyA3joLyhTJ0PQo=;
+        s=default; t=1582056126;
+        bh=ThgjNCU+8MS+eBKTclwmfynFRyuPnapydKLL6JZ7fXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CS1G+i3PevSLGtcgKamBwVFbNvtqIdG3GIgnTJHndoS8LPCbq6c2DIvJDEAMuF25m
-         4sHGtGXOziYvVBe5NcxrfvQejVAJUr5NiF7Ycc3WQYHQtl4eBkCb7mwFNeBIma+Uig
-         L9uq5NXCUP/FMkq6S5ZZgf+PBRZP8l12lnduC67I=
+        b=i9TPnexnLOjecV3Ene+xaO3XC0HCYzuKSDMt7bkwwnVy5HbDptpalW2U2/7kDMhBG
+         TQY3TpsD8oeoQ29v8dEL908KqRz/teOVgGbbiP9jo+myLeBbqKqULD1Eo0s+kfMd38
+         6YsD0xemDiznn0vQfy0maxVSaRX6Fc0w4q1nesZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 43/80] drm/amdgpu: update smu_v11_0_pptable.h
-Date:   Tue, 18 Feb 2020 20:55:04 +0100
-Message-Id: <20200218190436.481284122@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        sohu0106 <sohu0106@126.com>, Olof Johansson <olof@lixom.net>
+Subject: [PATCH 5.5 45/80] bus: moxtet: fix potential stack buffer overflow
+Date:   Tue, 18 Feb 2020 20:55:06 +0100
+Message-Id: <20200218190436.649116364@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,76 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Marek Behún <marek.behun@nic.cz>
 
-commit c1d66bc2e531b4ed3a9464b8e87144cc6b2fd63f upstream.
+commit 3bf3c9744694803bd2d6f0ee70a6369b980530fd upstream.
 
-Update to the latest changes.
+The input_read function declares the size of the hex array relative to
+sizeof(buf), but buf is a pointer argument of the function. The hex
+array is meant to contain hexadecimal representation of the bin array.
 
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org # 5.5.x
+Link: https://lore.kernel.org/r/20200215142130.22743-1-marek.behun@nic.cz
+Fixes: 5bc7f990cd98 ("bus: Add support for Moxtet bus")
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Reported-by: sohu0106 <sohu0106@126.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_pptable.h |   46 ++++++++++++------
- 1 file changed, 32 insertions(+), 14 deletions(-)
+ drivers/bus/moxtet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_pptable.h
-+++ b/drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_pptable.h
-@@ -39,21 +39,39 @@
- #define SMU_11_0_PP_OVERDRIVE_VERSION                   0x0800
- #define SMU_11_0_PP_POWERSAVINGCLOCK_VERSION            0x0100
+--- a/drivers/bus/moxtet.c
++++ b/drivers/bus/moxtet.c
+@@ -466,7 +466,7 @@ static ssize_t input_read(struct file *f
+ {
+ 	struct moxtet *moxtet = file->private_data;
+ 	u8 bin[TURRIS_MOX_MAX_MODULES];
+-	u8 hex[sizeof(buf) * 2 + 1];
++	u8 hex[sizeof(bin) * 2 + 1];
+ 	int ret, n;
  
-+enum SMU_11_0_ODFEATURE_CAP {
-+    SMU_11_0_ODCAP_GFXCLK_LIMITS = 0,
-+    SMU_11_0_ODCAP_GFXCLK_CURVE,
-+    SMU_11_0_ODCAP_UCLK_MAX,
-+    SMU_11_0_ODCAP_POWER_LIMIT,
-+    SMU_11_0_ODCAP_FAN_ACOUSTIC_LIMIT,
-+    SMU_11_0_ODCAP_FAN_SPEED_MIN,
-+    SMU_11_0_ODCAP_TEMPERATURE_FAN,
-+    SMU_11_0_ODCAP_TEMPERATURE_SYSTEM,
-+    SMU_11_0_ODCAP_MEMORY_TIMING_TUNE,
-+    SMU_11_0_ODCAP_FAN_ZERO_RPM_CONTROL,
-+    SMU_11_0_ODCAP_AUTO_UV_ENGINE,
-+    SMU_11_0_ODCAP_AUTO_OC_ENGINE,
-+    SMU_11_0_ODCAP_AUTO_OC_MEMORY,
-+    SMU_11_0_ODCAP_FAN_CURVE,
-+    SMU_11_0_ODCAP_COUNT,
-+};
-+
- enum SMU_11_0_ODFEATURE_ID {
--    SMU_11_0_ODFEATURE_GFXCLK_LIMITS        = 1 << 0,         //GFXCLK Limit feature
--    SMU_11_0_ODFEATURE_GFXCLK_CURVE         = 1 << 1,         //GFXCLK Curve feature
--    SMU_11_0_ODFEATURE_UCLK_MAX             = 1 << 2,         //UCLK Limit feature
--    SMU_11_0_ODFEATURE_POWER_LIMIT          = 1 << 3,         //Power Limit feature
--    SMU_11_0_ODFEATURE_FAN_ACOUSTIC_LIMIT   = 1 << 4,         //Fan Acoustic RPM feature
--    SMU_11_0_ODFEATURE_FAN_SPEED_MIN        = 1 << 5,         //Minimum Fan Speed feature
--    SMU_11_0_ODFEATURE_TEMPERATURE_FAN      = 1 << 6,         //Fan Target Temperature Limit feature
--    SMU_11_0_ODFEATURE_TEMPERATURE_SYSTEM   = 1 << 7,         //Operating Temperature Limit feature
--    SMU_11_0_ODFEATURE_MEMORY_TIMING_TUNE   = 1 << 8,         //AC Timing Tuning feature
--    SMU_11_0_ODFEATURE_FAN_ZERO_RPM_CONTROL = 1 << 9,         //Zero RPM feature
--    SMU_11_0_ODFEATURE_AUTO_UV_ENGINE       = 1 << 10,        //Auto Under Volt GFXCLK feature
--    SMU_11_0_ODFEATURE_AUTO_OC_ENGINE       = 1 << 11,        //Auto Over Clock GFXCLK feature
--    SMU_11_0_ODFEATURE_AUTO_OC_MEMORY       = 1 << 12,        //Auto Over Clock MCLK feature
--    SMU_11_0_ODFEATURE_FAN_CURVE            = 1 << 13,        //VICTOR TODO
-+    SMU_11_0_ODFEATURE_GFXCLK_LIMITS        = 1 << SMU_11_0_ODCAP_GFXCLK_LIMITS,            //GFXCLK Limit feature
-+    SMU_11_0_ODFEATURE_GFXCLK_CURVE         = 1 << SMU_11_0_ODCAP_GFXCLK_CURVE,             //GFXCLK Curve feature
-+    SMU_11_0_ODFEATURE_UCLK_MAX             = 1 << SMU_11_0_ODCAP_UCLK_MAX,                 //UCLK Limit feature
-+    SMU_11_0_ODFEATURE_POWER_LIMIT          = 1 << SMU_11_0_ODCAP_POWER_LIMIT,              //Power Limit feature
-+    SMU_11_0_ODFEATURE_FAN_ACOUSTIC_LIMIT   = 1 << SMU_11_0_ODCAP_FAN_ACOUSTIC_LIMIT,       //Fan Acoustic RPM feature
-+    SMU_11_0_ODFEATURE_FAN_SPEED_MIN        = 1 << SMU_11_0_ODCAP_FAN_SPEED_MIN,            //Minimum Fan Speed feature
-+    SMU_11_0_ODFEATURE_TEMPERATURE_FAN      = 1 << SMU_11_0_ODCAP_TEMPERATURE_FAN,          //Fan Target Temperature Limit feature
-+    SMU_11_0_ODFEATURE_TEMPERATURE_SYSTEM   = 1 << SMU_11_0_ODCAP_TEMPERATURE_SYSTEM,       //Operating Temperature Limit feature
-+    SMU_11_0_ODFEATURE_MEMORY_TIMING_TUNE   = 1 << SMU_11_0_ODCAP_MEMORY_TIMING_TUNE,       //AC Timing Tuning feature
-+    SMU_11_0_ODFEATURE_FAN_ZERO_RPM_CONTROL = 1 << SMU_11_0_ODCAP_FAN_ZERO_RPM_CONTROL,     //Zero RPM feature
-+    SMU_11_0_ODFEATURE_AUTO_UV_ENGINE       = 1 << SMU_11_0_ODCAP_AUTO_UV_ENGINE,           //Auto Under Volt GFXCLK feature
-+    SMU_11_0_ODFEATURE_AUTO_OC_ENGINE       = 1 << SMU_11_0_ODCAP_AUTO_OC_ENGINE,           //Auto Over Clock GFXCLK feature
-+    SMU_11_0_ODFEATURE_AUTO_OC_MEMORY       = 1 << SMU_11_0_ODCAP_AUTO_OC_MEMORY,           //Auto Over Clock MCLK feature
-+    SMU_11_0_ODFEATURE_FAN_CURVE            = 1 << SMU_11_0_ODCAP_FAN_CURVE,                //Fan Curve feature
-     SMU_11_0_ODFEATURE_COUNT                = 14,
- };
- #define SMU_11_0_MAX_ODFEATURE    32          //Maximum Number of OD Features
+ 	ret = moxtet_spi_read(moxtet, bin);
 
 
