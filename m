@@ -2,113 +2,144 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98570C34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EF6C34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6538A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3oSrPHw"
+	by mail.kernel.org (Postfix) with ESMTP id 97369214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 03:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgBRDNl (ORCPT
+        id S1726510AbgBRDNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 22:13:41 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35175 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgBRDNf (ORCPT
+        Mon, 17 Feb 2020 22:13:55 -0500
+Received: from twhmllg4.macronix.com ([122.147.135.202]:53060 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgBRDNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 22:13:35 -0500
-Received: by mail-pg1-f194.google.com with SMTP id v23so6823853pgk.2;
-        Mon, 17 Feb 2020 19:13:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZFyQEdWxvwBxjLzrFGGVsFOAAPD8i2AvVgwQpt25K/U=;
-        b=X3oSrPHwn3fmMokFFba0Psbe8GMZM/aNgleo0TXOkMdoeXtWOcmIUiaN48N9xLIRgN
-         +/7TJndN0fzeZchT0RC+V9+oiVP9gQxJZaj8sB1/lY9Z7P/Uj9u6q/nH+saF+TlS1j1m
-         4f1j9YqXpQMqpy5y1jtLa0Z9/NkHgGFCVacAgly/rkKjCfwxQttJhYIxLF6oNRZkGJbz
-         anpuUKGGk6JhsH1q+WNWDfxlSheexwjId/xd214r1gc75NKJnPRlzKtu8BgqC7PkXz4b
-         hQVv48DPxDYLBG4Hed5/t7aSZmawvUEF2PmbUPHWjoHl4q3WlcozknmU4M3PE6cS8kXJ
-         tVEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZFyQEdWxvwBxjLzrFGGVsFOAAPD8i2AvVgwQpt25K/U=;
-        b=kgo465OKQHbWwlJUCeIKRHCCeKsUobjBbSsr16MSi9OKsL5xTG2lJ6FwHcKxWi+oCH
-         MXijQIfXjhkp9Ok21oUkd2RKWeqzhtEbfYNOY9WsZ9eCIvO0W40pJgrZA9YB1J8+NRDf
-         0m+iTzWoneCaGbcgY6sxB51WM+s1qt+PhyHIl9VpkPVDImaBT0Z3XnYJ6j5/wsmf1Q6Y
-         Z9I+2auimBbHaVZ1h8SPuULXiaNnvPvdb6Fnv2UWTvUCbR0D5LXL1jsYNvAkzevPFkLA
-         bnIsGNZD0NoZKujh/FrUDs2GWrDbKxwlxdSi4ObE3g1GvSU1LW3qoa4o/Cp7N53/PE3/
-         FecQ==
-X-Gm-Message-State: APjAAAXdsJnDQDY4OjHEqNDJAxzu0VlI4AxaIbJd98fxMf2SUvmv/4hT
-        gm1aGnExzzL6q+pdOIVLtVY=
-X-Google-Smtp-Source: APXvYqx5X191Us6wKiAbBYcJ+hEwCRwb0WAXLxgCTj5dGYTmWJiFy9sNG10WQKcON5Vp5efq+phbkQ==
-X-Received: by 2002:a63:ae0a:: with SMTP id q10mr20715662pgf.178.1581995613715;
-        Mon, 17 Feb 2020 19:13:33 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:180::6f94])
-        by smtp.gmail.com with ESMTPSA id b18sm1812595pfd.63.2020.02.17.19.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 19:13:33 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v3 5/5] ARM: dts: aspeed-g4: add vhub port and endpoint properties
-Date:   Mon, 17 Feb 2020 19:13:15 -0800
-Message-Id: <20200218031315.562-6-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200218031315.562-1-rentao.bupt@gmail.com>
-References: <20200218031315.562-1-rentao.bupt@gmail.com>
+        Mon, 17 Feb 2020 22:13:54 -0500
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 01I3Dk5L004086;
+        Tue, 18 Feb 2020 11:13:46 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id C236F781A13725FAE6CD;
+        Tue, 18 Feb 2020 11:13:46 +0800 (CST)
+In-Reply-To: <20200217100124.6ff71191@xps13>
+References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>  <1572256527-5074-2-git-send-email-masonccyang@mxic.com.tw>
+        <20200109203055.2370a358@collabora.com> <OF505D0437.0130F15A-ON48258511.002C7F75-48258511.002D4341@mxic.com.tw> <20200217100124.6ff71191@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org,
+        "Boris Brezillon" <boris.brezillon@collabora.com>,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        richard@nod.at, vigneshr@ti.com
+Subject: Re: [PATCH v2 1/4] mtd: rawnand: Add support manufacturer specific lock/unlock
+ operatoin
+MIME-Version: 1.0
+X-KeepSent: 888BBBE2:74456DA3-48258512:0011688B;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF888BBBE2.74456DA3-ON48258512.0011688B-48258512.0011BE25@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 18 Feb 2020 11:13:47 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/02/18 AM 11:13:46,
+        Serialize complete at 2020/02/18 AM 11:13:46
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com 01I3Dk5L004086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
 
-Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-endpoints"
-properties to describe supported number of vhub ports and endpoints.
+Hi Miquel,
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- No changes in v2/v3.
-   - It's given v3 to align with the version of the patch series.
 
- arch/arm/boot/dts/aspeed-g4.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> > > >  /* Set default functions */
+> > > >  static void nand_set_defaults(struct nand_chip *chip)
+> > > >  {
+> > > > @@ -5782,8 +5810,8 @@ static int nand_scan_tail(struct nand_chip 
+> > *chip)
+> > > >     mtd->_read_oob = nand_read_oob;
+> > > >     mtd->_write_oob = nand_write_oob;
+> > > >     mtd->_sync = nand_sync;
+> > > > -   mtd->_lock = NULL;
+> > > > -   mtd->_unlock = NULL;
+> > > > +   mtd->_lock = nand_lock;
+> > > > +   mtd->_unlock = nand_unlock;
+> > > >     mtd->_suspend = nand_suspend;
+> > > >     mtd->_resume = nand_resume;
+> > > >     mtd->_reboot = nand_shutdown;
+> > > > diff --git a/include/linux/mtd/rawnand.h 
+b/include/linux/mtd/rawnand.h
+> > > > index 4ab9bcc..2430ecd 100644
+> > > > --- a/include/linux/mtd/rawnand.h
+> > > > +++ b/include/linux/mtd/rawnand.h
+> > > > @@ -1136,6 +1136,9 @@ struct nand_chip {
+> > > >        const struct nand_manufacturer *desc;
+> > > >        void *priv;
+> > > >     } manufacturer;
+> > > > +
+> > > > +   int (*_lock)(struct nand_chip *chip, loff_t ofs, uint64_t 
+len);
+> > > > +   int (*_unlock)(struct nand_chip *chip, loff_t ofs, uint64_t 
+len); 
+> > > 
+> > > Please drop this _ prefix. 
+> > 
+> > Drop _ prefix of _lock will get compile error due to there is already 
+> > defined "struct mutex lock" in struct nand_chip.
+> 
+> Right!
+> 
+> > 
+> > What about keep this _ prefix or patch it to blocklock/blockunlock,
+> > i.e.,
+> > int (*blocklock)(struct nand_chip *chip, loff_t ofs, uint64_t len);
+> > int (*blockunlock)(struct nand_chip *chip, loff_t ofs, uint64_t len);
+> 
+> What about lock_area() unlock_area() ? Seems more accurate to me, tell
+> me if I'm wrong.
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 807a0fc20670..8e04303e8514 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -164,6 +164,8 @@
- 			reg = <0x1e6a0000 0x300>;
- 			interrupts = <5>;
- 			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			aspeed,vhub-downstream-ports = <5>;
-+			aspeed,vhub-generic-endpoints = <15>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2d_default>;
- 			status = "disabled";
--- 
-2.17.1
+yup, you are right!
+
+Using lock/unlock_area is better, will patch it.
+
+thanks for your comments.
+Mason
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
