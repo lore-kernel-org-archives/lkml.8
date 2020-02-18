@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8013C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEFFC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA7924656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEFA2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056224;
-	bh=jm14cuJBTP7GwLRT1+HvrOAskCL2iqjqaGpy9rNhLDQ=;
+	s=default; t=1582056227;
+	bh=DtG1klsFYIJX4cADiDULKjR/ydcpU3huW4ineSvRNjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fX+FZACVWjlLiT6tIaVSRnN6Gl6vG1gUd3Qe1BDZfzli9jOcC0pJ+v8nN8PLX/BRi
-	 UXlXXuNA8V+M+R/fDRBTGryhSTy/+YWLmnE61p6RVURTfyK9nKu7I1bMNrYASltVpA
-	 56ph5AGnmnGRV2NP3QZMZBcjpK/mAezkOP981ELE=
+	b=RVxOVmneCyuOhLJTjDmPSR6fRJuVlFmG8PUR05Gg9TI+GpCgkvLr3aQi6By83zJPp
+	 lSux5YeRA1kDshk2DHBDAJoS78r9+KH40pfc6T1UQtb0nJxqqRW/UBtCHs+dDDKXo2
+	 FBl5x5ZUB30lFkT3SBklrWlM7tQsLlRj+NQG74Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgBRUDm (ORCPT
+        id S1728969AbgBRUDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44902 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbgBRUDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:34 -0500
+        id S1729140AbgBRUDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BFFB24125;
-        Tue, 18 Feb 2020 20:03:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCF5D21D56;
+        Tue, 18 Feb 2020 20:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056214;
-        bh=jm14cuJBTP7GwLRT1+HvrOAskCL2iqjqaGpy9rNhLDQ=;
+        s=default; t=1582056222;
+        bh=DtG1klsFYIJX4cADiDULKjR/ydcpU3huW4ineSvRNjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdKso1XdYk4I2J0c9ZwsWdgN88pIis4Bkma/W7cPDApZq1HJ80DIeerupfOh4pPXE
-         kI0E7bVkghXfPiXQ1N5VS1M3aZmNMqDKqS36Tic5h36J5JhgT389mk4lgj39r9D/Cs
-         Aljh4Yyn5N7F0R6g1mONhSdvTtmX5/nC1I7h8Ync=
+        b=MJZh2lvmCUq9xxdLMDtceqcwnMb0ZHLjFnmF8n7D+7AH+XHeQs2iC9gITuRdVw98Z
+         OeIdy7ouNFeIEA31gb5VOFPhBocr2cAwYb5932HUqqCoR4ByJDEodjrg74RMjvStX2
+         EGI/lvFJl4MTm/QL3+t/f5tC1KB/5a3AaUkSh54Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Sean Paul <sean@poorly.run>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-Subject: [PATCH 5.5 41/80] drm/mst: Fix possible NULL pointer dereference in drm_dp_mst_process_up_req()
-Date:   Tue, 18 Feb 2020 20:55:02 +0100
-Message-Id: <20200218190436.290258677@linuxfoundation.org>
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 5.5 74/80] Revert "drm/sun4i: drv: Allow framebuffer modifiers in mode config"
+Date:   Tue, 18 Feb 2020 20:55:35 +0100
+Message-Id: <20200218190438.880718592@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: José Roberto de Souza <jose.souza@intel.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit 8ccb5bf7619c6523e7a4384a84b72e7be804298c upstream.
+commit cf913e9683273f2640501094fa63a67e29f437b3 upstream.
 
-According to DP specification, DP_SINK_EVENT_NOTIFY is also a
-broadcast message but as this function only handles
-DP_CONNECTION_STATUS_NOTIFY I will only make the static
-analyzer that caught this issue happy by not calling
-drm_dp_get_mst_branch_device_by_guid() with a NULL guid, causing
-drm_dp_mst_process_up_req() to return in the "if (!mstb)" right
-bellow.
+This reverts commit 9db9c0cf5895e4ddde2814360cae7bea9282edd2.
 
-Fixes: 9408cc94eb04 ("drm/dp_mst: Handle UP requests asynchronously")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: <stable@vger.kernel.org> # v5.5+
-Signed-off-by: José Roberto de Souza <jose.souza@intel.com>
-[added cc to stable]
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200129232448.84704-1-jose.souza@intel.com
+Setting mode_config.allow_fb_modifiers manually is completely
+unnecessary. It is set automatically by drm_universal_plane_init() based
+on the fact if modifier list is provided or not. Even more, it breaks
+DE2 and DE3 as they don't support any modifiers beside linear. Modifiers
+aware applications can be confused by provided empty modifier list - at
+least linear modifier should be included, but it's not for DE2 and DE3.
+
+Fixes: 9db9c0cf5895 ("drm/sun4i: drv: Allow framebuffer modifiers in mode config")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200126065937.9564-1-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_drv.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3772,7 +3772,8 @@ drm_dp_mst_process_up_req(struct drm_dp_
- 		else if (msg->req_type == DP_RESOURCE_STATUS_NOTIFY)
- 			guid = msg->u.resource_stat.guid;
- 
--		mstb = drm_dp_get_mst_branch_device_by_guid(mgr, guid);
-+		if (guid)
-+			mstb = drm_dp_get_mst_branch_device_by_guid(mgr, guid);
- 	} else {
- 		mstb = drm_dp_get_mst_branch_device(mgr, hdr->lct, hdr->rad);
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -85,7 +85,6 @@ static int sun4i_drv_bind(struct device
  	}
+ 
+ 	drm_mode_config_init(drm);
+-	drm->mode_config.allow_fb_modifiers = true;
+ 
+ 	ret = component_bind_all(drm->dev, drm);
+ 	if (ret) {
 
 
