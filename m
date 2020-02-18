@@ -2,160 +2,117 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E1DC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2C6C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C8920722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:31:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="h3t6q6Hb"
+	by mail.kernel.org (Postfix) with ESMTP id CE07B20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgBRGbB (ORCPT
+        id S1726289AbgBRGbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:31:01 -0500
-Received: from mout.gmx.net ([212.227.17.21]:53083 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgBRGbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:31:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582007446;
-        bh=ZetF6xqDcMO2JF+8ExFRyxevjA05EVourTLBK+C8MZY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=h3t6q6HbpWcMIwuM5XXaitRV946wHWz34zMRYTptt5KD2Ry1Yas2Npt31bfP5tWrM
-         oNszrJ1aLhWvK2UBAMJE2LEDfRGlstHC+OFXnUD9hjAFA8aLQkS6vN3H/C53Xr8Fw7
-         HxwxXFNB6XhwklUfR2Npj5x7FzvpW8rh6urwAVgM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N49lJ-1jU1yh0qjh-01039u; Tue, 18
- Feb 2020 07:30:46 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH v3 1/1] efi/libstub: describe memory functions
-Date:   Tue, 18 Feb 2020 07:30:38 +0100
-Message-Id: <20200218063038.3436-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
+        Tue, 18 Feb 2020 01:31:17 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53608 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbgBRGbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 01:31:16 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 5BBFE3A2633;
+        Tue, 18 Feb 2020 17:31:12 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3wPX-0006P4-0T; Tue, 18 Feb 2020 17:31:11 +1100
+Date:   Tue, 18 Feb 2020 17:31:10 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 09/19] mm: Add page_cache_readahead_limit
+Message-ID: <20200218063110.GO10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-16-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wT1b3Hyriht0Y77UyRjiTY6NhsK1Xom/4zgy+2HXWMVTFqzr6/n
- t+QKm6GAaqJ2IpNAjPI4O/TMx+SN+D4qVDIltIss/NZU+ne3/28FnphpYlIPWmrZv2CwHnx
- BhwH1YHTDRF2KbZttiUzC1S70sIrbELJysZyTHywn81LQLWhp0YwC0Z4DDJSYROLJrqKpFN
- IknPAM1db1q/Z5WHNS6Ag==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8TDUFYsQl3c=:LwgYPXofV36Z4bUprxb3WS
- ThwGAwg9JS9rNiWrmbQZHXaHSq1qiiiwYrRdhZDXYJTLG9Xg0zlyosRCHeaXsYumt2xL7jaUR
- mfxjh9ZkIBJngNbUX8LaARIh7t/Prmb9YUShztE57eO1DwkkDBkgCxG6Lbw0wjnthIwGcwXRU
- J0USL485kjdPGvPJoZ8cmnTkr6/nDcOuJrGW7OkhrMHQgqVToxoT14dPvQ1jgc3EYq2fdKuxY
- oAkF3rHXDbzSlUzyGUouHIp3KDq5Oyy7fEAA8eLlWsu1zOjSsBxY0XcBvHk4ZkdBR7fTS0JuY
- 7TDH8/kO3zp4N6J6I7Yo6w/I9WFh8WGoRXNgB+5uFbvGNdhYR5wmm5m79ofaejSCtzQd3w3IN
- tGJKKdlW2N+wRS9O7cUqxSeWdHVgnUu/DC8py50r+CFcdYLL5VID7Ekn6sqPPOUxvkun1V7Uv
- t8xwdXb9bYD6jqzi/lguXOTNGQ3uYOLeDNpOrTa0OxEwR/xdyWR5s6FRIlloqIakb6AT7A46h
- YcuOGGkz7tEfGQFRDd8x5VikQJydAyo/4YbHHVLg85y+t1+DTJ6kzB4RIPlHQyv/wElBNWQDm
- 1dxbjwE+1DOlIz4eUs/HQYRl8IQJUNy+ls69LUOtSKB76E+sEXzIsLxOrL+/TetwO1drvVSCU
- QbbKwtHiPbXW62ldbV94+AVT6PCGHg4n7cfehplBSQ11qXyoAi+5/7cAuCTPGLylZNstb6Krn
- MQk/sMyAIwl33HKoYwuRm624fOISoUS/l7+PuTU1q2n+5vAuzYMTGdNdw/pBu1w6Xy81qr7v8
- CoxM1Zzdss7XM15TvJzwbqPk8SH6SRuM4CW+D1O00nhvMIkzefWkQvz86nm5mdVY3tVlg4y1D
- UGIoc5ehc7qRLNPp0tQ0xiEy/bEIglmruk39v2MIFuxq9i7fh1jpiMh5w0PItA7VP8VpXcBd7
- 3nwG+qJHiLPgyJqARXJZ9eOHHhF9Q9oJ6Fo0EybGmrGMwO4tfvq0Hbr7Jz0wvQFwAhfg63BBs
- rqE9SaaMlSukpKFPumtFTiTH0r7atXv6nkiZPD5BJytjynzVMJdyYP9lldZ/v7yOVA8hXnOuh
- e9zVnHKRVXSTX6b4B+Du4Wyp8/KWnEND7YbxSnw9bWi7a1Wgzsh9Yex0gTDCaXjpw/FkgvjzJ
- sKdez7wXrIwj2mOchhkl1v7ehwwF9lNq6FngyrulCXcJMHU+Zo7hOhhdx+4Z6tfiNDgXlplFJ
- D7mPBOq6N+yVoMuZq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-16-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=ven5Kus8yXOb1GZ9o24A:9
+        a=H2SKM-hdKVZ4IyYU:21 a=MGgw-NAvouSNSaNI:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide descriptions of:
+On Mon, Feb 17, 2020 at 10:45:56AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> ext4 and f2fs have duplicated the guts of the readahead code so
+> they can read past i_size.  Instead, separate out the guts of the
+> readahead code so they can call it directly.
 
-* efi_get_memory_map()
-* efi_low_alloc_above()
-* efi_free()
+Gross and nasty (hosting non-stale data beyond EOF in the page
+cache, that is).
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
-v3:
-	add missing colons for parameter descriptions
-v2:
-	point out how efi_free() is rounding up the memory size
-=2D--
- drivers/firmware/efi/libstub/mem.c | 36 ++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+Code is pretty simple, but...
 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/lib=
-stub/mem.c
-index c25fd9174b74..7cf2823bdedc 100644
-=2D-- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -16,6 +16,15 @@ static inline bool mmap_has_headroom(unsigned long buff=
-_size,
- 	return slack / desc_size >=3D EFI_MMAP_NR_SLACK_SLOTS;
- }
+>  }
+>  
+> -/*
+> - * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
+> - * the pages first, then submits them for I/O. This avoids the very bad
+> - * behaviour which would occur if page allocations are causing VM writeback.
+> - * We really don't want to intermingle reads and writes like that.
+> +/**
+> + * page_cache_readahead_limit - Start readahead beyond a file's i_size.
+> + * @mapping: File address space.
+> + * @file: This instance of the open file; used for authentication.
+> + * @offset: First page index to read.
+> + * @end_index: The maximum page index to read.
+> + * @nr_to_read: The number of pages to read.
+> + * @lookahead_size: Where to start the next readahead.
+> + *
+> + * This function is for filesystems to call when they want to start
+> + * readahead potentially beyond a file's stated i_size.  If you want
+> + * to start readahead on a normal file, you probably want to call
+> + * page_cache_async_readahead() or page_cache_sync_readahead() instead.
+> + *
+> + * Context: File is referenced by caller.  Mutexes may be held by caller.
+> + * May sleep, but will not reenter filesystem to reclaim memory.
+>   */
+> -void __do_page_cache_readahead(struct address_space *mapping,
+> -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
+> -		unsigned long lookahead_size)
+> +void page_cache_readahead_limit(struct address_space *mapping,
 
-+/**
-+ * efi_get_memory_map() - get memory map
-+ * @map:	on return pointer to memory map
-+ *
-+ * Retrieve the UEFI memory map. The allocated memory leaves room for
-+ * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
-+ *
-+ * Return:	status code
-+ */
- efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
- {
- 	efi_memory_desc_t *m =3D NULL;
-@@ -109,8 +118,20 @@ efi_status_t efi_allocate_pages(unsigned long size, u=
-nsigned long *addr,
- 	}
- 	return EFI_SUCCESS;
- }
--/*
-- * Allocate at the lowest possible address that is not below 'min'.
-+/**
-+ * efi_low_alloc_above() - allocate pages at or above given address
-+ * @size:	size of the memory area to allocate
-+ * @align:	minimum alignment of the allocated memory area. It should
-+ *		a power of two.
-+ * @addr:	on exit the address of the allocated memory
-+ * @min:	minimum address to used for the memory allocation
-+ *
-+ * Allocate at the lowest possible address that is not below 'min' as
-+ * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' =
-but at
-+ * least EFI_ALLOC_ALIGN. The first allocated page will not below the add=
-ress
-+ * given by 'min'.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
- 				 unsigned long *addr, unsigned long min)
-@@ -187,6 +208,17 @@ efi_status_t efi_low_alloc_above(unsigned long size, =
-unsigned long align,
- 	return status;
- }
+... I don't think the function name conveys it's purpose. It's
+really a ranged readahead that ignores where i_size lies. i.e
 
-+/**
-+ * efi_free() - free memory pages
-+ * @size:	size of the memory area to free in bytes
-+ * @addr:	start of the memory area to free (must be EFI_PAGE_SIZE
-+ *		aligned)
-+ *
-+ * 'size' is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
-+ * architecture specific multiple of EFI_PAGE_SIZE. So this function shou=
-ld
-+ * only be used to return pages allocated with efi_allocate_pages() or
-+ * efi_low_alloc_above().
-+ */
- void efi_free(unsigned long size, unsigned long addr)
- {
- 	unsigned long nr_pages;
-=2D-
-2.25.0
+	page_cache_readahead_range(mapping, start, end, nr_to_read)
 
+seems like a better API to me, and then you can drop the "start
+readahead beyond i_size" comments and replace it with "Range is not
+limited by the inode's i_size and hence can be used to read data
+stored beyond EOF into the page cache."
+
+Also: "This is almost certainly not the function you want to call.
+Use page_cache_async_readahead or page_cache_sync_readahead()
+instead."
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
