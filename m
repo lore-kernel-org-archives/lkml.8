@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862CEC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C25C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5561D24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A736E2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055917;
-	bh=Y+p35oZA6EvXFtibK1QrYEqzN/+CJYN7+vX9iMq7Tys=;
+	s=default; t=1582055929;
+	bh=VlYFbi8R93NZ9MLjbFG8aNwqFw6eH/NfQOSq89lK47Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wOT8VFEvLaL3JDAL4C/8Jg8umtT6Jj22OGPsT3JORD9g62qVH0XyrdafaBBPAhIBv
-	 IFw46riIv44JR2HIMU3jeXjvvNlzyL8xGloBCZHFOB0o5mmvzznPtPXjEjp5EXGOeR
-	 zluRZzRWIoeZMCxE3+4DJDia3GgouaISMibOUOhc=
+	b=F08rVTqTM24yNtTTcpFoEnb8zR23SA+9T0pmvj3S+IyIBw5hxgMwXYJGoHn4EhBwq
+	 dGGfi5Xc3C2qSieY/xQ+1Gk5wDI557q+VvWrxiTO2u94AHDAtHtEgVwQzRJnZwMbKM
+	 iBMoE8xQ603GXZC0G3J12blA90ddC71LkOpanAmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBRT6f (ORCPT
+        id S1728294AbgBRT6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:58:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgBRT6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:33 -0500
+        id S1727906AbgBRT6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B716B20659;
-        Tue, 18 Feb 2020 19:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A697D24125;
+        Tue, 18 Feb 2020 19:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055912;
-        bh=Y+p35oZA6EvXFtibK1QrYEqzN/+CJYN7+vX9iMq7Tys=;
+        s=default; t=1582055925;
+        bh=VlYFbi8R93NZ9MLjbFG8aNwqFw6eH/NfQOSq89lK47Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JkXCc2aIfH9EbQUvsYiICsXriwLBb9Lio+4K/M12/NWdpbW3l8OQgiE/QAcOBShZK
-         XUtSAbb/a6k0F4wXC1MLfI8yEgLdUq+cbYD8cnGb0bI5CoyRmvJ0orCdQEmGC/mhnB
-         kzbYceKrCbjIl8oWJ5awuw87uTuxyJVrw74xB/3U=
+        b=p6SGSzlpgKfY/jGyPrOwXRrMLNgI8WfnIQjdj2w0rePmUxUZL9L8bof2yUJco4OFA
+         WibSeljLZK7UhI0S2VZ81ohep/G2jsrIYiwQrKb2iQGOifT/01rGeJT+D1pSM564rl
+         QZnNfLF8tXqcDhsqsqCXT6HdYAOSOo7mtWRnoq3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.4 29/66] EDAC/mc: Fix use-after-free and memleaks during device removal
-Date:   Tue, 18 Feb 2020 20:54:56 +0100
-Message-Id: <20200218190430.757292618@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 33/66] s390/uv: Fix handling of length extensions
+Date:   Tue, 18 Feb 2020 20:55:00 +0100
+Message-Id: <20200218190431.133878860@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,144 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit 216aa145aaf379a50b17afc812db71d893bd6683 upstream.
+commit 27dc0700c3be7c681cea03c5230b93d02f623492 upstream.
 
-A test kernel with the options DEBUG_TEST_DRIVER_REMOVE, KASAN and
-DEBUG_KMEMLEAK set, revealed several issues when removing an mci device:
+The query parameter block might contain additional information and can
+be extended in the future. If the size of the block does not suffice we
+get an error code of rc=0x100.  The buffer will contain all information
+up to the specified size and the hypervisor/guest simply do not need the
+additional information as they do not know about the new data.  That
+means that we can (and must) accept rc=0x100 as success.
 
-1) Use-after-free:
-
-On 27.11.19 17:07:33, John Garry wrote:
-> [   22.104498] BUG: KASAN: use-after-free in
-> edac_remove_sysfs_mci_device+0x148/0x180
-
-The use-after-free is caused by the mci_for_each_dimm() macro called in
-edac_remove_sysfs_mci_device(). The iterator was introduced with
-
-  c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator").
-
-The iterator loop calls device_unregister(&dimm->dev), which removes
-the sysfs entry of the device, but also frees the dimm struct in
-dimm_attr_release(). When incrementing the loop in mci_for_each_dimm(),
-the dimm struct is accessed again, after having been freed already.
-
-The fix is to free all the mci device's subsequent dimm and csrow
-objects at a later point, in _edac_mc_free(), when the mci device itself
-is being freed.
-
-This keeps the data structures intact and the mci device can be
-fully used until its removal. The change allows the safe usage of
-mci_for_each_dimm() to release dimm devices from sysfs.
-
-2) Memory leaks:
-
-Following memory leaks have been detected:
-
- # grep edac /sys/kernel/debug/kmemleak | sort | uniq -c
-       1     [<000000003c0f58f9>] edac_mc_alloc+0x3bc/0x9d0      # mci->csrows
-      16     [<00000000bb932dc0>] edac_mc_alloc+0x49c/0x9d0      # csr->channels
-      16     [<00000000e2734dba>] edac_mc_alloc+0x518/0x9d0      # csr->channels[chn]
-       1     [<00000000eb040168>] edac_mc_alloc+0x5c8/0x9d0      # mci->dimms
-      34     [<00000000ef737c29>] ghes_edac_register+0x1c8/0x3f8 # see edac_mc_alloc()
-
-All leaks are from memory allocated by edac_mc_alloc().
-
-Note: The test above shows that edac_mc_alloc() was called here from
-ghes_edac_register(), thus both functions show up in the stack trace
-but the module causing the leaks is edac_mc. The comments with the data
-structures involved were made manually by analyzing the objdump.
-
-The data structures listed above and created by edac_mc_alloc() are
-not properly removed during device removal, which is done in
-edac_mc_free().
-
-There are two paths implemented to remove the device depending on device
-registration, _edac_mc_free() is called if the device is not registered
-and edac_unregister_sysfs() otherwise.
-
-The implemenations differ. For the sysfs case, the mci device removal
-lacks the removal of subsequent data structures (csrows, channels,
-dimms). This causes the memory leaks (see mci_attr_release()).
-
- [ bp: Massage commit message. ]
-
-Fixes: c498afaf7df8 ("EDAC: Introduce an mci_for_each_dimm() iterator")
-Fixes: faa2ad09c01c ("edac_mc: edac_mc_free() cannot assume mem_ctl_info is registered in sysfs.")
-Fixes: 7a623c039075 ("edac: rewrite the sysfs code to use struct device")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: John Garry <john.garry@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200212120340.4764-3-rrichter@marvell.com
+Cc: stable@vger.kernel.org
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Fixes: 5abb9351dfd9 ("s390/uv: introduce guest side ultravisor code")
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/edac_mc.c       |   12 +++---------
- drivers/edac/edac_mc_sysfs.c |   15 +++------------
- 2 files changed, 6 insertions(+), 21 deletions(-)
+ arch/s390/boot/uv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -503,16 +503,10 @@ void edac_mc_free(struct mem_ctl_info *m
- {
- 	edac_dbg(1, "\n");
+--- a/arch/s390/boot/uv.c
++++ b/arch/s390/boot/uv.c
+@@ -15,7 +15,8 @@ void uv_query_info(void)
+ 	if (!test_facility(158))
+ 		return;
  
--	/* If we're not yet registered with sysfs free only what was allocated
--	 * in edac_mc_alloc().
--	 */
--	if (!device_is_registered(&mci->dev)) {
--		_edac_mc_free(mci);
--		return;
--	}
-+	if (device_is_registered(&mci->dev))
-+		edac_unregister_sysfs(mci);
+-	if (uv_call(0, (uint64_t)&uvcb))
++	/* rc==0x100 means that there is additional data we do not process */
++	if (uv_call(0, (uint64_t)&uvcb) && uvcb.header.rc != 0x100)
+ 		return;
  
--	/* the mci instance is freed here, when the sysfs object is dropped */
--	edac_unregister_sysfs(mci);
-+	_edac_mc_free(mci);
- }
- EXPORT_SYMBOL_GPL(edac_mc_free);
- 
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -276,10 +276,7 @@ static const struct attribute_group *csr
- 
- static void csrow_attr_release(struct device *dev)
- {
--	struct csrow_info *csrow = container_of(dev, struct csrow_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(csrow);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type csrow_attr_type = {
-@@ -619,10 +616,7 @@ static const struct attribute_group *dim
- 
- static void dimm_attr_release(struct device *dev)
- {
--	struct dimm_info *dimm = container_of(dev, struct dimm_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(dimm);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type dimm_attr_type = {
-@@ -905,10 +899,7 @@ static const struct attribute_group *mci
- 
- static void mci_attr_release(struct device *dev)
- {
--	struct mem_ctl_info *mci = container_of(dev, struct mem_ctl_info, dev);
--
--	edac_dbg(1, "device %s released\n", dev_name(dev));
--	kfree(mci);
-+	/* release device with _edac_mc_free() */
- }
- 
- static const struct device_type mci_attr_type = {
+ 	if (test_bit_inv(BIT_UVC_CMD_SET_SHARED_ACCESS, (unsigned long *)uvcb.inst_calls_list) &&
 
 
