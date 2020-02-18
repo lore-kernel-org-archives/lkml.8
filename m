@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D3C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ECDC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736A12067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6E42067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056566;
-	bh=mi1fa9tjV0BUcFYBmkbrq5si7+ROUjp6B9kLMqc2Fkg=;
+	s=default; t=1582056570;
+	bh=CG86kiDTW/YgKTOX9xk3Avhhsf9xEaEU2HTyYCuRcYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsKpTIwDXUQg0xQpgePc1DjrLIHzPFYs7Twv2lAaayH74VPuead3EVxz7xoqZnVav
-	 TCMk9VWJxEXKpmTMg9Ahhl1yP5i4xVtqGMykKOzgxL+FM8hZziEOPY86H8uohbnlau
-	 ir/nIFDii9b0g4EgHTndVHqnPvY42f1fWkxxx53M=
+	b=TSjWKJDi7zZyCtgrrbNPtrBeIhXCLtMrennzEkV8Sjcl1+fESPQisvTnFjmbiKg0x
+	 tLP1Y2k6chYIfnbDzXmefyCcOmkJxKJaPVSKyVdzci66dF1KCGcQqNdi0bshhIVFN9
+	 0z4lWS+iXPQLzG2Yl5RgabJB24GpVUXQP02+eGJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgBRT5E (ORCPT
+        id S1727781AbgBRUJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:09:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727761AbgBRT5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:01 -0500
+        id S1727680AbgBRT46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7C124670;
-        Tue, 18 Feb 2020 19:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0141124125;
+        Tue, 18 Feb 2020 19:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055819;
-        bh=mi1fa9tjV0BUcFYBmkbrq5si7+ROUjp6B9kLMqc2Fkg=;
+        s=default; t=1582055817;
+        bh=CG86kiDTW/YgKTOX9xk3Avhhsf9xEaEU2HTyYCuRcYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OlE93QL8HCTLTCrVxk+YobygV38gC/i0Rylq80NmgBaKSed3RCNRZ6bwp66cFejXi
-         8bWLauJToTnDrwjDPFkiREk2aC5zyXHJQ6P1AfdXU8mcDU8+l9KfC0s9tZ9Zrul2F0
-         +AyoK9sjpCyMYPn1/SzF2sNcB8jPDtle5m2pqyvE=
+        b=MsRhnjqWrei3bCt/neKlZDqLf4KZ+L/CBq568yv/Vs1rDqUlkuHFCVdX7Aji2lb9z
+         nNLjc1Bg/WjrSpB4b3SE80PY33T0xevB4XM+G6Ui/lKm+k9GlLVgPv96ITSZJzITWG
+         lIicec+bQjUCZiVxFVH2CNHPpDcr9gmf4w3DcBNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 08/38] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
-Date:   Tue, 18 Feb 2020 20:54:54 +0100
-Message-Id: <20200218190419.519633378@linuxfoundation.org>
+Subject: [PATCH 4.19 07/38] arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+Date:   Tue, 18 Feb 2020 20:54:53 +0100
+Message-Id: <20200218190419.409722070@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -66,162 +65,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 52f73c383b2418f2d31b798e765ae7d596c35021 upstream
+commit 7559950aef1ab8792c50797c6c5c7c5150a02460 upstream
 
-We detect the absence of FP/SIMD after an incapable CPU is brought up,
-and by then we have kernel threads running already with TIF_FOREIGN_FPSTATE set
-which could be set for early userspace applications (e.g, modprobe triggered
-from initramfs) and init. This could cause the applications to loop forever in
-do_nofity_resume() as we never clear the TIF flag, once we now know that
-we don't support FP.
-
-Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
-for tasks which may have them set, as we would have done in the normal
-case, but avoiding touching the hardware state (since we don't support any).
-
-Also to make sure we handle the cases seemlessly we categorise the
-helper functions to two :
- 1) Helpers for common core code, which calls into take appropriate
-    actions without knowing the current FPSIMD state of the CPU/task.
-
-    e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
-        fpsimd_save_and_flush_cpu_state().
-
-    We bail out early for these functions, taking any appropriate actions
-    (e.g, clearing the TIF flag) where necessary to hide the handling
-    from core code.
-
- 2) Helpers used when the presence of FP/SIMD is apparent.
-    i.e, save/restore the FP/SIMD register state, modify the CPU/task
-    FP/SIMD state.
-    e.g,
-
-    fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD registers
-
-    fpsimd_bind_task_to_cpu()  \
-                                - Update the "state" metadata for CPU/task.
-    fpsimd_bind_state_to_cpu() /
-
-    fpsimd_update_current_state() - Update the fp/simd state for the current
-                                    task from memory.
-
-    These must not be called in the absence of FP/SIMD. Put in a WARNING
-    to make sure they are not invoked in the absence of FP/SIMD.
-
-KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
-on the CPU. However, without FP/SIMD support we trap all accesses and
-inject undefined instruction. Thus we should never "load" guest state.
-Add a sanity check to make sure this is valid.
+We set the compat_elf_hwcap bits unconditionally on arm64 to
+include the VFP and NEON support. However, the FP/SIMD unit
+is optional on Arm v8 and thus could be missing. We already
+handle this properly in the kernel, but still advertise to
+the COMPAT applications that the VFP is available. Fix this
+to make sure we only advertise when we really have them.
 
 Cc: stable@vger.kernel.org # v4.19
 Cc: Will Deacon <will@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/fpsimd.c  | 20 ++++++++++++++++++--
- arch/arm64/kvm/hyp/switch.c | 10 +++++++++-
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 52 +++++++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 58c53bc969289..14fdbaa6ee3ab 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -218,6 +218,7 @@ static void sve_free(struct task_struct *task)
- static void task_fpsimd_load(void)
- {
- 	WARN_ON(!in_softirq() && !irqs_disabled());
-+	WARN_ON(!system_supports_fpsimd());
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 1375307fbe4d2..ac3126aba0368 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -42,9 +42,7 @@ EXPORT_SYMBOL_GPL(elf_hwcap);
+ #define COMPAT_ELF_HWCAP_DEFAULT	\
+ 				(COMPAT_HWCAP_HALF|COMPAT_HWCAP_THUMB|\
+ 				 COMPAT_HWCAP_FAST_MULT|COMPAT_HWCAP_EDSP|\
+-				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_VFP|\
+-				 COMPAT_HWCAP_VFPv3|COMPAT_HWCAP_VFPv4|\
+-				 COMPAT_HWCAP_NEON|COMPAT_HWCAP_IDIV|\
++				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_IDIV|\
+ 				 COMPAT_HWCAP_LPAE)
+ unsigned int compat_elf_hwcap __read_mostly = COMPAT_ELF_HWCAP_DEFAULT;
+ unsigned int compat_elf_hwcap2 __read_mostly;
+@@ -1341,17 +1339,30 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 	{},
+ };
  
- 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
- 		sve_load_state(sve_pffr(&current->thread),
-@@ -238,6 +239,7 @@ void fpsimd_save(void)
- 	struct user_fpsimd_state *st = __this_cpu_read(fpsimd_last_state.st);
- 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	WARN_ON(!in_softirq() && !irqs_disabled());
- 
- 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
-@@ -977,6 +979,7 @@ void fpsimd_bind_task_to_cpu(void)
- 	struct fpsimd_last_state_struct *last =
- 		this_cpu_ptr(&fpsimd_last_state);
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	last->st = &current->thread.uw.fpsimd_state;
- 	current->thread.fpsimd_cpu = smp_processor_id();
- 
-@@ -996,6 +999,7 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st)
- 	struct fpsimd_last_state_struct *last =
- 		this_cpu_ptr(&fpsimd_last_state);
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	WARN_ON(!in_softirq() && !irqs_disabled());
- 
- 	last->st = st;
-@@ -1008,8 +1012,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st)
-  */
- void fpsimd_restore_current_state(void)
- {
--	if (!system_supports_fpsimd())
-+	/*
-+	 * For the tasks that were created before we detected the absence of
-+	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch(),
-+	 * e.g, init. This could be then inherited by the children processes.
-+	 * If we later detect that the system doesn't support FP/SIMD,
-+	 * we must clear the flag for  all the tasks to indicate that the
-+	 * FPSTATE is clean (as we can't have one) to avoid looping for ever in
-+	 * do_notify_resume().
-+	 */
-+	if (!system_supports_fpsimd()) {
-+		clear_thread_flag(TIF_FOREIGN_FPSTATE);
- 		return;
+-#define HWCAP_CAP(reg, field, s, min_value, cap_type, cap)	\
+-	{							\
+-		.desc = #cap,					\
+-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,		\
++
++#define HWCAP_CPUID_MATCH(reg, field, s, min_value)		\
+ 		.matches = has_cpuid_feature,			\
+ 		.sys_reg = reg,					\
+ 		.field_pos = field,				\
+ 		.sign = s,					\
+ 		.min_field_value = min_value,			\
++
++#define __HWCAP_CAP(name, cap_type, cap)			\
++		.desc = name,					\
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,		\
+ 		.hwcap_type = cap_type,				\
+ 		.hwcap = cap,					\
++
++#define HWCAP_CAP(reg, field, s, min_value, cap_type, cap)	\
++	{							\
++		__HWCAP_CAP(#cap, cap_type, cap)		\
++		HWCAP_CPUID_MATCH(reg, field, s, min_value)	\
 +	}
++
++#define HWCAP_CAP_MATCH(match, cap_type, cap)			\
++	{							\
++		__HWCAP_CAP(#cap, cap_type, cap)		\
++		.matches = match,				\
+ 	}
  
- 	local_bh_disable();
+ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+@@ -1387,8 +1398,35 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	{},
+ };
  
-@@ -1028,7 +1043,7 @@ void fpsimd_restore_current_state(void)
-  */
- void fpsimd_update_current_state(struct user_fpsimd_state const *state)
- {
--	if (!system_supports_fpsimd())
-+	if (WARN_ON(!system_supports_fpsimd()))
- 		return;
- 
- 	local_bh_disable();
-@@ -1055,6 +1070,7 @@ void fpsimd_flush_task_state(struct task_struct *t)
- 
- void fpsimd_flush_cpu_state(void)
- {
-+	WARN_ON(!system_supports_fpsimd());
- 	__this_cpu_write(fpsimd_last_state.st, NULL);
- 	set_thread_flag(TIF_FOREIGN_FPSTATE);
- }
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 6290a4e81d57a..f3978931aaf40 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -37,7 +37,15 @@
- /* Check whether the FP regs were dirtied while in the host-side run loop: */
- static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
- {
--	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
++#ifdef CONFIG_COMPAT
++static bool compat_has_neon(const struct arm64_cpu_capabilities *cap, int scope)
++{
 +	/*
-+	 * When the system doesn't support FP/SIMD, we cannot rely on
-+	 * the _TIF_FOREIGN_FPSTATE flag. However, we always inject an
-+	 * abort on the very first access to FP and thus we should never
-+	 * see KVM_ARM64_FP_ENABLED. For added safety, make sure we always
-+	 * trap the accesses.
++	 * Check that all of MVFR1_EL1.{SIMDSP, SIMDInt, SIMDLS} are available,
++	 * in line with that of arm32 as in vfp_init(). We make sure that the
++	 * check is future proof, by making sure value is non-zero.
 +	 */
-+	if (!system_supports_fpsimd() ||
-+	    vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
- 		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
- 				      KVM_ARM64_FP_HOST);
- 
++	u32 mvfr1;
++
++	WARN_ON(scope == SCOPE_LOCAL_CPU && preemptible());
++	if (scope == SCOPE_SYSTEM)
++		mvfr1 = read_sanitised_ftr_reg(SYS_MVFR1_EL1);
++	else
++		mvfr1 = read_sysreg_s(SYS_MVFR1_EL1);
++
++	return cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDSP_SHIFT) &&
++		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDINT_SHIFT) &&
++		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDLS_SHIFT);
++}
++#endif
++
+ static const struct arm64_cpu_capabilities compat_elf_hwcaps[] = {
+ #ifdef CONFIG_COMPAT
++	HWCAP_CAP_MATCH(compat_has_neon, CAP_COMPAT_HWCAP, COMPAT_HWCAP_NEON),
++	HWCAP_CAP(SYS_MVFR1_EL1, MVFR1_SIMDFMAC_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv4),
++	/* Arm v8 mandates MVFR0.FPDP == {0, 2}. So, piggy back on this for the presence of VFP support */
++	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFP),
++	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv3),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
 -- 
 2.20.1
 
