@@ -2,125 +2,84 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D99AC34037
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D756C34036
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DDA207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tscj4Oj8"
+	by mail.kernel.org (Postfix) with ESMTP id 1F7ED207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgBRLoH (ORCPT
+        id S1726528AbgBRLod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:44:07 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50302 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgBRLoH (ORCPT
+        Tue, 18 Feb 2020 06:44:33 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:32904 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgBRLod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:44:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=G/0EgupJEaHk9RaTtMo/9IBvZaaTF/4ZawtZFbgF/9E=; b=Tscj4Oj8Yj316IA3nRe7+EQqNk
-        NDVNlRcWFSpj2cy67ISumsXr2T9KNj8QEICy4OBpbVi70qzA6hBkPqK00PZzZVCAxLvrplWrdz3ST
-        IHS+yj6A9MIvZH3JpoU0va3VZCOShingHwW3jxEUQ30mdiFSo1R3DNXlBXfw75gGw7/NmwypH9R8s
-        cuSMlDoIWUFyfOK49j8DrkzywWPDJTDIRFVOAPEJ9LuVXKyIb6JpJQEZ3UQtEAcTCNSKfLwL1yQ0/
-        7X50tEg8vPxXAJ4ynQ7ga2hvBLAKjh3g2j9Gl+MhJFfj5fW+AWR3S6RyC3KMA6Ljrz413k/ItFzz8
-        EuCbySnA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j41Hu-0002QZ-9u; Tue, 18 Feb 2020 11:43:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 52FB630008D;
-        Tue, 18 Feb 2020 12:41:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 00124203E6A01; Tue, 18 Feb 2020 12:43:34 +0100 (CET)
-Date:   Tue, 18 Feb 2020 12:43:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
- ->srcu_gp_seq load
-Message-ID: <20200218114334.GX14914@hirez.programming.kicks-ass.net>
-References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
- <20200215002932.15976-4-paulmck@kernel.org>
- <20200217124507.GT14914@hirez.programming.kicks-ass.net>
- <20200217183220.GS2935@paulmck-ThinkPad-P72>
+        Tue, 18 Feb 2020 06:44:33 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C02573C057C;
+        Tue, 18 Feb 2020 12:44:30 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fH-QhLVjk6Dg; Tue, 18 Feb 2020 12:44:25 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 847193C00C5;
+        Tue, 18 Feb 2020 12:44:25 +0100 (CET)
+Received: from vmlxhi-121.adit-jv.com (10.72.93.65) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 18 Feb
+ 2020 12:44:24 +0100
+From:   Michael Rodin <mrodin@de.adit-jv.com>
+To:     <niklas.soderlund@ragnatech.se>, <mchehab@kernel.org>,
+        <p.zabel@pengutronix.de>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Michael Rodin <mrodin@de.adit-jv.com>, <efriedrich@de.adit-jv.com>,
+        <erosca@de.adit-jv.com>, <sudipi@jp.adit-jv.com>,
+        <akiyama@nds-osk.co.jp>
+Subject: [PATCH] [RFC] media: rcar-vin: don't wait for stop state on clock lane during start of CSI2
+Date:   Tue, 18 Feb 2020 12:44:11 +0100
+Message-ID: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217183220.GS2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.72.93.65]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:32:20AM -0800, Paul E. McKenney wrote:
-> On Mon, Feb 17, 2020 at 01:45:07PM +0100, Peter Zijlstra wrote:
-> > On Fri, Feb 14, 2020 at 04:29:32PM -0800, paulmck@kernel.org wrote:
-> > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > 
-> > > The load of the srcu_struct structure's ->srcu_gp_seq field in
-> > > srcu_funnel_gp_start() is lockless, so this commit adds the requisite
-> > > READ_ONCE().
-> > > 
-> > > This data race was reported by KCSAN.
-> > 
-> > But is there in actual fact a data-race? AFAICT this code was just fine.
-> 
-> Now that you mention it, the lock is held at that point, isn't it?  So if
-> that READ_ONCE() actually does anything, there is a bug somewhere else.
-> 
-> Good catch, I will drop this patch, thank you!
+The chapter 7.1 "D-PHY Physical Layer Option" of the CSI2 specification
+states that non-continuous clock behavior is optional, i.e. the Clock Lane
+can remain in high-speed mode between the transmission of data packets.
+Therefore waiting for the stop state (LP-11) on the Clock Lane is wrong and
+will cause timeouts when a CSI2 transmitter with continuous clock behavior
+is attached to R-Car CSI2 receiver. So wait only for the stop state on the
+Data Lanes.
 
-Well, I didn't get further than the Changelog fails to describe an
-actual problem and it looks like compare-against-a-constant.
+Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+---
+ drivers/media/platform/rcar-vin/rcar-csi2.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-(worse, it masks off everything but the 2 lowest bits, so even if there
-was a problem with load-tearing, it still wouldn't matter)
+diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+index faa9fb2..6d1992a 100644
+--- a/drivers/media/platform/rcar-vin/rcar-csi2.c
++++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+@@ -416,8 +416,7 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+ 	for (timeout = 0; timeout <= 20; timeout++) {
+ 		const u32 lane_mask = (1 << priv->lanes) - 1;
+ 
+-		if ((rcsi2_read(priv, PHCLM_REG) & PHCLM_STOPSTATECKL)  &&
+-		    (rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
++		if ((rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
+ 			return 0;
+ 
+ 		usleep_range(1000, 2000);
+-- 
+2.7.4
 
-I'm not going to argue with you if you want to use READ_ONCE() vs
-data_race() and a comment to denote false-positive KCSAN warnings, but I
-do feel somewhat strongly that the Changelog should describe the actual
-problem -- if there is one -- or just flat out state that this is to
-make KCSAN shut up but the code is fine.
-
-That is; every KCSAN report should be analysed, right? All I'm asking is
-for that analysis to end up in the Changelog.
-
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > ---
-> > >  kernel/rcu/srcutree.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > > index 119a373..90ab475 100644
-> > > --- a/kernel/rcu/srcutree.c
-> > > +++ b/kernel/rcu/srcutree.c
-> > > @@ -678,7 +678,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
-> > >  
-> > >  	/* If grace period not already done and none in progress, start it. */
-> > >  	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
-> > > -	    rcu_seq_state(ssp->srcu_gp_seq) == SRCU_STATE_IDLE) {
-> > > +	    rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_IDLE) {
-> > >  		WARN_ON_ONCE(ULONG_CMP_GE(ssp->srcu_gp_seq, ssp->srcu_gp_seq_needed));
-> > >  		srcu_gp_start(ssp);
-> > >  		if (likely(srcu_init_done))
-> > > -- 
-> > > 2.9.5
-> > > 
