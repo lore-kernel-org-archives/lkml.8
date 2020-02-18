@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA35AC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78ABC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40322464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5DC2464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056233;
-	bh=4UwrsHQsBWHe3bc+r7isD+sUgNN4l6LBbflLE9A2ujw=;
+	s=default; t=1582056241;
+	bh=MjbAwarxr7IV5yIMjnOz7+XarybWEmEx3aToUhDogsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMynJQ99fRiD5gVxOiVDlFcmxVqTD88pMhpO2QRaqs3NRNkkzr/wMYRuuFBBl0NIW
-	 l7/hoyazV43YipiKm9/8dIc+5SUfadE8vDCMena4+94lIhmInI1UplOh9mw606xNhY
-	 yTuU0t5FQISDs8QCnd1J7Mkp2l+/Qg8QXCHlX02I=
+	b=p+GXdHrO0Xkss/cS/Rq7wE3iFBClscatD0z8nfS19P0JgxzgG/0X3I1/a/CTVJzJj
+	 k//77nsZolmhr7uDEsOhfTKNhtDfALBFXCdvZi6CHgkWH3DVxfXrjhq1c6FXFeKrYg
+	 lRBUOjLd1MNKl3YY8WBj7ZcmhORrukqaUi0gdtPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgBRUDw (ORCPT
+        id S1729178AbgBRUEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45222 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:04:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgBRUDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:48 -0500
+        id S1729166AbgBRUD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F2121D56;
-        Tue, 18 Feb 2020 20:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40FFD21D56;
+        Tue, 18 Feb 2020 20:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056227;
-        bh=4UwrsHQsBWHe3bc+r7isD+sUgNN4l6LBbflLE9A2ujw=;
+        s=default; t=1582056237;
+        bh=MjbAwarxr7IV5yIMjnOz7+XarybWEmEx3aToUhDogsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TvcxHxBvOm+U8cwpyvDU4d5DPwvQuc0O/3o0JpVBWaHoaW+SwPxZJLTMkRq/6Vkrd
-         iHaZRsJLkp994AFAtsM2cM5akiiO7usL9+rZtbeMgwpFglrjLl3boEovTUlTdh+HGu
-         zEvnSGKy7On2rXJzMrNQt6lfQzRCKYLG2y8VHnOU=
+        b=e/mP9+KL14wo15c04RKPZv6suZAZpcSsCvEuWs2zFYwfl0SEEZfcAHe/bVu7k9AMF
+         zLvcezocHQymCm7AMIcl0hYG8Gt3EO5pcNzUdnBRtcCZFnkrjpnlZRxt3ANI3lr9py
+         NzInA/7iECqMCvNcLKFMDoA+/yPe3emcqJwMnsUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 76/80] ext4: choose hardlimit when softlimit is larger than hardlimit in ext4_statfs_project()
-Date:   Tue, 18 Feb 2020 20:55:37 +0100
-Message-Id: <20200218190439.027652102@linuxfoundation.org>
+Subject: [PATCH 5.5 80/80] mmc: core: Rework wp-gpio handling
+Date:   Tue, 18 Feb 2020 20:55:41 +0100
+Message-Id: <20200218190439.428756287@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,93 +61,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-[ Upstream commit 57c32ea42f8e802bda47010418e25043e0c9337f ]
+[ Upstream commit 9073d10b098973519044f5fcdc25586810b435da ]
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+Use MMC_CAP2_RO_ACTIVE_HIGH flag as indicator if GPIO line is to be
+inverted compared to DT/platform-specified polarity. The flag is not used
+after init in GPIO mode anyway. No functional changes intended.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
-
-[root@hades mnt_ext4]# repquota -P -a
-*** Report for project quotas on device /dev/loop0
-Block grace time: 7days; Inode grace time: 7days
-                        Block limits                File limits
-Project         used    soft    hard  grace    used  soft  hard  grace
-----------------------------------------------------------------------
- 0        --      13       0       0              2     0     0
- 123      --   10237   20480   10240              5   200   100
-
-The result of df command as below:
-
-[root@hades mnt_ext4]# df -h test_dir
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       20M   10M   10M  50% /home/cgxu/test/mnt_ext4
-
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test_dir(inherit project id),
-the write will fail with errno(-EDQUOT).
-
-After this patch, the df result looks like below.
-
-[root@hades mnt_ext4]# df -h test_dir
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       10M   10M  3.0K 100% /home/cgxu/test/mnt_ext4
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191016022501.760-1-cgxu519@mykernel.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/a60f563f11bbff821da2fa2949ca82922b144860.1576031637.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/gpio/gpiolib-of.c          |  4 ----
+ drivers/mmc/core/host.c            | 11 ++++-------
+ drivers/mmc/core/slot-gpio.c       |  3 +++
+ drivers/mmc/host/pxamci.c          |  8 ++++----
+ drivers/mmc/host/sdhci-esdhc-imx.c |  3 ++-
+ 5 files changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 937d8bc1dda74..c51d7ef2e4675 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5536,9 +5536,15 @@ static int ext4_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index b696e4598a240..b0e79bed59520 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -147,10 +147,6 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 			if (of_property_read_bool(np, "cd-inverted"))
+ 				*flags ^= OF_GPIO_ACTIVE_LOW;
+ 		}
+-		if (!strcmp(propname, "wp-gpios")) {
+-			if (of_property_read_bool(np, "wp-inverted"))
+-				*flags ^= OF_GPIO_ACTIVE_LOW;
+-		}
+ 	}
+ 	/*
+ 	 * Some GPIO fixed regulator quirks.
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 105b7a7c02513..b3484def0a8b0 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -176,7 +176,6 @@ int mmc_of_parse(struct mmc_host *host)
+ 	u32 bus_width, drv_type, cd_debounce_delay_ms;
+ 	int ret;
+ 	bool cd_cap_invert, cd_gpio_invert = false;
+-	bool ro_cap_invert, ro_gpio_invert = false;
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_bsoftlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+	limit >>= sb->s_blocksize_bits;
-+
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = (dquot->dq_dqb.dqb_curspace +
- 			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
-@@ -5548,9 +5554,14 @@ static int ext4_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
+ 	if (!dev || !dev_fwnode(dev))
+ 		return 0;
+@@ -255,9 +254,11 @@ int mmc_of_parse(struct mmc_host *host)
  	}
  
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_isoftlimit < limit))
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
+ 	/* Parse Write Protection */
+-	ro_cap_invert = device_property_read_bool(dev, "wp-inverted");
+ 
+-	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, &ro_gpio_invert);
++	if (device_property_read_bool(dev, "wp-inverted"))
++		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
 +
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
++	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, NULL);
+ 	if (!ret)
+ 		dev_info(host->parent, "Got WP GPIO\n");
+ 	else if (ret != -ENOENT && ret != -ENOSYS)
+@@ -266,10 +267,6 @@ int mmc_of_parse(struct mmc_host *host)
+ 	if (device_property_read_bool(dev, "disable-wp"))
+ 		host->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
+ 
+-	/* See the comment on CD inversion above */
+-	if (ro_cap_invert ^ ro_gpio_invert)
+-		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
+-
+ 	if (device_property_read_bool(dev, "cap-sd-highspeed"))
+ 		host->caps |= MMC_CAP_SD_HIGHSPEED;
+ 	if (device_property_read_bool(dev, "cap-mmc-highspeed"))
+diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
+index da2596c5fa28d..582ec3d720f64 100644
+--- a/drivers/mmc/core/slot-gpio.c
++++ b/drivers/mmc/core/slot-gpio.c
+@@ -241,6 +241,9 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
+ 			return ret;
+ 	}
+ 
++	if (host->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
++		gpiod_toggle_active_low(desc);
++
+ 	if (gpio_invert)
+ 		*gpio_invert = !gpiod_is_active_low(desc);
+ 
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index 024acc1b0a2ea..b2bbcb09a49e6 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -740,16 +740,16 @@ static int pxamci_probe(struct platform_device *pdev)
+ 			goto out;
+ 		}
+ 
++		if (!host->pdata->gpio_card_ro_invert)
++			mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
++
+ 		ret = mmc_gpiod_request_ro(mmc, "wp", 0, 0, NULL);
+ 		if (ret && ret != -ENOENT) {
+ 			dev_err(dev, "Failed requesting gpio_ro\n");
+ 			goto out;
+ 		}
+-		if (!ret) {
++		if (!ret)
+ 			host->use_ro_gpio = true;
+-			mmc->caps2 |= host->pdata->gpio_card_ro_invert ?
+-				0 : MMC_CAP2_RO_ACTIVE_HIGH;
+-		}
+ 
+ 		if (host->pdata->init)
+ 			host->pdata->init(dev, pxamci_detect_irq, mmc);
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 1c988d6a24330..dccb4df465126 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -1381,13 +1381,14 @@ static int sdhci_esdhc_imx_probe_nondt(struct platform_device *pdev,
+ 				host->mmc->parent->platform_data);
+ 	/* write_protect */
+ 	if (boarddata->wp_type == ESDHC_WP_GPIO) {
++		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
++
+ 		err = mmc_gpiod_request_ro(host->mmc, "wp", 0, 0, NULL);
+ 		if (err) {
+ 			dev_err(mmc_dev(host->mmc),
+ 				"failed to request write-protect gpio!\n");
+ 			return err;
+ 		}
+-		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
+ 	}
+ 
+ 	/* card_detect */
 -- 
 2.20.1
 
