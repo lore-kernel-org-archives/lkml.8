@@ -2,137 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8D4C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39139C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F65420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4FC20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:48:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VAAEidVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgBRRrY (ORCPT
+        id S1726751AbgBRRsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:47:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:57404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgBRRrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:47:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E1E731B;
-        Tue, 18 Feb 2020 09:47:23 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F4283F68F;
-        Tue, 18 Feb 2020 09:47:22 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:47:19 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
-Message-ID: <20200218174718.ma6cpr2qwnueertn@e107158-lin.cambridge.arm.com>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-4-qais.yousef@arm.com>
- <20200217092329.GC28029@codeaurora.org>
- <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
- <20200218041620.GD28029@codeaurora.org>
+        Tue, 18 Feb 2020 12:48:20 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33992 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgBRRsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:48:19 -0500
+Received: by mail-pg1-f194.google.com with SMTP id j4so11309969pgi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3hvwSCkX9pxo1KclHmLRqkXi0GkIvTorMMfGsTl4G64=;
+        b=VAAEidVXRRVDkWgdL8SLHMdW/a6i0JY1vrRlufLUFPlN1Z6SYM8X5VTqDZBAPUedND
+         4ruzfRGdb8pLQaWgxu7UontmEXbaTH0VaZl0Q5euy/y/2WFA7zMujwbE+oQG8w+rPV9i
+         UG+fkuMyecHK4BosrQTxYG2AO1fumayZrwr0u4AKL/Ue2tzY7KR5hlZrktzCpMifDApO
+         W1LfGeaeHeYksPMrG5TYec7IsLnKGplTSboPTNBoc7N2iqd2YpjstOVSA9WeyTZk7lpY
+         zn4OTiCfti6FMEJrncqSRCq9SeniKXfLGLgxPyoaSA1YrMBxxAg/WNUMrQXYiAz56UpD
+         VvUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3hvwSCkX9pxo1KclHmLRqkXi0GkIvTorMMfGsTl4G64=;
+        b=O6ATr/MvQ7J0iHOAzdije7w9qh1K4Ih0DDYDMngzHkVydwFCGpZ/tlyX34ZLlLkcwO
+         JWoPw9nHb4D6oo8kK4msI+wJBKmbcGbMnVDdqJ1AzsLPmMZQSaZTd7wY5JSzccPxDi3z
+         wUN6/V3X+6hT7JsRYy02vfIhcxyeiqX0lIhNSeMGbFLL92HdqKL6/GmSBJyDU2VGBZMA
+         a7R4ZfmHJxp/Ew9mh5eA8AMFmYVbHMQUMpQ+CTxxY4L1HkzWzXaLgWY88iQQwLyz10J7
+         dKNn/s2zAHi6SS09rT+iHZiMW2AoCdkgYqum5OK4T8Y1zeUjYxfo544YPGlMX+x5vZs0
+         Y7Cg==
+X-Gm-Message-State: APjAAAVICaecfiRYmR4CT+HNvgyJW7MeLjHP9O02J+Bx8jTTIXP3Md1w
+        nDUS1dXXhO4V/Z0+a9+V3lSbjHe5+EpQRuO6iIGT4A==
+X-Google-Smtp-Source: APXvYqyHwGTvTHxmWk1k9pViQpHjUGTIZX/AtqGWeQUl8A2fAwEAndE5x9tTwDhlw2346g6yq01Nqi+VvI65dhFEdfw=
+X-Received: by 2002:a63:f24b:: with SMTP id d11mr23276938pgk.381.1582048098676;
+ Tue, 18 Feb 2020 09:48:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200218041620.GD28029@codeaurora.org>
-User-Agent: NeoMutt/20171215
+References: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
+In-Reply-To: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Feb 2020 09:48:07 -0800
+Message-ID: <CAKwvOd=SD0AMwoxRovnPfAV70D7W4LPWtLHbui26A92ycUic=w@mail.gmail.com>
+Subject: Re: [Bluez PATCH v1] bluetooth: fix passkey uninitialized when used
+To:     Howard Chung <howardchung@google.com>
+Cc:     linux-bluetooth@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/18/20 09:46, Pavan Kondeti wrote:
-> The original RT task placement i.e without capacity awareness, places the task
-> on the previous CPU if the task can preempt the running task. I interpreted it
-> as that "higher prio RT" task should get better treatment even if it results
-> in stopping the lower prio RT execution and migrating it to another CPU.
-> 
-> Now coming to your patch (merged), we force find_lowest_rq() if the previous
-> CPU can't fit the task though this task can right away run there. When the
-> lowest mask returns an unfit CPU (with your new patch), We have two choices,
-> either to place it on this unfit CPU (may involve migration) or place it on
-> the previous CPU to avoid the migration. We are selecting the first approach.
-> 
-> The task_cpu(p) check in find_lowest_rq() only works when the previous CPU
-> does not have a RT task. If it is running a lower prio RT task than the
-> waking task, the lowest_mask may not contain the previous CPU.
-> 
-> I don't if any workload hurts due to this change in behavior. So not sure
-> if we have to restore the original behavior. Something like below will do.
+On Tue, Feb 18, 2020 at 3:05 AM 'Howard Chung' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> From: "howardchung@google.com" <howardchung@google.com>
+>
+> This issue cause a warning here
+> https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
+>
+> Signed-off-by: Howard Chung <howardchung@google.com>
 
-Is this patch equivalent to yours? If yes, then I got you. If not, then I need
-to re-read this again..
+Reported-by: kbuild test robot <lkp@intel.com>
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index ace9acf9d63c..854a0c9a7be6 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1476,6 +1476,13 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
-        if (test || !rt_task_fits_capacity(p, cpu)) {
-                int target = find_lowest_rq(p);
+Thanks for the fix. No comment on whether or not the value 0 is
+ignored here, but this should fix the warning.
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-+               /*
-+                * Bail out if we were forcing a migration to find a better
-+                * fitting CPU but our search failed.
-+                */
-+               if (!test && !rt_task_fits_capacity(p, target))
-+                       goto out_unlock;
-+
-                /*
-                 * Don't bother moving it if the destination CPU is
-                 * not running a lower priority task.
-@@ -1484,6 +1491,8 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
-                    p->prio < cpu_rq(target)->rt.highest_prio.curr)
-                        cpu = target;
-        }
-+
-+out_unlock:
-        rcu_read_unlock();
+> ---
+>
+>  net/bluetooth/smp.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index 50e0ac692ec4..fa40de69e487 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -2179,10 +2179,12 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+>                  */
+>                 if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+>                                  hcon->role)) {
+> +                       /* Set passkey to 0. The value can be any number since
+> +                        * it'll be ignored anyway.
+> +                        */
+>                         err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+>                                                         hcon->type,
+> -                                                       hcon->dst_type,
+> -                                                       passkey, 1);
+> +                                                       hcon->dst_type, 0, 1);
+>                         if (err)
+>                                 return SMP_UNSPECIFIED;
+>                         set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+> --
 
- out:
-
-
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 4043abe..c80d948 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1475,11 +1475,15 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
->  		int target = find_lowest_rq(p);
->  
->  		/*
-> -		 * Don't bother moving it if the destination CPU is
-> -		 * not running a lower priority task.
-> +		 * Don't bother moving it
-> +		 *
-> +		 * - If the destination CPU is not running a lower priority task
-> +		 * - The task can't fit on the destination CPU and it can run
-> +		 *   right away on it's previous CPU.
->  		 */
-> -		if (target != -1 &&
-> -		    p->prio < cpu_rq(target)->rt.highest_prio.curr)
-> +		if (target != -1 && target != cpu &&
-> +		    p->prio < cpu_rq(target)->rt.highest_prio.curr &&
-> +		    (test || rt_task_fits_capacity(p, target)))
->  			cpu = target;
->  	}
->  	rcu_read_unlock();
-> 
-> Thanks,
-> Pavan
-> 
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+-- 
+Thanks,
+~Nick Desaulniers
