@@ -2,126 +2,123 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DBAC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5382EC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FDB2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582058394;
-	bh=1M7sJyKek2vzcD+WMBztTe3Vke3hE8g33/8xU4GekOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gwXkVpNEVLhDk6q4SMxSjqlMvHg+mSPdOy601LDmPkoeAKnj0skW30KIqYDRd5Cua
-	 8Q1mbIFE5GVY453eCm0XUnKQ1FOMiuq0w1W498HPXr2vhBEIY+rOJARk9+gQa1DB4g
-	 Lvxrys89DUlI88RBjUV3tPfXryipqkgTm9bpl/M8=
+	by mail.kernel.org (Postfix) with ESMTP id 292DE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n7e0v8ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgBRUjx (ORCPT
+        id S1726922AbgBRUkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:39:53 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41520 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRUjw (ORCPT
+        Tue, 18 Feb 2020 15:40:41 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44366 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgBRUkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:39:52 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so20852454otc.8;
-        Tue, 18 Feb 2020 12:39:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C8j0O76ayqbfqE0bVu8zQXNeOaxgxzZC+4WywF7J+iw=;
-        b=WloVHiBsfD/pptWSgH0gzkPztMIEUfHpyFJaQEM/4z5HB4tKR4QXpnESbtGGwn+Y/B
-         BzwqI8OwTeWwOGCOCoYiDiDpasjPLFwdcIMBsrh4tTRe/cwuvvN+2xYr2gG6Jz9s3LL5
-         jNJAY4siQikOD+fHAaKblz7zNco5FOfnblcMuynJsEVpB79YV11UplKkJSI4h5Fr37ca
-         ntSY/sh7J0sdQjMXB8tOva4XT2u3WsF31ch09KdVys/kW1CMC3/zBc/wvQDulu4SBqMf
-         EwXJcaFKyCeK2NzdHQMSW4iwVtHf0Qjaf7Tmp5gxehHHhZBJUabKQzLLzkvcsrPkVSdw
-         EEiQ==
-X-Gm-Message-State: APjAAAWyjdbCYUOTIfaC8UCbxIxjuih+kOD5N1RfBCP7vE2ANs+yQtUu
-        nbinY6FEFzKpNZNv2nNTZw==
-X-Google-Smtp-Source: APXvYqyH1p5MWdMBardwNwTmNs1F6hhPi3TUJe8KGhFk/oPzVltIMKXI9kg6VgPOTDZoEaMQDFRXnA==
-X-Received: by 2002:a9d:116:: with SMTP id 22mr16069633otu.149.1582058390424;
-        Tue, 18 Feb 2020 12:39:50 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w197sm446590oia.12.2020.02.18.12.39.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:39:49 -0800 (PST)
-Received: (nullmailer pid 31148 invoked by uid 1000);
-        Tue, 18 Feb 2020 20:39:48 -0000
-Date:   Tue, 18 Feb 2020 14:39:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ryder Lee <Ryder.Lee@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH v7 1/7] dt-bindings: clock: mediatek: document clk
- bindings for Mediatek MT6765 SoC
-Message-ID: <20200218203948.GA28003@bogus>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
- <1581067250-12744-2-git-send-email-macpaul.lin@mediatek.com>
- <d606aeb2-5327-ff13-0043-e70ef37522f5@gmail.com>
+        Tue, 18 Feb 2020 15:40:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ezXVEe4FeJgs8vGaFryOelcymimRB2XjeyUjWso/aEk=; b=n7e0v8ssBmvuZIzr1HNNYBa55m
+        ITiL3kfA2kGf72KEH3nMjzWivzsv1i2PW5dLib4/5l9Lm7H0ECtL/EpW91EticmO/Lgpx3Ma2FRAR
+        1MyD7qiac65G46JG0wqpVlA1YlxU9Nl8vNvtHZLrjv/oLbjsDsTp8BHkXfbv6RJuAkgFM7zLoqNZR
+        HeLWLvjJf9AtNeaZq/eYam5p2hpMFT+s0UzRsnyuIRCq2fEzMBj0T+MlaaOfHNx4kNptTKHqvzjUg
+        BQsn6vDPI3xEfRot3ghhf0udYMAH4LzYNx6AqsLNocLUpNZtsDwee+wBKvFqZzrYR8G68VSvb19Ot
+        CQXNW+yw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j49fL-0000wX-0s; Tue, 18 Feb 2020 20:40:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 35813980E56; Tue, 18 Feb 2020 21:40:21 +0100 (CET)
+Date:   Tue, 18 Feb 2020 21:40:21 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200218204021.GJ11457@worktop.programming.kicks-ass.net>
+References: <20200212210139.382424693@infradead.org>
+ <20200212210749.971717428@infradead.org>
+ <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+ <20200218195831.GD11457@worktop.programming.kicks-ass.net>
+ <20200218201728.GH2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d606aeb2-5327-ff13-0043-e70ef37522f5@gmail.com>
+In-Reply-To: <20200218201728.GH2935@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:47:25PM +0100, Matthias Brugger wrote:
-> 
-> 
-> On 07/02/2020 10:20, Macpaul Lin wrote:
-> > From: Mars Cheng <mars.cheng@mediatek.com>
+On Tue, Feb 18, 2020 at 12:17:28PM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 18, 2020 at 08:58:31PM +0100, Peter Zijlstra wrote:
+> > On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:
 > > 
-> > This patch adds the binding documentation for apmixedsys, audsys, camsys,
-> > imgsys, infracfg, mipi0a, topckgen, vcodecsys
+> > > > > That _should_ already be the case today. That is, if we end up in a
+> > > > > tracer and in_nmi() is unreliable we're already screwed anyway.
 > > 
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> > Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> > ---
-> >  .../arm/mediatek/mediatek,apmixedsys.txt      |  1 +
-> >  .../bindings/arm/mediatek/mediatek,audsys.txt |  1 +
-> >  .../bindings/arm/mediatek/mediatek,camsys.txt |  1 +
-> >  .../bindings/arm/mediatek/mediatek,imgsys.txt |  1 +
-> >  .../arm/mediatek/mediatek,infracfg.txt        |  1 +
-> >  .../bindings/arm/mediatek/mediatek,mipi0a.txt | 28 +++++++++++++++++++
-> >  .../bindings/arm/mediatek/mediatek,mmsys.txt  |  1 +
-> >  .../arm/mediatek/mediatek,pericfg.txt         |  1 +
-> >  .../arm/mediatek/mediatek,topckgen.txt        |  1 +
-> >  .../arm/mediatek/mediatek,vcodecsys.txt       | 27 ++++++++++++++++++
+> > > I removed the static from rcu_nmi_enter()/exit() as it is called from
+> > > outside, that makes it build now. Updated below is Paul's diff. I also added
+> > > NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
+> > > asymmetric.
+> > 
+> > > +__always_inline void rcu_nmi_exit(void)
+> > >  {
+> > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > >  
+> > > @@ -651,25 +653,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+> > >  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+> > >  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+> > >  
+> > > -	if (irq)
+> > > +	if (!in_nmi())
+> > >  		rcu_prepare_for_idle();
+> > >  
+> > >  	rcu_dynticks_eqs_enter();
+> > >  
+> > > -	if (irq)
+> > > +	if (!in_nmi())
+> > >  		rcu_dynticks_task_enter();
+> > >  }
+> > 
+> > Boris and me have been going over the #MC code (and finding loads of
+> > 'interesting' code) and ran into ist_enter(), whish has the following
+> > code:
+> > 
+> >                 /*
+> >                  * We might have interrupted pretty much anything.  In
+> >                  * fact, if we're a machine check, we can even interrupt
+> >                  * NMI processing.  We don't want in_nmi() to return true,
+> >                  * but we need to notify RCU.
+> >                  */
+> >                 rcu_nmi_enter();
+> > 
+> > 
+> > Which, to me, sounds all sorts of broken. The IST (be it #DB or #MC) can
+> > happen while we're holding all sorts of locks. This must be an NMI-like
+> > context.
 > 
-> I think it's OK to put all the bindings, that only add one compatible in onw
-> patch. But I think mipi0a and vcodesys should each go into a separate patch, as
-> we will need a Ack by Rob for that.
+> Ouch!  Looks like I need to hold off on getting rid of the "irq"
+> parameters if in_nmi() isn't going to be accurate.
 
-Yes, and DT schema for the new ones.
+I'm currently trying to twist my brain around all this, because I
+suspect it's all completely broken one way or another.
 
-Rob
+But yes, we definitely need to fix this before your patch goes in.
