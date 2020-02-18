@@ -2,99 +2,96 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3110EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E5C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E045206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E385206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgBRK4M (ORCPT
+        id S1726569AbgBRK5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:56:12 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54739 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgBRK4M (ORCPT
+        Tue, 18 Feb 2020 05:57:14 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54846 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgBRK5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:56:12 -0500
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01IAsrGS004290;
-        Tue, 18 Feb 2020 19:54:53 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
- Tue, 18 Feb 2020 19:54:53 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 01IAsgl4004217
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 18 Feb 2020 19:54:53 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Matthew Garrett <mjg59@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com>
- <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
- <20191216201834.GA785904@mit.edu>
- <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
- <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
- <CACT4Y+Y1NTsRmifm2QLCnGom_=TnOo5Nf4EzQ=7gCJLYzx9gKA@mail.gmail.com>
- <CACdnJut=Sp9fF7ysb+Giiky0QRfakczJyK2AH2puJPYWQQKhdQ@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <4abd90ad-dc1a-7228-1f1c-b106097bcaef@i-love.sakura.ne.jp>
-Date:   Tue, 18 Feb 2020 19:54:40 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 05:57:13 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 76F431C0371; Tue, 18 Feb 2020 11:57:11 +0100 (CET)
+Date:   Tue, 18 Feb 2020 11:57:10 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Convert common LED binding to
+ schema
+Message-ID: <20200218105710.GA28348@duo.ucw.cz>
+References: <20200108001738.8209-1-robh@kernel.org>
+ <bec9ab4a-da09-6ef1-7334-d19f11ab2523@gmail.com>
+ <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACdnJut=Sp9fF7ysb+Giiky0QRfakczJyK2AH2puJPYWQQKhdQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+bOWJM5nvtY58+2DRtWQNzOPiVX9P===NOk4eBaE5OEA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/01/03 4:57, Matthew Garrett wrote:
-> On Tue, Dec 17, 2019 at 12:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->> +Matthew for a lockdown question
->> We are considering [ab]using lockdown (you knew this will happen!) for
->> fuzzing kernel. LOCKDOWN_DEBUGFS is a no-go for us and we may want a
->> few other things that may be fuzzing-specific.
->> The current inflexibility comes from the global ordering of levels:
->>
->> if (kernel_locked_down >= level)
->> if (kernel_locked_down >= what) {
->>
->> Is it done for performance? Or for simplicity?
-> 
-> Simplicity. Based on discussion, we didn't want the lockdown LSM to
-> enable arbitrary combinations of lockdown primitives, both because
-> that would make it extremely difficult for userland developers and
-> because it would make it extremely easy for local admins to
-> accidentally configure policies that didn't achieve the desired
-> outcome. There's no inherent problem in adding new options, but really
-> right now they should fall into cases where they're protecting either
-> the integrity of the kernel or preventing leakage of confidential
-> information from the kernel.
-> 
 
-Can we resume this topic?
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think build-time lockdown (i.e. kernel config option) is more reliable
-and easier to use.
+Hi!
+
+> > > Bindings for LED controllers can reference the common schema for the =
+LED
+> > > child nodes:
+> > >
+> > > patternProperties:
+> > >   "^led@[0-4]":
+> > >     type: object
+> > >     allOf:
+> > >       - $ref: common.yaml#
+> > >
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Dan Murphy <dmurphy@ti.com>
+> > > Cc: linux-leds@vger.kernel.org
+> > > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Jacek, Please take this via led tree
+> >
+> > Currently Pavel maintains LED tree. Pavel?
+>=20
+> As it doesn't look like there's any conflicts, I've applied this
+> series to the DT tree.
+
+Thank you!
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXkvDBgAKCRAw5/Bqldv6
+8uTmAJ4q9FOCilnz5IzvOIzO/Pvu+CTcIACgk95eQ06CVaeLv5XJZIbCQUSPV9I=
+=mqJ6
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
