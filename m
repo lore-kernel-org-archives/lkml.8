@@ -5,422 +5,236 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF28EC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A975C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DA5206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B2E206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XCau9977"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sMCo+kzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBRWVz (ORCPT
+        id S1727313AbgBRWW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:21:55 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45551 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRWVy (ORCPT
+        Tue, 18 Feb 2020 17:22:26 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9757 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgBRWW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:21:54 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so11360209pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4ae8TZu3f0/iy91FoI8iTekIQejDkJJeNt9p6hBIs4w=;
-        b=XCau9977EU/2cfJFWAYbqYiM+W1BOtQ1ge3/1WWyBOVVaOimLqkK707vHu297FiCca
-         cBoZpp1ybWfxL8A/OA2UbU97AIjhGAWSBNLVobjTIb4ujiwp66r+puJtlRSAMu86DjSh
-         tOKV8RQiGi5NYxRZsKVcaGkJy04E07qP7KgLk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4ae8TZu3f0/iy91FoI8iTekIQejDkJJeNt9p6hBIs4w=;
-        b=Usg2TsAJecXdk3gtXSAPt+0bEbAePYye651QKL0iyS+O4NWH9XcvsieSu5SMvxL9tu
-         4bGJ68w0k6lMcV8fCMxH9s1gx1BGJZAMZ6pmo9BIKVxHH/PUGtdrG4CB5BG+gYnZZa14
-         4tjiLz+uRFB6TKzxgE0APDUj3BQSyoKYlrXyV2vAzpzcdzFsWTp/JI8Y4w28FjbOG1dm
-         4LVOg9tdqZhQVvifYDv981l5OpDtmwI+gxSD806MDmzzbRUOJipHkBW8i2fSnyBl8I2N
-         iz7T0esSAKWrlmc6Q9T6oTn1+OsxGFDDRqF9/m2mhd5nfhYGtswt9IP8JpkcdcqgcSm6
-         kouA==
-X-Gm-Message-State: APjAAAWw15kplL3Z+VVcWp6EoeFXskiuDuEJ8/rsNnFffUl8tf34hWj7
-        6BA1UBIInQrhq6f+HejTOJFOBg==
-X-Google-Smtp-Source: APXvYqwDUVM3Y0pZl+OXRpUJPoCMvvC353mJa5yCgcdaGa5y01Z3JW2lH4hYmauAsaeizaK3YyLOUQ==
-X-Received: by 2002:a63:4804:: with SMTP id v4mr24517077pga.373.1582064513080;
-        Tue, 18 Feb 2020 14:21:53 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id c26sm16989pfj.8.2020.02.18.14.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 14:21:52 -0800 (PST)
-Date:   Tue, 18 Feb 2020 14:21:51 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v4 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-Message-ID: <20200218222151.GD15781@google.com>
-References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
- <1582030833-12964-2-git-send-email-ppvk@codeaurora.org>
+        Tue, 18 Feb 2020 17:22:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c63810000>; Tue, 18 Feb 2020 14:21:53 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 14:22:25 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 14:22:25 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
+ 2020 22:22:25 +0000
+Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-4-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <e42273c5-1528-73d1-7a1c-6cc4253ddf5c@nvidia.com>
+Date:   Tue, 18 Feb 2020 14:22:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1582030833-12964-2-git-send-email-ppvk@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217184613.19668-4-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582064513; bh=ZZ7ZnXmWS/+25lCnS0Msc4oVcTYWx35dNubCQJlyios=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=sMCo+kzHChvgZdHGQm3ugwe95Yy3u85k0iTNa8iFdKNEtWD62hxHdqvdgNNSjtdxb
+         enTEGW/SfVJLCHfbmpjg9Jefzr0FSn8p03k0hmK3im6emR6FuRzJ4Kjh2jAGWCPOAZ
+         AJRFKt4RYh6NxqnG9BlGHsnneYy9zTg2CqrTbBftfsZBMhcHh5fR/jXoDtYl395Lyn
+         GfNFP9aWRVAzaXP3VMZv/tOL1A3fARHojujr1xyeVhMxRRfK5C11alx3JJspYdo8HS
+         n4v0x5ZPHFSa3fu1BIfcU7dkxH9vREijE68noNdkb+cNvvV8S4dd0wqjChm3q9T+nM
+         7MAerZ+gnJAQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pradeep,
-
-On Tue, Feb 18, 2020 at 06:30:32PM +0530, Pradeep P V K wrote:
-> Add interconnect bandwidths for SDHC driver using OPP framework that
-> is required by SDHC driver based on the clock frequency and bus width
-> of the card. Otherwise, the system clocks may run at minimum clock
-> speed and thus affecting the performance.
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> This change is based on
-> [RFC] mmc: host: sdhci-msm: Use the interconnect API
-> (https://lkml.org/lkml/2018/10/11/499) and
+> In this patch, only between __do_page_cache_readahead() and
+> read_pages(), but it will be extended in upcoming patches.  Also add
+> the readahead_count() accessor.
 > 
-> [PATCH v6] Introduce Bandwidth OPPs for interconnects
-> (https://lkml.org/lkml/2019/12/6/740)
-> 
-> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
+>  include/linux/pagemap.h | 17 +++++++++++++++++
+>  mm/readahead.c          | 36 +++++++++++++++++++++---------------
+>  2 files changed, 38 insertions(+), 15 deletions(-)
 > 
-> changes from RFC v3 -> v4:
-> 
-> - Addressed review comments from Bjorn and Matthias
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index ccb14b6a16b5..982ecda2d4a2 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -630,6 +630,23 @@ static inline int add_to_page_cache(struct page *page,
+>  	return error;
+>  }
+>  
+> +/*
+> + * Readahead is of a block of consecutive pages.
+> + */
+> +struct readahead_control {
+> +	struct file *file;
+> +	struct address_space *mapping;
+> +/* private: use the readahead_* accessors instead */
 
-This is not helpful, please describe in future versions what those
-changes are.
 
-> 
->  drivers/mmc/host/sdhci-msm.c | 204 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 200 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 71f29ba..5af1c58 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -11,8 +11,10 @@
->  #include <linux/mmc/mmc.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> +#include <linux/interconnect.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/pm_opp.h>
->  
->  #include "sdhci-pltfm.h"
->  
-> @@ -229,6 +231,12 @@ struct sdhci_msm_variant_info {
->  	const struct sdhci_msm_offset *offset;
->  };
->  
-> +struct sdhci_msm_bus_vote_data {
-> +	struct icc_path *sdhc_to_ddr;
-> +	struct icc_path *cpu_to_sdhc;
-> +	u32 curr_freq;
+Really a minor point, sorry...what about documenting "input", "output", 
+"input/output" instead? I ask because:
+
+a) public and private seems sort of meaningless here: even in this initial
+   patch, the code starts off by setting .file, .mapping, and .nr_pages.
+
+b) The part that's confusing, and that might benefit from either documentation
+   or naming changes, is the way _nr_pages is used. Is it "number of pages
+   requested to read ahead", or "number of pages just read", or number of
+   pages remaining to be read"? I've had trouble keeping it straight because
+   I recall it being used differently at different points.
+
+
+> +	pgoff_t _start;
+> +	unsigned int _nr_pages;
 > +};
 > +
->  struct sdhci_msm_host {
->  	struct platform_device *pdev;
->  	void __iomem *core_mem;	/* MSM SDCC mapped address */
-> @@ -255,8 +263,11 @@ struct sdhci_msm_host {
->  	bool use_cdr;
->  	u32 transfer_mode;
->  	bool updated_ddr_cfg;
-> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
->  };
->  
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable);
+> +/* The number of pages in this readahead block */
+> +static inline unsigned int readahead_count(struct readahead_control *rac)
+> +{
+> +	return rac->_nr_pages;
+> +}
+
+
+I took a peek at the generated code, and was reassured to see that this realy
+does work even in the "for" loops. Once in a while I like to get my faith in
+the compiler renewed. :)
+
 > +
->  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+>  static inline unsigned long dir_pages(struct inode *inode)
 >  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -1564,6 +1575,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	return (unsigned long)(inode->i_size + PAGE_SIZE - 1) >>
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 12d13b7792da..15329309231f 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -113,26 +113,29 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
 >  
->  	msm_set_clock_rate_for_bus_mode(host, clock);
->  out:
-> +	sdhci_msm_bus_voting(host, !!clock);
->  	__sdhci_msm_set_clock(host, clock);
+>  EXPORT_SYMBOL(read_cache_pages);
+>  
+> -static void read_pages(struct address_space *mapping, struct file *filp,
+> -		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
+> +static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> +		gfp_t gfp)
+>  {
+> +	const struct address_space_operations *aops = rac->mapping->a_ops;
+>  	struct blk_plug plug;
+>  	unsigned page_idx;
+>  
+>  	blk_start_plug(&plug);
+>  
+> -	if (mapping->a_ops->readpages) {
+> -		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
+> +	if (aops->readpages) {
+> +		aops->readpages(rac->file, rac->mapping, pages,
+> +				readahead_count(rac));
+>  		/* Clean up the remaining pages */
+>  		put_pages_list(pages);
+>  		goto out;
+>  	}
+>  
+> -	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
+> +	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
+>  		struct page *page = lru_to_page(pages);
+>  		list_del(&page->lru);
+> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
+> -			mapping->a_ops->readpage(filp, page);
+> +		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
+> +				gfp))
+> +			aops->readpage(rac->file, page);
+>  		put_page(page);
+>  	}
+>  
+> @@ -155,9 +158,13 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	unsigned long end_index;	/* The last page we want to read */
+>  	LIST_HEAD(page_pool);
+>  	int page_idx;
+> -	unsigned int nr_pages = 0;
+>  	loff_t isize = i_size_read(inode);
+>  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> +	struct readahead_control rac = {
+> +		.mapping = mapping,
+> +		.file = filp,
+> +		._nr_pages = 0,
+> +	};
+>  
+>  	if (isize == 0)
+>  		return;
+> @@ -180,10 +187,9 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  			 * contiguous pages before continuing with the next
+>  			 * batch.
+>  			 */
+> -			if (nr_pages)
+> -				read_pages(mapping, filp, &page_pool, nr_pages,
+> -						gfp_mask);
+> -			nr_pages = 0;
+> +			if (readahead_count(&rac))
+> +				read_pages(&rac, &page_pool, gfp_mask);
+> +			rac._nr_pages = 0;
+>  			continue;
+>  		}
+>  
+> @@ -194,7 +200,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		list_add(&page->lru, &page_pool);
+>  		if (page_idx == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+> -		nr_pages++;
+> +		rac._nr_pages++;
+>  	}
+>  
+>  	/*
+> @@ -202,8 +208,8 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	 * uptodate then the caller will launch readpage again, and
+>  	 * will then handle the error.
+>  	 */
+> -	if (nr_pages)
+> -		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
+> +	if (readahead_count(&rac))
+> +		read_pages(&rac, &page_pool, gfp_mask);
+>  	BUG_ON(!list_empty(&page_pool));
 >  }
 >  
-> @@ -1685,6 +1697,174 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  
-> +/*
-> + * Returns required bandwidth in Bytes per Sec
-> + */
-> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-> +					struct mmc_ios *ios)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	switch (ios->bus_width) {
-> +	case MMC_BUS_WIDTH_1:
-> +		return msm_host->clk_rate/8;
+> 
 
-nit: it would be more readable with spaces around '/'.
+In any case, this patch faithfully preserves the existing logic, so regardless of any
+documentation decisions, 
 
-> +	case MMC_BUS_WIDTH_4:
-> +		return msm_host->clk_rate/2;
-> +	case MMC_BUS_WIDTH_8:
-> +		break;
-> +	}
-> +	return msm_host->clk_rate;
-> +}
-> +
-> +/*
-> + * Helper function to parse the exact OPP node
-> + * Returns OPP pointer on success else NULL on error
-> + */
-> +static struct dev_pm_opp
-> +		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
-> +							unsigned long bw)
-> +{
-> +	struct dev_pm_opp *opp;
-> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
-> +	unsigned int freq = bw;
-> +	struct device *dev = &msm_host->pdev->dev;
-> +
-> +
-> +	if (!freq)
-> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
-> +	else
-> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
-> +
-> +	/* Max bandwidth vote */
-> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
-> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
-> +
-> +	if (IS_ERR(opp)) {
-> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
-> +				freq, PTR_ERR(opp));
-> +		return NULL;
-> +	}
-> +	return opp;
-> +}
-> +
-> +/*
-> + * This function sets the interconnect bus bandwidth
-> + * vote based on bw (bandwidth) argument.
-> + */
-> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
-> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
-> +						unsigned int bw)
-> +{
-> +	int i, ddr_rc, cpu_rc;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
-> +	struct device *dev = &msm_host->pdev->dev;
-> +	struct dev_pm_opp *opp;
-> +	unsigned long freq = bw;
-> +	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
-> +	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
-> +
-> +	if (bw == vote_data->curr_freq)
-> +		return;
-> +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-> +		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
-> +		if (opp) {
-> +			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
-> +			freq += 1; /* Next bandwidth vote */
-> +			dev_pm_opp_put(opp);
-> +		}
-> +	}
-> +	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc avg_bw:%lu peak_bw:%lu\n",
-> +			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
-> +				avg_bw[1], peak_bw[1]);
-> +	ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
-> +	cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
-> +	if (ddr_rc || cpu_rc) {
-> +		dev_err(dev, "icc_set() failed ddr_rc:%d cpu_rc:%d\n",
-> +							ddr_rc, cpu_rc);
-> +		return;
-> +	}
+    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
-Do you necessarily want to set the bandwidth of the CPU to SDHC path, if
-setting the bandwidth for the SDHC to DDR path failed? If not I'd suggest
-to get rid of this double error handling with 'ddr_rc' and 'cpu_rc' and
-handle each error individually.
-
-> +	vote_data->curr_freq = bw;
-> +}
-> +
-> +/*
-> + * Helper function to register for OPP and interconnect
-> + * frameworks.
-> + */
-> +static struct sdhci_msm_bus_vote_data
-> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_msm_bus_vote_data *vote_data;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-> +	if (!vote_data)
-> +		return NULL;
-
-Even though the interconnects are optional I think we want to propagate an
-out of memory error, i.e. you probably want to return -ENOMEM here.
-
-Also the allocated 'vote_data' will not be used if the ICC configuration
-does not exist or is invalid. I think Bjorn suggested to do the allocation
-after getting the ICC paths and error handling, when you know the struct
-is actually used.
-
-> +
-> +	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
-> +	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
-> +	if (!vote_data->sdhc_to_ddr || !vote_data->cpu_to_sdhc) {
-> +		dev_info(&pdev->dev, "ICC DT property is missing. skip vote !!\n");
-> +		return NULL;
-
-This combined handling masks possible misconfigurations/errors, where one
-ICC path is specified (correctly or not), and the other not. Also the log
-message would be confusing in this case, since the ICC property exists.
-
-Preferably NULL would only be returned if neither of the ICC paths is
-specified. The message could be something like "no interconnect configuration".
-This is still not entirely correct, since there could be a configuration, just
-not with the expected interconnect names.
-
-> +	} else if (IS_ERR(vote_data->sdhc_to_ddr) ||
-> +			IS_ERR(vote_data->cpu_to_sdhc)) {
-> +		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
-> +				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
-
-What is the point of using '%s' here?
-
-> +		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
-> +				PTR_ERR(vote_data->sdhc_to_ddr), "cpu-sdhc");
-
-ditto
-
-> +
-> +		return IS_ERR(vote_data->sdhc_to_ddr) ?
-> +			ERR_CAST(vote_data->sdhc_to_ddr) :
-> +			ERR_CAST(vote_data->cpu_to_sdhc);
-> +	}
-
-The above could print an error message for an ICC path that doesn't
-have a problem. Also we don't want to yell in case of deferred probing.
-
-Something like this could be a possible alternative:
-
-     	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-	const char *path_names[] = {
-		"sdhc-ddr",
-		"cpu-sdhc"
-	};
-
-	// use loop?
-	icc_paths[0] = of_icc_get(&pdev->dev, "sdhc-ddr");
-	icc_paths[1] = of_icc_get(&pdev->dev, "cpu-sdhc");
-
-	if (!icc_paths[0] && !icc_paths[1]) {
-		dev_info(...);
-		return NULL;
-	}
-
-	for (i = 0; i <  BUS_INTERCONNECT_PATHS; i++) {
-	       	int err = 0;
-
-		if (!icc_paths[i]) {
-			dev_err(pdev->dev. "interconnect path '%s' is not configured\n", path_names[i]);
-			err = -EINVAL;
-			goto handle_err;
-		}
-
-		if (IS_ERR(icc_paths[i]) {
-			err = PTR_ERR(icc_paths[i]);
-
-			if (err != -EPROBE_DEFER)
-				dev_err(pdev->dev. "interconnect path '%s' is invalid: %d\n", path_names[i], err);
-		}
-
-handle_err:
-		if (err) {
-			int other = (i == 0)? 1 : 0;
-
-			if (!IS_ERR_OR_NULL(icc_paths[other]))
-				icc_put(icc_paths[other]);
-
-			return err;
-		}
-	}
-
-> +	ret = dev_pm_opp_of_add_table(dev);
-> +	if (ret) {
-> +		if (ret == -ENODEV || ret == -ENODATA)
-> +			dev_err(dev, "OPP dt properties missing:%d\n", ret);
-> +		else
-> +			dev_err(dev, "OPP registration failed:%d\n", ret);
-> +		return ERR_PTR(ret);
-> +	}
-
-Now that we know that there are no errors we can allocate 'vote_data' and
-initialize it.
-
-> +	return vote_data;
-> +}
-> +
-> +static void sdhci_msm_bus_unregister(struct device *dev,
-> +				struct sdhci_msm_host *host)
-> +{
-> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
-> +
-> +	if (!vote_data ||
-> +		IS_ERR(vote_data->sdhc_to_ddr) ||
-> +		IS_ERR(vote_data->cpu_to_sdhc))
-
-The check for errors in the ICC paths is not necessary. When an error is
-encountered sdhci_msm_bus_register() returns an error, not a struct.
-
-> +		return;
-> +
-> +	icc_put(vote_data->sdhc_to_ddr);
-> +	icc_put(vote_data->cpu_to_sdhc);
-> +}
-> +
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable)
-> +{
-> +	struct mmc_ios *ios = &host->mmc->ios;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	unsigned int bw;
-> +
-> +	if (!msm_host->bus_vote_data ||
-> +		IS_ERR(msm_host->bus_vote_data))
-
-no need to check for errors, _probe() is aborted in case of errors.
-
-Thanks
-
-Matthias
+thanks,
+-- 
+John Hubbard
+NVIDIA
