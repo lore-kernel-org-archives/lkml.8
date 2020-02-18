@@ -2,67 +2,159 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FE9C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B291DC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3432173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LScU3Yx/"
+	by mail.kernel.org (Postfix) with ESMTP id 811F22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582057916;
+	bh=oh7trNinL5HnQ47vhaNDfdVl4Rcr0N6EQQ6S3MAkd/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZwSuucYupDe7N4nXxrqBcyIWeLm23rM1Mp9mcgdsVmYEuF8/4OiQNa9OHKHN88H1B
+	 7WcGom9/fSY0L7CiUtBPp2o6kevLrzDALACDK4RzHlMtX6qPCvzxTF0XciYnmMT7kN
+	 4AzqnH8IQFoEGeeeB+w1ypd8p11XQ2JapdiNxwRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgBRUad (ORCPT
+        id S1727082AbgBRUbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:30:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgBRUad (ORCPT
+        Tue, 18 Feb 2020 15:31:55 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37102 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRUby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:30:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qtG6LFofrwuOgNcj1PU4O1gDuyqOVA6yV6Cv/BdIm3g=; b=LScU3Yx/LItS7jt6xqnd2waP3V
-        e9LBYb3ekaMpqvJnVXmisDs5LB+42a8HuLVBjedJI3zau1bTFZGhrfZ2iYyC0rZGDWUQ294ZcecQd
-        m28rb00yZH0o5QwPg3SOqx+5LSVP/psaYhWiIgG5AzZRiFwdP9p9fSoiy/NFLBfPPiMoMQEJKhlnP
-        D+gk26OLxBok17maFQ7jQMC0cxpJszarfxFvEJz3f+LdgsefXOSvD7MhkbSa3dZQChg2jMmXON1yN
-        DwUw2l4lfRSjjZcXmUcAKThOJRVPPIvdQbkqGE0a8lLO0/x6tXnbPjFh2I11bvlaet7V0u9QFcdOD
-        Dw20wwDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j49Vg-0005Yw-JQ; Tue, 18 Feb 2020 20:30:24 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B7944980E56; Tue, 18 Feb 2020 21:30:22 +0100 (CET)
-Date:   Tue, 18 Feb 2020 21:30:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200218203022.GH11457@worktop.programming.kicks-ass.net>
-References: <20200218173150.GK14449@zn.tnic>
- <20200218131158.693eeefc@gandalf.local.home>
- <20200218195035.GN14449@zn.tnic>
- <20200218150850.224d9b8e@gandalf.local.home>
+        Tue, 18 Feb 2020 15:31:54 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q84so21512439oic.4;
+        Tue, 18 Feb 2020 12:31:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J/VxJ3xiwdS6/BWNfUPWpgIlaLG5DINnCPtjKZgxKdM=;
+        b=to4rJbzvx2eabws6ZIqorBVPxeBvz1PRGBHQrRNnzrPBYB9b8OtUIAGxg4nWCQvMh7
+         Rt8zwcB1IjXcMtjJOkSvnwixmoP5lXTe7dnq6PgDXuv7UdXa9/lHhejQ7syN7BJY7FN4
+         BQ/ToBs3tzaw3CDnjWyBmxo7RJy2dMPsy3gFcDMgwKDHoxvQ2gOya3UH3ZKHQcN+kqDp
+         /qJuZ9B/itpHUcm9eeJ+NtPRyW4kzjukHbbK+T75Ng53AQoI0hfmvlDRZfTVa+vkFisz
+         X+LUEYdfRF0GNjrAYSmSg+GKKD07IAPNE83gX4L/aemV4gCsQBYAeP7lLPYB9aA5QTuO
+         MzKg==
+X-Gm-Message-State: APjAAAUgxRk/6MgwUq8bRHtb/oAIeiVFfzzXXo76aoBpC+h/oR0Q2abI
+        KFJw2OG2osp5nhOJRgaXtQ==
+X-Google-Smtp-Source: APXvYqz4+tMO0xRMFlD+Nj7EMFcqW+z3eblcWmDWok4aK303S3lbrgXPLQt5ovOmoCv1EkypuhWhDA==
+X-Received: by 2002:aca:af50:: with SMTP id y77mr2515745oie.8.1582057913671;
+        Tue, 18 Feb 2020 12:31:53 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y25sm1716518oto.27.2020.02.18.12.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 12:31:52 -0800 (PST)
+Received: (nullmailer pid 19094 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:31:51 -0000
+Date:   Tue, 18 Feb 2020 14:31:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     matthias.bgg@kernel.org
+Cc:     mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        drinkcat@chromium.org, frank-w@public-files.de,
+        sean.wang@mediatek.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, wens@csie.org,
+        linux-mediatek@lists.infradead.org, rdunlap@infradead.org,
+        hsinyi@chromium.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 02/13] dt-bindings: display: mediatek: Add mmsys
+ binding description
+Message-ID: <20200218203151.GA15948@bogus>
+References: <20200213201953.15268-1-matthias.bgg@kernel.org>
+ <20200213201953.15268-3-matthias.bgg@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218150850.224d9b8e@gandalf.local.home>
+In-Reply-To: <20200213201953.15268-3-matthias.bgg@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 03:08:50PM -0500, Steven Rostedt wrote:
-> Now, is jump labels bad in these cases (note, it is possible to trigger
-> a breakpoint in them, does an iret disable the MC as well, which means
-> we could get nested MC handlers corrupting the IST stack?).
+On Thu, Feb 13, 2020 at 09:19:42PM +0100, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> The MediaTek DRM has a block called mmsys, which sets
+> the routing and enables the different blocks.
+> This patch adds one line for the mmsys bindings description and changes
+> the mmsys description to use the generic form of referring to a specific
+> Soc.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> 
+> ---
+> 
+> Changes in v7:
+> - add hint to the mmsys binding document
+> - make mmsys description generic
+> - fix typo in commit message
+> 
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../bindings/display/mediatek/mediatek,disp.txt          | 3 +++
+>  .../bindings/display/mediatek/mediatek,mmsys.txt         | 9 +--------
+>  2 files changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index b91e709db7a4..8e453026ef78 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -24,6 +24,7 @@ connected to.
+>  For a description of the display interface sink function blocks, see
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt and
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+> +Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt.
+>  
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+> @@ -43,7 +44,9 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+>  	"mediatek,<chip>-disp-mutex" 		- display mutex
+>  	"mediatek,<chip>-disp-od"    		- overdrive
+> +	"mediatek,<chip>-mmsys", "syscon"	- provide clocks and components management
+>    the supported chips are mt2701, mt2712 and mt8173.
+> +
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> index 301eefbe1618..7bbadee820e3 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,mmsys.txt
+> @@ -5,14 +5,7 @@ The Mediatek mmsys controller provides various clocks to the system.
+>  
+>  Required Properties:
+>  
+> -- compatible: Should be one of:
+> -	- "mediatek,mt2701-mmsys", "syscon"
+> -	- "mediatek,mt2712-mmsys", "syscon"
+> -	- "mediatek,mt6779-mmsys", "syscon"
+> -	- "mediatek,mt6797-mmsys", "syscon"
+> -	- "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys", "syscon"
 
-That is what I expect, and would be consistent with the whole NMI
-situation.
+You've lost this information about the fallback...
+
+> -	- "mediatek,mt8173-mmsys", "syscon"
+> -	- "mediatek,mt8183-mmsys", "syscon"
+> +- compatible: "mediatek,<chip>-mmsys"
+
+You are just going to have to add these all back when this is converted 
+to schema.
+
+Rob
