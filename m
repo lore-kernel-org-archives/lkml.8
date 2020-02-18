@@ -2,148 +2,103 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068CDC34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ADEC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF45120659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B4F21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582017269;
+	bh=hRw209oKEaCZWoYigJBg7fczTf5My05WHql2Hw28z8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rZPB/GxSZ57yRYLhLBtaLD4tftxgJQjHXJagrKQxm4E2PGXJ40XIz1eWGf6dr/zWG
+	 cgUZmQ6f4pWAEJvH2mCiSwdOjbUep+820KlWuZFMB/z4lNWf2QPVZS0AsSn3KZshp8
+	 9sPwvwH0MLz43JSDordYOHpwUXr221HEpvtC1Sj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgBRJNY (ORCPT
+        id S1726415AbgBRJO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:13:24 -0500
-Received: from mga06.intel.com ([134.134.136.31]:19293 "EHLO mga06.intel.com"
+        Tue, 18 Feb 2020 04:14:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgBRJNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:13:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 01:13:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="314996167"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 01:13:17 -0800
-Subject: Re: [PATCH V3] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     asutoshd@codeaurora.org, swboyd@google.com,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, vbadigan@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org
-References: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e4424388-2c6c-7736-da45-7b3b20b9ebbd@intel.com>
-Date:   Tue, 18 Feb 2020 11:12:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726199AbgBRJO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:14:28 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1176320659;
+        Tue, 18 Feb 2020 09:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582017268;
+        bh=hRw209oKEaCZWoYigJBg7fczTf5My05WHql2Hw28z8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ajy3HkFdFWng9bLPIdBDSTUY+a9Q087LEQvwAb9hQoRaKk1S2f/KZ60vL5VdR3UtF
+         YGzA0uSe4HGNYCerYkSQ/h9zT2REdDnJoQXGKzI+Ddmv+qCGzDrMkJ7fIyfIwbVNU8
+         bTsxUSp/LdJtoYQu2vaUZR1bNPsh29niWarF4wik=
+Date:   Tue, 18 Feb 2020 17:14:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Olof Johansson <olof@lixom.net>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
+Message-ID: <20200218091409.GA6075@dragon>
+References: <20200124084359.16817-1-christian.gmeiner@gmail.com>
+ <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
+ <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
+ <CAH9NwWdg5r1T9TkXAe4=3Zui2vMcnOc2UJ=e02NFbiPhb5n48w@mail.gmail.com>
+ <20200217041936.GH5395@dragon>
+ <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1581492673-27295-1-git-send-email-sbhanu@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/02/20 9:31 am, Shaik Sajida Bhanu wrote:
-> The existing suspend/resume callbacks of sdhci-msm driver are just
-> gating/un-gating the clocks. During suspend cycle more can be done
-> like disabling controller, disabling card detection, enabling wake-up events.
+On Mon, Feb 17, 2020 at 01:09:32PM +0100, Christian Gmeiner wrote:
+> Am Mo., 17. Feb. 2020 um 05:19 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
+> >
+> > On Mon, Feb 10, 2020 at 02:30:12PM +0100, Christian Gmeiner wrote:
+> > > Am Mo., 10. Feb. 2020 um 11:58 Uhr schrieb Krzysztof Kozlowski
+> > > <krzk@kernel.org>:
+> > > >
+> > > > On Mon, 10 Feb 2020 at 11:54, Christian Gmeiner
+> > > > <christian.gmeiner@gmail.com> wrote:
+> > > > >
+> > > > > Am Fr., 24. Jan. 2020 um 09:44 Uhr schrieb Christian Gmeiner
+> > > > > <christian.gmeiner@gmail.com>:
+> > > > > >
+> > > > > > Makes it possible to multi v7 defconfig for stm32 and imx based devices with
+> >
+> > What do you mean by stm32 based devices here?
+> >
 > 
-> So updating the system pm callbacks for performing these extra
-> actions besides controlling the clocks.
-> 
-> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> 
-> Changes since V2:
->     Removed disabling/enabling pwr-irq from system pm ops.
-> 
-> Changes since V1:
->     Invoking pm_runtime_force_suspend/resume instead of
->     sdhci_msm_runtime_suepend/resume.
-> ---
->  drivers/mmc/host/sdhci-msm.c | 41 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..fcff3e8 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -2159,9 +2159,46 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
->  	return 0;
->  }
->  
-> +static int sdhci_msm_suspend(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +		ret = cqhci_suspend(host->mmc);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = sdhci_suspend_host(host);
-> +	if (ret)
-> +		return ret;
+> CONFIG_ARCH_STM32 - I have a STM32MP157C-DK2 in my board farm and
+> would love to use
+> multi_v7 for imx6 and stm32.
 
-		goto resume_cqhci;
+The patch is all about enabling drm-imx driver support.  The commit log
+gives the impression that drm-imx driver also works on stm32 devices.
+Is that the case?
 
-> +
-> +	return pm_runtime_force_suspend(dev);
-
-Ideally there should be an error path e.g.
-
-	ret = pm_runtime_force_suspend(dev);
-	if (!ret)
-		return ret;
-
-	sdhci_resume_host()
-resume_cqhci:
-	cqhci_resume()
-	return ret;
-
-> +}
-> +
-> +static int sdhci_msm_resume(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_force_resume(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sdhci_resume_host(host);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (host->mmc->caps2 & MMC_CAP2_CQE)
-> +		ret = cqhci_resume(host->mmc);
-> +
-> +	return ret;
-> +}
-> +
->  static const struct dev_pm_ops sdhci_msm_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> -				pm_runtime_force_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
-> +				sdhci_msm_resume)
->  	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
->  			   sdhci_msm_runtime_resume,
->  			   NULL)
-> 
-
+Shawn
