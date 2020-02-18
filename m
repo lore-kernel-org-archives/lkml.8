@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A2DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC80C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862E924670
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580332465D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056119;
-	bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
+	s=default; t=1582056123;
+	bh=MsuaI/HgEQAFlCw8QnXlY0IG7Q+77tzdvi9ttefGTN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psdhi8OI4XDTSK86mC9fkflSj1NJRX71nFBU5+ZlhzXgcH/7EHi23ShxaIuI1oisc
-	 jADUlbj9QTkm810ACTDuznba37neL940dbnG4X+SV6j91H8Mf8EqvBThBB42ARoDFK
-	 8dE9vevKZpnHjoXsFh2pSKY8EVy24fiv79VymRzw=
+	b=ARZtohF8oaA/itJgD46v/E3G1OD0ic3MAJBeYaji3K7XpFYJwASDN1+VInlyvRL/s
+	 t0/ZoU+744OIicO4xKWm1kLg0ObZzEUFCHEUVgQ0LhYUijMvo9oZjmiFVO1KJCQFUP
+	 nX9egQ8OMXY04HoCmjRzQy67VZRHyBkM2RVhZBJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgBRUB6 (ORCPT
+        id S1728856AbgBRUCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:01:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbgBRUBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:01:55 -0500
+        id S1728847AbgBRUB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:01:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA892465D;
-        Tue, 18 Feb 2020 20:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1862465D;
+        Tue, 18 Feb 2020 20:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056115;
-        bh=yYZKeSyGawqNcMCw4ypNqgx7uLhMIDMRc5yLeMvZ3TI=;
+        s=default; t=1582056118;
+        bh=MsuaI/HgEQAFlCw8QnXlY0IG7Q+77tzdvi9ttefGTN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u35cqI8unj6C7QfO03IrSR+MWRBIlxapaQ4LnhGLzrbUJC9NlN6XAmb7AVclMCkIy
-         9JypNUST0plnBi0Lg8+Z6Uqoxnw6iSOAfRASZiMqfnaj7qu229GtaoNUvSP1VG261a
-         i3FKFRUaM7O49DIgVdAefcVjuXI1vDjMfsyBtVzo=
+        b=jkOXhjIsraZ1/h03HU5PL9/hLZar3OAG87/+9XeC8Rmr0eH3Cdxdls7tGNp7Gdm+X
+         WpmOVIhTkaGZal3fTvxdRELGveTcEIKsmxtMAE50F3ZN0eLdgDU44CALHThfkSBJJj
+         wbhVwAEX9rGylRdKurMcJzTmBT/r3av7a7FsV8rA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 5.5 33/80] EDAC/sysfs: Remove csrow objects on errors
-Date:   Tue, 18 Feb 2020 20:54:54 +0100
-Message-Id: <20200218190435.636693665@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.5 42/80] drm/panfrost: Make sure the shrinker does not reclaim referenced BOs
+Date:   Tue, 18 Feb 2020 20:55:03 +0100
+Message-Id: <20200218190436.393793164@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,41 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-commit 4d59588c09f2a2daedad2a544d4d1b602ab3a8af upstream.
+commit 7e0cf7e9936c4358b0863357b90aa12afe6489da upstream.
 
-All created csrow objects must be removed in the error path of
-edac_create_csrow_objects(). The objects have been added as devices.
+Userspace might tag a BO purgeable while it's still referenced by GPU
+jobs. We need to make sure the shrinker does not purge such BOs until
+all jobs referencing it are finished.
 
-They need to be removed by doing a device_del() *and* put_device() call
-to also free their memory. The missing put_device() leaves a memory
-leak. Use device_unregister() instead of device_del() which properly
-unregisters the device doing both.
-
-Fixes: 7adc05d2dc3a ("EDAC/sysfs: Drop device references properly")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: John Garry <john.garry@huawei.com>
+Fixes: 013b65101315 ("drm/panfrost: Add madvise and shrinker support")
 Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200212120340.4764-4-rrichter@marvell.com
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191129135908.2439529-9-boris.brezillon@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/edac_mc_sysfs.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_drv.c          |    1 +
+ drivers/gpu/drm/panfrost/panfrost_gem.h          |    6 ++++++
+ drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c |    3 +++
+ drivers/gpu/drm/panfrost/panfrost_job.c          |    7 ++++++-
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -447,8 +447,7 @@ error:
- 		csrow = mci->csrows[i];
- 		if (!nr_pages_per_csrow(csrow))
- 			continue;
--
--		device_del(&mci->csrows[i]->dev);
-+		device_unregister(&mci->csrows[i]->dev);
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -166,6 +166,7 @@ panfrost_lookup_bos(struct drm_device *d
+ 			break;
+ 		}
+ 
++		atomic_inc(&bo->gpu_usecount);
+ 		job->mappings[i] = mapping;
  	}
  
- 	return err;
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.h
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
+@@ -30,6 +30,12 @@ struct panfrost_gem_object {
+ 		struct mutex lock;
+ 	} mappings;
+ 
++	/*
++	 * Count the number of jobs referencing this BO so we don't let the
++	 * shrinker reclaim this object prematurely.
++	 */
++	atomic_t gpu_usecount;
++
+ 	bool noexec		:1;
+ 	bool is_heap		:1;
+ };
+--- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
+@@ -41,6 +41,9 @@ static bool panfrost_gem_purge(struct dr
+ 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
+ 	struct panfrost_gem_object *bo = to_panfrost_bo(obj);
+ 
++	if (atomic_read(&bo->gpu_usecount))
++		return false;
++
+ 	if (!mutex_trylock(&shmem->pages_lock))
+ 		return false;
+ 
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -269,8 +269,13 @@ static void panfrost_job_cleanup(struct
+ 	dma_fence_put(job->render_done_fence);
+ 
+ 	if (job->mappings) {
+-		for (i = 0; i < job->bo_count; i++)
++		for (i = 0; i < job->bo_count; i++) {
++			if (!job->mappings[i])
++				break;
++
++			atomic_dec(&job->mappings[i]->obj->gpu_usecount);
+ 			panfrost_gem_mapping_put(job->mappings[i]);
++		}
+ 		kvfree(job->mappings);
+ 	}
+ 
 
 
