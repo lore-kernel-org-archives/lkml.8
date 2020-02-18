@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C1BC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EF9C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF1F2464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDBD21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056248;
-	bh=q78o6HQ0yfZG7Zp7kLt0nFtwq1+DanlptBtvtQKA9rQ=;
+	s=default; t=1582056250;
+	bh=Gx1VSKNcxi/fkNRFLfAEH+vI9f4N0sq/0PmCBrWWOOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/y6W+Iq97ndqCeDf3sVp5D1Rc8CGqADHLUSLfqTovo/4dNYj8QCsLKCzALvH4LT/
-	 77LArDHxWb7AYjFrBaAf70Y2WpxzSbN7SUS6sUkARxvr75oo5YiL4nN9ZW/Ar67sWj
-	 yU2+YdCtbJBA0l0Mlp6U7gZe4x6AqvHOAcgFWReQ=
+	b=VR1nnw/dV5jrqLZRv8MGzlBUoP8OCXLJ+coo3nXdacxLQ1R2c5O2QEY5oDMPQgxez
+	 x9Zu9C2s2/W8x4nbnSUzbNIHYMcqyn+IJTFct9uE4R9F2vmSOIgIXeYx1ZYmIK28bW
+	 uCnkzx4y+GX6uN9kr0Llr/wSy8tPcv9iEQpyY5tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgBRUD7 (ORCPT
+        id S1728220AbgBRUD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729002AbgBRUDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:53 -0500
+        id S1729158AbgBRUDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5101D21D56;
-        Tue, 18 Feb 2020 20:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1192464E;
+        Tue, 18 Feb 2020 20:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056232;
-        bh=q78o6HQ0yfZG7Zp7kLt0nFtwq1+DanlptBtvtQKA9rQ=;
+        s=default; t=1582056230;
+        bh=Gx1VSKNcxi/fkNRFLfAEH+vI9f4N0sq/0PmCBrWWOOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IprRHr+ZWnnSutS8Jws/fVJW7hdHq4Z3JO7fz9x/d/TS+YZgQTjLHArg6b/HY5QJq
-         y8jUhVnTguw8d/fK86mFyAPeBSXVwgbuc9/jFpehO8GOuZ3gqCoMA2wJEmQl+fesLq
-         9iSIP12v9UpCDCUVNDKOqD6EzUxa/dZeQFxaO1Xk=
+        b=AwQce9GP7MzrZkK/lRm8+SPLEqU4bOoN+E9mm8wXQrKi5notT3BPiN71ZQsfTG0CR
+         vPo0syfhw0C3zAej26dUApzz9KFwSgWvbq2ETh+4hzBHrHix2PekohsAjVJ7tRzbIo
+         pJ6b9xm4vg5590B7yevW8H8/KgwmERP05gdQvQrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 78/80] NFSv4: Add accounting for the number of active delegations held
-Date:   Tue, 18 Feb 2020 20:55:39 +0100
-Message-Id: <20200218190439.243798210@linuxfoundation.org>
+Subject: [PATCH 5.5 77/80] io-wq: add support for inheriting ->fs
+Date:   Tue, 18 Feb 2020 20:55:38 +0100
+Message-Id: <20200218190439.111549126@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -61,115 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit d2269ea14ebd2a73f291d6b3a7a7d320ec00270c ]
+[ Upstream commit 9392a27d88b9707145d713654eb26f0c29789e50 ]
 
-In order to better manage our delegation caching, add a counter
-to track the number of active delegations.
+Some work items need this for relative path lookup, make it available
+like the other inherited credentials/mm/etc.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc: stable@vger.kernel.org # 5.3+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ fs/io-wq.c | 8 ++++++++
+ fs/io-wq.h | 4 +++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 5f02d922f2173..8e322bacde699 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -25,13 +25,29 @@
- #include "internal.h"
- #include "nfs4trace.h"
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 5147d2213b019..0dc4bb6de6566 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
+ #include <linux/rculist_nulls.h>
++#include <linux/fs_struct.h>
  
--static void nfs_free_delegation(struct nfs_delegation *delegation)
-+static atomic_long_t nfs_active_delegations;
-+
-+static void __nfs_free_delegation(struct nfs_delegation *delegation)
- {
- 	put_cred(delegation->cred);
- 	delegation->cred = NULL;
- 	kfree_rcu(delegation, rcu);
- }
+ #include "io-wq.h"
  
-+static void nfs_mark_delegation_revoked(struct nfs_delegation *delegation)
-+{
-+	if (!test_and_set_bit(NFS_DELEGATION_REVOKED, &delegation->flags)) {
-+		delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
-+		atomic_long_dec(&nfs_active_delegations);
-+	}
-+}
-+
-+static void nfs_free_delegation(struct nfs_delegation *delegation)
-+{
-+	nfs_mark_delegation_revoked(delegation);
-+	__nfs_free_delegation(delegation);
-+}
-+
- /**
-  * nfs_mark_delegation_referenced - set delegation's REFERENCED flag
-  * @delegation: delegation to process
-@@ -348,7 +364,8 @@ nfs_update_inplace_delegation(struct nfs_delegation *delegation,
- 		delegation->stateid.seqid = update->stateid.seqid;
- 		smp_wmb();
- 		delegation->type = update->type;
--		clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
-+		if (test_and_clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
-+			atomic_long_inc(&nfs_active_delegations);
+@@ -58,6 +59,7 @@ struct io_worker {
+ 	struct mm_struct *mm;
+ 	const struct cred *creds;
+ 	struct files_struct *restore_files;
++	struct fs_struct *restore_fs;
+ };
+ 
+ #if BITS_PER_LONG == 64
+@@ -150,6 +152,9 @@ static bool __io_worker_unuse(struct io_wqe *wqe, struct io_worker *worker)
+ 		task_unlock(current);
  	}
- }
  
-@@ -428,6 +445,8 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
- 	rcu_assign_pointer(nfsi->delegation, delegation);
- 	delegation = NULL;
- 
-+	atomic_long_inc(&nfs_active_delegations);
++	if (current->fs != worker->restore_fs)
++		current->fs = worker->restore_fs;
 +
- 	trace_nfs4_set_delegation(inode, type);
+ 	/*
+ 	 * If we have an active mm, we need to drop the wq lock before unusing
+ 	 * it. If we do, return true and let the caller retry the idle loop.
+@@ -310,6 +315,7 @@ static void io_worker_start(struct io_wqe *wqe, struct io_worker *worker)
  
- 	spin_lock(&inode->i_lock);
-@@ -437,7 +456,7 @@ int nfs_inode_set_delegation(struct inode *inode, const struct cred *cred,
- out:
- 	spin_unlock(&clp->cl_lock);
- 	if (delegation != NULL)
--		nfs_free_delegation(delegation);
-+		__nfs_free_delegation(delegation);
- 	if (freeme != NULL) {
- 		nfs_do_return_delegation(inode, freeme, 0);
- 		nfs_free_delegation(freeme);
-@@ -765,13 +784,6 @@ static void nfs_client_mark_return_unused_delegation_types(struct nfs_client *cl
- 	rcu_read_unlock();
+ 	worker->flags |= (IO_WORKER_F_UP | IO_WORKER_F_RUNNING);
+ 	worker->restore_files = current->files;
++	worker->restore_fs = current->fs;
+ 	io_wqe_inc_running(wqe, worker);
  }
  
--static void nfs_mark_delegation_revoked(struct nfs_server *server,
--		struct nfs_delegation *delegation)
--{
--	set_bit(NFS_DELEGATION_REVOKED, &delegation->flags);
--	delegation->stateid.type = NFS4_INVALID_STATEID_TYPE;
--}
--
- static void nfs_revoke_delegation(struct inode *inode,
- 		const nfs4_stateid *stateid)
- {
-@@ -799,7 +811,7 @@ static void nfs_revoke_delegation(struct inode *inode,
+@@ -456,6 +462,8 @@ static void io_worker_handle_work(struct io_worker *worker)
  		}
- 		spin_unlock(&delegation->lock);
- 	}
--	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
-+	nfs_mark_delegation_revoked(delegation);
- 	ret = true;
- out:
- 	rcu_read_unlock();
-@@ -838,7 +850,7 @@ void nfs_delegation_mark_returned(struct inode *inode,
- 			delegation->stateid.seqid = stateid->seqid;
- 	}
+ 		if (!worker->creds)
+ 			worker->creds = override_creds(wq->creds);
++		if (work->fs && current->fs != work->fs)
++			current->fs = work->fs;
+ 		if (test_bit(IO_WQ_BIT_CANCEL, &wq->state))
+ 			work->flags |= IO_WQ_WORK_CANCEL;
+ 		if (worker->mm)
+diff --git a/fs/io-wq.h b/fs/io-wq.h
+index 3f5e356de9805..bbab98d1d328b 100644
+--- a/fs/io-wq.h
++++ b/fs/io-wq.h
+@@ -72,6 +72,7 @@ struct io_wq_work {
+ 	};
+ 	void (*func)(struct io_wq_work **);
+ 	struct files_struct *files;
++	struct fs_struct *fs;
+ 	unsigned flags;
+ };
  
--	nfs_mark_delegation_revoked(NFS_SERVER(inode), delegation);
-+	nfs_mark_delegation_revoked(delegation);
+@@ -79,8 +80,9 @@ struct io_wq_work {
+ 	do {						\
+ 		(work)->list.next = NULL;		\
+ 		(work)->func = _func;			\
+-		(work)->flags = 0;			\
+ 		(work)->files = NULL;			\
++		(work)->fs = NULL;			\
++		(work)->flags = 0;			\
+ 	} while (0)					\
  
- out_clear_returning:
- 	clear_bit(NFS_DELEGATION_RETURNING, &delegation->flags);
+ typedef void (get_work_fn)(struct io_wq_work *);
 -- 
 2.20.1
 
