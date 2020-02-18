@@ -2,113 +2,137 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A47C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E796C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D482176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mxsS0/EU"
+	by mail.kernel.org (Postfix) with ESMTP id EE21E2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056463;
+	bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DQW00tNRS1b7ie1wZiMmKcuwuFZMSEnJwbtBM5rFfO6AS8AXKV+5snCUtM9ro8Bfa
+	 9qpHYyfrweHfdaS3CXULGKWDU4zSPDmp6FzP58yqYUPcyvjrWqj1KzGD+eKF6MLsTe
+	 D/U1vf/nDm1CqNNQ5mfL5NiAD5YyM4Y8sGv8XyE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBRUHg (ORCPT
+        id S1728303AbgBRT6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:07:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33422 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgBRT65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jhFMuIkrGdoFJ2Bzf898MeLf5h06pE6PgMihUSGnnDk=; b=mxsS0/EU42AG2iYsPYJdls+yF1
-        PrlGW+zlqETrZtlV7Vx5vhcX3h7Zj4Grh0Pn9VA8K32FhlVOuJE8pwMx/ggjIvT0ZBHgwLwfVez6S
-        ZZon/NmW8gJa+4vPf91VX3lxFtT7Hnw+PqUuWL3rbf5kbYyDkFP4huOQHB4JAEaOAqGtoMgFHmWDb
-        sKSIBbwqug1KkoXyBMd80l3mNmlqS6TDmzoQRFFpkIuvG6YhvF/r0HOLu/sCtVO/5LGVvkE0fqyS1
-        SVeH3cbjJSkHXVjW5Qi427wWuQn8GbRVVyNR5M5pQUKei7yOOL8W7MUHrI8sZI/vzLWUK2jruoUON
-        ainiY+YQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j490u-0005LK-No; Tue, 18 Feb 2020 19:58:37 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 75315980E53; Tue, 18 Feb 2020 20:58:31 +0100 (CET)
-Date:   Tue, 18 Feb 2020 20:58:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200218195831.GD11457@worktop.programming.kicks-ass.net>
-References: <20200212210139.382424693@infradead.org>
- <20200212210749.971717428@infradead.org>
- <20200212232005.GC115917@google.com>
- <20200213082716.GI14897@hirez.programming.kicks-ass.net>
- <20200213135138.GB2935@paulmck-ThinkPad-P72>
- <20200213164031.GH14914@hirez.programming.kicks-ass.net>
- <20200213185612.GG2935@paulmck-ThinkPad-P72>
- <20200213204444.GA94647@google.com>
+        Tue, 18 Feb 2020 14:58:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728288AbgBRT6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:48 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEED420659;
+        Tue, 18 Feb 2020 19:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582055927;
+        bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wz44PmpY9iMbWkLduWBuJT3Yf+0zDWXPDpvKLgIzIawnp8zw+h1YlwcVc9avLUY5O
+         V5P76uepln9sINVeYtnK0oGUmR+RsxgOLobGjYmeF4EyNd9R3CR4S+wj/FDvU1qvMI
+         05ACJKVy9l9JxfARDyCk06ILzRUt7JsauAFwlLn4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Eric Anholt <eric@anholt.net>, Sam Ravnborg <sam@ravnborg.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH 5.4 34/66] drm/vgem: Close use-after-free race in vgem_gem_create
+Date:   Tue, 18 Feb 2020 20:55:01 +0100
+Message-Id: <20200218190431.217621623@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
+References: <20200218190428.035153861@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213204444.GA94647@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 03:44:44PM -0500, Joel Fernandes wrote:
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-> > > That _should_ already be the case today. That is, if we end up in a
-> > > tracer and in_nmi() is unreliable we're already screwed anyway.
+commit 4b848f20eda5974020f043ca14bacf7a7e634fc8 upstream.
 
-> I removed the static from rcu_nmi_enter()/exit() as it is called from
-> outside, that makes it build now. Updated below is Paul's diff. I also added
-> NOKPROBE_SYMBOL() to rcu_nmi_exit() to match rcu_nmi_enter() since it seemed
-> asymmetric.
+There's two references floating around here (for the object reference,
+not the handle_count reference, that's a different thing):
 
-> +__always_inline void rcu_nmi_exit(void)
->  {
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  
-> @@ -651,25 +653,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
->  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
->  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
->  
-> -	if (irq)
-> +	if (!in_nmi())
->  		rcu_prepare_for_idle();
->  
->  	rcu_dynticks_eqs_enter();
->  
-> -	if (irq)
-> +	if (!in_nmi())
->  		rcu_dynticks_task_enter();
->  }
+- The temporary reference held by vgem_gem_create, acquired by
+  creating the object and released by calling
+  drm_gem_object_put_unlocked.
 
-Boris and me have been going over the #MC code (and finding loads of
-'interesting' code) and ran into ist_enter(), whish has the following
-code:
+- The reference held by the object handle, created by
+  drm_gem_handle_create. This one generally outlives the function,
+  except if a 2nd thread races with a GEM_CLOSE ioctl call.
 
-                /*
-                 * We might have interrupted pretty much anything.  In
-                 * fact, if we're a machine check, we can even interrupt
-                 * NMI processing.  We don't want in_nmi() to return true,
-                 * but we need to notify RCU.
-                 */
-                rcu_nmi_enter();
+So usually everything is correct, except in that race case, where the
+access to gem_object->size could be looking at freed data already.
+Which again isn't a real problem (userspace shot its feet off already
+with the race, we could return garbage), but maybe someone can exploit
+this as an information leak.
 
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200202132133.1891846-1-daniel.vetter@ffwll.ch
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Which, to me, sounds all sorts of broken. The IST (be it #DB or #MC) can
-happen while we're holding all sorts of locks. This must be an NMI-like
-context.
+---
+ drivers/gpu/drm/vgem/vgem_drv.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -196,9 +196,10 @@ static struct drm_gem_object *vgem_gem_c
+ 		return ERR_CAST(obj);
+ 
+ 	ret = drm_gem_handle_create(file, &obj->base, handle);
+-	drm_gem_object_put_unlocked(&obj->base);
+-	if (ret)
++	if (ret) {
++		drm_gem_object_put_unlocked(&obj->base);
+ 		return ERR_PTR(ret);
++	}
+ 
+ 	return &obj->base;
+ }
+@@ -221,7 +222,9 @@ static int vgem_gem_dumb_create(struct d
+ 	args->size = gem_object->size;
+ 	args->pitch = pitch;
+ 
+-	DRM_DEBUG("Created object of size %lld\n", size);
++	drm_gem_object_put_unlocked(gem_object);
++
++	DRM_DEBUG("Created object of size %llu\n", args->size);
+ 
+ 	return 0;
+ }
 
 
