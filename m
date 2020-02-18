@@ -2,49 +2,49 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F118C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC3BC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6462D24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077A7206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="kX65JjUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBRI1n (ORCPT
+        id S1727069AbgBRI1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:27:43 -0500
-Received: from mga07.intel.com ([134.134.136.100]:18962 "EHLO mga07.intel.com"
+        Tue, 18 Feb 2020 03:27:46 -0500
+Received: from first.geanix.com ([116.203.34.67]:59662 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbgBRI1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:27:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 00:27:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="235466738"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.151])
-  by orsmga003.jf.intel.com with ESMTP; 18 Feb 2020 00:27:38 -0800
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Feng Tang <feng.tang@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC -V2 8/8] autonuma, memory tiering: Adjust hot threshold automatically
-Date:   Tue, 18 Feb 2020 16:26:34 +0800
-Message-Id: <20200218082634.1596727-9-ying.huang@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218082634.1596727-1-ying.huang@intel.com>
-References: <20200218082634.1596727-1-ying.huang@intel.com>
+        id S1726962AbgBRI1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:27:44 -0500
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id C9794C003F;
+        Tue, 18 Feb 2020 08:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582014413; bh=FjjXvDzFnkljG7dLY4SaZbmbX0tHBNHM2LB3sA1jlV4=;
+        h=From:To:Cc:Subject:Date;
+        b=kX65JjUAmN4R6IuXkZUWoQi7FEjZuRS1rGNFUc3lqptn2DHfQMGY/8hotnkWwa+/E
+         5Mw0uOZOigwn9VTT94gmTos9A5q1RcV3rXneB2FIo6A9Mb60tg3Ib/G/JZ+gl33uOx
+         vWHgEcU/KTqB/QjaTQZAyTEVlEWUN6vjcAktpDdaSiuNfCcie5vhZRatb2adFKtEUU
+         XZ3VKe7QB9Q7wnPdzAjT9guayEFrxBirCO94TAYFR292uh5s5q0STcP6xyrlhsUrKA
+         zLjusdtFg3t+fN3i1mgRyTYdod2fhUz9NI1fjYPwwM0iLaOAgc5yEhCn1f3uOyEH3H
+         YaijeYKb4Yw9w==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH 8/8] net: ll_temac: Add ethtool support for coalesce parameters
+Date:   Tue, 18 Feb 2020 09:27:41 +0100
+Message-Id: <20200218082741.7710-1-esben@geanix.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,140 +52,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+Please note that the delays are calculated based on typical
+parameters.  But as TEMAC is an HDL IP, designs may vary, and future
+work might be needed to make this calculation configurable.
 
-It isn't easy for the administrator to determine the hot threshold.
-So in this patch, a method to adjust the hot threshold automatically
-is implemented.  The basic idea is to control the number of the
-candidate promotion pages to match the promotion rate limit.  If the
-hint page fault latency of a page is less than the hot threshold, we
-will try to promote the page, that is, the page is the candidate
-promotion page.
-
-If the number of the candidate promotion pages in the statistics
-interval is much higher than the promotion rate limit, the hot
-threshold will be lowered to reduce the number of the candidate
-promotion pages.  Otherwise, the hot threshold will be raised to
-increase the number of the candidate promotion pages.
-
-To make the above method works, in each statistics interval, the total
-number of the pages to check (on which the hint page faults occur) and
-the hot/cold distribution need to be stable.  Because the page tables
-are scanned linearly in autonuma, but the hot/cold distribution isn't
-uniform along the address.  The statistics interval should be larger
-than the autonuma scan period.  So in the patch, the max scan period
-is used as statistics interval and it works well in our tests.
-
-The sysctl knob kernel.numa_balancing_hot_threshold_ms becomes the
-initial value and max value of the hot threshold.
-
-The patch improves the score of pmbench memory accessing benchmark
-with 80:20 read/write ratio and normal access address distribution by
-5.5% with 24.6% fewer NUMA page migrations on a 2 socket Intel server
-with Optance DC Persistent Memory.  Because it improves the accuracy
-of the hot page selection.
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
+Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- include/linux/mmzone.h |  3 +++
- kernel/sched/fair.c    | 40 ++++++++++++++++++++++++++++++++++++----
- 2 files changed, 39 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac.h      |   5 +-
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 102 ++++++++++++++++----
+ 2 files changed, 85 insertions(+), 22 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 6e7a28becdc2..4ed82eb5c8b5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -792,6 +792,9 @@ typedef struct pglist_data {
- #ifdef CONFIG_NUMA_BALANCING
- 	unsigned long numa_ts;
- 	unsigned long numa_try;
-+	unsigned long numa_threshold_ts;
-+	unsigned long numa_threshold_try;
-+	unsigned long numa_threshold;
- #endif
- 	/* Fields commonly accessed by the page reclaim scanner */
+diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
+index 8777ec6e21c8..4a73127e10a6 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac.h
++++ b/drivers/net/ethernet/xilinx/ll_temac.h
+@@ -379,9 +379,10 @@ struct temac_local {
+ 	int rx_bd_tail;
  
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e5f7f4139c82..90098c35d336 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1487,6 +1487,35 @@ static bool numa_migration_check_rate_limit(struct pglist_data *pgdat,
- 	return true;
+ 	/* DMA channel control setup */
+-	u32 tx_chnl_ctrl;
+-	u32 rx_chnl_ctrl;
++	u8 coalesce_count_tx;
++	u8 coalesce_delay_tx;
+ 	u8 coalesce_count_rx;
++	u8 coalesce_delay_rx;
+ 
+ 	struct delayed_work restart_work;
+ };
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index e3d4857334f3..3168dd77ecbc 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -379,11 +379,13 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 	}
+ 
+ 	/* Configure DMA channel (irq setup) */
+-	lp->dma_out(lp, TX_CHNL_CTRL, lp->tx_chnl_ctrl |
++	lp->dma_out(lp, TX_CHNL_CTRL,
++		    lp->coalesce_delay_tx << 24 | lp->coalesce_count_tx << 16 |
+ 		    0x00000400 | // Use 1 Bit Wide Counters. Currently Not Used!
+ 		    CHNL_CTRL_IRQ_EN | CHNL_CTRL_IRQ_ERR_EN |
+ 		    CHNL_CTRL_IRQ_DLY_EN | CHNL_CTRL_IRQ_COAL_EN);
+-	lp->dma_out(lp, RX_CHNL_CTRL, lp->rx_chnl_ctrl |
++	lp->dma_out(lp, RX_CHNL_CTRL,
++		    lp->coalesce_delay_rx << 24 | lp->coalesce_count_rx << 16 |
+ 		    CHNL_CTRL_IRQ_IOE |
+ 		    CHNL_CTRL_IRQ_EN | CHNL_CTRL_IRQ_ERR_EN |
+ 		    CHNL_CTRL_IRQ_DLY_EN | CHNL_CTRL_IRQ_COAL_EN);
+@@ -1284,6 +1286,69 @@ static int ll_temac_ethtools_set_ringparam(struct net_device *ndev,
+ 	return 0;
  }
  
-+#define NUMA_MIGRATION_ADJUST_STEPS	16
-+
-+static void numa_migration_adjust_threshold(struct pglist_data *pgdat,
-+					    unsigned long rate_limit,
-+					    unsigned long ref_th)
++static int ll_temac_ethtools_get_coalesce(struct net_device *ndev,
++					  struct ethtool_coalesce *ec)
 +{
-+	unsigned long now = jiffies, last_th_ts, th_period;
-+	unsigned long unit_th, th;
-+	unsigned long try, ref_try, tdiff;
++	struct temac_local *lp = netdev_priv(ndev);
 +
-+	th_period = msecs_to_jiffies(sysctl_numa_balancing_scan_period_max);
-+	last_th_ts = pgdat->numa_threshold_ts;
-+	if (now > last_th_ts + th_period &&
-+	    cmpxchg(&pgdat->numa_threshold_ts, last_th_ts, now) == last_th_ts) {
-+		ref_try = rate_limit *
-+			sysctl_numa_balancing_scan_period_max / 1000;
-+		try = node_page_state(pgdat, NUMA_TRY_MIGRATE);
-+		tdiff = try - pgdat->numa_threshold_try;
-+		unit_th = ref_th / NUMA_MIGRATION_ADJUST_STEPS;
-+		th = pgdat->numa_threshold ? : ref_th;
-+		if (tdiff > ref_try * 11 / 10)
-+			th = max(th - unit_th, unit_th);
-+		else if (tdiff < ref_try * 9 / 10)
-+			th = min(th + unit_th, ref_th);
-+		pgdat->numa_threshold_try = try;
-+		pgdat->numa_threshold = th;
-+	}
++	ec->rx_max_coalesced_frames = lp->coalesce_count_rx;
++	ec->tx_max_coalesced_frames = lp->coalesce_count_tx;
++	ec->rx_coalesce_usecs = (lp->coalesce_delay_rx * 512) / 100;
++	ec->tx_coalesce_usecs = (lp->coalesce_delay_tx * 512) / 100;
++	return 0;
 +}
 +
- bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 				int src_nid, int dst_cpu, unsigned long addr,
- 				int flags)
-@@ -1502,7 +1531,7 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 	if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING &&
- 	    next_promotion_node(src_nid) != -1) {
- 		struct pglist_data *pgdat;
--		unsigned long rate_limit, latency, th;
-+		unsigned long rate_limit, latency, th, def_th;
- 
- 		pgdat = NODE_DATA(dst_nid);
- 		if (pgdat_free_space_enough(pgdat))
-@@ -1512,15 +1541,18 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 		if (!(flags & TNF_YOUNG))
- 			return false;
- 
--		th = msecs_to_jiffies(sysctl_numa_balancing_hot_threshold);
-+		def_th = msecs_to_jiffies(sysctl_numa_balancing_hot_threshold);
-+		rate_limit =
-+			sysctl_numa_balancing_rate_limit << (20 - PAGE_SHIFT);
-+		numa_migration_adjust_threshold(pgdat, rate_limit, def_th);
++static int ll_temac_ethtools_set_coalesce(struct net_device *ndev,
++					  struct ethtool_coalesce *ec)
++{
++	struct temac_local *lp = netdev_priv(ndev);
 +
-+		th = pgdat->numa_threshold ? : def_th;
- 		if (flags & TNF_WRITE)
- 			th *= 2;
- 		latency = numa_hint_fault_latency(p, addr);
- 		if (latency > th)
- 			return false;
++	if (netif_running(ndev)) {
++		netdev_err(ndev,
++			   "Please stop netif before applying configuration\n");
++		return -EFAULT;
++	}
++
++	if (ec->rx_coalesce_usecs_irq ||
++	    ec->rx_max_coalesced_frames_irq ||
++	    ec->tx_coalesce_usecs_irq ||
++	    ec->tx_max_coalesced_frames_irq ||
++	    ec->stats_block_coalesce_usecs ||
++	    ec->use_adaptive_rx_coalesce ||
++	    ec->use_adaptive_tx_coalesce ||
++	    ec->pkt_rate_low ||
++	    ec->rx_coalesce_usecs_low ||
++	    ec->rx_max_coalesced_frames_low ||
++	    ec->tx_coalesce_usecs_low ||
++	    ec->tx_max_coalesced_frames_low ||
++	    ec->pkt_rate_high ||
++	    ec->rx_coalesce_usecs_high ||
++	    ec->rx_max_coalesced_frames_high ||
++	    ec->tx_coalesce_usecs_high ||
++	    ec->tx_max_coalesced_frames_high ||
++	    ec->rate_sample_interval)
++		return -EOPNOTSUPP;
++	if (ec->rx_max_coalesced_frames)
++		lp->coalesce_count_rx = ec->rx_max_coalesced_frames;
++	if (ec->tx_max_coalesced_frames)
++		lp->coalesce_count_tx = ec->tx_max_coalesced_frames;
++	/* With typical LocalLink clock speed of 200 MHz and
++	 * C_PRESCALAR=1023, each delay count corresponds to 5.12 us.
++	 */
++	if (ec->rx_coalesce_usecs)
++		lp->coalesce_delay_rx =
++			min(255U, (ec->rx_coalesce_usecs * 100) / 512);
++	if (ec->tx_coalesce_usecs)
++		lp->coalesce_delay_tx =
++			min(255U, (ec->tx_coalesce_usecs * 100) / 512);
++
++	pr_info("%d -> %d  %d -> %d\n",
++		ec->rx_coalesce_usecs, lp->coalesce_delay_rx,
++		ec->tx_coalesce_usecs, lp->coalesce_delay_tx);
++
++	return 0;
++}
++
+ static const struct ethtool_ops temac_ethtool_ops = {
+ 	.nway_reset = phy_ethtool_nway_reset,
+ 	.get_link = ethtool_op_get_link,
+@@ -1292,6 +1357,8 @@ static const struct ethtool_ops temac_ethtool_ops = {
+ 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
+ 	.get_ringparam	= ll_temac_ethtools_get_ringparam,
+ 	.set_ringparam	= ll_temac_ethtools_set_ringparam,
++	.get_coalesce	= ll_temac_ethtools_get_coalesce,
++	.set_coalesce	= ll_temac_ethtools_set_coalesce,
+ };
  
--		rate_limit =
--			sysctl_numa_balancing_rate_limit << (20 - PAGE_SHIFT);
- 		return numa_migration_check_rate_limit(pgdat, rate_limit,
- 						       hpage_nr_pages(page));
+ static int temac_probe(struct platform_device *pdev)
+@@ -1401,6 +1468,14 @@ static int temac_probe(struct platform_device *pdev)
+ 		/* Can checksum TCP/UDP over IPv4. */
+ 		ndev->features |= NETIF_F_IP_CSUM;
+ 
++	/* Defaults for IRQ delay/coalescing setup.  These are
++	 * configuration values, so does not belong in device-tree.
++	 */
++	lp->coalesce_delay_tx = 0x10;
++	lp->coalesce_count_tx = 0x22;
++	lp->coalesce_delay_rx = 0xff;
++	lp->coalesce_count_rx = 0x07;
++
+ 	/* Setup LocalLink DMA */
+ 	if (temac_np) {
+ 		/* Find the DMA node, map the DMA registers, and
+@@ -1439,14 +1514,6 @@ static int temac_probe(struct platform_device *pdev)
+ 		lp->rx_irq = irq_of_parse_and_map(dma_np, 0);
+ 		lp->tx_irq = irq_of_parse_and_map(dma_np, 1);
+ 
+-		/* Use defaults for IRQ delay/coalescing setup.  These
+-		 * are configuration values, so does not belong in
+-		 * device-tree.
+-		 */
+-		lp->tx_chnl_ctrl = 0x10220000;
+-		lp->rx_chnl_ctrl = 0xff070000;
+-		lp->coalesce_count_rx = 0x07;
+-
+ 		/* Finished with the DMA node; drop the reference */
+ 		of_node_put(dma_np);
+ 	} else if (pdata) {
+@@ -1472,18 +1539,13 @@ static int temac_probe(struct platform_device *pdev)
+ 		lp->tx_irq = platform_get_irq(pdev, 1);
+ 
+ 		/* IRQ delay/coalescing setup */
+-		if (pdata->tx_irq_timeout || pdata->tx_irq_count)
+-			lp->tx_chnl_ctrl = (pdata->tx_irq_timeout << 24) |
+-				(pdata->tx_irq_count << 16);
+-		else
+-			lp->tx_chnl_ctrl = 0x10220000;
++		if (pdata->tx_irq_timeout || pdata->tx_irq_count) {
++			lp->coalesce_delay_tx = pdata->tx_irq_timeout;
++			lp->coalesce_count_tx = pdata->tx_irq_count;
++		}
+ 		if (pdata->rx_irq_timeout || pdata->rx_irq_count) {
+-			lp->rx_chnl_ctrl = (pdata->rx_irq_timeout << 24) |
+-				(pdata->rx_irq_count << 16);
++			lp->coalesce_delay_rx = pdata->rx_irq_timeout;
+ 			lp->coalesce_count_rx = pdata->rx_irq_count;
+-		} else {
+-			lp->rx_chnl_ctrl = 0xff070000;
+-			lp->coalesce_count_rx = 0x07;
+ 		}
  	}
+ 
 -- 
-2.24.1
+2.25.0
 
