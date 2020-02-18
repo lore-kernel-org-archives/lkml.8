@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA537C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08179C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B197A21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF9624125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056154;
-	bh=iJHNKSYGnxMSCtFIX5d8ZQWPZczsyXHD2fcIXpGlXXM=;
+	s=default; t=1582056157;
+	bh=6DlsMtUAQvpGL98hwpqKAjqCQIqpEYmenz0309Qh9LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZ2GMz0EveEgmmEEoitT9nAkVaPky06XJAWgADGdtI4rixwhS+eqNadbKQkzxFYQg
-	 V6OUQq6bYqj59TyaJghZBYZW/hyAN0UcudqG5J2mBKZC70esuxXw1VV3sFgRCppWUg
-	 WdR9FwIqCroWNF+BICs7Vm1Y5wBXuBhMo6KPq7Kc=
+	b=gZzlTUKK5gaRLe9jS6X1FhiGWn5YBrJgvrYJl1lFMpS/vZ9nA7mJCidBo3+8n8BFJ
+	 2NGeZWBMh7611mJ+NFuhIyiIeZ3WfJ4JUXQkoR98eoxRn7Vr1OB08cy/KUlfRaF/Se
+	 kqck6HzXnz+PKPUpDE5Vs0ma5YP74/P5LNOTZ3N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgBRUCd (ORCPT
+        id S1728974AbgBRUCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:02:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42940 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbgBRUCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:31 -0500
+        id S1728954AbgBRUCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C402A21D56;
-        Tue, 18 Feb 2020 20:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4293424125;
+        Tue, 18 Feb 2020 20:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056151;
-        bh=iJHNKSYGnxMSCtFIX5d8ZQWPZczsyXHD2fcIXpGlXXM=;
+        s=default; t=1582056153;
+        bh=6DlsMtUAQvpGL98hwpqKAjqCQIqpEYmenz0309Qh9LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULBXP6/iygu48UaJES3jybOAR5+Bzo8PIq67PqkiqSAFlJMEieTDVl8fpHCzvMEV9
-         wqfbqUnQjn7B3pDUybI3tk/ZLqN2fQuIr8l74WgNZkKWgyI13UyFmKynTfmZBZ5L5Y
-         GkfH/ESpN3vebXpaQgD3V5HZcXdqDrnLQmG2UYzI=
+        b=QcGFK9n4OFmlYA/btKPled7A7fbPEQGlIUVNJ6wQKIygwxlp70qQSsFkXda95Qo9y
+         P2rQxzwseGomkE6/YYsy/O7rT5HGfhxxaIFX2DH1wA7WSmTecZOhxV3lk39yRTyTPj
+         4f7msSsATG1lQc30beSx0cK+2zMmmUXvA4CHNwoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Krishnamraju Eraparaju <krishna2@chelsio.com>,
+        stable@vger.kernel.org, Kamal Heib <kamalheib1@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 54/80] RDMA/iw_cxgb4: initiate CLOSE when entering TERM
-Date:   Tue, 18 Feb 2020 20:55:15 +0100
-Message-Id: <20200218190437.331531433@linuxfoundation.org>
+Subject: [PATCH 5.5 55/80] RDMA/hfi1: Fix memory leak in _dev_comp_vect_mappings_create
+Date:   Tue, 18 Feb 2020 20:55:16 +0100
+Message-Id: <20200218190437.410910235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,70 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Kamal Heib <kamalheib1@gmail.com>
 
-commit d219face9059f38ad187bde133451a2a308fdb7c upstream.
+commit 8a4f300b978edbbaa73ef9eca660e45eb9f13873 upstream.
 
-As per draft-hilland-iwarp-verbs-v1.0, sec 6.2.3, always initiate a CLOSE
-when entering into TERM state.
+Make sure to free the allocated cpumask_var_t's to avoid the following
+reported memory leak by kmemleak:
 
-In c4iw_modify_qp(), disconnect operation should only be performed when
-the modify_qp call is invoked from ib_core. And all other internal
-modify_qp calls(invoked within iw_cxgb4) that needs 'disconnect' should
-call c4iw_ep_disconnect() explicitly after modify_qp. Otherwise, deadlocks
-like below can occur:
+$ cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff8897f812d6a8 (size 8):
+  comm "kworker/1:1", pid 347, jiffies 4294751400 (age 101.703s)
+  hex dump (first 8 bytes):
+    00 00 00 00 00 00 00 00                          ........
+  backtrace:
+    [<00000000bff49664>] alloc_cpumask_var_node+0x4c/0xb0
+    [<0000000075d3ca81>] hfi1_comp_vectors_set_up+0x20f/0x800 [hfi1]
+    [<0000000098d420df>] hfi1_init_dd+0x3311/0x4960 [hfi1]
+    [<0000000071be7e52>] init_one+0x25e/0xf10 [hfi1]
+    [<000000005483d4c2>] local_pci_probe+0xd4/0x180
+    [<000000007c3cbc6e>] work_for_cpu_fn+0x51/0xa0
+    [<000000001d626905>] process_one_work+0x8f0/0x17b0
+    [<000000007e569e7e>] worker_thread+0x536/0xb50
+    [<00000000fd39a4a5>] kthread+0x30c/0x3d0
+    [<0000000056f2edb3>] ret_from_fork+0x3a/0x50
 
- Call Trace:
-  schedule+0x2f/0xa0
-  schedule_preempt_disabled+0xa/0x10
-  __mutex_lock.isra.5+0x2d0/0x4a0
-  c4iw_ep_disconnect+0x39/0x430    => tries to reacquire ep lock again
-  c4iw_modify_qp+0x468/0x10d0
-  rx_data+0x218/0x570              => acquires ep lock
-  process_work+0x5f/0x70
-  process_one_work+0x1a7/0x3b0
-  worker_thread+0x30/0x390
-  kthread+0x112/0x130
-  ret_from_fork+0x35/0x40
-
-Fixes: d2c33370ae73 ("RDMA/iw_cxgb4: Always disconnect when QP is transitioning to TERMINATE state")
-Link: https://lore.kernel.org/r/20200204091230.7210-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
+Fixes: 5d18ee67d4c1 ("IB/{hfi1, rdmavt, qib}: Implement CQ completion vector support")
+Link: https://lore.kernel.org/r/20200205110530.12129-1-kamalheib1@gmail.com
+Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb4/cm.c |    4 ++++
- drivers/infiniband/hw/cxgb4/qp.c |    4 ++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/affinity.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -3036,6 +3036,10 @@ static int terminate(struct c4iw_dev *de
- 				       C4IW_QP_ATTR_NEXT_STATE, &attrs, 1);
- 		}
+--- a/drivers/infiniband/hw/hfi1/affinity.c
++++ b/drivers/infiniband/hw/hfi1/affinity.c
+@@ -479,6 +479,8 @@ static int _dev_comp_vect_mappings_creat
+ 			  rvt_get_ibdev_name(&(dd)->verbs_dev.rdi), i, cpu);
+ 	}
  
-+		/* As per draft-hilland-iwarp-verbs-v1.0, sec 6.2.3,
-+		 * when entering the TERM state the RNIC MUST initiate a CLOSE.
-+		 */
-+		c4iw_ep_disconnect(ep, 1, GFP_KERNEL);
- 		c4iw_put_ep(&ep->com);
- 	} else
- 		pr_warn("TERM received tid %u no ep/qp\n", tid);
---- a/drivers/infiniband/hw/cxgb4/qp.c
-+++ b/drivers/infiniband/hw/cxgb4/qp.c
-@@ -1948,10 +1948,10 @@ int c4iw_modify_qp(struct c4iw_dev *rhp,
- 			qhp->attr.layer_etype = attrs->layer_etype;
- 			qhp->attr.ecode = attrs->ecode;
- 			ep = qhp->ep;
--			c4iw_get_ep(&ep->com);
--			disconnect = 1;
- 			if (!internal) {
-+				c4iw_get_ep(&ep->com);
- 				terminate = 1;
-+				disconnect = 1;
- 			} else {
- 				terminate = qhp->attr.send_term;
- 				ret = rdma_fini(rhp, qhp, ep);
++	free_cpumask_var(available_cpus);
++	free_cpumask_var(non_intr_cpus);
+ 	return 0;
+ 
+ fail:
 
 
