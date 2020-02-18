@@ -2,212 +2,186 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B911C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E9C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0148D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AD5206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OYgEBVV/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HVA6K5DS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgBRUt0 (ORCPT
+        id S1726439AbgBRUwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:49:26 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3361 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgBRUtZ (ORCPT
+        Tue, 18 Feb 2020 15:52:25 -0500
+Received: from gateway30.websitewelcome.com ([192.185.160.12]:31362 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726383AbgBRUwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:49:25 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4c4da80000>; Tue, 18 Feb 2020 12:48:40 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 12:49:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 12:49:11 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
- 2020 20:49:11 +0000
-Subject: Re: [PATCH v6 00/19] Change readahead API
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200217184613.19668-1-willy@infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <80d98657-2f93-da92-a541-707429a6fcdf@nvidia.com>
-Date:   Tue, 18 Feb 2020 12:49:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 15:52:24 -0500
+X-Greylist: delayed 1428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 15:52:23 EST
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id A32688460
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:28:34 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 49Tuj8m168vkB49Tuj5WY8; Tue, 18 Feb 2020 14:28:34 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=yNvO5nQCXupbNxiTPEhF0b9Zhr1y/1EPEHY68gcTols=; b=HVA6K5DSwDnJ2wcNKVGN3ndT0+
+        xc5xOSjwtCEZsZmQQmmjETJfq6qMBzKdcBIHg1zljNkFqd2mZseSt4k+zQXolEkMVY29c3MeUEBkC
+        yMTuTU/+H3c4SkQ53ncAIHJtGWAQESRUWY7DkvbzKzob8Xbnzo9NxQF8EfuXNGQoX4X4biy5S5JJl
+        jYSNVYBo8dW1FM2POANAJb9sA3mTH5eKNrBPtgplqR/O39q+vuJtyBpnZHhpaOfSXxhv3T5GGNL1U
+        tWjfBQbKDQdmrsbEhyDxiVQJWAkI4KOzvLpVvr3MvJPQTGHnhLd1PSD6Qv/Dyv3vHajRiCb5rgi6A
+        tq/Gkl9g==;
+Received: from [200.68.140.26] (port=8034 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j49Tr-000H4c-J9; Tue, 18 Feb 2020 14:28:31 -0600
+Date:   Tue, 18 Feb 2020 14:31:14 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Boris Pismenny <borisp@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net/mlx5e: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200218203114.GA27096@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200217184613.19668-1-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582058920; bh=sSzUuAsXGIrXy4vQ0zTAGyf0jed9sNlmwz2tpEx8I1w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OYgEBVV/ua9FohonQVxYl3qPPXVMYQG31aVJZXFPu7SkYOwxhtaZfQM11ZRWuKWRn
-         lVI3HR/RIXFrZMOWjvHUihTcKXkE2jgWZqXXGCNxpXb3Nv2SKAT+FXp4fzmW9R+SbR
-         +H8xokJDzpZ6UCukKlMzu/5eKP5axPGrm5jxpyyz73wcaxjN5ykeBaYI4TDMwgMSY8
-         xsZHrBQYyHRUHdXgYU3ZVNQuJpgqlmVcDrdSv4XqikXa55cxrAOxN2l1s5oRfr4SZG
-         EEyk1LdZCMme+4QhBVN+8g/HUCynjQ8e9lz6/YoFujDdaTBOhd1TQ8nXhH+hrOTVqL
-         JwGZHfev+XX/A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.26
+X-Source-L: No
+X-Exim-ID: 1j49Tr-000H4c-J9
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.26]:8034
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 10:45 AM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> This series adds a readahead address_space operation to eventually
-> replace the readpages operation.  The key difference is that
-> pages are added to the page cache as they are allocated (and
-> then looked up by the filesystem) instead of passing them on a
-> list to the readpages operation and having the filesystem add
-> them to the page cache.  It's a net reduction in code for each
-> implementation, more efficient than walking a list, and solves
-> the direct-write vs buffered-read problem reported by yu kuai at
-> https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
-> 
-> The only unconverted filesystems are those which use fscache.
-> Their conversion is pending Dave Howells' rewrite which will make the
-> conversion substantially easier.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Hi Matthew,
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-I see that Dave Chinner is reviewing this series, but I'm trying out his recent
-advice about code reviews [1], and so I'm not going to read his comments first.
-So you may see some duplication or contradictions this time around.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-[1] Somewhere in this thread, "[LSF/MM/BPF TOPIC] FS Maintainers Don't Scale": 
-https://lore.kernel.org/r/20200131052520.GC6869@magnolia
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
 
-thanks,
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h          | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c  | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 220ef9f06f84..a960099cd7aa 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -204,7 +204,7 @@ struct mlx5e_tx_wqe {
+ 
+ struct mlx5e_rx_wqe_ll {
+ 	struct mlx5_wqe_srq_next_seg  next;
+-	struct mlx5_wqe_data_seg      data[0];
++	struct mlx5_wqe_data_seg      data[];
+ };
+ 
+ struct mlx5e_rx_wqe_cyc {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
+index 4c61d25d2e88..b794888fa3ba 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
+@@ -57,7 +57,7 @@ struct mlx5_fpga_ipsec_cmd_context {
+ 	struct completion complete;
+ 	struct mlx5_fpga_device *dev;
+ 	struct list_head list; /* Item in pending_cmds */
+-	u8 command[0];
++	u8 command[];
+ };
+ 
+ struct mlx5_fpga_esp_xfrm;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+index ab69effb056d..f43caefd07a1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+@@ -470,7 +470,7 @@ struct mlx5_fc_bulk {
+ 	u32 base_id;
+ 	int bulk_len;
+ 	unsigned long *bitmask;
+-	struct mlx5_fc fcs[0];
++	struct mlx5_fc fcs[];
+ };
+ 
+ static void mlx5_fc_init(struct mlx5_fc *counter, struct mlx5_fc_bulk *bulk,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
+index c87962cab921..de7e01a027bb 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h
+@@ -56,7 +56,7 @@ struct mlx5i_priv {
+ 	u32    qkey;
+ 	u16    pkey_index;
+ 	struct mlx5i_pkey_qpn_ht *qpn_htbl;
+-	char  *mlx5e_priv[0];
++	char  *mlx5e_priv[];
+ };
+ 
+ int mlx5i_create_tis(struct mlx5_core_dev *mdev, u32 underlay_qpn, u32 *tisn);
+@@ -107,7 +107,7 @@ struct mlx5i_tx_wqe {
+ 	struct mlx5_wqe_datagram_seg datagram;
+ 	struct mlx5_wqe_eth_pad      pad;
+ 	struct mlx5_wqe_eth_seg      eth;
+-	struct mlx5_wqe_data_seg     data[0];
++	struct mlx5_wqe_data_seg     data[];
+ };
+ 
+ static inline void mlx5i_sq_fetch_wqe(struct mlx5e_txqsq *sq,
 -- 
-John Hubbard
-NVIDIA
+2.25.0
 
-> 
-> v6:
->  - Name the private members of readahead_control with a leading underscore
->    (suggested by Christoph Hellwig)
->  - Fix whitespace in rst file
->  - Remove misleading comment in btrfs patch
->  - Add readahead_next() API and use it in iomap
->  - Add iomap_readahead kerneldoc.
->  - Fix the mpage_readahead kerneldoc
->  - Make various readahead functions return void
->  - Keep readahead_index() and readahead_offset() pointing to the start of
->    this batch through the body.  No current user requires this, but it's
->    less surprising.
->  - Add kerneldoc for page_cache_readahead_limit
->  - Make page_idx an unsigned long, and rename it to just 'i'
->  - Get rid of page_offset local variable
->  - Add patch to call memalloc_nofs_save() before allocating pages (suggested
->    by Michal Hocko)
->  - Resplit a lot of patches for more logical progression and easier review
->    (suggested by John Hubbard)
->  - Added sign-offs where received, and I deemed still relevant
-> 
-> v5 switched to passing a readahead_control struct (mirroring the
-> writepages_control struct passed to writepages).  This has a number of
-> advantages:
->  - It fixes a number of bugs in various implementations, eg forgetting to
->    increment 'start', an off-by-one error in 'nr_pages' or treating 'start'
->    as a byte offset instead of a page offset.
->  - It allows us to change the arguments without changing all the
->    implementations of ->readahead which just call mpage_readahead() or
->    iomap_readahead()
->  - Figuring out which pages haven't been attempted by the implementation
->    is more natural this way.
->  - There's less code in each implementation.
-> 
-> Matthew Wilcox (Oracle) (19):
->   mm: Return void from various readahead functions
->   mm: Ignore return value of ->readpages
->   mm: Use readahead_control to pass arguments
->   mm: Rearrange readahead loop
->   mm: Remove 'page_offset' from readahead loop
->   mm: rename readahead loop variable to 'i'
->   mm: Put readahead pages in cache earlier
->   mm: Add readahead address space operation
->   mm: Add page_cache_readahead_limit
->   fs: Convert mpage_readpages to mpage_readahead
->   btrfs: Convert from readpages to readahead
->   erofs: Convert uncompressed files from readpages to readahead
->   erofs: Convert compressed files from readpages to readahead
->   ext4: Convert from readpages to readahead
->   f2fs: Convert from readpages to readahead
->   fuse: Convert from readpages to readahead
->   iomap: Restructure iomap_readpages_actor
->   iomap: Convert from readpages to readahead
->   mm: Use memalloc_nofs_save in readahead path
-> 
->  Documentation/filesystems/locking.rst |   6 +-
->  Documentation/filesystems/vfs.rst     |  13 ++
->  drivers/staging/exfat/exfat_super.c   |   7 +-
->  fs/block_dev.c                        |   7 +-
->  fs/btrfs/extent_io.c                  |  46 ++-----
->  fs/btrfs/extent_io.h                  |   3 +-
->  fs/btrfs/inode.c                      |  16 +--
->  fs/erofs/data.c                       |  39 ++----
->  fs/erofs/zdata.c                      |  29 ++--
->  fs/ext2/inode.c                       |  10 +-
->  fs/ext4/ext4.h                        |   3 +-
->  fs/ext4/inode.c                       |  23 ++--
->  fs/ext4/readpage.c                    |  22 ++-
->  fs/ext4/verity.c                      |  35 +----
->  fs/f2fs/data.c                        |  50 +++----
->  fs/f2fs/f2fs.h                        |   5 +-
->  fs/f2fs/verity.c                      |  35 +----
->  fs/fat/inode.c                        |   7 +-
->  fs/fuse/file.c                        |  46 +++----
->  fs/gfs2/aops.c                        |  23 ++--
->  fs/hpfs/file.c                        |   7 +-
->  fs/iomap/buffered-io.c                | 118 +++++++----------
->  fs/iomap/trace.h                      |   2 +-
->  fs/isofs/inode.c                      |   7 +-
->  fs/jfs/inode.c                        |   7 +-
->  fs/mpage.c                            |  38 ++----
->  fs/nilfs2/inode.c                     |  15 +--
->  fs/ocfs2/aops.c                       |  34 ++---
->  fs/omfs/file.c                        |   7 +-
->  fs/qnx6/inode.c                       |   7 +-
->  fs/reiserfs/inode.c                   |   8 +-
->  fs/udf/inode.c                        |   7 +-
->  fs/xfs/xfs_aops.c                     |  13 +-
->  fs/zonefs/super.c                     |   7 +-
->  include/linux/fs.h                    |   2 +
->  include/linux/iomap.h                 |   3 +-
->  include/linux/mpage.h                 |   4 +-
->  include/linux/pagemap.h               |  90 +++++++++++++
->  include/trace/events/erofs.h          |   6 +-
->  include/trace/events/f2fs.h           |   6 +-
->  mm/internal.h                         |   8 +-
->  mm/migrate.c                          |   2 +-
->  mm/readahead.c                        | 184 +++++++++++++++++---------
->  43 files changed, 474 insertions(+), 533 deletions(-)
-> 
-> 
-> base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
-> 
