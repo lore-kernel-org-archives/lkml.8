@@ -2,209 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1939EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB9EC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75D624670
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055880;
-	bh=FpIz84TeGZcaSOVcwGGUp7CVd0vgtjsxOYV2MUZX6v0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWBRuhjaN/Wt4FnYiYGEUCOWJ4SR0zRpnZJP6Bt9CLIpsgED7q4OF7MiqcgRTGu5m
-	 2KzuxIG6QFo9x0MrpeLro7Y6noXr4eZ9fTh52owTzsfjio9xl6kxRdxjCLYiW+7532
-	 rwB5x9SQsibYOO6Vd74C2YBGzBFa9sWSfXeqhATM=
+	by mail.kernel.org (Postfix) with ESMTP id 4427B2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQ+9pXbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgBRT57 (ORCPT
+        id S1728103AbgBRT6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbgBRT5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:01 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35893 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbgBRT5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 14:57:55 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 227E22465A;
-        Tue, 18 Feb 2020 19:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055874;
-        bh=FpIz84TeGZcaSOVcwGGUp7CVd0vgtjsxOYV2MUZX6v0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msO80TW+vKBINtMGXhtZSg/QFUPXcxx6/5JM/rdJUpzoZrO7clkUQNQdZedb6rm9f
-         u2xPVksnK26KPTWkGWsTEUKR6RpFgPHddq25M/iqQ4JBCmR9hpReLsvZlN9lWmBUiU
-         zlPDYNhid1wh+XHnPiFa3few2Cws3KLB1bO6RsDw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 08/66] ACPI: EC: Fix flushing of pending work
-Date:   Tue, 18 Feb 2020 20:54:35 +0100
-Message-Id: <20200218190428.879663812@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by mail-pg1-f196.google.com with SMTP id d9so11474644pgu.3;
+        Tue, 18 Feb 2020 11:57:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=93cUwvRz5DcbF2nQaz+gagk6IvPBCJp98CU5NTDjQMY=;
+        b=UQ+9pXbDMmbdwA6F96Qv1VTxfWIz+JpDgMRfBgEwsI2/DxQA8d1YYv3LhqeSWvFyG3
+         KySMupXsPLTKR8WIfSgIj374RP/tpNY6rn9kI85B2bdUZKNIAI4bBtweOJJkv+UufbfL
+         OsHJC1WfHbmkTo4aTz0APkZDFAdFavuyyZd6ZXl1OwPo93zeo/bz8FthImtkeCMnvSFS
+         vLhtX0zbw3wAuwNmOtJU6nw6SWTGmqPVqAubM0XpVuoS5kogsoQOXzF6YzD7MGj+PfLU
+         FaP2WqUchlHEnqt0TtGb4plEPa9QcyJBK/mJcXAwrN+vzxkqCENzHeZu0Lh3Yb+lIkhs
+         cIYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=93cUwvRz5DcbF2nQaz+gagk6IvPBCJp98CU5NTDjQMY=;
+        b=cYlMuMhrcfgSz2BGEQzzP4rIBh/JWzSMJWAFl2NOwz5cFro5p8S9qevRLJkz4RCloF
+         fNkvN+BH2TlZZXNlE6eluVKuhT+9TOflH9vBzMs/4tJi5z1x/ZxAPRuFH0r1SrUzptSu
+         DPx04XDFfW2bP2m6TXditXD9K4JbOf+oW3pfNdMweybhWXwyh9rRdoSI1Ki1MO2TpRgd
+         mMZSlgpzF0NoxjAq0Ex3qvcIIkE2DYg00MwGFxQb/3JN3KEwWa8Gk5niJDuW14zD9QZ9
+         5XYxqLzwWxIPdrzRusJmAdY8kA2tFV4NVPsynM3vGKBzmtVecSFj3/EB44yYtvE8hnKR
+         TgOw==
+X-Gm-Message-State: APjAAAXcKQwQP8a4ZfLFuQbaTJFZA17la3xeGg/oQycnPzo+BT2V/pGC
+        Y1JXOcZ/hFw6r3KmLtplaQ==
+X-Google-Smtp-Source: APXvYqzmmai+702KiOlcfbcc3ZFX7jmIWdGXi8fVhYaR8Nc3GJgeHndI1Pldb3SlGbLRf31qGdaxsA==
+X-Received: by 2002:a63:4525:: with SMTP id s37mr24073227pga.418.1582055875098;
+        Tue, 18 Feb 2020 11:57:55 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:ff08:f869:e1e5:121e:cdbf])
+        by smtp.gmail.com with ESMTPSA id d4sm4038413pjz.12.2020.02.18.11.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 11:57:54 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     pshelar@ovn.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 2/4] vport.c: Use built-in RCU list checking
+Date:   Wed, 19 Feb 2020 01:27:42 +0530
+Message-Id: <20200218195742.2636-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-commit f0ac20c3f6137910c8a927953e8a92f5b3716166 upstream.
+hlist_for_each_entry_rcu() has built-in RCU and lock checking.
 
-Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
-introduced a subtle bug into the flushing of pending EC work while
-suspended to idle, which may cause the EC driver to fail to
-re-enable the EC GPE after handling a non-wakeup event (like a
-battery status change event, for example).
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+by default.
 
-The problem is that the work item flushed by flush_scheduled_work()
-in __acpi_ec_flush_work() may disable the EC GPE and schedule another
-work item expected to re-enable it, but that new work item is not
-flushed, so __acpi_ec_flush_work() returns with the EC GPE disabled
-and the CPU running it goes into an idle state subsequently.  If all
-of the other CPUs are in idle states at that point, the EC GPE won't
-be re-enabled until at least one CPU is woken up by another interrupt
-source, so system wakeup events that would normally come from the EC
-then don't work.
-
-This is reproducible on a Dell XPS13 9360 in my office which
-sometimes stops reacting to power button and lid events (triggered
-by the EC on that machine) after switching from AC power to battery
-power or vice versa while suspended to idle (each of those switches
-causes the EC GPE to trigger for several times in a row, but they
-are not system wakeup events).
-
-To avoid this problem, it is necessary to drain the workqueue
-entirely in __acpi_ec_flush_work(), but that cannot be done with
-respect to system_wq, because work items may be added to it from
-other places while __acpi_ec_flush_work() is running.  For this
-reason, make the EC driver use a dedicated workqueue for EC events
-processing (let that workqueue be ordered so that EC events are
-processed sequentially) and use drain_workqueue() on it in
-__acpi_ec_flush_work().
-
-Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- drivers/acpi/ec.c |   44 ++++++++++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ net/openvswitch/vport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -179,6 +179,7 @@ EXPORT_SYMBOL(first_ec);
+diff --git a/net/openvswitch/vport.c b/net/openvswitch/vport.c
+index 5da9392b03d6..47febb4504f0 100644
+--- a/net/openvswitch/vport.c
++++ b/net/openvswitch/vport.c
+@@ -96,7 +96,8 @@ struct vport *ovs_vport_locate(const struct net *net, const char *name)
+ 	struct hlist_head *bucket = hash_bucket(net, name);
+ 	struct vport *vport;
  
- static struct acpi_ec *boot_ec;
- static bool boot_ec_is_ecdt = false;
-+static struct workqueue_struct *ec_wq;
- static struct workqueue_struct *ec_query_wq;
- 
- static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
-@@ -461,7 +462,7 @@ static void acpi_ec_submit_query(struct
- 		ec_dbg_evt("Command(%s) submitted/blocked",
- 			   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
- 		ec->nr_pending_queries++;
--		schedule_work(&ec->work);
-+		queue_work(ec_wq, &ec->work);
- 	}
- }
- 
-@@ -527,7 +528,7 @@ static void acpi_ec_enable_event(struct
- #ifdef CONFIG_PM_SLEEP
- static void __acpi_ec_flush_work(void)
- {
--	flush_scheduled_work(); /* flush ec->work */
-+	drain_workqueue(ec_wq); /* flush ec->work */
- 	flush_workqueue(ec_query_wq); /* flush queries */
- }
- 
-@@ -548,8 +549,8 @@ static void acpi_ec_disable_event(struct
- 
- void acpi_ec_flush_work(void)
- {
--	/* Without ec_query_wq there is nothing to flush. */
--	if (!ec_query_wq)
-+	/* Without ec_wq there is nothing to flush. */
-+	if (!ec_wq)
- 		return;
- 
- 	__acpi_ec_flush_work();
-@@ -2032,25 +2033,33 @@ static struct acpi_driver acpi_ec_driver
- 	.drv.pm = &acpi_ec_pm,
- };
- 
--static inline int acpi_ec_query_init(void)
-+static void acpi_ec_destroy_workqueues(void)
- {
--	if (!ec_query_wq) {
--		ec_query_wq = alloc_workqueue("kec_query", 0,
--					      ec_max_queries);
--		if (!ec_query_wq)
--			return -ENODEV;
-+	if (ec_wq) {
-+		destroy_workqueue(ec_wq);
-+		ec_wq = NULL;
- 	}
--	return 0;
--}
--
--static inline void acpi_ec_query_exit(void)
--{
- 	if (ec_query_wq) {
- 		destroy_workqueue(ec_query_wq);
- 		ec_query_wq = NULL;
- 	}
- }
- 
-+static int acpi_ec_init_workqueues(void)
-+{
-+	if (!ec_wq)
-+		ec_wq = alloc_ordered_workqueue("kec", 0);
-+
-+	if (!ec_query_wq)
-+		ec_query_wq = alloc_workqueue("kec_query", 0, ec_max_queries);
-+
-+	if (!ec_wq || !ec_query_wq) {
-+		acpi_ec_destroy_workqueues();
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
- static const struct dmi_system_id acpi_ec_no_wakeup[] = {
- 	{
- 		.ident = "Thinkpad X1 Carbon 6th",
-@@ -2081,8 +2090,7 @@ int __init acpi_ec_init(void)
- 	int result;
- 	int ecdt_fail, dsdt_fail;
- 
--	/* register workqueue for _Qxx evaluations */
--	result = acpi_ec_query_init();
-+	result = acpi_ec_init_workqueues();
- 	if (result)
- 		return result;
- 
-@@ -2113,6 +2121,6 @@ static void __exit acpi_ec_exit(void)
- {
- 
- 	acpi_bus_unregister_driver(&acpi_ec_driver);
--	acpi_ec_query_exit();
-+	acpi_ec_destroy_workqueues();
- }
- #endif	/* 0 */
-
+-	hlist_for_each_entry_rcu(vport, bucket, hash_node)
++	hlist_for_each_entry_rcu(vport, bucket, hash_node,
++				lockdep_ovsl_is_held())
+ 		if (!strcmp(name, ovs_vport_name(vport)) &&
+ 		    net_eq(ovs_dp_get_net(vport->dp), net))
+ 			return vport;
+-- 
+2.17.1
 
