@@ -2,88 +2,68 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F1C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D103C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74CE24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582066972;
-	bh=2AKDvd36MyttW56BeXPy2flInfAoyRcXnCj4KGVY8rk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Vh2tHUcP8KJ9+/QIoLPQW5aKSA6UAxrXxMp5FgMBjjfCRDUmCN9mXaz2DaYgIDEcc
-	 qOcnaNXFSeaSVinCMCh1fFVCVczByGZ6AUx21a2hxQsR46f3KWwV6F1Xz069jq4ZeW
-	 TsC0dRKzVQ/iEgSVHBv0CHr7y4gfqj1QrlNE2OwE=
+	by mail.kernel.org (Postfix) with ESMTP id 39F9C2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgBRXCv (ORCPT
+        id S1727743AbgBRXDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:02:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 18:03:12 -0500
+Received: from mga02.intel.com ([134.134.136.20]:57150 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgBRXCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:02:49 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB2D62173E;
-        Tue, 18 Feb 2020 23:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582066969;
-        bh=2AKDvd36MyttW56BeXPy2flInfAoyRcXnCj4KGVY8rk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=D5gKxVvqnJcFQOLrxmtcO30le3tVvnXkZoZ4dk/g3RyOdCsdY1NZ/SkFS9ak5OSZa
-         OqgeoGQ2JpN4hynkEsBQxrEAcaszx1vcjiYn1q4zEU3d9XnvRNc+ie9/gErefotDcM
-         3H2yt9FB/7gxpTW/kfm8tSyX2q/yH07Afj9H6ZbM=
-Subject: Re: [PATCH 5.5 00/80] 5.5.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1727298AbgBRXDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:03:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:03:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="239504569"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 18 Feb 2020 15:03:10 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200218190432.043414522@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <263059ef-8934-23fc-ddcd-fe91b0eaf4b7@kernel.org>
-Date:   Tue, 18 Feb 2020 16:02:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Subject: [PATCH v2 0/3] KVM: x86: Minor emulator cleanup
+Date:   Tue, 18 Feb 2020 15:03:07 -0800
+Message-Id: <20200218230310.29410-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 12:54 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.5 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Three small patches to move emulator specific variables from 'struct
+kvm_vcpu_arch' to 'struct x86_emulate_ctxt'.
 
-Compiled and booted on my test system. No dmesg regressions.
+v2:
+  - Rebase to kvm/queue, 2c2787938512 ("KVM: selftests: Stop ...")
 
-thanks,
--- Shuah
+Sean Christopherson (3):
+  KVM: x86: Add EMULTYPE_PF when emulation is triggered by a page fault
+  KVM: x86: Move gpa_val and gpa_available into the emulator context
+  KVM: x86: Move #PF retry tracking variables into emulation context
+
+ arch/x86/include/asm/kvm_emulate.h |  8 ++++++
+ arch/x86/include/asm/kvm_host.h    | 19 ++++++-------
+ arch/x86/kvm/mmu/mmu.c             | 10 ++-----
+ arch/x86/kvm/x86.c                 | 45 +++++++++++++++++++-----------
+ 4 files changed, 48 insertions(+), 34 deletions(-)
+
+-- 
+2.24.1
 
