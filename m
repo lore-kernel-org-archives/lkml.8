@@ -2,94 +2,91 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5E5C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E95BC34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEC0207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hGs1vrG8"
+	by mail.kernel.org (Postfix) with ESMTP id 461822176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgBRHCs (ORCPT
+        id S1726399AbgBRHDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:02:48 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42207 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726104AbgBRHCr (ORCPT
+        Tue, 18 Feb 2020 02:03:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48427 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgBRHDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:02:47 -0500
-X-UUID: 08be96ec4594481da63ab274ea77ebbb-20200218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SfQLOOesViht8zuhVZth6gVEBbimYGDRoLRh1mE3SdQ=;
-        b=hGs1vrG84S+Pz2nTgA2P2nTRze0MIZaTGrFJUASFtwVira+GpWynxZrNlUhlyzdyX37T1sNlrykeNd83BAhFNIDWiBaoMaA4M91p+CZ402Oj3EKvMgJoLfqxKtKJVhpoNA6lWhW7M6QYf1SzhCOovGtJjlL4XfbgyytIJ7ssWVY=;
-X-UUID: 08be96ec4594481da63ab274ea77ebbb-20200218
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 265033743; Tue, 18 Feb 2020 15:02:41 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Feb 2020 15:00:11 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Feb 2020 15:02:11 +0800
-Message-ID: <1582009359.26304.29.camel@mtksdccf07>
-Subject: Re: [PATCH v3 1/2] scsi: ufs: pass device information to
- apply_dev_quirks
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Date:   Tue, 18 Feb 2020 15:02:39 +0800
-In-Reply-To: <2a8fc44914b7ed8777a4a99ba6b8647a@codeaurora.org>
-References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
-         <1578726707-6596-2-git-send-email-stanley.chu@mediatek.com>
-         <2a8fc44914b7ed8777a4a99ba6b8647a@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 18 Feb 2020 02:03:16 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j3wuV-0007Ym-Hi; Tue, 18 Feb 2020 08:03:11 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j3wuU-0005OG-LI; Tue, 18 Feb 2020 08:03:10 +0100
+Date:   Tue, 18 Feb 2020 08:03:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH 0/2] serial: imx: Backport fixes for irq handling to v4.14
+Message-ID: <20200218070310.ibv2m2f7ihfaevrp@pengutronix.de>
+References: <20200217140740.29743-1-frieder.schrempf@kontron.de>
+ <20200218045008.GA2049358@kroah.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 73E60B1B862E9A9A7A34435771FBADD9483B4202554A334657B8DC4403A419B82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218045008.GA2049358@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQoNCj4gSGkgU3RhbmxleSwNCj4gDQo+IElzIHRoaXMgc2VyaWVzIG1lcmdlZD8g
-SWYgbm8sIHdvdWxkIHlvdSBtaW5kIG1vdmluZw0KPiB1ZnNoY2Rfdm9wc19hcHBseV9kZXZfcXVp
-cmtzKGhiYSwgY2FyZCk7IGEgbGl0dGxlIGJpdD8gTGlrZSBiZWxvdy4NCj4gDQo+IEBAIC02ODUy
-LDE0ICs2ODUyLDE0IEBAIHN0YXRpYyB2b2lkIHVmc2hjZF90dW5lX3VuaXByb19wYXJhbXMoc3Ry
-dWN0IA0KPiB1ZnNfaGJhICpoYmEpDQo+ICAgICAgICAgICAgICAgICAgdWZzaGNkX3R1bmVfcGFf
-aGliZXJuOHRpbWUoaGJhKTsNCj4gICAgICAgICAgfQ0KPiANCj4gKyAgICAgICB1ZnNoY2Rfdm9w
-c19hcHBseV9kZXZfcXVpcmtzKGhiYSwgY2FyZCk7DQo+ICsNCj4gICAgICAgICAgaWYgKGhiYS0+
-ZGV2X3F1aXJrcyAmIFVGU19ERVZJQ0VfUVVJUktfUEFfVEFDVElWQVRFKQ0KPiAgICAgICAgICAg
-ICAgICAgIC8qIHNldCAxbXMgdGltZW91dCBmb3IgUEFfVEFDVElWQVRFICovDQo+ICAgICAgICAg
-ICAgICAgICAgdWZzaGNkX2RtZV9zZXQoaGJhLCBVSUNfQVJHX01JQihQQV9UQUNUSVZBVEUpLCAx
-MCk7DQo+IA0KPiBJbiB0aGlzIHdheSwgdmVuZG9yIGNvZGVzIGhhdmUgYSBjaGFuY2UgdG8gbW9k
-aWZ5IHRoZSBkZXZfcXVpcmtzDQo+IGJlZm9yZSB1ZnNoY2RfdHVuZV91bmlwcm9fcGFyYW1zKCkg
-ZG9lcyB0aGUgcmVzdCBvZiBpdHMgam9iLg0KPiANCg0KVGhpcyBwYXRjaCBoYXMgYmVlbiBtZXJn
-ZWQgdG8gNS42LXJjMS4NCg0KQmFzaWNhbGx5IEkgYW0gZmluZSB3aXRoIHlvdXIgcHJvcG9zYWwu
-IEJ1dCBpZiB5b3UgbmVlZCB0byBtb3ZlIGl0IHRvDQpuZXcgbWVudGlvbmVkIHBvc2l0aW9uLCBv
-dXIgYXBwbHlfZGV2X3F1aXJrcyBjYWxsYmFjayBhbHNvIG5lZWQNCmNvcnJlc3BvbmRpbmcgY2hh
-bmdlIHNvIGl0IG1pZ2h0IG5lZWQgb3VyIGNvLXdvcmtzIDogKQ0KDQpGb3IgZXhhbXBsZSwgeW91
-IGNvdWxkIGp1c3QgcG9zdCB5b3VyIHByb3Bvc2VkIGNoYW5nZXMgYW5kIHRoZW4gd2Ugd291bGQN
-CnByb3ZpZGUgY29ycmVzcG9uZGluZyBjaGFuZ2UgYXMgc29vbiBhcyBwb3NzaWJsZT8NCg0KQmVz
-aWRlcywgSSB3b3VsZCBsaWtlIHRvIHJlbWluZCB0aGF0IGFsbG93aW5nIHZlbmRvciB0byAiZml4
-IiBkZXZpY2UNCnF1aXJrcyBpbiBhZHZhbmNlIGltcGx5IHRoYXQgY3VycmVudCBjb21tb24gZGV2
-aWNlIHF1aXJrcyBoYXZlIHNvbWUNCnByb2JsZW1zPyBJZiBzbywgd291bGQgeW91IGNvbnNpZGVy
-IHRvIGZpeCBjb21tb24gZGV2aWNlIHF1aXJrcyBpbnN0ZWFkPw0KDQoNCj4gVGhhbmtzLA0KPiBD
-YW4gR3VvLg0KDQpUaGFua3MsDQpTdGFubGV5IENodQ0KDQoNCg==
+On Tue, Feb 18, 2020 at 05:50:08AM +0100, gregkh@linuxfoundation.org wrote:
+> On Mon, Feb 17, 2020 at 02:08:00PM +0000, Schrempf Frieder wrote:
+> > From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> > 
+> > A customer of ours has problems with RS485 on i.MX6UL with the latest v4.14
+> > kernel. They get an exception like below from time to time (the trace is
+> > from an older kernel, but the problem also exists in v4.14.170).
+> > 
+> > As the cpuidle state 2 causes large delays for the interrupt that controls the
+> > RS485 RTS signal (which can lead to collisions on the bus), cpuidle state 2 was
+> > disabled on this system. This aspect might cause the exception happening more
+> > often on this system than on other systems with default cpuidle settings.
+> > 
+> > Looking for solutions I found Uwe's patches that were applied in v4.17 being
+> > mentioned here [1] and here [2]. In [1] Uwe notes that backporting these fixes
+> > to v4.14 might not be trivial, but I tried and in my opinion found it not to be
+> > too problematic either.
+> > 
+> > With the backported patches applied, our customer reports that the exceptions
+> > stopped occuring. Given this and the fact that the problem seems to be known
+> > and quite common, it would be nice to get this into the v4.14 stable tree. 
+> 
+> Thanks for the backports, both now queued up.
 
+To complete these fixes you also want to backport
+
+	101aa46bd221 serial: imx: fix a race condition in receive path
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
