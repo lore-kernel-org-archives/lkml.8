@@ -2,74 +2,79 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F68DC34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A6C3402F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349D1206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53B5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgBRB4U (ORCPT
+        id S1726267AbgBRB6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:56:20 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2964 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726108AbgBRB4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:56:19 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id CD48718DE2656FD75CA8;
-        Tue, 18 Feb 2020 09:56:17 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 18 Feb 2020 09:56:17 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 18 Feb 2020 09:56:17 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Tue, 18 Feb 2020 09:56:17 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
-Thread-Topic: [PATCH] KVM: apic: remove unused function apic_lvt_vector()
-Thread-Index: AdXl/mukwxIGAhU+rEGyO/fRDkVJww==
-Date:   Tue, 18 Feb 2020 01:56:17 +0000
-Message-ID: <5c43bef1c82f4324935e341c744fdd9c@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Mon, 17 Feb 2020 20:58:25 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39868 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgBRB6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 20:58:25 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CC4B5202EF5;
+        Tue, 18 Feb 2020 02:58:23 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7C9C6202EE6;
+        Tue, 18 Feb 2020 02:58:17 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3B86D40245;
+        Tue, 18 Feb 2020 09:58:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        abel.vesa@nxp.com, leonard.crestez@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] arm64: dts: imx8mn-ddr4-evk: Adjust 1.2GHz OPP voltage to OD mode
+Date:   Tue, 18 Feb 2020 09:52:32 +0800
+Message-Id: <1581990752-10219-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4gd3JvdGU6DQo+T24gMTcvMDIvMjAg
-MTg6MDIsIFZpdGFseSBLdXpuZXRzb3Ygd3JvdGU6DQo+PiANCj4+IEFsc28sIGFwaWNfbHZ0X2Vu
-YWJsZWQoKSBpcyBvbmx5IHVzZWQgb25jZSB3aXRoIEFQSUNfTFZUVCBhcyB0aGUgDQo+PiBzZWNv
-bmQgYXJndW1lbnQgc28gSSdkIHN1Z2dlc3Qgd2UgYWxzbyBkbzoNCj4+IA0KPj4gZGlmZiAtLWdp
-dCBhL2FyY2gveDg2L2t2bS9sYXBpYy5jIGIvYXJjaC94ODYva3ZtL2xhcGljLmMgaW5kZXggDQo+
-PiANCj4+IGluIGFkZGl0aW9uIHRvIHRoZSBhYm92ZS4NCj4+IA0KPj4gLS0gVml0YWx5DQo+DQo+
-U291bmRzIGdvb2QuDQo+DQoNCldpbGwgZG8uIFRoYW5rcyBhbGwgb2YgeW91Lg0KDQo=
+According to latest datasheet Rev.0, 10/2019, there is restriction
+as below:
+
+"If VDD_SOC/GPU/DDR = 0.95V, then VDD_ARM must be >= 0.95V."
+
+As by default SoC is running at OD mode(VDD_SOC = 0.95V), so
+VDD_ARM 1.2GHz OPP's voltage should be increased to 0.95V.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 2497eeb..7a61a1a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -13,6 +13,12 @@
+ 	compatible = "fsl,imx8mn-ddr4-evk", "fsl,imx8mn";
+ };
+ 
++&a53_opp_table {
++	opp-1200000000 {
++		opp-microvolt = <950000>;
++	};
++};
++
+ &A53_0 {
+ 	cpu-supply = <&buck2_reg>;
+ };
+-- 
+2.7.4
+
