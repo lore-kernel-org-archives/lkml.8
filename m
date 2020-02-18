@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157B0C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D341C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87B324125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC28F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="toTVb7sJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OHP2T1LV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgBRXGd (ORCPT
+        id S1727772AbgBRXIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:06:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46874 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726820AbgBRXGd (ORCPT
+        Tue, 18 Feb 2020 18:08:02 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58092 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727463AbgBRXIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:06:33 -0500
+        Tue, 18 Feb 2020 18:08:02 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582067192; h=In-Reply-To: Content-Type: MIME-Version:
+ s=smtp; t=1582067281; h=In-Reply-To: Content-Type: MIME-Version:
  References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=c/Gl/+xaod6PXrjWKtPB7ywUhpAOGRUPvcwLQULGdyg=; b=toTVb7sJ+cWSxHu3T7oGCcA/Jx1L4kQgJOctoZXodiCkq+cJc95T8CU1ffjgrQWlxoDBlaoV
- 5JTtjL8r+kW5QEODAWsm4FT3E7XiHv+RX5Ogi5r/Z6vL6MTyla5YPZ7DGWaMSnoT5iWiMoxA
- ntulsEgzhmcFOrvhLbZy3t3n03Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=8iLC/MIWsGLNObQpdCKpF6XJIjNHls01CTFBxBKRpuE=; b=OHP2T1LVYCoaLi0MT+wtrwKN8ZnDthI2j6XFifgmrmZM76enmJ3JEk0+crSgymn8Lg7i2+g+
+ daQxZdKGROMFgspXdhChJQ6zDENV8L61UdBr8URTZkBm/1VZFa+rdOzonRefPiPloiUGAOmY
+ AqVAeohGWjHdokOBojYyguLxKHs=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c6df7.7fb808cdfd50-smtp-out-n03;
- Tue, 18 Feb 2020 23:06:31 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4c6e49.7fa3aefafab0-smtp-out-n02;
+ Tue, 18 Feb 2020 23:07:53 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A2940C447A0; Tue, 18 Feb 2020 23:06:31 +0000 (UTC)
+        id 58A04C433A2; Tue, 18 Feb 2020 23:07:53 +0000 (UTC)
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5598C4479C;
-        Tue, 18 Feb 2020 23:06:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5598C4479C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27CFFC43383;
+        Tue, 18 Feb 2020 23:07:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27CFFC43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 18 Feb 2020 16:06:27 -0700
+Date:   Tue, 18 Feb 2020 16:07:50 -0700
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     Rob Clark <robdclark@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org,
@@ -55,29 +55,29 @@ Cc:     dri-devel@lists.freedesktop.org,
         "open list:DRM DRIVER FOR MSM ADRENO GPU" 
         <linux-arm-msm@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH] drm/msm: devcoredump should dump
- MSM_SUBMIT_BO_DUMP buffers
-Message-ID: <20200218230627.GA8715@jcrouse1-lnx.qualcomm.com>
+        Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2] drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP
+ buffers
+Message-ID: <20200218230750.GB8715@jcrouse1-lnx.qualcomm.com>
 Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
         dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
         "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
         David Airlie <airlied@linux.ie>,
         "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-References: <20200218210021.1066100-1-robdclark@gmail.com>
+        Sean Paul <sean@poorly.run>
+References: <20200218212012.1067236-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218210021.1066100-1-robdclark@gmail.com>
+In-Reply-To: <20200218212012.1067236-1-robdclark@gmail.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:00:21PM -0800, Rob Clark wrote:
+On Tue, Feb 18, 2020 at 01:20:12PM -0800, Rob Clark wrote:
 > From: Rob Clark <robdclark@chromium.org>
 > 
 > Also log buffers with the DUMP flag set, to ensure we capture all useful
@@ -85,8 +85,10 @@ On Tue, Feb 18, 2020 at 01:00:21PM -0800, Rob Clark wrote:
 > 
 > Otherwise we miss out on the contents of "state object" cmdstream
 > buffers.
+> 
+> v2: add missing 'inline'
 
-One nit, but with that:
+I should have checked my inbox before responding to v1.
 
 Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
@@ -98,7 +100,7 @@ Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 >  3 files changed, 34 insertions(+), 12 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-> index 9e0953c2b7ce..22b4ccd7bb28 100644
+> index 9e0953c2b7ce..dcee0e223ed8 100644
 > --- a/drivers/gpu/drm/msm/msm_gem.h
 > +++ b/drivers/gpu/drm/msm/msm_gem.h
 > @@ -160,4 +160,14 @@ struct msm_gem_submit {
@@ -108,10 +110,7 @@ Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 > +/* helper to determine of a buffer in submit should be dumped, used for both
 > + * devcoredump and debugfs cmdstream dumping:
 > + */
-> +static bool
-
-Static inline? Surprised you didn't get an unused warning or two.
-
+> +static inline bool
 > +should_dump(struct msm_gem_submit *submit, int idx)
 > +{
 > +	extern bool rd_full;
@@ -193,9 +192,9 @@ Static inline? Surprised you didn't get an unused warning or two.
 > 2.24.1
 > 
 > _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
