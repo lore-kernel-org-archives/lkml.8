@@ -2,98 +2,199 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601A5C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E917C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203CA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:45:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q60757T8"
+	by mail.kernel.org (Postfix) with ESMTP id 0595A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582058762;
+	bh=4ZLS18TqYAWW2QSRI8EOXjOw+PEXuQg7xO/0j1OZjis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mlab5u2HywM3rW2IqJLBUlmirFkgFzbMJWuN688p73yvHEoUSJYJdeFcx2yyRgYwA
+	 15Y5Kjz8Fva4wCJ/2jltpiqDxZj+JEulK99TwscY4cTIf26N9i7kwLQWS3E1M6dDGY
+	 I7Fzzeb7zUvBOdnwX/taQ+vNXYBPcrOlPJEtvtU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgBRUpr (ORCPT
+        id S1727525AbgBRUqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:45:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49769 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgBRUpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:45:46 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48MXtc1GxGz9sNg;
-        Wed, 19 Feb 2020 07:45:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582058744;
-        bh=vcH78/WKpaQSZFfOI9MHiMt3W7LNLVfvc8SLfALOdK8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Q60757T88nE1c+zQg6l1Hjz7twjfcu3z7hWDFDEcRGpNauM3c1tXEMSyzrogLDj+p
-         b9nzfH8U7Llhf5exdXRt0M2rJ7uayl8Wi+5Hxzoy3uzGIylaZdpLktSpG1x04cAZb+
-         sfcLibVt0i69HPKlSdaM6H1oRvQIovA+QylV2PKsDBThiTE0P4A6HvFDnnq3fcVEwE
-         Y0lb0JLEvh39+DLFNS6+b3IOLIJgw+Dscm0Gnq553oDKxkqfXTGacWomYDkMEixa3k
-         vHkk4/jThXeG9MNTf2ZLJ9KC5hBrRaaL0dklXwjd/ve/3VDsvDPM2okGk8Tt5iHfB0
-         AabV90k9ZFjeA==
-Date:   Wed, 19 Feb 2020 07:45:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20200219074534.33c21dee@canb.auug.org.au>
+        Tue, 18 Feb 2020 15:46:01 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40074 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgBRUqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:46:00 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a142so21516426oii.7;
+        Tue, 18 Feb 2020 12:46:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7Et/eZlIxf7cVf5P7AQvi+7oih65Y9drHHn98Cm1z2c=;
+        b=nL9CNNhwaWbRNkriyrlk1JekTV8gx+c2QLi11WmPhANAubSXF7KE3rbN5m8LqF7jlL
+         ajkqFg981z0IYoFmcmP7RBJ+rhKmp20/ZsWl34lOPnr+cOfwuEfPdjCH85o8dGnbqyl2
+         wfuZqzk1/C9/ub8ieJW2JH3WwnOnuQvf6pwP58Rmbi9JgV8Qe85rmj4MW81PqY3wgCyO
+         DhXmVVuRjLyjPDn290uMwq2nuYqvGpjz8XMlndSxcLvroofBj6kQw7ppaeDwPmN2r9vP
+         B5nhcmmg6MA4/hpWOBFqb/luTpaN8Tx0w1HZfyxZ20q2VMoXk1cUk9D20r+oeo0VoemN
+         reCw==
+X-Gm-Message-State: APjAAAWEvq13CMIxyPKRQswepxyIEmyyf4W4yavXdyKbpM5vuuDEUkFl
+        6ouBuknkfgfnEHM+CVWJ/w==
+X-Google-Smtp-Source: APXvYqy0h6z6zxkOcLW5ZpqwVf1OvcOGoME5M5x/yDLACyFfWRITn+hHLzeNT4JN34tyFwI1ahQ6+w==
+X-Received: by 2002:a05:6808:55:: with SMTP id v21mr2033546oic.14.1582058760055;
+        Tue, 18 Feb 2020 12:46:00 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j24sm1733196otk.7.2020.02.18.12.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 12:45:59 -0800 (PST)
+Received: (nullmailer pid 7607 invoked by uid 1000);
+        Tue, 18 Feb 2020 20:45:58 -0000
+Date:   Tue, 18 Feb 2020 14:45:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 04/18] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200218204558.GA5022@bogus>
+References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
+ <20200210120723.91794-5-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HwP/tRR4zvaemdF0dLGNw7T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210120723.91794-5-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/HwP/tRR4zvaemdF0dLGNw7T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Feb 10, 2020 at 12:07:09PM +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> 
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed PHY. This PHY
+> appears in a number of SoCs on various flavors of 20nm and 28nm nodes.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+> new file mode 100644
+> index 000000000000..377b9e1e39d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,usb-ss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
+> +
+> +maintainers:
+> +  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> +
+> +description: |
+> +  Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,usb-ssphy
 
-Hi all,
+Pretty generic... Only 1 SS USB PHY in all of QCom forever?
 
-In commit
+IOW, this needs an SoC specific compatible.
 
-  af6565adb02d ("qede: Fix race between rdma destroy workqueue and link cha=
-nge event")
-
-Fixes tag
-
-  Fixes: cee9fbd8e2e ("qede: Add qedr framework")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HwP/tRR4zvaemdF0dLGNw7T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5MTO4ACgkQAVBC80lX
-0GztbAf+JpmdkPPYQtOSJJUfzA2bYbQLU7BZkQc1eyfpPlSIpHiSDKTFRRCwuhqp
-l4rte/+LlSdfclqWW4tcnrpPf4YaPbTNebGLMjizVfUEWvoRCXF3Pq+f5H3Bghhv
-7Y0YkzHbJEbU0OYX491xL8/nDYJZX/GuYPjGHxuZnB628aOqHRo+oogi/+2feZDJ
-iY2B0mpNR62rSn/f4yFkf9crATyfd+Yws4nvgH+g1x0NlQpt1VhO2Eyt6mWwtJsF
-J0NvmjucPevLat+8ldAp53rFTltLiuci/mVlGhpXh5CV/bv2+/ZN10w+387sI65A
-JOR+HDg5woRvBLQAtUqPzzu0IGdXHg==
-=6b50
------END PGP SIGNATURE-----
-
---Sig_/HwP/tRR4zvaemdF0dLGNw7T--
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: rpmcc clock
+> +      - description: PHY AHB clock
+> +      - description: SuperSpeed pipe clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: ahb
+> +      - const: pipe
+> +
+> +  vdd-supply:
+> +    description: phandle to the regulator VDD supply node.
+> +
+> +  vdda1p8-supply:
+> +    description: phandle to the regulator 1.8V supply node.
+> +
+> +  resets:
+> +    items:
+> +      - description: COM reset
+> +      - description: PHY reset line
+> +
+> +  reset-names:
+> +    items:
+> +      - const: com
+> +      - const: phy
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +  - vdd-supply
+> +  - vdda1p8-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
+> +    #include <dt-bindings/clock/qcom,rpmcc.h>
+> +    usb3_phy: usb3-phy@78000 {
+> +        compatible = "qcom,usb-ssphy";
+> +        reg = <0x78000 0x400>;
+> +        #phy-cells = <0>;
+> +        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> +                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> +                 <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> +        clock-names = "ref", "ahb", "pipe";
+> +        resets = <&gcc GCC_USB3_PHY_BCR>,
+> +                 <&gcc GCC_USB3PHY_PHY_BCR>;
+> +        reset-names = "com", "phy";
+> +        vdd-supply = <&vreg_l3_1p05>;
+> +        vdda1p8-supply = <&vreg_l5_1p8>;
+> +    };
+> +...
+> -- 
+> 2.25.0
+> 
