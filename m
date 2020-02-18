@@ -2,114 +2,129 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00387C34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5356C34032
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1BA207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CB8207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbN5HZC3"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="f/5DW0Qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgBRAH3 (ORCPT
+        id S1726171AbgBRALH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 19:07:29 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39783 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgBRAH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 19:07:29 -0500
-Received: by mail-il1-f195.google.com with SMTP id f70so15744757ill.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 16:07:28 -0800 (PST)
+        Mon, 17 Feb 2020 19:11:07 -0500
+Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:38421
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725987AbgBRALH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 19:11:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AShLImpaWseK2QjYksQHdQ6bMrpwVCwLNIZq4WkjTqFsdishd5i8D8dF9hVnRC2bSuV9jcKl8s73GGXVhQipfnb3mNyasU4WqNpJXV9dgJP6Q79qgOzkhxoN/hCYk6Jp9zd95ic6V+1boK/y59dBtySr58JHEqBpe8A5rkn5Ms7buT0jA3Mn7fVLsUi6+lVqvEdgQb86GVXL5Y0JwMFFWFIojbw7nKsgfZCGJ13fvG1jQu2xsXGk/GVjRL3A0ReDIe4dXwNGJOpWWV9QAdGspSNDQURmB2dDPTfMvuC7DEDjYWDd2kHoyJboAdmIob4DwtaYwOZaymsDH+ZcoVxG1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASdxIR7Yzk07fNbtoH1uXp1qjJJ2LqBFdakThHDBlxU=;
+ b=VNaOS8FatGYTfZhUhlnsVi1V/oBQqvTTdUIeK9lAxYrd1Kk8ftSeyYYAlJcPp1vivOYB1seG8/MGf2MloVZ5rIE4APF9NTNyc/5pU2Qlr5W9MSfUNqhFFms92DeiOlk19cWNOsHsRsl46IxH8ZP/r+V5HNmzINtb0SCsUIL9e+xLuEiWIY0qk9EOAUbPM6JPaO9Q6z98GyceM1aRNHaMToJJu0xOKWIY4TsVx/JydSFVp/kShocyRLnP2DUZTaGtJtK8dQpXu3ttHv5R9S1BeBNtS8rxsIW09QMzD3++lbbUCP2+xtGGmkm4EHDdWg3rL+cWlCWaYoiLcRey//mR7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MoFEkHOq5avDm3Itfm0xV4MkPfliVXkfnVI2Cmo7Qwg=;
-        b=NbN5HZC3ISPCmrssH0++8OFBF6RtLF1VLm/NyPi5QkMZbwK98B4oUX2UhdZfnfmF2d
-         2XT5HnDr4nyg0tjtDSF1U+zvokJt5BPHPQurg5ZVqurw9SpPmk2gn8dpoEM/5TnWDpkQ
-         Sd1s2t7e5SbB1Sz4TL1JiXviMmvIRYtXSJvJLyUELr0/FqAcSHwb7FxVQagaKZ3wlvyd
-         0qQJ2PjiJAJL9b4hqkMbBfpYcFl7o7utDnZRi9JE8hGyTbr5k94rxM9hqNI5TFGAnzV4
-         +Op8PYxBjIy5PvRDCmXuo+yfiPVJWiW9avbXurAeCMhNpsXpa3JqkbB0EN1xjq5MKAYS
-         vICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MoFEkHOq5avDm3Itfm0xV4MkPfliVXkfnVI2Cmo7Qwg=;
-        b=rJ/ehtu+T57DGPqe8wVL2I5d7Mcs5IgFJm59PH467cUH8VYlHyO6h4h5dyu20GOKQq
-         wERkFb69xxEZMRO0mEEkRr59ftCu9QWSVmyQ2txV/gQheZWJizX8UptopG/k2s1HEKS9
-         RflDCbibAQYQ/f7+35g3gCXHqI8srNbG+IpBCfzUdPfjgxHedrDU5S9HmO5dJccsxEGV
-         G0zB2oh6VkiWpOTRsa41/D2MulJjyoIULCISr5GiGhdyvmkP5+w6pYgze2MuuBxvw0zA
-         kgCGRrpXXi2ciJzB9jsBi26PlqXHf4AQJQCGhq0VLUoVQa4JeeXQzJFno7T47oMEBMvc
-         V8vQ==
-X-Gm-Message-State: APjAAAXR6oDdvLyqDKw7QoOcZglNiTuJncJ5OZ23e9k2W/8wFyhjZT/O
-        s26djxvvIdcramsW1NERKU9BuRDVIBeH57+v8FamGa9T17k=
-X-Google-Smtp-Source: APXvYqzZ3IseYxThnaoGo74JS4UF6XMsBQ9+GMqTIp2aoI2io2YxacywjmNzepSMZW4nquqluS8GhkEY2x0VqH9wysM=
-X-Received: by 2002:a92:3a8d:: with SMTP id i13mr17923948ilf.112.1581984448443;
- Mon, 17 Feb 2020 16:07:28 -0800 (PST)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASdxIR7Yzk07fNbtoH1uXp1qjJJ2LqBFdakThHDBlxU=;
+ b=f/5DW0QaI/FLWAE/3Cr2PMkdNdH/MkWgs6W9tHqieRHGIavggt4K7oMwv8l7ytaTu1ZMdzZatnvcPJUvZTUCWtUfNv/mXo4oHu0Kp7uBbVzc5mJMBtExCXb0QhZHi9AdDejYWfqohhafJhVW+Uh2cRQDXZ4AGISNpV4cx1Rz10c=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4799.jpnprd01.prod.outlook.com (20.179.175.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Tue, 18 Feb 2020 00:11:03 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
+ 00:11:03 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        =?iso-8859-1?Q?Niklas_S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Thread-Topic: [PATCH] MAINTAINERS: Add entry for Renesas R-Car thermal drivers
+Thread-Index: AQHV5MmmLymxK/lC2USJviU/BgNMZagfB0oAgAAkTgCAAOfAAIAAAoog
+Date:   Tue, 18 Feb 2020 00:11:03 +0000
+Message-ID: <TYAPR01MB4544C2F924EA24C7F6394267D8110@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200216130252.125100-1-niklas.soderlund+renesas@ragnatech.se>
+        <CAMuHMdUdBVwAbG8Qicg3_aKvwjq91QJWS5FQwM6NPdgbyP2Wzw@mail.gmail.com>
+        <20200217101114.GO3013231@oden.dyn.berto.se>
+ <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87zhdg2293.wl-kuninori.morimoto.gx@renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b3083474-ced8-4726-5194-08d7b4070ac2
+x-ms-traffictypediagnostic: TYAPR01MB4799:|TYAPR01MB4799:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB47995EDC3A869F675B7BE120D8110@TYAPR01MB4799.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 031763BCAF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(189003)(199004)(55236004)(71200400001)(186003)(86362001)(5660300002)(478600001)(4744005)(6506007)(4326008)(52536014)(316002)(33656002)(2906002)(81156014)(76116006)(26005)(110136005)(7696005)(54906003)(66476007)(64756008)(66446008)(66556008)(55016002)(8676002)(66946007)(9686003)(81166006)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4799;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BFbt5w6EyA4+6/G5UDVHNocEOKdX3sYbvfeGXBY+6X0PwKaumieydtDCag8nz/SEjmIuYsXwqrfIzwu+Su9EG+t3vi/s5ELd3Q0ynLTNYeYedctUUp2uKQKOA/9D9hsavLQV54xvZq+eo2ypY+tjo4T2pCHRuArMPD5Wp9pqtbD92E5MofS/Kp6LilQTP+fRWqWAKqGDPy4QxztXTD9TPHmBdkSJzG8qBWuTtALfcNw4mWfAy4ct9rrcDwkTZLjHckfbQY8FTexoGUccJ9Jx9yI+wLwaT/6MbpTzl95neZNqxGTa41jOSIBFyXBOjQUDhtMlwiaUKY8i5EDwXvale5lFN5jn8Tmrj5GGN1BT8IXcuxIdEQRNO4vbjCp1I049q+Xp6OCs3yQegVr4Usdon1VQorBw9GFCJoylevzusEgJOthd/Rn/cgAe2KC1nJme
+x-ms-exchange-antispam-messagedata: FWaZxp6UW3WBpHlHgZdqXEOQmBm+EXKZlaaXjZg+CFtKMK9+x7GNcePBmc8axhQnsyVKNi27CvXvWOEgu6YJ4M5NfbZS2wtR76EfUhJAlcIuCOGAJUxRA44dAnX0sMxXsFbFPUtGb9iw2biaV/f67g==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200217222803.6723-1-idryomov@gmail.com> <202002171546.A291F23F12@keescook>
-In-Reply-To: <202002171546.A291F23F12@keescook>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 18 Feb 2020 01:07:53 +0100
-Message-ID: <CAOi1vP-2uAD83Vi=Eebu_GPzq5DUt+z9zogA7BNGF1B1jUgAVw@mail.gmail.com>
-Subject: Re: [PATCH] vsprintf: don't obfuscate NULL and error pointers
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3083474-ced8-4726-5194-08d7b4070ac2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2020 00:11:03.2873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Kb0L9bkRPqhbr6eXPL+5SbFQPEIUWtwsblJff0ErbNcrPql8NIRIa0woxj3PRMPPz+7IM70ut/K27fCgwBU7DKwbOEylGjSJD4Htpu6J6PMI97/IOvySJbmo+lWktMe8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 12:47 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Feb 17, 2020 at 11:28:03PM +0100, Ilya Dryomov wrote:
-> > I don't see what security concern is addressed by obfuscating NULL
-> > and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-> > of sites where %p is used (over 10000) and the fact that NULL pointers
-> > aren't uncommon, it probably wouldn't take long for an attacker to
-> > find the hash that corresponds to 0.  Although harder, the same goes
-> > for most common error values, such as -1, -2, -11, -14, etc.
-> >
-> > The NULL part actually fixes a regression: NULL pointers weren't
-> > obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-> > dereferencing invalid pointers") which went into 5.2.  I'm tacking
-> > the IS_ERR() part on here because error pointers won't leak kernel
-> > addresses and printing them as pointers shouldn't be any different
-> > from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-> > debugging based on existing pr_debug and friends excruciating.
-> >
-> > Note that the "always print 0's for %pK when kptr_restrict == 2"
-> > behaviour which goes way back is left as is.
-> >
-> > Example output with the patch applied:
-> >
-> >                             ptr         error-ptr              NULL
-> > %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
->
-> This seems reasonable. Though I wonder -- since the efault string is
-> exposed now -- should this instead print all the error-ptr strings
-> instead of the unsigned negative pointer value?
+Hi Niklas-san,
 
-I'm not sure what you mean by efault string.  Are you referring to what
-%pe is doing?  If so, no -- I would keep %p and %pe separate.
+> From: Kuninori Morimoto, Sent: Tuesday, February 18, 2020 9:01 AM
+>=20
+> Hi Niklas
+>=20
+> > > +renesas@???
+> >
+> > I have not used the +renesas@ for my other entry in MAINTAINERS for
+> > R-Car VIN and wish them to be the same. I have do not mind if that is
+> > with or without the +renesas tag.
+> >
+> > @Shimoda-san: What would you and Renesas prefer I use?
+>=20
+> Please use +renesas@ for Author when you post patches.
+> We don't mind for other mail address, like MAINTAINERS.
 
-Thanks,
+I have the same opinion with Morimoto-san.
 
-                Ilya
+Best regards,
+Yoshihiro Shimoda
+
+> Thank you for your help !!
+> Best regards
+> ---
+> Kuninori Morimoto
