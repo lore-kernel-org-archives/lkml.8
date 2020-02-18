@@ -2,99 +2,90 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B435C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A4EC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6123722527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87ECC21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gV+vQumo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fO3nknBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgBRHlZ (ORCPT
+        id S1726266AbgBRHoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:41:25 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60387 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726104AbgBRHlY (ORCPT
+        Tue, 18 Feb 2020 02:44:13 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36644 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgBRHoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:41:24 -0500
-X-UUID: d408accb050345269bf4092c32b8eabd-20200218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=R5o8h58rYOA1fQLNSXIwPhnCU0xALWjQ5mRQdByDjFk=;
-        b=gV+vQumofRgeHZQLi18ZL0fXI0cOe/m8m9jHQK1lAAwIwiikMv2ILEXat/eyhU0IKRcshFL0QWupA8xNmwG/j707T7GFs7L/sAdvYuq6fi0fCOzpXQSn9nB2mR/p9Wky/ggJ7CRWDs0fdL5mb+PPO+/bq/uHzSDFyXvILobmlKU=;
-X-UUID: d408accb050345269bf4092c32b8eabd-20200218
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1173835655; Tue, 18 Feb 2020 15:41:16 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Feb 2020 15:42:30 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Feb 2020 15:40:51 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Shen Jing <jingx.shen@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Jerry Zhang <zhangjerry@google.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: [PATCH] lib: iov_iter.c: fix a possible calculation error on remaining bytes
-Date:   Tue, 18 Feb 2020 15:41:12 +0800
-Message-ID: <1582011672-17189-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 18 Feb 2020 02:44:12 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I7hshl148884;
+        Tue, 18 Feb 2020 07:43:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2cFkJJ+HWXz8rBSLgVbh02TUoTvyZyGJ1ksnlPP9NrM=;
+ b=fO3nknBQ/q/w2ukA1ZS7Kp/Uu7Qp2snL+wn0aw8BHScGey6QHUFCJnSRZ084h/Wla1d7
+ l9CyxuzQl6LtfOVENSmjGIzkhzkSxmzAFvqHZUJaI7l65ArrkGvaWjNOYgaektzYq+2a
+ YvJH10HZV8SABWf1DTOzfu8ZpLO7Jj8WMSegXfTCxR595PqnwMIF2dQprr2NFmD1GltD
+ svQlVKSq6zwFNybGSZ7XaIoDI2MrL+tDnWl2M/0s/IvznB3A204L3vZVrbQv5tgfu97L
+ 8TLcZQmq5Y548Ruo+bs7H0QJc3E1i6Ra4mufnqhPudLo22ZzMKc0Kw07bdB0Pn3lhzTX rQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2y699rkppn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 07:43:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01I7fgEu116169;
+        Tue, 18 Feb 2020 07:43:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2y6tepdnuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 07:43:58 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01I7hhNs027756;
+        Tue, 18 Feb 2020 07:43:43 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Feb 2020 23:43:42 -0800
+Date:   Tue, 18 Feb 2020 10:43:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: staging: board: disabled driver
+Message-ID: <20200218074335.GC19641@kadam>
+References: <20200213185205.GA26906@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213185205.GA26906@kaaira-HP-Pavilion-Notebook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 bulkscore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180062
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9534 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBpc3N1ZSB3YXMgZm91bmQgd2hlbiBhZGJkIHRyeWluZyB0byBvcGVuIGZ1bmN0aW9uZnMg
-d2l0aCBBSU8gbW9kZS4NClVzdWFsbHksIHdlIG5lZWQgdG8gc2V0ICJzZXRwcm9wIHN5cy51c2Iu
-ZmZzLmFpb19jb21wYXQgMCIgdG8gZW5hYmxlDQphZGJkIHdpdGggQUlPIG1vZGUgb24gQW5kcm9p
-ZC4NCg0KV2hlbiBhZGJkIGlzIG9wZW5pbmcgZnVuY3Rpb25mcywgaXQgd2lsbCB0cnkgdG8gcmVh
-ZCAyNCBieXRlcyBhdCB0aGUNCmZpc3J0IHJlYWQgSS9PIGNvbnRyb2wuIElmIHRoaXMgcmVhZGlu
-ZyBoYXMgYmVlbiBmYWlsZWQsIGFkYmQgd2lsbA0KdHJ5IHRvIHNlbmQgRlVOQ1RJT05GU19DTEVB
-Ul9IQUxUIHRvIGZ1bmN0aW9uZnMuIFdoZW4gYWRiZCBpcyBpbiBBSU8NCm1vZGUsIGZ1bmN0aW9u
-ZnMgd2lsbCBiZSBhY3RlZCB3aXRoIGFzeW5jcm9uaXplZCBJL08gcGF0aC4gQWZ0ZXIgdGhlDQpz
-dWNjZXNzZnVsIHJlYWQgdHJhbnNmZXIgaGFzIGJlZW4gY29tcGxldGVkIGJ5IGdhZGdldCBoYXJk
-d2FyZSwgdGhlDQpmb2xsb3dpbmcgc2VyaWVzIG9mIGZ1bmN0aW9ucyB3aWxsIGJlIGNhbGxlZC4N
-CiAgZmZzX2VwZmlsZV9hc3luY19pb19jb21wbGV0ZSgpIC0+IGZmc191c2VyX2NvcHlfd29ya2Vy
-KCkgLT4NCiAgICBjb3B5X3RvX2l0ZXIoKSAtPiBfY29weV90b19pdGVyKCkgLT4gY29weW91dCgp
-IC0+DQogICAgaXRlcmF0ZV9hbmRfYWR2YW5jZSgpIC0+IGl0ZXJhdGVfaW92ZWMoKQ0KDQpBZGRp
-bmcgZGVidWcgdHJhY2UgdG8gdGhlc2UgZnVuY3Rpb25zLCBpdCBoYXMgYmVlbiBmb3VuZCB0aGF0
-IGluDQppdGVyYXRlX2lvdmVjKCksIHRoZSBjYWxjdWxhdGlvbiByZXN1bHQgb2YgbiB3aWxsIGJl
-IHR1cm5lZCBpbnRvIHplcm8uDQogICBuID0gd2FudGVkIC0gbjsgLyogMCA9PSBuID0gMjQgLSAy
-NDsgKi8NCldoaWNoIGNhdXNlcyBjb3B5b3V0KCkgd29uJ3QgY29weSBkYXRhIHRvIHVzZXJzcGFj
-ZSBzaW5jZSB0aGUgbGVuZ3RoDQp0byBiZSBjb3BpZWQgInYuaW92X2xlbiIgd2lsbCBiZSB6ZXJv
-LCB3aGljaCBpc24ndCBjb3JyZWN0LiBUaGlzIGFsc28NCmxlYWRzIGZmc19jb3B5X3RvX2l0ZXIo
-KSBhbHdheXMgcmV0dXJuIC1FRkFVTFQuIEZpbmFsbHkgYWRiZCBjYW5ub3QNCm9wZW4gZnVuY3Rp
-b25mcyBhbmQgc2VuZCBGVU5DVElPTkZTX0NMRUFSX0hBTFQuDQoNClNpZ25lZC1vZmYtYnk6IE1h
-Y3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBsaWIvaW92X2l0ZXIu
-YyB8IDMgKystDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQ0KDQpkaWZmIC0tZ2l0IGEvbGliL2lvdl9pdGVyLmMgYi9saWIvaW92X2l0ZXIuYw0KaW5kZXgg
-ZmIyOWMwMmM2YTNjLi5mOTMzNDE0NGUyNTkgMTAwNjQ0DQotLS0gYS9saWIvaW92X2l0ZXIuYw0K
-KysrIGIvbGliL2lvdl9pdGVyLmMNCkBAIC0zNiw3ICszNiw4IEBADQogCQlza2lwID0gX192Lmlv
-dl9sZW47CQkJXA0KIAkJbiAtPSBfX3YuaW92X2xlbjsJCQlcDQogCX0JCQkJCQlcDQotCW4gPSB3
-YW50ZWQgLSBuOwkJCQkJXA0KKwlpZiAobiAhPSB3YW50ZWQpCQkJCVwNCisJCW4gPSB3YW50ZWQg
-LSBuOwkJCQlcDQogfQ0KIA0KICNkZWZpbmUgaXRlcmF0ZV9rdmVjKGksIG4sIF9fdiwgX19wLCBz
-a2lwLCBTVEVQKSB7CVwNCi0tIA0KMi4xOC4wDQo=
+On Fri, Feb 14, 2020 at 12:22:05AM +0530, Kaaira Gupta wrote:
+> I made some changes in board.h and other files under board to remove the MACRO using conditions. I did git log --oneline "file path" to get the logs, but turned out the driver was disabled. Hence on seeing it's KConfig file I found STAGING_BOARd and searched it in device drivers in menuconfig. I found that OF_ADDRESS-> OF-> X86_INTEL_CE were disabled as well. But I couldn't find X86_INTEL_CE under the device drivers.What should I do about it? Is there a way around or should I look at other drivers than board?
+> Thanks for your time!
+
+Use "make nconfig" and then press F8 and search for X86_INTEL_CE.
+
+regards,
+dan carpenter
 
