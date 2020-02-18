@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6F9C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FA9C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EF724125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6082824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056003;
-	bh=lyZsnS0h6TGGW/VfN0c4oQr58ckhLVmklvBo/A/pFM0=;
+	s=default; t=1582056007;
+	bh=0jem6XZ66gE+dB+u/Ocyu8cRj6OtJjD6/+Lb9cXcejI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ge5mb9KQjlBysfS14XNnHpR30m6FXKcxgzijRZZelSQOPEDUExhWP5z5aYb9Rvbg
-	 OWBCBswkCAk+rIpMJdjAcFShcap7Qh33yMBTdavuS7fHOd+Rq6KuQogjzQPzs1ehX/
-	 ptA2FaMe/yN8Cyhb5MkmMFYSgjfNeim9mGTyALv8=
+	b=tTvknOgRZYGeDhaRkUWzhl+0O4Bf1WF9/NfV7kKGahGpN87NCgKXVPWxSnuyN6s3l
+	 1OnpwC7eSMdsNQK/wMSTCnqZwF/MuthSlOMuHkBD2PPLw45KEVa9i+Q4ufdMSgBfow
+	 daP5W9l34bSgzyN1aTL44Bn2Ua6S+e/IJPAdY7b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgBRUAB (ORCPT
+        id S1727996AbgBRUAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38972 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgBRUAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:00 -0500
+        id S1728228AbgBRUAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDA3E24655;
-        Tue, 18 Feb 2020 19:59:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A872F20659;
+        Tue, 18 Feb 2020 20:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055999;
-        bh=lyZsnS0h6TGGW/VfN0c4oQr58ckhLVmklvBo/A/pFM0=;
+        s=default; t=1582056002;
+        bh=0jem6XZ66gE+dB+u/Ocyu8cRj6OtJjD6/+Lb9cXcejI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qddYIbDF30d4k7Uvw/LvL22SCRduk9+6odpOL49O5H5TEMJ84Dc9PVaPGKBxjdB2N
-         WGh2EnEcxqhpPo0qSSWDTy6nrkFPxMSQo07tH8WAJeeCr+SzRSMP9wIKsuMaD2PcE7
-         Fhi4Xgl4fyg/YMFiLrhwL4tRF02605bKRf8mrXgM=
+        b=Kg7SFLSXQe6HBoeXWXahGLoCjtivhA7yFUAELrg+dE8wLl7u0KEfg143dMPCAFLT+
+         vEzuOjkWx9EB+6iSB13/fcaG8jCt4e0mG/CmNohHu/nPPjJavSUw08yYg528e1T8D3
+         9QQoC6ejhxB+ODRUt30FnD+BehiEeZ1oXeKX0jFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 63/66] ext4: choose hardlimit when softlimit is larger than hardlimit in ext4_statfs_project()
-Date:   Tue, 18 Feb 2020 20:55:30 +0100
-Message-Id: <20200218190434.030902996@linuxfoundation.org>
+Subject: [PATCH 5.4 64/66] KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+Date:   Tue, 18 Feb 2020 20:55:31 +0100
+Message-Id: <20200218190434.149508774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,93 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 57c32ea42f8e802bda47010418e25043e0c9337f ]
+[ Upstream commit f6ab0107a4942dbf9a5cf0cca3f37e184870a360 ]
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+Define PT_MAX_FULL_LEVELS as PT64_ROOT_MAX_LEVEL, i.e. 5, to fix shadow
+paging for 5-level guest page tables.  PT_MAX_FULL_LEVELS is used to
+size the arrays that track guest pages table information, i.e. using a
+"max levels" of 4 causes KVM to access garbage beyond the end of an
+array when querying state for level 5 entries.  E.g. FNAME(gpte_changed)
+will read garbage and most likely return %true for a level 5 entry,
+soft-hanging the guest because FNAME(fetch) will restart the guest
+instead of creating SPTEs because it thinks the guest PTE has changed.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
+Note, KVM doesn't yet support 5-level nested EPT, so PT_MAX_FULL_LEVELS
+gets to stay "4" for the PTTYPE_EPT case.
 
-[root@hades mnt_ext4]# repquota -P -a
-*** Report for project quotas on device /dev/loop0
-Block grace time: 7days; Inode grace time: 7days
-                        Block limits                File limits
-Project         used    soft    hard  grace    used  soft  hard  grace
-----------------------------------------------------------------------
- 0        --      13       0       0              2     0     0
- 123      --   10237   20480   10240              5   200   100
-
-The result of df command as below:
-
-[root@hades mnt_ext4]# df -h test_dir
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       20M   10M   10M  50% /home/cgxu/test/mnt_ext4
-
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test_dir(inherit project id),
-the write will fail with errno(-EDQUOT).
-
-After this patch, the df result looks like below.
-
-[root@hades mnt_ext4]# df -h test_dir
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       10M   10M  3.0K 100% /home/cgxu/test/mnt_ext4
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191016022501.760-1-cgxu519@mykernel.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 855feb673640 ("KVM: MMU: Add 5 level EPT & Shadow page table support.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ arch/x86/kvm/paging_tmpl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 95826bde9025b..914230e630544 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5540,9 +5540,15 @@ static int ext4_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
- 
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_bsoftlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+	limit >>= sb->s_blocksize_bits;
-+
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = (dquot->dq_dqb.dqb_curspace +
- 			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
-@@ -5552,9 +5558,14 @@ static int ext4_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
- 	}
- 
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_isoftlimit < limit))
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+	    (!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
-+
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
+diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/paging_tmpl.h
+index c1d7b866a03fa..4e3f137ffa8c8 100644
+--- a/arch/x86/kvm/paging_tmpl.h
++++ b/arch/x86/kvm/paging_tmpl.h
+@@ -33,7 +33,7 @@
+ 	#define PT_GUEST_ACCESSED_SHIFT PT_ACCESSED_SHIFT
+ 	#define PT_HAVE_ACCESSED_DIRTY(mmu) true
+ 	#ifdef CONFIG_X86_64
+-	#define PT_MAX_FULL_LEVELS 4
++	#define PT_MAX_FULL_LEVELS PT64_ROOT_MAX_LEVEL
+ 	#define CMPXCHG cmpxchg
+ 	#else
+ 	#define CMPXCHG cmpxchg64
 -- 
 2.20.1
 
