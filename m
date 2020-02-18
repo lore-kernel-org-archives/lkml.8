@@ -2,95 +2,232 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A93BC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB730C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98512176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582060302;
-	bh=KJ8vglVapw/2iwFzdo5lxPghdHY+J8BXT8pm/rSrwzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FPVQDwqbTD918pRxstzvZ5x7jSpjKsMZ4Dfh5oi4oiTPePLLMKCiJjkD7OrlYmJh5
-	 xH2TmJCDc6iN0Xnuo7dsG2nfsL2rZ9f3qoxcMeq6V5JSf6NwTPdOMGdfQj/g+XEJ+5
-	 hUpISpUhV/1ufF1hagO5i9CLyvYpf+q6Zi8OTYUE=
+	by mail.kernel.org (Postfix) with ESMTP id 7899324125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdZgWPml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBRVLk (ORCPT
+        id S1727405AbgBRVM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:11:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35925 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgBRVLk (ORCPT
+        Tue, 18 Feb 2020 16:12:29 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46088 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRVM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:11:40 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so21004981otq.3;
-        Tue, 18 Feb 2020 13:11:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VF+9+FNI4E+Nip5+V6ijEpNvKUP4upuNUFTZZUsRCXg=;
-        b=ETmDyBQgdFxE+CzThVrH7bKsR3aHm3IdXSdhFT+8Px9cad/jN4LsKMmGPQWqVTf6gk
-         um3xP1rVIGVQjRS1+yitl99MffVU3EAGCs/XjN2lHE1QLs5+eL6Be670Irvy20rDnhYJ
-         BBrfssXVFKYm2H0PWVVtiIUJ4qiVALFtBNGt/Zq2TuUGrHXLSWnpHcshLuE5V3tIU67Z
-         pi/c5ACBqcWckdVpNan0WKa6B0sFIP0C9gIVM5jAWXiEkH1hde9xfGrOxIp3/+CxCKg2
-         6Mjg+ULMQC0rSpb/WFj++KjJZe+64x+Ky9D5PPaQemY3DGyzQQawWwlA6ORaxJmTFbYI
-         819w==
-X-Gm-Message-State: APjAAAWERIzDwy4yrnEcCrEdBQAnFFLBIsAtonfZzId0TEoVB0CgVZj4
-        6gX404SiV5pjCpSobYgHaA==
-X-Google-Smtp-Source: APXvYqwJzVO7Tt+nwt33yTfdT7FBGZHp27tmMJKxVMqskFLak+pv0Qur7ZcoIPtKeYrxDLetf1E5GQ==
-X-Received: by 2002:a05:6830:138b:: with SMTP id d11mr16239453otq.38.1582060299527;
-        Tue, 18 Feb 2020 13:11:39 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r10sm1732782otn.37.2020.02.18.13.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:11:38 -0800 (PST)
-Received: (nullmailer pid 12310 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:11:38 -0000
-Date:   Tue, 18 Feb 2020 15:11:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, sriram.dash@samsung.com,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: net: can: Convert M_CAN to
- json-schema
-Message-ID: <20200218211138.GA12217@bogus>
-References: <20200207100306.20997-1-benjamin.gaignard@st.com>
- <20200207100306.20997-3-benjamin.gaignard@st.com>
+        Tue, 18 Feb 2020 16:12:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=C6+FIzbRd5o0hW1kRRKUBom8n/N7TIIIJ10n6Bm+gNU=; b=SdZgWPmlYVT0XMUjMwdirbyYq5
+        z/MvgHdWZUONYcHl0TnpfiGDmf095oomwV/N/RH6GifFj/rwydwe+kq6f2tbOAtJRElqxHz5Dgnh+
+        EW7uBjnC3wOpboaXgsOCVQRD30ui8pjcMOhoklr/TvrXbI8o6CiPf6ruIhRLe6FKvhd2qrDgFPK1I
+        KmNAWjN7hvSGK0O5AQs3X+tXrG9yBpfQMM6X25JmPmgGOzUnAROE3QwvicPpE9MgRzP8MlaGrDSXQ
+        mBWD91boJiYlTGiZfTXKX3BebkqowPF+MM0ZAndsu5z1koT2azK+W51G0UZDdJcX2CL0ZNSIzEO5Y
+        20S6gvOQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4AAO-0006yP-HR; Tue, 18 Feb 2020 21:12:28 +0000
+Date:   Tue, 18 Feb 2020 13:12:28 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 11/19] btrfs: Convert from readpages to readahead
+Message-ID: <20200218211228.GF24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-19-willy@infradead.org>
+ <20200218065758.GQ10776@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207100306.20997-3-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218065758.GQ10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 11:03:06 +0100, Benjamin Gaignard wrote:
-> Convert M_CAN bindings to json-schema
+On Tue, Feb 18, 2020 at 05:57:58PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:45:59AM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Use the new readahead operation in btrfs.  Add a
+> > readahead_for_each_batch() iterator to optimise the loop in the XArray.
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > ---
+> >  fs/btrfs/extent_io.c    | 46 +++++++++++++----------------------------
+> >  fs/btrfs/extent_io.h    |  3 +--
+> >  fs/btrfs/inode.c        | 16 +++++++-------
+> >  include/linux/pagemap.h | 27 ++++++++++++++++++++++++
+> >  4 files changed, 49 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > index c0f202741e09..e97a6acd6f5d 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -4278,52 +4278,34 @@ int extent_writepages(struct address_space *mapping,
+> >  	return ret;
+> >  }
+> >  
+> > -int extent_readpages(struct address_space *mapping, struct list_head *pages,
+> > -		     unsigned nr_pages)
+> > +void extent_readahead(struct readahead_control *rac)
+> >  {
+> >  	struct bio *bio = NULL;
+> >  	unsigned long bio_flags = 0;
+> >  	struct page *pagepool[16];
+> >  	struct extent_map *em_cached = NULL;
+> > -	struct extent_io_tree *tree = &BTRFS_I(mapping->host)->io_tree;
+> > -	int nr = 0;
+> > +	struct extent_io_tree *tree = &BTRFS_I(rac->mapping->host)->io_tree;
+> >  	u64 prev_em_start = (u64)-1;
+> > +	int nr;
+> >  
+> > -	while (!list_empty(pages)) {
+> > -		u64 contig_end = 0;
+> > -
+> > -		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
+> > -			struct page *page = lru_to_page(pages);
+> > -
+> > -			prefetchw(&page->flags);
+> > -			list_del(&page->lru);
+> > -			if (add_to_page_cache_lru(page, mapping, page->index,
+> > -						readahead_gfp_mask(mapping))) {
+> > -				put_page(page);
+> > -				break;
+> > -			}
+> > -
+> > -			pagepool[nr++] = page;
+> > -			contig_end = page_offset(page) + PAGE_SIZE - 1;
+> > -		}
+> > +	readahead_for_each_batch(rac, pagepool, ARRAY_SIZE(pagepool), nr) {
+> > +		u64 contig_start = page_offset(pagepool[0]);
+> > +		u64 contig_end = page_offset(pagepool[nr - 1]) + PAGE_SIZE - 1;
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 4:
-> - remove useless ref to can-transceiver.yaml
-> 
-> version 3:
-> - move can-transceive node into bosch,m_can.yaml bindings
->  .../devicetree/bindings/net/can/bosch,m_can.yaml   | 144 +++++++++++++++++++++
->  .../devicetree/bindings/net/can/m_can.txt          |  75 -----------
->  2 files changed, 144 insertions(+), 75 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
->  delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
-> 
+> So this assumes a contiguous page range is returned, right?
 
-Applied, thanks.
+Yes.  That's documented in the readahead API and is the behaviour of
+the code.  I mean, btrfs asserts it's true while most of the rest of
+the kernel is indifferent to it, but it's the documented and actual
+behaviour.
 
-Rob
+> >  
+> > -		if (nr) {
+> > -			u64 contig_start = page_offset(pagepool[0]);
+> > +		ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
+> 
+> Ok, yes it does. :)
+> 
+> I don't see how readahead_for_each_batch() guarantees that, though.
+
+I ... don't see how it doesn't?  We start at rac->_start and iterate
+through the consecutive pages in the page cache.  readahead_for_each_batch()
+does assume that __do_page_cache_readahead() has its current behaviour
+of putting the pages in the page cache in order, and kicks off a new
+call to ->readahead() every time it has to skip an index for whatever
+reason (eg page already in page cache).
+
+> > -	if (bio)
+> > -		return submit_one_bio(bio, 0, bio_flags);
+> > -	return 0;
+> > +	if (bio) {
+> > +		if (submit_one_bio(bio, 0, bio_flags))
+> > +			return;
+> > +	}
+> >  }
+> 
+> Shouldn't that just be
+> 
+> 	if (bio)
+> 		submit_one_bio(bio, 0, bio_flags);
+
+It should, but some overzealous person decided to mark submit_one_bio()
+as __must_check, so I have to work around that.
+
+> > +static inline unsigned int readahead_page_batch(struct readahead_control *rac,
+> > +		struct page **array, unsigned int size)
+> > +{
+> > +	unsigned int batch = 0;
+> 
+> Confusing when put alongside rac->_batch_count counting the number
+> of pages in the batch, and "batch" being the index into the page
+> array, and they aren't the same counts....
+
+Yes.  Renamed to 'i'.
+
+> > +	XA_STATE(xas, &rac->mapping->i_pages, rac->_start);
+> > +	struct page *page;
+> > +
+> > +	rac->_batch_count = 0;
+> > +	xas_for_each(&xas, page, rac->_start + rac->_nr_pages - 1) {
+> 
+> That just iterates pages in the start,end doesn't it? What
+> guarantees that this fills the array with a contiguous page range?
+
+The behaviour of __do_page_cache_readahead().  Dave Howells also has a
+usecase for xas_for_each_contig(), so I'm going to add that soon.
+
+> > +		VM_BUG_ON_PAGE(!PageLocked(page), page);
+> > +		VM_BUG_ON_PAGE(PageTail(page), page);
+> > +		array[batch++] = page;
+> > +		rac->_batch_count += hpage_nr_pages(page);
+> > +		if (PageHead(page))
+> > +			xas_set(&xas, rac->_start + rac->_batch_count);
+> 
+> What on earth does this do? Comments please!
+
+		/*
+		 * The page cache isn't using multi-index entries yet,
+		 * so xas_for_each() won't do the right thing for
+		 * large pages.  This can be removed once the page cache
+		 * is converted.
+		 */
+
+> > +
+> > +		if (batch == size)
+> > +			break;
+> > +	}
+> > +
+> > +	return batch;
+> > +}
+> 
+> Seems a bit big for an inline function.
+
+It's only called by btrfs at the moment.  If it gets more than one caller,
+then sure, let's move it out of line.
+
+> > +
+> > +#define readahead_for_each_batch(rac, array, size, nr)			\
+> > +	for (; (nr = readahead_page_batch(rac, array, size));		\
+> > +			readahead_next(rac))
+> 
+> I had to go look at the caller to work out what "size" refered to
+> here.
+> 
+> This is complex enough that it needs proper API documentation.
+
+How about just:
+
+-#define readahead_for_each_batch(rac, array, size, nr)                 \
+-       for (; (nr = readahead_page_batch(rac, array, size));           \
++#define readahead_for_each_batch(rac, array, array_sz, nr)             \
++       for (; (nr = readahead_page_batch(rac, array, array_sz));       \
+
+(corresponding rename in readahead_page_batch).  I mean, we could also
+do:
+
+#define readahead_for_each_batch(rac, array, nr)			\
+	for (; (nr = readahead_page_batch(rac, array, ARRAY_SIZE(array)); \
+			readahead_next(rac))
+
+making it less flexible, but easier to use.
