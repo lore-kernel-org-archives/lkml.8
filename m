@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A990C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7276C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C50C24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7596624654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055784;
-	bh=18mLaI5oH1cn24V355OtSxSgMyY35q/E06ZDv5eECW4=;
+	s=default; t=1582055787;
+	bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNWCEeX/Rpf7tOzGbc/w/ATCoF8se80/ZehU9D0LW5v3CQTzcH9jc0bra7drLidbT
-	 CEWBskouriJLz4MSSE2di7Co27uTAhmCrsGyO1c5V8PN3PEbYrc1CULm3T3rSllmkr
-	 XOJqWy2ljAIUA/aHyTeb9/hdpXuMhqE2x4U028yw=
+	b=1XvEn+AAU5cC1YEoyj3C8S6q0tEKlE2yOM2cSTMIJcpvbG6af1oXsKw9gPjYUdnNx
+	 BmRv+p3HO3DL5/Fc1sKFtGuHA4DrSRKH9vYtdF5NuEfPs0GnSwATilijTryGIZDXfj
+	 oa4qSIHEjtDaaZlLLwgz8m+bupzdXHVZDXKfGMng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgBRT4W (ORCPT
+        id S1727193AbgBRT40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgBRT4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:21 -0500
+        id S1726571AbgBRT4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58B124654;
-        Tue, 18 Feb 2020 19:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8DE24655;
+        Tue, 18 Feb 2020 19:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055781;
-        bh=18mLaI5oH1cn24V355OtSxSgMyY35q/E06ZDv5eECW4=;
+        s=default; t=1582055783;
+        bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0G4VSJAXKR/RZIbnpEwbwXZN4iaYCxrEil1uKse1YxVQDYSr8imNy4/mUNfas1CCR
-         IJ5oZFtdoxr7JFzchHUCGuaOw/TtbMZrXnPUPMXCnKQuV2vnFlY6ZrdjHU2+DodmvJ
-         zTliYzJjEU7Nd2K6ohpuL1lVqQoaXWJZsbuIXdTE=
+        b=q0AyYw6PFDoPjqK7BR3sEuvp7A4mHbCWgPLbU5t2DhM9aZHEhoLsZGJDp66eXQRIG
+         HGvXnSm/fkrREbkn5w14LjpUhAC2WabRYoSFsjvfarTsS9PzQeEo6sZdZTCO8P9qAi
+         ljftvaePvJboYTxt2EARRwuL7LIpEOkddwlNGT0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 19/38] btrfs: log message when rw remount is attempted with unclean tree-log
-Date:   Tue, 18 Feb 2020 20:55:05 +0100
-Message-Id: <20200218190420.954317732@linuxfoundation.org>
+        stable@vger.kernel.org, Gaurav Agrawal <agrawalgaurav@gnome.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 02/38] Input: synaptics - enable SMBus on ThinkPad L470
+Date:   Tue, 18 Feb 2020 20:54:48 +0100
+Message-Id: <20200218190418.827696119@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -60,37 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Gaurav Agrawal <agrawalgaurav@gnome.org>
 
-commit 10a3a3edc5b89a8cd095bc63495fb1e0f42047d9 upstream.
+commit b8a3d819f872e0a3a0a6db0dbbcd48071042fb98 upstream.
 
-A remount to a read-write filesystem is not safe when there's tree-log
-to be replayed. Files that could be opened until now might be affected
-by the changes in the tree-log.
+Add touchpad LEN2044 to the list, as it is capable of working with
+psmouse.synaptics_intertouch=1
 
-A regular mount is needed to replay the log so the filesystem presents
-the consistent view with the pending changes included.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Gaurav Agrawal <agrawalgaurav@gnome.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/CADdtggVzVJq5gGNmFhKSz2MBwjTpdN5YVOdr4D3Hkkv=KZRc9g@mail.gmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1857,6 +1857,8 @@ static int btrfs_remount(struct super_bl
- 		}
- 
- 		if (btrfs_super_log_root(fs_info->super_copy) != 0) {
-+			btrfs_warn(fs_info,
-+		"mount required to replay tree-log, cannot remount read-write");
- 			ret = -EINVAL;
- 			goto restore;
- 		}
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -183,6 +183,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
++	"LEN2044", /* L470  */
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
 
 
