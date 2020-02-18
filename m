@@ -2,119 +2,78 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C9C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5F9C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099AF24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056138;
-	bh=mxKnM7pMPMd/YYHFnDhjWINAWLECBBrs3PzAEoLYjGw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6J8vdYkQ9oIb3l5CVs2dCN43cIgFp8N6yeZfXdT5JbpD36NvhUTEB1Tm4kjEZ2Kp
-	 21+88YXW2a5aFz0nohdj7rCEJ+WfioNp4n0lx235eSV6xx7sUjpgdEjOT5zRLdjKaO
-	 CGy0vxWFiTnuWg97LgOcYZB1vW29CsgIM8ddOJfA=
+	by mail.kernel.org (Postfix) with ESMTP id 4C5812464E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="keBX26ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgBRUCQ (ORCPT
+        id S1728903AbgBRUCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbgBRUCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:13 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDEA62464E;
-        Tue, 18 Feb 2020 20:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056133;
-        bh=mxKnM7pMPMd/YYHFnDhjWINAWLECBBrs3PzAEoLYjGw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yGObA4RMv4+WdEnHtPynBfBeLdgz4NfVnwOE0kBVmZS/IV8IEZQJ91jG7fTgrnvNC
-         0rCou1ysA3jPwa8WC3EQ/tllcZ/F2wuhLHAUHoYVqfRBH3nIDUbva2F1acpeRgR54K
-         VV/o/hSBZD3258AUy4bS2p8kwXToFDqJoVdMaUOE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 48/80] IB/mlx5: Return failure when rts2rts_qp_counters_set_id is not supported
-Date:   Tue, 18 Feb 2020 20:55:09 +0100
-Message-Id: <20200218190436.869817382@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
-References: <20200218190432.043414522@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 18 Feb 2020 15:02:19 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33412 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbgBRUCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nflWPq7ESAKoZ8WQ7+riCNATlDHNhjAjlMMNmDflZoc=; b=keBX26apztDdU/WjI1j5MVdoNG
+        y+VJeT25XRIJUA2ASCzPloyrTWWwXvuTkm6kaJa2MytIz2YT9Jv9WO1ov/qZ4BJlIUcpj0QpL9wOo
+        IXBUOh61TD6WULU4WzQcXP8ajtgSpfe41ZNUb7ZpmC1AAv9B+gnkIaHw2Zp5iv0KaaUsqbsoaXyEa
+        xSENlv8Jn8O9lCa0uZTsnY3lOalDE5XKm6AiE7qt9m1QzAO9hw0TWz9AdJHWeoX9YOiuBrjYBZu5k
+        s7qARYURK3u1zw9Ww3/isi6pUUCyBqatNg00vscFBeh1K+acCha0VUpjrLnpYlKyyasBNrUIXDRKQ
+        xPWbyAEA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j494C-0005MH-Nc; Tue, 18 Feb 2020 20:02:00 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3B687980E53; Tue, 18 Feb 2020 21:02:00 +0100 (CET)
+Date:   Tue, 18 Feb 2020 21:02:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] #MC mess
+Message-ID: <20200218200200.GE11457@worktop.programming.kicks-ass.net>
+References: <20200218173150.GK14449@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+On Tue, Feb 18, 2020 at 06:20:38PM +0000, Luck, Tony wrote:
+> > Anything else I'm missing? It is likely...
+> 
+> +	hw_breakpoint_disable();
+> +	static_key_disable(&__tracepoint_read_msr.key);
+> +	tracing_off();
+> +
+>  	ist_enter(regs);
+> 
+> How about some code to turn all those back on for a recoverable (where we actually recovered) #MC?
 
-commit 10189e8e6fe8dcde13435f9354800429c4474fb1 upstream.
+Then please rewrite the #MC entry code to deal with nested exceptions
+unmasking the MCE, very similr to NMI.
 
-When binding a QP with a counter and the QP state is not RESET, return
-failure if the rts2rts_qp_counters_set_id is not supported by the
-device.
+The moment you allow tracing, jump_labels or anything else you can
+expect #PF, #BP and probably #DB while inside #MC, those will then IRET
+and re-enable the #MC.
 
-This is to prevent cases like manual bind for Connect-IB devices from
-returning success when the feature is not supported.
-
-Fixes: d14133dd4161 ("IB/mlx5: Support set qp counter")
-Link: https://lore.kernel.org/r/20200126171708.5167-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/mlx5/qp.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -3394,9 +3394,6 @@ static int __mlx5_ib_qp_set_counter(stru
- 	struct mlx5_ib_qp_base *base;
- 	u32 set_id;
- 
--	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id))
--		return 0;
--
- 	if (counter)
- 		set_id = counter->id;
- 	else
-@@ -6529,6 +6526,7 @@ void mlx5_ib_drain_rq(struct ib_qp *qp)
-  */
- int mlx5_ib_qp_set_counter(struct ib_qp *qp, struct rdma_counter *counter)
- {
-+	struct mlx5_ib_dev *dev = to_mdev(qp->device);
- 	struct mlx5_ib_qp *mqp = to_mqp(qp);
- 	int err = 0;
- 
-@@ -6538,6 +6536,11 @@ int mlx5_ib_qp_set_counter(struct ib_qp
- 		goto out;
- 	}
- 
-+	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id)) {
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+
- 	if (mqp->state == IB_QPS_RTS) {
- 		err = __mlx5_ib_qp_set_counter(qp, counter);
- 		if (!err)
-
-
+The current situation is completely and utterly buggered.
