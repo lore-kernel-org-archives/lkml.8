@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2842C34040
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9148BC34043
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB28A22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74484208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgBROfe (ORCPT
+        id S1726945AbgBROfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:35:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52954 "EHLO
+        Tue, 18 Feb 2020 09:35:38 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52981 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgBROfe (ORCPT
+        with ESMTP id S1726750AbgBROff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:35:34 -0500
+        Tue, 18 Feb 2020 09:35:35 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j43xy-0000fF-1W; Tue, 18 Feb 2020 14:35:14 +0000
+        id 1j43xv-0000fF-6f; Tue, 18 Feb 2020 14:35:11 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -41,9 +41,9 @@ Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 10/25] namei: may_{o_}create(): handle fsid mappings
-Date:   Tue, 18 Feb 2020 15:33:56 +0100
-Message-Id: <20200218143411.2389182-11-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 07/25] proc: task_state(): use from_kfs{g,u}id_munged
+Date:   Tue, 18 Feb 2020 15:33:53 +0100
+Message-Id: <20200218143411.2389182-8-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
@@ -54,130 +54,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch may_{o_}create() to lookup fsids in the fsid mappings. If no fsid
-mappings are setup the behavior is unchanged, i.e. fsids are looked up in the
-id mappings.
+If fsid mappings have been written, this will cause proc to look at fsid
+mappings for the user namespace. If no fsid mappings have been written the
+behavior is as before.
 
-Filesystems that share a superblock in all user namespaces they are mounted in
-will retain their old semantics even with the introduction of fsid mappings.
+Here is part of the output from /proc/<pid>/status from the initial user
+namespace for systemd running in an unprivileged container as user namespace
+root with id mapping 0 100000 100000 and fsid mapping 0 300000 100000:
 
-Cc: Jann Horn <jannh@google.com>
+Name:   systemd
+Umask:  0000
+State:  S (sleeping)
+Tgid:   13023
+Ngid:   0
+Pid:    13023
+PPid:   13008
+TracerPid:      0
+Uid:    100000  100000  100000  300000
+Gid:    100000  100000  100000  300000
+FDSize: 64
+Groups:
+
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v2 */
-- Jann Horn <jannh@google.com>:
-  - Ensure that the correct fsid is used when dealing with userns visible
-    filesystems like proc.
+unchanged
 
 /* v3 */
 unchanged
 ---
- fs/namei.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ fs/proc/array.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index db6565c99825..c5b014000f13 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -39,6 +39,7 @@
- #include <linux/bitops.h>
- #include <linux/init_task.h>
- #include <linux/uaccess.h>
+diff --git a/fs/proc/array.c b/fs/proc/array.c
+index 5efaf3708ec6..d4a04f85a67e 100644
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -91,6 +91,7 @@
+ #include <linux/string_helpers.h>
+ #include <linux/user_namespace.h>
+ #include <linux/fs_struct.h>
 +#include <linux/fsuidgid.h>
  
- #include "internal.h"
- #include "mount.h"
-@@ -287,6 +288,13 @@ static int check_acl(struct inode *inode, int mask)
- 	return -EAGAIN;
- }
+ #include <asm/pgtable.h>
+ #include <asm/processor.h>
+@@ -193,11 +194,11 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
+ 	seq_put_decimal_ull(m, "\nUid:\t", from_kuid_munged(user_ns, cred->uid));
+ 	seq_put_decimal_ull(m, "\t", from_kuid_munged(user_ns, cred->euid));
+ 	seq_put_decimal_ull(m, "\t", from_kuid_munged(user_ns, cred->suid));
+-	seq_put_decimal_ull(m, "\t", from_kuid_munged(user_ns, cred->fsuid));
++	seq_put_decimal_ull(m, "\t", from_kfsuid_munged(user_ns, cred->fsuid));
+ 	seq_put_decimal_ull(m, "\nGid:\t", from_kgid_munged(user_ns, cred->gid));
+ 	seq_put_decimal_ull(m, "\t", from_kgid_munged(user_ns, cred->egid));
+ 	seq_put_decimal_ull(m, "\t", from_kgid_munged(user_ns, cred->sgid));
+-	seq_put_decimal_ull(m, "\t", from_kgid_munged(user_ns, cred->fsgid));
++	seq_put_decimal_ull(m, "\t", from_kfsgid_munged(user_ns, cred->fsgid));
+ 	seq_put_decimal_ull(m, "\nFDSize:\t", max_fds);
  
-+static inline kuid_t get_current_fsuid(const struct inode *inode)
-+{
-+	if (is_userns_visible(inode->i_sb->s_iflags))
-+		return current_kfsuid();
-+	return current_fsuid();
-+}
-+
- /*
-  * This does the basic permission checking
-  */
-@@ -294,7 +302,7 @@ static int acl_permission_check(struct inode *inode, int mask)
- {
- 	unsigned int mode = inode->i_mode;
- 
--	if (likely(uid_eq(current_fsuid(), inode->i_uid)))
-+	if (likely(uid_eq(get_current_fsuid(inode), inode->i_uid)))
- 		mode >>= 6;
- 	else {
- 		if (IS_POSIXACL(inode) && (mode & S_IRWXG)) {
-@@ -980,7 +988,7 @@ static inline int may_follow_link(struct nameidata *nd)
- 
- 	/* Allowed if owner and follower match. */
- 	inode = nd->link_inode;
--	if (uid_eq(current_cred()->fsuid, inode->i_uid))
-+	if (uid_eq(get_current_fsuid(inode), inode->i_uid))
- 		return 0;
- 
- 	/* Allowed if parent directory not sticky and world-writable. */
-@@ -1097,7 +1105,7 @@ static int may_create_in_sticky(umode_t dir_mode, kuid_t dir_uid,
- 	    (!sysctl_protected_regular && S_ISREG(inode->i_mode)) ||
- 	    likely(!(dir_mode & S_ISVTX)) ||
- 	    uid_eq(inode->i_uid, dir_uid) ||
--	    uid_eq(current_fsuid(), inode->i_uid))
-+	    uid_eq(get_current_fsuid(inode), inode->i_uid))
- 		return 0;
- 
- 	if (likely(dir_mode & 0002) ||
-@@ -2832,7 +2840,7 @@ EXPORT_SYMBOL(kern_path_mountpoint);
- 
- int __check_sticky(struct inode *dir, struct inode *inode)
- {
--	kuid_t fsuid = current_fsuid();
-+	kuid_t fsuid = get_current_fsuid(inode);
- 
- 	if (uid_eq(inode->i_uid, fsuid))
- 		return 0;
-@@ -2902,6 +2910,20 @@ static int may_delete(struct inode *dir, struct dentry *victim, bool isdir)
- 	return 0;
- }
- 
-+static bool fsid_has_mapping(struct user_namespace *ns, struct super_block *sb)
-+{
-+	if (is_userns_visible(sb->s_iflags)) {
-+		if (!kuid_has_mapping(ns, current_kfsuid()) ||
-+		    !kgid_has_mapping(ns, current_kfsgid()))
-+			return false;
-+	} else if (!kfsuid_has_mapping(ns, current_fsuid()) ||
-+		   !kfsgid_has_mapping(ns, current_fsgid())) {
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- /*	Check whether we can create an object with dentry child in directory
-  *  dir.
-  *  1. We can't do it if child already exists (open has special treatment for
-@@ -2920,8 +2942,7 @@ static inline int may_create(struct inode *dir, struct dentry *child)
- 	if (IS_DEADDIR(dir))
- 		return -ENOENT;
- 	s_user_ns = dir->i_sb->s_user_ns;
--	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
--	    !kgid_has_mapping(s_user_ns, current_fsgid()))
-+	if (!fsid_has_mapping(s_user_ns, dir->i_sb))
- 		return -EOVERFLOW;
- 	return inode_permission(dir, MAY_WRITE | MAY_EXEC);
- }
-@@ -3103,8 +3124,7 @@ static int may_o_create(const struct path *dir, struct dentry *dentry, umode_t m
- 		return error;
- 
- 	s_user_ns = dir->dentry->d_sb->s_user_ns;
--	if (!kuid_has_mapping(s_user_ns, current_fsuid()) ||
--	    !kgid_has_mapping(s_user_ns, current_fsgid()))
-+	if (!fsid_has_mapping(s_user_ns, dir->dentry->d_sb))
- 		return -EOVERFLOW;
- 
- 	error = inode_permission(dir->dentry->d_inode, MAY_WRITE | MAY_EXEC);
+ 	seq_puts(m, "\nGroups:\t");
 -- 
 2.25.0
 
