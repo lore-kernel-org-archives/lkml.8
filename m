@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13970C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EA5C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE14424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980A124670
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055982;
-	bh=ctiJ5QklUUUiqbxfDM/aAC6O/xND98Ys7P27q8+cOqc=;
+	s=default; t=1582055985;
+	bh=qmES+1uRtANOGz79p7/ycb4Nn1So7DrO0/YhdSWe8TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2g0pgZF9SppSFjupsAKy67LOZLtE6i5L/GiYvtfwDUrmSbWyQlIAJc4odI9hxiDZZ
-	 AMGujEAklCXTpSw/8HDvuUD6E2DAMF/lKv9PO+/NvdSAFHhVEPzcLGA12gWDSyYJLx
-	 LRw5xstHurYFDX8JFIE5O+LGXKh+/Nid3CvAzmQY=
+	b=QguajC/JXJ9gudlF+/DG6jixpyQhQd0JAZ//US7/Zr4BB2WM+18HgCvQfBNOaGcft
+	 UcT2jqmgjjCGBqqfdBsWgd5ioovJiaZhxP7AJItGsI+TTh/xW1bLE7SBeVcJD4lSN9
+	 WeDF8f3R3HzHobMIE2t6yQVw2r4C7Xv0SEqqX5xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgBRT7m (ORCPT
+        id S1728469AbgBRT7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38450 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgBRT7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:39 -0500
+        id S1727935AbgBRT7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C26020659;
-        Tue, 18 Feb 2020 19:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F20882464E;
+        Tue, 18 Feb 2020 19:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055979;
-        bh=ctiJ5QklUUUiqbxfDM/aAC6O/xND98Ys7P27q8+cOqc=;
+        s=default; t=1582055981;
+        bh=qmES+1uRtANOGz79p7/ycb4Nn1So7DrO0/YhdSWe8TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BG+WAOCv4OPHH5ji/qhBLAOyVVUoNJol26aLaQ9k6VpBryoXHpG31lURKiEygD+NX
-         6AxdhQK0HRI16vk5rrlcwj6gdZXHEeJURuZOcrqsWWqpqiGdYVLGE5C+Q9bk3Ya0yw
-         2drj2BYlzHrG/VyB6Jy1RUPb47nhuiR86y0GndPs=
+        b=BZOvjRyuZ2WSI25WnfZHlfJdPNKBDA1sr1Mm3Tz7BK0UAgCQfQiL40vJZcOp1fEvI
+         zZyKqUjrvk61Y/DmOnQM6GYGTS3JvWIdcPZz2277b0jlYCJ0znbRWXrfhHLeNY0b6s
+         akrIWK1BIn/m/nucwlLp7bhbiRBh1Cm3FUsz46ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Shijie Luo <luoshijie1@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.4 17/66] ext4: add cond_resched() to ext4_protect_reserved_inode
-Date:   Tue, 18 Feb 2020 20:54:44 +0100
-Message-Id: <20200218190429.681173507@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.4 18/66] ext4: improve explanation of a mount failure caused by a misconfigured kernel
+Date:   Tue, 18 Feb 2020 20:54:45 +0100
+Message-Id: <20200218190429.776224561@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -60,64 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijie Luo <luoshijie1@huawei.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit af133ade9a40794a37104ecbcc2827c0ea373a3c upstream.
+commit d65d87a07476aa17df2dcb3ad18c22c154315bec upstream.
 
-When journal size is set too big by "mkfs.ext4 -J size=", or when
-we mount a crafted image to make journal inode->i_size too big,
-the loop, "while (i < num)", holds cpu too long. This could cause
-soft lockup.
+If CONFIG_QFMT_V2 is not enabled, but CONFIG_QUOTA is enabled, when a
+user tries to mount a file system with the quota or project quota
+enabled, the kernel will emit a very confusing messsage:
 
-[  529.357541] Call trace:
-[  529.357551]  dump_backtrace+0x0/0x198
-[  529.357555]  show_stack+0x24/0x30
-[  529.357562]  dump_stack+0xa4/0xcc
-[  529.357568]  watchdog_timer_fn+0x300/0x3e8
-[  529.357574]  __hrtimer_run_queues+0x114/0x358
-[  529.357576]  hrtimer_interrupt+0x104/0x2d8
-[  529.357580]  arch_timer_handler_virt+0x38/0x58
-[  529.357584]  handle_percpu_devid_irq+0x90/0x248
-[  529.357588]  generic_handle_irq+0x34/0x50
-[  529.357590]  __handle_domain_irq+0x68/0xc0
-[  529.357593]  gic_handle_irq+0x6c/0x150
-[  529.357595]  el1_irq+0xb8/0x140
-[  529.357599]  __ll_sc_atomic_add_return_acquire+0x14/0x20
-[  529.357668]  ext4_map_blocks+0x64/0x5c0 [ext4]
-[  529.357693]  ext4_setup_system_zone+0x330/0x458 [ext4]
-[  529.357717]  ext4_fill_super+0x2170/0x2ba8 [ext4]
-[  529.357722]  mount_bdev+0x1a8/0x1e8
-[  529.357746]  ext4_mount+0x44/0x58 [ext4]
-[  529.357748]  mount_fs+0x50/0x170
-[  529.357752]  vfs_kern_mount.part.9+0x54/0x188
-[  529.357755]  do_mount+0x5ac/0xd78
-[  529.357758]  ksys_mount+0x9c/0x118
-[  529.357760]  __arm64_sys_mount+0x28/0x38
-[  529.357764]  el0_svc_common+0x78/0x130
-[  529.357766]  el0_svc_handler+0x38/0x78
-[  529.357769]  el0_svc+0x8/0xc
-[  541.356516] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [mount:18674]
+    EXT4-fs warning (device vdc): ext4_enable_quotas:5914: Failed to enable quota tracking (type=0, err=-3). Please run e2fsck to fix.
+    EXT4-fs (vdc): mount failed
 
-Link: https://lore.kernel.org/r/20200211011752.29242-1-luoshijie1@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+We will now report an explanatory message indicating which kernel
+configuration options have to be enabled, to avoid customer/sysadmin
+confusion.
+
+Link: https://lore.kernel.org/r/20200215012738.565735-1-tytso@mit.edu
+Google-Bug-Id: 149093531
+Fixes: 7c319d328505b778 ("ext4: make quota as first class supported feature")
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/super.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -203,6 +203,7 @@ static int ext4_protect_reserved_inode(s
- 		return PTR_ERR(inode);
- 	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
- 	while (i < num) {
-+		cond_resched();
- 		map.m_lblk = i;
- 		map.m_len = num - i;
- 		n = ext4_map_blocks(NULL, inode, &map, 0);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2961,17 +2961,11 @@ static int ext4_feature_set_ok(struct su
+ 		return 0;
+ 	}
+ 
+-#ifndef CONFIG_QUOTA
+-	if (ext4_has_feature_quota(sb) && !readonly) {
++#if !defined(CONFIG_QUOTA) || !defined(CONFIG_QFMT_V2)
++	if (!readonly && (ext4_has_feature_quota(sb) ||
++			  ext4_has_feature_project(sb))) {
+ 		ext4_msg(sb, KERN_ERR,
+-			 "Filesystem with quota feature cannot be mounted RDWR "
+-			 "without CONFIG_QUOTA");
+-		return 0;
+-	}
+-	if (ext4_has_feature_project(sb) && !readonly) {
+-		ext4_msg(sb, KERN_ERR,
+-			 "Filesystem with project quota feature cannot be mounted RDWR "
+-			 "without CONFIG_QUOTA");
++			 "The kernel was not built with CONFIG_QUOTA and CONFIG_QFMT_V2");
+ 		return 0;
+ 	}
+ #endif  /* CONFIG_QUOTA */
 
 
