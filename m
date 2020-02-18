@@ -2,156 +2,105 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444F0C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A84C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E6C2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582051226;
-	bh=e0prGkshvWw2XTwL3+iei7JE8F3vbsgEto2sLKzoNxY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iZ48p0JQnMZza+ebRpKAViVhqV07KGB3iQcqDS99Q3l7nfPvS8gexljZj/605wuk9
-	 DfWLsuJ/f6eRhIT1k7vg2HsIy+2axqZWXrJPKgVyzYXtm9QtEmzx4qakIkVrIXtuE/
-	 NPpu0E5RgMnlJiCJEODfmLZCVN2ZY+cJ9C0Mq/qs=
+	by mail.kernel.org (Postfix) with ESMTP id 32BEA24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhDjabUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBRSkY (ORCPT
+        id S1726605AbgBRSkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:40:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgBRSkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:40:24 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3BA124656;
-        Tue, 18 Feb 2020 18:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582051223;
-        bh=e0prGkshvWw2XTwL3+iei7JE8F3vbsgEto2sLKzoNxY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZbapHghKemvj/oI+zpPIruW3rQ0y+/IGCFK4hWmOUDx7Vi4fNxeSS/WMkU/tOfVw6
-         5U9tzmE0siFMLLMGiimacSWFAD6i3onMYAlpQEevIhoPtM05rP/W3Mn7mRRqz8OUEZ
-         FvJ+rEAk2hZeuYncgmnHdz8KREoKXg7XPBgExTnc=
-Received: by mail-qk1-f170.google.com with SMTP id h4so20556083qkm.0;
-        Tue, 18 Feb 2020 10:40:22 -0800 (PST)
-X-Gm-Message-State: APjAAAXMOybWhbMjP/PI5WyTkGrIoj25iB3wKpVv2e+lmQsAhJTKVBQW
-        6myrge+bZL3RZnK73O4cu1nqjyZvPb1bDrWCqQ==
-X-Google-Smtp-Source: APXvYqzzc5l2bT41Ulxw896RzAsZHa163jCmWCxKmNgy3aUdTfnzFWB1uBJXqNRZFmClh71pLAlutTDYlRFRVHXfwrQ=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr20551704qkg.152.1582051221993;
- Tue, 18 Feb 2020 10:40:21 -0800 (PST)
+        Tue, 18 Feb 2020 13:40:33 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39575 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgBRSkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:40:33 -0500
+Received: by mail-yw1-f68.google.com with SMTP id h126so9845099ywc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:40:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9jZ5yWoaicfmGExgrAkNkbKcks0bHnu5AVQQLZuqwII=;
+        b=XhDjabUDEUe8VC3gAy53xtbp5w/d0/4LQrPDSO5xphlcflwkRF7WDbSyvRYY+OZcsj
+         VUycx3AWRgY5hEdyGk1X/7OG8eCH5VAtgh9HR/tak1UoJYm7VEwF/NByNTZjCYN1GCbB
+         ksPa7tDDuv3QwHIaWV6K+hM2Tixxa/zXjjrGW0Zd15JYWV1PYEs6Kg+UxAkCoygRh5t9
+         qPfsh9Nl0EcvB9a3BixgzbfehcM/rhIMVeqzZZN3giOp2JmqrdlHkyQwsVNxRJWk49Hj
+         SV3A5F5vI4btdgTEZM+Q4wmhL+HCDOKvr9/Kk145vW3Y2e5QWP9jp56vv6L2dLp7mefl
+         ScRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9jZ5yWoaicfmGExgrAkNkbKcks0bHnu5AVQQLZuqwII=;
+        b=c+UGEv1ksgPpAtYoIEbnMx4ZZfkchXwFI2mM3Lrv33EN6enC9j+SwJWq1hfXW9aJ63
+         RUcQihiwBaHse4SVKreaImmLSaHAUSJL89ly4qqjiWrmjA6/3o/oEjIxJirW5HM8ae0+
+         1jMssokQzdAhMf2pgUgJ8XkxztIK/3+FWWEN0Bbe9wFY2KtDJoNMG51lCOJpRDft9754
+         CQ9TSKrrZ8OSmiymeMA6XudUG4Fk+4DFjnnCY/a2f21wOcFX7Fo5Dm3XW1bEJ7sqvp76
+         Ud1Cuos6UvwEQx64qyU7LVoDACfDuh7lKLAAsI3iOncMZNGa93ceMO4l3EY0MwLJe4am
+         Nq8Q==
+X-Gm-Message-State: APjAAAVDsEHyyKFppfQHAOUrG5VzgJpsMJf3SDxGwCPhrpruXkTxzNF3
+        ppd5keIBRYfskHPpLC/We1I=
+X-Google-Smtp-Source: APXvYqy0zWwsFCGehkM8xLQ+AQLpo76Cq17gBqATF/hbY7BC3G5kB4ppNDRcpfyh0/JWt8m9UdwHgg==
+X-Received: by 2002:a81:7145:: with SMTP id m66mr17930368ywc.458.1582051232179;
+        Tue, 18 Feb 2020 10:40:32 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id s68sm2012903ywg.69.2020.02.18.10.40.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 10:40:31 -0800 (PST)
+Subject: Re: [PATCH] COPYING: state that all contributions really are covered
+ by this file
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+References: <20200206154800.GA3754085@kroah.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <b3dbaeaf-0960-1b76-e2a7-7f45962ffdd2@gmail.com>
+Date:   Tue, 18 Feb 2020 12:40:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200218171321.30990-1-robh@kernel.org> <20200218181356.09ae0779@donnerap.cambridge.arm.com>
-In-Reply-To: <20200218181356.09ae0779@donnerap.cambridge.arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Feb 2020 12:40:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJpDLn5Zr2UHno1TeReqrwZ-HAAfd78AouigGi4sAQuOw@mail.gmail.com>
-Message-ID: <CAL_JsqJpDLn5Zr2UHno1TeReqrwZ-HAAfd78AouigGi4sAQuOw@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/11] Removing Calxeda platform support
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200206154800.GA3754085@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 12:14 PM Andre Przywara <andre.przywara@arm.com> wr=
-ote:
->
-> On Tue, 18 Feb 2020 11:13:10 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
-> Hi,
->
-> > Calxeda has been defunct for 6 years now. Use of Calxeda servers carrie=
-d
-> > on for some time afterwards primarily as distro builders for 32-bit ARM=
-.
-> > AFAIK, those systems have been retired in favor of 32-bit VMs on 64-bit
-> > hosts.
-> >
-> > The other use of Calxeda Midway I'm aware of was testing 32-bit ARM KVM
-> > support as there are few or no other systems with enough RAM and LPAE. =
-Now
-> > 32-bit KVM host support is getting removed[1].
-> >
-> > While it's not much maintenance to support, I don't care to convert the
-> > Calxeda DT bindings to schema nor fix any resulting errors in the dts f=
-iles
-> > (which already don't exactly match what's shipping in firmware).
->
-> While every kernel maintainer seems always happy to take patches with a n=
-egative diffstat, I wonder if this is really justification enough to remove=
- a perfectly working platform. I don't really know about any active users, =
-but experience tells that some platforms really are used for quite a long t=
-ime, even if they are somewhat obscure. N900 or Netwinder, anyone?
->
-> So to not give the impression that actually *everyone* (from that small s=
-ubset of people actively reading the kernel list) is happy with that, I thi=
-nk that having support for at least Midway would be useful. On the one hand=
- it's a decent LPAE platform (with memory actually exceeding 4GB), and on t=
-he other hand it's something with capable I/O (SATA) and networking, so one=
- can actually stress test the system. Which is the reason I was using that =
-for KVM testing, but even with that probably going away now there remain st=
-ill some use cases, and be it for general ARM(32) testing.
+On 2/6/20 9:48 AM, Greg Kroah-Hartman wrote:
+> Explicitly state that all contributions to the kernel source tree
+> really are covered under this COPYING file in case someone thought
+> otherwise.  Lawyers love to be pedantic, even more so than software
+> engineers at times, and this sentence makes them sleep easier.
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  COPYING | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/COPYING b/COPYING
+> index da4cb28febe6..a635a38ef940 100644
+> --- a/COPYING
+> +++ b/COPYING
+> @@ -16,3 +16,5 @@ In addition, other licenses may also apply. Please see:
+>  	Documentation/process/license-rules.rst
+>  
+>  for more details.
+> +
+> +All contributions to the Linux Kernel are subject to this COPYING file.
+> 
 
-Does LPAE with more than 4GB actually need to work if there's not
-another platform out there?
-
-> I don't particularly care about the more optional parts like EDAC, cpuidl=
-e, or cpufreq, but I wonder if keeping in at least the rather small SATA an=
-d XGMAC drivers and basic platform support is feasible.
-
-cpuidle isn't actually stable from what I remember. I think without
-cpufreq, we default to 1.1GHz instead of 1.4.
-
-> If YAML DT bindings are used as an excuse, I am more than happy to conver=
-t those over.
-
-Thanks!
-
->
-> And if anyone has any particular gripes with some code, maybe there is a =
-way to fix that instead of removing it? I was always wondering if we could =
-get rid of the mach-highbank directory, for instance. I think most of it is=
- Highbank (Cortex-A9) related.
-
-All the reset/suspend/poweroff and coherency parts are shared. The SCU
-and L2 parts could be removed, but not really worth the surgery IMO.
-
-Rob
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
