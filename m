@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F3C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85826C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C10E24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5387124125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056038;
-	bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
+	s=default; t=1582056044;
+	bh=zFBPkorORv1mDODvlEy84IkG/6oz+vyKN4G57irLDDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o650aTqt+zNrSsgjYwzertdvNdfPH0ZkfgxUEcZ6DzBWiOiS6nXzSe8+c88yUhv9H
-	 wLRiNEgKN8haoRB9vI8Dj0bjk1ZVR3hrJ9vrZxPyAVUpFL+8fJDC/l/TpqNVEz7qhA
-	 fNB+EVzBjjF17pYL7ZG5bbSzIX9gz0+KUQDCe6X8=
+	b=ZRc8dU8/0xzWPj9ajTuNjtGlb1tjbxrMysrTC4bVTMvSoxtOBjfcI4TnCjVQzJSCi
+	 K5RxRY+BnD4N/X7WKnb6zIYKR7yuXhL5ob7IwNBlXMW69yyHjUit4RQwPwIbgarqqJ
+	 80S7xc/wr/9gKh8D44ma310/qKlYPlDfzpoq25K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgBRUAg (ORCPT
+        id S1728650AbgBRUAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39876 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgBRUAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:35 -0500
+        id S1728064AbgBRUAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC392464E;
-        Tue, 18 Feb 2020 20:00:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8492464E;
+        Tue, 18 Feb 2020 20:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056034;
-        bh=iaLubHGPgPk7jIXL2erHvzW0+SkVMmcTvq40jqMmVM8=;
+        s=default; t=1582056039;
+        bh=zFBPkorORv1mDODvlEy84IkG/6oz+vyKN4G57irLDDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZ8MvAqDIasbfFv8dVLAcTBtgnWBTjJeqqkjHxvdwpygtbHzG01bMRsCLPJIaKpGY
-         tSCOFouYgG89JrFX04XZIhgGhLxHUV4LfLTvtobYD73SPYzOT61vshPhbxdTb3Vvoc
-         BHmBQAw/k0GTG5boDW60I/thTMsDSzBlCcd0IViE=
+        b=nyVKbcL3sD65msr0/t0pp+o8unEeLxzd4QNVM0V9lvULoCwbJAUiHVwAvRA6yaNRl
+         qC8FiZrexwhbQJX5B1DnLH1k0uCmJ9REeD+gqyNkKZ/Ts35gJvv79pPIou8Hs7lP2E
+         fMggKyHfx3wrwz0+GQ98ta63TS8lJVQ8YT426WQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 10/80] ALSA: hda/realtek - Fix silent output on MSI-GL73
-Date:   Tue, 18 Feb 2020 20:54:31 +0100
-Message-Id: <20200218190433.075335833@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 12/80] ACPI: EC: Fix flushing of pending work
+Date:   Tue, 18 Feb 2020 20:54:33 +0100
+Message-Id: <20200218190433.261249514@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -58,33 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 7dafba3762d6c0083ded00a48f8c1a158bc86717 upstream.
+commit f0ac20c3f6137910c8a927953e8a92f5b3716166 upstream.
 
-MSI-GL73 laptop with ALC1220 codec requires a similar workaround for
-Clevo laptops to enforce the DAC/mixer connection path.  Set up a
-quirk entry for that.
+Commit 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+introduced a subtle bug into the flushing of pending EC work while
+suspended to idle, which may cause the EC driver to fail to
+re-enable the EC GPE after handling a non-wakeup event (like a
+battery status change event, for example).
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204159
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212081047.27727-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The problem is that the work item flushed by flush_scheduled_work()
+in __acpi_ec_flush_work() may disable the EC GPE and schedule another
+work item expected to re-enable it, but that new work item is not
+flushed, so __acpi_ec_flush_work() returns with the EC GPE disabled
+and the CPU running it goes into an idle state subsequently.  If all
+of the other CPUs are in idle states at that point, the EC GPE won't
+be re-enabled until at least one CPU is woken up by another interrupt
+source, so system wakeup events that would normally come from the EC
+then don't work.
+
+This is reproducible on a Dell XPS13 9360 in my office which
+sometimes stops reacting to power button and lid events (triggered
+by the EC on that machine) after switching from AC power to battery
+power or vice versa while suspended to idle (each of those switches
+causes the EC GPE to trigger for several times in a row, but they
+are not system wakeup events).
+
+To avoid this problem, it is necessary to drain the workqueue
+entirely in __acpi_ec_flush_work(), but that cannot be done with
+respect to system_wq, because work items may be added to it from
+other places while __acpi_ec_flush_work() is running.  For this
+reason, make the EC driver use a dedicated workqueue for EC events
+processing (let that workqueue be ordered so that EC events are
+processed sequentially) and use drain_workqueue() on it in
+__acpi_ec_flush_work().
+
+Fixes: 016b87ca5c8c ("ACPI: EC: Rework flushing of pending work")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/ec.c |   44 ++++++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
-+	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
- 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -179,6 +179,7 @@ EXPORT_SYMBOL(first_ec);
+ 
+ static struct acpi_ec *boot_ec;
+ static bool boot_ec_is_ecdt = false;
++static struct workqueue_struct *ec_wq;
+ static struct workqueue_struct *ec_query_wq;
+ 
+ static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
+@@ -469,7 +470,7 @@ static void acpi_ec_submit_query(struct
+ 		ec_dbg_evt("Command(%s) submitted/blocked",
+ 			   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
+ 		ec->nr_pending_queries++;
+-		schedule_work(&ec->work);
++		queue_work(ec_wq, &ec->work);
+ 	}
+ }
+ 
+@@ -535,7 +536,7 @@ static void acpi_ec_enable_event(struct
+ #ifdef CONFIG_PM_SLEEP
+ static void __acpi_ec_flush_work(void)
+ {
+-	flush_scheduled_work(); /* flush ec->work */
++	drain_workqueue(ec_wq); /* flush ec->work */
+ 	flush_workqueue(ec_query_wq); /* flush queries */
+ }
+ 
+@@ -556,8 +557,8 @@ static void acpi_ec_disable_event(struct
+ 
+ void acpi_ec_flush_work(void)
+ {
+-	/* Without ec_query_wq there is nothing to flush. */
+-	if (!ec_query_wq)
++	/* Without ec_wq there is nothing to flush. */
++	if (!ec_wq)
+ 		return;
+ 
+ 	__acpi_ec_flush_work();
+@@ -2115,25 +2116,33 @@ static struct acpi_driver acpi_ec_driver
+ 	.drv.pm = &acpi_ec_pm,
+ };
+ 
+-static inline int acpi_ec_query_init(void)
++static void acpi_ec_destroy_workqueues(void)
+ {
+-	if (!ec_query_wq) {
+-		ec_query_wq = alloc_workqueue("kec_query", 0,
+-					      ec_max_queries);
+-		if (!ec_query_wq)
+-			return -ENODEV;
++	if (ec_wq) {
++		destroy_workqueue(ec_wq);
++		ec_wq = NULL;
+ 	}
+-	return 0;
+-}
+-
+-static inline void acpi_ec_query_exit(void)
+-{
+ 	if (ec_query_wq) {
+ 		destroy_workqueue(ec_query_wq);
+ 		ec_query_wq = NULL;
+ 	}
+ }
+ 
++static int acpi_ec_init_workqueues(void)
++{
++	if (!ec_wq)
++		ec_wq = alloc_ordered_workqueue("kec", 0);
++
++	if (!ec_query_wq)
++		ec_query_wq = alloc_workqueue("kec_query", 0, ec_max_queries);
++
++	if (!ec_wq || !ec_query_wq) {
++		acpi_ec_destroy_workqueues();
++		return -ENODEV;
++	}
++	return 0;
++}
++
+ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
+ 	{
+ 		.ident = "Thinkpad X1 Carbon 6th",
+@@ -2164,8 +2173,7 @@ int __init acpi_ec_init(void)
+ 	int result;
+ 	int ecdt_fail, dsdt_fail;
+ 
+-	/* register workqueue for _Qxx evaluations */
+-	result = acpi_ec_query_init();
++	result = acpi_ec_init_workqueues();
+ 	if (result)
+ 		return result;
+ 
+@@ -2196,6 +2204,6 @@ static void __exit acpi_ec_exit(void)
+ {
+ 
+ 	acpi_bus_unregister_driver(&acpi_ec_driver);
+-	acpi_ec_query_exit();
++	acpi_ec_destroy_workqueues();
+ }
+ #endif	/* 0 */
 
 
