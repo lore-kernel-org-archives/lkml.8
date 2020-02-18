@@ -2,130 +2,152 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77855C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47668C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D69422B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VH+/6iyQ"
+	by mail.kernel.org (Postfix) with ESMTP id 22E4A24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582056533;
+	bh=Hh3IRsjLUN15zrgEekw5SRbopEXDRppNaLMd24qGHP4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vIUD5p58mhYjjS8FQfkr1vqFpWfbAxN9UBoOKi7qp7t9ibj9cTews7wLxqrcH9Rrq
+	 kAoLkwJJMiz7rmChfo1/cbwEU7RmB15o0be2GLuZ3mTHsCr2vrx5NM7h+uktCE/lkO
+	 j4eHRNjV9h9IV8j/Mr0lUVEklOJ+6PluG9dxXzlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgBRUIr (ORCPT
+        id S1727972AbgBRT5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:08:47 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41958 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbgBRUIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:08:45 -0500
-Received: by mail-yb1-f193.google.com with SMTP id j11so11123940ybt.8;
-        Tue, 18 Feb 2020 12:08:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=GA0KuIfGABhOq0CUZZFDmrHlxV/p9BLpPzwXbBYkT6w=;
-        b=VH+/6iyQaWXpOVM/tksOiDfVtqV+g3zIewTJ3+yv5g79algXW8S4fAiRQTZIf57bWT
-         bc8azjUHSpQI6aQnkQcBbk+V6+0wKC97Tq2d4lMHVT3ynMip6mu8r1TPZwdZ9SJ126qv
-         C4RsYJtMpMxz9RKof7t/MZ/1cDhSe1czy1msd0E4mJTASIyJ/Y6pOS2s8W3xcQJ/ZMIE
-         SFfu2qiOyBcNTfFBBk9vsxxZUQahY0GPZF+GscB6WSOadwxM7ptUpxkgK6eI+xemycfZ
-         3Rq29xowj1BJST62mg5Nc0/pzQk5iNIbN5k1jWN6unjzn+0nKNQS0txBaZJ2EmqoT65e
-         qwWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GA0KuIfGABhOq0CUZZFDmrHlxV/p9BLpPzwXbBYkT6w=;
-        b=Sb1f+y5t9fDJeZOsZ8YziHPcuXpFrRHP6N72x/uO59jDi3TlZwF9uxGcUyIvUFKynO
-         Dgl94bdza/+fmY+Tiv1IhcAQ4FjnXkSj2JBLEFAk2T23kXiZPxZB/anw1NtgUrJlGJoH
-         8p7NRg7P2751dFnMy9BOXEMkgqXmQfq9tCR3iKpdPyaTHeMMU8WeemjKUyIkl5xj01dE
-         O5nWG4Jy1hqQcPfLWl3fY2M1NMNpRgS++1/fjgjm3jKFZIqB6Ouh4wELLcM+ftjxiw+S
-         lKMHjRobCSfMLSnMTzXbuP2mIgiGDdJZQ5AH3Hv3mhr4Z9fAgQAks51GpRvzJ2Mx++Hp
-         o9Yw==
-X-Gm-Message-State: APjAAAW4fbFf8eWOq/2yMf71J0YzlI8ihogbnzntgqTMBXfNSyulIutl
-        0tErqxqaMDgD7hZW/Ykx0I4=
-X-Google-Smtp-Source: APXvYqwsgI1/m4hK5XA9ufQQDhlO98Nwo+hZt7ulEb9S13r2CWPRmPLWGn4TlXMK/CH9hSyhJu6a4A==
-X-Received: by 2002:a05:6902:4b1:: with SMTP id r17mr19257720ybs.38.1582056523819;
-        Tue, 18 Feb 2020 12:08:43 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id e63sm1933970ywd.64.2020.02.18.12.08.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:08:43 -0800 (PST)
-Subject: Re: [PATCH] kunit: run kunit_tool from any directory
-To:     Heidi Fahim <heidifahim@google.com>, brendanhiggins@google.com,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-References: <20200211002551.147187-1-heidifahim@google.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <757222d7-ab88-8298-2ff1-2ea8b2fafadf@gmail.com>
-Date:   Tue, 18 Feb 2020 14:08:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 14:57:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727946AbgBRT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDA3520659;
+        Tue, 18 Feb 2020 19:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582055851;
+        bh=Hh3IRsjLUN15zrgEekw5SRbopEXDRppNaLMd24qGHP4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kT29eLHEau+HRjWl/Y5ut8fHLa5OvXclV+RhRi0fFmxCtKRvRbqntg3D46+vaoBdn
+         6mGkEBA9bMJbpr3zvvXBf5irtDkm1fbNxY9QBImJSeD3vAoAtZJZ1ND0p7yf14iTZo
+         +Yi/8JrU+G7LbnA4ztuGbmbQod0ZtV02I8BKNd1Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 37/38] jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
+Date:   Tue, 18 Feb 2020 20:55:23 +0100
+Message-Id: <20200218190422.815937101@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
+References: <20200218190418.536430858@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200211002551.147187-1-heidifahim@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 6:25 PM, Heidi Fahim wrote:
-> Implemented small fix so that the script changes work directories to the
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-> linux directory where kunit.py is run. This enables the user to run
+[ Upstream commit c96dceeabf765d0b1b1f29c3bf50a5c01315b820 ]
 
-s/linux directory where/root of the linux kernel source tree from which/
+Commit 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from
+an older transaction") set the BH_Freed flag when forgetting a metadata
+buffer which belongs to the committing transaction, it indicate the
+committing process clear dirty bits when it is done with the buffer. But
+it also clear the BH_Mapped flag at the same time, which may trigger
+below NULL pointer oops when block_size < PAGE_SIZE.
 
-The existing wording implies that the cd is to .../tools/testing/kunit/
+rmdir 1             kjournald2                 mkdir 2
+                    jbd2_journal_commit_transaction
+		    commit transaction N
+jbd2_journal_forget
+set_buffer_freed(bh1)
+                    jbd2_journal_commit_transaction
+                     commit transaction N+1
+                     ...
+                     clear_buffer_mapped(bh1)
+                                               ext4_getblk(bh2 ummapped)
+                                               ...
+                                               grow_dev_page
+                                                init_page_buffers
+                                                 bh1->b_private=NULL
+                                                 bh2->b_private=NULL
+                     jbd2_journal_put_journal_head(jh1)
+                      __journal_remove_journal_head(hb1)
+		       jh1 is NULL and trigger oops
 
--Frank
+*) Dir entry block bh1 and bh2 belongs to one page, and the bh2 has
+   already been unmapped.
 
-> kunit from any working directory. Originally considered using
-> os.path.join but this is more error prone as we would have to find all
-> file path usages and modify them accordingly. Using os.chdir ensures
-> that the entire script is run within /linux.
-> 
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
-> ---
->  tools/testing/kunit/kunit.py | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index e59eb9e7f923..3cc7be7b28a0 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -35,6 +35,13 @@ def create_default_kunitconfig():
->  		shutil.copyfile('arch/um/configs/kunit_defconfig',
->  				kunit_kernel.kunitconfig_path)
->  
-> +def get_kernel_root_path():
-> +	parts = sys.argv[0] if not __file__ else __file__
-> +	parts = os.path.realpath(parts).split('tools/testing/kunit')
-> +	if len(parts) != 2:
-> +		sys.exit(1)
-> +	return parts[0]
-> +
->  def run_tests(linux: kunit_kernel.LinuxSourceTree,
->  	      request: KunitRequest) -> KunitResult:
->  	config_start = time.time()
-> @@ -114,6 +121,9 @@ def main(argv, linux=None):
->  	cli_args = parser.parse_args(argv)
->  
->  	if cli_args.subcommand == 'run':
-> +		if get_kernel_root_path():
-> +			os.chdir(get_kernel_root_path())
-> +
->  		if cli_args.build_dir:
->  			if not os.path.exists(cli_args.build_dir):
->  				os.mkdir(cli_args.build_dir)
-> 
+For the metadata buffer we forgetting, we should always keep the mapped
+flag and clear the dirty flags is enough, so this patch pick out the
+these buffers and keep their BH_Mapped flag.
+
+Link: https://lore.kernel.org/r/20200213063821.30455-3-yi.zhang@huawei.com
+Fixes: 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from an older transaction")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/jbd2/commit.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 3fe9b7c27ce82..c321fa06081ce 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -980,12 +980,29 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 		 * pagesize and it is attached to the last partial page.
+ 		 */
+ 		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			struct address_space *mapping;
++
+ 			clear_buffer_freed(bh);
+ 			clear_buffer_jbddirty(bh);
+-			clear_buffer_mapped(bh);
+-			clear_buffer_new(bh);
+-			clear_buffer_req(bh);
+-			bh->b_bdev = NULL;
++
++			/*
++			 * Block device buffers need to stay mapped all the
++			 * time, so it is enough to clear buffer_jbddirty and
++			 * buffer_freed bits. For the file mapping buffers (i.e.
++			 * journalled data) we need to unmap buffer and clear
++			 * more bits. We also need to be careful about the check
++			 * because the data page mapping can get cleared under
++			 * out hands, which alse need not to clear more bits
++			 * because the page and buffers will be freed and can
++			 * never be reused once we are done with them.
++			 */
++			mapping = READ_ONCE(bh->b_page->mapping);
++			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
++				clear_buffer_mapped(bh);
++				clear_buffer_new(bh);
++				clear_buffer_req(bh);
++				bh->b_bdev = NULL;
++			}
+ 		}
+ 
+ 		if (buffer_jbddirty(bh)) {
+-- 
+2.20.1
+
+
 
