@@ -2,120 +2,111 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AF9C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38440C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5E322B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1038822B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Ih8OVG9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgBRWsd (ORCPT
+        id S1726939AbgBRWtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:48:33 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57094 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726556AbgBRWsc (ORCPT
+        Tue, 18 Feb 2020 17:49:10 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43890 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgBRWtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:48:32 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D144F7E9387;
-        Wed, 19 Feb 2020 09:48:29 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4BfJ-0003lA-7e; Wed, 19 Feb 2020 09:48:29 +1100
-Date:   Wed, 19 Feb 2020 09:48:29 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 04/19] mm: Rearrange readahead loop
-Message-ID: <20200218224829.GU10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-5-willy@infradead.org>
- <20200218050824.GJ10776@dread.disaster.area>
- <20200218135736.GP7778@bombadil.infradead.org>
+        Tue, 18 Feb 2020 17:49:10 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so26696499edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:49:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l6bGLfW+S3PbTSNe7BlkqXOXTsrm4VZ4lQdamKUPW64=;
+        b=Ih8OVG9omwJ6Rxw+SlKjwczxNf0k2Ng94CvXCZbV3YDaX3UQbLCeVFJCDBgE+/TbWa
+         949c1MNdpMLpcyDXtROzVlkZqcqThZvj3dhD1ALAKRu2iuAubkhK1t55o+Mi/JGULJQA
+         Do0mKi+fIwpeSajmK6ZtYgsGWtcp2ixmaSSIN7Z+3VM59asG03lUut8OZYU+OftobKN/
+         FARxahH/c9osR5/SjqCdrfiIcl3zufcnKdJwz8aagy+PHbiKJZq82UM0DiByhRA429++
+         amw4egh1MaKmoNsfmmEllJZPFRXMrhRAJ3PBPBSRTfXKHz76UknYvpsHjXKYCfr9H+iG
+         sLNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l6bGLfW+S3PbTSNe7BlkqXOXTsrm4VZ4lQdamKUPW64=;
+        b=sAH72xVubfAM7RJ5Wi+VDPnTuuIjN0Pw30DAOu2fDU3HUb/fHOBrGwp42xwMb0Ek0h
+         4jzOsL7r6aQGw9QVYKrMmG4P6slOBoOYNHVvnBlDjpvIks6Bdud9QaGeEY5J57sAmPLM
+         HRxJbtvD0RQmZQQi8MALljK/fQCjM3vtHit3L7s3kJSrfTvu/f0vccqmoGXl+Eq88i8B
+         nSAI/gBtM09Tdz9U+HmtzJtj1eYrrCTQ9ItLhan1tV4dNdTGAwsnUlqe8e29wJW+7Ug/
+         H9zVbDzb8MRnVnX75SZYjhVnP1vgoes4mudPqGsSDQPivNWoLmBLAaFvTKWgiAwo0Xtj
+         FZCw==
+X-Gm-Message-State: APjAAAXu399YH7cIpCinVNImsbTVovBiMCyZ6D+4lU4HmbiIJoxzYCgD
+        bH33H1Ha1JIYkUourvf3ByvIgLbkHkqhXd4snHFVwty7dA==
+X-Google-Smtp-Source: APXvYqyL9+hoGiE8tChYcCVk+t7iqdIxiz2N27oHXffytLSJrvsGhrrkoMyf4wu5HG59PmlYeN3uSH1WjtWg9WFGERg=
+X-Received: by 2002:a17:906:f251:: with SMTP id gy17mr21225090ejb.308.1582066147205;
+ Tue, 18 Feb 2020 14:49:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218135736.GP7778@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=alOI8opFAFPe2SRtgw8A:9
-        a=xQkswpi2j_EUEYvS:21 a=GSRXKHwoUNCfdhKr:21 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200218181718.7258-1-madhuparnabhowmik10@gmail.com>
+In-Reply-To: <20200218181718.7258-1-madhuparnabhowmik10@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 18 Feb 2020 17:48:56 -0500
+Message-ID: <CAHC9VhSzqccDgt2EAPqVmTFCcETrKrkUDRoL-2YzzSFGfYJGQg@mail.gmail.com>
+Subject: Re: [PATCH] net: netlabel: Use built-in RCU list checking
+To:     madhuparnabhowmik10@gmail.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:57:36AM -0800, Matthew Wilcox wrote:
-> On Tue, Feb 18, 2020 at 04:08:24PM +1100, Dave Chinner wrote:
-> > On Mon, Feb 17, 2020 at 10:45:45AM -0800, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > Move the declaration of 'page' to inside the loop and move the 'kick
-> > > off a fresh batch' code to the end of the function for easier use in
-> > > subsequent patches.
-> > 
-> > Stale? the "kick off" code is moved to the tail of the loop, not the
-> > end of the function.
-> 
-> Braino; I meant to write end of the loop.
-> 
-> > > @@ -183,14 +183,14 @@ void __do_page_cache_readahead(struct address_space *mapping,
-> > >  		page = xa_load(&mapping->i_pages, page_offset);
-> > >  		if (page && !xa_is_value(page)) {
-> > >  			/*
-> > > -			 * Page already present?  Kick off the current batch of
-> > > -			 * contiguous pages before continuing with the next
-> > > -			 * batch.
-> > > +			 * Page already present?  Kick off the current batch
-> > > +			 * of contiguous pages before continuing with the
-> > > +			 * next batch.  This page may be the one we would
-> > > +			 * have intended to mark as Readahead, but we don't
-> > > +			 * have a stable reference to this page, and it's
-> > > +			 * not worth getting one just for that.
-> > >  			 */
-> > > -			if (readahead_count(&rac))
-> > > -				read_pages(&rac, &page_pool, gfp_mask);
-> > > -			rac._nr_pages = 0;
-> > > -			continue;
-> > > +			goto read;
-> > >  		}
-> > >  
-> > >  		page = __page_cache_alloc(gfp_mask);
-> > > @@ -201,6 +201,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
-> > >  		if (page_idx == nr_to_read - lookahead_size)
-> > >  			SetPageReadahead(page);
-> > >  		rac._nr_pages++;
-> > > +		continue;
-> > > +read:
-> > > +		if (readahead_count(&rac))
-> > > +			read_pages(&rac, &page_pool, gfp_mask);
-> > > +		rac._nr_pages = 0;
-> > >  	}
-> > 
-> > Also, why? This adds a goto from branched code that continues, then
-> > adds a continue so the unbranched code doesn't execute the code the
-> > goto jumps to. In absence of any explanation, this isn't an
-> > improvement and doesn't make any sense...
-> 
-> I thought I was explaining it ... "for easier use in subsequent patches".
+On Tue, Feb 18, 2020 at 1:17 PM <madhuparnabhowmik10@gmail.com> wrote:
+>
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>
+> list_for_each_entry_rcu() has built-in RCU and lock checking.
+>
+> Pass cond argument to list_for_each_entry_rcu() to silence
+> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> by default.
+>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  net/netlabel/netlabel_unlabeled.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sorry, my braino there. :) I commented on the problem with the first
-part of the sentence, then the rest of the sentence completely
-failed to sink in.
+Not that this has much bearing since it's already been merged, but for
+what it's worth ...
 
--Dave.
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+> diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
+> index d2e4ab8d1cb1..77bb1bb22c3b 100644
+> --- a/net/netlabel/netlabel_unlabeled.c
+> +++ b/net/netlabel/netlabel_unlabeled.c
+> @@ -207,7 +207,8 @@ static struct netlbl_unlhsh_iface *netlbl_unlhsh_search_iface(int ifindex)
+>
+>         bkt = netlbl_unlhsh_hash(ifindex);
+>         bkt_list = &netlbl_unlhsh_rcu_deref(netlbl_unlhsh)->tbl[bkt];
+> -       list_for_each_entry_rcu(iter, bkt_list, list)
+> +       list_for_each_entry_rcu(iter, bkt_list, list,
+> +                               lockdep_is_held(&netlbl_unlhsh_lock))
+>                 if (iter->valid && iter->ifindex == ifindex)
+>                         return iter;
+>
+> --
+> 2.17.1
+
 -- 
-Dave Chinner
-david@fromorbit.com
+paul moore
+www.paul-moore.com
