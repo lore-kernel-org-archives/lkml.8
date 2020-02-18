@@ -2,105 +2,87 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F89C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A155CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523BC2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDB72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DMiEa56R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBRMl4 (ORCPT
+        id S1726663AbgBRMm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:41:56 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51288 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgBRMlz (ORCPT
+        Tue, 18 Feb 2020 07:42:56 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:36229 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgBRMm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:41:55 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j42C6-00Efka-5Y; Tue, 18 Feb 2020 12:41:42 +0000
-Date:   Tue, 18 Feb 2020 12:41:42 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Shen Jing <jingx.shen@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Jerry Zhang <zhangjerry@google.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH] lib: iov_iter.c: fix a possible calculation error on
- remaining bytes
-Message-ID: <20200218124142.GJ23230@ZenIV.linux.org.uk>
-References: <1582011672-17189-1-git-send-email-macpaul.lin@mediatek.com>
-MIME-Version: 1.0
+        Tue, 18 Feb 2020 07:42:56 -0500
+Received: by mail-qk1-f171.google.com with SMTP id t83so2317519qke.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 04:42:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=HXwLXPC3uj2FBozvtZYRTOCinHGN6/mECOLa8GGzXbw=;
+        b=DMiEa56RcS6t4bfviWcOwkMg7hVCD0v6dp3izIiWck3+NoVCJkw0oWwtBX4pQZSo8w
+         9hgJtRN14UsC3sxU5kIaOo24XZSOUgpJt+ppUqPWXuHYfUrvaZxxcavgvZM3eBq+wc+g
+         gnWNWf/2l4LYB5IyBBVv6ZmNW8aBcTnuxqw07nQJjrRLsuOPIrdRc27pqAfwCmfaYTVC
+         CfAXR1/XjHrodMOB5SHhBgs3j1O5QOE+NWKIQqnm6EIYsU85ff0WfJBMU6ZCC3UScvgK
+         OAKoXUJcqoAihaBB/5s6wJPJ/vhSe1l2qEhO9YyrY3SLIKxYTWNVt8Rmx7eETNg9TBse
+         A6Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=HXwLXPC3uj2FBozvtZYRTOCinHGN6/mECOLa8GGzXbw=;
+        b=Bwl/NSo5ze96me+7V4zBBVIseQUBTC7LakqpWNdNXy8iMj/KScGhXzninrkr/Gls7h
+         8FVBFiOVBoGRP4W3tBpGOzFfPZI5Kl3Z0KuXXsjGOTVlPjMN+klcNaJBiVp0B7Zb3QPN
+         jra+R5xds582kA3JOoOXI5Kbm22wI0umVvfhHWHOVTlRGxka4Bj3IlcMaofmHjwkz2rl
+         BXUbRBeaHMb60vdgg+i2wY45Y5Gxlv+JLRW+BKyxBSxJF3LVZYq/Z5LUzU+3OK8zDc52
+         OvmY8j2nGe0kqFz+yqiIygApuvmlSwGu1o04m1UkzWK/ZclwRVLhndejOkZb94ldc+Fe
+         dSIg==
+X-Gm-Message-State: APjAAAUzjzmEtz5E7RC4RZJS3/gBcO1g6h/3ylpvwd3Ozi1AkMno26CE
+        p3uHfC9sk9QEd2zebMA0UY0xtQ==
+X-Google-Smtp-Source: APXvYqy6Wm7sXU7W5+mucvMyXdyd6lZPrkO3Ol/mLD3Hrklp9U/tJLSKHsmzQkfj3CnheHidAYAp8Q==
+X-Received: by 2002:a37:ac17:: with SMTP id e23mr18514275qkm.80.1582029773807;
+        Tue, 18 Feb 2020 04:42:53 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l10sm1786508qke.93.2020.02.18.04.42.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 04:42:53 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582011672-17189-1-git-send-email-macpaul.lin@mediatek.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next v2] mm: annotate a data race in page_zonenum()
+Date:   Tue, 18 Feb 2020 07:42:52 -0500
+Message-Id: <4F681D4B-8A43-4312-8085-BC679D3D83F4@lca.pw>
+References: <20200214161639.GR2935@paulmck-ThinkPad-P72>
+Cc:     akpm@linux-foundation.org, elver@google.com, david@redhat.com,
+        jack@suse.cz, jhubbard@nvidia.com, ira.weiny@intel.com,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200214161639.GR2935@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 03:41:12PM +0800, Macpaul Lin wrote:
-> This issue was found when adbd trying to open functionfs with AIO mode.
-> Usually, we need to set "setprop sys.usb.ffs.aio_compat 0" to enable
-> adbd with AIO mode on Android.
-> 
-> When adbd is opening functionfs, it will try to read 24 bytes at the
-> fisrt read I/O control. If this reading has been failed, adbd will
-> try to send FUNCTIONFS_CLEAR_HALT to functionfs. When adbd is in AIO
-> mode, functionfs will be acted with asyncronized I/O path. After the
-> successful read transfer has been completed by gadget hardware, the
-> following series of functions will be called.
->   ffs_epfile_async_io_complete() -> ffs_user_copy_worker() ->
->     copy_to_iter() -> _copy_to_iter() -> copyout() ->
->     iterate_and_advance() -> iterate_iovec()
-> 
-> Adding debug trace to these functions, it has been found that in
-> iterate_iovec(), the calculation result of n will be turned into zero.
->    n = wanted - n; /* 0 == n = 24 - 24; */
-> Which causes copyout() won't copy data to userspace since the length
-> to be copied "v.iov_len" will be zero, which isn't correct. This also
-> leads ffs_copy_to_iter() always return -EFAULT. Finally adbd cannot
-> open functionfs and send FUNCTIONFS_CLEAR_HALT.
-> 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->  lib/iov_iter.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index fb29c02c6a3c..f9334144e259 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -36,7 +36,8 @@
->  		skip = __v.iov_len;			\
->  		n -= __v.iov_len;			\
->  	}						\
-> -	n = wanted - n;					\
-> +	if (n != wanted)				\
-> +		n = wanted - n;				\
->  }
 
-	First of all, nothing in that line can possibly *cause*
-copyout() to do anything - it's after the calls of step.  What's
-more, this changes behaviour only when wanted would've been equal to
-n, doesn't it?  Which translates into "no decrements of n have
-happened at all", i.e. "nothing has been copied".  IOW, it's
-a consequence of no copyout, not the cause of such.  You can
-make copy_to_iter() lie and pretend if has copied everything
-when it has copied nothing, but that won't change the underlying
-bug.
 
-	So I'm afraid your debugging is not finished - you
-still need to find out what causes the copyout failures and/or
-BS iov_iter padded by caller.
+> On Feb 14, 2020, at 11:16 AM, Paul E. McKenney <paulmck@kernel.org> wrote:=
+
+>=20
+> Any of the three options above would get you into -next quickly.
+>=20
+> So just let me know how you would like to proceed.
+
+Unless Andrew has any objection, I think it makes sense that you pick this u=
+p as it is pretty much a low risk patch.=
