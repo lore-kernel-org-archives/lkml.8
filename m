@@ -2,99 +2,110 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD700C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1ABC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8802C2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0jj166N"
+	by mail.kernel.org (Postfix) with ESMTP id 40B6B206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBRJoQ (ORCPT
+        id S1726492AbgBRJou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:44:16 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35192 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgBRJoP (ORCPT
+        Tue, 18 Feb 2020 04:44:50 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:35304 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgBRJot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:44:15 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y73so10391721pfg.2;
-        Tue, 18 Feb 2020 01:44:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HNw/4H6/vd73/BDz9NY7P3n/SYJkPQvMSu9pnjd4OI0=;
-        b=T0jj166NyIIYsZWGkA6bw1qquWK4pwEH8zNZqOrz7gRJ+w0IOg8SHBoOfGUoeSC76j
-         lfwAKNKWj/CUSESKN8/p9psXJ669A8U/IK6OIufFheKUBA4oTzN8lc9Ct+VrnVf2/fiy
-         EQhAP0LT5FYmOLmZ6pY3T/0epMl9QN8wX/+nbnXMzxXWTBgCM0RYJTqubzNPy1wRv3vt
-         mvcnyDXROkK3qHl2irsJHU02kG6sIsUgdfyu5VuwnWMSOxriPaqvagQeInOA5PKuiuC5
-         oYZFV1g7W+ePVMB/I+oWcRTtozZRhUp3wJmDISk4gyLpOQ4IM8qVlBmoa69QSOP+Gwgm
-         rDlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HNw/4H6/vd73/BDz9NY7P3n/SYJkPQvMSu9pnjd4OI0=;
-        b=jwG42tgp5LUWN8lf1OcMIP6Nfkqo3VHUwQpI6FrfgzQO/xndf1uOMBaBkUj1lx7nzp
-         jkE0u+KKsjLGe0FUGceTUCCr9d9Uuz6fKVbVl6gZy8Mx5Kmezdv1OPIxY4eMhke4t64y
-         O0Z3INOKw4SXtqVoAm4erUlNf15gplgEU0FMjnaIE5Fkmne8i26vz7XKYIyQQIwVvJAX
-         vSBaTBMqXhdowXbLQUNFc3GakwYrQ4C+TpBkeAZSMxlfZsMTAWv/3e2sDKbb7Sy3AJO+
-         tAKbQf+Ijl8n5osflEQwcymlbX78YBpbV22JHXOPQWSf8NeUGJ8gj6paXNYpMwFDk2ZR
-         8Rhg==
-X-Gm-Message-State: APjAAAWkvT6lZr1jWWp3cBRkzDnYsINK5rTJJDFCz+0ppeCZV963lRX9
-        Qam3VzQtrLIB1z1/H1zpkINyeCGQVDE=
-X-Google-Smtp-Source: APXvYqwSQovdx0x/dBbrq78/Nk3rJpBtr4ZejkKk0cG28D2d6b4sV77mnRgoiOTrXIW2YD58v8XhfA==
-X-Received: by 2002:a63:a741:: with SMTP id w1mr22532136pgo.131.1582019055042;
-        Tue, 18 Feb 2020 01:44:15 -0800 (PST)
-Received: from localhost.localdomain ([103.231.91.38])
-        by smtp.gmail.com with ESMTPSA id l10sm2457419pjy.5.2020.02.18.01.44.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 01:44:14 -0800 (PST)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     corbet@lwn.net, federico.vaga@vaga.pv.it, rdunlap@infradead.org
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] Replace dead urls with active urls for Mutt
-Date:   Tue, 18 Feb 2020 15:10:13 +0530
-Message-Id: <20200218094013.29806-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 18 Feb 2020 04:44:49 -0500
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id D0C3967A8C4;
+        Tue, 18 Feb 2020 10:44:46 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 18 Feb
+ 2020 10:44:46 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.005; Tue, 18 Feb 2020 10:44:46 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH 0/2] serial: imx: Backport fixes for irq handling to v4.14
+Thread-Topic: [PATCH 0/2] serial: imx: Backport fixes for irq handling to
+ v4.14
+Thread-Index: AQHV5ZuphrtwteBzhkWCeOYI46C5s6ggUc4AgAAlLACAAAQRAIAAKRSA
+Date:   Tue, 18 Feb 2020 09:44:46 +0000
+Message-ID: <e71d11c4-b2e6-d923-337e-1378e1cf64c5@kontron.de>
+References: <20200217140740.29743-1-frieder.schrempf@kontron.de>
+ <20200218045008.GA2049358@kroah.com>
+ <20200218070310.ibv2m2f7ihfaevrp@pengutronix.de>
+ <20200218071744.GA2087281@kroah.com>
+In-Reply-To: <20200218071744.GA2087281@kroah.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <00443668C1DDC642A055DA2A7D544E78@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: D0C3967A8C4.AF249
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        shawnguo@kernel.org, stable@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch replace stale/dead urls with active urls for Mutt.
-
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- Documentation/process/email-clients.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/process/email-clients.rst b/Documentation/process/email-clients.rst
-index 5273d06c8ff6..c4f9dc7a0889 100644
---- a/Documentation/process/email-clients.rst
-+++ b/Documentation/process/email-clients.rst
-@@ -237,9 +237,9 @@ using Mutt to send patches through Gmail::
-
- The Mutt docs have lots more information:
-
--    http://dev.mutt.org/trac/wiki/UseCases/Gmail
-+    https://gitlab.com/muttmua/mutt/-/wikis/UseCases/Gmail
-
--    http://dev.mutt.org/doc/manual.html
-+    http://www.mutt.org/doc/manual/
-
- Pine (TUI)
- **********
---
-2.24.1
-
+T24gMTguMDIuMjAgMDg6MTcsIGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnIHdyb3RlOg0KPiBP
+biBUdWUsIEZlYiAxOCwgMjAyMCBhdCAwODowMzoxMEFNICswMTAwLCBVd2UgS2xlaW5lLUvDtm5p
+ZyB3cm90ZToNCj4+IE9uIFR1ZSwgRmViIDE4LCAyMDIwIGF0IDA1OjUwOjA4QU0gKzAxMDAsIGdy
+ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnIHdyb3RlOg0KPj4+IE9uIE1vbiwgRmViIDE3LCAyMDIw
+IGF0IDAyOjA4OjAwUE0gKzAwMDAsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+Pj4+IEZyb206
+IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+Pj4NCj4+
+Pj4gQSBjdXN0b21lciBvZiBvdXJzIGhhcyBwcm9ibGVtcyB3aXRoIFJTNDg1IG9uIGkuTVg2VUwg
+d2l0aCB0aGUgbGF0ZXN0IHY0LjE0DQo+Pj4+IGtlcm5lbC4gVGhleSBnZXQgYW4gZXhjZXB0aW9u
+IGxpa2UgYmVsb3cgZnJvbSB0aW1lIHRvIHRpbWUgKHRoZSB0cmFjZSBpcw0KPj4+PiBmcm9tIGFu
+IG9sZGVyIGtlcm5lbCwgYnV0IHRoZSBwcm9ibGVtIGFsc28gZXhpc3RzIGluIHY0LjE0LjE3MCku
+DQo+Pj4+DQo+Pj4+IEFzIHRoZSBjcHVpZGxlIHN0YXRlIDIgY2F1c2VzIGxhcmdlIGRlbGF5cyBm
+b3IgdGhlIGludGVycnVwdCB0aGF0IGNvbnRyb2xzIHRoZQ0KPj4+PiBSUzQ4NSBSVFMgc2lnbmFs
+ICh3aGljaCBjYW4gbGVhZCB0byBjb2xsaXNpb25zIG9uIHRoZSBidXMpLCBjcHVpZGxlIHN0YXRl
+IDIgd2FzDQo+Pj4+IGRpc2FibGVkIG9uIHRoaXMgc3lzdGVtLiBUaGlzIGFzcGVjdCBtaWdodCBj
+YXVzZSB0aGUgZXhjZXB0aW9uIGhhcHBlbmluZyBtb3JlDQo+Pj4+IG9mdGVuIG9uIHRoaXMgc3lz
+dGVtIHRoYW4gb24gb3RoZXIgc3lzdGVtcyB3aXRoIGRlZmF1bHQgY3B1aWRsZSBzZXR0aW5ncy4N
+Cj4+Pj4NCj4+Pj4gTG9va2luZyBmb3Igc29sdXRpb25zIEkgZm91bmQgVXdlJ3MgcGF0Y2hlcyB0
+aGF0IHdlcmUgYXBwbGllZCBpbiB2NC4xNyBiZWluZw0KPj4+PiBtZW50aW9uZWQgaGVyZSBbMV0g
+YW5kIGhlcmUgWzJdLiBJbiBbMV0gVXdlIG5vdGVzIHRoYXQgYmFja3BvcnRpbmcgdGhlc2UgZml4
+ZXMNCj4+Pj4gdG8gdjQuMTQgbWlnaHQgbm90IGJlIHRyaXZpYWwsIGJ1dCBJIHRyaWVkIGFuZCBp
+biBteSBvcGluaW9uIGZvdW5kIGl0IG5vdCB0byBiZQ0KPj4+PiB0b28gcHJvYmxlbWF0aWMgZWl0
+aGVyLg0KPj4+Pg0KPj4+PiBXaXRoIHRoZSBiYWNrcG9ydGVkIHBhdGNoZXMgYXBwbGllZCwgb3Vy
+IGN1c3RvbWVyIHJlcG9ydHMgdGhhdCB0aGUgZXhjZXB0aW9ucw0KPj4+PiBzdG9wcGVkIG9jY3Vy
+aW5nLiBHaXZlbiB0aGlzIGFuZCB0aGUgZmFjdCB0aGF0IHRoZSBwcm9ibGVtIHNlZW1zIHRvIGJl
+IGtub3duDQo+Pj4+IGFuZCBxdWl0ZSBjb21tb24sIGl0IHdvdWxkIGJlIG5pY2UgdG8gZ2V0IHRo
+aXMgaW50byB0aGUgdjQuMTQgc3RhYmxlIHRyZWUuDQo+Pj4NCj4+PiBUaGFua3MgZm9yIHRoZSBi
+YWNrcG9ydHMsIGJvdGggbm93IHF1ZXVlZCB1cC4NCj4+DQo+PiBUbyBjb21wbGV0ZSB0aGVzZSBm
+aXhlcyB5b3UgYWxzbyB3YW50IHRvIGJhY2twb3J0DQo+Pg0KPj4gCTEwMWFhNDZiZDIyMSBzZXJp
+YWw6IGlteDogZml4IGEgcmFjZSBjb25kaXRpb24gaW4gcmVjZWl2ZSBwYXRoDQo+IA0KPiBJZiBz
+bywgaXQgbmVlZHMgdG8gYWxzbyBnbyB0byA0LjE5LnksIGFuZCBzb21lb25lIG5lZWRzIHRvIHBy
+b3ZpZGUgYQ0KPiB3b3JraW5nIGJhY2twb3J0IGZvciBib3RoIHBsYWNlcyA6KQ0KDQpJIGNhbiB0
+cnkgdG8gY29tZSB1cCB3aXRoIHNvbWV0aGluZy4gQnV0IEkgZG9uJ3QgaGF2ZSBhIHN5c3RlbSB0
+aGF0IGlzIA0KYWZmZWN0ZWQgYnkgdGhpcyAob25seSBzaW5nbGUgY29yZSkgdG8gdGVzdC4NCg0K
+QmVzdCByZWdhcmRzLA0KRnJpZWRlcg==
