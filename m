@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F519C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8F3C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED8D2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9FD24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055947;
-	bh=RYYN5qTMyBY+8UgtW3B8zXLXW/ynPsVz+QuTgD0qJfo=;
+	s=default; t=1582055950;
+	bh=D35N25K8N/+3qxxU6oWsd/VcsaIY+YrZgEa17lB9r1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePSXQsa4wUPZNqdQ58lfJlgotGwMMYyQ921et0NHZ8YgmEeUpcy4MK9uGPRv/wbBf
-	 S9Oga+8qW89eL6kmg4sFP0ex+iGCD+RF8jWFeSK2Hm91FtliO03/302YeSgEhou7bb
-	 wn8qhe/qc+sCsopAmrw+hg70cv0xYAcIzFEanfos=
+	b=bMx8fkB5lkkbSG2/IBa+xeekMBQm4e2OBMQ4hbOw/M8cZ3R3yMMOJ4JXCYZSgChnk
+	 b0K3ZyopMen2RPnXV+IcJ2ytWraaTCAzTXvJnSADKVyZ++GsQLzbn6g1CVOATyUElI
+	 +4T/lwO+NhOd6e3imXkWN6xdfvoGzHJ9kDE1pr9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgBRT7F (ORCPT
+        id S1727380AbgBRT7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:59:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgBRT7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:01 -0500
+        id S1728362AbgBRT7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:59:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 382BD24670;
-        Tue, 18 Feb 2020 19:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3511924670;
+        Tue, 18 Feb 2020 19:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055940;
-        bh=RYYN5qTMyBY+8UgtW3B8zXLXW/ynPsVz+QuTgD0qJfo=;
+        s=default; t=1582055945;
+        bh=D35N25K8N/+3qxxU6oWsd/VcsaIY+YrZgEa17lB9r1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SqTfjeyHi+XqbafnW7bjPAgWstaq3BnKGRHp15YebTX9Xn5twkGE+ICPbXKvKI7ak
-         /G3SwaZ2PHpvrIRQvj1Q35kGfxnwQZe1d906kBWZpEPmjlvasNwN9Od2zHqyJTCX/L
-         4996ofg+IUW6Aw5qLoZuGeOWBzCMdQn7S08LEST8=
+        b=qyQQxqazUKBSx9OZF4Pu9rxvakeWA7MrQSSAwFr17MTICyMlAJ5pt6uImYcxa+P17
+         ryZTlkocLoZs8gujTIJCkT7v0zUhudJyBUiwV5/npbD5iiZlFsaR280/reod8bWQT1
+         tKrxJ4ttLl9Z/Se0Y8/OWYL1QIfVWCFJdeI1iVWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 39/66] IB/mlx5: Return failure when rts2rts_qp_counters_set_id is not supported
-Date:   Tue, 18 Feb 2020 20:55:06 +0100
-Message-Id: <20200218190431.636036146@linuxfoundation.org>
+Subject: [PATCH 5.4 40/66] IB/hfi1: Acquire lock to release TID entries when user file is closed
+Date:   Tue, 18 Feb 2020 20:55:07 +0100
+Message-Id: <20200218190431.721981574@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -61,60 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 10189e8e6fe8dcde13435f9354800429c4474fb1 upstream.
+commit a70ed0f2e6262e723ae8d70accb984ba309eacc2 upstream.
 
-When binding a QP with a counter and the QP state is not RESET, return
-failure if the rts2rts_qp_counters_set_id is not supported by the
-device.
+Each user context is allocated a certain number of RcvArray (TID)
+entries and these entries are managed through TID groups. These groups
+are put into one of three lists in each user context: tid_group_list,
+tid_used_list, and tid_full_list, depending on the number of used TID
+entries within each group. When TID packets are expected, one or more
+TID groups will be allocated. After the packets are received, the TID
+groups will be freed. Since multiple user threads may access the TID
+groups simultaneously, a mutex exp_mutex is used to synchronize the
+access. However, when the user file is closed, it tries to release
+all TID groups without acquiring the mutex first, which risks a race
+condition with another thread that may be releasing its TID groups,
+leading to data corruption.
 
-This is to prevent cases like manual bind for Connect-IB devices from
-returning success when the feature is not supported.
+This patch addresses the issue by acquiring the mutex first before
+releasing the TID groups when the file is closed.
 
-Fixes: d14133dd4161 ("IB/mlx5: Support set qp counter")
-Link: https://lore.kernel.org/r/20200126171708.5167-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 3abb33ac6521 ("staging/hfi1: Add TID cache receive init and free funcs")
+Link: https://lore.kernel.org/r/20200210131026.87408.86853.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/qp.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -3391,9 +3391,6 @@ static int __mlx5_ib_qp_set_counter(stru
- 	struct mlx5_ib_qp_base *base;
- 	u32 set_id;
- 
--	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id))
--		return 0;
--
- 	if (counter)
- 		set_id = counter->id;
- 	else
-@@ -6503,6 +6500,7 @@ void mlx5_ib_drain_rq(struct ib_qp *qp)
-  */
- int mlx5_ib_qp_set_counter(struct ib_qp *qp, struct rdma_counter *counter)
- {
-+	struct mlx5_ib_dev *dev = to_mdev(qp->device);
- 	struct mlx5_ib_qp *mqp = to_mqp(qp);
- 	int err = 0;
- 
-@@ -6512,6 +6510,11 @@ int mlx5_ib_qp_set_counter(struct ib_qp
- 		goto out;
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+@@ -165,10 +165,12 @@ void hfi1_user_exp_rcv_free(struct hfi1_
+ 	if (fd->handler) {
+ 		hfi1_mmu_rb_unregister(fd->handler);
+ 	} else {
++		mutex_lock(&uctxt->exp_mutex);
+ 		if (!EXP_TID_SET_EMPTY(uctxt->tid_full_list))
+ 			unlock_exp_tids(uctxt, &uctxt->tid_full_list, fd);
+ 		if (!EXP_TID_SET_EMPTY(uctxt->tid_used_list))
+ 			unlock_exp_tids(uctxt, &uctxt->tid_used_list, fd);
++		mutex_unlock(&uctxt->exp_mutex);
  	}
  
-+	if (!MLX5_CAP_GEN(dev->mdev, rts2rts_qp_counters_set_id)) {
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+
- 	if (mqp->state == IB_QPS_RTS) {
- 		err = __mlx5_ib_qp_set_counter(qp, counter);
- 		if (!err)
+ 	kfree(fd->invalid_tids);
 
 
