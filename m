@@ -2,107 +2,119 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52297C34037
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB34C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA9021D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582025563;
-	bh=2b1XwxH8MZNa/x4vH9fIYj1CqGENzpjeWAElEh1a/xI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SX7uDa4v+2KYvxLpG18GEGzHhlUkvQT00nx+sIDzoTbxCFxhUerxa8/25dpWbluAU
-	 tslG6jjz0y3VX7GIocdYH4ePQf1tFr2DicGoY0xzJxhTvPgyQQWwGwfV2+FWXPOs8c
-	 F7793ZDgLCe0/bbUE5eMlLbSdQ/XPWE67ZX1DG1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 50BBA207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="oExTkIri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgBRLcm (ORCPT
+        id S1726437AbgBRLhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:32:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:50372 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgBRLcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:32:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 705721FB;
-        Tue, 18 Feb 2020 03:32:41 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E92BA3F703;
-        Tue, 18 Feb 2020 03:32:40 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:32:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@free-electrons.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Subject: Re: [RFC PATCH 05/34] ASoC: sun8i-codec: Remove incorrect
- SND_SOC_DAIFMT_DSP_B
-Message-ID: <20200218113239.GB4232@sirena.org.uk>
-References: <20200217064250.15516-1-samuel@sholland.org>
- <20200217064250.15516-6-samuel@sholland.org>
- <20200217150208.GG9304@sirena.org.uk>
- <1cdcbc0d-39c7-25f2-68eb-a44e815fb9b8@sholland.org>
+        Tue, 18 Feb 2020 06:37:52 -0500
+Received: from www149.your-server.de ([78.47.15.70]:60150 "EHLO
+        www149.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgBRLhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 06:37:52 -0500
+X-Greylist: delayed 423 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 06:37:51 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hanno.de;
+         s=default1911; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=P5DWN49D92TYsuLESpqd7fS0a6DhOWs1cg95OmyVKFk=; b=oExTkIriDMLNUtj5rHDW6TvTwp
+        G7NDOREH8BF/zFec6i+qf2LgUBN1zOqhSKumQ3WwEwTD3gx2qxNPgaSFFkAcp5F6yA+D8UyXJ3GYZ
+        FamFZlFda1IspXFWLG92BCUovwYwPkoJaLqfDJqAGxUEjh7sdYRhgg2rUHeS04MEfwpaCgsYdz+AI
+        C9p+G64Pz5puMNB3ErmOv7EGHhNis/N/xdmXfTGph1XxF66OizllzlL7Qy2rx7qVeC+tsn+LobSBr
+        y4ct/MiDjKg1bOnemO7X9b7TntMriPX5OGMOB69mlbZShtZrJ/MT9jB0O4/Osk7WAS0CfA35q6Gl2
+        4XwhMbTw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www149.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j41CG-0003st-G4; Tue, 18 Feb 2020 12:37:48 +0100
+Received: from [2a04:4540:680e:4300:a894:29ae:bca2:b322]
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j41CG-000Cyl-Cc; Tue, 18 Feb 2020 12:37:48 +0100
+Subject: [PATCH v2 1/3] HID: hid-bigbenff: fix general protection fault caused
+ by double kfree
+From:   Hanno Zulla <kontakt@hanno.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
+ <CAO-hwJJ1sc_RAh4ytWSOmRqfVESi2dvB_Ao_Vn+6XXixxVyxrA@mail.gmail.com>
+ <74d73ebc-0cff-768d-00b7-57bb9b44124f@hanno.de>
+Message-ID: <266828ed-d335-d707-56ef-622fd1cc216d@hanno.de>
+Date:   Tue, 18 Feb 2020 12:37:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
-Content-Disposition: inline
-In-Reply-To: <1cdcbc0d-39c7-25f2-68eb-a44e815fb9b8@sholland.org>
-X-Cookie: No alcohol, dogs or horses.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <74d73ebc-0cff-768d-00b7-57bb9b44124f@hanno.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: kontakt@hanno.de
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+HID: hid-bigbenff: fix general protection fault caused by double kfree
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The struct *bigben was allocated via devm_kzalloc() and then used as a
+parameter in input_ff_create_memless(). This caused a double kfree
+during removal of the device, since both the managed resource API and
+ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
 
-On Mon, Feb 17, 2020 at 07:35:08PM -0600, Samuel Holland wrote:
-> On 2/17/20 9:02 AM, Mark Brown wrote:
-> > On Mon, Feb 17, 2020 at 12:42:21AM -0600, Samuel Holland wrote:
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+---
+ drivers/hid/hid-bigbenff.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> >> DSP_A and DSP_B are not interchangeable. The timing used by the codec in
-> >> DSP mode is consistent with DSP_A. This is verified with an EG25-G modem
-> >> connected to AIF2, as well as by comparing with the BSP driver.
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index 3f6abd190df4..f7e85bacb688 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
+ static int hid_bigben_play_effect(struct input_dev *dev, void *data,
+ 			 struct ff_effect *effect)
+ {
+-	struct bigben_device *bigben = data;
++	struct hid_device *hid = input_get_drvdata(dev);
++	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 	u8 right_motor_on;
+ 	u8 left_motor_force;
+ 
++	if (!bigben) {
++		hid_err(hid, "no device data\n");
++		return 0;
++	}
++
+ 	if (effect->type != FF_RUMBLE)
+ 		return 0;
+ 
+@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
+ 
+ 	INIT_WORK(&bigben->worker, bigben_worker);
+ 
+-	error = input_ff_create_memless(hidinput->input, bigben,
++	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+ 		return error;
+-- 
+2.20.1
 
-> > This can only break things for existing systems using stable, if they
-> > haven't noticed a problem with DSP B they'll certainly notice failing to
-> > set up the DAI at all without it.
-
-> Are you suggesting that I drop this patch entirely, or only that I remove the CC
-> to stable (and/or Fixes: tag)? Is this something that can't be removed once it's
-> there, or is the concern about making user-visible changes on stable?
-
-Remove the stable tag, if someone is relying on the DSP B support in
-stable this will break it.
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Ly1YACgkQJNaLcl1U
-h9CFEQf8D9YL5SadnjL9dOFFrzy8yoRe7dCBkHfRxS2YavdoyZPsbCrDOcY93rEL
-/VkLJwslj6K1LCmAYYJ4/Qo+q+hPV2bnnzcslJD4Mk19RhLuBbLR8/kfP0mgnlb4
-igA2RgQJlN1GubExF4orNfkGrQxaTORV9EmceHayvRL232NkBdwGqu6wcG4Gk3YR
-dA0GaD0uBoCMBucCRvveNRdwJAD9aStpZZwC2Qb4Iv3lMAD6do8XCz99kT+ptlFs
-8N/oDBbmQpwJTkXmTphUhhkCkxA/bMZMw8QxPHZnG5SuemVyfYJ/WYevARSnpaTp
-zPxaVojES71xzKzOJUh3NURlUBhKcg==
-=Hx/L
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
