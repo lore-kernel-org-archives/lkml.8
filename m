@@ -2,136 +2,95 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D6C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD251C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4C224125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LKslbmH0"
+	by mail.kernel.org (Postfix) with ESMTP id BF19224125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgBRT0y (ORCPT
+        id S1726616AbgBRT05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:26:54 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34796 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRT0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:26:54 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so11159698pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PG1inGCjkR8mbsV9FBAGsiFoMPIEZyx6SU/E1O5JF7M=;
-        b=LKslbmH0dvmcG60Ck8sK/dmQiiexpGxXSgYtk3lY8upWmpuvOz/oM+fPI6ZbcDhDsa
-         RpPSJd2RUqGFX/QQYtGVauBVeZypL2oKXrEObFBe12YylfCiFeSoI80UMMRdjEsdg7n3
-         POgU5qp0Tgi8hPVyOf17vRI1G2fQe7rF6uWKLJxDaereKr+1W2qiRv0L6RwRmoOfryLx
-         h96KAO8dbjtrrnazYDf6UwT1vUQ+L70DL0X/CZlKWXMQT7OYN3/dnpovh7DVQASJ7rMX
-         IguDxDfOK8XUGiszApK+IDSIuUQMX1PFq8XSomi7opasBfzniD9phH9yq00SVfztmKO3
-         xZKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PG1inGCjkR8mbsV9FBAGsiFoMPIEZyx6SU/E1O5JF7M=;
-        b=OWD9p13aVKXikqtiP5ZOVDI0LT5AuPcEkr/ShrCr97eg9eDZOPDZQAZd3mjWGiBAVH
-         ifafOBV6b/GgpemE7h8bleq/3rbqU7tKv1BzKWpNIMSEHRSj7v3VDUZRlQtQWsF0ZqEg
-         8Jo3klJy6CGA+GVXTC8km6LtzdrXd9vGvuuGVzqyd7rdBk87URNsDSFhZr3cO7Y2ocWG
-         8F9YpDzWqES1W+HW9hnMLcoUt7zzxMeBPl83bmSelwjqfUh1WbpiYKPEwT88brKezzre
-         u4cjUOwWmB8cLJBTPuCgxrQnmZIcp98OBjojaPrTzYotf8e3TE+W3MtMWzaiR5nSXtIM
-         mbSQ==
-X-Gm-Message-State: APjAAAVr7uFyFHPAvs3XO4MYF69LaOSUO1jT8J9x6E4n6ZgxvJ9j0aTj
-        5rX22w9gDwNW8XkhLBbrnA/WwIXqLLeVopIvz9ikQw==
-X-Google-Smtp-Source: APXvYqz4+UZUuuR5h/fNaE5Tzptkbuq8wJ2Z/GQxsLTn9qb7rpgmkUShMVAz14BtnZOgirr4od0cln9sN1EnrYiTfSs=
-X-Received: by 2002:a62:6842:: with SMTP id d63mr23106087pfc.113.1582054013382;
- Tue, 18 Feb 2020 11:26:53 -0800 (PST)
+        Tue, 18 Feb 2020 14:26:57 -0500
+Received: from namei.org ([65.99.196.166]:46724 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgBRT05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:26:57 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 01IJP3Ub013606;
+        Tue, 18 Feb 2020 19:25:03 GMT
+Date:   Wed, 19 Feb 2020 06:25:03 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+cc:     Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v7 05/12] drm/i915/perf: open access for CAP_PERFMON
+ privileged process
+In-Reply-To: <8b408c10-9bb0-4b08-8681-93c0f4a1132e@linux.intel.com>
+Message-ID: <alpine.LRH.2.21.2002190624510.10165@namei.org>
+References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com> <8b408c10-9bb0-4b08-8681-93c0f4a1132e@linux.intel.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <1581949660-20113-1-git-send-email-alan.maguire@oracle.com> <1581949660-20113-3-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1581949660-20113-3-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 18 Feb 2020 11:26:42 -0800
-Message-ID: <CAFd5g47bU+5dEb2FxbT1X0oXgcD0jOkqW7a4WfCxVttRhDSYoA@mail.gmail.com>
-Subject: Re: [PATCH v4 kunit-next 2/3] kunit: add log test
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 6:28 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> the logging test ensures multiple strings logged appear in the
-> log string associated with the test when CONFIG_KUNIT_DEBUGFS is
-> enabled.
->
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+On Mon, 17 Feb 2020, Alexey Budankov wrote:
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> 
+> Open access to i915_perf monitoring for CAP_PERFMON privileged process.
+> Providing the access under CAP_PERFMON capability singly, without the
+> rest of CAP_SYS_ADMIN credentials, excludes chances to misuse the
+> credentials and makes operation more secure.
+> 
+> CAP_PERFMON implements the principal of least privilege for performance
+> monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+> principle of least privilege: A security design principle that states
+> that a process or program be granted only those privileges (e.g.,
+> capabilities) necessary to accomplish its legitimate function, and only
+> for the time that such privileges are actually required)
+> 
+> For backward compatibility reasons access to i915_events subsystem
+> remains open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN
+> usage for secure i915_events monitoring is discouraged with respect to
+> CAP_PERFMON capability.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-One minor comment below.
 
-> ---
->  lib/kunit/kunit-test.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-> index aceb5bf..0789060 100644
-> --- a/lib/kunit/kunit-test.c
-> +++ b/lib/kunit/kunit-test.c
-> @@ -329,6 +329,31 @@ static void kunit_resource_test_exit(struct kunit *test)
->         .exit = kunit_resource_test_exit,
->         .test_cases = kunit_resource_test_cases,
->  };
-> -kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
-> +
-> +static void kunit_log_test(struct kunit *test)
-> +{
-> +       kunit_log(KERN_INFO, test, "put this in log.");
-> +       kunit_log(KERN_INFO, test, "this too.");
-> +
-> +#ifdef CONFIG_KUNIT_DEBUGFS
-> +       KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-> +                                    strstr(test->log, "put this in log."));
-> +       KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-> +                                    strstr(test->log, "this too."));
-> +#endif
-> +}
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-Would you mind adding some expectations against the suite log? It
-might be good for the sake of completeness.
 
-> +
-> +static struct kunit_case kunit_log_test_cases[] = {
-> +       KUNIT_CASE(kunit_log_test),
-> +       {}
-> +};
-> +
-> +static struct kunit_suite kunit_log_test_suite = {
-> +       .name = "kunit-log-test",
-> +       .test_cases = kunit_log_test_cases,
-> +};
-> +
-> +kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
-> +                 &kunit_log_test_suite);
->
->  MODULE_LICENSE("GPL v2");
-> --
-> 1.8.3.1
->
+-- 
+James Morris
+<jmorris@namei.org>
+
