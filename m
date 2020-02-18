@@ -2,189 +2,93 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A4CC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B829C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A4024656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E0F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582067006;
+	bh=YEFqQv+lstuEqCgb6LglB6JO5IywnsuU/5UPXeklUDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r6cXiem1UC2FohgTOErcefCvIdyKrpdG1dNHpoC7vp2uv1gkcqlZZC9kZ9EZ6HHNT
+	 Bhmetd2PWYTIZCJKy/UTbWE+JYb2aeq/aIjEd4EQOjNRBxfbhhmFuoglGooDutMLYR
+	 Q7dBuK7YFLJl+LjSLMdJtyfdfIRCEm7Bpj4S+Jtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgBRXDS (ORCPT
+        id S1727890AbgBRXDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:03:18 -0500
-Received: from mga02.intel.com ([134.134.136.20]:57150 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgBRXDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:03:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:03:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="239504570"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 18 Feb 2020 15:03:10 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is triggered by a page fault
-Date:   Tue, 18 Feb 2020 15:03:08 -0800
-Message-Id: <20200218230310.29410-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218230310.29410-1-sean.j.christopherson@intel.com>
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
+        Tue, 18 Feb 2020 18:03:25 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:37802 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgBRXDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:03:23 -0500
+Received: by mail-ot1-f48.google.com with SMTP id w23so4848298otj.4;
+        Tue, 18 Feb 2020 15:03:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/OUq9HnmLC39bwvwK3zdiIFd4Xyuiy+9BAYMbBqnLpE=;
+        b=MgtEsQ+Ssn4TX8RppXL48ogPVzvABz4sDdawibTmYecoHm0CAAyxHsPZdWA35z6f6r
+         HZUN+NqnyfJ7N6XBktGP3vdtKDmR9bzTryA1tOeVpZW43HkSf7Wh1jSoYl9XcVePXEMw
+         kOXeA2yB8BDR1PuVCNj4N/Cug52MWLjtOe2s0FYUM/1r3I0525uFod+90Ick2fB6yWxt
+         Gx6+yvguvS4RiSLIqwUDFg3UPeHaAaZxya0kCQEHiHJpSN31eSozJaYNR6v/4GM+k0ER
+         goAaHFwOWc90u8I221bvUkqc50W3C7GgXH23nMX9Fo47KvLrGqcenz2546DbuqV1cMZs
+         iHxg==
+X-Gm-Message-State: APjAAAVp7OHXzGz2DiJHj1yit7zs45bPaDHuI7lsc/M2XRQDhxYomsHi
+        ZvTT9MV0NyPE8p7SJbdXKw==
+X-Google-Smtp-Source: APXvYqxCzDLHXIGYjFlzG6Q6f8GZsOXUYoDWJm6RVL1HBDpxsnxGVcSPSLKELpFB+g2wI947gkqZiA==
+X-Received: by 2002:a9d:64ca:: with SMTP id n10mr17626635otl.325.1582067002984;
+        Tue, 18 Feb 2020 15:03:22 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w8sm1822780ote.80.2020.02.18.15.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 15:03:22 -0800 (PST)
+Received: (nullmailer pid 11058 invoked by uid 1000);
+        Tue, 18 Feb 2020 23:03:21 -0000
+Date:   Tue, 18 Feb 2020 17:03:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv3 2/2] dt-bindings: watchdog: Add compatible for QCS404,
+ SC7180, SDM845, SM8150
+Message-ID: <20200218230321.GA10954@bogus>
+References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
+ <a8bd3f4062fd7bb45aeab5aa55f6f31c14c69a96.1581459151.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8bd3f4062fd7bb45aeab5aa55f6f31c14c69a96.1581459151.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new emulation type flag to explicitly mark emulation related to a
-page fault.  Move the propation of the GPA into the emulator from the
-page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
-indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
-exception.address when it's *not* valid.
+On Wed, 12 Feb 2020 03:54:30 +0530, Sai Prakash Ranjan wrote:
+> Add missing compatible for watchdog timer on QCS404,
+> SC7180, SDM845 and SM8150 SoCs.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/kvm_host.h | 12 +++++++++---
- arch/x86/kvm/mmu/mmu.c          | 10 ++--------
- arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
- 3 files changed, 30 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 4dffbc10d3f8..10c1e8f472b6 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
-  *		   decode the instruction length.  For use *only* by
-  *		   kvm_x86_ops->skip_emulated_instruction() implementations.
-  *
-- * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
-- *			  retry native execution under certain conditions.
-+ * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
-+ *			     retry native execution under certain conditions,
-+ *			     Can only be set in conjunction with EMULTYPE_PF.
-  *
-  * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
-  *			     triggered by KVM's magic "force emulation" prefix,
-@@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
-  *			backdoor emulation, which is opt in via module param.
-  *			VMware backoor emulation handles select instructions
-  *			and reinjects the #GP for all other cases.
-+ *
-+ * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
-+ *		 case the CR2/GPA value pass on the stack is valid.
-  */
- #define EMULTYPE_NO_DECODE	    (1 << 0)
- #define EMULTYPE_TRAP_UD	    (1 << 1)
- #define EMULTYPE_SKIP		    (1 << 2)
--#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
-+#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
- #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
- #define EMULTYPE_VMWARE_GP	    (1 << 5)
-+#define EMULTYPE_PF		    (1 << 6)
-+
- int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
- int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
- 					void *insn, int insn_len);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7011a4e54866..258624d46588 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
- int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- 		       void *insn, int insn_len)
- {
--	int r, emulation_type = 0;
-+	int r, emulation_type = EMULTYPE_PF;
- 	bool direct = vcpu->arch.mmu->direct_map;
- 
- 	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
- 		return RET_PF_RETRY;
- 
--	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
--	if (vcpu->arch.mmu->direct_map) {
--		vcpu->arch.gpa_available = true;
--		vcpu->arch.gpa_val = cr2_or_gpa;
--	}
--
- 	r = RET_PF_INVALID;
- 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
- 		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-@@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
- 	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
- 	 */
- 	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
--		emulation_type = EMULTYPE_ALLOW_RETRY;
-+		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
- emulate:
- 	/*
- 	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index fbabb2f06273..92af6c5a69e3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	gpa_t gpa = cr2_or_gpa;
- 	kvm_pfn_t pfn;
- 
--	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
- 		return false;
- 
--	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
- 		return false;
- 
- 	if (!vcpu->arch.mmu->direct_map) {
-@@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
- 	 */
- 	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
- 
--	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
- 		return false;
- 
--	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
- 		return false;
- 
- 	if (x86_page_table_writing_insn(ctxt))
-@@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	}
- 
- restart:
--	/* Save the faulting GPA (cr2) in the address field */
--	ctxt->exception.address = cr2_or_gpa;
-+	if (emulation_type & EMULTYPE_PF) {
-+		/* Save the faulting GPA (cr2) in the address field */
-+		ctxt->exception.address = cr2_or_gpa;
-+
-+		/* With shadow page tables, cr2 contains a GVA or nGPA. */
-+		if (vcpu->arch.mmu->direct_map) {
-+			vcpu->arch.gpa_available = true;
-+			vcpu->arch.gpa_val = cr2_or_gpa;
-+		}
-+	} else {
-+		/* Sanitize the address out of an abundance of paranoia. */
-+		ctxt->exception.address = 0;
-+	}
- 
- 	r = x86_emulate_insn(ctxt);
- 
--- 
-2.24.1
-
+Acked-by: Rob Herring <robh@kernel.org>
