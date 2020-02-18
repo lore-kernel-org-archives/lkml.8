@@ -2,89 +2,77 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9EC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7147C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6184522B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582062188;
-	bh=rnCNNwfwhhUByAEoWNGt0qucm6qUiZuNAQwPm+qSMtM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aq1lIKJwx47JctQoxVBHOslqEgdkP+LyxLaQn3M/XHy31vAwzFE7eR/67lFGqAuDs
-	 itf1lVddjC4e5jR7f89NNc5Ww1Boawnxtz+HkbDG3feumDrXmiPYG9qlX86km31QP6
-	 luXvNLGrXIDt3G1SUJ0V2yB83yKEa/ESKAIKV9hQ=
+	by mail.kernel.org (Postfix) with ESMTP id C4D23206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBRVnH (ORCPT
+        id S1727966AbgBRVpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:43:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 16:45:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:34962 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgBRVnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:43:06 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26CEF22B48
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 21:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582062186;
-        bh=rnCNNwfwhhUByAEoWNGt0qucm6qUiZuNAQwPm+qSMtM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aicildmJ7rBxWL7JzzdwvmvR9g9L8JkOfUpk+3g8xitwe8LZhGDavlRVGXFzvIb4F
-         b4LDzq/aP/RrVNhXbcYbtdg3dA8L7bJdi5jeRiSCN0TfrDV/NpRPJMaJ1E/LKB1Xcl
-         6BvCRpQ6lZOA5Ryvr8bQEUY+dDjqqLIg/gU55h98=
-Received: by mail-wr1-f46.google.com with SMTP id y11so25763434wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 13:43:06 -0800 (PST)
-X-Gm-Message-State: APjAAAWb9eUWK5uUIyEK5UexMq+xIi6/wNUdaE119c/s9NZdRbmHs0sR
-        ZGA4z5YGaQ0D9KDG+UkQZwlJsSK+rDM+/jcsAOrcAA==
-X-Google-Smtp-Source: APXvYqzLREAcofk3M298MDaI+8CWYJZx5SlL6vMrAkXQhof8olULKyvV0eELk98DkPzLqW5H2eTQ23f8/Fz6jJu3GmI=
-X-Received: by 2002:adf:8564:: with SMTP id 91mr32101320wrh.252.1582062184607;
- Tue, 18 Feb 2020 13:43:04 -0800 (PST)
+        id S1727868AbgBRVpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:45:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D583A1FB;
+        Tue, 18 Feb 2020 13:45:03 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A043F68F;
+        Tue, 18 Feb 2020 13:45:02 -0800 (PST)
+Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     lee.jones@linaro.org
+Cc:     linux-rockchip@lists.infradead.org, smoch@web.de,
+        linux-kernel@vger.kernel.org, heiko@sntech.de
+References: <cover.1578789410.git.robin.murphy@arm.com>
+Message-ID: <caf2fcfe-696e-9398-7c85-57498107f0ac@arm.com>
+Date:   Tue, 18 Feb 2020 21:44:55 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200218063038.3436-1-xypron.glpk@gmx.de> <212145f2-5b00-fe82-82a8-360d3f608b35@infradead.org>
-In-Reply-To: <212145f2-5b00-fe82-82a8-360d3f608b35@infradead.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 18 Feb 2020 22:42:53 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu8ggxtYehOc++E+NxiaRuDigieUQauz-xbCPXU1vW6sEQ@mail.gmail.com>
-Message-ID: <CAKv+Gu8ggxtYehOc++E+NxiaRuDigieUQauz-xbCPXU1vW6sEQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] efi/libstub: describe memory functions
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 07:33, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 2/17/20 10:30 PM, Heinrich Schuchardt wrote:
-> > Provide descriptions of:
-> >
-> > * efi_get_memory_map()
-> > * efi_low_alloc_above()
-> > * efi_free()
-> >
-> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > ---
-> > v3:
-> >       add missing colons for parameter descriptions
-> > v2:
-> >       point out how efi_free() is rounding up the memory size
-> > ---
-> >  drivers/firmware/efi/libstub/mem.c | 36 ++++++++++++++++++++++++++++--
-> >  1 file changed, 34 insertions(+), 2 deletions(-)
->
-> Looks good. Thanks.
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
->
+On 2020-01-12 1:54 am, Robin Murphy wrote:
+> Hi all,
+> 
+> Here's a second crack at my RK805-inspired cleanup. There was a bit
+> of debate around v1[1], but it seems like we're now all happy that this
+> is a reasonable way to go. For clarity I decided to include Soeren's
+> patch as #1/5, but since I've rewritten most of my patches I've not
+> included the tested-by tags.
 
-Queued, thanks.
+Any more comments, or are these patches good to merge now? My local 
+branch seemed to rebase to 5.6-rc1 cleanly, but I can resend if necessary.
+
+Thanks,
+Robin.
+
+> 
+> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
+> 
+> Robin Murphy (4):
+>    mfd: rk808: Ensure suspend/resume hooks always work
+>    mfd: rk808: Stop using syscore ops
+>    mfd: rk808: Reduce shutdown duplication
+>    mfd: rk808: Convert RK805 to shutdown/suspend hooks
+> 
+> Soeren Moch (1):
+>    mfd: rk808: Always use poweroff when requested
+> 
+>   drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
+>   include/linux/mfd/rk808.h |   2 -
+>   2 files changed, 48 insertions(+), 93 deletions(-)
+> 
