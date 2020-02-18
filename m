@@ -2,132 +2,152 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51BEC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4882BC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BDB21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582026632;
-	bh=MSQMEr8/X8jyl/lO4pX5AF1skDj7s9X7KlOL2Iv7x+E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2YhRt3VX5WZWhYjQgxkYNInNFKEPFwhkIydzsJLBkqOmalf3+2dtV543YrFDB0pud
-	 VYCYdVuE0jfVrcuxPVHb11PDSGYP88eN+MewBRtRBKEk+9QnEQxXQNwRVJYvXpSitp
-	 r7Uym817SL+Rqvby+r+lbUfTqBljoXH8J9xHbho8=
+	by mail.kernel.org (Postfix) with ESMTP id 289982173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgBRLub (ORCPT
+        id S1726492AbgBRLy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:50:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 06:54:56 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55813 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgBRLub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:50:31 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BFC207FD;
-        Tue, 18 Feb 2020 11:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582026629;
-        bh=MSQMEr8/X8jyl/lO4pX5AF1skDj7s9X7KlOL2Iv7x+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=F/Qi0Pw9wch5TLlaX1Psb0ymv+ZQd/8s5aF1+GyFvfoTwHYhyLxRaSQPPuZrn3V5x
-         d5UZ2bhsvZi+HuQpemRRtQf4Ni25f+1ixBDH3lyzLNqmdHPWTKXXYocISh6cmlnQaq
-         XYNYSbCCO5V+y0PEHrlIfuzFnlO3vVM5AY9fKXXU=
-Date:   Tue, 18 Feb 2020 20:50:25 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Luigi Rizzo <lrizzo@google.com>
-Cc:     linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, David Miller <davem@davemloft.net>,
-        gregkh@linuxfoundation.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3] kretprobe: percpu support
-Message-Id: <20200218205025.4047cf0506f56b18f9a989c4@kernel.org>
-In-Reply-To: <CAMOZA0L14CjA97UHj7V1tPuOtesrUykYPj3_vgbF3JQWS3bcaw@mail.gmail.com>
-References: <20200218005659.91318-1-lrizzo@google.com>
-        <20200218165529.39e761c4be828285cc060279@kernel.org>
-        <CAMOZA0L14CjA97UHj7V1tPuOtesrUykYPj3_vgbF3JQWS3bcaw@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726312AbgBRLy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 06:54:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 03:54:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="315032008"
+Received: from cuifangf-mobl.ccr.corp.intel.com (HELO [10.254.211.249]) ([10.254.211.249])
+  by orsmga001.jf.intel.com with ESMTP; 18 Feb 2020 03:54:53 -0800
+Subject: Re: [PATCH 3/5 v2] iommu/vt-d: Do deferred attachment in
+ iommu_need_mapping()
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200217193858.26990-1-joro@8bytes.org>
+ <20200217193858.26990-4-joro@8bytes.org>
+ <83b21e50-9097-06db-d404-8fe400134bac@linux.intel.com>
+ <20200218092827.tp3pq67adzr56k7e@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a83ec6c4-2995-3219-c28a-72d2e56a0557@linux.intel.com>
+Date:   Tue, 18 Feb 2020 19:54:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200218092827.tp3pq67adzr56k7e@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 01:39:40 -0800
-Luigi Rizzo <lrizzo@google.com> wrote:
+Hi Joerg,
 
-> On Mon, Feb 17, 2020 at 11:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > Hi Luigi,
-> >
-> > On Mon, 17 Feb 2020 16:56:59 -0800
-> > Luigi Rizzo <lrizzo@google.com> wrote:
-> >
-> > > kretprobe uses a list protected by a single lock to allocate a
-> > > kretprobe_instance in pre_handler_kretprobe(). This works poorly with
-> > > concurrent calls.
-> >
-> > Yes, there are several potential performance issue and the recycle
-> > instance is one of them. However, I think this spinlock is not so racy,
-> > but noisy (especially on many core machine) right?
+On 2020/2/18 17:28, Joerg Roedel wrote:
+> Hi Baolu,
 > 
-> correct, it is especially painful on 2+ sockets and many-core systems
-> when attaching kretprobes on otherwise uncontended paths.
+> On Tue, Feb 18, 2020 at 10:38:14AM +0800, Lu Baolu wrote:
+>>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>>> index 42cdcce1602e..32f43695a22b 100644
+>>> --- a/drivers/iommu/intel-iommu.c
+>>> +++ b/drivers/iommu/intel-iommu.c
+>>> @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
+>>>    static struct dmar_domain *deferred_attach_domain(struct device *dev)
+>>>    {
+>>> -	if (unlikely(attach_deferred(dev)))
+>>> -		do_deferred_attach(dev);
+>>> -
+>>
+>> This should also be moved to the call place of deferred_attach_domain()
+>> in bounce_map_single().
+>>
+>> bounce_map_single() assumes that devices always use DMA domain, so it
+>> doesn't call iommu_need_mapping(). We could do_deferred_attach() there
+>> manually.
 > 
-> >
-> > Racy lock is the kretprobe_hash_lock(), I would like to replace it
-> > with ftrace's per-task shadow stack. But that will be available
-> > only if CONFIG_FUNCTION_GRAPH_TRACER=y (and instance has no own
-> > payload).
-> >
-> > > This patch offers a simplified fix: the percpu_instance flag indicates
-> > > that we allocate one instance per CPU, and the allocation is contention
-> > > free, but we allow only have one pending entry per CPU (this could be
-> > > extended to a small constant number without much trouble).
-> >
-> > OK, the percpu instance idea is good to me, and I think it should be
-> > default option. Unless user specifies the number of instances, it should
-> > choose percpu instance by default.
+> Good point, thanks for your review. Updated patch below.
 > 
-> That was my initial implementation, which would not even need the
-> percpu_instance
-> flag in struct kretprobe. However, I felt that changing the default
-> would have subtle
-> side effects (e.g., only one outstanding call per CPU) so I thought it
-> would be better
-> to leave the default unchanged and make the flag explicit.
+
+Looks good to me now. For all patches in this series,
+
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
+>  From 3a5b8a66d288d86ac1fd45092e7d96f842d0cccf Mon Sep 17 00:00:00 2001
+> From: Joerg Roedel <jroedel@suse.de>
+> Date: Mon, 17 Feb 2020 17:20:59 +0100
+> Subject: [PATCH 3/5] iommu/vt-d: Do deferred attachment in
+>   iommu_need_mapping()
 > 
-> > Moreover, this makes things a bit complicated, can you add per-cpu
-> > instance array? If it is there, we can remove the old recycle rp insn
-> > code.
+> The attachment of deferred devices needs to happen before the check
+> whether the device is identity mapped or not. Otherwise the check will
+> return wrong results, cause warnings boot failures in kdump kernels, like
 > 
-> Can you clarify what you mean by "per-cpu instance array" ?
-> Do you mean allowing multiple outstanding entries per cpu?
-
-Yes, either allocating it on percpu area or allocating arraies
-on percpu pointer is OK. e.g.
-
-	instance_size = sizeof(*rp->pcpu) + rp->data_size;
-	rp->pcpu = __alloc_percpu(instance_size * array_size,
-				  __alignof__(*rp->pcpu));
-
-And we will search free ri on the percpu array by checking ri->rp == NULL. 
-
-Thank you,
-
+> 	WARNING: CPU: 0 PID: 318 at ../drivers/iommu/intel-iommu.c:592 domain_get_iommu+0x61/0x70
 > 
-> I will address your code comments in an updated patch.
+> 	[...]
 > 
-> thanks
-> luigi
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> 	 Call Trace:
+> 	  __intel_map_single+0x55/0x190
+> 	  intel_alloc_coherent+0xac/0x110
+> 	  dmam_alloc_attrs+0x50/0xa0
+> 	  ahci_port_start+0xfb/0x1f0 [libahci]
+> 	  ata_host_start.part.39+0x104/0x1e0 [libata]
+> 
+> With the earlier check the kdump boot succeeds and a crashdump is written.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>   drivers/iommu/intel-iommu.c | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 42cdcce1602e..723f615c6e84 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -2541,9 +2541,6 @@ static void do_deferred_attach(struct device *dev)
+>   
+>   static struct dmar_domain *deferred_attach_domain(struct device *dev)
+>   {
+> -	if (unlikely(attach_deferred(dev)))
+> -		do_deferred_attach(dev);
+> -
+>   	return find_domain(dev);
+>   }
+>   
+> @@ -3595,6 +3592,9 @@ static bool iommu_need_mapping(struct device *dev)
+>   	if (iommu_dummy(dev))
+>   		return false;
+>   
+> +	if (unlikely(attach_deferred(dev)))
+> +		do_deferred_attach(dev);
+> +
+>   	ret = identity_mapping(dev);
+>   	if (ret) {
+>   		u64 dma_mask = *dev->dma_mask;
+> @@ -3958,7 +3958,11 @@ bounce_map_single(struct device *dev, phys_addr_t paddr, size_t size,
+>   	int prot = 0;
+>   	int ret;
+>   
+> +	if (unlikely(attach_deferred(dev)))
+> +		do_deferred_attach(dev);
+> +
+>   	domain = deferred_attach_domain(dev);
+> +
+>   	if (WARN_ON(dir == DMA_NONE || !domain))
+>   		return DMA_MAPPING_ERROR;
+>   
+> 
