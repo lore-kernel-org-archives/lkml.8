@@ -2,127 +2,210 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE608C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1513AC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE30322B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D816822B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dMdinklJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgBRWqQ (ORCPT
+        id S1726821AbgBRWrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:46:16 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43265 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726438AbgBRWqQ (ORCPT
+        Tue, 18 Feb 2020 17:47:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32717 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726556AbgBRWrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:46:16 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2C6AA3A311C;
-        Wed, 19 Feb 2020 09:46:11 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4Bd4-0003kz-H7; Wed, 19 Feb 2020 09:46:10 +1100
-Date:   Wed, 19 Feb 2020 09:46:10 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
-Message-ID: <20200218224610.GT10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-4-willy@infradead.org>
- <20200218050300.GI10776@dread.disaster.area>
- <20200218135618.GO7778@bombadil.infradead.org>
+        Tue, 18 Feb 2020 17:47:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582066057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UdLjC4QY0dRRlMObceUJJ6AgKC0QDK6iC3rlvBmMiGI=;
+        b=dMdinklJ0xIgLLgrsBYMENItsDaa4lQ+vApWxP534sVlt9b/o9MqhHBwVrFhpnlfohT1hy
+        9X466LyzEcJqS8n0XXX1WLaHN102KCgq0YHkeN6GdpWPSPmTdZq82a5gvr2VdvAmJ+Ikab
+        +vo8JWjmjlD0AJh612nCRavVUD9QbZU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-bqp_KELENdqb7_5NzKddPw-1; Tue, 18 Feb 2020 17:47:32 -0500
+X-MC-Unique: bqp_KELENdqb7_5NzKddPw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B51C61005512;
+        Tue, 18 Feb 2020 22:47:30 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD69460BE1;
+        Tue, 18 Feb 2020 22:47:22 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 17:47:20 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 4/9] audit: record nfcfg params
+Message-ID: <20200218224720.dwe4ibxxca3mesha@madcap2.tricolour.ca>
+References: <cover.1577830902.git.rgb@redhat.com>
+ <b1b2e6f917816c4ae85b53d7f93c10c3d1df4a53.1577830902.git.rgb@redhat.com>
+ <CAHC9VhRSRggBD9QgXD7-YEx=qY7Ym_1D12y3anAihE=9P7r-6w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218135618.GO7778@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=-669WvyOGAhHUzcTJR8A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <CAHC9VhRSRggBD9QgXD7-YEx=qY7Ym_1D12y3anAihE=9P7r-6w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:56:18AM -0800, Matthew Wilcox wrote:
-> On Tue, Feb 18, 2020 at 04:03:00PM +1100, Dave Chinner wrote:
-> > On Mon, Feb 17, 2020 at 10:45:44AM -0800, Matthew Wilcox wrote:
-> > > +static void read_pages(struct readahead_control *rac, struct list_head *pages,
-> > > +		gfp_t gfp)
-> > >  {
-> > > +	const struct address_space_operations *aops = rac->mapping->a_ops;
-> > >  	struct blk_plug plug;
-> > >  	unsigned page_idx;
-> > 
-> > Splitting out the aops rather than the mapping here just looks
-> > weird, especially as you need the mapping later in the function.
-> > Using aops doesn't even reduce the code side....
+On 2020-01-30 22:18, Paul Moore wrote:
+> On Mon, Jan 6, 2020 at 1:55 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Record the auditable parameters of any non-empty netfilter table
+> > configuration change.
+> >
+> > See: https://github.com/linux-audit/audit-kernel/issues/25
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  include/linux/audit.h | 11 +++++++++++
+> >  kernel/auditsc.c      | 16 ++++++++++++++++
+> >  2 files changed, 27 insertions(+)
 > 
-> It does in subsequent patches ... I agree it looks a little weird here,
-> but I think in the final form, it makes sense:
-
-Ok. Perhaps just an additional commit comment to say "read_pages() is
-changed to be aops centric as @rac abstracts away all other
-implementation details by the end of the patchset."
-
-> > > +			if (readahead_count(&rac))
-> > > +				read_pages(&rac, &page_pool, gfp_mask);
-> > > +			rac._nr_pages = 0;
-> > 
-> > Hmmm. Wondering ig it make sense to move the gfp_mask to the readahead
-> > control structure - if we have to pass the gfp_mask down all the
-> > way along side the rac, then I think it makes sense to do that...
+> I can not see a good reason why this patch is separate from patches 5
+> and 6, please squash them down into one patch.  As it currently stands
+> the logging function introduced here has no caller so it is pointless
+> by itself.  Strive to make an individual patch have some significance
+> on its own whenever possible.
 > 
-> So we end up removing it later on in this series, but I do wonder if
-> it would make sense anyway.  By the end of the series, we still have
-> this in iomap:
+> This will also help you write a better commit description, right now
+> the commit description tells me nothing, but if you bring in the other
+> patches you can talk about consolidating similar code into a common
+> function.
+
+Fair enough.  I could see squashing some of these, but there are a
+number of issues being addressed and would like to see some granularity,
+but as you point out, each patch should stand on its own...
+
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index f9ceae57ca8d..96cabb095eed 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -379,6 +379,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+> >  extern void __audit_fanotify(unsigned int response);
+> >  extern void __audit_tk_injoffset(struct timespec64 offset);
+> >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> > +extern void __audit_nf_cfg(const char *name, u8 af, int nentries);
+> >
+> >  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+> >  {
+> > @@ -514,6 +515,12 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+> >                 __audit_ntp_log(ad);
+> >  }
+> >
+> > +static inline void audit_nf_cfg(const char *name, u8 af, int nentries)
+> > +{
+> > +       if (!audit_dummy_context())
+> > +               __audit_nf_cfg(name, af, nentries);
 > 
->                 if (ctx->rac) /* same as readahead_gfp_mask */
->                         gfp |= __GFP_NORETRY | __GFP_NOWARN;
+> See my comments below about audit_enabled.
+
+I've cleaned up audit_enabled and removed dummy due to ghak120.
+
+> > +}
+> > +
+> >  extern int audit_n_rules;
+> >  extern int audit_signals;
+> >  #else /* CONFIG_AUDITSYSCALL */
+> > @@ -646,6 +653,10 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+> >
+> >  static inline void audit_ptrace(struct task_struct *t)
+> >  { }
+> > +
+> > +static inline void audit_nf_cfg(const char *name, u8 af, int nentries)
+> > +{ }
+> > +
+> >  #define audit_n_rules 0
+> >  #define audit_signals 0
+> >  #endif /* CONFIG_AUDITSYSCALL */
+> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > index 4effe01ebbe2..4e1df4233cd3 100644
+> > --- a/kernel/auditsc.c
+> > +++ b/kernel/auditsc.c
+> > @@ -2545,6 +2545,22 @@ void __audit_ntp_log(const struct audit_ntp_data *ad)
+> >         audit_log_ntp_val(ad, "adjust", AUDIT_NTP_ADJUST);
+> >  }
+> >
+> > +void __audit_nf_cfg(const char *name, u8 af, int nentries)
 > 
-> and we could get rid of that by passing gfp flags down in the rac.  On the
-> other hand, I don't know why it doesn't just use readahead_gfp_mask()
-> here anyway ... Christoph?
+> Should nentries be an unsigned int?
 
-mapping->gfp_mask is awful. Is it a mask, or is it a valid set of
-allocation flags? Or both?  Some callers to mapping_gfp_constraint()
-uses it as a mask, some callers to mapping_gfp_constraint() use it
-as base flags that context specific flags get masked out of,
-readahead_gfp_mask() callers use it as the entire set of gfp flags
-for allocation.
+Yes, it should, thank you.
 
-That whole API sucks - undocumented as to what it's suposed to do
-and how it's supposed to be used. Hence it's difficult to use
-correctly or understand whether it's being used correctly. And
-reading callers only leads to more confusion and crazy code like in
-do_mpage_readpage() where readahead returns a mask that are used as
-base flags and normal reads return a masked set of base flags...
+> > +{
+> > +       struct audit_buffer *ab;
+> > +       struct audit_context *context = audit_context();
+> 
+> This is a good example of why the context of a caller matters; taken
+> alone I would say that we need a check for audit_enabled here, but if
+> we look at the latter patches we can see that the caller already has
+> the audit_enabled check.
+> 
+> Considering that the caller is already doing an audit_enabled check,
+> we might want to consider moving the audit_enabled check into
+> audit_nf_cfg() where we do the dummy context check.  It's a static
+> inline so there shouldn't be a performance impact and it makes the
+> caller's code cleaner.
+> 
+> > +       if (!nentries)
+> > +               return;
+> > +       ab = audit_log_start(context, GFP_KERNEL, AUDIT_NETFILTER_CFG);
+> 
+> Why do we need the context variable, why not just call audit_context()
+> here directly?
 
-The iomap code is obviously correct when it comes to gfp flag
-manipulation. We start with GFP_KERNEL context, then constrain it
-via the mask held in mapping->gfp_mask, then if it's readahead we
-allow the allocation to silently fail.
+Context has been cleaned up.
 
-Simple to read and understand code, versus having weird code that
-requires the reader to decipher an undocumented and inconsistent API
-to understand how the gfp flags have been calculated and are valid.
+> > +       if (!ab)
+> > +               return; /* audit_panic or being filtered */
+> 
+> We generally don't add comments when audit_log_start() fails
+> elsewhere, please don't do it here.
 
-Cheers,
+Ok.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> > +       audit_log_format(ab, "table=%s family=%u entries=%u",
+> > +                        name, af, nentries);
+> > +       audit_log_end(ab);
+> > +}
+> > +EXPORT_SYMBOL_GPL(__audit_nf_cfg);
+> > +
+> >  static void audit_log_task(struct audit_buffer *ab)
+> >  {
+> >         kuid_t auid, uid;
+> > --
+> > 1.8.3.1
+> 
+> --
+> paul moore
+> www.paul-moore.com
+> 
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
