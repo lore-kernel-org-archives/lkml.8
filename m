@@ -2,77 +2,119 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7147C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0EBC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D23206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F6822B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582062500;
+	bh=WiwCNvyJt8cbbiANZODpyVDUSfy10IYL4YvpxXMSn94=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=b83cKOnhWaDEWLXtfbHKPNp8j41HpvAnMv8X+lAX0qsCssxNozBkcSr4zR8VUeNbW
+	 nNwrOb3ff4t0aNMYtoAGSkow1HbKYEqCWFet6qb389TcqYll3p/LZyRp702VBrUmVz
+	 YlHz/vb6v0pbMK6dyzbZII8fG5RX1gc2gq1Q7awI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBRVpE (ORCPT
+        id S1727972AbgBRVsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:45:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:34962 "EHLO foss.arm.com"
+        Tue, 18 Feb 2020 16:48:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgBRVpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:45:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D583A1FB;
-        Tue, 18 Feb 2020 13:45:03 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A043F68F;
-        Tue, 18 Feb 2020 13:45:02 -0800 (PST)
-Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     lee.jones@linaro.org
-Cc:     linux-rockchip@lists.infradead.org, smoch@web.de,
-        linux-kernel@vger.kernel.org, heiko@sntech.de
-References: <cover.1578789410.git.robin.murphy@arm.com>
-Message-ID: <caf2fcfe-696e-9398-7c85-57498107f0ac@arm.com>
-Date:   Tue, 18 Feb 2020 21:44:55 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1727868AbgBRVsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:48:19 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99797206E2;
+        Tue, 18 Feb 2020 21:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582062498;
+        bh=WiwCNvyJt8cbbiANZODpyVDUSfy10IYL4YvpxXMSn94=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fme/q6nIBndVPOE9S/+MT4Im1evsayUsfqULw+kjhN65iDdWtejOcHK+PIydugRKa
+         GsWcJNqqWNm0cBzwFSa3xh267On4LF1y04UZOeUCMna3rT7bJAg3zaYq/xXNGqgWQK
+         kjxxM+IfH9b4BaqXBlmFfannJryAHNbZ6ZGIyeKU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 700173520856; Tue, 18 Feb 2020 13:48:18 -0800 (PST)
+Date:   Tue, 18 Feb 2020 13:48:18 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, rostedt@goodmis.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH tip/core/rcu 4/4] srcu: Add READ_ONCE() to srcu_struct
+ ->srcu_gp_seq load
+Message-ID: <20200218214818.GM2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200215002907.GA15895@paulmck-ThinkPad-P72>
+ <20200215002932.15976-4-paulmck@kernel.org>
+ <20200217124507.GT14914@hirez.programming.kicks-ass.net>
+ <20200217183220.GS2935@paulmck-ThinkPad-P72>
+ <20200217230657.GA8985@paulmck-ThinkPad-P72>
+ <20200218114631.GY14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218114631.GY14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-12 1:54 am, Robin Murphy wrote:
-> Hi all,
+On Tue, Feb 18, 2020 at 12:46:31PM +0100, Peter Zijlstra wrote:
+> On Mon, Feb 17, 2020 at 03:06:57PM -0800, Paul E. McKenney wrote:
+> > commit 52324a7b8a025f47a1a1a9fbd23ffe59fa764764
+> > Author: Paul E. McKenney <paulmck@kernel.org>
+> > Date:   Fri Jan 3 11:42:05 2020 -0800
+> > 
+> >     srcu: Hold srcu_struct ->lock when updating ->srcu_gp_seq
+> >     
+> >     A read of the srcu_struct structure's ->srcu_gp_seq field should not
+> >     need READ_ONCE() when that structure's ->lock is held.  Except that this
+> >     lock is not always held when updating this field.  This commit therefore
+> >     acquires the lock around updates and removes a now-unneeded READ_ONCE().
+> >     
+> >     This data race was reported by KCSAN.
+> >     
+> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 > 
-> Here's a second crack at my RK805-inspired cleanup. There was a bit
-> of debate around v1[1], but it seems like we're now all happy that this
-> is a reasonable way to go. For clarity I decided to include Soeren's
-> patch as #1/5, but since I've rewritten most of my patches I've not
-> included the tested-by tags.
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Any more comments, or are these patches good to merge now? My local 
-branch seemed to rebase to 5.6-rc1 cleanly, but I can resend if necessary.
+Applied, thank you!
 
-Thanks,
-Robin.
+							Thanx, Paul
 
-> 
-> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
-> 
-> Robin Murphy (4):
->    mfd: rk808: Ensure suspend/resume hooks always work
->    mfd: rk808: Stop using syscore ops
->    mfd: rk808: Reduce shutdown duplication
->    mfd: rk808: Convert RK805 to shutdown/suspend hooks
-> 
-> Soeren Moch (1):
->    mfd: rk808: Always use poweroff when requested
-> 
->   drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
->   include/linux/mfd/rk808.h |   2 -
->   2 files changed, 48 insertions(+), 93 deletions(-)
-> 
+> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+> > index 119a373..c19c1df 100644
+> > --- a/kernel/rcu/srcutree.c
+> > +++ b/kernel/rcu/srcutree.c
+> > @@ -450,7 +450,7 @@ static void srcu_gp_start(struct srcu_struct *ssp)
+> >  	spin_unlock_rcu_node(sdp);  /* Interrupts remain disabled. */
+> >  	smp_mb(); /* Order prior store to ->srcu_gp_seq_needed vs. GP start. */
+> >  	rcu_seq_start(&ssp->srcu_gp_seq);
+> > -	state = rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq));
+> > +	state = rcu_seq_state(ssp->srcu_gp_seq);
+> >  	WARN_ON_ONCE(state != SRCU_STATE_SCAN1);
+> >  }
+> >  
+> > @@ -1130,7 +1130,9 @@ static void srcu_advance_state(struct srcu_struct *ssp)
+> >  			return; /* readers present, retry later. */
+> >  		}
+> >  		srcu_flip(ssp);
+> > +		spin_lock_irq_rcu_node(ssp);
+> >  		rcu_seq_set_state(&ssp->srcu_gp_seq, SRCU_STATE_SCAN2);
+> > +		spin_unlock_irq_rcu_node(ssp);
+> >  	}
+> >  
+> >  	if (rcu_seq_state(READ_ONCE(ssp->srcu_gp_seq)) == SRCU_STATE_SCAN2) {
