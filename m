@@ -2,106 +2,146 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263E6C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E0C34048
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F4822B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046412;
-	bh=1/QcFFVdy6vaYY3yC/qBVxENZ9VWu8BQUFNLPDxdkwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P5W/kn1iLZUzHfnHypWP7hIkFq+RCpQx+wGxEkxQhrRMRePwMe6vSnPqkdy1XZQ/i
-	 KFctNlSgLDjyicn2KRQxYEkkuTbM3lIYNdpd3MDwSPEmUyAAgzWmj/NLCKrFGJsjsA
-	 4E/gLq8xDf4rsR2BnJj+yRRqeysRpp0DzyzTxWQI=
+	by mail.kernel.org (Postfix) with ESMTP id 8B72820801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgBRRUL (ORCPT
+        id S1726754AbgBRRUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:20:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgBRRUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:20:10 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA1D20801;
-        Tue, 18 Feb 2020 17:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582046409;
-        bh=1/QcFFVdy6vaYY3yC/qBVxENZ9VWu8BQUFNLPDxdkwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FUdza3Rmbg/mS79PNLWd5ZIzn/9300o9tKNwbcJP/mcDcJzUXNmpPjr3jh0X1zJQY
-         2DeI3v9A8QBOH7SD92VtvtrHYPjrF3geQHcK40Qmlnhfnh4LVkrgJXeC+f0XbtauyE
-         Egn9ZDEQtvitjwxDPEpQNg8nsuu31Fls/i5PJ22g=
-Date:   Tue, 18 Feb 2020 17:20:00 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode
- quirk
-Message-ID: <20200218172000.GF1133@willie-the-truck>
-References: <20200218171321.30990-1-robh@kernel.org>
- <20200218171321.30990-7-robh@kernel.org>
+        Tue, 18 Feb 2020 12:20:25 -0500
+Received: from rhlx01.hs-esslingen.de ([129.143.116.10]:44156 "EHLO
+        rhlx01.hs-esslingen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgBRRUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:20:24 -0500
+X-Greylist: delayed 535 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 12:20:23 EST
+Received: by rhlx01.hs-esslingen.de (Postfix, from userid 1203)
+        id F2D7B29C4924; Tue, 18 Feb 2020 18:11:26 +0100 (CET)
+Date:   Tue, 18 Feb 2020 18:11:26 +0100
+From:   Adrian Reber <adrian@lisas.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers <containers@lists.linux-foundation.org>,
+        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
+        x86@kernel.org, Andrei Vagin <avagin@gmail.com>
+Subject: Re: Time Namespaces: CLONE_NEWTIME and clone3()?
+Message-ID: <20200218171126.GF2322403@lisas.de>
+References: <20191112012724.250792-1-dima@arista.com>
+ <20191112012724.250792-4-dima@arista.com>
+ <CAHO5Pa2_7BzZPCXjFj4f=YoX28M4q2Au=h6GrzN-EjRffMo1iw@mail.gmail.com>
+ <20200217145908.7epzz5nescccwvzv@wittgenstein>
+ <CAKgNAkjfdWFwNdFzdBY81_8WZJNtbtztfjO9T2YNQDV4ThNiNw@mail.gmail.com>
+ <20200217230331.he6p5bs766zp6smx@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218171321.30990-7-robh@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217230331.he6p5bs766zp6smx@wittgenstein>
+X-Url:  <http://lisas.de/~adrian/>
+X-Operating-System: Linux (5.4.8-200.fc31.x86_64)
+X-Load-Average: 7.47 8.46 9.12
+X-Unexpected: The Spanish Inquisition
+X-GnuPG-Key: gpg --recv-keys D3C4906A
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: iommu@lists.linux-foundation.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Do not apply yet.
+On Tue, Feb 18, 2020 at 12:03:31AM +0100, Christian Brauner wrote:
+> On Mon, Feb 17, 2020 at 10:47:53PM +0100, Michael Kerrisk (man-pages) wrote:
+> > Hello Christian,
+> > 
+> > On Mon, 17 Feb 2020 at 16:15, Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > >
+> > > On Mon, Feb 17, 2020 at 03:20:55PM +0100, Michael Kerrisk wrote:
+> > > > Hello Dmitry, Andrei,
+> > > >
+> > > > Is the CLONE_NEWTIME flag intended to be usable with clone3()? The
+> > > > mail quoted below implies (in my reading) that this should be possible
+> > > > once clone3() is available, which it is by now. (See also [1].)
+> > > >
+> > > > If the answer is yes, CLONE_NEWTIME  should be usable with clone3(),
+> > > > then I have a bug report and a question.
+> > > >
+> > > > I successfully used CLONE_NEWTIME with unshare(). But if I try to use
+> > > > CLONE_NEWSIGNAL with clone3(), it errors out with EINVAL, because of
+> > >
+> > > s/CLONE_NEWSIGNAL/CLONE_NEWTIME/
+> > >
+> > > > the following check in clone3_args_valid():
+> > > >
+> > > >         /*
+> > > >          * - make the CLONE_DETACHED bit reuseable for clone3
+> > > >          * - make the CSIGNAL bits reuseable for clone3
+> > > >          */
+> > > >         if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
+> > > >                 return false;
+> > > >
+> > > > The problem is that CLONE_NEWTIME matches one of the bits in the
+> > > > CSIGNAL mask. If the intention is to allow CLONE_NEWTIME with
+> > > > clone3(), then either the bit needs to be redefined, or the error
+> > > > checking in clone3_args_valid() needs to be reworked.
+> > >
+> > > If this is intended to be useable with clone3() the check should be
+> > > adapted to allow for CLONE_NEWTIME. (I asked about this a while ago I
+> > > think.)
+> > > But below rather sounds like it should simply be an unshare() flag. The
+> > > code seems to set frozen_offsets to true right after copy_namespaces()
+> > > in timens_on_fork(new_ns, tsk) and so the offsets can't be changed
+> > > anymore unless I'm reading this wrong.
+> > > Alternatives seem to either make timens_offsets writable once after fork
+> > > and before exec, I guess - though that's probably not going to work
+> > > with the vdso judging from timens_on_fork().
+> > >
+> > > The other alternative is that Andrei and Dmitry send me a patch to
+> > > enable CLONE_NEWTIME with clone3() by exposing struct timens_offsets (or
+> > > a version of it) in the uapi and extend struct clone_args to include a
+> > > pointer to a struct timens_offset that is _only_ set when CLONE_NEWTIME
+> > > is set.
+> > > Though the unshare() way sounds way less invasive simpler.
+> > 
+> > Actually, I think the alternative you propose just here is better. I
+> > imagine there are times when one will want to create multiple
+> > namespaces with a single call to clone3(), including a time namespace.
+> > I think this should be allowed by the API. And, otherwise, clone3()
+> > becomes something of a second-class citizen for creating namespaces.
+> > (I don't really get the "less invasive" argument. Implementing this is
+> > just a piece of kernel to code to make user-space's life a bit simpler
+> > and more consistent.)
+> 
+> I don't particularly mind either way. If there's actual users that need
+> to set it at clone3() time then we can extend it. So I'd like to hear
+> what Adrian, Dmitry, and Thomas think since they are well-versed how
+> this will be used in the wild. I'm weary of exposing a whole new uapi
+> struct and extending clone3() without any real use-case but I'm happy to
+> if there is!
 
-Pleeeeease? ;)
+Re-creating a time namespace during restore via clone3() would be CRIU's
+preferred way of doing this. If available CRIU is already using
+clone3(), especially because of set_tid, and for the time namespace we
+would also rely on clone3() to re-create it.
 
->  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
->  1 file changed, 43 deletions(-)
+I will provide a patch to extend clone3() to handle the creation of a
+new time namespace.
 
-Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
-anything from 'struct arm_smmu_impl' because most implementations fall
-just short of perfect.
-
-Anyway, let me know when I can push the button and I'll queue this in
-the arm-smmu tree.
-
-Cheers,
-
-Will
+		Adrian
