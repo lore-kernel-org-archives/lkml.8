@@ -2,98 +2,123 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6390C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4E1C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F7A2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D992621D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UcxFtM3Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFVTVD96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgBRJur (ORCPT
+        id S1726508AbgBRJvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:50:47 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41660 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgBRJur (ORCPT
+        Tue, 18 Feb 2020 04:51:13 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39574 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726449AbgBRJvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:50:47 -0500
-Received: by mail-qv1-f65.google.com with SMTP id s7so8851689qvn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:50:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CMpbsuUrAguPuwyvtKyydMgGKcHAmQpZ4ST+OIxCEvo=;
-        b=UcxFtM3QvoELxSrxXjAyIIXy3ToxtOp8v/RoUtffuAnl+jI58nEFBR1JfxJY6YtEQw
-         9bYRta+CO8LsBnfm/X4eLsihAf5TgEDgmxF4Bs5PE4fRh4/h//8ujYNZxkb/Mm4Sb7mE
-         Pi7Xvy5MjSfNG4TV0lpR+UxwArd/G1fzDVmtqd2vyDsNRPzBqc+NURhylRKULiboYYvF
-         lWHTHJZVF4CySygCylj+JeRXkC95mF3hk5uK4Bh2fLxSKi46PMaN+rFyPssMcSzFT3FE
-         1912mA/8K9fr3BZd/ovrfL67iBHvZ7vBCRcoTsF0XuWtmLafy8R1n5hjtG95q+ZSPHd+
-         EiKA==
+        Tue, 18 Feb 2020 04:51:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582019472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f6S3H9Q+xCWLQbxsvGz1L63SOHDRI/P/SP31mReQZeM=;
+        b=fFVTVD96ILzvaAGFmzTJ7rWlP6Y6hYqUTFL90AwJKT2Bh8M3yRvvpaw2wb4jNmmk5xbmm9
+        7kmkd99TvUO90STINX2f5UfthJnhG0doLBn8YcszYn/GeN0JX87pLPEljqsa1qbC/fsvHr
+        G7uy6mYoMR3py9ewrdfFLfYA+HmULQM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-XkBS2qtUPQKkUtoTSFTt0A-1; Tue, 18 Feb 2020 04:51:10 -0500
+X-MC-Unique: XkBS2qtUPQKkUtoTSFTt0A-1
+Received: by mail-wr1-f70.google.com with SMTP id j4so10518530wrs.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:51:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CMpbsuUrAguPuwyvtKyydMgGKcHAmQpZ4ST+OIxCEvo=;
-        b=RB+Dp2Ex5IZFY7EjoHkFCk+V/mj/rV75YkoAbdpx19DFPmxlVdw7q+ZD3YSHwY8ZYs
-         70CTbWVQQ6cgft+EMQbAdjO3N7j0eZoiVRtG8ZM4fRU1HNOmowaPzNaec5Ejn5O1czAm
-         Vyj+j5453bFYhGW/UBspFCzDr8OcjAi6qMZVObPtL7xGjH9EgKP/cfTYjLwm8ttTeRZd
-         c+8MsNq6chZ0wSRrnT3BbCl9g/74cye8UBqyaOyDeXYF1fac2H4S/zd2BSb+aPh96T6y
-         You+sCBU73yDaS1ozuxmWR0cX3R+nERGAYS5kUNO9aFv8c9xGZmLEcXR/3ExeJBQfa7I
-         f0Bw==
-X-Gm-Message-State: APjAAAUVhNJI0xxxEaqgsvT300aYJVmpSyhAlRp19seXVGsnFedAEo5x
-        sZPkaPpe72iARyKs8zdl844Zeuryk6GWznoKSdR39A==
-X-Google-Smtp-Source: APXvYqzay4vxReDT+unINvbnfD9zstcDUK4FIQOUDAgcsMRXsQNMHebbaD1kPFF714OvcWTxxfS3Pe6fQRaEZjqn1fc=
-X-Received: by 2002:a0c:f28f:: with SMTP id k15mr15645199qvl.76.1582019446430;
- Tue, 18 Feb 2020 01:50:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=f6S3H9Q+xCWLQbxsvGz1L63SOHDRI/P/SP31mReQZeM=;
+        b=ORDUJ513NsB+6rhe8/3o+I+gx6i2h/XZykmwp8V4J2K/rJfKtU2ppqFRfU+L9e63PL
+         1M0jr4uiNDeJEEpuvMpB6XFQW5Pxe+8UqtWy29bNlfDHZ+/K+2za8INC1yrnoH8jT5gf
+         NfmaOpcWnGUsLR3xhTCKC+bgeBT9v31sBhBAAaCeBo8qKQAHdo1PW0sxC9n88KThQAj4
+         EnLnttzgLTKLlIFHjgUjsLDxrZ+Gb2GTQo7iAEVk3ogEgHeR9o9nTtLJjkNQyMrcpuO5
+         woKz9PCRQ7jMUa20iI01BbUFT9/ELuBvafpwJpJBkSsBOGi9yMVaWHHFbkVtJh1Nqwwq
+         FvWA==
+X-Gm-Message-State: APjAAAWFLrogG8n6vz4F0epcTfOyHQJWbB+O7EmiiZJdb0uM/xOs1o/L
+        gXuYbTqv/61fkxSbyPDJIpf4uCG/C9lJ6CSZlM4Bzm8PCAO/EhviUAaEIlRF8oWvuZhaErDR6Jr
+        IDASrkEXYPXikyA5nyqUVNO7O
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr26767552wro.234.1582019469076;
+        Tue, 18 Feb 2020 01:51:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzbsVWsC/clpUSMI+QxchpdxgMAvfJu1v5ks+QAVdg84JW43xe6pTbomJpPHIiBlicc26MBfg==
+X-Received: by 2002:adf:ef92:: with SMTP id d18mr26767533wro.234.1582019468906;
+        Tue, 18 Feb 2020 01:51:08 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id e16sm5329978wrs.73.2020.02.18.01.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 01:51:08 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson\@intel.com" <sean.j.christopherson@intel.com>,
+        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "joro\@8bytes.org" <joro@8bytes.org>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>,
+        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: x86: don't notify userspace IOAPIC on edge-triggered interrupt EOI
+In-Reply-To: <edf7454be5a743928cbc1bec5dce238d@huawei.com>
+References: <edf7454be5a743928cbc1bec5dce238d@huawei.com>
+Date:   Tue, 18 Feb 2020 10:51:07 +0100
+Message-ID: <8736b89qb8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200218094234.23896-1-brgl@bgdev.pl> <20200218094234.23896-3-brgl@bgdev.pl>
- <9519ba1b-17fe-7121-ce00-d940b3de2777@linaro.org>
-In-Reply-To: <9519ba1b-17fe-7121-ce00-d940b3de2777@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Feb 2020 10:50:35 +0100
-Message-ID: <CAMpxmJX5mo239fe3Y6a7uaLFpWSAbLg5mUpCw-idJuBjYxOdYg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] nvmem: fix another memory leak in error path
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Stable # 4 . 20+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 18 lut 2020 o 10:47 Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
->
->
->
-> On 18/02/2020 09:42, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The nvmem struct is only freed on the first error check after its
-> > allocation and leaked after that. Fix it with a new label.
-> >
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> looks like 1/7 introduced the bug and 2/7 fixes it.
-> IMO, you should 1/7 and 2/7 should be single patch.
->
+linmiaohe <linmiaohe@huawei.com> writes:
 
-The bug already exists in mainline - the nvmem object is only freed if
-ida_simple_get() fails, but any subsequent error leads to a memory
-leak. In other words: it doesn't matter if it's a single patch or two.
+> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>>linmiaohe <linmiaohe@huawei.com> writes:
+>>
+>>> @@ -417,7 +417,7 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+>>>  
+>>>  			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
+>>>  
+>>> -			if (irq.level &&
+>>> +			if (irq.trig_mode &&
+>>>  			    kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>>>  						irq.dest_id, irq.dest_mode))
+>>>  				__set_bit(irq.vector, ioapic_handled_vectors);
+>>
+>>Assuming Radim's comment (13db77347db1) is correct, the change in
+>>3159d36ad799 looks wrong and your patch restores the status quo. Actually, kvm_set_msi_irq() always sets irq->level = 1 so checking it is pointless.
+>>
+>>Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>
+> Thanks for review.
+>
+>>
+>> (but it is actually possible that there's a buggy userspace out there which expects EOI notifications; we won't find out unless we try to fix the bug).
+>>
+>
+> Yeh, there may be a buggy userspace hidden from this unexpected EOI notifications. It may not be worth enough to fix it as we may spend many time
+> to catch the bug.
+> Perhaps we should only remove the pointless checking of irq->level for cleanup. :)
 
-Bart
+I'm feeling brave so in case nobody expresses any particular concerns
+let's just fix it :-)
+
+-- 
+Vitaly
+
