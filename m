@@ -2,110 +2,128 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13440C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D1FC34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8C5207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF127207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2etLP6I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="I3VnMukW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgBRLjc (ORCPT
+        id S1726463AbgBRLjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:39:32 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43774 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgBRLjb (ORCPT
+        Tue, 18 Feb 2020 06:39:36 -0500
+Received: from www149.your-server.de ([78.47.15.70]:33724 "EHLO
+        www149.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgBRLjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:39:31 -0500
-Received: by mail-oi1-f196.google.com with SMTP id p125so19751095oif.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 03:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UUPzsUk1wu+gPhqdi+1tZpybnOvga12zZ1MGyKCA/rU=;
-        b=L2etLP6IYwFIW3FyevHBpWly/BSpXYuv/jq3DPu5AB2ejfQtcQDJjrS9OE9cFEcp0z
-         ZAE05qdVy9AwI3/tcEHZ7L+P6ksqA9p2tv2HT8TUHi3DGqldEZRE7vExUeHGeLw4SBsL
-         WPIZqrpCUr+/Q1k0nt7VlDRiMl//NW7uMT6vLHy6abNjbFpZWCzRiuKzqRld02kwluvo
-         q9E06Xz1dQjqWj6JbbfIy6aIFI8vg8KklO1IeAMUsaZCtoRlpmIXFeARyLgmf9+0Fj6P
-         LWSNVMaPlH3oC+inPyfIlnxzYP9/VrqsAntZjBp9Ur8KPm6iOt9aGKRJVr71NGc5PHuj
-         xW2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UUPzsUk1wu+gPhqdi+1tZpybnOvga12zZ1MGyKCA/rU=;
-        b=fKdXn6ofjB5LYpHl6sQNiYBRaBPvQJhxIX+XBLg+3deDOvyL6J5HZXO02jRima38tc
-         2ZpS3OyH6p12JA7m7pO3muTOLj4WS5aj7MMVHF5QfvGAQKr/s35yIfh1LnZX307nALM2
-         C1qdF3El9Gd34FDzWL0ES+tC3LExm3HXhYcgenSRygGVgDn8P3c33hC1QgLXMKgb7abx
-         BBwS3yJc9iuQghvw+OBYjlfKDOuL6GTcGxjgYOt6JS2nWsRiCyIKEr1P+XG5Z5w6BNLo
-         p9K7CMwGnyFEawfCkS6xMRSJPd9rwD6uoqBhtl0Vqq1Qnrqe7k6MYG2u+6QkM3Aj8FGa
-         5IoA==
-X-Gm-Message-State: APjAAAX2sUTYU4IPo+jo8D8fnJ/N6SgMLLL4vXWrD+/ivvyKhKzrk5l/
-        wsa5TVUzEeoQw4Hy0wZS75PkEAv1KE0yeoOsRRLw9SG3
-X-Google-Smtp-Source: APXvYqz29iGao91H+1lCMqGZV/+PUEBjuNNJdnFuDjAM+V1tt+JID5O9GWf62dxM+b0xDwTMT8pYAtkKGPudb75BLVk=
-X-Received: by 2002:aca:cd46:: with SMTP id d67mr945511oig.156.1582025970745;
- Tue, 18 Feb 2020 03:39:30 -0800 (PST)
+        Tue, 18 Feb 2020 06:39:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hanno.de;
+         s=default1911; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wcHYCgvIc1V4L4eqgKkfizJKSrtKfmAWPhFBpvyI6bQ=; b=I3VnMukWF6WKccKYTWKGE5U/37
+        H+zGYvm56+lr/H+x2RwJcjbzZCCT+464sdhj3IfIAxHeuVzsbrmfRMi69tp2RAgSugiRpf8/S2/Hc
+        zG7Pim+/RREpz7ZHDnqXXHrXb8L0FJxulAMh0br3SMSWNBNeMNhGvbViNEaAfGh2zbgEFqmHWY66T
+        RCkBbkYU/jazB9pYqD8b2wiuJVPS76ZeLfw2yY7C9ad/WFB+iFq/29GooGWkR5yIipdxDcNmo1mSH
+        Fmb6Wd68po5MEwUJaOap+qPYdXBH64gY2VEmmFwoVymmWCii5ktG7DjKaGRSN+bllwoW7YhDQHgXI
+        +LJCDLYA==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www149.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j41Dv-0003z0-UM; Tue, 18 Feb 2020 12:39:32 +0100
+Received: from [2a04:4540:680e:4300:a894:29ae:bca2:b322]
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j41Dv-000LjW-Px; Tue, 18 Feb 2020 12:39:31 +0100
+Subject: [PATCH v2 3/3] HID: hid-bigbenff: fix race condition for scheduled
+ work during removal
+From:   Hanno Zulla <kontakt@hanno.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
+ <CAO-hwJJ1sc_RAh4ytWSOmRqfVESi2dvB_Ao_Vn+6XXixxVyxrA@mail.gmail.com>
+ <74d73ebc-0cff-768d-00b7-57bb9b44124f@hanno.de>
+ <266828ed-d335-d707-56ef-622fd1cc216d@hanno.de>
+ <002114d2-ad2f-5dfc-fa3a-25d135ee41a3@hanno.de>
+Message-ID: <7b9cc0d7-a128-b056-4d3c-1bc16c4643f3@hanno.de>
+Date:   Tue, 18 Feb 2020 12:39:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200124181811.4780-1-hjl.tools@gmail.com> <E184715B-30CD-4951-BAF4-E95135AEE938@amacapital.net>
- <CAMe9rOov9pLYcDLcu2CR7-i5VJhWzz4n95MYiXZDd9p79nQFyQ@mail.gmail.com>
- <CAMe9rOrtj-Hrr6tmSrwg_V9bawXXB2WjsSedL=aCaaH-=ZSKsA@mail.gmail.com> <20200218104552.GA14449@zn.tnic>
-In-Reply-To: <20200218104552.GA14449@zn.tnic>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Tue, 18 Feb 2020 03:38:54 -0800
-Message-ID: <CAMe9rOpyb0-DZME8fdqjvD4fM7-0ZugM3YcPfX9i-kGM1Yj_QA@mail.gmail.com>
-Subject: Re: [PATCH] x86: Don't declare __force_order in kaslr_64.c
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <002114d2-ad2f-5dfc-fa3a-25d135ee41a3@hanno.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: kontakt@hanno.de
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 2:45 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Jan 24, 2020 at 10:44:30AM -0800, H.J. Lu wrote:
-> > This updated patch fixed a typo in Subject: "care" -> "declare".
-> >
-> > From c8c26194cf5a344cd53763eaaf16c3ab609736f4 Mon Sep 17 00:00:00 2001
-> > From: "H.J. Lu" <hjl.tools@gmail.com>
-> > Date: Thu, 16 Jan 2020 12:46:51 -0800
-> > Subject: [PATCH] x86: Don't declare __force_order in kaslr_64.c
-> >
-> > GCC 10 changed the default to -fno-common, which leads to
-> >
-> >   LD      arch/x86/boot/compressed/vmlinux
-> > ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
-> > make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
-> >
-> > Since __force_order is already provided in pgtable_64.c, there is no
-> > need to declare __force_order in kaslr_64.c.
-> >
-> > Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
->
-> What is Yu-cheng's SOB supposed to mean here?
->
-> The only case where it would make sense is if he's sending this patch
-> but he isn't. So what's up?
->
+HID: hid-bigbenff: fix race condition for scheduled work during removal
 
-I wrote this patch as the part of the previous CET patch set Yu-cheng submitted.
-Since this is a standalone patch, he asked me to send it separately.  I didn't
-remove Yu-cheng's SOB when I submitted this patch.
+It's possible that there is scheduled work left while the device is
+already being removed, which can cause a kernel crash. Adding a flag
+will avoid this.
 
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+---
+ drivers/hid/hid-bigbenff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f8c552b64a89..db6da21ade06 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -174,6 +174,7 @@ static __u8 pid0902_rdesc_fixed[] = {
+ struct bigben_device {
+ 	struct hid_device *hid;
+ 	struct hid_report *report;
++	bool removed;
+ 	u8 led_state;         /* LED1 = 1 .. LED4 = 8 */
+ 	u8 right_motor_on;    /* right motor off/on 0/1 */
+ 	u8 left_motor_force;  /* left motor force 0-255 */
+@@ -190,6 +191,9 @@ static void bigben_worker(struct work_struct *work)
+ 		struct bigben_device, worker);
+ 	struct hid_field *report_field = bigben->report->field[0];
+ 
++	if (bigben->removed)
++		return;
++
+ 	if (bigben->work_led) {
+ 		bigben->work_led = false;
+ 		report_field->value[0] = 0x01; /* 1 = led message */
+@@ -304,6 +308,7 @@ static void bigben_remove(struct hid_device *hid)
+ {
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 
++	bigben->removed = true;
+ 	cancel_work_sync(&bigben->worker);
+ 	hid_hw_stop(hid);
+ }
+@@ -324,6 +329,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		return -ENOMEM;
+ 	hid_set_drvdata(hid, bigben);
+ 	bigben->hid = hid;
++	bigben->removed = false;
+ 
+ 	error = hid_parse(hid);
+ 	if (error) {
 -- 
-H.J.
+2.20.1
+
+
+
