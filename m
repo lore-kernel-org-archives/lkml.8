@@ -2,100 +2,99 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D094C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E5FC3403B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8A62173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A887624649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582033770;
+	bh=n51/KJs8L/cpLycv+iIuj87Sa4qT5s8XqN6SNM7S/NA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Id67STiuTwHjHPuLDoSTzvdiJq5lyZWJRJWOJnaevRdNi7NUidoTJHMiD22beUw7r
+	 oNcyvtlbnMc5963pVqCJNEfYCT2usdxHr8ROf89Tm+LDA51f0iUQWh/MqwX9a0mjNg
+	 oqg0kiiIKbIhVgUIi1DxfANg9hoi4Jzqjyu3Dsqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgBRNtP (ORCPT
+        id S1726739AbgBRNt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:49:15 -0500
-Received: from mga09.intel.com ([134.134.136.24]:35526 "EHLO mga09.intel.com"
+        Tue, 18 Feb 2020 08:49:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:52634 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgBRNtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:49:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 05:49:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="268760966"
-Received: from unknown (HELO srivasta-NUC7i7BNH.iind.intel.com) ([10.223.163.113])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Feb 2020 05:49:11 -0800
-From:   Shobhit Srivastava <shobhit.srivastava@intel.com>
-To:     daniel@zonque.org, haojian.zhuang@gmail.com,
-        robert.jarzmik@free.fr, broonie@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     furquan@google.com, rajatja@google.com, evgreen@google.com,
-        andriy.shevchenko@linux.intel.com
-Subject: [PATCH 1/1] spi: pxa2xx: Enable SSP controller for CS toggle
-Date:   Tue, 18 Feb 2020 19:19:06 +0530
-Message-Id: <20200218191752.1.I5dcc25df7fd0fda29d57f5127337348e4c447852@changeid>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200218134906.25458-1-shobhit.srivastava@intel.com>
-References: <20200218134906.25458-1-shobhit.srivastava@intel.com>
+        id S1726347AbgBRNt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 08:49:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B9FD1FB;
+        Tue, 18 Feb 2020 05:49:28 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D34A53F6CF;
+        Tue, 18 Feb 2020 05:49:27 -0800 (PST)
+Date:   Tue, 18 Feb 2020 13:49:26 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/3] power: (regmap:) Add linear_range helper
+Message-ID: <20200218134926.GH4232@sirena.org.uk>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+ <20b107ac6e40206b82d014a145abe0569d7a6f81.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200211190614.GP4543@sirena.org.uk>
+ <cb9ed43aafcd8e1f6af05bfec8108ee8c14af265.camel@fi.rohmeurope.com>
+ <20200214114749.GB4827@sirena.org.uk>
+ <375c7756fca56de4f2f85d1a1a4e0b01dadc290b.camel@fi.rohmeurope.com>
+ <208a81c87e944c69d95da85d7fd0f3ea2bd61547.camel@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zhtSGe8h3+lMyY1M"
+Content-Disposition: inline
+In-Reply-To: <208a81c87e944c69d95da85d7fd0f3ea2bd61547.camel@fi.rohmeurope.com>
+X-Cookie: No alcohol, dogs or horses.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some circumstances on Intel LPSS controllers, toggling the LPSS
-CS control register doesn't actually cause the CS line to toggle.
-This ruins SPI transactions that either rely on delay_usecs,
-or toggle the CS line without sending any data.
-This seems to be because the SSP controller is in disabled state.
-As per the spec, the controller needs to be enabled for CS change
-to take effect.
-This issue is not seen in cases where there is data to be
-transferred because then the SSCR0 gets enabled via
-pxa2xx_configure_sscr0().
 
-Signed-off-by: Shobhit Srivastava <shobhit.srivastava@intel.com>
+--zhtSGe8h3+lMyY1M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
----
+On Tue, Feb 18, 2020 at 07:23:38AM +0000, Vaittinen, Matti wrote:
 
- drivers/spi/spi-pxa2xx.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+> By the way - do you have some nice test cases for regulators hidden
+> somewhere? If so, do you think you could share them? I sure have some
+> for BD718x7 but they are somewhat clumsy and require special HW. (I've
+> never liked unit-tests but I must admit there are some specific cases
+> where they would be pretty usable).
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 4c7a71f0fb3e..414afc72ef44 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -370,7 +370,7 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
- 	struct driver_data *drv_data =
- 		spi_controller_get_devdata(spi->controller);
- 	const struct lpss_config *config;
--	u32 value;
-+	u32 value, sscr0;
- 
- 	config = lpss_get_config(drv_data);
- 
-@@ -382,7 +382,18 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
- 		value &= ~LPSS_CS_CONTROL_CS_HIGH;
- 	else
- 		value |= LPSS_CS_CONTROL_CS_HIGH;
-+
-+	/* To propagate CS value to output, the controller should
-+	 * be enabled. This is needed for devices that just do
-+	 * CS assert, wait and CS deassert without sending any data.
-+	 */
-+	sscr0 = pxa2xx_spi_read(drv_data, SSCR0);
-+	pxa2xx_spi_write(drv_data, SSCR0, sscr0 | SSCR0_SSE);
-+
- 	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
-+
-+	/* Restore the original SSCR0 config*/
-+	 pxa2xx_spi_write(drv_data, SSCR0, sscr0);
- }
- 
- static void cs_assert(struct spi_device *spi)
--- 
-2.17.1
+You can't really run tests on actual regulator drivers outside of test
+rigs as they're kind of important to the system they're running in.
 
+--zhtSGe8h3+lMyY1M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5L62UACgkQJNaLcl1U
+h9AmpQf/Sh9P3ryrmoMBEQp3tnpxxMRxZYKeqQpaMK347KrY7FF8v38AFpSwNIJJ
+3fFTu3vXfSNgpf5io3pmWhwQt7P0qV6sHiAGp/HcWgbSTaWsS+WUawffc4Ktz2LY
+lQWg8mxosy7Ip/BKBB+h925C5id0M6afqZlgUg5ACzCYCRpGk+HPN1zb0gSeU5Oh
+qni/LyBFo+6ugvCuEspGStlDIIHOSD+eyUk+as8Hct1Ou/WQdqpCZH7ghhBwfbN+
+IpLj7p+k6VCa2RXgrd/mdmHZQWE1x3r3JnUkpCdBCF94SXHC54khG3Syiznad9XQ
+UyxcwiQxUuv+DD9zP0ly2VKl6BcErg==
+=1sE4
+-----END PGP SIGNATURE-----
+
+--zhtSGe8h3+lMyY1M--
