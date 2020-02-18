@@ -2,211 +2,129 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4115DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D0C34036
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1756322527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582021754;
-	bh=8lfCo9JgbsUMnfmswTPY301UU9yeRlXDAewhFt3Z78E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K5gZBOI50ekzLFm4mY9iNH+JNe+/B4iuZOh5/SaTZZeMLSxYDpihBz5orHD2OHEx6
-	 uoYU6YLObdYW1odhAbQCnJsfKXYZmoevUI0lH9Un+oDtl5Y54rfzhTrh/z5Mva/vBj
-	 RqwDZ5HbaolUV1jkj1l0sS/zXV9DUNqIKbmXOyMY=
+	by mail.kernel.org (Postfix) with ESMTP id 0C77A22527
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="FzFE0W+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgBRK3N (ORCPT
+        id S1726546AbgBRK3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:29:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgBRK3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:29:12 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C091C21D7D;
-        Tue, 18 Feb 2020 10:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582021751;
-        bh=8lfCo9JgbsUMnfmswTPY301UU9yeRlXDAewhFt3Z78E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=anEayyTALTwnTzWa6RGz9cbR1szMeBbIJFKM3m+FB9jIG49YaxkA5yT1tXTvoiJnS
-         LXse0O+midzMDa+GqvZpRL1qFuCR9+hjJ2SMhKf1ZXcgE4jSGwCHDP5vRMitmzZrTD
-         zPEOqSN45Txc1VHcfXQh8oOoGEXj6IwqIUWBkFxI=
-Date:   Tue, 18 Feb 2020 19:29:05 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
- real mode
-Message-Id: <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
-In-Reply-To: <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
-References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
-        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
-        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
-        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
-        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
-        <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
-        <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
-        <20200218094421.6d402de389ce23a55a3ec084@kernel.org>
-        <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Feb 2020 05:29:39 -0500
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:32835 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgBRK3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 05:29:39 -0500
+Received: by mail-lj1-f169.google.com with SMTP id y6so22325172lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 02:29:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=s+I8pj7DDW7+MEIcYQaGsLXCKLqSSyhyC6U6vjGcY3Y=;
+        b=FzFE0W+UiHz1mbo6S9YKAeko2ypDGCUCA9ezE4SgAQI+9W3ZOhB7sCDgtSRGsbtiwi
+         WHZsz3Ox+UF79hDY/VMkWmHo8Ylh6afm7d6jEMM4QkPq8OxyIbGj8kaVffWRHnB9Z+gd
+         bDwvsnrR7OxysvPw6GY+SYBGvFfHxfqSAfiYwoKx/bHuUYCBpPHjG/TBRUB4sKfDohAb
+         ajJ6baDqYQgGGcVaKMuzuzxKAHyhP11EuHwX2aObJUIy7DDpX+zlSF72Sby7L3f7qQyo
+         ypJmiBrIUWebmMoik0zRHK+cC4QiX6NBnxcTPdyBUAIpfG219xIdk/K0+0N/PnViW+8i
+         hTAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=s+I8pj7DDW7+MEIcYQaGsLXCKLqSSyhyC6U6vjGcY3Y=;
+        b=dW6/8lLh0thY9l8Y7VGHWjdPbBTX2aEeT31B7sVhkPb6P0jpFfxJCLxt2Bs5tVFUAv
+         ABBiprnNlinW1nVLieFRLvTYk61qvfojaCrIYt6lrbCOacwwutvuxtClM/bAO3mIfEuy
+         bmlhQlQjoFQ6bMnCaG+tdqyi2aAHbSGTclbIv6miz0JImbvuTnVgwwV3afS1iu1UEfc/
+         kY456SqXSClie3jkmaDKUx9Kaw62s5OXnM/tNfxL+zRk/A7AjNBx39su3bddyqIsVjJn
+         MvlSovwKUoyM6ewl4fc3RCCbrboUW3Eq/IPvxqC7x03DwR1stVyWTXIbW2jDf/WtK7Gd
+         BaCg==
+X-Gm-Message-State: APjAAAWyqYFXUYFL0AkSbDKIWQll7ywfLUkim7EKzLN/wKV+oeXQROlk
+        vlEMtlJGyXqLY2VFCDo1Rh+WQw==
+X-Google-Smtp-Source: APXvYqx7w7kDrGAiOADdb7ykxRBSJpPOsXY00e27KzXbWnE6fz0tXD7YeabOs3OfrMDVtrtRpo9D/Q==
+X-Received: by 2002:a2e:a551:: with SMTP id e17mr12742787ljn.86.1582021777270;
+        Tue, 18 Feb 2020 02:29:37 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a10sm1922743lfr.94.2020.02.18.02.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 02:29:36 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 1C99A100F9D; Tue, 18 Feb 2020 13:30:02 +0300 (+03)
+Date:   Tue, 18 Feb 2020 13:30:02 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, elver@google.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org,
+        syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH -next] fork: annotate a data race in vm_area_dup()
+Message-ID: <20200218103002.6rtjreyqjepo3yxe@box>
+References: <20200217223138.doaph66iwprbwhw5@box>
+ <EAD6E54D-8A57-4494-94F2-2EEEC3265560@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <EAD6E54D-8A57-4494-94F2-2EEEC3265560@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 06:58:06 +0100
-Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-
-> >>>>
-> >>>> What do you mean by 'there' ? At the entry of kprobe_handler() ?
-> >>>>
-> >>>> That's what my patch does, it checks whether MMU is disabled or not. If
-> >>>> it is, it converts the address to a virtual address.
-> >>>>
-> >>>> Do you mean kprobe_handler() should bail out early as it does when the
-> >>>> trap happens in user mode ?
-> >>>
-> >>> Yes, that is what I meant.
-> >>>
-> >>>> Of course we can do that, I don't know
-> >>>> enough about kprobe to know if kprobe_handler() should manage events
-> >>>> that happened in real-mode or just ignore them. But I tested adding an
-> >>>> event on a function that runs in real-mode, and it (now) works.
-> >>>>
-> >>>> So, what should we do really ?
-> >>>
-> >>> I'm not sure how the powerpc kernel runs in real mode.
-> >>> But clearly, at least kprobe event can not handle that case because
-> >>> it tries to access memory by probe_kernel_read(). Unless that function
-> >>> correctly handles the address translation, I want to prohibit kprobes
-> >>> on such address.
-> >>>
-> >>> So what I would like to see is, something like below.
-> >>>
-> >>> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
-> >>> index 2d27ec4feee4..4771be152416 100644
-> >>> --- a/arch/powerpc/kernel/kprobes.c
-> >>> +++ b/arch/powerpc/kernel/kprobes.c
-> >>> @@ -261,7 +261,7 @@ int kprobe_handler(struct pt_regs *regs)
-> >>>           unsigned int *addr = (unsigned int *)regs->nip;
-> >>>           struct kprobe_ctlblk *kcb;
-> >>>    
-> >>> -       if (user_mode(regs))
-> >>> +       if (user_mode(regs) || !(regs->msr & MSR_IR))
-> >>>                   return 0;
-> >>>    
-> >>>           /*
-> >>>
-> >>>
-> >>
-> >> With this instead change of my patch, I get an Oops everytime a kprobe
-> >> event occurs in real-mode.
-> >>
-> >> This is because kprobe_handler() is now saying 'this trap doesn't belong
-> >> to me' for a trap that has been installed by it.
+On Mon, Feb 17, 2020 at 10:59:47PM -0500, Qian Cai wrote:
+> 
+> 
+> > On Feb 17, 2020, at 5:31 PM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
 > > 
-> > Hmm, on powerpc, kprobes is allowed to probe on the code which runs
-> > in the real mode? I think we should also prohibit it by blacklisting.
-> > (It is easy to add blacklist by NOKPROBE_SYMBOL(func))
-> 
-> Yes, I see a lot of them tagged with _ASM_NOKPROBE_SYMBOL() on PPC64, 
-> but none on PPC32. I suppose that's missing and have to be added. 
-
-Ah, you are using PPC32. 
-
-> Nevertheless, if one symbol has been forgotten in the blacklist, I think 
-> it is a problem if it generate Oopses.
-
-There is a long history also on x86 to make a blacklist. Anyway, how did
-you get this error on PPC32? Somewhere would you like to probe and
-it is a real mode function? Or, it happened unexpectedly?
-
-> 
-> > Or, some parts are possble to run under both real mode and kernel mode?
-> 
-> I don't think so, at least on PPC32
-
-OK, that's a good news. Also, are there any independent section where such
-real mode functions are stored? (I can see start_real_trampolines in
-sections.h) If that kind of sections are defined, it is easy to make
-a blacklist in arch_populate_kprobe_blacklist(). See arch/arm64/kernel/probes/kprobes.c.
-
-
-> >> So the 'program check' exception handler doesn't find the owner of the
-> >> trap hence generate an Oops.
-> >>
-> >> Even if we don't want kprobe() to proceed with the event entirely
-> >> (allthough it works at least for simple events), I'd expect it to fail
-> >> gracefully.
+> > I'm confused. AFAICS both sides hold mmap_sem on write:
 > > 
-> > Agreed. I thought it was easy to identify real mode code. But if it is
-> > hard, we should apply your first patch and also skip user handlers
-> > if we are in the real mode (and increment missed count).
-> 
-> user handlers are already skipped.
-
-Yes, if you don't put a kprobes on real mode code. However, if user
-(accidentally) puts a probe on real mode code, it might call a
-user handler?
-
-> 
-> What do you think about my latest proposal below ? If a trap is 
-> encoutered in real mode, if checks if the matching virtual address 
-> corresponds to a valid kprobe. If it is, it skips it. If not, it returns 
-> 0 to tell "it's no me". You are also talking about incrementing the 
-> missed count. Who do we do that ?
-
-I rather like your first patch. If there is a kprobes, we can not skip
-the instruction, because there is an instruction which must be executed.
-(or single-skipped, but I'm not sure the emulator works correctly on
-real mode)
-
-Thank you,
-
-> 
-> 
-> 
-> @@ -264,6 +265,13 @@ int kprobe_handler(struct pt_regs *regs)
->       if (user_mode(regs))
->           return 0;
-> 
-> +    if (!(regs->msr & MSR_IR)) {
-> +        if (!get_kprobe(phys_to_virt(regs->nip)))
-> +            return 0;
-> +        regs->nip += 4;
-> +        return 1;
-> +    }
-> +
->       /*
->        * We don't want to be preempted for the entire
->        * duration of kprobe processing
-> 
-> 
+> > - vm_mmap_pgoff() takes mmap_sem for the write on the write side
 > > 
-> > BTW, can the emulater handle the real mode code correctly?
+> > - do_mprotect_pkey() takes mmap_sem for the write on the read side
+> > 
+> > 
+> > What do I miss?
 > 
-> I don't know, how do I test that ?
+> Ah, good catch. I missed the locking for the read there. This is interesting because Marco
+> did confirmed that the concurrency could happen,
 > 
-> Christophe
+> https://lore.kernel.org/lkml/20191025173511.181416-1-elver@google.com/
+> 
+> If that means KCSAN is not at fault, then I could think of two things,
+> 
+> 1) someone downgrades the lock.
+> 
+> I don’t think that a case here. Only __do_munmap() will do that but I did not see how
+> it will affect us here.
+> 
+> 2) the reader and writer are two different processes.
+> 
+> So, they held a different mmap_sem, but I can’t see how could two processes shared
+> the same vm_area_struct. Also, file->f_mapping->i_mmap was also stored in the
+> writer, but I can’t see how it was also loaded in the reader.
+> 
+> Any ideas?
 
+I think I've got this:
+
+vm_area_dup() blindly copies all fields of orignal VMA to the new one.
+This includes coping vm_area_struct::shared.rb which is normally protected
+by i_mmap_lock. But this is fine because the read value will be
+overwritten on the following __vma_link_file() under proper protectection.
+
+So the fix is correct, but justificaiton is lacking.
+
+Also, I would like to more fine-grained annotation: marking with
+data_race() 200 bytes copy may hide other issues.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+ Kirill A. Shutemov
