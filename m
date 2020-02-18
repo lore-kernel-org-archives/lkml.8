@@ -2,106 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07FEC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67397C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5762067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D532067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hXAdbJg9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZP/lIbWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgBRUJL (ORCPT
+        id S1727497AbgBRUJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:09:11 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55893 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBRUJJ (ORCPT
+        Tue, 18 Feb 2020 15:09:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37877 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgBRT5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:09:09 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so4051932wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 12:09:07 -0800 (PST)
+        Tue, 18 Feb 2020 14:57:08 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w23so4340759otj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:57:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=4O8UBMcWrJ0vW2xCQ1w086ifQXzUq/0Zcfzr3vmxCmU=;
-        b=hXAdbJg9t7Ac7RWs2LVmLNuhUWu7hjBhe1Z8zVbgf5MTlBwdMbUrvJRzRAOAQsDc0I
-         EUM8+Gww5mrY84CsItT7dvGCd3oXCNqqoUvzcU5nXhvJvaTEvmA+kvxVEYOxAXv/gGdc
-         ictOXLSgaUbnju48nPm5bLTfBSOlaU6fSu4BQuHA9qtPpiUYlr2FjaFJJxAGFqWrNmgb
-         lWogUfBylpH6gHl/gxg5kggzq3YYcAbCIskV+OYW2tTWvcOGoRDbwc4nk8AIafQpWExb
-         rHYi6sQSgdrP+P2gduAztJFiiVWpU0wOBi2rxLbXy04ZQ//c1jLI1VSRMmqBODLmu4bS
-         KxUg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1jO1q8kwMNU1sHidaXu/iTrKUxw8olHFqB5ddcj+Hqw=;
+        b=ZP/lIbWIDHAZrYeCHKe+6oiU3ofC3zhTeALfX1J0x/xrTLivu9MPaImW7bNovjJX3/
+         /Tj6h5WwJY7zqiKulKdNaATXoZPSIhneFljhHTJCHGzy5JXSnsf/ZPoj3X1j0blwxfB2
+         fVMNJgv4nAxWPR/8wkTivlqXPViIc+4F3xRq0f5ZSIAilPOMk4uLHOKgoMYt8pX9M0TP
+         48Tx6Y+NyXrqOCwwRTfNbF+OVoxTC7jUNi8hJPsVWGJLxPq1XZyPZlh8ASeLBk2P8+PA
+         NbAUljEjPlWNu0KIrJ6zRaPCOwl0PlMu/JY0nSDCZMeoGuN5KbXoByugUFhGqrK5yN7M
+         cBpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4O8UBMcWrJ0vW2xCQ1w086ifQXzUq/0Zcfzr3vmxCmU=;
-        b=rXaxK6+GVQBJaDKkhR1EetUb0JRG7h9rdphIs6+MeMrrhnPkPDe2V3ZWpfQc37q6vi
-         clM3ADVmQ6uK+iqw8obNmIKpM7EAgES7BHHgerOASZVh4JtP0I1y9y0SfzjVK9eM3cwx
-         BpDcVmaxSpRX8NH7G4YzZjVmO4we8ti3n0zn6oEZJLpzCTXDi39w1nIFCupuDTHraU8a
-         +hUV44uaLUdY6tOZq2WvYJW+aMI5GSkZfCJfEy6rxla5uzjIPPyA4aLhrbwM6S89Sd/Z
-         bdfpvJoKt+cgBKU8ynyD/Dj05oPBjJ21/e/NWPh1khCBXyIO0K7kDQ6rr7loLBRyTebk
-         rOkQ==
-X-Gm-Message-State: APjAAAXkMcphlVjA2ESp85jmzjw/Wt4VmQ7ZZbeU1JWRd6HusUTrQJLs
-        rLWdK2PsZBBLdQI3IqjQp6pLog==
-X-Google-Smtp-Source: APXvYqyz8XCmBJQazBT3WrJL/40oe8aCs3Awx1JIxQFwy+25m3+8OEWhpJq7d8e2b6HSlTLRNYWFWA==
-X-Received: by 2002:a1c:1dc7:: with SMTP id d190mr5026741wmd.48.1582056546861;
-        Tue, 18 Feb 2020 12:09:06 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id c74sm5043017wmd.26.2020.02.18.12.09.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 12:09:06 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     lee.jones@linaro.org, tony@atomide.com
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] mfd: omap: remove useless cast for driver.name
-Date:   Tue, 18 Feb 2020 20:09:01 +0000
-Message-Id: <1582056541-16973-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1jO1q8kwMNU1sHidaXu/iTrKUxw8olHFqB5ddcj+Hqw=;
+        b=H6SkTE/fu+GwFc5lLQlAdCY7PzGTPaP9uDm698RakqC43C5i4GBTJMhCDjN6uv26RI
+         +8U1l4FjIxqyI5WbMDOkMMx+jYF7UTYqUJomB3AZWUjpUCr4/p+A2AJH+flDP6I5e5Gf
+         myvYU8Tk9Rvjwnl997aRI0YI1m9uu+tQ/5267TnVtiic61/yxEUguhcbWskOMspff8Ey
+         k63WXB+IRsO5zagWKSFzh6vbNX+Da5uakxtqvvZFiVLICQudmEgwwS739Iy0c/lj9NUt
+         aVyXx3Oo9Voa38CsQPQcPVsPx3AvnWHdRtfKWITGe17HkipotSBKFwA33+0GyN5Kidem
+         HOWQ==
+X-Gm-Message-State: APjAAAVFUo67JWe2ROuSXyquQzUzp1aTaxg0bRLAt3w+rl+f9xqEp0P+
+        59lJ2GZjNPqw0k9yHeoHMP8=
+X-Google-Smtp-Source: APXvYqxHVDxt3kjyDTyqT5LZv51VcsPvFV/OaAZMR0D36jEIKH62WVF82+ArplH7Do6LRRQV6RppCQ==
+X-Received: by 2002:a9d:3cf:: with SMTP id f73mr17020995otf.11.1582055827276;
+        Tue, 18 Feb 2020 11:57:07 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id z17sm1506069oib.3.2020.02.18.11.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Feb 2020 11:57:06 -0800 (PST)
+Date:   Tue, 18 Feb 2020 12:57:05 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH 1/2] objtool: Fix clang switch table edge case
+Message-ID: <20200218195705.GA10545@ubuntu-m2-xlarge-x86>
+References: <cover.1581997059.git.jpoimboe@redhat.com>
+ <263f6aae46d33da0b86d7030ced878cb5cab1788.1581997059.git.jpoimboe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <263f6aae46d33da0b86d7030ced878cb5cab1788.1581997059.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_driver name is const char pointer, so it not useful to cast
-xx_driver_name (which is already const char).
+On Mon, Feb 17, 2020 at 09:41:53PM -0600, Josh Poimboeuf wrote:
+> Clang has the ability to create a switch table which is not a jump
+> table, but is rather a table of string pointers.  This confuses objtool,
+> because it sees the relocations for the string pointers and assumes
+> they're part of a jump table:
+> 
+>   drivers/ata/sata_dwc_460ex.o: warning: objtool: sata_dwc_bmdma_start_by_tag()+0x3a2: can't find switch jump table
+>   net/ceph/messenger.o: warning: objtool: ceph_con_workfn()+0x47c: can't find switch jump table
+> 
+> Make objtool's find_jump_table() smart enough to distinguish between a
+> switch jump table (which has relocations to text addresses in the same
+> function as the original instruction) and other anonymous rodata (which
+> may have relocations to elsewhere).
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/485
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/mfd/omap-usb-host.c | 2 +-
- drivers/mfd/omap-usb-tll.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Tested with clang-11 and binutils 2.34, a combo that was previously
+broken and I no longer see these warnings on either defconfig or
+allyesconfig.
 
-diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
-index 4798d9f3f9d5..1f4f01b02d98 100644
---- a/drivers/mfd/omap-usb-host.c
-+++ b/drivers/mfd/omap-usb-host.c
-@@ -840,7 +840,7 @@ MODULE_DEVICE_TABLE(of, usbhs_omap_dt_ids);
- 
- static struct platform_driver usbhs_omap_driver = {
- 	.driver = {
--		.name		= (char *)usbhs_driver_name,
-+		.name		= usbhs_driver_name,
- 		.pm		= &usbhsomap_dev_pm_ops,
- 		.of_match_table = usbhs_omap_dt_ids,
- 	},
-diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
-index 265f5e350e1c..72f5a1cf867a 100644
---- a/drivers/mfd/omap-usb-tll.c
-+++ b/drivers/mfd/omap-usb-tll.c
-@@ -304,7 +304,7 @@ MODULE_DEVICE_TABLE(of, usbtll_omap_dt_ids);
- 
- static struct platform_driver usbtll_omap_driver = {
- 	.driver = {
--		.name		= (char *)usbtll_driver_name,
-+		.name		= usbtll_driver_name,
- 		.of_match_table = usbtll_omap_dt_ids,
- 	},
- 	.probe		= usbtll_omap_probe,
--- 
-2.24.1
-
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
