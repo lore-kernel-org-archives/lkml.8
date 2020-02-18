@@ -2,55 +2,54 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ECDC3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190F0C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6E42067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D742E2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056570;
-	bh=CG86kiDTW/YgKTOX9xk3Avhhsf9xEaEU2HTyYCuRcYY=;
+	s=default; t=1582056574;
+	bh=5rtxK+bLoKOH0YW9aBXEEUQ8fXsObI/jOQh/hApLQU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TSjWKJDi7zZyCtgrrbNPtrBeIhXCLtMrennzEkV8Sjcl1+fESPQisvTnFjmbiKg0x
-	 tLP1Y2k6chYIfnbDzXmefyCcOmkJxKJaPVSKyVdzci66dF1KCGcQqNdi0bshhIVFN9
-	 0z4lWS+iXPQLzG2Yl5RgabJB24GpVUXQP02+eGJQ=
+	b=1hBHGDaDGMN+KEmzQzp3WJ7pTuBjzunBW0kfAr82/hzuNyH58IV2nsWhv+L48OCqv
+	 +MvZ6kEvZ1/DHQQhLv7c89YH9pD3duBpxROTXJtQBZP7m47/6+ZwPsI2sQ5cdIv2Rh
+	 sRW72pGuDiWBmNpIyIhENENqvPJPa2w/QdOp840g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBRUJ3 (ORCPT
+        id S1727592AbgBRT4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727680AbgBRT46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:58 -0500
+        id S1727513AbgBRT4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0141124125;
-        Tue, 18 Feb 2020 19:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB1A24654;
+        Tue, 18 Feb 2020 19:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055817;
-        bh=CG86kiDTW/YgKTOX9xk3Avhhsf9xEaEU2HTyYCuRcYY=;
+        s=default; t=1582055804;
+        bh=5rtxK+bLoKOH0YW9aBXEEUQ8fXsObI/jOQh/hApLQU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsRhnjqWrei3bCt/neKlZDqLf4KZ+L/CBq568yv/Vs1rDqUlkuHFCVdX7Aji2lb9z
-         nNLjc1Bg/WjrSpB4b3SE80PY33T0xevB4XM+G6Ui/lKm+k9GlLVgPv96ITSZJzITWG
-         lIicec+bQjUCZiVxFVH2CNHPpDcr9gmf4w3DcBNM=
+        b=l00tBNfGBeJCJBsRzZmDoteTOY7WYM4PVCrXosnz8Jd4IaaCPmrchmCyJxv4BcP8e
+         XaFhLwfIE1OrL18NjkEFEocpA9r51KBz0IxsL6etqjvtEtAErbxqe49q4/sd+SCEaq
+         KN6F4pZRoIsYEPAezscmFORPL6Nh62Qr7w3W4mJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/38] arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
-Date:   Tue, 18 Feb 2020 20:54:53 +0100
-Message-Id: <20200218190419.409722070@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 27/38] IB/rdmavt: Reset all QPs when the device is shut down
+Date:   Tue, 18 Feb 2020 20:55:13 +0100
+Message-Id: <20200218190421.827686321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -63,116 +62,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 7559950aef1ab8792c50797c6c5c7c5150a02460 upstream
+commit f92e48718889b3d49cee41853402aa88cac84a6b upstream.
 
-We set the compat_elf_hwcap bits unconditionally on arm64 to
-include the VFP and NEON support. However, the FP/SIMD unit
-is optional on Arm v8 and thus could be missing. We already
-handle this properly in the kernel, but still advertise to
-the COMPAT applications that the VFP is available. Fix this
-to make sure we only advertise when we really have them.
+When the hfi1 device is shut down during a system reboot, it is possible
+that some QPs might have not not freed by ULPs. More requests could be
+post sent and a lingering timer could be triggered to schedule more packet
+sends, leading to a crash:
 
-Cc: stable@vger.kernel.org # v4.19
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000102
+  IP: [ffffffff810a65f2] __queue_work+0x32/0x3c0
+  PGD 0
+  Oops: 0000 1 SMP
+  Modules linked in: nvmet_rdma(OE) nvmet(OE) nvme(OE) dm_round_robin nvme_rdma(OE) nvme_fabrics(OE) nvme_core(OE) pal_raw(POE) pal_pmt(POE) pal_cache(POE) pal_pile(POE) pal(POE) pal_compatible(OE) rpcrdma sunrpc ib_isert iscsi_target_mod target_core_mod ib_iser libiscsi scsi_transport_iscsi ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm mlx4_ib sb_edac edac_core intel_powerclamp coretemp intel_rapl iosf_mbi kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd iTCO_wdt iTCO_vendor_support mxm_wmi ipmi_ssif pcspkr ses enclosure joydev scsi_transport_sas i2c_i801 sg mei_me lpc_ich mei ioatdma shpchp ipmi_si ipmi_devintf ipmi_msghandler wmi acpi_power_meter acpi_pad dm_multipath hangcheck_timer ip_tables ext4 mbcache jbd2 mlx4_en
+  sd_mod crc_t10dif crct10dif_generic mgag200 drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm drm mlx4_core crct10dif_pclmul crct10dif_common hfi1(OE) igb crc32c_intel rdmavt(OE) ahci ib_core libahci libata ptp megaraid_sas pps_core dca i2c_algo_bit i2c_core devlink dm_mirror dm_region_hash dm_log dm_mod
+  CPU: 23 PID: 0 Comm: swapper/23 Tainted: P OE ------------ 3.10.0-693.el7.x86_64 #1
+  Hardware name: Intel Corporation S2600CWR/S2600CWR, BIOS SE5C610.86B.01.01.0028.121720182203 12/17/2018
+  task: ffff8808f4ec4f10 ti: ffff8808f4ed8000 task.ti: ffff8808f4ed8000
+  RIP: 0010:[ffffffff810a65f2] [ffffffff810a65f2] __queue_work+0x32/0x3c0
+  RSP: 0018:ffff88105df43d48 EFLAGS: 00010046
+  RAX: 0000000000000086 RBX: 0000000000000086 RCX: 0000000000000000
+  RDX: ffff880f74e758b0 RSI: 0000000000000000 RDI: 000000000000001f
+  RBP: ffff88105df43d80 R08: ffff8808f3c583c8 R09: ffff8808f3c58000
+  R10: 0000000000000002 R11: ffff88105df43da8 R12: ffff880f74e758b0
+  R13: 000000000000001f R14: 0000000000000000 R15: ffff88105a300000
+  FS: 0000000000000000(0000) GS:ffff88105df40000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000102 CR3: 00000000019f2000 CR4: 00000000001407e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+  Stack:
+  ffff88105b6dd708 0000001f00000286 0000000000000086 ffff88105a300000
+  ffff880f74e75800 0000000000000000 ffff88105a300000 ffff88105df43d98
+  ffffffff810a6b85 ffff88105a301e80 ffff88105df43dc8 ffffffffc0224cde
+  Call Trace:
+  IRQ
+
+  [ffffffff810a6b85] queue_work_on+0x45/0x50
+  [ffffffffc0224cde] _hfi1_schedule_send+0x6e/0xc0 [hfi1]
+  [ffffffffc0170570] ? get_map_page+0x60/0x60 [rdmavt]
+  [ffffffffc0224d62] hfi1_schedule_send+0x32/0x70 [hfi1]
+  [ffffffffc0170644] rvt_rc_timeout+0xd4/0x120 [rdmavt]
+  [ffffffffc0170570] ? get_map_page+0x60/0x60 [rdmavt]
+  [ffffffff81097316] call_timer_fn+0x36/0x110
+  [ffffffffc0170570] ? get_map_page+0x60/0x60 [rdmavt]
+  [ffffffff8109982d] run_timer_softirq+0x22d/0x310
+  [ffffffff81090b3f] __do_softirq+0xef/0x280
+  [ffffffff816b6a5c] call_softirq+0x1c/0x30
+  [ffffffff8102d3c5] do_softirq+0x65/0xa0
+  [ffffffff81090ec5] irq_exit+0x105/0x110
+  [ffffffff816b76c2] smp_apic_timer_interrupt+0x42/0x50
+  [ffffffff816b5c1d] apic_timer_interrupt+0x6d/0x80
+  EOI
+
+  [ffffffff81527a02] ? cpuidle_enter_state+0x52/0xc0
+  [ffffffff81527b48] cpuidle_idle_call+0xd8/0x210
+  [ffffffff81034fee] arch_cpu_idle+0xe/0x30
+  [ffffffff810e7bca] cpu_startup_entry+0x14a/0x1c0
+  [ffffffff81051af6] start_secondary+0x1b6/0x230
+  Code: 89 e5 41 57 41 56 49 89 f6 41 55 41 89 fd 41 54 49 89 d4 53 48 83 ec 10 89 7d d4 9c 58 0f 1f 44 00 00 f6 c4 02 0f 85 be 02 00 00 41 f6 86 02 01 00 00 01 0f 85 58 02 00 00 49 c7 c7 28 19 01 00
+  RIP [ffffffff810a65f2] __queue_work+0x32/0x3c0
+  RSP ffff88105df43d48
+  CR2: 0000000000000102
+
+The solution is to reset the QPs before the device resources are freed.
+This reset will change the QP state to prevent post sends and delete
+timers to prevent callbacks.
+
+Fixes: 0acb0cc7ecc1 ("IB/rdmavt: Initialize and teardown of qpn table")
+Link: https://lore.kernel.org/r/20200210131040.87408.38161.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/kernel/cpufeature.c | 52 +++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 7 deletions(-)
+ drivers/infiniband/sw/rdmavt/qp.c |   84 +++++++++++++++++++++++---------------
+ 1 file changed, 51 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 1375307fbe4d2..ac3126aba0368 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -42,9 +42,7 @@ EXPORT_SYMBOL_GPL(elf_hwcap);
- #define COMPAT_ELF_HWCAP_DEFAULT	\
- 				(COMPAT_HWCAP_HALF|COMPAT_HWCAP_THUMB|\
- 				 COMPAT_HWCAP_FAST_MULT|COMPAT_HWCAP_EDSP|\
--				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_VFP|\
--				 COMPAT_HWCAP_VFPv3|COMPAT_HWCAP_VFPv4|\
--				 COMPAT_HWCAP_NEON|COMPAT_HWCAP_IDIV|\
-+				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_IDIV|\
- 				 COMPAT_HWCAP_LPAE)
- unsigned int compat_elf_hwcap __read_mostly = COMPAT_ELF_HWCAP_DEFAULT;
- unsigned int compat_elf_hwcap2 __read_mostly;
-@@ -1341,17 +1339,30 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 	{},
- };
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -58,6 +58,8 @@
+ #include "trace.h"
  
--#define HWCAP_CAP(reg, field, s, min_value, cap_type, cap)	\
--	{							\
--		.desc = #cap,					\
--		.type = ARM64_CPUCAP_SYSTEM_FEATURE,		\
-+
-+#define HWCAP_CPUID_MATCH(reg, field, s, min_value)		\
- 		.matches = has_cpuid_feature,			\
- 		.sys_reg = reg,					\
- 		.field_pos = field,				\
- 		.sign = s,					\
- 		.min_field_value = min_value,			\
-+
-+#define __HWCAP_CAP(name, cap_type, cap)			\
-+		.desc = name,					\
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,		\
- 		.hwcap_type = cap_type,				\
- 		.hwcap = cap,					\
-+
-+#define HWCAP_CAP(reg, field, s, min_value, cap_type, cap)	\
-+	{							\
-+		__HWCAP_CAP(#cap, cap_type, cap)		\
-+		HWCAP_CPUID_MATCH(reg, field, s, min_value)	\
-+	}
-+
-+#define HWCAP_CAP_MATCH(match, cap_type, cap)			\
-+	{							\
-+		__HWCAP_CAP(#cap, cap_type, cap)		\
-+		.matches = match,				\
- 	}
+ static void rvt_rc_timeout(struct timer_list *t);
++static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
++			 enum ib_qp_type type);
  
- static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
-@@ -1387,8 +1398,35 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
- 	{},
- };
+ /*
+  * Convert the AETH RNR timeout code into the number of microseconds.
+@@ -268,40 +270,41 @@ no_qp_table:
+ }
  
-+#ifdef CONFIG_COMPAT
-+static bool compat_has_neon(const struct arm64_cpu_capabilities *cap, int scope)
+ /**
+- * free_all_qps - check for QPs still in use
++ * rvt_free_qp_cb - callback function to reset a qp
++ * @qp: the qp to reset
++ * @v: a 64-bit value
++ *
++ * This function resets the qp and removes it from the
++ * qp hash table.
++ */
++static void rvt_free_qp_cb(struct rvt_qp *qp, u64 v)
 +{
-+	/*
-+	 * Check that all of MVFR1_EL1.{SIMDSP, SIMDInt, SIMDLS} are available,
-+	 * in line with that of arm32 as in vfp_init(). We make sure that the
-+	 * check is future proof, by making sure value is non-zero.
-+	 */
-+	u32 mvfr1;
++	unsigned int *qp_inuse = (unsigned int *)v;
++	struct rvt_dev_info *rdi = ib_to_rvt(qp->ibqp.device);
 +
-+	WARN_ON(scope == SCOPE_LOCAL_CPU && preemptible());
-+	if (scope == SCOPE_SYSTEM)
-+		mvfr1 = read_sanitised_ftr_reg(SYS_MVFR1_EL1);
-+	else
-+		mvfr1 = read_sysreg_s(SYS_MVFR1_EL1);
++	/* Reset the qp and remove it from the qp hash list */
++	rvt_reset_qp(rdi, qp, qp->ibqp.qp_type);
 +
-+	return cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDSP_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDINT_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDLS_SHIFT);
++	/* Increment the qp_inuse count */
++	(*qp_inuse)++;
 +}
-+#endif
 +
- static const struct arm64_cpu_capabilities compat_elf_hwcaps[] = {
- #ifdef CONFIG_COMPAT
-+	HWCAP_CAP_MATCH(compat_has_neon, CAP_COMPAT_HWCAP, COMPAT_HWCAP_NEON),
-+	HWCAP_CAP(SYS_MVFR1_EL1, MVFR1_SIMDFMAC_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv4),
-+	/* Arm v8 mandates MVFR0.FPDP == {0, 2}. So, piggy back on this for the presence of VFP support */
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFP),
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv3),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
--- 
-2.20.1
-
++/**
++ * rvt_free_all_qps - check for QPs still in use
+  * @rdi: rvt device info structure
+  *
+  * There should not be any QPs still in use.
+  * Free memory for table.
++ * Return the number of QPs still in use.
+  */
+ static unsigned rvt_free_all_qps(struct rvt_dev_info *rdi)
+ {
+-	unsigned long flags;
+-	struct rvt_qp *qp;
+-	unsigned n, qp_inuse = 0;
+-	spinlock_t *ql; /* work around too long line below */
+-
+-	if (rdi->driver_f.free_all_qps)
+-		qp_inuse = rdi->driver_f.free_all_qps(rdi);
++	unsigned int qp_inuse = 0;
+ 
+ 	qp_inuse += rvt_mcast_tree_empty(rdi);
+ 
+-	if (!rdi->qp_dev)
+-		return qp_inuse;
++	rvt_qp_iter(rdi, (u64)&qp_inuse, rvt_free_qp_cb);
+ 
+-	ql = &rdi->qp_dev->qpt_lock;
+-	spin_lock_irqsave(ql, flags);
+-	for (n = 0; n < rdi->qp_dev->qp_table_size; n++) {
+-		qp = rcu_dereference_protected(rdi->qp_dev->qp_table[n],
+-					       lockdep_is_held(ql));
+-		RCU_INIT_POINTER(rdi->qp_dev->qp_table[n], NULL);
+-
+-		for (; qp; qp = rcu_dereference_protected(qp->next,
+-							  lockdep_is_held(ql)))
+-			qp_inuse++;
+-	}
+-	spin_unlock_irqrestore(ql, flags);
+-	synchronize_rcu();
+ 	return qp_inuse;
+ }
+ 
+@@ -684,14 +687,14 @@ static void rvt_init_qp(struct rvt_dev_i
+ }
+ 
+ /**
+- * rvt_reset_qp - initialize the QP state to the reset state
++ * _rvt_reset_qp - initialize the QP state to the reset state
+  * @qp: the QP to reset
+  * @type: the QP type
+  *
+  * r_lock, s_hlock, and s_lock are required to be held by the caller
+  */
+-static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
+-			 enum ib_qp_type type)
++static void _rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
++			  enum ib_qp_type type)
+ 	__must_hold(&qp->s_lock)
+ 	__must_hold(&qp->s_hlock)
+ 	__must_hold(&qp->r_lock)
+@@ -737,6 +740,27 @@ static void rvt_reset_qp(struct rvt_dev_
+ 	lockdep_assert_held(&qp->s_lock);
+ }
+ 
++/**
++ * rvt_reset_qp - initialize the QP state to the reset state
++ * @rdi: the device info
++ * @qp: the QP to reset
++ * @type: the QP type
++ *
++ * This is the wrapper function to acquire the r_lock, s_hlock, and s_lock
++ * before calling _rvt_reset_qp().
++ */
++static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
++			 enum ib_qp_type type)
++{
++	spin_lock_irq(&qp->r_lock);
++	spin_lock(&qp->s_hlock);
++	spin_lock(&qp->s_lock);
++	_rvt_reset_qp(rdi, qp, type);
++	spin_unlock(&qp->s_lock);
++	spin_unlock(&qp->s_hlock);
++	spin_unlock_irq(&qp->r_lock);
++}
++
+ /** rvt_free_qpn - Free a qpn from the bit map
+  * @qpt: QP table
+  * @qpn: queue pair number to free
+@@ -1285,7 +1309,7 @@ int rvt_modify_qp(struct ib_qp *ibqp, st
+ 	switch (new_state) {
+ 	case IB_QPS_RESET:
+ 		if (qp->state != IB_QPS_RESET)
+-			rvt_reset_qp(rdi, qp, ibqp->qp_type);
++			_rvt_reset_qp(rdi, qp, ibqp->qp_type);
+ 		break;
+ 
+ 	case IB_QPS_RTR:
+@@ -1434,13 +1458,7 @@ int rvt_destroy_qp(struct ib_qp *ibqp)
+ 	struct rvt_qp *qp = ibqp_to_rvtqp(ibqp);
+ 	struct rvt_dev_info *rdi = ib_to_rvt(ibqp->device);
+ 
+-	spin_lock_irq(&qp->r_lock);
+-	spin_lock(&qp->s_hlock);
+-	spin_lock(&qp->s_lock);
+ 	rvt_reset_qp(rdi, qp, ibqp->qp_type);
+-	spin_unlock(&qp->s_lock);
+-	spin_unlock(&qp->s_hlock);
+-	spin_unlock_irq(&qp->r_lock);
+ 
+ 	wait_event(qp->wait, !atomic_read(&qp->refcount));
+ 	/* qpn is now available for use again */
 
 
