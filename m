@@ -2,102 +2,157 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E720FC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E86C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C8D21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1475221D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFZj2Ssq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NqUeA5bm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgBRSM5 (ORCPT
+        id S1726858AbgBRSNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:12:57 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41208 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgBRSMy (ORCPT
+        Tue, 18 Feb 2020 13:13:04 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57036 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726826AbgBRSND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:12:54 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so8394407plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:12:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oLeONphgN8bI3yXOD6b6adnLltoiWoWgl8XWN+7QgxY=;
-        b=VFZj2SsqMCbIShucyuZlAHB1hbUvkl/E0khDnin9ueeSQG3ICe56NLzND/ROolqv75
-         PZZ9/TYDfmZ9pqyrg0NxDm8rItdRvQFa7QGeBPRtCKN1XuOk6ngqul1pfAFXiY1bXifU
-         SXBqfoKKQP3z7DfVjxeiRZPKL/YfhK57cBLYhoPLyaOUvYLFEaQU7v4eMLtWgO9RlyuM
-         9jLWV6VYMNO14UpvFfy6IFOmnxkaTmtdqRSjbrOfkaDevdhUYK0q6V0aLEj1F23fyCPA
-         t41CTKy627ZQrELEExiV+bG7DcAUzoygNamg/ZgSVmVbjBF58ki6jVazVq3iLe/oIQ/y
-         7z7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oLeONphgN8bI3yXOD6b6adnLltoiWoWgl8XWN+7QgxY=;
-        b=srNgGYuOLN1/IZqSgNLEgeduHDhI7EkKCCk+UC/DIBwb9SpEnbgT4D8W7ZJ8q83rie
-         w3S94VeYJaaRhzC+Tydur65QZzU7kH0WEuVlTvLfnshvjas6MD0SFqBI9eaM+GsFaFPP
-         2JuCv/YzOkxjDlYmbqLA5KQzPD/qkMtHe1sComqNQjOX7N9b+oyfRTojMUmadWrPUDxt
-         A/oL/TN9a7ui7le7jQyEBgdQmmQNOejfdaZFY7jVSgJbHWNmuKkRDhUfeB7GInvZX8jn
-         LrWzaZ04hGpkhFhLcAEnlJyIEZvQhcxmYiaxgRwm5R+FKQyrCBCbwGulTyX7ePLvhC37
-         KPPw==
-X-Gm-Message-State: APjAAAWNoxRkemNCNPVLics70BP4YXP4k4NO8ncITqjnGUBEo1cmuWUw
-        80DpVUbzXTcZp8YctFkjfVzpFGrZTNk=
-X-Google-Smtp-Source: APXvYqxiNPa/1gH9eAM7SpBofRF5udb8qqSPMvgm5ozyIY2/qfio9pHlLjFssqaOxPtTkBAL38KDCw==
-X-Received: by 2002:a17:90a:cb11:: with SMTP id z17mr4153616pjt.122.1582049572841;
-        Tue, 18 Feb 2020 10:12:52 -0800 (PST)
-Received: from localhost ([103.195.202.120])
-        by smtp.gmail.com with ESMTPSA id t66sm5185236pgb.91.2020.02.18.10.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:12:51 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        swboyd@chromium.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v5 8/8] drivers: thermal: tsens: Remove unnecessary irq flag
-Date:   Tue, 18 Feb 2020 23:42:12 +0530
-Message-Id: <d3e1c0f148d46e395a0886d9028df0faf8e9f9bb.1582048155.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1582048155.git.amit.kucheria@linaro.org>
-References: <cover.1582048155.git.amit.kucheria@linaro.org>
+        Tue, 18 Feb 2020 13:13:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582049582; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0c1mjaoinwfnnDHt6xgGoo8PceKhGgd93L7iJhOjAzw=; b=NqUeA5bmY/AO5JewI0vR2M2e6b9w0c2knGlr9g6rMtwFSay+Ww5dpZvcVTCjw8HMm7Ls/6fo
+ x/eC05sbYDr2cTK8kRt2p+5CvfUTPqgspG0rC3WqCxeanJpXqRwbKivFUIkHGIxSa4/vyzlQ
+ t+Ha0i37Vohc672P6MdecSZhVWM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4c2925.7fc52b12a1f0-smtp-out-n03;
+ Tue, 18 Feb 2020 18:12:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C2D45C447AF; Tue, 18 Feb 2020 18:12:51 +0000 (UTC)
+Received: from [192.168.0.107] (unknown [183.83.146.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1A07C447AA;
+        Tue, 18 Feb 2020 18:12:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C1A07C447AA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
+ <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
+ <20200130180637.9E02D206F0@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <6ea1e6a5-4942-5dba-4e91-28275db00153@codeaurora.org>
+Date:   Tue, 18 Feb 2020 23:42:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130180637.9E02D206F0@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IRQF_TRIGGER_HIGH is already specified through devicetree interrupts
-property. Remove it from code.
+Thanks Stephen.
+Will address the comments in the next patch series.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/thermal/qcom/tsens.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 1/30/2020 11:36 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2020-01-29 20:18:41)
+>> The Modem Subsystem clock provider have a bunch of generic properties
+>> that are needed in a device tree. Add a YAML schemas for those.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,mss.yaml        | 58 ++++++++++++++++++++++
+> 
+> Please rename to qcom,sc7180-mss.yaml
+> 
+>>   1 file changed, 58 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>> new file mode 100644
+>> index 0000000..ebb04e1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Modem Clock Controller Binding
+>> +
+>> +maintainers:
+>> +  - Taniya Das <tdas@codeaurora.org>
+>> +
+>> +description: |
+>> +  Qualcomm modem clock control module which supports the clocks.
+> 
+> Can you point to the header file from here?
+> include/dt-bindings/clock/qcom,sc7180-mss.h I guess.
+> 
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 5b003d598234..9ee00c67144c 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -118,7 +118,7 @@ static int tsens_register(struct tsens_priv *priv)
- 
- 	ret = devm_request_threaded_irq(&pdev->dev, irq,
- 					NULL, tsens_irq_thread,
--					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-+					IRQF_ONESHOT,
- 					dev_name(&pdev->dev), priv);
- 	if (ret) {
- 		dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+will add the same.
+
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +       - qcom,sc7180-mss
+>> +
+>> +  clocks:
+>> +    minItems: 1
+>> +    maxItems: 3
+> 
+> Why is it optional? Don't these all go there?
+> 
+
+Yes, moved them to required.
+
+>> +    items:
+>> +      - description: gcc_mss_mfab_axi clock from GCC
+>> +      - description: gcc_mss_nav_axi clock from GCC
+>> +      - description: gcc_mss_cfg_ahb clock from GCC
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: gcc_mss_mfab_axis_clk
+>> +      - const: gcc_mss_nav_axi_clk
+>> +      - const: cfg_clk
+> 
+> Do these really need _clk at the end? Seems redundant.
+> 
+Removed _clk.
+
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+
 -- 
-2.20.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
