@@ -2,110 +2,189 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68361C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C10C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FCC207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628DB24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="Q/iHPLPq"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MTyOyZdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgBRW4p (ORCPT
+        id S1727438AbgBRW5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:56:45 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43656 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRW4o (ORCPT
+        Tue, 18 Feb 2020 17:57:45 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1295 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgBRW5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:56:44 -0500
-Received: by mail-pg1-f195.google.com with SMTP id u12so11319120pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 14:56:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=5EPr0BrtYIu4h/VI5T3PQSkN4bFjMVa+ROiHBvZu+BI=;
-        b=Q/iHPLPqU8KdXSDOCl9uBuYCdsHCX3GF4coOl8mrfuVReaafn0vLQ569GLDEf95ROp
-         1RRq249ryqMkK791jMbWsUYY7Ak2eYcW7PmeDvO7w+F8Jiut3eCYCPpxGR5ekBkbMBjr
-         LxqEqtN/u4h1wojWYglY3nSBT7PblCwHynJCaGTHZkABwxg1GRRyrN0se+2ttsxRcOHd
-         DYMZ7KOlwY2XXtpca6px953DW+lTYKlgz+F/6QhNYtlh7y064SWeX1Ejg1zzKoXx8kjY
-         Dqxou/vrxUtxylYySObfEXXMjHYLTFNdecCmTsrcv+/ZFHp5h/F631YJJOtUQhdTTYXV
-         Jzdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=5EPr0BrtYIu4h/VI5T3PQSkN4bFjMVa+ROiHBvZu+BI=;
-        b=XL6IBuxZLonlYF04vFCCI2Ssy4yA3P6/NHBs+VLLO6RRYBeJSE+2TrBi+JRnwpPuDX
-         QPsXKCdxwzF6pt5gWKr0u8a7jPvgasuACjWK09jR+QQLYhXLUSlOwIkhwediCfUsffck
-         RnwNNPTwhMkSyJaj6a3QiPviki5Qihx2h/kMYj2+teKBpeNEY1RQwRE3JRxXQBHd2wJY
-         Tt9OdC8Scny/VVWrmIuybDQMV7nLmhSCJlhIPntkF9k/K7r3KAGgPGJP/oPoiy90HjLg
-         2kJ+VmkZlsLlt80mkzqCo21CiYyZi0Ch/EbnUQ9RUhlQl7Am2BceCHxFSHEGeNZcpPzO
-         fQjg==
-X-Gm-Message-State: APjAAAW0s/F4OPdt5vUTHJdbt4gCxOiOmciam3J/yw0p0T8iTGtRqMe6
-        1A8XSqO34JcadirQz6dUC9AFUHkwqXstUQ==
-X-Google-Smtp-Source: APXvYqz7nedQ+1/dk7RG2xy+rgK1m7AzU1TycdR/pgv8v/Mql8v6cJP3Fll6GADovWcn9okVAAwWNw==
-X-Received: by 2002:a62:4e42:: with SMTP id c63mr23648342pfb.86.1582066602217;
-        Tue, 18 Feb 2020 14:56:42 -0800 (PST)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id p21sm47270pfn.103.2020.02.18.14.56.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 14:56:41 -0800 (PST)
-Subject: Re: [PATCH net-next v2 08/13] ionic: use new helper
- tcp_v6_gso_csum_prep
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Pensando Drivers <drivers@pensando.io>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
- <6960380e-cee3-b65c-010f-551635cb3988@gmail.com>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <b542e139-307b-47eb-cdf8-45465e8e7b41@pensando.io>
-Date:   Tue, 18 Feb 2020 14:56:40 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Tue, 18 Feb 2020 17:57:44 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c6ba10001>; Tue, 18 Feb 2020 14:56:33 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 14:57:43 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 18 Feb 2020 14:57:43 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
+ 2020 22:57:43 +0000
+Subject: Re: [PATCH v6 04/16] mm: Tweak readahead loop slightly
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-6-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <7691abe7-d0e9-e091-b158-764fb624c2d7@nvidia.com>
+Date:   Tue, 18 Feb 2020 14:57:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <6960380e-cee3-b65c-010f-551635cb3988@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200217184613.19668-6-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582066593; bh=FNMoOaZBBl3i9xCcuLKNCWIelNbWmCqc+hWHl4NpXdM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MTyOyZdHZQkMODmo8rlMB/2qEg3HU5pqh9FgRxpYsmGRmONsz8OrRQrreEBM2NRJR
+         0PWe6O9d1zufzQnZ7Nh6PXVGWI9FIG6u5Ry+tgMofrYVgsctLaciTGIvy+/cW27I6X
+         ozy/zXaexJDMUc/Qb0NIOSo/IRTQ4YUAKJ8AfzrVP0G+gsALpSzt/WUyZkuZM9/H1b
+         pEHxNVaE1Zn1djE6CJLbRxf6pW4SLxI0NCI/PFJCulvIoPdYakDv8H6EHgYany/KqQ
+         +WVDcVH0cvTLVgLvT04N+CZ78lEclF8aBvkeqi/RwbOuHLAT3Vj6DHF81hAcdWMyIY
+         Ygo2o7pN3aTag==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 12:07 PM, Heiner Kallweit wrote:
-> Use new helper tcp_v6_gso_csum_prep in additional network drivers.
->
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Eliminate the page_offset variable which was just confusing;
+> record the start of each consecutive run of pages in the
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
 
+OK...presumably for the benefit of a following patch, since it is not 
+actually consumed in this patch.
+
+> readahead_control, and move the 'kick off a fresh batch' code to
+> the end of the function for easier use in the next patch.
+
+
+That last bit was actually done in the previous patch, rather than this
+one, right?
+
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->   drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> index e452f4242..020acc300 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> @@ -632,10 +632,7 @@ static int ionic_tx_tcp_pseudo_csum(struct sk_buff *skb)
->   					   ip_hdr(skb)->daddr,
->   					   0, IPPROTO_TCP, 0);
->   	} else if (skb->protocol == cpu_to_be16(ETH_P_IPV6)) {
-> -		tcp_hdr(skb)->check =
-> -			~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
-> -					 &ipv6_hdr(skb)->daddr,
-> -					 0, IPPROTO_TCP, 0);
-> +		tcp_v6_gso_csum_prep(skb);
->   	}
->   
->   	return 0;
+>  mm/readahead.c | 31 +++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 15329309231f..74791b96013f 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -154,7 +154,6 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		unsigned long lookahead_size)
+>  {
+>  	struct inode *inode = mapping->host;
+> -	struct page *page;
+>  	unsigned long end_index;	/* The last page we want to read */
+>  	LIST_HEAD(page_pool);
+>  	int page_idx;
+> @@ -163,6 +162,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	struct readahead_control rac = {
+>  		.mapping = mapping,
+>  		.file = filp,
+> +		._start = offset,
+>  		._nr_pages = 0,
+>  	};
+>  
+> @@ -175,32 +175,39 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	 * Preallocate as many pages as we will need.
+>  	 */
+>  	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
+> -		pgoff_t page_offset = offset + page_idx;
 
+
+You know...this ends up incrementing offset each time through the
+loop, so yes, the behavior is the same as when using "offset + page_idx".
+However, now it's a little harder to see that.
+
+IMHO the page_offset variable is not actually a bad thing, here. I'd rather
+keep it, all other things being equal (and I don't see any other benefits
+here: line count is the same, for example).
+
+What do you think?
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> +		struct page *page;
+>  
+> -		if (page_offset > end_index)
+> +		if (offset > end_index)
+>  			break;
+>  
+> -		page = xa_load(&mapping->i_pages, page_offset);
+> +		page = xa_load(&mapping->i_pages, offset);
+>  		if (page && !xa_is_value(page)) {
+>  			/*
+> -			 * Page already present?  Kick off the current batch of
+> -			 * contiguous pages before continuing with the next
+> -			 * batch.
+> +			 * Page already present?  Kick off the current batch
+> +			 * of contiguous pages before continuing with the
+> +			 * next batch.  This page may be the one we would
+> +			 * have intended to mark as Readahead, but we don't
+> +			 * have a stable reference to this page, and it's
+> +			 * not worth getting one just for that.
+>  			 */
+> -			if (readahead_count(&rac))
+> -				read_pages(&rac, &page_pool, gfp_mask);
+> -			rac._nr_pages = 0;
+> -			continue;
+> +			goto read;
+>  		}
+>  
+>  		page = __page_cache_alloc(gfp_mask);
+>  		if (!page)
+>  			break;
+> -		page->index = page_offset;
+> +		page->index = offset;
+>  		list_add(&page->lru, &page_pool);
+>  		if (page_idx == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		rac._nr_pages++;
+> +		offset++;
+> +		continue;
+> +read:
+> +		if (readahead_count(&rac))
+> +			read_pages(&rac, &page_pool, gfp_mask);
+> +		rac._nr_pages = 0;
+> +		rac._start = ++offset;
+>  	}
+>  
+>  	/*
+> 
