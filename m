@@ -2,151 +2,184 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCD8C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3A0C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC4320801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195A220801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgBROif (ORCPT
+        id S1726713AbgBROj6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:38:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:53250 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgBROif (ORCPT
+        Tue, 18 Feb 2020 09:39:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726605AbgBROj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:38:35 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j43y8-0000fF-OS; Tue, 18 Feb 2020 14:35:24 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
-Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 20/25] exec: bprm_fill_uid(): handle fsid mappings
-Date:   Tue, 18 Feb 2020 15:34:06 +0100
-Message-Id: <20200218143411.2389182-21-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+        Tue, 18 Feb 2020 09:39:58 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IEZATg093139
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:39:57 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y7uagwcpc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:39:56 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Tue, 18 Feb 2020 14:39:54 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Feb 2020 14:39:52 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IEcuUR40042880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 14:38:56 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDD54A4051;
+        Tue, 18 Feb 2020 14:39:51 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 60FFEA4040;
+        Tue, 18 Feb 2020 14:39:51 +0000 (GMT)
+Received: from localhost (unknown [9.199.60.10])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 14:39:51 +0000 (GMT)
+Date:   Tue, 18 Feb 2020 20:09:49 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH 1/2] powerpc/kprobes: Remove redundant code
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
+In-Reply-To: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20021814-0020-0000-0000-000003AB4FEB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021814-0021-0000-0000-000022034BEA
+Message-Id: <1582036611.9hm2t8ijhz.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 bulkscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 mlxscore=0 mlxlogscore=788 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that during suid/sgid binary execution we lookup the fsids in the
-fsid mappings. If the kernel is compiled without fsid mappings or no fsid
-mappings are setup the behavior is unchanged.
+Christophe Leroy wrote:
+> At the time being we have something like
+> 
+> 	if (something) {
+> 		p = get();
+> 		if (p) {
+> 			if (something_wrong)
+> 				goto out;
+> 			...
+> 			return;
+> 		} else if (a != b) {
+> 			if (some_error)
+> 				goto out;
+> 			...
+> 		}
+> 		goto out;
+> 	}
+> 	p = get();
+> 	if (!p) {
+> 		if (a != b) {
+> 			if (some_error)
+> 				goto out;
+> 			...
+> 		}
+> 		goto out;
+> 	}
+> 
+> This is similar to
+> 
+> 	p = get();
+> 	if (something) {
+> 		if (p) {
+> 			if (something_wrong)
+> 				goto out;
+> 			...
+> 			return;
+> 		}
+> 	}
+> 	if (!p) {
+> 		if (a != b) {
+> 			if (some_error)
+> 				goto out;
+> 			...
+> 		}
+> 		goto out;
+> 	}
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/kernel/kprobes.c | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
 
-Assuming we have a binary in a given user namespace that is owned by 0:0 in the
-given user namespace which appears as 300000:300000 on-disk in the initial user
-namespace. Now assume we write an id mapping of 0 100000 100000 and an fsid
-mapping for 0 300000 300000 in the user namespace. When we hit bprm_fill_uid()
-during setid execution we will retrieve inode kuid=300000 and kgid=300000. We
-first check whether there's an fsid mapping for these kids. In our scenario we
-find that they map to fsuid=0 and fsgid=0 in the user namespace. Now we
-translate them into kids in the id mapping. In our example they translate to
-kuid=100000 and kgid=100000 which means the file will ultimately run as uid=0
-and gid=0 in the user namespace and as uid=100000, gid=100000 in the initial
-user namespace.
-Let's alter the example and assume that there is an fsid mapping of 0 300000
-300000 set up but no id mapping has been setup for the user namespace. In this
-the last step of translating into a valid kid pair in the id mappings will fail
-and we will behave as before and ignore the sid bits.
+Good cleanup, thanks.
 
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-patch added
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Make sure that bprm_fill_uid() handles fsid mappings.
+> 
+> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+> index f8b848aa65bd..7a925eb76ec0 100644
+> --- a/arch/powerpc/kernel/kprobes.c
+> +++ b/arch/powerpc/kernel/kprobes.c
+> @@ -276,8 +276,8 @@ int kprobe_handler(struct pt_regs *regs)
+>  	kcb = get_kprobe_ctlblk();
+>  
+>  	/* Check we're not actually recursing */
+> +	p = get_kprobe(addr);
+>  	if (kprobe_running()) {
+> -		p = get_kprobe(addr);
+>  		if (p) {
+>  			kprobe_opcode_t insn = *p->ainsn.insn;
+>  			if (kcb->kprobe_status == KPROBE_HIT_SS &&
+> @@ -308,22 +308,9 @@ int kprobe_handler(struct pt_regs *regs)
+>  			}
+>  			prepare_singlestep(p, regs);
+>  			return 1;
+> -		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+> -			/* If trap variant, then it belongs not to us */
+> -			kprobe_opcode_t cur_insn = *addr;
+> -
+> -			if (is_trap(cur_insn))
+> -				goto no_kprobe;
+> -			/* The breakpoint instruction was removed by
+> -			 * another cpu right after we hit, no further
+> -			 * handling of this interrupt is appropriate
+> -			 */
+> -			ret = 1;
+>  		}
+> -		goto no_kprobe;
 
-/* v3 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Fix commit message.
----
- fs/exec.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+A minot nit -- removing the above goto makes a slight change to the 
+logic. But, see my comments for the next patch.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index db17be51b112..9e4a7e757cef 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -62,6 +62,7 @@
- #include <linux/oom.h>
- #include <linux/compat.h>
- #include <linux/vmalloc.h>
-+#include <linux/fsuidgid.h>
- 
- #include <linux/uaccess.h>
- #include <asm/mmu_context.h>
-@@ -1518,8 +1519,8 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
- {
- 	struct inode *inode;
- 	unsigned int mode;
--	kuid_t uid;
--	kgid_t gid;
-+	kuid_t uid, euid;
-+	kgid_t gid, egid;
- 
- 	/*
- 	 * Since this can be called multiple times (via prepare_binprm),
-@@ -1551,18 +1552,30 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
- 	inode_unlock(inode);
- 
- 	/* We ignore suid/sgid if there are no mappings for them in the ns */
--	if (!kuid_has_mapping(bprm->cred->user_ns, uid) ||
--		 !kgid_has_mapping(bprm->cred->user_ns, gid))
-+	if (!kfsuid_has_mapping(bprm->cred->user_ns, uid) ||
-+		 !kfsgid_has_mapping(bprm->cred->user_ns, gid))
- 		return;
- 
-+	if (mode & S_ISUID) {
-+		euid = kfsuid_to_kuid(bprm->cred->user_ns, uid);
-+		if (!uid_valid(euid))
-+			return;
-+	}
-+
-+	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
-+		egid = kfsgid_to_kgid(bprm->cred->user_ns, gid);
-+		if (!gid_valid(egid))
-+			return;
-+	}
-+
- 	if (mode & S_ISUID) {
- 		bprm->per_clear |= PER_CLEAR_ON_SETID;
--		bprm->cred->euid = uid;
-+		bprm->cred->euid = euid;
- 	}
- 
- 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
- 		bprm->per_clear |= PER_CLEAR_ON_SETID;
--		bprm->cred->egid = gid;
-+		bprm->cred->egid = egid;
- 	}
- }
- 
--- 
-2.25.0
+- Naveen
+
+>  	}
+>  
+> -	p = get_kprobe(addr);
+>  	if (!p) {
+>  		if (*addr != BREAKPOINT_INSTRUCTION) {
+>  			/*
+> -- 
+> 2.25.0
+> 
+> 
 
