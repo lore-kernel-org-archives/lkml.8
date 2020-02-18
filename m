@@ -2,121 +2,198 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F33C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A37C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369812464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FC221D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgBRVT5 (ORCPT
+        id S1727333AbgBRVUf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:19:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:34482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgBRVT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:19:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A43351FB;
-        Tue, 18 Feb 2020 13:19:56 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D952D3F68F;
-        Tue, 18 Feb 2020 13:19:54 -0800 (PST)
-Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
-To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, hdanton@sina.com
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-5-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
-Date:   Tue, 18 Feb 2020 21:19:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200214152729.6059-5-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Feb 2020 16:20:35 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:38502 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgBRVUf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:20:35 -0500
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 9C238CECC6;
+        Tue, 18 Feb 2020 22:29:57 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Bluez PATCH v1] bluetooth: fix passkey uninitialized when used
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
+Date:   Tue, 18 Feb 2020 22:20:32 +0100
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <D9045CD6-997B-4018-8AB0-40F15C71BF5C@holtmann.org>
+References: <20200218190509.Bluez.v1.1.I04681c6e295c27088c0b4ed7bb9b187d1bb4ed19@changeid>
+To:     Howard Chung <howardchung@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/02/2020 15:27, Vincent Guittot wrote:
-> Now that runnable_load_avg has been removed, we can replace it by a new
-> signal that will highlight the runnable pressure on a cfs_rq. This signal
-> track the waiting time of tasks on rq and can help to better define the
-> state of rqs.
+Hi Howard,
+
+> From: "howardchung@google.com" <howardchung@google.com>
+
+any chance you fix your git setting to provide a From: with full name and email like you have in the signed-off-by line.
+
 > 
-> At now, only util_avg is used to define the state of a rq:
->   A rq with more that around 80% of utilization and more than 1 tasks is
->   considered as overloaded.
+> This issue cause a warning here
+> https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
 > 
-> But the util_avg signal of a rq can become temporaly low after that a task
-> migrated onto another rq which can bias the classification of the rq.
-> 
-> When tasks compete for the same rq, their runnable average signal will be
-> higher than util_avg as it will include the waiting time and we can use
-> this signal to better classify cfs_rqs.
-> 
-> The new runnable_avg will track the runnable time of a task which simply
-> adds the waiting time to the running time. The runnable _avg of cfs_rq
-> will be the /Sum of se's runnable_avg and the runnable_avg of group entity
-> will follow the one of the rq similarly to util_avg.
-> 
-
-I did a bit of playing around with tracepoints and it seems to be behaving
-fine. For instance, if I spawn 12 always runnable tasks (sysbench --test=cpu)
-on my Juno (6 CPUs), I get to a system-wide runnable value (\Sum cpu_runnable())
-of about 12K. I've only eyeballed them, but migration of the signal values
-seem fine too.
-
-I have a slight worry that the rq-wide runnable signal might be too easy to
-inflate, since we aggregate for *all* runnable tasks, and that may not play
-well with your group_is_overloaded() change (despite having the imbalance_pct
-on the "right" side).
-
-In any case I'll need to convince myself of it with some messing around, and
-this concerns patch 5 more than patch 4. So FWIW for this one:
-
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
-
-I also have one (two) more nit(s) below.
-
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Signed-off-by: Howard Chung <howardchung@google.com>
 > ---
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> @@ -227,14 +231,14 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
->  	 * Step 1: accumulate *_sum since last_update_time. If we haven't
->  	 * crossed period boundaries, finish.
->  	 */
-> -	if (!accumulate_sum(delta, sa, load, running))
-> +	if (!accumulate_sum(delta, sa, load, runnable, running))
->  		return 0;
->  
->  	return 1;
->  }
->  
->  static __always_inline void
-> -___update_load_avg(struct sched_avg *sa, unsigned long load)
-> +___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runnable)
->  {
->  	u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
->  
-> @@ -242,6 +246,7 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load)
->  	 * Step 2: update *_avg.
->  	 */
->  	sa->load_avg = div_u64(load * sa->load_sum, divider);
-> +	sa->runnable_avg =	div _u64(runnable * sa->runnable_sum, divider);
-                          ^^^^^^        ^^^^^^^^
-                            a)             b)
-a) That's a tab
+> 
+> net/bluetooth/smp.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index 50e0ac692ec4..fa40de69e487 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -2179,10 +2179,12 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+> 		 */
+> 		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+> 				 hcon->role)) {
+> +			/* Set passkey to 0. The value can be any number since
+> +			 * it'll be ignored anyway.
+> +			 */
+> 			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+> 							hcon->type,
+> -							hcon->dst_type,
+> -							passkey, 1);
+> +							hcon->dst_type, 0, 1);
+> 			if (err)
+> 				return SMP_UNSPECIFIED;
+> 			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
 
-b) The value being passed is always 1, do we really need it to expose it as a
-   parameter?
+Since I have to look at this again, I wonder if we do this correctly. Either we have a bug there or not enough comments on why the code is correct.
+
+        if (hcon->out) {
+                u8 cfm[16];
+
+                err = smp_f4(smp->tfm_cmac, smp->remote_pk, smp->local_pk,
+                             smp->rrnd, 0, cfm);
+                if (err)
+                        return SMP_UNSPECIFIED;
+
+                if (crypto_memneq(smp->pcnf, cfm, 16))
+                        return SMP_CONFIRM_FAILED;
+        } else {
+                smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
+                             smp->prnd);
+                SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
+
+                /* Only Just-Works pairing requires extra checks */
+                if (smp->method != JUST_WORKS)
+                        goto mackey_and_ltk;
+
+                /* If there already exists long term key in local host, leave
+                 * the decision to user space since the remote device could
+                 * be legitimate or malicious.
+                 */
+                if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+                                 hcon->role)) {
+                        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+                                                        hcon->type,
+                                                        hcon->dst_type,
+                                                        passkey, 1);
+                        if (err)
+                                return SMP_UNSPECIFIED;
+                        set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+                }
+        }
+
+mackey_and_ltk:
+        /* Generate MacKey and LTK */
+        err = sc_mackey_and_ltk(smp, smp->mackey, smp->tk);
+        if (err)
+                return SMP_UNSPECIFIED;
+
+        if (smp->method == JUST_WORKS || smp->method == REQ_OOB) {
+                if (hcon->out) {
+                        sc_dhkey_check(smp);
+                        SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
+                }
+                return 0;
+        }
+
+        err = smp_g2(smp->tfm_cmac, pkax, pkbx, na, nb, &passkey);
+        if (err)
+                return SMP_UNSPECIFIED;
+
+        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
+                                        hcon->dst_type, passkey, 0);
+        if (err)
+                return SMP_UNSPECIFIED;
+
+        set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+
+        return 0;
+}
+
+Since we are already !hcon->out and smp->method == JUST_WORKS, why are we moving into mackey_and_ltk path? If we have already an LTK, then we just should bail out after setting SMP_FLAG_WAIT_USER, right?
+
+@@ -2115,7 +2115,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+        struct l2cap_chan *chan = conn->smp;
+        struct smp_chan *smp = chan->data;
+        struct hci_conn *hcon = conn->hcon;
+-       u8 *pkax, *pkbx, *na, *nb;
++       u8 *pkax, *pkbx, *na, *nb, confirm_hint;
+        u32 passkey;
+        int err;
+ 
+@@ -2179,13 +2179,9 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+                 */
+                if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+                                 hcon->role)) {
+-                       err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+-                                                       hcon->type,
+-                                                       hcon->dst_type,
+-                                                       passkey, 1);
+-                       if (err)
+-                               return SMP_UNSPECIFIED;
+-                       set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
++                       passkey = 0;
++                       confirm_hint = 1;
++                       goto confirm;
+                }
+        }
+ 
+@@ -2207,8 +2203,11 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+        if (err)
+                return SMP_UNSPECIFIED;
+ 
++       confirm_hint = 0;
++
++confirm:
+        err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
+-                                       hcon->dst_type, passkey, 0);
++                                       hcon->dst_type, passkey, confirm_hint);
+        if (err)
+                return SMP_UNSPECIFIED;
+
+So isn’t this the better approach and actually cleaner code? And I would still add a comment above setting passkey = 0.
+
+Am I missing anything?
+
+Regards
+
+Marcel
+
