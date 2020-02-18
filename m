@@ -2,119 +2,198 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5736C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B077C3403D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A658C208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C1A208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NhSEsw2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgBROYy (ORCPT
+        id S1726650AbgBRO1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:24:54 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726402AbgBROYy (ORCPT
+        Tue, 18 Feb 2020 09:27:14 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55678 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgBRO1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:24:54 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IEOTAK120823
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:24:52 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dnts33n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:24:52 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 18 Feb 2020 14:24:50 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 14:24:46 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IEOjkQ40108542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 14:24:45 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A24611C058;
-        Tue, 18 Feb 2020 14:24:45 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBCC411C052;
-        Tue, 18 Feb 2020 14:24:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.142.171])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 14:24:43 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] crypto: fix mismatched hash algorithm name
- sm3-256 to sm3
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        jarkko.sakkinen@linux.intel.com, ebiggers@kernel.org,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com
-Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Feb 2020 09:24:43 -0500
-In-Reply-To: <f26b221c-f2e1-a14b-46cb-cae03f1357aa@linux.alibaba.com>
-References: <20200217093649.97938-1-tianjia.zhang@linux.alibaba.com>
-         <20200217093649.97938-2-tianjia.zhang@linux.alibaba.com>
-         <1581989598.8515.233.camel@linux.ibm.com>
-         <f26b221c-f2e1-a14b-46cb-cae03f1357aa@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021814-0016-0000-0000-000002E7FAD5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021814-0017-0000-0000-0000334B0F1B
-Message-Id: <1582035883.4576.8.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- malwarescore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002180112
+        Tue, 18 Feb 2020 09:27:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YS36TkOpB+s1Z6ooC/rDC9dFIpR2y2lNd3Ik+zEuCxU=; b=NhSEsw2lStmnnhLyJ85FT6Sk9w
+        tPdddRhOKqK1EeDwUaZXD4Q6R0PkJp5PkBLmBMzxMcXnIj2/chzdrKg4jOTtQtFWask8ZO7g5ge5W
+        vjnMhhUtwasWZLuWA/YhJYPjA8kZordg9YlahwINShfH1id6K+7mWBCDbANhisHLbyqBhrxE6aE56
+        JZlI3cQ09t8fEMf7Fev8Rdc7IBKRZ+j3hjsOcvOllNBvT20nrOZZ0NZzdqhnCA8KjFd3x1/FQuOOz
+        v/1FpnJ320XbjAPikGkw2zxc5mvIKXyHK8EOh6nzFmUwB0h5ijpM+vAqInVrhtcfoWoDBk/6joi1F
+        AQ2usvuA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j43q4-0005yV-9b; Tue, 18 Feb 2020 14:27:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6B68E300606;
+        Tue, 18 Feb 2020 15:25:08 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 52AC72B92E8B9; Tue, 18 Feb 2020 15:27:00 +0100 (CET)
+Date:   Tue, 18 Feb 2020 15:27:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Carter Li =?utf-8?B?5p2O6YCa5rSy?= <carter.li@eoitek.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        io-uring <io-uring@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
+Subject: [PATCH] asm-generic/atomic: Add try_cmpxchg() fallbacks
+Message-ID: <20200218142700.GB14946@hirez.programming.kicks-ass.net>
+References: <5995f84e-8a6c-e774-6bb5-5b9b87a9cd3c@kernel.dk>
+ <7c4c3996-4886-eb58-cdee-fe0951907ab5@kernel.dk>
+ <addcd44e-ed9b-5f82-517d-c1ed3ee2d85c@kernel.dk>
+ <b8069e62-7ea4-c7f3-55a3-838241951068@kernel.dk>
+ <20200217120920.GQ14914@hirez.programming.kicks-ass.net>
+ <53de3581-b902-89ba-3f53-fd46b052df40@kernel.dk>
+ <43c066d1-a892-6a02-82e7-7be850d9454d@kernel.dk>
+ <20200217174610.GU14897@hirez.programming.kicks-ass.net>
+ <592cf069-41ee-0bc1-1f83-e058e5dd53ff@kernel.dk>
+ <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-18 at 10:34 +0800, Tianjia Zhang wrote:
-> On 2020/2/18 9:33, Mimi Zohar wrote:
-> > On Mon, 2020-02-17 at 17:36 +0800, Tianjia Zhang wrote:
-> >> The name sm3-256 is defined in hash_algo_name in hash_info, but the
-> >> algorithm name implemented in sm3_generic.c is sm3, which will cause
-> >> the sm3-256 algorithm to be not found in some application scenarios of
-> >> the hash algorithm, and an ENOENT error will occur. For example,
-> >> IMA, keys, and other subsystems that reference hash_algo_name all use
-> >> the hash algorithm of sm3.
-> >>
-> >> According to https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html,
-> >> SM3 always produces a 256-bit hash value and there are no plans for
-> >> other length development, so there is no ambiguity in the name of sm3.
-> >>
-> >> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> >> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > The previous version of this patch set is queued in the next-
-> > integrity-testing branch.  That version of this patch didn't
-> > change TPM_ALG_SM3_256.  Unless the TPM standard was modified, the TPM
-> > spec refers to it as TPM_ALG_SM3_256.  Has that changed?
-> >
-> > Mimi
-> 
-> The definition in the TPM specification is still TPM_ALG_SM3_256, please
-> ignore the modification to the TPM definition in this patch.
+On Tue, Feb 18, 2020 at 02:13:10PM +0100, Peter Zijlstra wrote:
+> (with the caveat that try_cmpxchg() doesn't seem available on !x86 -- I
+> should go fix that)
 
-Ok.  Just confirming that I should ignore v2 of this patch set.
- Upstreaming the original version, as queued in next-integrity-
-testing, is fine.
+Completely untested (lemme go do that shortly), but something like so I
+suppose.
 
-thanks,
+---
+Subject: asm-generic/atomic: Add try_cmpxchg() fallbacks
 
-Mimi
+Only x86 provides try_cmpxchg() outside of the atomic_t interfaces,
+provide generic fallbacks to create this interface from the widely
+available cmpxchg() function.
 
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+diff --git a/include/linux/atomic-fallback.h b/include/linux/atomic-fallback.h
+index 656b5489b673..243f61d6c35f 100644
+--- a/include/linux/atomic-fallback.h
++++ b/include/linux/atomic-fallback.h
+@@ -77,6 +77,50 @@
+ 
+ #endif /* cmpxchg64_relaxed */
+ 
++#ifndef try_cmpxchg
++#define try_cmpxchg(_ptr, _oldp, _new) \
++({ \
++	typeof(*ptr) ___r, ___o = *(_oldp); \
++	___r = cmpxchg((_ptr), ___o, (_new)); \
++	if (unlikely(___r != ___o)) \
++		*(_old) = ___r; \
++	likely(___r == ___o); \
++})
++#endif /* try_cmpxchg */
++
++#ifndef try_cmpxchg_acquire
++#define try_cmpxchg_acquire(_ptr, _oldp, _new) \
++({ \
++	typeof(*ptr) ___r, ___o = *(_oldp); \
++	___r = cmpxchg_acquire((_ptr), ___o, (_new)); \
++	if (unlikely(___r != ___o)) \
++		*(_old) = ___r; \
++	likely(___r == ___o); \
++})
++#endif /* try_cmpxchg_acquire */
++
++#ifndef try_cmpxchg_release
++#define try_cmpxchg_release(_ptr, _oldp, _new) \
++({ \
++	typeof(*ptr) ___r, ___o = *(_oldp); \
++	___r = cmpxchg_release((_ptr), ___o, (_new)); \
++	if (unlikely(___r != ___o)) \
++		*(_old) = ___r; \
++	likely(___r == ___o); \
++})
++#endif /* try_cmpxchg_release */
++
++#ifndef try_cmpxchg_relaxed
++#define try_cmpxchg_relaxed(_ptr, _oldp, _new) \
++({ \
++	typeof(*ptr) ___r, ___o = *(_oldp); \
++	___r = cmpxchg_relaxed((_ptr), ___o, (_new)); \
++	if (unlikely(___r != ___o)) \
++		*(_old) = ___r; \
++	likely(___r == ___o); \
++})
++#endif /* try_cmpxchg_relaxed */
++
+ #ifndef atomic_read_acquire
+ static __always_inline int
+ atomic_read_acquire(const atomic_t *v)
+@@ -2294,4 +2338,4 @@ atomic64_dec_if_positive(atomic64_t *v)
+ #define atomic64_cond_read_relaxed(v, c) smp_cond_load_relaxed(&(v)->counter, (c))
+ 
+ #endif /* _LINUX_ATOMIC_FALLBACK_H */
+-// baaf45f4c24ed88ceae58baca39d7fd80bb8101b
++// 2dfbc767ce308d2edd67a49bd7b764dd07f62f6c
+diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
+index b6c6f5d306a7..3c9be8d550e0 100755
+--- a/scripts/atomic/gen-atomic-fallback.sh
++++ b/scripts/atomic/gen-atomic-fallback.sh
+@@ -140,6 +140,32 @@ cat <<EOF
+ EOF
+ }
+ 
++gen_try_cmpxchg_fallback()
++{
++	local order="$1"; shift;
++
++cat <<EOF
++#ifndef try_cmpxchg${order}
++#define try_cmpxchg${order}(_ptr, _oldp, _new) \\
++({ \\
++	typeof(*ptr) ___r, ___o = *(_oldp); \\
++	___r = cmpxchg${order}((_ptr), ___o, (_new)); \\
++	if (unlikely(___r != ___o)) \\
++		*(_old) = ___r; \\
++	likely(___r == ___o); \\
++})
++#endif /* try_cmpxchg${order} */
++
++EOF
++}
++
++gen_try_cmpxchg_fallbacks()
++{
++	for order in "" "_acquire" "_release" "_relaxed"; do
++		gen_try_cmpxchg_fallback "${order}"
++	done
++}
++
+ cat << EOF
+ // SPDX-License-Identifier: GPL-2.0
+ 
+@@ -157,6 +183,8 @@ for xchg in "xchg" "cmpxchg" "cmpxchg64"; do
+ 	gen_xchg_fallbacks "${xchg}"
+ done
+ 
++gen_try_cmpxchg_fallbacks
++
+ grep '^[a-z]' "$1" | while read name meta args; do
+ 	gen_proto "${meta}" "${name}" "atomic" "int" ${args}
+ done
