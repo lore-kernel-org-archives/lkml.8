@@ -2,106 +2,95 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=MAILING_LIST_MULTI,
-	SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D5FC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD4C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6522F20801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A06021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgBRTUa (ORCPT
+        id S1726427AbgBRTVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:20:30 -0500
-Received: from mail.archive.org ([207.241.224.6]:57414 "EHLO mail.archive.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgBRTU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:20:29 -0500
-Received: from mail.archive.org (localhost [127.0.0.1])
-        by mail.archive.org (Postfix) with ESMTP id 06B371FB34;
-        Tue, 18 Feb 2020 19:20:25 +0000 (UTC)
-Received: from [0.0.0.0] (a82-161-36-93.adsl.xs4all.nl [82.161.36.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: merlijn@archive.org)
-        by mail.archive.org (Postfix) with ESMTPSA id 971A71FB1D;
-        Tue, 18 Feb 2020 19:20:23 +0000 (UTC)
-Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
-To:     Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <jejb@linux.ibm.com>
-Cc:     merlijn@wizzup.org, linux-scsi@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-References: <20200218143918.30267-1-merlijn@archive.org>
- <20200218171259.GA6724@infradead.org>
- <1582046428.16681.7.camel@linux.ibm.com>
- <20200218172347.GA3020@infradead.org>
- <1582046914.16681.11.camel@linux.ibm.com>
- <20200218173158.GA18386@infradead.org>
-From:   "Merlijn B.W. Wajer" <merlijn@archive.org>
-Message-ID: <33da5f81-ad37-05fd-d765-8bd997995dd2@archive.org>
-Date:   Tue, 18 Feb 2020 20:21:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 18 Feb 2020 14:21:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726283AbgBRTVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:21:51 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IJLlJ7110159;
+        Tue, 18 Feb 2020 14:21:47 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y89aautkf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 14:21:46 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01IJKMFH001444;
+        Tue, 18 Feb 2020 19:21:27 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2y6896ut8x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 19:21:26 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IJLPwj28049828
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 19:21:25 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A82F9BE054;
+        Tue, 18 Feb 2020 19:21:25 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4723DBE04F;
+        Tue, 18 Feb 2020 19:21:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 19:21:25 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH] checkpatch: add NOKPROBE_SYMBOL to list of special cases
+Date:   Tue, 18 Feb 2020 14:21:20 -0500
+Message-Id: <20200218192120.176633-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200218173158.GA18386@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Envelope-From: <merlijn@archive.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_06:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=747 adultscore=0 impostorscore=0 clxscore=1011
+ mlxscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+NOKPROBE_SYMBOL should - like EXPORT_SYMBOL - directly follow the
+struct or union. This is widely used.
+See git grep -B 1  NOKPROBE_SYMBOL
 
-On 18/02/2020 18:31, Christoph Hellwig wrote:
-> On Tue, Feb 18, 2020 at 09:28:34AM -0800, James Bottomley wrote:
->> On Tue, 2020-02-18 at 09:23 -0800, Christoph Hellwig wrote:
->>> On Tue, Feb 18, 2020 at 09:20:28AM -0800, James Bottomley wrote:
->>>>>> Replace the global mutex with per-sr-device mutex.
->>>>>
->>>>> Do we actually need the lock at all?  What is protected by it?
->>>>
->>>> We do at least for cdrom_open.  It modifies the cdi structure with
->>>> no other protection and concurrent modification would at least
->>>> screw up the use counter which is not atomic.  Same reasoning for
->>>> cdrom_release.
->>>
->>> Wouldn't the right fix to add locking to cdrom_open/release instead
->>> of having an undocumented requirement for the callers?
->>
->> Yes ... but that's somewhat of a bigger patch because you now have to
->> reason about the callbacks within cdrom.  There's also the question of
->> whether you can assume ops->generic_packet() has its own concurrency
->> protections ... it's certainly true for SCSI, but is it for anything
->> else?  Although I suppose you can just not care and run the internal
->> lock over it anyway.
-> 
-> We have 4 instances of struct cdrom_device_ops in the kernel, one of
-> which has a no-op generic_packet.  So I don't think this should be a
-> huge project.
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+---
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-The are two reasons I decided to make minor changes to fix the
-performance regression.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a63380c6b0d2..d4cc992d4876 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3354,6 +3354,7 @@ sub process {
+ 		    $line =~ /^\+/ &&
+ 		    !($line =~ /^\+\s*$/ ||
+ 		      $line =~ /^\+\s*EXPORT_SYMBOL/ ||
++		      $line =~ /^\+\s*NOKPROBE_SYMBOL/ ||
+ 		      $line =~ /^\+\s*MODULE_/i ||
+ 		      $line =~ /^\+\s*\#\s*(?:end|elif|else)/ ||
+ 		      $line =~ /^\+[a-z_]*init/ ||
+-- 
+2.25.0
 
-First, being able to send the patch to the various stable branches once
-merged. For people working with many CD drives attached to one station,
-this is a pretty big deal, so I tried to keep the patch simple. It fixes
-the regression introduced in another commit.
-
-Secondly, I don't have the hardware to test sophisticated or old setups,
-like some of the issues linked from my patch. I have SATA CD drives with
-USB->SATA bridges, no IDE, no PATA, etc. So the testing I can do is
-relatively limited.
-
-Perhaps I or someone else can work on removing the usage of the locks,
-but as it stands I think this addresses the performance issue present in
-the current kernel, and removing locks and the associated testing
-required with that is something I am not entirely comfortable doing.
-
-Cheers,
-Merlijn
