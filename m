@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C710C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1168C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45C2208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F132176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046047;
-	bh=16ZF0cCZbV5kwDCFQUoY69KQyr41LZYil0YEJqkGGFI=;
+	s=default; t=1582046057;
+	bh=ok1xiAZ7WXj+mbnCKpDrCgz5JGz9ZCZABjFXb9dYyNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1RrYdLEo0ByLEY3/dnbI8ksnsntyNo7GqRNg9CD1wA+KQ+ZIIVobreCffIvVL/OY6
-	 fdu0pjkxEMOu4zmdgDHiMerePlgZhG21B0NOyCsmwTpo7tBGQwFM383zGJNAhlcKjk
-	 WHMiUQdZWYVRUtFS37atF+GK4bmcofBb6UYJZook=
+	b=iI4DvERrbUxschcwK8SuVgRCTZvlfF/T/+UlOSH3JVq6F9L2usLKQftZ6ePSAHBnZ
+	 Dg4dqfvEOfE1rvm/fwUB90LUK4fknbtkzU1q/P4q756xbUPQ026a/xtrC1nsYAxO1X
+	 bJEQic/3NJo8iP+gEYDAl/9ckAKKjg3dyucAQrVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgBRROF (ORCPT
+        id S1727648AbgBRRNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:14:05 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43175 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbgBRRNk (ORCPT
+        Tue, 18 Feb 2020 12:13:39 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39880 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgBRRNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:13:40 -0500
-Received: by mail-oi1-f196.google.com with SMTP id p125so20818028oif.10;
-        Tue, 18 Feb 2020 09:13:39 -0800 (PST)
+        Tue, 18 Feb 2020 12:13:34 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z2so20835228oih.6;
+        Tue, 18 Feb 2020 09:13:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OfSjz0SY3gB9vvqANcu/VWw8bhc0UxSKC0tVnm3NpGk=;
-        b=L1AGWk8BpgWHL5guD5QdhRD713FXIpInZBcfX2DHLO7iWUSArEo13izgAJ9OBj+qep
-         2HtrjqwuB7bSRzniiWuFenijkHqzWyGvLHi6hgNBQZ12nRoWqwC17sxAtK+pAMLVbAiW
-         Au76CT7uz7ONcymB/idAwc0a09v0kPeflhhxdxC87TDfomwYOQQK6frOWwiPPVJjJRZA
-         d6531oOLaF3begNXV8t148fnQuFjIbobAPK4/a7Iuoz2afRNfyVt1rHPfzNJ+TwUVqI4
-         sYnZcmRMVbBENJKqoLeY6aR8c5HulGNNIA4GmY2r43teZaK6juSMddPcjjQS0SWNkcqP
-         Epew==
-X-Gm-Message-State: APjAAAWCPwf1qPbc4fvrusGEB3/MJb7aBU9/QEcKet8Jbca4/pM1Sgzj
-        58/G6gJX5wWWoDxV8t8tyw==
-X-Google-Smtp-Source: APXvYqxbphi1K6W3rxnH0g40QxVSz6sF58VircIrd+GanSZMoZoTlalIrudHTPYPIyhAT1DhIrluPg==
-X-Received: by 2002:aca:f305:: with SMTP id r5mr1981696oih.174.1582046018439;
-        Tue, 18 Feb 2020 09:13:38 -0800 (PST)
+        bh=v0Vl76UEuxsk5yg9Po+ygPtGTaEk/mhPYQr81MGY08w=;
+        b=Oc1p5IkhFbSD7nyEpRUNxjrbtupY5OMRnXbUqBraJiMzOpIFdybAtdJB7yOtyb7/mV
+         uYllS6jCktnGrzaAMJMwJDWheweSzWV1H3A7Um2FQVUmeb0ytJL6yYEasWtMN3tTQkLc
+         AbVQ8JEGF2SOGKUoqytXCJ/JW2ULp2/WsHiSP3komFUhTMsirNQFFkfNhSdLDNfRcAAi
+         Uh/kLv9aTUd+JTWSO+xz+UpiD0ZpLn2OF0TdB4yUTXsccX1WKZh5WEgwzLRROA7t3VEG
+         096sZDcYweCfGK9sBJO7QP9wgNrvEfSb5bX92Tkk0xhBRhRJayJmIEUtAGkESxdIGbpO
+         46Lw==
+X-Gm-Message-State: APjAAAX9bsBkqsPeJnyDtC6TyuzPKdA8UvSAIr5XE5sBxaVoXLJWyamv
+        7/yecvUCGPHtEVXIMyD6Bg==
+X-Google-Smtp-Source: APXvYqwUc3inMoCdecbdUuNsMDgvDcrJjhj8ChMk19cWCZkyZjwjeXollkDMysGYw5kJtCo1GqwvHQ==
+X-Received: by 2002:a54:4791:: with SMTP id o17mr1818618oic.70.1582046011959;
+        Tue, 18 Feb 2020 09:13:31 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.36
+        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:13:37 -0800 (PST)
+        Tue, 18 Feb 2020 09:13:31 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
@@ -76,9 +76,9 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Tony Luck <tony.luck@intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 09/11] ARM: Remove Calxeda platform support
-Date:   Tue, 18 Feb 2020 11:13:19 -0600
-Message-Id: <20200218171321.30990-10-robh@kernel.org>
+Subject: [RFC PATCH 05/11] EDAC: Remove Calxeda drivers
+Date:   Tue, 18 Feb 2020 11:13:15 -0600
+Message-Id: <20200218171321.30990-6-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
 References: <20200218171321.30990-1-robh@kernel.org>
@@ -89,591 +89,506 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: linux-edac@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- MAINTAINERS                         |   8 --
- arch/arm/Kconfig                    |   2 -
- arch/arm/Kconfig.debug              |  12 +-
- arch/arm/Makefile                   |   1 -
- arch/arm/configs/multi_v7_defconfig |   5 -
- arch/arm/mach-highbank/Kconfig      |  19 ---
- arch/arm/mach-highbank/Makefile     |   4 -
- arch/arm/mach-highbank/core.h       |  18 ---
- arch/arm/mach-highbank/highbank.c   | 175 ----------------------------
- arch/arm/mach-highbank/pm.c         |  49 --------
- arch/arm/mach-highbank/smc.S        |  25 ----
- arch/arm/mach-highbank/sysregs.h    |  75 ------------
- arch/arm/mach-highbank/system.c     |  22 ----
- 13 files changed, 1 insertion(+), 414 deletions(-)
- delete mode 100644 arch/arm/mach-highbank/Kconfig
- delete mode 100644 arch/arm/mach-highbank/Makefile
- delete mode 100644 arch/arm/mach-highbank/core.h
- delete mode 100644 arch/arm/mach-highbank/highbank.c
- delete mode 100644 arch/arm/mach-highbank/pm.c
- delete mode 100644 arch/arm/mach-highbank/smc.S
- delete mode 100644 arch/arm/mach-highbank/sysregs.h
- delete mode 100644 arch/arm/mach-highbank/system.c
+Do not apply yet.
+
+ MAINTAINERS                     |   6 -
+ drivers/edac/Kconfig            |  14 --
+ drivers/edac/Makefile           |   3 -
+ drivers/edac/highbank_l2_edac.c | 142 -----------------
+ drivers/edac/highbank_mc_edac.c | 272 --------------------------------
+ 5 files changed, 437 deletions(-)
+ delete mode 100644 drivers/edac/highbank_l2_edac.c
+ delete mode 100644 drivers/edac/highbank_mc_edac.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4732bb268299..551aaa9d2dab 100644
+index a0d86490c2c6..4732bb268299 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -1604,14 +1604,6 @@ F:	Documentation/devicetree/bindings/arm/bitmain.yaml
- F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
- F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
--ARM/CALXEDA HIGHBANK ARCHITECTURE
--M:	Rob Herring <robh@kernel.org>
--L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--S:	Maintained
--F:	arch/arm/mach-highbank/
--F:	arch/arm/boot/dts/highbank.dts
--F:	arch/arm/boot/dts/ecx-*.dts*
--
- ARM/CAVIUM NETWORKS CNS3XXX MACHINE SUPPORT
- M:	Krzysztof Halasa <khalasa@piap.pl>
- S:	Maintained
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97864aabc2a6..6f8ce7b38a46 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -640,8 +640,6 @@ source "arch/arm/mach-footbridge/Kconfig"
- 
- source "arch/arm/mach-gemini/Kconfig"
- 
--source "arch/arm/mach-highbank/Kconfig"
--
- source "arch/arm/mach-hisi/Kconfig"
- 
- source "arch/arm/mach-imx/Kconfig"
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index b70d7debf5ca..66413f98cae9 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -346,14 +346,6 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on HI3620 UART.
- 
--	config DEBUG_HIGHBANK_UART
--		bool "Kernel low-level debugging messages via Highbank UART"
--		depends on ARCH_HIGHBANK
--		select DEBUG_UART_PL01X
--		help
--		  Say Y here if you want the debug print routines to direct
--		  their output to the UART on Highbank based devices.
--
- 	config DEBUG_HIP01_UART
- 		bool "Hisilicon Hip01 Debug UART"
- 		depends on ARCH_HIP01
-@@ -1692,7 +1684,6 @@ config DEBUG_UART_PHYS
- 	default 0xffc03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
- 	default 0xffe40000 if DEBUG_RCAR_GEN1_SCIF0
- 	default 0xffe42000 if DEBUG_RCAR_GEN1_SCIF2
--	default 0xfff36000 if DEBUG_HIGHBANK_UART
- 	default 0xfffb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
- 	default 0xfffb0800 if DEBUG_OMAP1UART2 || DEBUG_OMAP7XXUART2
- 	default 0xfffb9800 if DEBUG_OMAP1UART3 || DEBUG_OMAP7XXUART3
-@@ -1810,7 +1801,6 @@ config DEBUG_UART_VIRT
- 	default 0xfee20000 if DEBUG_NSPIRE_CLASSIC_UART || DEBUG_NSPIRE_CX_UART
- 	default 0xfef00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
- 	default 0xfef00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
--	default 0xfef36000 if DEBUG_HIGHBANK_UART
- 	default 0xfefb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
- 	default 0xfefb0800 if DEBUG_OMAP1UART2 || DEBUG_OMAP7XXUART2
- 	default 0xfefb9800 if DEBUG_OMAP1UART3 || DEBUG_OMAP7XXUART3
-@@ -1873,7 +1863,7 @@ config DEBUG_UNCOMPRESS
- 	  When this option is set, the selected DEBUG_LL output method
- 	  will be re-used for normal decompressor output on multiplatform
- 	  kernels.
--	  
-+
- 
- config UNCOMPRESS_INCLUDE
- 	string
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index db857d07114f..fa3bc920e3ac 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -178,7 +178,6 @@ machine-$(CONFIG_ARCH_EP93XX)		+= ep93xx
- machine-$(CONFIG_ARCH_EXYNOS)		+= exynos
- machine-$(CONFIG_ARCH_FOOTBRIDGE)	+= footbridge
- machine-$(CONFIG_ARCH_GEMINI)		+= gemini
--machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
- machine-$(CONFIG_ARCH_HISI)		+= hisi
- machine-$(CONFIG_ARCH_INTEGRATOR)	+= integrator
- machine-$(CONFIG_ARCH_IOP32X)		+= iop32x
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 017d65f86eba..69eb62f831c7 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -31,7 +31,6 @@ CONFIG_MACH_BERLIN_BG2CD=y
- CONFIG_MACH_BERLIN_BG2Q=y
- CONFIG_ARCH_DIGICOLOR=y
- CONFIG_ARCH_EXYNOS=y
--CONFIG_ARCH_HIGHBANK=y
- CONFIG_ARCH_HISI=y
- CONFIG_ARCH_HI3xxx=y
- CONFIG_ARCH_HIP01=y
-@@ -236,7 +235,6 @@ CONFIG_AHCI_ST=y
- CONFIG_AHCI_IMX=y
- CONFIG_AHCI_SUNXI=y
- CONFIG_AHCI_TEGRA=y
--CONFIG_SATA_HIGHBANK=y
- CONFIG_SATA_MV=y
- CONFIG_SATA_RCAR=y
- CONFIG_NETDEVICES=y
-@@ -250,7 +248,6 @@ CONFIG_BCMGENET=m
- CONFIG_BGMAC_BCMA=y
- CONFIG_SYSTEMPORT=m
- CONFIG_MACB=y
--CONFIG_NET_CALXEDA_XGMAC=y
- CONFIG_FTGMAC100=m
- CONFIG_GIANFAR=y
- CONFIG_HIX5HD2_GMAC=y
-@@ -866,8 +863,6 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_LEDS_TRIGGER_TRANSIENT=y
- CONFIG_LEDS_TRIGGER_CAMERA=y
- CONFIG_EDAC=y
--CONFIG_EDAC_HIGHBANK_MC=y
--CONFIG_EDAC_HIGHBANK_L2=y
- CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_AC100=y
- CONFIG_RTC_DRV_AS3722=y
-diff --git a/arch/arm/mach-highbank/Kconfig b/arch/arm/mach-highbank/Kconfig
-deleted file mode 100644
-index 1bc68913d62c..000000000000
---- a/arch/arm/mach-highbank/Kconfig
-+++ /dev/null
-@@ -1,19 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--config ARCH_HIGHBANK
--	bool "Calxeda ECX-1000/2000 (Highbank/Midway)"
--	depends on ARCH_MULTI_V7
--	select ARCH_HAS_HOLES_MEMORYMODEL
--	select ARCH_SUPPORTS_BIG_ENDIAN
--	select ARM_AMBA
--	select ARM_ERRATA_764369 if SMP
--	select ARM_ERRATA_775420
--	select ARM_ERRATA_798181 if SMP
--	select ARM_GIC
--	select ARM_PSCI
--	select ARM_TIMER_SP804
--	select CACHE_L2X0
--	select HAVE_ARM_SCU
--	select HAVE_ARM_TWD if SMP
--	select MAILBOX
--	select PL320_MBOX
--	select ZONE_DMA if ARM_LPAE
-diff --git a/arch/arm/mach-highbank/Makefile b/arch/arm/mach-highbank/Makefile
-deleted file mode 100644
-index 71cc68041d92..000000000000
---- a/arch/arm/mach-highbank/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--obj-y					:= highbank.o system.o smc.o
--
--obj-$(CONFIG_PM_SLEEP)			+= pm.o
-diff --git a/arch/arm/mach-highbank/core.h b/arch/arm/mach-highbank/core.h
-deleted file mode 100644
-index 3991a6594ae5..000000000000
---- a/arch/arm/mach-highbank/core.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __HIGHBANK_CORE_H
--#define __HIGHBANK_CORE_H
--
--#include <linux/reboot.h>
--
--extern void highbank_restart(enum reboot_mode, const char *);
--extern void __iomem *scu_base_addr;
--
--#ifdef CONFIG_PM_SLEEP
--extern void highbank_pm_init(void);
--#else
--static inline void highbank_pm_init(void) {}
--#endif
--
--extern void highbank_smc1(int fn, int arg);
--
--#endif
-diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
-deleted file mode 100644
-index 56bf29523c65..000000000000
---- a/arch/arm/mach-highbank/highbank.c
-+++ /dev/null
-@@ -1,175 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright 2010-2011 Calxeda, Inc.
-- */
--#include <linux/clk.h>
--#include <linux/clkdev.h>
--#include <linux/clocksource.h>
--#include <linux/dma-mapping.h>
--#include <linux/input.h>
--#include <linux/io.h>
--#include <linux/irqchip.h>
--#include <linux/pl320-ipc.h>
--#include <linux/of.h>
--#include <linux/of_irq.h>
--#include <linux/of_address.h>
--#include <linux/reboot.h>
--#include <linux/amba/bus.h>
--#include <linux/platform_device.h>
--#include <linux/psci.h>
--
--#include <asm/hardware/cache-l2x0.h>
--#include <asm/mach/arch.h>
--#include <asm/mach/map.h>
--
--#include "core.h"
--#include "sysregs.h"
--
--void __iomem *sregs_base;
--void __iomem *scu_base_addr;
--
--static void __init highbank_scu_map_io(void)
--{
--	unsigned long base;
--
--	/* Get SCU base */
--	asm("mrc p15, 4, %0, c15, c0, 0" : "=r" (base));
--
--	scu_base_addr = ioremap(base, SZ_4K);
--}
--
--
--static void highbank_l2c310_write_sec(unsigned long val, unsigned reg)
--{
--	if (reg == L2X0_CTRL)
--		highbank_smc1(0x102, val);
--	else
--		WARN_ONCE(1, "Highbank L2C310: ignoring write to reg 0x%x\n",
--			  reg);
--}
--
--static void __init highbank_init_irq(void)
--{
--	irqchip_init();
--
--	if (of_find_compatible_node(NULL, NULL, "arm,cortex-a9"))
--		highbank_scu_map_io();
--}
--
--static void highbank_power_off(void)
--{
--	highbank_set_pwr_shutdown();
--
--	while (1)
--		cpu_do_idle();
--}
--
--static int highbank_platform_notifier(struct notifier_block *nb,
--				  unsigned long event, void *__dev)
--{
--	struct resource *res;
--	int reg = -1;
--	u32 val;
--	struct device *dev = __dev;
--
--	if (event != BUS_NOTIFY_ADD_DEVICE)
--		return NOTIFY_DONE;
--
--	if (of_device_is_compatible(dev->of_node, "calxeda,hb-ahci"))
--		reg = 0xc;
--	else if (of_device_is_compatible(dev->of_node, "calxeda,hb-sdhci"))
--		reg = 0x18;
--	else if (of_device_is_compatible(dev->of_node, "arm,pl330"))
--		reg = 0x20;
--	else if (of_device_is_compatible(dev->of_node, "calxeda,hb-xgmac")) {
--		res = platform_get_resource(to_platform_device(dev),
--					    IORESOURCE_MEM, 0);
--		if (res) {
--			if (res->start == 0xfff50000)
--				reg = 0;
--			else if (res->start == 0xfff51000)
--				reg = 4;
--		}
--	}
--
--	if (reg < 0)
--		return NOTIFY_DONE;
--
--	if (of_property_read_bool(dev->of_node, "dma-coherent")) {
--		val = readl(sregs_base + reg);
--		writel(val | 0xff01, sregs_base + reg);
--		set_dma_ops(dev, &arm_coherent_dma_ops);
--	}
--
--	return NOTIFY_OK;
--}
--
--static struct notifier_block highbank_amba_nb = {
--	.notifier_call = highbank_platform_notifier,
--};
--
--static struct notifier_block highbank_platform_nb = {
--	.notifier_call = highbank_platform_notifier,
--};
--
--static struct platform_device highbank_cpuidle_device = {
--	.name = "cpuidle-calxeda",
--};
--
--static int hb_keys_notifier(struct notifier_block *nb, unsigned long event, void *data)
--{
--	u32 key = *(u32 *)data;
--
--	if (event != 0x1000)
--		return 0;
--
--	if (key == KEY_POWER)
--		orderly_poweroff(false);
--	else if (key == 0xffff)
--		ctrl_alt_del();
--
--	return 0;
--}
--static struct notifier_block hb_keys_nb = {
--	.notifier_call = hb_keys_notifier,
--};
--
--static void __init highbank_init(void)
--{
--	struct device_node *np;
--
--	/* Map system registers */
--	np = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
--	sregs_base = of_iomap(np, 0);
--	WARN_ON(!sregs_base);
--
--	pm_power_off = highbank_power_off;
--	highbank_pm_init();
--
--	bus_register_notifier(&platform_bus_type, &highbank_platform_nb);
--	bus_register_notifier(&amba_bustype, &highbank_amba_nb);
--
--	pl320_ipc_register_notifier(&hb_keys_nb);
--
--	if (psci_ops.cpu_suspend)
--		platform_device_register(&highbank_cpuidle_device);
--}
--
--static const char *const highbank_match[] __initconst = {
--	"calxeda,highbank",
--	"calxeda,ecx-2000",
--	NULL,
--};
--
--DT_MACHINE_START(HIGHBANK, "Highbank")
--#if defined(CONFIG_ZONE_DMA) && defined(CONFIG_ARM_LPAE)
--	.dma_zone_size	= (4ULL * SZ_1G),
--#endif
--	.l2c_aux_val	= 0,
--	.l2c_aux_mask	= ~0,
--	.l2c_write_sec	= highbank_l2c310_write_sec,
--	.init_irq	= highbank_init_irq,
--	.init_machine	= highbank_init,
--	.dt_compat	= highbank_match,
--	.restart	= highbank_restart,
--MACHINE_END
-diff --git a/arch/arm/mach-highbank/pm.c b/arch/arm/mach-highbank/pm.c
-deleted file mode 100644
-index 561941baeda9..000000000000
---- a/arch/arm/mach-highbank/pm.c
-+++ /dev/null
-@@ -1,49 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright 2011 Calxeda, Inc.
-- */
--
--#include <linux/cpu_pm.h>
--#include <linux/init.h>
--#include <linux/psci.h>
--#include <linux/suspend.h>
--
--#include <asm/suspend.h>
--
--#include <uapi/linux/psci.h>
--
--#define HIGHBANK_SUSPEND_PARAM \
--	((0 << PSCI_0_2_POWER_STATE_ID_SHIFT) | \
--	 (1 << PSCI_0_2_POWER_STATE_AFFL_SHIFT) | \
--	 (PSCI_POWER_STATE_TYPE_POWER_DOWN << PSCI_0_2_POWER_STATE_TYPE_SHIFT))
--
--static int highbank_suspend_finish(unsigned long val)
--{
--	return psci_ops.cpu_suspend(HIGHBANK_SUSPEND_PARAM, __pa(cpu_resume));
--}
--
--static int highbank_pm_enter(suspend_state_t state)
--{
--	cpu_pm_enter();
--	cpu_cluster_pm_enter();
--
--	cpu_suspend(0, highbank_suspend_finish);
--
--	cpu_cluster_pm_exit();
--	cpu_pm_exit();
--
--	return 0;
--}
--
--static const struct platform_suspend_ops highbank_pm_ops = {
--	.enter = highbank_pm_enter,
--	.valid = suspend_valid_only_mem,
--};
--
--void __init highbank_pm_init(void)
--{
--	if (!psci_ops.cpu_suspend)
--		return;
--
--	suspend_set_ops(&highbank_pm_ops);
--}
-diff --git a/arch/arm/mach-highbank/smc.S b/arch/arm/mach-highbank/smc.S
-deleted file mode 100644
-index 78b3f19e7f37..000000000000
---- a/arch/arm/mach-highbank/smc.S
-+++ /dev/null
-@@ -1,25 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copied from omap44xx-smc.S Copyright (C) 2010 Texas Instruments, Inc.
-- * Copyright 2012 Calxeda, Inc.
-- */
--
--#include <linux/linkage.h>
--
--/*
-- * This is common routine to manage secure monitor API
-- * used to modify the PL310 secure registers.
-- * 'r0' contains the value to be modified and 'r12' contains
-- * the monitor API number.
-- * Function signature : void highbank_smc1(u32 fn, u32 arg)
-- */
--	.arch armv7-a
--	.arch_extension sec
--ENTRY(highbank_smc1)
--	stmfd   sp!, {r4-r11, lr}
--	mov	r12, r0
--	mov 	r0, r1
--	dsb
--	smc	#0
--	ldmfd   sp!, {r4-r11, pc}
--ENDPROC(highbank_smc1)
-diff --git a/arch/arm/mach-highbank/sysregs.h b/arch/arm/mach-highbank/sysregs.h
-deleted file mode 100644
-index 3c13fdcafb1e..000000000000
---- a/arch/arm/mach-highbank/sysregs.h
-+++ /dev/null
-@@ -1,75 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Copyright 2011 Calxeda, Inc.
-- */
--#ifndef _MACH_HIGHBANK__SYSREGS_H_
--#define _MACH_HIGHBANK__SYSREGS_H_
--
--#include <linux/io.h>
--#include <linux/smp.h>
--#include <asm/smp_plat.h>
--#include <asm/smp_scu.h>
--#include "core.h"
--
--extern void __iomem *sregs_base;
--
--#define HB_SREG_A9_PWR_REQ		0xf00
--#define HB_SREG_A9_BOOT_STAT		0xf04
--#define HB_SREG_A9_BOOT_DATA		0xf08
--
--#define HB_PWR_SUSPEND			0
--#define HB_PWR_SOFT_RESET		1
--#define HB_PWR_HARD_RESET		2
--#define HB_PWR_SHUTDOWN			3
--
--#define SREG_CPU_PWR_CTRL(c)		(0x200 + ((c) * 4))
--
--static inline void highbank_set_core_pwr(void)
--{
--	int cpu = MPIDR_AFFINITY_LEVEL(cpu_logical_map(smp_processor_id()), 0);
--	if (scu_base_addr)
--		scu_power_mode(scu_base_addr, SCU_PM_POWEROFF);
--	else
--		writel_relaxed(1, sregs_base + SREG_CPU_PWR_CTRL(cpu));
--}
--
--static inline void highbank_clear_core_pwr(void)
--{
--	int cpu = MPIDR_AFFINITY_LEVEL(cpu_logical_map(smp_processor_id()), 0);
--	if (scu_base_addr)
--		scu_power_mode(scu_base_addr, SCU_PM_NORMAL);
--	else
--		writel_relaxed(0, sregs_base + SREG_CPU_PWR_CTRL(cpu));
--}
--
--static inline void highbank_set_pwr_suspend(void)
--{
--	writel(HB_PWR_SUSPEND, sregs_base + HB_SREG_A9_PWR_REQ);
--	highbank_set_core_pwr();
--}
--
--static inline void highbank_set_pwr_shutdown(void)
--{
--	writel(HB_PWR_SHUTDOWN, sregs_base + HB_SREG_A9_PWR_REQ);
--	highbank_set_core_pwr();
--}
--
--static inline void highbank_set_pwr_soft_reset(void)
--{
--	writel(HB_PWR_SOFT_RESET, sregs_base + HB_SREG_A9_PWR_REQ);
--	highbank_set_core_pwr();
--}
--
--static inline void highbank_set_pwr_hard_reset(void)
--{
--	writel(HB_PWR_HARD_RESET, sregs_base + HB_SREG_A9_PWR_REQ);
--	highbank_set_core_pwr();
--}
--
--static inline void highbank_clear_pwr_request(void)
--{
--	writel(~0UL, sregs_base + HB_SREG_A9_PWR_REQ);
--	highbank_clear_core_pwr();
--}
--
--#endif
-diff --git a/arch/arm/mach-highbank/system.c b/arch/arm/mach-highbank/system.c
-deleted file mode 100644
-index b749c4a6ddf5..000000000000
---- a/arch/arm/mach-highbank/system.c
-+++ /dev/null
-@@ -1,22 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright 2011 Calxeda, Inc.
-- */
--#include <linux/io.h>
--#include <asm/proc-fns.h>
--#include <linux/reboot.h>
--
--#include "core.h"
--#include "sysregs.h"
--
--void highbank_restart(enum reboot_mode mode, const char *cmd)
--{
--	if (mode == REBOOT_HARD)
--		highbank_set_pwr_hard_reset();
--	else
--		highbank_set_pwr_soft_reset();
--
--	while (1)
--		cpu_do_idle();
--}
--
--- 
-2.20.1
+@@ -5964,12 +5964,6 @@ M:	Shravan Kumar Ramani <sramani@mellanox.com>
+ S:	Supported
+ F:	drivers/edac/bluefield_edac.c
 
+-EDAC-CALXEDA
+-M:	Robert Richter <rric@kernel.org>
+-L:	linux-edac@vger.kernel.org
+-S:	Maintained
+-F:	drivers/edac/highbank*
+-
+ EDAC-CAVIUM OCTEON
+ M:	Ralf Baechle <ralf@linux-mips.org>
+ M:	Robert Richter <rrichter@marvell.com>
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index b3c99bb5fe77..f3ff75e5ed9b 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -334,20 +334,6 @@ config EDAC_CPC925
+ 	  a companion chip to the PowerPC 970 family of
+ 	  processors.
+
+-config EDAC_HIGHBANK_MC
+-	tristate "Highbank Memory Controller"
+-	depends on ARCH_HIGHBANK
+-	help
+-	  Support for error detection and correction on the
+-	  Calxeda Highbank memory controller.
+-
+-config EDAC_HIGHBANK_L2
+-	tristate "Highbank L2 Cache"
+-	depends on ARCH_HIGHBANK
+-	help
+-	  Support for error detection and correction on the
+-	  Calxeda Highbank memory controller.
+-
+ config EDAC_OCTEON_PC
+ 	tristate "Cavium Octeon Primary Caches"
+ 	depends on CPU_CAVIUM_OCTEON
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index d77200c9680b..9a563db39bc3 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -69,9 +69,6 @@ obj-$(CONFIG_EDAC_PPC4XX)		+= ppc4xx_edac.o
+ obj-$(CONFIG_EDAC_AMD8111)		+= amd8111_edac.o
+ obj-$(CONFIG_EDAC_AMD8131)		+= amd8131_edac.o
+
+-obj-$(CONFIG_EDAC_HIGHBANK_MC)		+= highbank_mc_edac.o
+-obj-$(CONFIG_EDAC_HIGHBANK_L2)		+= highbank_l2_edac.o
+-
+ obj-$(CONFIG_EDAC_OCTEON_PC)		+= octeon_edac-pc.o
+ obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
+ obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
+diff --git a/drivers/edac/highbank_l2_edac.c b/drivers/edac/highbank_l2_edac.c
+deleted file mode 100644
+index c4549cec788b..000000000000
+--- a/drivers/edac/highbank_l2_edac.c
++++ /dev/null
+@@ -1,142 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright 2011-2012 Calxeda, Inc.
+- */
+-#include <linux/types.h>
+-#include <linux/kernel.h>
+-#include <linux/ctype.h>
+-#include <linux/edac.h>
+-#include <linux/interrupt.h>
+-#include <linux/platform_device.h>
+-#include <linux/of_platform.h>
+-
+-#include "edac_module.h"
+-
+-#define SR_CLR_SB_ECC_INTR	0x0
+-#define SR_CLR_DB_ECC_INTR	0x4
+-
+-struct hb_l2_drvdata {
+-	void __iomem *base;
+-	int sb_irq;
+-	int db_irq;
+-};
+-
+-static irqreturn_t highbank_l2_err_handler(int irq, void *dev_id)
+-{
+-	struct edac_device_ctl_info *dci = dev_id;
+-	struct hb_l2_drvdata *drvdata = dci->pvt_info;
+-
+-	if (irq == drvdata->sb_irq) {
+-		writel(1, drvdata->base + SR_CLR_SB_ECC_INTR);
+-		edac_device_handle_ce(dci, 0, 0, dci->ctl_name);
+-	}
+-	if (irq == drvdata->db_irq) {
+-		writel(1, drvdata->base + SR_CLR_DB_ECC_INTR);
+-		edac_device_handle_ue(dci, 0, 0, dci->ctl_name);
+-	}
+-
+-	return IRQ_HANDLED;
+-}
+-
+-static const struct of_device_id hb_l2_err_of_match[] = {
+-	{ .compatible = "calxeda,hb-sregs-l2-ecc", },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, hb_l2_err_of_match);
+-
+-static int highbank_l2_err_probe(struct platform_device *pdev)
+-{
+-	const struct of_device_id *id;
+-	struct edac_device_ctl_info *dci;
+-	struct hb_l2_drvdata *drvdata;
+-	struct resource *r;
+-	int res = 0;
+-
+-	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), "cpu",
+-		1, "L", 1, 2, NULL, 0, 0);
+-	if (!dci)
+-		return -ENOMEM;
+-
+-	drvdata = dci->pvt_info;
+-	dci->dev = &pdev->dev;
+-	platform_set_drvdata(pdev, dci);
+-
+-	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
+-		return -ENOMEM;
+-
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!r) {
+-		dev_err(&pdev->dev, "Unable to get mem resource\n");
+-		res = -ENODEV;
+-		goto err;
+-	}
+-
+-	if (!devm_request_mem_region(&pdev->dev, r->start,
+-				     resource_size(r), dev_name(&pdev->dev))) {
+-		dev_err(&pdev->dev, "Error while requesting mem region\n");
+-		res = -EBUSY;
+-		goto err;
+-	}
+-
+-	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+-	if (!drvdata->base) {
+-		dev_err(&pdev->dev, "Unable to map regs\n");
+-		res = -ENOMEM;
+-		goto err;
+-	}
+-
+-	id = of_match_device(hb_l2_err_of_match, &pdev->dev);
+-	dci->mod_name = pdev->dev.driver->name;
+-	dci->ctl_name = id ? id->compatible : "unknown";
+-	dci->dev_name = dev_name(&pdev->dev);
+-
+-	if (edac_device_add_device(dci))
+-		goto err;
+-
+-	drvdata->db_irq = platform_get_irq(pdev, 0);
+-	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
+-			       highbank_l2_err_handler,
+-			       0, dev_name(&pdev->dev), dci);
+-	if (res < 0)
+-		goto err2;
+-
+-	drvdata->sb_irq = platform_get_irq(pdev, 1);
+-	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
+-			       highbank_l2_err_handler,
+-			       0, dev_name(&pdev->dev), dci);
+-	if (res < 0)
+-		goto err2;
+-
+-	devres_close_group(&pdev->dev, NULL);
+-	return 0;
+-err2:
+-	edac_device_del_device(&pdev->dev);
+-err:
+-	devres_release_group(&pdev->dev, NULL);
+-	edac_device_free_ctl_info(dci);
+-	return res;
+-}
+-
+-static int highbank_l2_err_remove(struct platform_device *pdev)
+-{
+-	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
+-
+-	edac_device_del_device(&pdev->dev);
+-	edac_device_free_ctl_info(dci);
+-	return 0;
+-}
+-
+-static struct platform_driver highbank_l2_edac_driver = {
+-	.probe = highbank_l2_err_probe,
+-	.remove = highbank_l2_err_remove,
+-	.driver = {
+-		.name = "hb_l2_edac",
+-		.of_match_table = hb_l2_err_of_match,
+-	},
+-};
+-
+-module_platform_driver(highbank_l2_edac_driver);
+-
+-MODULE_LICENSE("GPL v2");
+-MODULE_AUTHOR("Calxeda, Inc.");
+-MODULE_DESCRIPTION("EDAC Driver for Calxeda Highbank L2 Cache");
+diff --git a/drivers/edac/highbank_mc_edac.c b/drivers/edac/highbank_mc_edac.c
+deleted file mode 100644
+index 61b76ec226af..000000000000
+--- a/drivers/edac/highbank_mc_edac.c
++++ /dev/null
+@@ -1,272 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright 2011-2012 Calxeda, Inc.
+- */
+-#include <linux/types.h>
+-#include <linux/kernel.h>
+-#include <linux/ctype.h>
+-#include <linux/edac.h>
+-#include <linux/interrupt.h>
+-#include <linux/platform_device.h>
+-#include <linux/of_platform.h>
+-#include <linux/uaccess.h>
+-
+-#include "edac_module.h"
+-
+-/* DDR Ctrlr Error Registers */
+-
+-#define HB_DDR_ECC_ERR_BASE		0x128
+-#define MW_DDR_ECC_ERR_BASE		0x1b4
+-
+-#define HB_DDR_ECC_OPT			0x00
+-#define HB_DDR_ECC_U_ERR_ADDR		0x08
+-#define HB_DDR_ECC_U_ERR_STAT		0x0c
+-#define HB_DDR_ECC_U_ERR_DATAL		0x10
+-#define HB_DDR_ECC_U_ERR_DATAH		0x14
+-#define HB_DDR_ECC_C_ERR_ADDR		0x18
+-#define HB_DDR_ECC_C_ERR_STAT		0x1c
+-#define HB_DDR_ECC_C_ERR_DATAL		0x20
+-#define HB_DDR_ECC_C_ERR_DATAH		0x24
+-
+-#define HB_DDR_ECC_OPT_MODE_MASK	0x3
+-#define HB_DDR_ECC_OPT_FWC		0x100
+-#define HB_DDR_ECC_OPT_XOR_SHIFT	16
+-
+-/* DDR Ctrlr Interrupt Registers */
+-
+-#define HB_DDR_ECC_INT_BASE		0x180
+-#define MW_DDR_ECC_INT_BASE		0x218
+-
+-#define HB_DDR_ECC_INT_STATUS		0x00
+-#define HB_DDR_ECC_INT_ACK		0x04
+-
+-#define HB_DDR_ECC_INT_STAT_CE		0x8
+-#define HB_DDR_ECC_INT_STAT_DOUBLE_CE	0x10
+-#define HB_DDR_ECC_INT_STAT_UE		0x20
+-#define HB_DDR_ECC_INT_STAT_DOUBLE_UE	0x40
+-
+-struct hb_mc_drvdata {
+-	void __iomem *mc_err_base;
+-	void __iomem *mc_int_base;
+-};
+-
+-static irqreturn_t highbank_mc_err_handler(int irq, void *dev_id)
+-{
+-	struct mem_ctl_info *mci = dev_id;
+-	struct hb_mc_drvdata *drvdata = mci->pvt_info;
+-	u32 status, err_addr;
+-
+-	/* Read the interrupt status register */
+-	status = readl(drvdata->mc_int_base + HB_DDR_ECC_INT_STATUS);
+-
+-	if (status & HB_DDR_ECC_INT_STAT_UE) {
+-		err_addr = readl(drvdata->mc_err_base + HB_DDR_ECC_U_ERR_ADDR);
+-		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, 1,
+-				     err_addr >> PAGE_SHIFT,
+-				     err_addr & ~PAGE_MASK, 0,
+-				     0, 0, -1,
+-				     mci->ctl_name, "");
+-	}
+-	if (status & HB_DDR_ECC_INT_STAT_CE) {
+-		u32 syndrome = readl(drvdata->mc_err_base + HB_DDR_ECC_C_ERR_STAT);
+-		syndrome = (syndrome >> 8) & 0xff;
+-		err_addr = readl(drvdata->mc_err_base + HB_DDR_ECC_C_ERR_ADDR);
+-		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, 1,
+-				     err_addr >> PAGE_SHIFT,
+-				     err_addr & ~PAGE_MASK, syndrome,
+-				     0, 0, -1,
+-				     mci->ctl_name, "");
+-	}
+-
+-	/* clear the error, clears the interrupt */
+-	writel(status, drvdata->mc_int_base + HB_DDR_ECC_INT_ACK);
+-	return IRQ_HANDLED;
+-}
+-
+-static void highbank_mc_err_inject(struct mem_ctl_info *mci, u8 synd)
+-{
+-	struct hb_mc_drvdata *pdata = mci->pvt_info;
+-	u32 reg;
+-
+-	reg = readl(pdata->mc_err_base + HB_DDR_ECC_OPT);
+-	reg &= HB_DDR_ECC_OPT_MODE_MASK;
+-	reg |= (synd << HB_DDR_ECC_OPT_XOR_SHIFT) | HB_DDR_ECC_OPT_FWC;
+-	writel(reg, pdata->mc_err_base + HB_DDR_ECC_OPT);
+-}
+-
+-#define to_mci(k) container_of(k, struct mem_ctl_info, dev)
+-
+-static ssize_t highbank_mc_inject_ctrl(struct device *dev,
+-	struct device_attribute *attr, const char *buf, size_t count)
+-{
+-	struct mem_ctl_info *mci = to_mci(dev);
+-	u8 synd;
+-
+-	if (kstrtou8(buf, 16, &synd))
+-		return -EINVAL;
+-
+-	highbank_mc_err_inject(mci, synd);
+-
+-	return count;
+-}
+-
+-static DEVICE_ATTR(inject_ctrl, S_IWUSR, NULL, highbank_mc_inject_ctrl);
+-
+-static struct attribute *highbank_dev_attrs[] = {
+-	&dev_attr_inject_ctrl.attr,
+-	NULL
+-};
+-
+-ATTRIBUTE_GROUPS(highbank_dev);
+-
+-struct hb_mc_settings {
+-	int	err_offset;
+-	int	int_offset;
+-};
+-
+-static struct hb_mc_settings hb_settings = {
+-	.err_offset = HB_DDR_ECC_ERR_BASE,
+-	.int_offset = HB_DDR_ECC_INT_BASE,
+-};
+-
+-static struct hb_mc_settings mw_settings = {
+-	.err_offset = MW_DDR_ECC_ERR_BASE,
+-	.int_offset = MW_DDR_ECC_INT_BASE,
+-};
+-
+-static const struct of_device_id hb_ddr_ctrl_of_match[] = {
+-	{ .compatible = "calxeda,hb-ddr-ctrl",		.data = &hb_settings },
+-	{ .compatible = "calxeda,ecx-2000-ddr-ctrl",	.data = &mw_settings },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, hb_ddr_ctrl_of_match);
+-
+-static int highbank_mc_probe(struct platform_device *pdev)
+-{
+-	const struct of_device_id *id;
+-	const struct hb_mc_settings *settings;
+-	struct edac_mc_layer layers[2];
+-	struct mem_ctl_info *mci;
+-	struct hb_mc_drvdata *drvdata;
+-	struct dimm_info *dimm;
+-	struct resource *r;
+-	void __iomem *base;
+-	u32 control;
+-	int irq;
+-	int res = 0;
+-
+-	id = of_match_device(hb_ddr_ctrl_of_match, &pdev->dev);
+-	if (!id)
+-		return -ENODEV;
+-
+-	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+-	layers[0].size = 1;
+-	layers[0].is_virt_csrow = true;
+-	layers[1].type = EDAC_MC_LAYER_CHANNEL;
+-	layers[1].size = 1;
+-	layers[1].is_virt_csrow = false;
+-	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+-			    sizeof(struct hb_mc_drvdata));
+-	if (!mci)
+-		return -ENOMEM;
+-
+-	mci->pdev = &pdev->dev;
+-	drvdata = mci->pvt_info;
+-	platform_set_drvdata(pdev, mci);
+-
+-	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
+-		return -ENOMEM;
+-
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!r) {
+-		dev_err(&pdev->dev, "Unable to get mem resource\n");
+-		res = -ENODEV;
+-		goto err;
+-	}
+-
+-	if (!devm_request_mem_region(&pdev->dev, r->start,
+-				     resource_size(r), dev_name(&pdev->dev))) {
+-		dev_err(&pdev->dev, "Error while requesting mem region\n");
+-		res = -EBUSY;
+-		goto err;
+-	}
+-
+-	base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+-	if (!base) {
+-		dev_err(&pdev->dev, "Unable to map regs\n");
+-		res = -ENOMEM;
+-		goto err;
+-	}
+-
+-	settings = id->data;
+-	drvdata->mc_err_base = base + settings->err_offset;
+-	drvdata->mc_int_base = base + settings->int_offset;
+-
+-	control = readl(drvdata->mc_err_base + HB_DDR_ECC_OPT) & 0x3;
+-	if (!control || (control == 0x2)) {
+-		dev_err(&pdev->dev, "No ECC present, or ECC disabled\n");
+-		res = -ENODEV;
+-		goto err;
+-	}
+-
+-	mci->mtype_cap = MEM_FLAG_DDR3;
+-	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+-	mci->edac_cap = EDAC_FLAG_SECDED;
+-	mci->mod_name = pdev->dev.driver->name;
+-	mci->ctl_name = id->compatible;
+-	mci->dev_name = dev_name(&pdev->dev);
+-	mci->scrub_mode = SCRUB_SW_SRC;
+-
+-	/* Only a single 4GB DIMM is supported */
+-	dimm = *mci->dimms;
+-	dimm->nr_pages = (~0UL >> PAGE_SHIFT) + 1;
+-	dimm->grain = 8;
+-	dimm->dtype = DEV_X8;
+-	dimm->mtype = MEM_DDR3;
+-	dimm->edac_mode = EDAC_SECDED;
+-
+-	res = edac_mc_add_mc_with_groups(mci, highbank_dev_groups);
+-	if (res < 0)
+-		goto err;
+-
+-	irq = platform_get_irq(pdev, 0);
+-	res = devm_request_irq(&pdev->dev, irq, highbank_mc_err_handler,
+-			       0, dev_name(&pdev->dev), mci);
+-	if (res < 0) {
+-		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
+-		goto err2;
+-	}
+-
+-	devres_close_group(&pdev->dev, NULL);
+-	return 0;
+-err2:
+-	edac_mc_del_mc(&pdev->dev);
+-err:
+-	devres_release_group(&pdev->dev, NULL);
+-	edac_mc_free(mci);
+-	return res;
+-}
+-
+-static int highbank_mc_remove(struct platform_device *pdev)
+-{
+-	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+-
+-	edac_mc_del_mc(&pdev->dev);
+-	edac_mc_free(mci);
+-	return 0;
+-}
+-
+-static struct platform_driver highbank_mc_edac_driver = {
+-	.probe = highbank_mc_probe,
+-	.remove = highbank_mc_remove,
+-	.driver = {
+-		.name = "hb_mc_edac",
+-		.of_match_table = hb_ddr_ctrl_of_match,
+-	},
+-};
+-
+-module_platform_driver(highbank_mc_edac_driver);
+-
+-MODULE_LICENSE("GPL v2");
+-MODULE_AUTHOR("Calxeda, Inc.");
+-MODULE_DESCRIPTION("EDAC Driver for Calxeda Highbank");
+--
+2.20.1
