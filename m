@@ -2,129 +2,104 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DADC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EDAC34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6298820801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8B0206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 04:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="N6WnfoTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgBREHO (ORCPT
+        id S1726340AbgBREM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 23:07:14 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:50763 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgBREHN (ORCPT
+        Mon, 17 Feb 2020 23:12:27 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55043 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726266AbgBREM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 23:07:13 -0500
-Received: by mail-il1-f200.google.com with SMTP id z12so15943942ilh.17
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 20:07:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=uHglhlTsZL9nYXC1SuW5n8zSraL5OSomR7EKPnnITWs=;
-        b=j/mtihZDyUiQqigOeJSSo4Adgs+bz+UobTPM9kr5r5tbLAeXrPefds0CdXlHFwZUOC
-         VK21CHAay9qHOFNQNtwfOy+O5dKWWw4XoMb27R3N6jWhWdeoMo+SKkgcQDA4Ypd99Qga
-         fnXzvQuq5I9cDqWZ+rj/5LJxYdGmmuVZDlEOmowjG8d4WStSWRlwH53sHHwUZD16iE6V
-         gYOH+36HIz4YMmDrMNL/DPeQUEkjZPw5As5sCswEaNYdl2OwBf9wxFl9Zyn1N6UalcCP
-         Z0fR76SdfaxVy71KtmZG+QkcUF/dtEGCkOu51j9dJNySNczK4/w1QSwPhjufPkpzoDPR
-         k5Fw==
-X-Gm-Message-State: APjAAAXmmogmRbQ432hBrtyFkJOu/pYuQnnmjLAIwTqCpvqYhd8NGC54
-        E3K8oeQefs+9J+DKFb006tUcxMa0ksObUaUHH0hMqA3DMTeB
-X-Google-Smtp-Source: APXvYqykvr5lZYYJzLA1G3jokmMLxLQMutu/6LzMIis/OPHm53DIYqPrXMQ1lTAZYZ7MZTpQKx8uB0HWAK4G5RctK5UqXjFwwjDg
-MIME-Version: 1.0
-X-Received: by 2002:a6b:d912:: with SMTP id r18mr13781201ioc.306.1581998832890;
- Mon, 17 Feb 2020 20:07:12 -0800 (PST)
-Date:   Mon, 17 Feb 2020 20:07:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007838f1059ed1cea5@google.com>
-Subject: general protection fault in l2cap_sock_getsockopt
-From:   syzbot <syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+        Mon, 17 Feb 2020 23:12:26 -0500
+X-UUID: cdb39c2320e145139c693c85c5567541-20200218
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sC1dH8d6p1Sb7KU8Fpm99duFBOtY/J9QQu2NqxSwvKI=;
+        b=N6WnfoTKYUPY37LiLGDgStQon8O6ENar205hqs12I6Qs6XflcAJO9zhzPn7ct69epFnjRRxfxi5TNZwEBEyiTpn5UZD3TdJpA5pQ7rGHarmAe0SybGs8tQVoyIaYKe4Zp7xCpGdKdegUXCXDHouQbMYbokyqffS0ujhSWxpXdqY=;
+X-UUID: cdb39c2320e145139c693c85c5567541-20200218
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 889799796; Tue, 18 Feb 2020 12:12:20 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 18 Feb 2020 12:09:51 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 18 Feb 2020 12:11:50 +0800
+Message-ID: <1581999138.19053.21.camel@mtkswgap22>
+Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Stephen Boyd <sboyd@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        "Evan Green" <evgreen@chromium.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        "Joerg Roedel" <jroedel@suse.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        "Sean Wang" <Sean.Wang@mediatek.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
+Date:   Tue, 18 Feb 2020 12:12:18 +0800
+In-Reply-To: <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
+References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
+         <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com>
+         <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 84BB3C13CA23C8AB9C9ED080959C0C3F21F3FB9B8B07A59D24DCEF47D5C4BF1C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+T24gU2F0LCAyMDIwLTAyLTE1IGF0IDAyOjQ3ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KDQpIaSBTdGVwaGVuLA0KDQo+IEhpIFN0ZXBoZW4sDQo+IA0KPiBPbiAxMy8wMi8yMDIwIDAw
+OjQ0LCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+ID4gUXVvdGluZyBNYWNwYXVsIExpbiAoMjAyMC0w
+Mi0wNyAwMToyMDo0MykNCj4gPj4gVGhpcyBwYXRjaCBhZGRzIGJhc2ljIFNvQyBzdXBwb3J0IGZv
+ciBNZWRpYXRlaydzIG5ldyA4LWNvcmUgU29DLA0KPiA+PiBNVDY3NjUsIHdoaWNoIGlzIG1haW5s
+eSBmb3Igc21hcnRwaG9uZSBhcHBsaWNhdGlvbi4NCj4gPiANCj4gPiBDbG9jayBwYXRjaGVzIGxv
+b2sgT0sgdG8gbWUuIENhbiB5b3UgcmVzZW5kIHRoZW0gd2l0aG91dCB0aGUgZGVmY29uZmlnDQo+
+ID4gYW5kIGR0cyBwYXRjaGVzIGFuZCBhZGRyZXNzIE1hdHRoaWFzJyBxdWVzdGlvbj8NCj4gPiAN
+Cj4gDQo+IEknbSBub3Qgc3VyZSBpZiBJIHVuZGVyc3RhbmQgeW91LiBEbyB5b3UgcHJlZmVyIHRv
+IGhhdmUganVzdCB0aGUgY2xvY2sgcGFydHMNCj4gc2VuZCBhcyBhbiBpbmRlcGVuZGVudCB2ZXJz
+aW9uIHNvIHRoYXQgeW91IGNhbiBlYXNpZXIgYXBwbHkgdGhlIHBhdGNoZXMgdG8geW91cg0KPiB0
+cmVlPw0KPiANCj4gUGF0Y2ggMiwgNSwgNiBhbmQgNyBzaG91bGQgZ28gdGhyb3VnaCBteSB0cmVl
+Lg0KPiBTbyBkbyB5b3Ugd2FudCBhIHNlcmllcyB3aXRoIHBhdGNoZXMgMSwgMyBhbmQgND8NCj4g
+DQo+IFJlZ2FyZHMsDQo+IE1hdHRoaWFzDQoNCll1cCwgSSd2ZSBnb3QgYSBsaXR0bGUgYml0IGNv
+bmZ1c2VkLCB0b28uDQpTaG91bGQgSSBzZXBhcmF0ZSBhbmQgcmVzZW5kIHRoZXNlIHBhdGNoZXMg
+aW50byAyIHBhdGNoIHNldHM/DQpUaGUgMXN0IHBhdGNoIHNldCBpbmNsdWRlcyAjMSwgIzMsIGFu
+ZCAjND8NCkFuZCB0aGUgb3RoZXIgaW5jbHVkZXMgIzIsICM1LCAjNiwgYW5kICM3Pw0KDQpSZWdh
+cmRzLA0KTWFjcGF1bCBMaW4NCg0K
 
-syzbot found the following crash on:
-
-HEAD commit:    c25a951c Add linux-next specific files for 20200217
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=171b1a29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
-dashboard link: https://syzkaller.appspot.com/bug?extid=6446a589a5ca34dd6e8b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10465579e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16dabb11e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6446a589a5ca34dd6e8b@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 PID: 9844 Comm: syz-executor679 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
-Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
-RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
-RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
-RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
-R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
-R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
-FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __sys_getsockopt+0x16d/0x310 net/socket.c:2175
- __do_sys_getsockopt net/socket.c:2190 [inline]
- __se_sys_getsockopt net/socket.c:2187 [inline]
- __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2187
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440149
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcb256f088 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440149
-RDX: 000000000000000e RSI: 0000000000000112 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000020000140 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019d0
-R13: 0000000000401a60 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 63f0b6416dbaab7d ]---
-RIP: 0010:l2cap_sock_getsockopt+0x7d3/0x1200 net/bluetooth/l2cap_sock.c:613
-Code: 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 a0 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 1f 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 75 09 00 00 48 8b 3b e8 cb be f6 ff be 67 02 00
-RSP: 0018:ffffc900062f7d20 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87253e8c
-RDX: 0000000000000000 RSI: ffffffff87253f44 RDI: 0000000000000001
-RBP: ffffc900062f7e00 R08: ffff88808a5001c0 R09: fffffbfff16a3f80
-R10: fffffbfff16a3f7f R11: ffffffff8b51fbff R12: 0000000000000000
-R13: 1ffff92000c5efa7 R14: ffff8880a9a79000 R15: ffff8880a1d92000
-FS:  0000000001ccd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000140 CR3: 0000000097113000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
