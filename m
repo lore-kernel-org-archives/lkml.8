@@ -2,121 +2,111 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35F0C34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7BBC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19B92072C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72852072C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 00:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UV5oq9wT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgBRAYk (ORCPT
+        id S1726185AbgBRAcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 19:24:40 -0500
-Received: from mga07.intel.com ([134.134.136.100]:21791 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgBRAYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 19:24:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 16:24:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,454,1574150400"; 
-   d="scan'208";a="433927310"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Feb 2020 16:24:37 -0800
-Date:   Tue, 18 Feb 2020 08:24:56 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com
-Subject: Re: [PATCH v2] mm/vmscan.c: only adjust related kswapd cpu affinity
- when online cpu
-Message-ID: <20200218002456.GA16623@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200214073320.28735-1-richardw.yang@linux.intel.com>
- <20200214085113.GP31689@dhcp22.suse.cz>
- <20200215003753.GA32682@richard>
- <20200217093124.GH31531@dhcp22.suse.cz>
+        Mon, 17 Feb 2020 19:32:45 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36600 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgBRAco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 19:32:44 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so10065064pgu.3;
+        Mon, 17 Feb 2020 16:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YkbCybzk75m/DwfgLQS+k1c3Zj35iCw6kglMnXwvNH4=;
+        b=UV5oq9wT6hVRcrADinmMSfqbJY3tQAss1lJyHmbizX8sMZ44RpJ2KQmvtGFReRluNf
+         WfZhCpP5uSZ51pqmsXdU+Q+btYZgZHQQ3vUGKWWPMB8XQf7FbCa60fCxXS3rqJx3nFyT
+         ZQkXSvWYl29/Nu2UwBGY7AFZCwsVOx68Z+Zq+ugRzHHsQh/EeQ/a7HgowEHm3+/ee6Xn
+         HRZipdm2N+jw0EGme4oasVgpHWGnyoOzMFJ1NwsS7mVJRyokRTu08R8Mi78li3sks6BH
+         9Nifri85WPwR0jc6SQCOb9oVw1rPeRn+vdPQq29r7ZG9oziZ/qKkVWdvvpnCVpsRx5+q
+         wtRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YkbCybzk75m/DwfgLQS+k1c3Zj35iCw6kglMnXwvNH4=;
+        b=g71NaxNpGHcix9sh7jx8pUrugN9dc9bVMuygbT0H2bfS0Q0sMzubL3CDV4zYKKEDuy
+         QG5av/22avrNo3WZgOtOZrL9sm74Yv7A0oAvlgXBKu0gOsTPWsGKRDmxOuoKyCMxcEqM
+         vbzwHBQb1iWpDp3VUhymvH+jy2gjmNvHCaf9Sq6DyCzVDQz9b9CEsB46ETD5CsUzO05F
+         Ucl0VIn/Dg464lvVGqWnypDr+KGk1su76PXgDqHfTDYO76rF2Tqmd1B4Sfphg0LJw5In
+         BKx/tLQoLcx6UCyEv8sSFxCR77/eIhwZfr1o+BmybYhMtyMM6dMFDN3d1GmqPf9xhERl
+         0Hxg==
+X-Gm-Message-State: APjAAAXHNi/IbMzV19gl3t92LuMgeVW2XurRCGZXBz9f3o/OI2/MeZI5
+        RS7MAxaf+FUvIggt/UZi0vbogaqU
+X-Google-Smtp-Source: APXvYqyU4HpyhuNG2Pk7898Kn5kHYBovyU41eVWfl/5GZVfjEERppXeSfSatnk3cMQ5MQeSmMmMfOQ==
+X-Received: by 2002:a63:1044:: with SMTP id 4mr20823772pgq.412.1581985963803;
+        Mon, 17 Feb 2020 16:32:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q8sm596672pje.2.2020.02.17.16.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 16:32:42 -0800 (PST)
+Subject: Re: [PATCH 0/5] hwmon: (adt7475) attenuator bypass and pwm invert
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <bb029a57-e7d2-c35c-f2e2-276e2373787b@roeck-us.net>
+Date:   Mon, 17 Feb 2020 16:32:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217093124.GH31531@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:31:24AM +0100, Michal Hocko wrote:
->On Sat 15-02-20 08:37:53, Wei Yang wrote:
->> On Fri, Feb 14, 2020 at 09:51:13AM +0100, Michal Hocko wrote:
->> >On Fri 14-02-20 15:33:20, Wei Yang wrote:
->> >> When onlining a cpu, kswapd_cpu_online() is called to adjust kswapd cpu
->> >> affinity.
->> >> 
->> >> Current routine does like this:
->> >> 
->> >>   a) Iterate all the numa node
->> >>   b) Adjust cpu affinity when node has an online cpu
->> >> 
->> >> For a) this is not necessary, since the particular online cpu belongs to
->> >> a particular numa node. So it is not necessary to iterate on every nodes
->> >> on the system. This new onlined cpu just affect kswapd cpu affinity of
->> >> this particular node.
->> >> 
->> >> For b) several cpumask operation is used to check whether the node has
->> >> an online CPU. Since at this point we are sure one of our CPU onlined,
->> >> we can set the cpu affinity directly to current cpumask_of_node().
->> >> 
->> >> This patch simplifies the logic by set cpu affinity of the affected
->> >> kswapd.
->> >
->> >How have you tested this patch?
->> >
->> 
->> I online one cpu and confirm the "cpu" is the one we just onlined.
->> 
->> If my understanding is correct, this is the expected behavior.
->> 
->> >Also this is an old code and quite convoluted but does it still work as
->> >inteded? I mean, I do not see any cpu offline callback to reduce the
->> >cpu mask as all the CPUs for the given node go offline? Wouldn't the
->> 
->> You are right, I didn't see the counterpart for cpu offline. This is the
->> question I want to ask. Seems we didn't handle it at the very beginning.
->> 
->> >scheduler simply go and fallback to no affinity if that happens?
->> >In other words what is the value of kswapd_cpu_online in the first
->> >place?
->> 
->> Some cases may this function be useful.
->> 
->> If we have a memory node which doesn't have any online cpu, the default
->> cpumask is not set. After one of the cpu online, we want to change cpu
->> affinity.
->> 
->> Or we want to add more cpu to the system, we could allow kswapd use more cpu
->> resources. Otherwise, kswapd would be limited to those original cpus.
->
->OK, so the usecase is when a NUMA node gains a new CPU which wasn't
->there at the time when the node got onlined. Is this a scenario we
->really do care about? While not completely impossible I haven't seen
->a system which would allow such a runtime configurability. Maybe it
->would be simply easier to drop the callback for now until we have a real
->world usecase to support it and have it documented.
+On 2/17/20 3:46 PM, Chris Packham wrote:
+> I've picked up Logan's changes[1] and am combining them with an old series of
+> mine[2] to hopefully get them both over the line.
+> 
 
-I am fine with this suggestion. Let me prepare v3.
+No change log and/or history, so I guess your expectation is that it will be up
+to me to figure out what may have changed and if previous comments have been
+addressed or not.
 
->-- 
->Michal Hocko
->SUSE Labs
+Guenter
 
--- 
-Wei Yang
-Help you, Help me
+> This series updates the binding documentation for the adt7475 and adds two new
+> sets of properties.
+> 
+> [1] - https://lore.kernel.org/linux-hwmon/20191219033213.30364-1-logan.shaw@alliedtelesis.co.nz/
+> [2] - https://lore.kernel.org/linux-hwmon/20181107040010.27436-1-chris.packham@alliedtelesis.co.nz/
+> 
+> Chris Packham (2):
+>    dt-bindings: hwmon: Document adt7475 invert-pwm property
+>    hwmon: (adt7475) Add support for inverting pwm output
+> 
+> Logan Shaw (3):
+>    dt-bindings: hwmon: Document adt7475 binding
+>    dt-bindings: hwmon: Document adt7475 bypass-attenuator property
+>    hwmon: (adt7475) Add attenuator bypass support
+> 
+>   .../devicetree/bindings/hwmon/adt7475.yaml    |  82 ++++++++++++++
+>   .../devicetree/bindings/trivial-devices.yaml  |   8 --
+>   drivers/hwmon/adt7475.c                       | 100 +++++++++++++++++-
+>   3 files changed, 179 insertions(+), 11 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> 
+
