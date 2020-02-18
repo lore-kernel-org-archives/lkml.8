@@ -2,180 +2,363 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B58C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2EDC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BDA2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C8121D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ELdiNAZK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O1En3UG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgBRTw5 (ORCPT
+        id S1726636AbgBRTyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:52:57 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45246 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTw4 (ORCPT
+        Tue, 18 Feb 2020 14:54:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60854 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:52:56 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a2so20698782qko.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:52:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IIIglP3lrK/bbp+/obNoUshm2KDGr/A+JSgxj0zWQRM=;
-        b=ELdiNAZK1VKWaWwrqcP20fOHQWrj6DQbxwmx7w0WY0RLNf/+TiQXVgXp1SSUSKJ7Dc
-         kX1M4c0YRCIaN75Ek1yR4KFIY5VdTQfcF9se/BPJhGkT2OPjhWSJQKJhsiCcsh6Eki4s
-         3+SBBD6Kj8S+CT9mZAZRvesFECSrv9uyfF51ktO6kaaXsF9bJblm+VGhyV+zzhmts4tc
-         k+x6QSZV8M/4Qtwim/E8ujQMPG7bhKOnWnqe0puPTTsYp9q8UBjZXBJH1BEizh9M8L65
-         s4DOQB6B2yOIslgio1SC9jx+Hm1muU3oRTPIHTJ4epmQ2XW+bjJA9IgL8jWoqqohTn1R
-         Jhww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IIIglP3lrK/bbp+/obNoUshm2KDGr/A+JSgxj0zWQRM=;
-        b=iHMkDuJ888lCOxUMAIJzsCepSaNzyCs9V3D/4z+JvA4LbIag5xmzLUj5dwlUEmRYli
-         lOMjM57XspAqHBZ3y41TGMsmyZaS7Hf4RRDdaIsr5wgpyYwBJG4SFf2Df+/JPY2Way3Q
-         9Ru+a44K32mkf/0e/vQCW/PKB2fCMdzRJQ9xLASegWv1+Y+CNR8Z79c/5VyJN5voOO2W
-         u9NXxH5018M+4JpoxbYEA0mjCKeJXBohWa+H0EHTKYdY7uQ45mZ6DFuHJs1lBghUba50
-         33uS6nIrj80WDAcxHy/TZNr2AeG5ZdMc85govt5vP+i/vAFW3cCC/JC4eRT08EqjdIdr
-         /Rvw==
-X-Gm-Message-State: APjAAAWM/fo9FQ/XKOUXtVcGqcy28sCPUIWghLK/hyY5tnRJXBKia62J
-        Ye3qITzK9MaPVG0BEMKdjr8kUg==
-X-Google-Smtp-Source: APXvYqyZnf5b/A44XYNB6cKskTQewARfA8b8mZ8AF5A/ycBVB3ulEFtPoltvEGgKlX1y1eqfDAPolA==
-X-Received: by 2002:a05:620a:1586:: with SMTP id d6mr20897459qkk.234.1582055575085;
-        Tue, 18 Feb 2020 11:52:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:9742])
-        by smtp.gmail.com with ESMTPSA id p50sm2426635qtf.5.2020.02.18.11.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 11:52:54 -0800 (PST)
-Date:   Tue, 18 Feb 2020 14:52:53 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200218195253.GA13406@cmpxchg.org>
-References: <20200213135348.GF88887@mtj.thefacebook.com>
- <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
- <20200214165311.GA253674@cmpxchg.org>
- <20200217084100.GE31531@dhcp22.suse.cz>
+        Tue, 18 Feb 2020 14:54:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0fbPHabH5rtRjpop0nvOgXSZPwl/5hzmmLwctoYuLtg=; b=O1En3UG2/SWLTrMtnpJrjjgjSj
+        eDzVzRDQGtNtvubDjDkjRGIJMAo2/GoMR9u4cwrm8+0raSMb0Dy9hL/V3FpFf/NmyWWubRiI9r+hm
+        MvOlhqGPP2nSWK8OHRdeyCeOjeD1HWTFC623D5HCt0pjipMPDmuypyH+NFt9zlecrKxRdrer+o3u3
+        pi3Enpw1YLfghmY62DGTbp2PLvGeLps7dpV1mZuLhZpmvdT2mfnn1muQ0TCMLV4/avuAAjtPVLxIY
+        Zyl5nqtrsKk/bKNP/w3WTu5SkxFkRP5G2N41SHaU+CoUG3Z05IW3gfMCxRt4E82CyQ0E1TCT81pxh
+        cxgZHRXg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j48wW-0003Wd-Ia; Tue, 18 Feb 2020 19:54:04 +0000
+Date:   Tue, 18 Feb 2020 11:54:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 09/19] mm: Add page_cache_readahead_limit
+Message-ID: <20200218195404.GD24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-16-willy@infradead.org>
+ <20200218063110.GO10776@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217084100.GE31531@dhcp22.suse.cz>
+In-Reply-To: <20200218063110.GO10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 09:41:00AM +0100, Michal Hocko wrote:
-> On Fri 14-02-20 11:53:11, Johannes Weiner wrote:
-> [...]
-> > The proper solution to implement the kind of resource hierarchy you
-> > want to express in cgroup2 is to reflect it in the cgroup tree. Yes,
-> > the_workload might have been started by user 100 in session c2, but in
-> > terms of resources, it's prioritized over system.slice and user.slice,
-> > and so that's the level where it needs to sit:
+On Tue, Feb 18, 2020 at 05:31:10PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:45:56AM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > > 
-> >                                root
-> >                        /        |                 \
-> >                system.slice  user.slice       the_workload
-> >                /    |           |
-> >            cron  journal     user-100.slice
-> >                                 |
-> >                              session-c2.scope
-> >                                 |
-> >                              misc
-> > 
-> > Then you can configure not just memory.low, but also a proper io
-> > weight and a cpu weight. And the tree correctly reflects where the
-> > workload is in the pecking order of who gets access to resources.
+> > ext4 and f2fs have duplicated the guts of the readahead code so
+> > they can read past i_size.  Instead, separate out the guts of the
+> > readahead code so they can call it directly.
 > 
-> I have already mentioned that this would be the only solution when the
-> protection would work, right. But I am also saying that this a trivial
-> example where you simply _can_ move your workload to the 1st level. What
-> about those that need to reflect organization into the hierarchy. Please
-> have a look at http://lkml.kernel.org/r/20200214075916.GM31689@dhcp22.suse.cz
-> Are you saying they are just not supported? Are they supposed to use
-> cgroup v1 for the organization and v2 for the resource control?
+> Gross and nasty (hosting non-stale data beyond EOF in the page
+> cache, that is).
 
-From that email:
+I thought you meant sneaking changes into the VFS (that were rejected) by
+copying VFS code and modifying it ...
 
-    > Let me give you an example. Say you have a DB workload which is the
-    > primary thing running on your system and which you want to protect from
-    > an unrelated activity (backups, frontends, etc). Running it inside a
-    > cgroup with memory.low while other components in other cgroups without
-    > any protection achieves that. If those cgroups are top level then this
-    > is simple and straightforward configuration.
-    > 
-    > Things would get much more tricky if you want run the same workload
-    > deeper down the hierarchy - e.g. run it in a container. Now your
-    > "root" has to use an explicit low protection as well and all other
-    > potential cgroups that are in the same sub-hierarchy (read in the same
-    > container) need to opt-out from the protection because they are not
-    > meant to be protected.
+> > +/**
+> > + * page_cache_readahead_limit - Start readahead beyond a file's i_size.
+> > + * @mapping: File address space.
+> > + * @file: This instance of the open file; used for authentication.
+> > + * @offset: First page index to read.
+> > + * @end_index: The maximum page index to read.
+> > + * @nr_to_read: The number of pages to read.
+> > + * @lookahead_size: Where to start the next readahead.
+> > + *
+> > + * This function is for filesystems to call when they want to start
+> > + * readahead potentially beyond a file's stated i_size.  If you want
+> > + * to start readahead on a normal file, you probably want to call
+> > + * page_cache_async_readahead() or page_cache_sync_readahead() instead.
+> > + *
+> > + * Context: File is referenced by caller.  Mutexes may be held by caller.
+> > + * May sleep, but will not reenter filesystem to reclaim memory.
+> >   */
+> > -void __do_page_cache_readahead(struct address_space *mapping,
+> > -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
+> > -		unsigned long lookahead_size)
+> > +void page_cache_readahead_limit(struct address_space *mapping,
+> 
+> ... I don't think the function name conveys it's purpose. It's
+> really a ranged readahead that ignores where i_size lies. i.e
+> 
+> 	page_cache_readahead_range(mapping, start, end, nr_to_read)
+> 
+> seems like a better API to me, and then you can drop the "start
+> readahead beyond i_size" comments and replace it with "Range is not
+> limited by the inode's i_size and hence can be used to read data
+> stored beyond EOF into the page cache."
 
-You can't prioritize some parts of a cgroup higher than the outside of
-the cgroup, and other parts lower than the outside. That's just not
-something that can be sanely supported from the controller interface.
+I'm concerned that calling it 'range' implies "I want to read between
+start and end" rather than "I want to read nr_to_read at start, oh but
+don't go past end".
 
-However, that doesn't mean this usecase isn't supported. You *can*
-always split cgroups for separate resource policies.
+Maybe the right way to do this is have the three callers cap nr_to_read.
+Well, the one caller ... after all, f2fs and ext4 have no desire to
+cap the length.  Then we can call it page_cache_readahead_exceed() or
+page_cache_readahead_dangerous() or something else like that to make it
+clear that you shouldn't be calling it.
 
-And you *can* split cgroups for group labeling purposes too (tracking
-stuff that belongs to a certain user).
+> Also: "This is almost certainly not the function you want to call.
+> Use page_cache_async_readahead or page_cache_sync_readahead()
+> instead."
 
-So in the scenario where you have an important database and a
-not-so-important secondary workload, and you want them to run them
-containerized, there are two possible scenarios:
++1 to that ;-)
 
-- The workloads are co-dependent (e.g. a logging service for the
-  db). In that case you actually need to protect them equally,
-  otherwise you'll have priority inversions, where the primary gets
-  backed up behind the secondary in some form or another.
+Here's what I currently have:
 
-- The workloads don't interact with each other. In that case, you can
-  create two separate containers, one high-pri, one low-pri, and run
-  them in parallel. They can share filesystem data, page cache
-  etc. where appropriate, so this isn't a problem.
+From d202dda7a92566496fe9e233ee7855fb560324ce Mon Sep 17 00:00:00 2001
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Date: Mon, 10 Feb 2020 18:31:15 -0500
+Subject: [PATCH] mm: Add page_cache_readahead_exceed
 
-  The fact that they belong to the same team/organization/"user"
-  e.g. is an attribute that can be tracked from userspace and isn't
-  material from a kernel interface POV.
+ext4 and f2fs have duplicated the guts of the readahead code so
+they can read past i_size.  Instead, separate out the guts of the
+readahead code so they can call it directly.
 
-  You just have two cgroups instead of one to track; but those cgroups
-  will still contain stuff like setsid(), setuid() etc. so users
-  cannot escape whatever policy/containment you implement for them.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/ext4/verity.c        | 35 ++--------------------
+ fs/f2fs/verity.c        | 35 ++--------------------
+ include/linux/pagemap.h |  3 ++
+ mm/readahead.c          | 66 ++++++++++++++++++++++++++++-------------
+ 4 files changed, 52 insertions(+), 87 deletions(-)
 
-    > In short we simply have to live with usecases where the cgroup hierarchy
-    > follows the "logical" workload organization at the higher level more
-    > than resource control. This is the case for systemd as well btw.
-    > Workloads are organized into slices and scopes without any direct
-    > relation to resources in mind.
+diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+index dc5ec724d889..172ebf860014 100644
+--- a/fs/ext4/verity.c
++++ b/fs/ext4/verity.c
+@@ -342,37 +342,6 @@ static int ext4_get_verity_descriptor(struct inode *inode, void *buf,
+ 	return desc_size;
+ }
+ 
+-/*
+- * Prefetch some pages from the file's Merkle tree.
+- *
+- * This is basically a stripped-down version of __do_page_cache_readahead()
+- * which works on pages past i_size.
+- */
+-static void ext4_merkle_tree_readahead(struct address_space *mapping,
+-				       pgoff_t start_index, unsigned long count)
+-{
+-	LIST_HEAD(pages);
+-	unsigned int nr_pages = 0;
+-	struct page *page;
+-	pgoff_t index;
+-	struct blk_plug plug;
+-
+-	for (index = start_index; index < start_index + count; index++) {
+-		page = xa_load(&mapping->i_pages, index);
+-		if (!page || xa_is_value(page)) {
+-			page = __page_cache_alloc(readahead_gfp_mask(mapping));
+-			if (!page)
+-				break;
+-			page->index = index;
+-			list_add(&page->lru, &pages);
+-			nr_pages++;
+-		}
+-	}
+-	blk_start_plug(&plug);
+-	ext4_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
+-	blk_finish_plug(&plug);
+-}
+-
+ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+@@ -386,8 +355,8 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			ext4_merkle_tree_readahead(inode->i_mapping, index,
+-						   num_ra_pages);
++			page_cache_readahead_exceed(inode->i_mapping, NULL,
++					index, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
+index d7d430a6f130..f240ad087162 100644
+--- a/fs/f2fs/verity.c
++++ b/fs/f2fs/verity.c
+@@ -222,37 +222,6 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
+ 	return size;
+ }
+ 
+-/*
+- * Prefetch some pages from the file's Merkle tree.
+- *
+- * This is basically a stripped-down version of __do_page_cache_readahead()
+- * which works on pages past i_size.
+- */
+-static void f2fs_merkle_tree_readahead(struct address_space *mapping,
+-				       pgoff_t start_index, unsigned long count)
+-{
+-	LIST_HEAD(pages);
+-	unsigned int nr_pages = 0;
+-	struct page *page;
+-	pgoff_t index;
+-	struct blk_plug plug;
+-
+-	for (index = start_index; index < start_index + count; index++) {
+-		page = xa_load(&mapping->i_pages, index);
+-		if (!page || xa_is_value(page)) {
+-			page = __page_cache_alloc(readahead_gfp_mask(mapping));
+-			if (!page)
+-				break;
+-			page->index = index;
+-			list_add(&page->lru, &pages);
+-			nr_pages++;
+-		}
+-	}
+-	blk_start_plug(&plug);
+-	f2fs_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
+-	blk_finish_plug(&plug);
+-}
+-
+ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+@@ -266,8 +235,8 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			f2fs_merkle_tree_readahead(inode->i_mapping, index,
+-						   num_ra_pages);
++			page_cache_readahead_exceed(inode->i_mapping, NULL,
++					index, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 48c3bca57df6..1f7964d2b8ca 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -623,6 +623,9 @@ void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
+ void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
+ 		struct file *, struct page *, pgoff_t index,
+ 		unsigned long req_count);
++void page_cache_readahead_exceed(struct address_space *, struct file *,
++		pgoff_t index, unsigned long nr_to_read,
++		unsigned long lookahead_count);
+ 
+ /*
+  * Like add_to_page_cache_locked, but used to add newly allocated pages:
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 9dd431fa16c9..cad26287ad8b 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -142,45 +142,43 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages)
+ 	blk_finish_plug(&plug);
+ }
+ 
+-/*
+- * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
+- * the pages first, then submits them for I/O. This avoids the very bad
+- * behaviour which would occur if page allocations are causing VM writeback.
+- * We really don't want to intermingle reads and writes like that.
++/**
++ * page_cache_readahead_exceed - Start unchecked readahead.
++ * @mapping: File address space.
++ * @file: This instance of the open file; used for authentication.
++ * @index: First page index to read.
++ * @nr_to_read: The number of pages to read.
++ * @lookahead_size: Where to start the next readahead.
++ *
++ * This function is for filesystems to call when they want to start
++ * readahead beyond a file's stated i_size.  This is almost certainly
++ * not the function you want to call.  Use page_cache_async_readahead()
++ * or page_cache_sync_readahead() instead.
++ *
++ * Context: File is referenced by caller.  Mutexes may be held by caller.
++ * May sleep, but will not reenter filesystem to reclaim memory.
+  */
+-void __do_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t index, unsigned long nr_to_read,
++void page_cache_readahead_exceed(struct address_space *mapping,
++		struct file *file, pgoff_t index, unsigned long nr_to_read,
+ 		unsigned long lookahead_size)
+ {
+-	struct inode *inode = mapping->host;
+-	unsigned long end_index;	/* The last page we want to read */
+ 	LIST_HEAD(page_pool);
+ 	unsigned long i;
+-	loff_t isize = i_size_read(inode);
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 	bool use_list = mapping->a_ops->readpages;
+ 	struct readahead_control rac = {
+ 		.mapping = mapping,
+-		.file = filp,
++		.file = file,
+ 		._start = index,
+ 		._nr_pages = 0,
+ 	};
+ 
+-	if (isize == 0)
+-		return;
+-
+-	end_index = ((isize - 1) >> PAGE_SHIFT);
+-
+ 	/*
+ 	 * Preallocate as many pages as we will need.
+ 	 */
+ 	for (i = 0; i < nr_to_read; i++) {
+-		struct page *page;
+-
+-		if (index > end_index)
+-			break;
++		struct page *page = xa_load(&mapping->i_pages, index);
+ 
+-		page = xa_load(&mapping->i_pages, index);
+ 		if (page && !xa_is_value(page)) {
+ 			/*
+ 			 * Page already present?  Kick off the current batch
+@@ -225,6 +223,32 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 		read_pages(&rac, &page_pool);
+ 	BUG_ON(!list_empty(&page_pool));
+ }
++EXPORT_SYMBOL_GPL(page_cache_readahead_exceed);
++
++/*
++ * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
++ * the pages first, then submits them for I/O. This avoids the very bad
++ * behaviour which would occur if page allocations are causing VM writeback.
++ * We really don't want to intermingle reads and writes like that.
++ */
++void __do_page_cache_readahead(struct address_space *mapping,
++		struct file *file, pgoff_t index, unsigned long nr_to_read,
++		unsigned long lookahead_size)
++{
++	struct inode *inode = mapping->host;
++	loff_t isize = i_size_read(inode);
++	pgoff_t end_index;
++
++	if (isize == 0)
++		return;
++
++	end_index = (isize - 1) >> PAGE_SHIFT;
++	if (end_index < index + nr_to_read)
++		nr_to_read = end_index - index;
++
++	page_cache_readahead_exceed(mapping, file, index, nr_to_read,
++			lookahead_size);
++}
+ 
+ /*
+  * Chunk the readahead into 2 megabyte units, so that we don't pin too much
+-- 
+2.25.0
 
-As I said in the previous email: Yes, per default, because it starts
-everything in a single resource domain. But it has all necessary
-support for dividing the tree into disjunct resource domains.
-
-    > Does this make it more clear what I am thinking about? Does it sound
-    > like a legit usecase?
-
-The desired behavior is legit, but you have to split the cgroups on
-conflicting attributes - whether organizational or policy-related -
-for properly expressing what you want from the kernel.
