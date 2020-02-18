@@ -2,53 +2,52 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA301C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A63FC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF8E20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2298520659
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056010;
-	bh=5Jf8cI4nOoxx6xZKEeoBi7W0xsvsAYOX+Lc69C/Hte8=;
+	s=default; t=1582056014;
+	bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gw+RFAs9v2gTXVbseemVW3RuqiVREFubsIW2KM2+u3biPbAkyAWs9y87ZVb2FPU/
-	 maXb/Mz80x2woouCQrBHJaGtEZBdeDd1j+pbJgWS5bk6O1k4VVE1q6yO0nZCtetnwp
-	 SSSH8nZO2JCXpdlHr0mSTCg8YgMtGwY/8/wK7R9g=
+	b=aDhLQZ33A2jqFX2+F/C1D1DDngoda8//ZYmANC/kdCnmuy5BU79PDondgIByE1cMk
+	 mLOlKeMSgtej8FM6KwxOn9dYUpT9Duwl8Ip9N0WN0ehcuGNXUee9Yg3yZ48eVx5ZAV
+	 nFXGysShhsjLRhzYUNbb9NMSn9aft1T18abUP420=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgBRUAJ (ORCPT
+        id S1728527AbgBRUAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgBRUAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:05 -0500
+        id S1728286AbgBRUAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2421B24673;
-        Tue, 18 Feb 2020 20:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE8424125;
+        Tue, 18 Feb 2020 20:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056004;
-        bh=5Jf8cI4nOoxx6xZKEeoBi7W0xsvsAYOX+Lc69C/Hte8=;
+        s=default; t=1582056010;
+        bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+F57eAKINOvVqmdN2PQALTddwKwjDEfu+8T4pSOQ538uM97fSqjsUOSXVMuPyfPe
-         p4uc7l9iY4P9huWwFsuJizrT97UbgwDQPq9x2zp7RquxIdCvEGOUKLAdDlUpT25jpQ
-         TmwoyhtIepJGANrrC9LGg6VvL/Ln+z/58yKYlFSY=
+        b=C8C2+HZLQU+ku5DKTjUe/SZ82C9+dNg5ZpxctsK1qTylvHwW/umCaSNhUxytnrNdg
+         c0oTvrmGH6TuVeXoedQDiaTcJJEj+q6RQjX9f2v9PN7a23syqZecGsLUlzJ38L0F92
+         zpzLklOaL3jh+MX8Z58/wOWmPskyn/gZ1tIP87W8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 65/66] gpio: add gpiod_toggle_active_low()
-Date:   Tue, 18 Feb 2020 20:55:32 +0100
-Message-Id: <20200218190434.273604722@linuxfoundation.org>
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 52/66] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
+Date:   Tue, 18 Feb 2020 20:55:19 +0100
+Message-Id: <20200218190432.866086714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -61,73 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit d3a5bcb4a17f1ad072484bb92c42519ff3aba6e1 ]
+commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
 
-Add possibility to toggle active-low flag of a gpio descriptor. This is
-useful for compatibility code, where defaults are inverted vs DT gpio
-flags or the active-low flag is taken from elsewhere.
+Perf doesn't take the left period into account when auto-reload is
+enabled with fixed period sampling mode in context switch.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/7ce0338e01ad17fa5a227176813941b41a7c35c1.1576031637.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Here is the MSR trace of the perf command as below.
+(The MSR trace is simplified from a ftrace log.)
+
+    #perf record -e cycles:p -c 2000000 -- ./triad_loop
+
+      //The MSR trace of task schedule out
+      //perf disable all counters, disable PEBS, disable GP counter 0,
+      //read GP counter 0, and re-enable all counters.
+      //The counter 0 stops at 0xfffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value fffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //The MSR trace of the same task schedule in again
+      //perf disable all counters, enable and set GP counter 0,
+      //enable PEBS, and re-enable all counters.
+      //0xffffffe17b80 (-2000000) is written to GP counter 0.
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+When the same task schedule in again, the counter should starts from
+previous left. However, it starts from the fixed period -2000000 again.
+
+A special variant of intel_pmu_save_and_restart() is used for
+auto-reload, which doesn't update the hwc->period_left.
+When the monitored task schedules in again, perf doesn't know the left
+period. The fixed period is used, which is inaccurate.
+
+With auto-reload, the counter always has a negative counter value. So
+the left period is -value. Update the period_left in
+intel_pmu_save_and_restart_reload().
+
+With the patch:
+
+      //The MSR trace of task schedule out
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value ffffffe25cbc
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //The MSR trace of the same task schedule in again
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/gpiolib.c        | 11 +++++++++++
- include/linux/gpio/consumer.h |  7 +++++++
- 2 files changed, 18 insertions(+)
+ arch/x86/events/intel/ds.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 2476306e7030e..22506e4614b3f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3220,6 +3220,17 @@ int gpiod_is_active_low(const struct gpio_desc *desc)
- }
- EXPORT_SYMBOL_GPL(gpiod_is_active_low);
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1713,6 +1713,8 @@ intel_pmu_save_and_restart_reload(struct
+ 	old = ((s64)(prev_raw_count << shift) >> shift);
+ 	local64_add(new - old + count * period, &event->count);
  
-+/**
-+ * gpiod_toggle_active_low - toggle whether a GPIO is active-low or not
-+ * @desc: the gpio descriptor to change
-+ */
-+void gpiod_toggle_active_low(struct gpio_desc *desc)
-+{
-+	VALIDATE_DESC_VOID(desc);
-+	change_bit(FLAG_ACTIVE_LOW, &desc->flags);
-+}
-+EXPORT_SYMBOL_GPL(gpiod_toggle_active_low);
++	local64_set(&hwc->period_left, -new);
 +
- /* I/O calls are only valid after configuration completed; the relevant
-  * "is this a valid GPIO" error checks should already have been done.
-  *
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b70af921c6145..803bb63dd5ffb 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -158,6 +158,7 @@ int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
+ 	perf_event_update_userpage(event);
  
- int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce);
- int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
-+void gpiod_toggle_active_low(struct gpio_desc *desc);
- 
- int gpiod_is_active_low(const struct gpio_desc *desc);
- int gpiod_cansleep(const struct gpio_desc *desc);
-@@ -479,6 +480,12 @@ static inline int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
- 	return -ENOSYS;
- }
- 
-+static inline void gpiod_toggle_active_low(struct gpio_desc *desc)
-+{
-+	/* GPIO can never have been requested */
-+	WARN_ON(desc);
-+}
-+
- static inline int gpiod_is_active_low(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--- 
-2.20.1
-
+ 	return 0;
 
 
