@@ -2,225 +2,107 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D9C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23825C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9312464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCD324654
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s2Q3Jo7U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6M6HrVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBRSlR (ORCPT
+        id S1726691AbgBRSl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:41:17 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43087 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726239AbgBRSlQ (ORCPT
+        Tue, 18 Feb 2020 13:41:29 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43475 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgBRSl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:41:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582051275; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=EvQfb4KB0Yt3g3r/UGv9gwTSbjpcLofIpVM7Lm1Z4Z4=; b=s2Q3Jo7U12BiN8SjYalKXLIDfWo0AWrU6pm35FkbP9m+nPX6pi5ZQF3yAyLPoMUYtvyC3iAL
- sOjf4CoSE8/C/EP7pkjssg5BeWNXK03fZfbbfs+V3tv9wVkOkXsP2CVs/2ctMhONqXdZDVXt
- 3Vc5jrmlvW3KxuIMEmNYnRgfrc0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c2fc6.7ff82a921228-smtp-out-n03;
- Tue, 18 Feb 2020 18:41:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B630C447A4; Tue, 18 Feb 2020 18:41:09 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 898CBC43383;
-        Tue, 18 Feb 2020 18:41:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 898CBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 18 Feb 2020 11:41:05 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC PATCH v1] iommu/arm-smmu: Allow domains to choose a context
- bank
-Message-ID: <20200218184103.GA15947@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1580250823-30739-1-git-send-email-jcrouse@codeaurora.org>
- <CAF6AEGvQyaZL8iSKkzTZ-X4nqXWcyO6RBf-pUfOZFg0w52BGUA@mail.gmail.com>
+        Tue, 18 Feb 2020 13:41:28 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d18so15261993qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:41:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+8trNULk0p7YTqlS76VkwaHxCoBJjgc3YSZwDVrMPcc=;
+        b=h6M6HrVl/s5ivPkO5Z1ae1j41oRDK/YZ/CMQeyTHeCm70Xf8uzH3NUd2U1TEIBQctu
+         zaEPJnigmUn3fvfj0Sa0Vtkti5inbKWVcYrGvzz2Z9j3tAywKdkucVFFz9PkvyoLP6wY
+         /5mIIY9IuOmrH7z2JMau9X++QuLwtDTXvMskap9MpzjyVWX//o0rQmGkyGijHqEUft0+
+         AU7HWAlmw783ySPgijXZvqNYfdh2o/ASnQ85K/RkvHNBsduuWv8f5kxmfZKVXm30kVa7
+         V0121A5vUilpN8Q72rXVxAfFiad3uPlDcFp8JTCASh2TMuKUxiBf1gGHBdEe1Hb0xtjP
+         zpcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+8trNULk0p7YTqlS76VkwaHxCoBJjgc3YSZwDVrMPcc=;
+        b=gr5wWMrrlKZiw4eIQzfSGIR2vm/ekKAOAjrRfebiGh6ObSZnbdjTkAXirA3dhtvs7q
+         QQLMAE5ir0GaBWEcvx4XJQ4o+b0dbkLH3Y17aIzD8Enpi7J8Rcw2k4JPdXwZ3YQ1edz6
+         jcmRlVpeDgkxPhF3HlpmUUr9eMqf3u/N+4C6I2SxtP/NKiuL3eFvoJ5hBwfHNRNfvb9h
+         d8j0NDQ85m+CwKUgk+BqWdPux78iU2K2Cxtli2OXpUgiBo9hpOehmchll14rFc+G4CO8
+         8HQkhwvLDyc+2aXqpNFhoqBrjloYxAKZ4jS9zi+bBw7FN0wy9mrMtye5KYpvziirDJl9
+         brZw==
+X-Gm-Message-State: APjAAAVI/TyKNsrLBYoJT/HWiK5CDvMs/Pjy8ROIevHTgJFioEehamkd
+        l+pKtUia2of1VLRxolowAUWoRPT9Zskbmwl5c10aJA==
+X-Google-Smtp-Source: APXvYqwNn+oeDOLhVeJz9u7cgOo+LDlda9ul4xQGNdm+tuTn6q87++mwk68MeqHh4jfoH64EprmRSvnltHAJHxaIXcI=
+X-Received: by 2002:ac8:2ffa:: with SMTP id m55mr18764287qta.189.1582051287712;
+ Tue, 18 Feb 2020 10:41:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGvQyaZL8iSKkzTZ-X4nqXWcyO6RBf-pUfOZFg0w52BGUA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191227063204.5813-1-xiyou.wangcong@gmail.com>
+In-Reply-To: <20191227063204.5813-1-xiyou.wangcong@gmail.com>
+From:   Chenbo Feng <fengc@google.com>
+Date:   Tue, 18 Feb 2020 10:41:16 -0800
+Message-ID: <CAMOXUJ=mvh0Aj-==wmPGh6x3dz0K3YTfaSw+osMwU=rgQv+Qkw@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: free dmabuf->name in dma_buf_release()
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com,
+        Greg Hackmann <ghackmann@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:19:53AM -0800, Rob Clark wrote:
-> On Tue, Jan 28, 2020 at 2:34 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >
-> > Domains which are being set up for split pagetables usually want to be
-> > on a specific context bank for hardware reasons. Force the context
-> > bank for domains with the split-pagetable quirk to context bank 0.
-> > If context bank 0 is taken, move that context bank to another unused
-> > bank and rewrite the stream matching registers accordingly.
-> 
-> Is the only reason for dealing with the case that bank 0 is already in
-> use, due to the DMA domain that gets setup before driver probes?
+Acked-by: Chenbo Feng <fengc@google.com>
 
-Right. On Adreno GPUs only one context bank at a time is accessible from the
-GPU through an aperture which defaults to context bank 0 and as you might
-expect, the aperture controls are protected by the secure world on AC enabled
-targets.
 
-Some of the newer targets have a SCM call to switch the aperture but for all the
-currently merged platforms we are forced to use context bank 0.
-
-> I'm kinda thinking that we need to invent a way to unwind/detatch the
-> DMA domain, and unhook the iommu-dmaops, since this seems to already
-> be already causing problems with dma-bufs imported from other drivers
-> (who expect that dma_map_*(), with the importing device's dev ptr,
-> will do something sane.
-
-That could work, assuming that we could guarantee that our new replacement
-domain got the context bank we wanted.
-
-Jordan
-
-> >
-> > This is be used by [1] and [2] to leave context bank 0 open so that
-> > the Adreno GPU can program it.
-> >
-> > [1] https://lists.linuxfoundation.org/pipermail/iommu/2020-January/041438.html
-> > [2] https://lists.linuxfoundation.org/pipermail/iommu/2020-January/041444.html
-> >
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> >
-> >  drivers/iommu/arm-smmu.c | 63 +++++++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 59 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > index 85a6773..799a254 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -254,6 +254,43 @@ static int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
-> >         return idx;
-> >  }
-> >
-> > +static void arm_smmu_write_s2cr(struct arm_smmu_device *smmu, int idx);
-> > +
-> > +static int __arm_smmu_alloc_cb(struct arm_smmu_device *smmu, int start,
-> > +               int target)
-> > +{
-> > +       int new, i;
-> > +
-> > +       /* Allocate a new context bank id */
-> > +       new = __arm_smmu_alloc_bitmap(smmu->context_map, start,
-> > +               smmu->num_context_banks);
-> > +
-> > +       if (new < 0)
-> > +               return new;
-> > +
-> > +       /* If no target is set or we actually got the bank index we wanted */
-> > +       if (target == -1 || new == target)
-> > +               return new;
-> > +
-> > +       /* Copy the context configuration to the new index */
-> > +       memcpy(&smmu->cbs[new], &smmu->cbs[target], sizeof(*smmu->cbs));
-> > +       smmu->cbs[new].cfg->cbndx = new;
-> > +
-> > +       /* FIXME: Do we need locking here? */
-> > +       for (i = 0; i < smmu->num_mapping_groups; i++) {
-> > +               if (smmu->s2crs[i].cbndx == target) {
-> > +                       smmu->s2crs[i].cbndx = new;
-> > +                       arm_smmu_write_s2cr(smmu, i);
-> > +               }
-> > +       }
-> > +
-> > +       /*
-> > +        * FIXME: Does getting here imply that 'target' is already set in the
-> > +        * context_map?
-> > +        */
-> > +       return target;
-> > +}
-> > +
-> >  static void __arm_smmu_free_bitmap(unsigned long *map, int idx)
-> >  {
-> >         clear_bit(idx, map);
-> > @@ -770,6 +807,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >         struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> >         struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> >         unsigned long quirks = 0;
-> > +       int forcecb = -1;
-> >
-> >         mutex_lock(&smmu_domain->init_mutex);
-> >         if (smmu_domain->smmu)
-> > @@ -844,8 +882,25 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >                          * SEP_UPSTREAM so we don't need to reduce the size of
-> >                          * the ias to account for the sign extension bit
-> >                          */
-> > -                       if (smmu_domain->split_pagetables)
-> > -                               quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
-> > +                       if (smmu_domain->split_pagetables) {
-> > +                               /*
-> > +                                * If split pagetables are enabled, assume that
-> > +                                * the user's intent is to use per-instance
-> > +                                * pagetables which, at least on a QCOM target,
-> > +                                * means that this domain should be on context
-> > +                                * bank 0.
-> > +                                */
-> > +
-> > +                               /*
-> > +                                * If we can't force to context bank 0 then
-> > +                                * don't bother enabling split pagetables which
-> > +                                * then would not allow aux domains
-> > +                                */
-> > +                               if (start == 0) {
-> > +                                       forcecb = 0;
-> > +                                       quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
-> > +                               }
-> > +                       }
-> >                 } else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
-> >                         fmt = ARM_32_LPAE_S1;
-> >                         ias = min(ias, 32UL);
-> > @@ -883,8 +938,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >                 ret = -EINVAL;
-> >                 goto out_unlock;
-> >         }
-> > -       ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
-> > -                                     smmu->num_context_banks);
-> > +
-> > +       ret = __arm_smmu_alloc_cb(smmu, start, forcecb);
-> >         if (ret < 0)
-> >                 goto out_unlock;
-> >
-> > --
-> > 2.7.4
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Thu, Dec 26, 2019 at 10:32 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> dma-buff name can be set via DMA_BUF_SET_NAME ioctl, but once set
+> it never gets freed.
+>
+> Free it in dma_buf_release().
+>
+> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
+> Cc: Greg Hackmann <ghackmann@google.com>
+> Cc: Chenbo Feng <fengc@google.com>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> ---
+>  drivers/dma-buf/dma-buf.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index ce41cd9b758a..2427398ff22a 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -108,6 +108,7 @@ static int dma_buf_release(struct inode *inode, struct file *file)
+>                 dma_resv_fini(dmabuf->resv);
+>
+>         module_put(dmabuf->owner);
+> +       kfree(dmabuf->name);
+>         kfree(dmabuf);
+>         return 0;
+>  }
+> --
+> 2.21.0
+>
