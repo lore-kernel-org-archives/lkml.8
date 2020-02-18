@@ -2,260 +2,160 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE33C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F3CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF7622527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VHjT9YWf"
+	by mail.kernel.org (Postfix) with ESMTP id 4F87422B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582041960;
+	bh=uxsydmaLYiWRBP1YEUE0J/D9SsS2i7BFVOmXJcknkls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KPRITvINQ50bfEAImP69NQ0aiqkLCiiUtpGs7mg5OBP/FY74yDbSvtFKnVTUYv1gP
+	 UiRHz7tldYMeciq/8ZDsmRE2XFD5ie+7ACUxyqcmHaG+Wwk0kt2c4KA1ha2Lco7Wpc
+	 rNEejfFYQ51h6L9iv2wJKBX3M8GofGFyVL8/DGTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgBRQCu (ORCPT
+        id S1726549AbgBRQF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:02:50 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33870 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgBRQCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:02:50 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c20so19987397qkm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:02:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oto09LwYRX6FYX7brDPiPM4cxtWalpt3QASOWsbUoEE=;
-        b=VHjT9YWf16e0vGy+6PMjeXMEGBDrB+6MVzit7ECRRkGRQZNDuJxA4Oh36+Zt3/HD+N
-         2cCxW0yl3EWIW9smgEJE9YkM8Tkzr948mFUsRte0lgzIPFWx+gZQf95TvhsK3abU2QYN
-         UFGebw2AQsPeXCvXxAxNEhkSsuLSJmZs7uhOdPJte+CIlLJqISzSYEQSh+to4xeNBeGK
-         g0OEeUkueFtOyw0LJlb0ImeIwUgo246HTGxcOOujr2EkAeWNTGtehdQCZTHXuUOxrGYV
-         t1kz47nzFboU4WC9eNgCeHOPKO3PnpX4zvccOYjobtSqmq9kMGJyTN4yrFddIuFT7OTR
-         Z4qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oto09LwYRX6FYX7brDPiPM4cxtWalpt3QASOWsbUoEE=;
-        b=QouLiGs4naYgWwmGv49GkP44drwjO2xXA7gZt1ybxMMwXeIZt6IkckyDM1/jppBSyM
-         tpQXsfDN8y7128yWEV0EL1zSJC7B0xhQogd/iYehYqE3IUCtcEjXtP9EPfNNEcN6RAhB
-         8OkxAsQzehjEnEpe/QdhDMGXBDD4leVUPFFx/tzYVHe2AcYElUFZMVxzKTCUkGaXMBpH
-         vxan9xUOq7Nqea7plCRMTKAqo7yqTSuzHwqps+D9/J34kOeiIoqpbG4BwvhvTeMwCiK/
-         OW5FcRo/3Vk+SyZy1FwFiKOmnuFSkR58r6ub4lxVzIfAbDSlezsEMD94UYivTELlFFOD
-         gwYQ==
-X-Gm-Message-State: APjAAAUcu2Btcwekpdou/0Ak4GKT7Qdq5H3CiIN3+ZnakXrjtfBRqYvy
-        Wmv3FcISI0fYFb81iNvWu+aBDL6AJk+eOVWk3MkBzg==
-X-Google-Smtp-Source: APXvYqx1VKVH7TrkVD81e10r+yji5B2W/p4EV6EBOujA2z0DjIBcHZQMiD1AiPiYIdZseFjwJmutWED/nwI7yrJKXiE=
-X-Received: by 2002:a37:8343:: with SMTP id f64mr18705569qkd.21.1582041768811;
- Tue, 18 Feb 2020 08:02:48 -0800 (PST)
+        Tue, 18 Feb 2020 11:05:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgBRQF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:05:58 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A90208C4;
+        Tue, 18 Feb 2020 16:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582041958;
+        bh=uxsydmaLYiWRBP1YEUE0J/D9SsS2i7BFVOmXJcknkls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FB3XtSmYfMVVrnf3YlMjGTIT5Fth77E08J3UneeouY/zVS9EvATh57yeL1uwQKVSQ
+         hHfmHn0fvy0R4Q0hcrvZ1a/SC2ejVwc6L5aYXjI4AyfWQv1a320vAqesnHEeuxf2Om
+         jLVTc6o9U/lkqvOZT4nsGt82MyaxDOI4PG+IH39s=
+Date:   Tue, 18 Feb 2020 17:05:54 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>
+Subject: Re: [PATCH] modpost: return error if module is missing ns imports
+ and MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n
+Message-ID: <20200218160553.GA18056@linux-8ccs>
+References: <20200214143709.6490-1-jeyu@kernel.org>
+ <20200217145644.GA221719@google.com>
 MIME-Version: 1.0
-References: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Feb 2020 17:02:37 +0100
-Message-ID: <CAMpxmJUkyaU_W2nuBVkun=Trxzvfo4+L5FV4kvBK_KqRbY-eng@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: xilinx: Add clock adaptation support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>, git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200217145644.GA221719@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 17 lut 2020 o 11:57 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
-=C5=82(a):
++++ Matthias Maennich [17/02/20 14:56 +0000]:
+>Hi Jessica!
 >
-> Add support of clock adaptation for AXI GPIO driver.
+>On Fri, Feb 14, 2020 at 03:37:09PM +0100, Jessica Yu wrote:
+>>Currently when CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, modpost only warns
+>>when a module is missing namespace imports. Under this configuration, such a module
+>>cannot be loaded into the kernel anyway, as the module loader would reject it.
+>>We might as well return a build error when a module is missing namespace imports
+>>under CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, so that the build
+>>warning does not go ignored/unnoticed.
 >
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-> ---
->  drivers/gpio/gpio-xilinx.c | 105 +++++++++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 103 insertions(+), 2 deletions(-)
+>I generally agree with the idea of the patch. Thanks for working on
+>this! I also can't remember any reason why I did not write it like this
+>initially. Probably just because I introduced this configuration option
+>quite late in the development process of the initial patches.
 >
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index a9748b5198e6..26753ae58295 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -14,6 +14,8 @@
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/clk.h>
+>>
+>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>>---
+>>scripts/Makefile.modpost |  1 +
+>>scripts/mod/modpost.c    | 19 +++++++++++++++----
+>>2 files changed, 16 insertions(+), 4 deletions(-)
+>>
+>>diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>>index b4d3f2d122ac..a53660f910a9 100644
+>>--- a/scripts/Makefile.modpost
+>>+++ b/scripts/Makefile.modpost
+>>@@ -53,6 +53,7 @@ MODPOST = scripts/mod/modpost						\
+>>	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+>>	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+>>	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
+>>+	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N) 	\
+>>	$(if $(KBUILD_MODPOST_WARN),-w)
+>>
+>>ifdef MODPOST_VMLINUX
+>>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>>index 7edfdb2f4497..53e966f7d557 100644
+>>--- a/scripts/mod/modpost.c
+>>+++ b/scripts/mod/modpost.c
+>>@@ -39,6 +39,8 @@ static int sec_mismatch_count = 0;
+>>static int sec_mismatch_fatal = 0;
+>>/* ignore missing files */
+>>static int ignore_missing_files;
+>>+/* Return an error when there are missing namespace imports */
+>>+static int missing_ns_import_error = 0;
 >
->  /* Register Offset Definitions */
->  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
-> @@ -38,6 +40,7 @@
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
-> + * @clk: clock resource for this driver
->   */
->  struct xgpio_instance {
->         struct gpio_chip gc;
-> @@ -45,7 +48,8 @@ struct xgpio_instance {
->         unsigned int gpio_width[2];
->         u32 gpio_state[2];
->         u32 gpio_dir[2];
-> -       spinlock_t gpio_lock[2];
-> +       spinlock_t gpio_lock[2];        /* For serializing operations */
-> +       struct clk *clk;
->  };
+>A more suitable name is maybe missing_ns_import_is_error or follow the
+>naming of the config option: allow_missing_ns_imports (with default = 1).
 >
->  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> @@ -255,6 +259,70 @@ static void xgpio_save_regs(struct xgpio_instance *c=
-hip)
->                        chip->gpio_dir[1]);
->  }
+>>
+>>enum export {
+>>	export_plain,      export_unused,     export_gpl,
+>>@@ -2216,9 +2218,15 @@ static int check_exports(struct module *mod)
+>>
+>>		if (exp->namespace &&
+>>		    !module_imports_namespace(mod, exp->namespace)) {
+>>-			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
+>>-			     basename, exp->name, exp->namespace);
+>>-			add_namespace(&mod->missing_namespaces, exp->namespace);
+>>+			if (missing_ns_import_error) {
+>>+				merror("module %s uses symbol %s from namespace %s, but does not import it.\n",
+>>+					basename, exp->name, exp->namespace);
 >
-> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       int ret =3D pm_runtime_get_sync(chip->parent);
-> +
-> +       /*
-> +        * If the device is already active pm_runtime_get() will return 1=
- on
-> +        * success, but gpio_request still needs to return 0.
-> +        */
-> +       return ret < 0 ? ret : 0;
-> +}
-> +
-> +static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       pm_runtime_put(chip->parent);
-> +}
-> +
-> +static int __maybe_unused xgpio_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev =3D to_platform_device(dev);
-> +       int irq =3D platform_get_irq(pdev, 0);
-> +       struct irq_data *data =3D irq_get_irq_data(irq);
-> +
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_suspend(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev =3D to_platform_device(dev);
-> +       int irq =3D platform_get_irq(pdev, 0);
-> +       struct irq_data *data =3D irq_get_irq_data(irq);
-> +
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_resume(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev =3D to_platform_device(dev);
-> +       struct xgpio_instance *gpio =3D platform_get_drvdata(pdev);
-> +
-> +       clk_disable(gpio->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev =3D to_platform_device(dev);
-> +       struct xgpio_instance *gpio =3D platform_get_drvdata(pdev);
-> +
-> +       return clk_enable(gpio->clk);
-> +}
-> +
-> +static const struct dev_pm_ops xgpio_dev_pm_ops =3D {
-> +       SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
-> +       SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
-> +                          xgpio_runtime_resume, NULL)
-> +};
-> +
->  /**
->   * xgpio_of_probe - Probe method for the GPIO device.
->   * @pdev: pointer to the platform device
-> @@ -323,6 +391,8 @@ static int xgpio_probe(struct platform_device *pdev)
->         chip->gc.direction_output =3D xgpio_dir_out;
->         chip->gc.get =3D xgpio_get;
->         chip->gc.set =3D xgpio_set;
-> +       chip->gc.request =3D xgpio_request;
-> +       chip->gc.free =3D xgpio_free;
->         chip->gc.set_multiple =3D xgpio_set_multiple;
->
->         chip->gc.label =3D dev_name(&pdev->dev);
-> @@ -333,15 +403,45 @@ static int xgpio_probe(struct platform_device *pdev=
-)
->                 return PTR_ERR(chip->regs);
->         }
->
-> +       chip->clk =3D devm_clk_get(&pdev->dev, "s_axi_aclk");
-> +       if (IS_ERR(chip->clk)) {
-> +               if (PTR_ERR(chip->clk) !=3D -ENOENT) {
-> +                       if (PTR_ERR(chip->clk) !=3D -EPROBE_DEFER)
-> +                               dev_err(&pdev->dev, "Input clock not foun=
-d\n");
-> +                       return PTR_ERR(chip->clk);
-> +               }
-> +               /*
-> +                * Clock framework support is optional, continue on
-> +                * anyways if we don't find a matching clock.
-> +                */
+>I would like to avoid the code duplication here. The string literal is
+>identical for both cases.
 
-Why not use devm_clk_get_optional() then?
+Hm, but one is a call to merror() and the other to warn(). The
+previous if (warn_unresolved) block does the same thing. I am not sure
+how to simplify it to one call without introducing macro magic or
+overcomplicating things. Or were you thinking of something else?
 
-> +               chip->clk =3D NULL;
-> +       }
-> +       status =3D clk_prepare_enable(chip->clk);
-> +       if (status < 0) {
-> +               dev_err(&pdev->dev, "Failed to prepare clk\n");
-> +               return status;
-> +       }
-> +       pm_runtime_enable(&pdev->dev);
-> +       status =3D pm_runtime_get_sync(&pdev->dev);
-> +       if (status < 0)
-> +               goto err_unprepare_clk;
-> +
->         xgpio_save_regs(chip);
+>>+				err = 1;
 >
->         status =3D devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
->         if (status) {
->                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
-> -               return status;
-> +               goto err_pm_put;
->         }
->
-> +       pm_runtime_put(&pdev->dev);
->         return 0;
-> +err_pm_put:
-> +       pm_runtime_put(&pdev->dev);
-> +err_unprepare_clk:
-> +       pm_runtime_disable(&pdev->dev);
-> +       clk_unprepare(chip->clk);
-> +       return status;
->  }
->
->  static const struct of_device_id xgpio_of_match[] =3D {
-> @@ -356,6 +456,7 @@ static struct platform_driver xgpio_plat_driver =3D {
->         .driver         =3D {
->                         .name =3D "gpio-xilinx",
->                         .of_match_table =3D xgpio_of_match,
-> +                       .pm =3D &xgpio_dev_pm_ops,
->         },
->  };
->
-> --
-> 2.7.4
->
+>Also, if we fail here, we might as well help the user to fix it by
+>suggesting to run `make nsdeps` (once per failed modpost run). Speaking
+>of which, `make nsdeps` is currently broken by this patch as it relies
+>on a successful (yet warning-full) build of the modules. So, in case of
+>`make nsdeps`, we probably have to omit the -N flag again when invoking
+>modpost.
+
+Good catch! Since KBUILD_NSDEPS is set when running `make nsdeps`,
+maybe we can do something like:
+
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index a53660f910a9..145703ef8d3a 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -53,7 +53,7 @@ MODPOST = scripts/mod/modpost                                         \
+        $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+        $(if $(KBUILD_EXTMOD),-o $(modulesymfile))                      \
+        $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)                  \
+-       $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N)      \
++       $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,$(if $(KBUILD_NSDEPS),,-N))      \
+        $(if $(KBUILD_MODPOST_WARN),-w)
+
+ ifdef MODPOST_VMLINUX
+
+Thanks for the review!
+
