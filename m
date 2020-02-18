@@ -2,185 +2,144 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731DFC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC93C3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4367624125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582067708;
-	bh=1e6s3LBPWIkH3B8CPIQcoHesI1x/DnMTo3Fll+14BP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lrxHTfvN06Vc2vNu2HQVFwDcDGx3iV/gsy+wSSUTSovlls2limbWtnpURDwNdra6f
-	 ECVVVuJ63bPPuyz051VD24nFECsj6gbIfBgator9ty8VmgTO2F370pE1QqCpKS7sto
-	 Pc0UY7NtkgTeY6yzu/kjyIyiC1rYdwsB13bCGpvE=
+	by mail.kernel.org (Postfix) with ESMTP id E797C24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:15:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfeL8JDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBRXPH (ORCPT
+        id S1727913AbgBRXPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:15:07 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35458 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727635AbgBRXPG (ORCPT
+        Tue, 18 Feb 2020 18:15:33 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35249 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbgBRXPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:15:06 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so21334333otd.2;
-        Tue, 18 Feb 2020 15:15:06 -0800 (PST)
+        Tue, 18 Feb 2020 18:15:33 -0500
+Received: by mail-ed1-f66.google.com with SMTP id y25so4633479edi.2;
+        Tue, 18 Feb 2020 15:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JWWqmVpcRfqJEivRVNBcgidPXaZP+c61nTzWzkomjSY=;
+        b=dfeL8JDieKb1EJAiJ+pv09xpLoSlv1ti7VYIdShY02oVYOiFQgtiG0Rx4uBBiyZjrS
+         QmzwFCgojq0fb4j3gMCYkdaSedFjtCUI8U0OhjQ1PSBvBLikhHQdop8DMtfdHzMCVHQ9
+         SJ7qn6r3vZDOmbYsFkbH7WScznKy9qri4Vx/N06RoPr86mPOo0trji7KKh6iGp1JrBTu
+         aLbqbiEn2X9WFha7xFYRuEr9gJR/U5RselzA4MYDU0v0gvje+zyG80i2RvBCHa6WRJeS
+         jiFf6KQ7J7sQJXEHeZp6CAb80qxp1HaJgG6pPce5/aX1s0Y/nTq8uYNJibsA/LnnVtc4
+         s9WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G4WNEhQO20vNtBJwI7oQMtpqp8OCtjLcIlARAY579Do=;
-        b=WTH6j54BqdBaSzT+y1ao52Wn0APSvmvcAcgWBm/OpVPkRpEIuucAQZumAmSEGvxaqj
-         61xLW3nCmucalCD9TMpBVWd3Oq4SrLg9waurxp8L0pewa2Riu7Po5CCu7thssF256O8O
-         L3vIxVMcj50nRuNODVBeSyXcuaGvBVeLor+4c4hyk+WXahQ/9nuPmHYMwbF+uBuyVWXH
-         y9XtPeHsErRdCuW96chNruZ4MhsbcDNWD5FpCvdafkbrMpDoQt0Oh1vpBm6AHq1yVplj
-         Peb/ib1djfwukOZGVBHkMPCdmhoo+58zAgeSM9Y2FqDsgrJ3yOY7Ltc+rt140ZK2Jjej
-         22Dw==
-X-Gm-Message-State: APjAAAXYGLe/VJSQUksq6j6IRIM1iQgtPYN2IugUdpWUDIHNw35/+LM7
-        WHsBd20UJvt+1E+Bl7U0Jw==
-X-Google-Smtp-Source: APXvYqwW+XFF6Vp8UgFF8kVdHeUlJefeBvJgDBj4dBF+mFylUww+21EMO3di/ZeLcp2dJQvp5DyM+g==
-X-Received: by 2002:a05:6830:1294:: with SMTP id z20mr17143801otp.60.1582067705428;
-        Tue, 18 Feb 2020 15:15:05 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j13sm122236oii.14.2020.02.18.15.15.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 15:15:04 -0800 (PST)
-Received: (nullmailer pid 27451 invoked by uid 1000);
-        Tue, 18 Feb 2020 23:15:03 -0000
-Date:   Tue, 18 Feb 2020 17:15:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, helen.koike@collabora.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-Message-ID: <20200218231503.GA19099@bogus>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JWWqmVpcRfqJEivRVNBcgidPXaZP+c61nTzWzkomjSY=;
+        b=lW0flRUwPnY5kjdvgPgPEqshxVymZhZ5AfKr5EhQy9/1MkxMYbjaHe0jTGkg8wA4y8
+         Cv7zsMqBTEInzjRfAYvpGkDdqboWMNiq+CcUTd84mcWyGRZfiCAs27KPvzMv0ASu1h6i
+         ya5xHmTlWUZcnuR/JV6qkJXqhwHdTNjOH7K73euhWwWarr9I+FpcSl3OnmKNzGUtzw5A
+         A4j33A4METsLkdF48b/3/PBeAt1lHAGPcUD66T+eCt5c5TTaYJtbqiYJUaquZ91ESNH6
+         ZThoeyaY7pBgQvyyQ1WBor2eaDDVGLUkkhAhMy/c0alsAzHMkigHwq541CyIPDvE32GL
+         iT1A==
+X-Gm-Message-State: APjAAAWqoA4IA3injHJXo8LmsCHbL6soZPuQXa/WmhdU2qcPweyRUF/P
+        IFshMy4oMiBvwnbQ67n9QQ0whLJJ1HjbPqAUa40=
+X-Google-Smtp-Source: APXvYqwpiOgIQO5h/xXb5VqSiH6WwB+YHjUU0Oq3uD55L/C5F0wkdPzJFx0H5q34fTJ4KuEdbA/iQm/ZlBnvvxRQZeU=
+X-Received: by 2002:a50:a864:: with SMTP id j91mr21551777edc.318.1582067731479;
+ Tue, 18 Feb 2020 15:15:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200217144414.409-1-olteanv@gmail.com> <20200217144414.409-4-olteanv@gmail.com>
+ <20200217152912.GE31084@lunn.ch> <CA+h21ho29TRG8JYfSaaSsoxM-mg0-yOKBNCq9wbHDHCf2pkdUg@mail.gmail.com>
+ <CA+h21hp-4WWtY=-WeMgC0M6Ls7Aq6AdVv3y=8WE9z=2Ybikt7Q@mail.gmail.com>
+In-Reply-To: <CA+h21hp-4WWtY=-WeMgC0M6Ls7Aq6AdVv3y=8WE9z=2Ybikt7Q@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 19 Feb 2020 01:15:20 +0200
+Message-ID: <CA+h21hqyiMQ6rxNz+hC-L7qX0heDAjoEXr1c5TBNV97hFRAopQ@mail.gmail.com>
+Subject: Re: [PATCH devicetree 3/4] arm64: dts: fsl: ls1028a: add node for
+ Felix switch
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
-> Tegra contains VI controller which can support up to 6 MIPI CSI
-> camera sensors.
-> 
-> Each Tegra CSI port from CSI unit can be one-to-one mapper to
-> VI channel and can capture from an external camera sensor or
-> from built-in test pattern generator.
-> 
-> This patch adds dt-bindings for Tegra VI and CSI.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
->  1 file changed, 47 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> index 9999255ac5b6..3d0ed540a646 100644
-> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> @@ -40,14 +40,24 @@ of the following host1x client modules:
->  
->    Required properties:
->    - compatible: "nvidia,tegra<chip>-vi"
-> -  - reg: Physical base address and length of the controller's registers.
-> +  - reg: Physical base address and length of the controller registers.
->    - interrupts: The interrupt outputs from the controller.
-> -  - clocks: Must contain one entry, for the module clock.
-> +  - clocks: Must contain an entry for the module clock "vi"
->      See ../clocks/clock-bindings.txt for details.
->    - resets: Must contain an entry for each entry in reset-names.
->      See ../reset/reset.txt for details.
-> -  - reset-names: Must include the following entries:
-> -    - vi
-> +  - reset-names: Must include the entry "vi"
-> +
-> +  Tegra210 has CSI part of VI sharing same host interface and register
-> +  space. So, VI device node should have CSI child node.
-> +
-> +  - csi: mipi csi interface to vi
-> +
-> +    Required properties:
-> +    - compatible: "nvidia,tegra<chip>-csi"
-> +    - reg: Physical base address and length of the controller registers.
-> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
-> +      See ../clocks/clock-bindings.txt for details.
->  
->  - epp: encoder pre-processor
->  
-> @@ -310,12 +320,41 @@ Example:
->  		};
->  
->  		vi {
-> -			compatible = "nvidia,tegra20-vi";
-> -			reg = <0x54080000 0x00040000>;
-> +			compatible = "nvidia,tegra210-vi";
-> +			reg = <0x0 0x54080000 0x0 0x700>;
->  			interrupts = <0 69 0x04>;
-> -			clocks = <&tegra_car TEGRA20_CLK_VI>;
-> -			resets = <&tegra_car 100>;
-> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
-> +			clock-names = "vi";
-> +			resets = <&tegra_car 20>;
->  			reset-names = "vi";
-> +
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +
-> +			ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
-> +
-> +			csi@0x54080838 {
+Hi Andrew,
 
-Drop '0x'
+On Mon, 17 Feb 2020 at 19:24, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Mon, 17 Feb 2020 at 17:33, Vladimir Oltean <olteanv@gmail.com> wrote:
+> >
+> > Hi Andrew,
+> >
+> > On Mon, 17 Feb 2020 at 17:29, Andrew Lunn <andrew@lunn.ch> wrote:
+> > >
+> > > Hi Vladimir
+> > >
+> > > > +                                     /* Internal port with DSA tagging */
+> > > > +                                     mscc_felix_port4: port@4 {
+> > > > +                                             reg = <4>;
+> > > > +                                             phy-mode = "gmii";
+> > >
+> > > Is it really using gmii? Often in SoC connections use something else,
+> > > and phy-mode = "internal" is more appropriate.
+> > >
+> >
+> > What would be that "something else"? Given that the host port and the
+> > switch are completely different hardware IP blocks, I would assume
+> > that a parallel GMII is what's connecting them, no optimizations done.
+> > Certainly no serializer. But I don't know for sure.
+> > Does it matter, in the end?
+> >
+>
+> To clarify, the reason I'm asking whether it matters is because I'd
+> have to modify PHY_INTERFACE_MODE_GMII in
+> drivers/net/dsa/ocelot/felix_vsc9959.c too, for the internal ports.
+> Then I'm not sure anymore what tree this device tree patch should go
+> in through.
+>
+> > > > +                                             ethernet = <&enetc_port2>;
+> > > > +
+> > > > +                                             fixed-link {
+> > > > +                                                     speed = <2500>;
+> > > > +                                                     full-duplex;
+> > > > +                                             };
+> > >
+> > > gmii and 2500 also don't really go together.
+> >
+> > Not even if you raise the clock frequency?
+> >
+> > >
+> > >      Andrew
+> >
+> > Thanks,
+> > -Vladimir
 
-> +				compatible = "nvidia,tegra210-csi";
-> +				reg = <0x0 0x54080838 0x0 0x2000>;
+Correct me if I'm wrong, but I think that PHY_INTERFACE_MODE_INTERNAL
+is added by Florian in 2017 as a generalization of the BCM7445 DSA
+switch bindings with internal PHY ports, and later became "popular"
+with other DSA drivers (ar9331, lantiq gswip). Of those, ar9331 is
+actually using phy-mode = "gmii" for the CPU port, and phy-mode =
+"internal" for the embedded copper PHYs.
+I hate to be making this sort of non-binary decision. Is it a GMII
+interface _or_ an internal interface? Prior to 2017, this would have
+probably been a non-question. The patch series which adds it does not
+clarify "you should use this mode in situation A, and this mode in
+situation B" either.
 
-Kind of odd that this address and ranges address are not the same. And 
-also wrong that the size here exceeds the bounds of ranges.
-
-Also, best practice is to make the child address 0 or relative to the 
-parent.
-
-> +				status = "disabled";
-
-Don't show status in examples.
-
-> +				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
-> +						  <&tegra_car TEGRA210_CLK_CILCD>,
-> +						  <&tegra_car TEGRA210_CLK_CILE>;
-> +				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
-> +							 <&tegra_car TEGRA210_CLK_PLL_P>,
-> +							 <&tegra_car TEGRA210_CLK_PLL_P>;
-> +				assigned-clock-rates = <102000000>,
-> +						       <102000000>,
-> +						       <102000000>;
-> +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
-> +					 <&tegra_car TEGRA210_CLK_CILAB>,
-> +					 <&tegra_car TEGRA210_CLK_CILCD>,
-> +					 <&tegra_car TEGRA210_CLK_CILE>;
-> +				clock-names = "csi", "cilab", "cilcd", "cile";
-> +			};
-> +
->  		};
->  
->  		epp {
-> -- 
-> 2.7.4
-> 
+Regards,
+-Vladimir
