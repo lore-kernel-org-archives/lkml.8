@@ -2,147 +2,101 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A425DC34045
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B351BC34045
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D75C22527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C60621D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nbl5NQ2C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sBI24QLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgBRQLY (ORCPT
+        id S1726640AbgBRQMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:11:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24649 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQLY (ORCPT
+        Tue, 18 Feb 2020 11:12:06 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:42036 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgBRQMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:11:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582042281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xtVxSnLQhBRQi9E46Vg+UFDvswVXyAHUtw4gNVo9AWU=;
-        b=Nbl5NQ2CQpfCnkM4+3mdtccT/XwWGnTSHT3M3yptzXkKAskC6LQpl8lXOgFEVNzXl/MU4h
-        7MloLqgg5cJ5t/zvetFLjeHbxAN+e252YF4rAochi5732lLihEOTRlekmQKoLplbhow3Xw
-        IR4ZHSjJYYH897eoIzW0mWwZuwyT+V8=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-5gykuEayP_-1ynYUJN7k6A-1; Tue, 18 Feb 2020 11:11:16 -0500
-X-MC-Unique: 5gykuEayP_-1ynYUJN7k6A-1
-Received: by mail-qv1-f71.google.com with SMTP id r9so12682688qvs.19
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:11:16 -0800 (PST)
+        Tue, 18 Feb 2020 11:12:06 -0500
+Received: by mail-oi1-f170.google.com with SMTP id j132so20615714oih.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 08:12:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
+        b=sBI24QLXeAMxnYobfUFiAmd4xR2PTbf+BdHJLpEnENN3qmIvaSodggHdxVC0a8TFor
+         daiCdzzMriYxSKIJDxlEJfBopsHtk8VdOYbkisI/98VtSvYnBm/rESBdpNEJJPXu0FF8
+         0BOofIxPjKHH2UCJaaashNaSc+UrHk7gBR97j07A04GcQwrzuXuIgsQCEq/JmIEOeDi/
+         mfRYWHmCsOX35tJZn56nzIQq+sayeHW3VdvXIXHmKnTOmW5kNVP/nDcGO4e6Plhn6dWU
+         U5qibufJ9kPP1ziTSLn4iP65+lhELzA/Z1ZgW2XEkCMDGEs440z34HMvlcKrmZoj1Nu0
+         Wv2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xtVxSnLQhBRQi9E46Vg+UFDvswVXyAHUtw4gNVo9AWU=;
-        b=gzY6B+TcMom1sOngMWZbM0e9c/PSRo1jhokVPwiYLHbNm9gXpgPnVj4KQzZm9vZHtL
-         h3l3oEdG2MIt5A7cpY1w3oN1zNFXZJck5coOJVWqNHL8Bj9C/LXvB8PhBSGGSJaA0vSd
-         dvozfPC4qGgihnzMHzJ430+RBo4xRwLpEYYrz0m1+i9dTCROXHtEIgiRGwVzC76ANOPm
-         Upat9bbCxe4qOXbr/41eLvXSbzltd6zwSp6wau2R2KM1Yw7uv9cO6nNfiPFvdjmI9gZc
-         k3I7ad4W0KgX3mihK4peukqAVpb7VJK/1Jit5Rlcu1rw4OvLyBYJvziyPqvQfxg9ZT+x
-         dOaQ==
-X-Gm-Message-State: APjAAAUO5OFW1Ay1EqrddV67gHl7CsS0uSio8YxETvNUXCGtvBec9l0B
-        pCdyOU8pLa8VAu5VcOhAs1iBFUnFpS6JyRrNlQwYze5WgeUOBajJSN1eGVfLxknU1FJzxYSA7n+
-        HRPOR4U1M+OstRJF0t4fdnRPq
-X-Received: by 2002:ad4:4d85:: with SMTP id cv5mr16879803qvb.171.1582042276099;
-        Tue, 18 Feb 2020 08:11:16 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwsAFNHnhCqjsdFksUjKyJOjKL33lq+lIUXEzX2KQ7pwl8HAXt1k5OJPRMX/bXlWcKQWVks9w==
-X-Received: by 2002:ad4:4d85:: with SMTP id cv5mr16879778qvb.171.1582042275771;
-        Tue, 18 Feb 2020 08:11:15 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id 65sm2013694qtf.95.2020.02.18.08.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 08:11:14 -0800 (PST)
-Date:   Tue, 18 Feb 2020 11:11:13 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Bobby Powers <bobbypowers@gmail.com>
-Cc:     linux-mm@kvack.org,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v5 00/25] userfaultfd: write protection support
-Message-ID: <20200218161113.GA1408806@xz-x1>
-References: <20190620022008.19172-1-peterx@redhat.com>
- <CAArOQ2Vbpyu=JGfWNgOSQbXe15WzAB6VSah1OV8Cbx99bf0AXA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CNVXd7GvQijAf9sUVbG2f1QgUfkHVv1jwB+UDYOWbyY=;
+        b=N4IV5YaAXft4rlw536QDO/9lCaSJkbEniB78LB6+8RlqLt2+ue4Qb3ekx4/vz8boVK
+         C+aA4yuUmGAc21dGDJjWZ5chDfwTdLiZp5SajwW2UdsLzJ1NaOWWmjktPRAWooWoup5f
+         /J/9PAXKZVxpzGEZYKGWD5CXuy0iv3SgWtyMAP8MWirGE4EsMtgrBDySDJaNr0nDoEiI
+         ZNcuh8W9D2QUbseb1tJgTT0Dl4RYn/SuI8YzDiLv+wzcZ090cbeu2ylNMjWU/vEnLKC5
+         2qshptTKr7G3VAN2TYzhRE3U9bPbFrzp++ErYnx8/pwA0uSyfvQOtOOhgfpfDr1lTX00
+         T76A==
+X-Gm-Message-State: APjAAAVk6lCFTA7PsFzYrPmbbPU8Wwq7we7WNRZX1KhoffJS1WrQaFjD
+        JTPQcqmQE5vN0TuM5epje4X7m2uj/rZVcpkhmffOBQ==
+X-Google-Smtp-Source: APXvYqyItQcqBDeH/j9bd5sgRpZfMvMbTo7/hzatU4ZDPYxeI+o76a9irGBqbSncYfhrdjrsgUL2OhHxhb9qaNUNIWU=
+X-Received: by 2002:aca:fcc1:: with SMTP id a184mr1665266oii.36.1582042324768;
+ Tue, 18 Feb 2020 08:12:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAArOQ2Vbpyu=JGfWNgOSQbXe15WzAB6VSah1OV8Cbx99bf0AXA@mail.gmail.com>
+References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+ <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
+ <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
+ <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org> <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
+ <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com> <20200215034652.GA19867@ming.t460p>
+In-Reply-To: <20200215034652.GA19867@ming.t460p>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Tue, 18 Feb 2020 08:11:53 -0800
+Message-ID: <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Salman Qazi <sqazi@google.com>, Ming Lei <tom.leiming@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 07:59:12PM -0800, Bobby Powers wrote:
-> On Wed, Jun 19, 2019 at 7:20 PM Peter Xu <peterx@redhat.com> wrote:
-> > This series implements initial write protection support for
-> > userfaultfd.  Currently both shmem and hugetlbfs are not supported
-> > yet, but only anonymous memory.  This is the 4nd version of it.
-> >
-> > The latest code can also be found at:
-> >
-> >   https://github.com/xzpeter/linux/tree/uffd-wp-merged
-> 
-> Hi Peter - I ported the branch you had above on top of v5.4.20 (what I
-> happened to be running locally), and fixed one issue that was causing
-> crashes for me:
-> https://github.com/bpowers/linux/commit/61086b5a0fa4aeb494e86d999926551a4323b84f
+On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
+> What are the 'other operations'? Are they block IOs?
+>
+> If yes, that is why I suggest to fix submit_bio_wait(), which should cover
+> most of sync bio submission.
+>
+> Anyway, the fix is simple & generic enough, I'd plan to post a formal
+> patch if no one figures out better doable approaches.
 
-Hi, Bobby,
+Yeah I think any block I/O operation that occurs after the
+BLKSECDISCARD is submitted will also potentially be affected by the
+hung task timeouts, and I think your patch will address that.  My only
+concern with it is that it might hide some other I/O "hangs" that are
+due to device misbehavior instead.  Yes driver and device timeouts
+should generally catch those, but with this in place we might miss a
+few bugs.
 
-Thanks for playing with the branch!
-
-Yes, this should be needed if you have 7d0325749a6c ("userfaultfd:
-untag user pointers", 2019-09-25) in your base branch where the
-address is replaced by its pointer.
-
-> I wrote a small test program here:
-> https://github.com/plasma-umass/Mesh/blob/master/src/test/userfaultfd-kernel-copy.cc
-
-Just FYI that there's some other tests/libraries over there [1,2].
-Also the series has the uffd selftest for write-protection as well.
-
-> and write protection support for userfaultfd (with eventual shmem
-> support) would be _hugely_ helpful for a userspace memory allocator
-> I'm working on.  Is there anything I can do to help get this
-> considered for mainline?  We have some time before the 5.7 merge
-> window opens up.  Tested-by: Bobby Powers <bobbypowers@gmail.com>
-
-Thanks for the tag!  Yes it would be great if we can continue to work
-on those, but for now let's see whether we can move on what we have
-first (it's already two series without much certainty on whether it
-could get merged soon).  Considering that we've got quite a few pings
-again for either the mm retry series and the write-protect work, I'll
-rebase the two series, test & post soon this week.  I'll keep you in
-the loop.
+Given the nature of these types of storage devices though, I think
+that's a minor issue and not worth blocking the patch on, given that
+it should prevent a lot of false positive hang reports as Salman
+demonstrated.
 
 Thanks,
-
-[1] https://github.com/LLNL/umap
-[2] https://github.com/xzpeter/clibs/blob/master/gpl/userspace/uffd-test/uffd-test.c
-
--- 
-Peter Xu
-
+Jesse
