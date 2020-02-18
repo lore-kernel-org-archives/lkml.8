@@ -2,76 +2,121 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8267DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259CBC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D847207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8076207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hs3rZMlc"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aMDXTYA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgBRPKW (ORCPT
+        id S1726802AbgBRPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:10:22 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60064 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBRPKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:10:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KdKsxgEfW+4Nd66H7OZcvqV7+g+co1/sXakxfl3LSkQ=; b=Hs3rZMlc04yWB2UJYw8NKHFLtS
-        i6fknqa5vLmE5ddFNCrPleN6S3lnFp4W/T/WcTqymMfiEOSSsVAWrP1jKBTLXKN5RHahDhMvBQwE1
-        2dhfMhhtpSN+4x5G94HqYuZKEGj3KZcgNcZcgaTE7Vyv+om9rz28zb3W1JdHNL9EwvKNKFnfGe9fr
-        6nwiZyNUjPJ2X+E81DOHpQrKMi0MA2HOX+t59ESgXB5ZTz8dCxGRiO0WHkuTl4RE+YB0psoKDUX7R
-        +MbX23GdMJR5Hzz/HdxrA57igwEss0d04gMG/fSIpGqp2TPsIiJTGR8Bj5lAykjd3YR4q8weuJXAK
-        NNvFaEdA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j44VH-0006nl-Ub; Tue, 18 Feb 2020 15:09:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3731E30008D;
-        Tue, 18 Feb 2020 16:07:45 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2217C2B935590; Tue, 18 Feb 2020 16:09:37 +0100 (CET)
-Date:   Tue, 18 Feb 2020 16:09:37 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, valentin.schneider@arm.com, hdanton@sina.com,
-        quentin.perret@arm.com, srikar@linux.vnet.ibm.com,
-        riel@surriel.com, Morten.Rasmussen@arm.com
-Subject: Re: [PATCH] sched/fair: fix statistics for find_idlest_group()
-Message-ID: <20200218150937.GD14914@hirez.programming.kicks-ass.net>
-References: <20200218144534.4564-1-vincent.guittot@linaro.org>
+        Tue, 18 Feb 2020 10:11:02 -0500
+Received: from mout.gmx.net ([212.227.15.18]:33759 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbgBRPLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:11:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582038639;
+        bh=iIXeJbJphQxq+Yjke2Cq99I3fwTTqpuEc57IwA/qwI4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=aMDXTYA4YdG3w+SBl6RquCH6a8ThrGLNwRS7ClKeD7Ogh3PyYTzPSHGoW6jGO11TQ
+         oCGAwzSHH837tYbT2dF85e0a2TEr6toDh9X9UwBEOSDqMvhiZa4KJnNWhPHPDwz24q
+         yZhINGa7EXErOqD6EZziRsx6AaSTjgaRPcELXEDg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.223]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1wlv-1jRkOc2VlR-012IYf; Tue, 18
+ Feb 2020 16:10:39 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-mtd@lists.infradead.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: spi-nor: Simplify loop in spi_nor_read_id()
+Date:   Tue, 18 Feb 2020 16:10:34 +0100
+Message-Id: <20200218151034.24744-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218144534.4564-1-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zINvuvI/vP4dAMYLrRwlntPkwlGVie3T+Ss13bG2eo3J/0AfEe3
+ 0YO3URsROtHRc/YuHX6Y2WTsBDm4RPq3IQZuDJ3RtVaPsl1Z5fePm9ut7QzjIpSvm5wQ7ZG
+ 9YlU74y9lLrAGcyRYmo0iBc3afl7rasXCmDWKBpbH49NDlU5WtMtZndyKnat3oOFqKnen7c
+ 9vL97bWk4xTwWVqF4BtGg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fDc1hno+pvA=:8siC+ZbWuD87CjZH5hvgke
+ mIVrlz83x/OyGaEJq8U1ObxXWQiQjh4VboBx7BDh1KybUCIRgoDSMLFo7S8SGpg/Qly//r2Vk
+ zvpson8ii9CHJGJFre+vC2saQYko9rD3+0TZK3KpEyXt/nfrB1EdoQpfqo0IItUWNP1NYG2xJ
+ luh7OfhKULfrallMVC2IQPZF5fkrnvuYjAex6x9QUQQJwUwvUtJks6eP1ghSAT3yqpRhKjJ33
+ cMP1MpB7NuGnfe6JVi9PKFFg5exADAO8zmFhlmhUUbb/jH4gyQeiQuP+QXA1hyJ8gnYDp9/5H
+ SoReeMlcB43HDfj9qTq8Ae33s84NASKl12ggPcC1tX8BTSlzICVyf0M2VW8hJ1vRQsYIgPW4Y
+ rcQ8AXxhqFhbbceOyqd/lEroTFHyU8Ri+0ny49K3q0AXxILhzurdNm8EESgbkwYppL8X9ur9y
+ QX7gUBZ8dhJMfrDHkxHdRUdJMW51RwzhB4pZuUteL9+8LxN1cjLMTmiNRxu9e7I6eWVpw0Si5
+ BhHw1/IJ1Jd752o611fcqcI+VcO7YK06hRGchmn2TtGF+U3NXCCJHMOZ/jxL/lV/emA01Kf4T
+ gYndDDS3rywdiIIV2DO4Ztcxdp/oJaP7U1tONeBlhZ/EbB9yFasBUaisWD9xxatkZsX3ISMnV
+ +BZTVqUT8fNGfj+ARRzGs406RR+1DAltN9EZXmou5biX8MyQkwcLRKT7Y0TXgCmC/MMJjyJoI
+ jAVR/Y4hgYpnUmFWcyzr+7So1XPO+FEBTxRjrOBQ56k+Pzi7MW5lqG/gG2svG+U7c3mTqm+Xj
+ /nThGmMt76n51KM9IRHcUd2pFo4VAQHutoSQ4c7TyHZia8jwv1HnHERza1C5aRoTxZpl708PI
+ G3PjyLnuLuQez24Srn9xzHMtnO9xmJZ3VK2mXe4WwNy7d87YOia/MICOXrViHeZjprVqFGmNV
+ RG4smvPWSlU8R2B68XT0/BfOEUcWRleZFS7IC6XGPEKqmoS2jKXhpDwBKqXJSIWfDY2LdE9IB
+ 9jnszNArWivDaREhQvWugS/cao7oJeHIgDN8SpYtMVI/ugMdQouE/w4u6s03M4Qu2KUb7marV
+ KVQM4ykkOVe6IqDbKv86bnclfz1BqP+4MGITRytX/g7/Gu7ri7FbHDzodTHBiMb9jrigW//Wu
+ 57fGAJsIM0Gu24HGMQ9N+ZCKNZwUjSuCxYZ678PnEQ9PKAH9rdeq6sr40OvmD1flR0NW4fK2C
+ GRe3stiC5DoFqmhR7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 03:45:34PM +0100, Vincent Guittot wrote:
-> sgs->group_weight is not set while gathering statistics in
-> update_sg_wakeup_stats(). This means that a group can be classified as
-> fully busy with 0 running tasks if utilization is high enough.
-> 
-> This path is mainly used for fork and exec.
-> 
-> Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+- Don't use `tmp` for two purposes (return value, loop counter)
+- Name the loop counter `i`, as is convention
+- Return the pointer variable that the if conditions leading up to the
+  return statement already operate on, rather than a different
+  expression that evaluates to the same pointer
 
-Thanks!
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/mtd/spi-nor/spi-nor.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 4fc632ec18fe..c491572d5267 100644
+=2D-- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2711,7 +2711,7 @@ static const struct flash_info spi_nor_ids[] =3D {
+
+ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
+ {
+-	int			tmp;
++	int			tmp, i;
+ 	u8			*id =3D nor->bouncebuf;
+ 	const struct flash_info	*info;
+
+@@ -2732,11 +2732,11 @@ static const struct flash_info *spi_nor_read_id(st=
+ruct spi_nor *nor)
+ 		return ERR_PTR(tmp);
+ 	}
+
+-	for (tmp =3D 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
+-		info =3D &spi_nor_ids[tmp];
++	for (i =3D 0; i < ARRAY_SIZE(spi_nor_ids) - 1; i++) {
++		info =3D &spi_nor_ids[i];
+ 		if (info->id_len) {
+ 			if (!memcmp(info->id, id, info->id_len))
+-				return &spi_nor_ids[tmp];
++				return info;
+ 		}
+ 	}
+ 	dev_err(nor->dev, "unrecognized JEDEC id bytes: %*ph\n",
+=2D-
+2.20.1
+
