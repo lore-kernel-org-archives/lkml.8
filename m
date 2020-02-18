@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650A4C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11605C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB3624677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E033824672
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056184;
-	bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
+	s=default; t=1582056186;
+	bh=yaJiDeQSI2EMCSVNMIN7LeAM+k+7UbmGAwh6/ahZFPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYWRq3DlziuOnC6mQgKi2Zq5/+FBctep/8rlb6g6PVPrgSoMud3lVCQ5/F3xXG7mu
-	 rJoFgITE45XTsIzZRJEMezRO+XX2jmklhVZlF2fE4CfL35W6Cqe7svnMHJTjCT6l+S
-	 p2PSf73PC6e0qNjzJIyQRi4SoYZXf1I+7Qwsl4BE=
+	b=p/L85iabu17J17AHE+JzPUuA3SvBQh2uuULv/DjzVgkZuBqLBxjS3UX5ftEglOLET
+	 FMr4u/OGRWslV+U/eXNCzVbsiKwbNLIq+isC5V8alThu93+mV3zng/Ewag+q1CDYri
+	 nRx2Eg0txcQ+GtwTH21Jnc2F8qp28q9V/NSpntI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgBRUDC (ORCPT
+        id S1729059AbgBRUDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgBRUC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:57 -0500
+        id S1728097AbgBRUDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 782C22464E;
-        Tue, 18 Feb 2020 20:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7793A24673;
+        Tue, 18 Feb 2020 20:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056176;
-        bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
+        s=default; t=1582056181;
+        bh=yaJiDeQSI2EMCSVNMIN7LeAM+k+7UbmGAwh6/ahZFPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BF3SOAMWqT93+4TyokxgohwhnWGm0B0QNv35qw9FJ8kKptcGg8xzAvl89LHcgvLUk
-         GknXFdQTYQGqDpPvgnx3ADjVmWR1wSIwShO6ylqmmshpJm5FUD29WkipGIjDeRq2Zp
-         LTaILgLPOWSMZfFKu4YHUOWkPC9yqdhZcv4id8pk=
+        b=RR9vODsdb7AK+qXlZ1t4UCySeshwoO/8a0BZKxGi3PoZdXsLRMqlRHclLFDdjNUkN
+         CIMeMNWbS/opxDeevc9qEIlELSqTpnf5jXBmI/C53zS8kf+TwYIyoAQG34DHhYvn2h
+         M3Jq7ypeyS3ZgWPfwm8fQSZuBLv86q00rxMyeN7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.5 63/80] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
-Date:   Tue, 18 Feb 2020 20:55:24 +0100
-Message-Id: <20200218190438.077772696@linuxfoundation.org>
+        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.5 65/80] mac80211: fix quiet mode activation in action frames
+Date:   Tue, 18 Feb 2020 20:55:26 +0100
+Message-Id: <20200218190438.225493571@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,87 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
+commit 2bf973ff9b9aeceb8acda629ae65341820d4b35b upstream.
 
-Perf doesn't take the left period into account when auto-reload is
-enabled with fixed period sampling mode in context switch.
+Previously I intended to ignore quiet mode in probe response, however
+I ended up ignoring it instead for action frames. As a matter of fact,
+this path isn't invoked for probe responses to start with. Just revert
+this patch.
 
-Here is the MSR trace of the perf command as below.
-(The MSR trace is simplified from a ftrace log.)
-
-    #perf record -e cycles:p -c 2000000 -- ./triad_loop
-
-      //The MSR trace of task schedule out
-      //perf disable all counters, disable PEBS, disable GP counter 0,
-      //read GP counter 0, and re-enable all counters.
-      //The counter 0 stops at 0xfffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value fffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      //perf disable all counters, enable and set GP counter 0,
-      //enable PEBS, and re-enable all counters.
-      //0xffffffe17b80 (-2000000) is written to GP counter 0.
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-When the same task schedule in again, the counter should starts from
-previous left. However, it starts from the fixed period -2000000 again.
-
-A special variant of intel_pmu_save_and_restart() is used for
-auto-reload, which doesn't update the hwc->period_left.
-When the monitored task schedules in again, perf doesn't know the left
-period. The fixed period is used, which is inaccurate.
-
-With auto-reload, the counter always has a negative counter value. So
-the left period is -value. Update the period_left in
-intel_pmu_save_and_restart_reload().
-
-With the patch:
-
-      //The MSR trace of task schedule out
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value ffffffe25cbc
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 7976b1e9e3bf ("mac80211: ignore quiet mode in probe")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20200131111300.891737-15-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/intel/ds.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/mlme.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1713,6 +1713,8 @@ intel_pmu_save_and_restart_reload(struct
- 	old = ((s64)(prev_raw_count << shift) >> shift);
- 	local64_add(new - old + count * period, &event->count);
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -8,7 +8,7 @@
+  * Copyright 2007, Michael Wu <flamingice@sourmilk.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright (C) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright (C) 2018 - 2019 Intel Corporation
++ * Copyright (C) 2018 - 2020 Intel Corporation
+  */
  
-+	local64_set(&hwc->period_left, -new);
-+
- 	perf_event_update_userpage(event);
+ #include <linux/delay.h>
+@@ -1311,7 +1311,7 @@ ieee80211_sta_process_chanswitch(struct
+ 	if (!res) {
+ 		ch_switch.timestamp = timestamp;
+ 		ch_switch.device_timestamp = device_timestamp;
+-		ch_switch.block_tx =  beacon ? csa_ie.mode : 0;
++		ch_switch.block_tx = csa_ie.mode;
+ 		ch_switch.chandef = csa_ie.chandef;
+ 		ch_switch.count = csa_ie.count;
+ 		ch_switch.delay = csa_ie.max_switch_time;
+@@ -1404,7 +1404,7 @@ ieee80211_sta_process_chanswitch(struct
  
- 	return 0;
+ 	sdata->vif.csa_active = true;
+ 	sdata->csa_chandef = csa_ie.chandef;
+-	sdata->csa_block_tx = ch_switch.block_tx;
++	sdata->csa_block_tx = csa_ie.mode;
+ 	ifmgd->csa_ignored_same_chan = false;
+ 
+ 	if (sdata->csa_block_tx)
+@@ -1438,7 +1438,7 @@ ieee80211_sta_process_chanswitch(struct
+ 	 * reset when the disconnection worker runs.
+ 	 */
+ 	sdata->vif.csa_active = true;
+-	sdata->csa_block_tx = ch_switch.block_tx;
++	sdata->csa_block_tx = csa_ie.mode;
+ 
+ 	ieee80211_queue_work(&local->hw, &ifmgd->csa_connection_drop_work);
+ 	mutex_unlock(&local->chanctx_mtx);
 
 
