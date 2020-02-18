@@ -2,144 +2,156 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75563C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F6BC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A07821D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10A921D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="omEsIjt8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WuPXMTek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgBRSg3 (ORCPT
+        id S1726515AbgBRShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:36:29 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40585 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgBRSg3 (ORCPT
+        Tue, 18 Feb 2020 13:37:13 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34643 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgBRShM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:36:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y1so8410715plp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:36:28 -0800 (PST)
+        Tue, 18 Feb 2020 13:37:12 -0500
+Received: by mail-pl1-f193.google.com with SMTP id j7so8426588plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:37:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=deSq0a14rSLUpPG1ENh74nUw4fh0dIpGPEl5kTUgrmw=;
-        b=omEsIjt8aCcWfGTycR646o4RZaZaKMTiWee69L+h8Fll5DulpeCtdxPisOy8v0kvAM
-         vu/2SlirKz3PFVgerQ+7mQNQVxEZgmSX+NtbNS8r1crMliYrPxUePrcoxH4zF2g3BuaO
-         nefp+B1sAzPMdwKqxU82rlYdguWXyDAiEMndG+3ZRotaL7i8NbwThMLyeQs/ab6AZPXC
-         506Ja+fL4Mqd1QNcEv6tcQhkhQ5JPNrVVmaNgG/Y6C6Q8033tQlpfDVvMg7Z9mnJLpgy
-         dPMIiQPP6tjBmYU2cZ34bUrQB9figgSStewo8Mg6Cq+4r0QneW73BkVzmlIbsvSffU6W
-         hWDw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ccXZcPHgblgsQ7szhI146C2Fb020S8Uq8EN9Auab0l4=;
+        b=WuPXMTeklZQs1oW0RE5IlOhPNzD6lbppOClBV6i0Ns8aeFerqCD3HXxAL6SQmOZv5L
+         T1Eztw2uppZlUEDdP+rbVrNRHxUhjrKsSs3AYg+rGVsfuBrs/+X5YDGxx4LHJQzsRqEU
+         FBb/sBVAkLgg1I8GCSI03WSVMahh9xEo0IikKesZX34MbFAvkVxQel80aQeoKFjuo339
+         hbVA3VFfaCseBdGYbE8pwDZZFc09cCdr7DmcEKrbGhCYfEnjZtWDNRPGSoZ193bniHrY
+         Y81NQnOo5edZ5MgDyG67f51BmuzxhIYka3sK4u0x/GkWRGLkrePBhKz8RLGRvUon9yC9
+         Yg5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=deSq0a14rSLUpPG1ENh74nUw4fh0dIpGPEl5kTUgrmw=;
-        b=C1UrmkbOZEN6eXSQ00X5eIqPrfnmeBKNZXk5RQFOxVTaGk7/0d++LFhO6XN90CvYBB
-         rUr2P1FSB2YwL2NY8XNd+TVXIosmHj4Z5pUojgk4/ieyLiVmaom9Th5rOlHB97la/019
-         zDzPRNvXSuzCagWWws1yvfmnfTa8IQhJbyjKG1JKY3Hj2Jcj8pse1EEli6noNqVywV35
-         2LeoaNLz/J5hyrVM1dZ9P/5NZDJPNPjFoiuYqsEp+Fab/jWDzTctNQdSfP8vkkEXSwnl
-         NVjSpmTBaddO3lot6rceAYuenZmerKQtSrhw3aDtsFBW4OfbyTOq2SvEs4VfKHED943Z
-         haUg==
-X-Gm-Message-State: APjAAAVq/wy1+vylewC1ALyvnAVBbqJku9jmhq5k6wsBc5AmXwvOFyMq
-        t0+McU3MvXItQnWQbfQzWDpjgA==
-X-Google-Smtp-Source: APXvYqwcYKKfwzMe9EN+17kdygLIXGc6z65srtD5bMH+mVuMdxWGlEWgWQagiLvoXlBPO5rzfJPmEA==
-X-Received: by 2002:a17:902:426:: with SMTP id 35mr21802232ple.176.1582050988323;
-        Tue, 18 Feb 2020 10:36:28 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id z10sm5664511pgf.35.2020.02.18.10.36.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:36:27 -0800 (PST)
-Date:   Tue, 18 Feb 2020 10:36:27 -0800 (PST)
-X-Google-Original-Date: Tue, 18 Feb 2020 10:36:25 PST (-0800)
-Subject:     Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
-In-Reply-To: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
-CC:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>, anup@brainfault.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     atishp@atishpatra.org
-Message-ID: <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ccXZcPHgblgsQ7szhI146C2Fb020S8Uq8EN9Auab0l4=;
+        b=WsdX+xvQeCzh2t9wg1l8JwKanIOWb/+ie/3Z9iNXo3maK45roxfkETwnw4S0D5Cumx
+         pfMynT47h48g2E2Vydt7eYldDYJ89vNxbBu237mEkwgkY9iC/QZztgWiyaU+VEc8fPGn
+         LLqCCRy89ZccnFHhtvQszHMpXiWk8V3ZyTEIfsOc8+WoHGzC9yutiW0NIzQoPaw3LS1+
+         yFFHBe0NkwpeoB28YqTqm3f6WfsF2sWsueJXAKF54wUI6W3M1DuyS/+Afe6asikKZMiN
+         2LubLRBq3ka06n6W78DxleVwTgjgEUngbUB0JAr7cN5z2A0Dqqj2vmdGsAcq/R/VrI9I
+         tB+w==
+X-Gm-Message-State: APjAAAXa8znb8oPRgoLTVRifr4Y869g8wpn1hB0dVfKTj2OqenQEWqXk
+        zSPsAh9WbLah2uopsmOKUWV9oKqxIWFE5WoWtgXcvfve2Jk=
+X-Google-Smtp-Source: APXvYqzZgsU+a3pD+9mNeeHD5Yzed7d/Zb2r/b92wg4B+RpYyN4zpLjcE6hVEt6mGDkskCHevectGcMJtuyrWa0g6tU=
+X-Received: by 2002:a17:902:760e:: with SMTP id k14mr20968051pll.119.1582051031642;
+ Tue, 18 Feb 2020 10:37:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
+ <CAAdtpL5Tf-8O=xMKO33DWDs=2_Hsdk=FQSNO5Gsrx=9hWvENdg@mail.gmail.com>
+ <8e852d84c8b0c6b35faa3b3f2a1034d93a6e8967.camel@alliedtelesis.co.nz> <8cb14684e2f774d9573c062f2d82ad5348c5fee7.camel@alliedtelesis.co.nz>
+In-Reply-To: <8cb14684e2f774d9573c062f2d82ad5348c5fee7.camel@alliedtelesis.co.nz>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Feb 2020 10:37:00 -0800
+Message-ID: <CAKwvOdkaLRE0Ek3PnmqE2P3Urn4+pwfAp-qQdsLurwERcqNXfQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "f4bug@amsat.org" <f4bug@amsat.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 02 Feb 2020 03:48:18 PST (-0800), atishp@atishpatra.org wrote:
-> On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
->>
->> Historically, we have been enabling all interrupts for each
->> HART in trap_init(). Ideally, we should only enable M-mode
->> interrupts for M-mode kernel and S-mode interrupts for S-mode
->> kernel in trap_init().
->>
->> Currently, we get suprious S-mode interrupts on Kendryte K210
->> board running M-mode NO-MMU kernel because we are enabling all
->> interrupts in trap_init(). To fix this, we only enable software
->> and external interrupt in trap_init(). In future, trap_init()
->> will only enable software interrupt and PLIC driver will enable
->> external interrupt using CPU notifiers.
-
-I think we should add a proper interrupt controller driver for the per-hart
-interrupt controllers, as doing this within the other drivers is ugly -- for
-example, there's no reason an MMIO timer or interrupt controller driver should
-be toggling these bits.
-
->> Cc: stable@vger.kernel.org
->> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
-
-I'd argue this actually fixes the M-mode stuff, since that's the first place
-this issue shows up.  I've queued this with
-
-Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
-
-instead, as that's the first commit that will actually write to MIE and
-therefor the first commit that will actually exhibit bad behavior.  It also has
-the advantage of making the patch apply on older trees, which should make life
-easier for the stable folks.
-
->> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->> ---
->>  arch/riscv/kernel/traps.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
->> index f4cad5163bf2..ffb3d94bf0cc 100644
->> --- a/arch/riscv/kernel/traps.c
->> +++ b/arch/riscv/kernel/traps.c
->> @@ -156,6 +156,6 @@ void __init trap_init(void)
->>         csr_write(CSR_SCRATCH, 0);
->>         /* Set the exception vector address */
->>         csr_write(CSR_TVEC, &handle_exception);
->> -       /* Enable all interrupts */
->> -       csr_write(CSR_IE, -1);
->> +       /* Enable interrupts */
->> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
->>  }
->> --
->> 2.17.1
->>
->>
+On Mon, Feb 17, 2020 at 12:01 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
 >
-> Looks good.
-> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+> On Mon, 2020-02-17 at 17:58 +1300, Mark Tomlinson wrote:
+> > Hi Phil,
+> >
+> > On Mon, 2020-02-17 at 01:22 +0100, Philippe Mathieu-Daud=C3=A9 wrote:
+> > > Hi Mark,
+> > >
+> > > On Tue, Feb 11, 2020 at 10:42 PM Mark Tomlinson
+> > > <mark.tomlinson@alliedtelesis.co.nz> wrote:
+> > > >
+> > > > The Cavium Octeon CPU uses a special sync instruction for implement=
+ing
+> > > > wmb, and due to a CPU bug, the instruction must appear twice. A mac=
+ro
+> > > > had been defined to hide this:
+> > > >
+> > > >  #define __SYNC_rpt(type)     (1 + (type =3D=3D __SYNC_wmb))
+> > > >
+> > > > which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any o=
+ther
+> > > > type of sync. However, this expression is evaluated by the assemble=
+r,
+> > > > and not the compiler, and the result of '=3D=3D' in the assembler i=
+s 0 or
+> > > > -1, not 0 or 1 as it is in C. The net result was wmb() producing no=
+ code
+> > > > at all. The simple fix in this patch is to change the '+' to '-'.
+> > >
+> > > Isn't this particular to the assembler implementation?
+> > > Can you explicit the assembler you are using in the commit descriptio=
+n?
+> > > Assuming we have to look at your commit in 3 years from now, we'll
+> > > wonder what assembler you were using.
+> > >
+> > > Thanks,
+> > >
+> > > Phil.
+> >
+> > Yes, it is tied to the assembler. But the Linux kernel is tied to GCC,
+> > and GCC (I believe) is tied to GNU as. I can't see the specification of
+> > GNU as changing, since that could break anything written for it.
+> >
+>
+> There is an effort underway to build the kernel with clang[1]. I'm not
+> sure what that ends up using for an assembler or if it'll even be able
+> to target mips64 anytime soon.
+>
+> For reference the relevant section from the GNU as manual[2] says "A
+> true results has a value of -1 whereas a false result has a value of
+> 0".
+>
+> [1] - https://clangbuiltlinux.github.io/
+> [2] - https://sourceware.org/binutils/docs/as/Infix-Ops.html#Infix-Ops
 
-Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Chris, thanks for CC'ing us.
 
-I consider this a bugfix, so I'm targeting it for RCs.  It's on fixes and
-should go up this week.
+Mark, we're building 32 bit MIPS kernels with Clang under CI (just
+added big endian builds this morning).  We're actively looking into
+supporting 64b MIPS.
 
-Thanks!
+The kernel uses GCC by default, but supports using any compiler via
+`make CC=3D<foo>`.  There is extensive support in the kernel for
+building with Clang.
+
+GCC and Clang (when doing kernel builds, for clang we set
+`-no-integrated-as`) will invoke GAS for inline assembly, but you can
+set `AS=3Dclang` for example for the out of line assembly files.  If the
+C source files don't contain inline assembly (or `-no-integrated-as`
+wasn't set) then Clang will skip invoking the assembler and stream out
+an object file.
+
+If you're actively supporting 64b mips, and want to give a Clang build
+a try, we'd appreciate the bug reports:
+https://github.com/ClangBuiltLinux/linux/issues
+--=20
+Thanks,
+~Nick Desaulniers
