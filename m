@@ -2,161 +2,160 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318F6C3403F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E8BC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0214207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PzuGy0rl"
+	by mail.kernel.org (Postfix) with ESMTP id BCE77207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 15:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgBRPRu (ORCPT
+        id S1726858AbgBRPST convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 10:17:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38545 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgBRPRu (ORCPT
+        Tue, 18 Feb 2020 10:18:19 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55252 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726666AbgBRPST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:17:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so23392607ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 07:17:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qWhEX9RKxhypnM5PPqWFOUyYSGe+pegPEe4K7fpUEmA=;
-        b=PzuGy0rlY3m0PILFANKBf4jU07YdevfnTGGFHMjs9F/K8E1yFdiUnUyvR7m8no03/h
-         3pCXn1X+ehHvBcC3Uc3QRYlT/ZjtUhn7I3SiF6yhssc/WTwymLNmQRg8b73Fcm/TzvJd
-         is/qIVvOqL9gFoekZwT0N9mvfC9j0pO39BjX7KBGYqJhCZFbnNX8EIAObEpnQl+Phcx7
-         zKYzVNXnUnHTB1ejNs/Rv9cu1w0ldFPqJDk7qgMGuFprB1XspaTqLRWZSbLGSb07BOOi
-         05unZ2B2QATKxlasmD2FOCEjp2WZ0CNF820QeigP/i2HUW6XVE+i6Uv6tjUzfJEQ9K6Q
-         23Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qWhEX9RKxhypnM5PPqWFOUyYSGe+pegPEe4K7fpUEmA=;
-        b=I7ftrIVfoUDYBOHTSlxmtMoPqttsySGKqTsHZoHidphTi1zFR/hUo/dPfcXIsF5fcv
-         7TojM+Z602vGs2WFcV41bNHTEI8ehOAX+iFMTWfz9j88Xgho4NL2jiYDtaDlNsNMW2BX
-         yTDR9muXLxjDGkBXUqf40Iq//hsJ+wRHlJz4ruskyuHn9ZrLUdR5+RLu2DJzpWEHjyJ7
-         I4aXzM8Sp7trioNMrKbrxLhzGbDiYM5I0TZS4o3N9JbatoBGmRB1XehwX3tVqoMG9m8H
-         5SHsUxiVcXX9Aks9lqS9wNp93TpJUDiYN9r5THm+dBGPywiB8GGD3gPA9hK6sPE/X9Xw
-         uTqg==
-X-Gm-Message-State: APjAAAVJJHytn93iXFZsgjJIXvrjxiHTniJlfIWNGI9J4OUIlCQiUTkS
-        J4Cgi8vqK+qhdR9TTrm7Kb9itQ==
-X-Google-Smtp-Source: APXvYqwmDGsCUfLrJ8biBI5KsgtzZAXb+nMk2XFsea2b0gKSENYf0OwiYFWttt/aHElu78KUASDZmg==
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr12797943ljn.48.1582039067743;
-        Tue, 18 Feb 2020 07:17:47 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id g15sm2747705ljk.8.2020.02.18.07.17.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 07:17:47 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 74291100FA3; Tue, 18 Feb 2020 18:18:13 +0300 (+03)
-Date:   Tue, 18 Feb 2020 18:18:13 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzbot <syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH -next] fork: annotate a data race in vm_area_dup()
-Message-ID: <20200218151813.3yzzb2hzlmtbf5xg@box>
-References: <20200218103002.6rtjreyqjepo3yxe@box>
- <93E6B243-9A0F-410C-8EE4-9D57E28AF5AF@lca.pw>
- <CANpmjNO320YvGvUfBkWJFnv+QwZy=B0GG=WAMKv7ZOJ2UYFkPg@mail.gmail.com>
- <1582038035.7365.93.camel@lca.pw>
+        Tue, 18 Feb 2020 10:18:19 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IFFAB7134328
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:18:18 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y87e6px52-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:18:17 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sth@linux.ibm.com>;
+        Tue, 18 Feb 2020 15:18:16 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Feb 2020 15:18:12 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IFIBAe27132044
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 15:18:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E9B6642047;
+        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B814542045;
+        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
+Received: from dyn-9-152-212-151.boeblingen.de.ibm.com (unknown [9.152.212.151])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200217165525.5187-1-krzk@kernel.org>
+ <20200218121713.GA3956@osiris>
+From:   Stefan Haberland <sth@linux.ibm.com>
+Autocrypt: addr=sth@linux.ibm.com; keydata=
+ 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
+ cH4TNHyhiR0KAbxE8qKx3Jc=
+Subject: Re: [PATCH] s390: Cleanup removed IOSCHED_DEADLINE
+Date:   Tue, 18 Feb 2020 16:18:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200218121713.GA3956@osiris>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582038035.7365.93.camel@lca.pw>
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20021815-0012-0000-0000-0000038800DD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021815-0013-0000-0000-000021C4918D
+Message-Id: <60998205-90ba-c343-b3f3-c9c25ee6fef1@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=3
+ impostorscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 priorityscore=1501
+ spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:00:35AM -0500, Qian Cai wrote:
-> On Tue, 2020-02-18 at 15:09 +0100, Marco Elver wrote:
-> > On Tue, 18 Feb 2020 at 13:40, Qian Cai <cai@lca.pw> wrote:
-> > > 
-> > > 
-> > > 
-> > > > On Feb 18, 2020, at 5:29 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> > > > 
-> > > > I think I've got this:
-> > > > 
-> > > > vm_area_dup() blindly copies all fields of orignal VMA to the new one.
-> > > > This includes coping vm_area_struct::shared.rb which is normally protected
-> > > > by i_mmap_lock. But this is fine because the read value will be
-> > > > overwritten on the following __vma_link_file() under proper protectection.
-> > > 
-> > > Right, multiple processes could share the same file-based address space where those vma have been linked into address_space::i_mmap via vm_area_struct::shared.rb. Thus, the reader could see its shared.rb linkage pointers got updated by other processes.
-> > > 
-> > > > 
-> > > > So the fix is correct, but justificaiton is lacking.
-> > > > 
-> > > > Also, I would like to more fine-grained annotation: marking with
-> > > > data_race() 200 bytes copy may hide other issues.
-> > > 
-> > > That is the harder part where I don’t think we have anything for that today. Macro, any suggestions? ASSERT_IGNORE_FIELD()?
-> > 
-> > There is no nice interface I can think of. All options will just cause
-> > more problems, inconsistencies, or annoyances.
-> > 
-> > Ideally, to not introduce more types of macros and keep it consistent,
-> > ASSERT_EXCLUSIVE_FIELDS_EXCEPT(var, ...) maybe what you're after:
-> > "Check no concurrent writers to struct, except ignore the provided
-> > fields".
-> > 
-> > This option doesn't quite work, unless you just restrict it to 1 field
-> > (we can't use ranges, because e.g. vm_area_struct has
-> > __randomize_layout). The next time around, you'll want 2 fields, and
-> > it won't work. Also, do we know that 'shared.rb' is the only thing we
-> > want to ignore?
-> > 
-> > If you wanted something similar to ASSERT_EXCLUSIVE_BITS, it'd have to
-> > be ASSERT_EXCLUSIVE_FIELDS(var, ...), however, this is quite annoying
-> > for structs with many fields as you'd have to list all of them. It's
-> > similar to what you can already do currently (but I also don't
-> > recommend because it's unmaintainable):
-> > 
-> > ASSERT_EXCLUSIVE_WRITER(orig->vm_start);
-> > ASSERT_EXCLUSIVE_WRITER(orig->vm_end);
-> > ASSERT_EXCLUSIVE_WRITER(orig->vm_next);
-> > ASSERT_EXCLUSIVE_WRITER(orig->vm_prev);
-> > ... and so on ...
-> > *new = data_race(*orig);
-> > 
-> > Also note that vm_area_struct has __randomize_layout, which makes
-> > using ranges impossible. All in all, I don't see a terribly nice
-> > option.
-> > 
-> > If, however, you knew that there are 1 or 2 fields only that you want
-> > to make sure are not modified concurrently, ASSERT_EXCLUSIVE_WRITER +
-> > data_race() would probably work well (or even ASSERT_EXCLUSIVE_ACCESS
-> > if you want to make sure there are no writers nor _readers_).
-> 
-> I am testing an idea that just do,
-> 
-> lockdep_assert_held_write(&orig->vm_mm->mmap_sem);
-> *new = data_race(*orig);
-> 
-> The idea is that as long as we have the exclusive mmap_sem held in all paths
-> (auditing indicated so), no writer should be able to mess up our vm_area_struct
-> except the "shared.rb" field which has no harm.
+Am 18.02.20 um 13:17 schrieb Heiko Carstens:
+> On Mon, Feb 17, 2020 at 05:55:25PM +0100, Krzysztof Kozlowski wrote:
+>> CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
+>> remove legacy IO schedulers").
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Thanks! I'll leave it up to Stefan and Jan to decide what to do with this.
 
-Well, some fields protected by page_table_lock and can be written to
-without exclusive mmap_sem. Probably even without any mmap_sem: pin
-mm_struct + page_table_lock should be enough.
+I will apply the patch. Thanks.
 
--- 
- Kirill A. Shutemov
+>
+>> ---
+>>  drivers/s390/block/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/s390/block/Kconfig b/drivers/s390/block/Kconfig
+>> index a8682f69effc..1f06b19cb290 100644
+>> --- a/drivers/s390/block/Kconfig
+>> +++ b/drivers/s390/block/Kconfig
+>> @@ -26,7 +26,7 @@ config DASD
+>>  	def_tristate y
+>>  	prompt "Support for DASD devices"
+>>  	depends on CCW && BLOCK
+>> -	select IOSCHED_DEADLINE
+>> +	select MQ_IOSCHED_DEADLINE
+>>  	help
+>>  	  Enable this option if you want to access DASDs directly utilizing
+>>  	  S/390s channel subsystem commands. This is necessary for running
+>> -- 
+>> 2.17.1
+>>
+
+
