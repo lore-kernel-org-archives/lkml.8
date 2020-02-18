@@ -2,91 +2,178 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE1CC34037
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDD1C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9696C21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328F82176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582029204;
+	bh=p5Cg7dkaOL/TAP7UTqb1VuRqbfVQB0oiZv/kRkrlk/0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zYKVajE6zFxaEcOSVzeVl6FX8rkvyQWGkTmThDr+viXol7/YhvFwA0oQTqpqWRUCI
+	 jLM9zztEoJOiVUh08yZnlK9Ig9A+vrFtN0QxM5B49TM+EHmu4+Z4qE6P9k2ZVyElIR
+	 ymgo4nFzQsovcOrUoW+TpSS9T9OGzNq3Pdb6Q7iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgBRMcZ (ORCPT
+        id S1726648AbgBRMdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:32:25 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:37550 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726549AbgBRMcZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:32:25 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01ICVcXO007989;
-        Tue, 18 Feb 2020 14:31:39 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id C1E586032E; Tue, 18 Feb 2020 14:31:38 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v4 0/3] arm: dts: add and modify device node in NPCM7xx device tree
-Date:   Tue, 18 Feb 2020 14:31:25 +0200
-Message-Id: <20200218123128.17990-1-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 07:33:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgBRMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 07:33:22 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5217720836;
+        Tue, 18 Feb 2020 12:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582029201;
+        bh=p5Cg7dkaOL/TAP7UTqb1VuRqbfVQB0oiZv/kRkrlk/0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aWlnTD3ngHGWit+WUQibOybAWTCa6KrOOwO2IOZComn3onYHL2f3hlybn60pMK2W2
+         m1ZtfcTNRjXCTbu7ZTw2SFkydP3x6D+xiRBCwpOxGvIT+YOh8HAtyBQ9KJ4gwMb/RA
+         NSbG43ehzUVWqqs7PWxiIRP/d/R42VxcCrQQPEfk=
+Date:   Tue, 18 Feb 2020 21:33:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@kernel.vger.org,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] powerpc/kprobes: Fix trap address when trap happened in
+ real mode
+Message-Id: <20200218213317.533c78753cefb05bd42cc6ad@kernel.org>
+In-Reply-To: <2b3f664e-d4ad-edd3-5bed-a4492f4ed213@c-s.fr>
+References: <b1451438f7148ad0e03306a1f1409f4ad1d6ec7c.1581684263.git.christophe.leroy@c-s.fr>
+        <20200214225434.464ec467ad9094961abb8ddc@kernel.org>
+        <e09d3c42-542e-48c1-2f1e-cfe605b05bec@c-s.fr>
+        <20200216213411.824295a321d8fa979dedbbbe@kernel.org>
+        <baee8186-549a-f6cf-3619-884b6d708185@c-s.fr>
+        <20200217192735.5070f0925c4159ccffa4e465@kernel.org>
+        <c6257b49-bf02-d30a-1e2e-99abba5955e6@c-s.fr>
+        <20200218094421.6d402de389ce23a55a3ec084@kernel.org>
+        <c93c5346-d964-9167-c4dd-3123917344cf@c-s.fr>
+        <20200218192905.a3ed969e8565901c4f69fa22@kernel.org>
+        <2b3f664e-d4ad-edd3-5bed-a4492f4ed213@c-s.fr>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds and modify device tree nodes in the NPCM7xx
-Baseboard Management Controller (BMC) device tree.
+On Tue, 18 Feb 2020 12:04:41 +0100
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-The following device node add:
-        - NPCM7xx Pin controller and GPIO
-        - NPCM7xx PWM and FAN.
-        - NPCM7xx EHCI USB.
-        - NPCM7xx KCS.
-        - NPCM Reset.
-        - NPCM Peripheral SPI.
-        - NPCM FIU SPI.
-        - NPCM HWRNG.
-        - NPCM I2C.
-        - STMicro STMMAC.
+> >> Nevertheless, if one symbol has been forgotten in the blacklist, I think
+> >> it is a problem if it generate Oopses.
+> > 
+> > There is a long history also on x86 to make a blacklist. Anyway, how did
+> > you get this error on PPC32? Somewhere would you like to probe and
+> > it is a real mode function? Or, it happened unexpectedly?
+> 
+> The first Oops I got was triggered by a WARN_ON() kind of trap in real 
+> mode. The trap exception handler called kprobe_handler() which tried to 
+> read the instruction at the trap address (which was a real-mode address) 
+> so it triggered a Bad Access Fault.
+> 
+> This was initially the purpose of my patch.
 
-The following device node modified:
-        - NPCM7xx timer.
-        - NPCM7xx clock constants parameters.
+OK, then filtering the trap reason in kprobe handler is a bit strange.
+It should be done in the previous stage (maybe in trap.c)
+Can we filter it by exception flag or only by checking the instruction
+which causes the exception, or needs get_kprobe()...?
 
-NPCM7xx device tree tested on NPCM750 evaluation board.
+> After discussion with you, I started looking at what would be the effect 
+> of setting a kprobe event in a function which runs in real mode.
 
-Changes since version 3:
- - Tested patches in Linux kernel 5.6.
+If the kprobe single-stepping (or emulation) works in real mode, just
+ignore the kprobes pre/post_handlers and increment nmissed count.
 
-Changes since version 2:
- - Remove unnecessary ouput-enable flags.
+If that doesn't work, we have to call a BUG_ON, because we can not
+continue the code execution. And also, you have to find a way to make
+a blacklist for real mode code.
 
-Changes since version 1:
- - Add NPCM reset device node.
- - Add reset parameters to NPCM driver device nodes.
+> >>
+> >>> Or, some parts are possble to run under both real mode and kernel mode?
+> >>
+> >> I don't think so, at least on PPC32
+> > 
+> > OK, that's a good news. Also, are there any independent section where such
+> > real mode functions are stored? (I can see start_real_trampolines in
+> > sections.h) If that kind of sections are defined, it is easy to make
+> > a blacklist in arch_populate_kprobe_blacklist(). See arch/arm64/kernel/probes/kprobes.c.
+> 
+> Part of them are in .head.text, and this section is already blacklisted 
+> throught function arch_within_kprobe_blacklist()
 
-Tomer Maimon (3):
-  arm: dts: modify NPCM7xx device tree clock parameter to clock constant
-  arm: dts: modify NPCM7xx device tree timer register size
-  arm: dts: add new device nodes to NPCM750 device tree
+Then, those are OK.
 
- arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 958 +++++++++++++++++-
- arch/arm/boot/dts/nuvoton-npcm750-evb.dts     | 444 +++++++-
- .../boot/dts/nuvoton-npcm750-pincfg-evb.dtsi  | 157 +++
- arch/arm/boot/dts/nuvoton-npcm750.dtsi        |  24 +-
- 4 files changed, 1549 insertions(+), 34 deletions(-)
- create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-pincfg-evb.dtsi
+> 
+> But there are several other functions which are not there. For instance, 
+> many things within entry_32.S, and also things in hash_low.S
+> On PPC64 (ie in entry_64.S) they were explicitely blacklisted with 
+> _ASM_NOKPROBE_SYMBOL(). We have to do the same on PPC64
+
+Agreed. Some of such unstable state code must not be probed.
+
+> >>>> So the 'program check' exception handler doesn't find the owner of the
+> >>>> trap hence generate an Oops.
+> >>>>
+> >>>> Even if we don't want kprobe() to proceed with the event entirely
+> >>>> (allthough it works at least for simple events), I'd expect it to fail
+> >>>> gracefully.
+> >>>
+> >>> Agreed. I thought it was easy to identify real mode code. But if it is
+> >>> hard, we should apply your first patch and also skip user handlers
+> >>> if we are in the real mode (and increment missed count).
+> >>
+> >> user handlers are already skipped.
+> > 
+> > Yes, if you don't put a kprobes on real mode code. However, if user
+> > (accidentally) puts a probe on real mode code, it might call a
+> > user handler?
+> 
+> Are we talking about the same thing ?
+
+Ah, sorry about that. "user handler" here I meant was "kprobe pre/post_handler
+function defined by the user of kprobes".
+
+> 
+> Only kernel code can run in real mode, so the following code at the 
+> beginning of kprobe_handler() does the job ?
+> 
+> 	if (user_mode(regs))
+> 		return 0;
+
+Yes, you're right.
+
+> >> What do you think about my latest proposal below ? If a trap is
+> >> encoutered in real mode, if checks if the matching virtual address
+> >> corresponds to a valid kprobe. If it is, it skips it. If not, it returns
+> >> 0 to tell "it's no me". You are also talking about incrementing the
+> >> missed count. Who do we do that ?
+> > 
+> > I rather like your first patch. If there is a kprobes, we can not skip
+> > the instruction, because there is an instruction which must be executed.
+> > (or single-skipped, but I'm not sure the emulator works correctly on
+> > real mode)
+> 
+> Oops, yes of course.
+
+Thank you,
 
 -- 
-2.22.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
