@@ -2,298 +2,138 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D58C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09DEC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E7D2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864632176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C2X155Ue"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y0R0X22d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgBROQW (ORCPT
+        id S1726715AbgBRORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:16:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48456 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBROQW (ORCPT
+        Tue, 18 Feb 2020 09:17:22 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35032 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgBRORV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:16:22 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IEGEsE074273;
-        Tue, 18 Feb 2020 08:16:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582035374;
-        bh=n2KrMiBAVRvNdjvVSSSf2VgxPh00qjT1MxIsx1Js1bc=;
-        h=From:To:CC:Subject:Date;
-        b=C2X155UeR3DePPy2KyaY05jG+tv6Is1x6lU0t+7bN0kz5Jv8h+7L728qp3zd7co2Q
-         bX6tCUoDYqCoZnQ6rXRAO8e1YdeVS72qbsMl1f1myn9PsYpvdMDkwDW9wRVRcxOxES
-         34jks0T40/qeLocpvAIzkTalfZegurFcSbSTjI/4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IEGEgY020868
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Feb 2020 08:16:14 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
- Feb 2020 08:16:13 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 18 Feb 2020 08:16:13 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IEGDMk085215;
-        Tue, 18 Feb 2020 08:16:13 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3] net: phy: dp83867: Add speed optimization feature
-Date:   Tue, 18 Feb 2020 08:11:30 -0600
-Message-ID: <20200218141130.28825-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 18 Feb 2020 09:17:21 -0500
+Received: by mail-lf1-f65.google.com with SMTP id z18so14647100lfe.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:17:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bcfw/WtwA7TkxKO8UeI2AZjb5CE4kKKsLOYA3/v/NYk=;
+        b=y0R0X22df9E5JDDebI/9+dhuUi+bCGARz+i3v9UCdAhzDaXbHdRNxwb6JV8PhHO0QC
+         Z2ZXb4yvZ+JMqwsdcwSk/UeEh3UPWQuLo8Q4yzKNIcOGPD3HzC593vmoYsP4UP+TcvaG
+         OZ4I4gpTv077Xf7SZspcYtnivCbQXGd/M4i++NPG0eM2KqjywO/ZNS7eoZoWLyhx/cCa
+         XkbqLx7AnNVJvPv9aZKa5FEcnROzYKbOCh5nO/Arlb6EE9i8rzb0TPNh8zCJl9QfB1Fo
+         idU3bZirDKoJc1qk3OZNRkpeYSRKl4SIKeVv4ty3blHsqWOG+CTI67LLvIvZHMZzgi6k
+         LYrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bcfw/WtwA7TkxKO8UeI2AZjb5CE4kKKsLOYA3/v/NYk=;
+        b=UwA0giGMRlv16fn7OM+fPfYyoJ046zlPP8607uYHl2mFBZyc9RYpNb2gUUZjmSDxyh
+         XET6ZELNavraF2gDA1u66omWVe5fnR8PF1AYP39pLceeW1ucLFi37ASpvOxImuffrekU
+         Lpv4pYKg+P693N5YmVVEPVp3yOk4S5Qao/4W8SNYeeM6t0Ue7UvCb+IBATfQJbLtN9L9
+         O9PdhvWdrGZAXl5jT4bp+nuSKxPubP8KjcupNVY+M4MLGvP5RQ+/qxsCFrNyMB+PESBN
+         gRpX9GwufQdBsEHtlFxWYrH71XFZcROXM7/qTvtsawjsmxsMq2J9tAre2RtSKRqstWZY
+         ov4g==
+X-Gm-Message-State: APjAAAW4z3pXIfqhCzEMcytMlWEamOKzSLbFkj3phtj7agNZvGgeRA3O
+        cuZjUHoikBVD5KcI47SGKEVs7zqHmkCzv6B06UGhNg==
+X-Google-Smtp-Source: APXvYqyYM5aKaTIZbnjBJk7cvPf+hh1cDE8hbWKUFZnrNneTz6TIGYoJTE/iNm2P4no4DHhhMAjH2fz/RxCQHopvh0Q=
+X-Received: by 2002:ac2:5e9b:: with SMTP id b27mr10933970lfq.184.1582035439659;
+ Tue, 18 Feb 2020 06:17:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-3-vincent.guittot@linaro.org> <ecbf5317-e6cf-fc20-9871-4ea06a987952@arm.com>
+ <20200218135059.GE3420@suse.de>
+In-Reply-To: <20200218135059.GE3420@suse.de>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 18 Feb 2020 15:17:08 +0100
+Message-ID: <CAKfTPtA9yOoPRMYgE1V22FJMpo+jr=VS1kQHqYrArG-GXMN18g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the speed optimization bit on the DP83867 PHY.
-This feature can also be strapped on the 64 pin PHY devices
-but the 48 pin devices do not have the strap pin available to enable
-this feature in the hardware.  PHY team suggests to have this bit set.
+On Tue, 18 Feb 2020 at 14:51, Mel Gorman <mgorman@suse.de> wrote:
+>
+> On Tue, Feb 18, 2020 at 01:37:45PM +0100, Dietmar Eggemann wrote:
+> > On 14/02/2020 16:27, Vincent Guittot wrote:
+> >
+> > [...]
+> >
+> > >     /*
+> > >      * The load is corrected for the CPU capacity available on each node.
+> > >      *
+> > > @@ -1788,10 +1831,10 @@ static int task_numa_migrate(struct task_struct *p)
+> > >     dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+> > >     taskweight = task_weight(p, env.src_nid, dist);
+> > >     groupweight = group_weight(p, env.src_nid, dist);
+> > > -   update_numa_stats(&env.src_stats, env.src_nid);
+> > > +   update_numa_stats(&env, &env.src_stats, env.src_nid);
+> >
+> > This looks strange. Can you do:
+> >
+> > -static void update_numa_stats(struct task_numa_env *env,
+> > +static void update_numa_stats(unsigned int imbalance_pct,
+> >                               struct numa_stats *ns, int nid)
+> >
+> > -    update_numa_stats(&env, &env.src_stats, env.src_nid);
+> > +    update_numa_stats(env.imbalance_pct, &env.src_stats, env.src_nid);
+> >
+>
+> You'd also have to pass in env->p and while it could be done, I do not
+> think its worthwhile.
 
-With this bit set the PHY will auto negotiate and report the link
-parameters in the PHYSTS register.  This register provides a single
-location within the register set for quick access to commonly accessed
-information.
+I agree
 
-In this case when auto negotiation is on the PHY core reads the bits
-that have been configured or if auto negotiation is off the PHY core
-reads the BMCR register and sets the phydev parameters accordingly.
+>
+> > [...]
+> >
+> > > +static unsigned long cpu_runnable_load(struct rq *rq)
+> > > +{
+> > > +   return cfs_rq_runnable_load_avg(&rq->cfs);
+> > > +}
+> > > +
+> >
+> > Why not remove cpu_runnable_load() in this patch rather moving it?
+> >
+> > kernel/sched/fair.c:5492:22: warning: ???cpu_runnable_load??? defined but
+> > not used [-Wunused-function]
+> >  static unsigned long cpu_runnable_load(struct rq *rq)
+> >
+>
+> I took the liberty of addressing that when I picked up Vincent's patches
+> for "Reconcile NUMA balancing decisions with the load balancer v3" to fix
+> a build warning. I did not highlight it when I posted because it was such
+> a trivial change.
 
-This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
-4-wire cable.  If this should occur the PHYSTS register contains the
-current negotiated speed and duplex mode.
+yes I have noticed that.
+Thanks
 
-In overriding the genphy_read_status the dp83867_read_status will do a
-genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
-register is read and the phydev speed and duplex mode settings are
-updated.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
-
-v3 - Add the tunable feature into the driver for downshift.  Change speed optimization
-nomenclature to dwonshift
-
- drivers/net/phy/dp83867.c | 150 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
-
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 967f57ed0b65..13f7f2d5a2ea 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-+#include <linux/bitfield.h>
- 
- #include <dt-bindings/net/ti-dp83867.h>
- 
-@@ -21,6 +22,7 @@
- #define DP83867_DEVADDR		0x1f
- 
- #define MII_DP83867_PHYCTRL	0x10
-+#define MII_DP83867_PHYSTS	0x11
- #define MII_DP83867_MICR	0x12
- #define MII_DP83867_ISR		0x13
- #define DP83867_CFG2		0x14
-@@ -118,6 +120,24 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* PHY STS bits */
-+#define DP83867_PHYSTS_1000			BIT(15)
-+#define DP83867_PHYSTS_100			BIT(14)
-+#define DP83867_PHYSTS_DUPLEX			BIT(13)
-+#define DP83867_PHYSTS_LINK			BIT(10)
-+
-+/* CFG2 bits */
-+#define DP83867_DOWNSHIFT_EN		(BIT(8) | BIT(9))
-+#define DP83867_DOWNSHIFT_ATTEMPT_MASK	(BIT(10) | BIT(11))
-+#define DP83867_DOWNSHIFT_1_COUNT_VAL	0
-+#define DP83867_DOWNSHIFT_2_COUNT_VAL	1
-+#define DP83867_DOWNSHIFT_4_COUNT_VAL	2
-+#define DP83867_DOWNSHIFT_8_COUNT_VAL	3
-+#define DP83867_DOWNSHIFT_1_COUNT	1
-+#define DP83867_DOWNSHIFT_2_COUNT	2
-+#define DP83867_DOWNSHIFT_4_COUNT	4
-+#define DP83867_DOWNSHIFT_8_COUNT	8
-+
- /* CFG3 bits */
- #define DP83867_CFG3_INT_OE			BIT(7)
- #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-@@ -287,6 +307,126 @@ static int dp83867_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83867_MICR, micr_status);
- }
- 
-+static int dp83867_read_status(struct phy_device *phydev)
-+{
-+	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-+	int ret;
-+
-+	ret = genphy_read_status(phydev);
-+	if (ret)
-+		return ret;
-+
-+	if (status < 0)
-+		return status;
-+
-+	if (status & DP83867_PHYSTS_DUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	if (status & DP83867_PHYSTS_1000)
-+		phydev->speed = SPEED_1000;
-+	else if (status & DP83867_PHYSTS_100)
-+		phydev->speed = SPEED_100;
-+	else
-+		phydev->speed = SPEED_10;
-+
-+	return 0;
-+}
-+
-+static int dp83867_get_downshift(struct phy_device *phydev, u8 *data)
-+{
-+	int val, cnt, enable, count;
-+
-+	val = phy_read(phydev, DP83867_CFG2);
-+	if (val < 0)
-+		return val;
-+
-+	enable = FIELD_GET(DP83867_DOWNSHIFT_EN, val);
-+	cnt = FIELD_GET(DP83867_DOWNSHIFT_ATTEMPT_MASK, val);
-+
-+	switch (cnt) {
-+	case DP83867_DOWNSHIFT_1_COUNT_VAL:
-+		count = DP83867_DOWNSHIFT_1_COUNT;
-+		break;
-+	case DP83867_DOWNSHIFT_2_COUNT_VAL:
-+		count = DP83867_DOWNSHIFT_2_COUNT;
-+		break;
-+	case DP83867_DOWNSHIFT_4_COUNT_VAL:
-+		count = DP83867_DOWNSHIFT_4_COUNT;
-+		break;
-+	case DP83867_DOWNSHIFT_8_COUNT_VAL:
-+		count = DP83867_DOWNSHIFT_8_COUNT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	*data = enable ? count : DOWNSHIFT_DEV_DISABLE;
-+
-+	return 0;
-+}
-+
-+static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
-+{
-+	int val, count;
-+
-+	if (cnt > DP83867_DOWNSHIFT_8_COUNT)
-+		return -E2BIG;
-+
-+	if (!cnt)
-+		return phy_clear_bits(phydev, DP83867_CFG2,
-+				      DP83867_DOWNSHIFT_EN);
-+
-+	switch (cnt) {
-+		case DP83867_DOWNSHIFT_1_COUNT:
-+			count = DP83867_DOWNSHIFT_1_COUNT_VAL;
-+			break;
-+		case DP83867_DOWNSHIFT_2_COUNT:
-+			count = DP83867_DOWNSHIFT_2_COUNT_VAL;
-+			break;
-+		case DP83867_DOWNSHIFT_4_COUNT:
-+			count = DP83867_DOWNSHIFT_4_COUNT_VAL;
-+			break;
-+		case DP83867_DOWNSHIFT_8_COUNT:
-+			count = DP83867_DOWNSHIFT_8_COUNT_VAL;
-+			break;
-+		default:
-+			phydev_err(phydev,
-+				   "Downshift count must be 1, 2, 4 or 8\n");
-+			return -EINVAL;
-+	};
-+
-+	val = DP83867_DOWNSHIFT_EN;
-+	val |= FIELD_PREP(DP83867_DOWNSHIFT_ATTEMPT_MASK, count);
-+
-+	return phy_modify(phydev, DP83867_CFG2,
-+			  DP83867_DOWNSHIFT_EN | DP83867_DOWNSHIFT_ATTEMPT_MASK,
-+			  val);
-+}
-+
-+static int dp83867_get_tunable(struct phy_device *phydev,
-+				struct ethtool_tunable *tuna, void *data)
-+{
-+	switch (tuna->id) {
-+	case ETHTOOL_PHY_DOWNSHIFT:
-+		return dp83867_get_downshift(phydev, data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int dp83867_set_tunable(struct phy_device *phydev,
-+				struct ethtool_tunable *tuna, const void *data)
-+{
-+	switch (tuna->id) {
-+	case ETHTOOL_PHY_DOWNSHIFT:
-+		return dp83867_set_downshift(phydev, *(const u8 *)data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int dp83867_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83867_private *dp83867 =
-@@ -467,6 +607,12 @@ static int dp83867_config_init(struct phy_device *phydev)
- 	int ret, val, bs;
- 	u16 delay;
- 
-+	/* Force speed optimization for the PHY even if it strapped */
-+	ret = phy_modify(phydev, DP83867_CFG2, DP83867_DOWNSHIFT_EN,
-+			 DP83867_DOWNSHIFT_EN);
-+	if (ret)
-+		return ret;
-+
- 	ret = dp83867_verify_rgmii_cfg(phydev);
- 	if (ret)
- 		return ret;
-@@ -655,6 +801,10 @@ static struct phy_driver dp83867_driver[] = {
- 		.config_init	= dp83867_config_init,
- 		.soft_reset	= dp83867_phy_reset,
- 
-+		.read_status	= dp83867_read_status,
-+		.get_tunable	= dp83867_get_tunable,
-+		.set_tunable	= dp83867_set_tunable,
-+
- 		.get_wol	= dp83867_get_wol,
- 		.set_wol	= dp83867_set_wol,
- 
--- 
-2.25.0
-
+>
+> --
+> Mel Gorman
+> SUSE Labs
