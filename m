@@ -2,92 +2,187 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEB7C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164A7C3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342B721D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E217E21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:22:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L9ufQZtG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDJ1RD/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBRVVQ (ORCPT
+        id S1726823AbgBRVW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:21:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59890 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgBRVVP (ORCPT
+        Tue, 18 Feb 2020 16:22:26 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34752 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgBRVW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:21:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0HtJTFPkdLwAcbGGhAHyzxa8a1mSgpc758IYlfDOg/k=; b=L9ufQZtGybPYd67zmz67Xgy4Tn
-        mZsneK5DIi4+EdZSTDy3qMq6jC4G9yjF4A0m3HKQqgfmPcf89rxgAlz7TflzrDt+lPKQjG8DBB0Nc
-        hFwG4XwkG9NeYBz6KYBZ58AKe0IfPIrYhHeqqinr+nlcKs9GdGtB8jhCcawcvPy3icitqNTTzH4jP
-        ZCAGflog5kL6wL3IvL71BWNMv5PaAXyucj7tYF+EQU4HI4NEjXGWh1T+shXyemzhRpUXmIabqr29C
-        5LaP21DN5DNYTONx+gIE3+S5Zr0Asg51I2iJBLolcYDkCch1kyQ608fu1c/WOZsk9fwFBAcPrEAy8
-        FZTOuLoQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4AIt-0003y5-Bi; Tue, 18 Feb 2020 21:21:15 +0000
-Date:   Tue, 18 Feb 2020 13:21:15 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 01/19] mm: Return void from various readahead functions
-Message-ID: <20200218212115.GG24185@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-2-willy@infradead.org>
- <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
+        Tue, 18 Feb 2020 16:22:26 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so11576349pgi.1;
+        Tue, 18 Feb 2020 13:22:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1yORocRN6bN/DWLSCc3LMaJhbwacp2HLNmosyK8PhXY=;
+        b=RDJ1RD/xDrXbznWXW43BryMq6Jz3QBb4fUTMsoLkBcTVJ6bh10hb5sTHYyI+zplASW
+         82HKX1xkUVNQrjo72x4Bzq5+KEcwcxIWOzUZ9GFTFp/xG4LkBT4lns9Vl5sE+bz9syny
+         9hCkQHsF8CaXVktqS7qz56ZDsZ0U5wpGq/jAFoTeBpZQIq0bNn3JXEIydvuOrNKWOtXe
+         nTs7JMSJGU22cVYQcFvUDFeQwPOGT304v37TSyyzKKx4tX8nCDY+Pg6+571zBZlof9M2
+         muX7Uz4vvVbovnYY6oDkycCZ92CCDxqCXf9Ekv+pGG2qfdtr7jqjpoGrGqwU/EosZHCX
+         ju1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1yORocRN6bN/DWLSCc3LMaJhbwacp2HLNmosyK8PhXY=;
+        b=KXd26Lr/I4jyzBZ+JuOQUNduP9gDaqhWlYoXkcO1BN0xAlFlQH73Pl2EMXftnUVek+
+         7CrPuVObBJxkLozVA/XIug1QpzqLde/ZdG7uiFbEXEZsFjcszt0y+cCz5pWCrM06PQX6
+         3ItXBWfweW9cbmQfJCSAVkM1BWrtBxiBPSoPBK4IfxL/xluHGUfm3+BO6czKxwxJ+fky
+         Iw+OXL5/+jGG6xyvsFkLb/TWdfzhRZQ4AG9THmdXwWcXwUVqm0MseyjEecyM86GzBq/t
+         SXPcWht4Dk6fViie9pRG08H0t0WtMLBIJJEWyZXyKhYnNEkIn8oT7k6ZgLb1Bn4P486i
+         COLQ==
+X-Gm-Message-State: APjAAAX1apyH7R4itKoakuEqlHed8t9uJdozMsqm3Dy4YZD9QFGkUyVg
+        R/R9lVckZj0zX0jLDpwFQPg=
+X-Google-Smtp-Source: APXvYqwMxph8WfZwy4jJ8Hm+oyFMnedPlyeKBoA1heO5RDIjj7W+U0YW42+WmDKbc9ER8CnrdZtVtg==
+X-Received: by 2002:a63:e509:: with SMTP id r9mr26127011pgh.274.1582060945518;
+        Tue, 18 Feb 2020 13:22:25 -0800 (PST)
+Received: from localhost ([100.118.89.211])
+        by smtp.gmail.com with ESMTPSA id c19sm5356081pfc.144.2020.02.18.13.22.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 13:22:24 -0800 (PST)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers
+Date:   Tue, 18 Feb 2020 13:20:12 -0800
+Message-Id: <20200218212012.1067236-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <29d2d7ca-7f2b-7eb4-78bc-f2af36c4c426@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:05:29PM -0800, John Hubbard wrote:
-> This is an easy review and obviously correct, so:
-> 
->     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+From: Rob Clark <robdclark@chromium.org>
 
-Thanks
+Also log buffers with the DUMP flag set, to ensure we capture all useful
+cmdstream in crashdump state with modern mesa.
 
-> Thoughts for the future of the API:
-> 
-> I will add that I could envision another patchset that went in the
-> opposite direction, and attempted to preserve the information about
-> how many pages were successfully read ahead. And that would be nice
-> to have (at least IMHO), even all the way out to the syscall level,
-> especially for the readahead syscall.
+Otherwise we miss out on the contents of "state object" cmdstream
+buffers.
 
-Right, and that was where I went initially.  It turns out to be a
-non-trivial aount of work to do the book-keeping to find out how many
-pages were _attempted_, and since we don't wait for the I/O to complete,
-we don't know how many _succeeded_, and we also don't know how many
-weren't attempted because they were already there, and how many weren't
-attempted because somebody else has raced with us and is going to attempt
-them themselves, and how many weren't attempted because we just ran out
-of memory, and decided to give up.
+v2: add missing 'inline'
 
-Also, we don't know how many pages were successfully read, and then the
-system decided to evict before the program found out how many were read,
-let alone before it did any action based on that.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_gem.h | 10 ++++++++++
+ drivers/gpu/drm/msm/msm_gpu.c | 28 +++++++++++++++++++++++-----
+ drivers/gpu/drm/msm/msm_rd.c  |  8 +-------
+ 3 files changed, 34 insertions(+), 12 deletions(-)
 
-So, given all that complexity, and the fact that nobody actually does
-anything with the limited and incorrect information we tried to provide
-today, I think it's fair to say that anybody who wants to start to do
-anything with that information can delve into all the complexity around
-"what number should we return, and what does it really mean".  In the
-meantime, let's just ditch the complexity and pretense that this number
-means anything.
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 9e0953c2b7ce..dcee0e223ed8 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -160,4 +160,14 @@ struct msm_gem_submit {
+ 	} bos[0];
+ };
+ 
++/* helper to determine of a buffer in submit should be dumped, used for both
++ * devcoredump and debugfs cmdstream dumping:
++ */
++static inline bool
++should_dump(struct msm_gem_submit *submit, int idx)
++{
++	extern bool rd_full;
++	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
++}
++
+ #endif /* __MSM_GEM_H__ */
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 18f3a5c53ffb..615c5cda5389 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -355,16 +355,34 @@ static void msm_gpu_crashstate_capture(struct msm_gpu *gpu,
+ 	state->cmd = kstrdup(cmd, GFP_KERNEL);
+ 
+ 	if (submit) {
+-		int i;
+-
+-		state->bos = kcalloc(submit->nr_cmds,
++		int i, nr = 0;
++
++		/* count # of buffers to dump: */
++		for (i = 0; i < submit->nr_bos; i++)
++			if (should_dump(submit, i))
++				nr++;
++		/* always dump cmd bo's, but don't double count them: */
++		for (i = 0; i < submit->nr_cmds; i++)
++			if (!should_dump(submit, submit->cmd[i].idx))
++				nr++;
++
++		state->bos = kcalloc(nr,
+ 			sizeof(struct msm_gpu_state_bo), GFP_KERNEL);
+ 
++		for (i = 0; i < submit->nr_bos; i++) {
++			if (should_dump(submit, i)) {
++				msm_gpu_crashstate_get_bo(state, submit->bos[i].obj,
++					submit->bos[i].iova, submit->bos[i].flags);
++			}
++		}
++
+ 		for (i = 0; state->bos && i < submit->nr_cmds; i++) {
+ 			int idx = submit->cmd[i].idx;
+ 
+-			msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
+-				submit->bos[idx].iova, submit->bos[idx].flags);
++			if (!should_dump(submit, submit->cmd[i].idx)) {
++				msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
++					submit->bos[idx].iova, submit->bos[idx].flags);
++			}
+ 		}
+ 	}
+ 
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index af7ceb246c7c..732f65df5c4f 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -43,7 +43,7 @@
+ #include "msm_gpu.h"
+ #include "msm_gem.h"
+ 
+-static bool rd_full = false;
++bool rd_full = false;
+ MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
+ module_param_named(rd_full, rd_full, bool, 0600);
+ 
+@@ -336,12 +336,6 @@ static void snapshot_buf(struct msm_rd_state *rd,
+ 	msm_gem_put_vaddr(&obj->base);
+ }
+ 
+-static bool
+-should_dump(struct msm_gem_submit *submit, int idx)
+-{
+-	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
+-}
+-
+ /* called under struct_mutex */
+ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 		const char *fmt, ...)
+-- 
+2.24.1
+
