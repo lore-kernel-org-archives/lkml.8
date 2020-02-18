@@ -2,198 +2,70 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B077C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C3C3403F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C1A208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NhSEsw2l"
+	by mail.kernel.org (Postfix) with ESMTP id D7793208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgBRO1O (ORCPT
+        id S1726696AbgBRO1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:27:14 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55678 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgBRO1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:27:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YS36TkOpB+s1Z6ooC/rDC9dFIpR2y2lNd3Ik+zEuCxU=; b=NhSEsw2lStmnnhLyJ85FT6Sk9w
-        tPdddRhOKqK1EeDwUaZXD4Q6R0PkJp5PkBLmBMzxMcXnIj2/chzdrKg4jOTtQtFWask8ZO7g5ge5W
-        vjnMhhUtwasWZLuWA/YhJYPjA8kZordg9YlahwINShfH1id6K+7mWBCDbANhisHLbyqBhrxE6aE56
-        JZlI3cQ09t8fEMf7Fev8Rdc7IBKRZ+j3hjsOcvOllNBvT20nrOZZ0NZzdqhnCA8KjFd3x1/FQuOOz
-        v/1FpnJ320XbjAPikGkw2zxc5mvIKXyHK8EOh6nzFmUwB0h5ijpM+vAqInVrhtcfoWoDBk/6joi1F
-        AQ2usvuA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j43q4-0005yV-9b; Tue, 18 Feb 2020 14:27:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6B68E300606;
-        Tue, 18 Feb 2020 15:25:08 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 52AC72B92E8B9; Tue, 18 Feb 2020 15:27:00 +0100 (CET)
-Date:   Tue, 18 Feb 2020 15:27:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Carter Li =?utf-8?B?5p2O6YCa5rSy?= <carter.li@eoitek.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
-Subject: [PATCH] asm-generic/atomic: Add try_cmpxchg() fallbacks
-Message-ID: <20200218142700.GB14946@hirez.programming.kicks-ass.net>
-References: <5995f84e-8a6c-e774-6bb5-5b9b87a9cd3c@kernel.dk>
- <7c4c3996-4886-eb58-cdee-fe0951907ab5@kernel.dk>
- <addcd44e-ed9b-5f82-517d-c1ed3ee2d85c@kernel.dk>
- <b8069e62-7ea4-c7f3-55a3-838241951068@kernel.dk>
- <20200217120920.GQ14914@hirez.programming.kicks-ass.net>
- <53de3581-b902-89ba-3f53-fd46b052df40@kernel.dk>
- <43c066d1-a892-6a02-82e7-7be850d9454d@kernel.dk>
- <20200217174610.GU14897@hirez.programming.kicks-ass.net>
- <592cf069-41ee-0bc1-1f83-e058e5dd53ff@kernel.dk>
- <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
+        Tue, 18 Feb 2020 09:27:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:53250 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbgBRO1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:27:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1B931FB;
+        Tue, 18 Feb 2020 06:27:23 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5089C3F6CF;
+        Tue, 18 Feb 2020 06:27:22 -0800 (PST)
+Subject: Re: [PATCH v2] iommu/qcom: fix NULL pointer dereference during probe
+ deferral
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
+        bjorn.andersson@linaro.org, joro@8bytes.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        j.neuschaefer@gmx.net, iommu@lists.linux-foundation.org,
+        agross@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>
+References: <20200104002024.37335-1-masneyb@onstation.org>
+ <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
+ <20200218120435.GA152723@gerhold.net>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4ed8542a-40fe-ae34-4203-efbcf285d784@arm.com>
+Date:   Tue, 18 Feb 2020 14:27:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218120435.GA152723@gerhold.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 02:13:10PM +0100, Peter Zijlstra wrote:
-> (with the caveat that try_cmpxchg() doesn't seem available on !x86 -- I
-> should go fix that)
+On 18/02/2020 12:04 pm, Stephan Gerhold wrote:
+[...]
+> Are you going to send a patch for the diff below?
+> AFAICT this problem still exists in 5.6-rc2.
+> 
+> Your patch also seems to fix a warning during probe deferral on arm64
+> that has been around for quite a while. (At least for me...)
+> 
+> (See https://lore.kernel.org/linux-iommu/CA+G9fYtScOpkLvx=__gP903uJ2v87RwZgkAuL6RpF9_DTDs9Zw@mail.gmail.com/)
 
-Completely untested (lemme go do that shortly), but something like so I
-suppose.
+Ha, I did see that and vaguely remembered a discussion about that 
+warning logic being broken, but I'd totally forgotten I was involved to 
+that extent :)
 
----
-Subject: asm-generic/atomic: Add try_cmpxchg() fallbacks
+Luckily I've managed to track the diff down in my Git stash, so I'll 
+write it up properly - thanks for the reminder!
 
-Only x86 provides try_cmpxchg() outside of the atomic_t interfaces,
-provide generic fallbacks to create this interface from the widely
-available cmpxchg() function.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
-diff --git a/include/linux/atomic-fallback.h b/include/linux/atomic-fallback.h
-index 656b5489b673..243f61d6c35f 100644
---- a/include/linux/atomic-fallback.h
-+++ b/include/linux/atomic-fallback.h
-@@ -77,6 +77,50 @@
- 
- #endif /* cmpxchg64_relaxed */
- 
-+#ifndef try_cmpxchg
-+#define try_cmpxchg(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*ptr) ___r, ___o = *(_oldp); \
-+	___r = cmpxchg((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*(_old) = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* try_cmpxchg */
-+
-+#ifndef try_cmpxchg_acquire
-+#define try_cmpxchg_acquire(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*ptr) ___r, ___o = *(_oldp); \
-+	___r = cmpxchg_acquire((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*(_old) = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* try_cmpxchg_acquire */
-+
-+#ifndef try_cmpxchg_release
-+#define try_cmpxchg_release(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*ptr) ___r, ___o = *(_oldp); \
-+	___r = cmpxchg_release((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*(_old) = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* try_cmpxchg_release */
-+
-+#ifndef try_cmpxchg_relaxed
-+#define try_cmpxchg_relaxed(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*ptr) ___r, ___o = *(_oldp); \
-+	___r = cmpxchg_relaxed((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*(_old) = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* try_cmpxchg_relaxed */
-+
- #ifndef atomic_read_acquire
- static __always_inline int
- atomic_read_acquire(const atomic_t *v)
-@@ -2294,4 +2338,4 @@ atomic64_dec_if_positive(atomic64_t *v)
- #define atomic64_cond_read_relaxed(v, c) smp_cond_load_relaxed(&(v)->counter, (c))
- 
- #endif /* _LINUX_ATOMIC_FALLBACK_H */
--// baaf45f4c24ed88ceae58baca39d7fd80bb8101b
-+// 2dfbc767ce308d2edd67a49bd7b764dd07f62f6c
-diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
-index b6c6f5d306a7..3c9be8d550e0 100755
---- a/scripts/atomic/gen-atomic-fallback.sh
-+++ b/scripts/atomic/gen-atomic-fallback.sh
-@@ -140,6 +140,32 @@ cat <<EOF
- EOF
- }
- 
-+gen_try_cmpxchg_fallback()
-+{
-+	local order="$1"; shift;
-+
-+cat <<EOF
-+#ifndef try_cmpxchg${order}
-+#define try_cmpxchg${order}(_ptr, _oldp, _new) \\
-+({ \\
-+	typeof(*ptr) ___r, ___o = *(_oldp); \\
-+	___r = cmpxchg${order}((_ptr), ___o, (_new)); \\
-+	if (unlikely(___r != ___o)) \\
-+		*(_old) = ___r; \\
-+	likely(___r == ___o); \\
-+})
-+#endif /* try_cmpxchg${order} */
-+
-+EOF
-+}
-+
-+gen_try_cmpxchg_fallbacks()
-+{
-+	for order in "" "_acquire" "_release" "_relaxed"; do
-+		gen_try_cmpxchg_fallback "${order}"
-+	done
-+}
-+
- cat << EOF
- // SPDX-License-Identifier: GPL-2.0
- 
-@@ -157,6 +183,8 @@ for xchg in "xchg" "cmpxchg" "cmpxchg64"; do
- 	gen_xchg_fallbacks "${xchg}"
- done
- 
-+gen_try_cmpxchg_fallbacks
-+
- grep '^[a-z]' "$1" | while read name meta args; do
- 	gen_proto "${meta}" "${name}" "atomic" "int" ${args}
- done
+Robin.
