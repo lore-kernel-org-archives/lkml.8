@@ -2,161 +2,118 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F46C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563D4C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0B02176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBA82176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:57:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSGc57N2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgBRO4x convert rfc822-to-8bit (ORCPT
+        id S1726830AbgBRO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:56:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13326 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726540AbgBRO4x (ORCPT
+        Tue, 18 Feb 2020 09:57:04 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45906 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgBRO5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:56:53 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IEukCi119500
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:56:51 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dntsxp2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 09:56:50 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Tue, 18 Feb 2020 14:55:08 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 14:55:03 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IEt2DC51249382
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 14:55:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91C46A4040;
-        Tue, 18 Feb 2020 14:55:02 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0869A4057;
-        Tue, 18 Feb 2020 14:55:01 +0000 (GMT)
-Received: from localhost (unknown [9.199.60.10])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 14:55:01 +0000 (GMT)
-Date:   Tue, 18 Feb 2020 20:25:00 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] powerpc/kprobes: Fix trap address when trap happened
- in real mode
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        stable@kernel.vger.org
-References: <0cd6647dae57894f77ceb7d5a48d52fac6c10ca5.1582036047.git.christophe.leroy@c-s.fr>
-In-Reply-To: <0cd6647dae57894f77ceb7d5a48d52fac6c10ca5.1582036047.git.christophe.leroy@c-s.fr>
+        Tue, 18 Feb 2020 09:57:04 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e18so23238464ljn.12;
+        Tue, 18 Feb 2020 06:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GDudbG3wnHSzToLbMzRev0LydH80cdgIzJuKOmpovTg=;
+        b=ZSGc57N2uN7+Gqai5OlHwJu1ACXOyVkoRr1rvba8pVFc5bmb00J8JQ7WAdgeEMRHS9
+         +aemE4hxeBOfenkNP+vhZyZipc7GJUjCib23vSDw0SLwlpE+cAafnZ/99dYeTwsF0clH
+         Hq+79o1sucatIZCDU4msoX/u6VBffwOkY/sLZtU4VQVfirtTJnHY319sSnWUSmZZhsF3
+         0HDK6n8pu70Iko+/8adoert4vGG+qsiTzavcfL4qoh1elnKL4r2tRNkpJ2zx979kxkTA
+         wxDLd5SMky6rcwIzMye7Ca5t8GkUf4Vpt5f0CazLrtudPd5XH0fywHxCk9iokLtUOwyV
+         NFlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GDudbG3wnHSzToLbMzRev0LydH80cdgIzJuKOmpovTg=;
+        b=rk3akuQifZeOyGYsCrF6ENkx3gAv8pfqE9q7uk1t0j8bGuTmJdXcBWzJ69KJL/Iv0C
+         i/UuGKfN88dArk3sz6jriP8tiRGu9a2+I0ZrzWlxL8UnpyyOZl+AOkRXLuQK4tKFiEuz
+         5tppPzGz/eHjSPy0cMnafLAS7FGO57f6ho0jcyKet0UBjcf7QiRtxP6VSCg+9uEGsCvp
+         SxNQqZkBR7a1lSbJFNaY7gK01siWaECltxzsmBhPjHA0TgtFf86F5bxUVNoyv+uyeyco
+         eR3sO9eqRkfT68JFeCENdJVXu2XqIWzKPoierps8Rin/fP6zO1AAjpL7cpud07JLLSN3
+         xpwA==
+X-Gm-Message-State: APjAAAXkgPs5aPPohvkWKrRuwyKk3/nNEoqzLNaOTF0WEKVHVa/W7bsQ
+        EYJLoqeY0G9XwsSSQHCJTiW13OaV
+X-Google-Smtp-Source: APXvYqyWg68EBq/eMAEuLUaAEgOAUEeryQ1pUZY8jHiCenUNXsboQco05A40bTmyPA2j4AQXK2on9A==
+X-Received: by 2002:a05:651c:10f:: with SMTP id a15mr13244771ljb.237.1582037820375;
+        Tue, 18 Feb 2020 06:57:00 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l16sm2400202lfh.74.2020.02.18.06.56.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 06:56:57 -0800 (PST)
+Subject: Re: [PATCH v9 00/17] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+Message-ID: <234f1d75-d86a-58b4-29d6-c0497498e85c@gmail.com>
+Date:   Tue, 18 Feb 2020 17:56:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20021814-0008-0000-0000-000003542617
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021814-0009-0000-0000-00004A752FB5
-Message-Id: <1582037375.4mkd6m1m5m.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=843 clxscore=1011
- malwarescore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002180117
+In-Reply-To: <20200212235134.12638-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy wrote:
-> When a program check exception happens while MMU translation is
-> disabled, following Oops happens in kprobe_handler() in the following
-> code:
+13.02.2020 02:51, Dmitry Osipenko пишет:
+> Hello,
 > 
-> 		} else if (*addr != BREAKPOINT_INSTRUCTION) {
+> This series does the following:
 > 
-> [   33.098554] BUG: Unable to handle kernel data access on read at 0x0000e268
-> [   33.105091] Faulting instruction address: 0xc000ec34
-> [   33.110010] Oops: Kernel access of bad area, sig: 11 [#1]
-> [   33.115348] BE PAGE_SIZE=16K PREEMPT CMPC885
-> [   33.119540] Modules linked in:
-> [   33.122591] CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
-> [   33.131005] NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
-> [   33.136002] REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
-> [   33.144324] MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
-> [   33.150699] DAR: 0000e268 DSISR: c0000000
-> [   33.150699] GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
-> [   33.150699] GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
-> [   33.150699] GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
-> [   33.150699] GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
-> [   33.188015] NIP [c000ec34] kprobe_handler+0x128/0x290
-> [   33.192989] LR [c000ecd8] kprobe_handler+0x1cc/0x290
-> [   33.197854] Call Trace:
-> [   33.200340] [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
-> [   33.206590] [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
-> [   33.212392] --- interrupt: 700 at 0xe268
-> [   33.270401] Instruction dump:
-> [   33.273335] 913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
-> [   33.280992] 38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
-> [   33.288841] ---[ end trace 5b9152d4cdadd06d ]---
+>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>      into common drivers/cpuidle/ directory.
 > 
-> kprobe is not prepared to handle events in real mode and functions
-> running in real mode should have been blacklisted, so kprobe_handler()
-> can safely bail out telling 'this trap is not mine' for any trap that
-> happened while in real-mode.
+>   2. Enables CPU cluster power-down idling state on Tegra30.
 > 
-> If the trap happened with MSR_IR cleared, return 0 immediately.
+> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+> and of the Tegra's arch code in general. Please apply, thanks!
 > 
-> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
-> Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
-> Cc: stable@vger.kernel.org
-> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> !!!WARNING!!! This series was made on top of the cpufreq patches [1]. But it
+>               should be fine as long as Thierry Reding would pick up this and
+>               the cpufreq patchsets via the Tegra tree, otherwise there will
+>               one minor merge-conflict.
 > 
-> ---
-> v2: bailing out instead of converting real-time address to virtual and continuing.
-> 
-> The bug might have existed even before that commit from Naveen.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/kernel/kprobes.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
-> index 2d27ec4feee4..673f349662e8 100644
-> --- a/arch/powerpc/kernel/kprobes.c
-> +++ b/arch/powerpc/kernel/kprobes.c
-> @@ -264,6 +264,9 @@ int kprobe_handler(struct pt_regs *regs)
->  	if (user_mode(regs))
->  		return 0;
-> 
-> +	if (!(regs->msr & MSR_IR))
-> +		return 0;
-> +
+> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=158206
+...
+>   cpuidle: Refactor and move out NVIDIA Tegra20 driver into
+>     drivers/cpuidle
+>   cpuidle: tegra: Squash Tegra30 driver into the common driver
+>   cpuidle: tegra: Squash Tegra114 driver into the common driver
+>   cpuidle: tegra: Disable CC6 state if LP2 unavailable
 
-Should we also check for MSR_DR? Are there scenarios with ppc32 where 
-MSR_IR is on, but MSR_DR is off?
+Hello Rafael and Daniel,
 
-
-- Naveen
-
+Could you please let us know whether you're fine with the above patches
+by giving an ACK to them? My understanding is that Thierry can't take
+the cpuidle patches through the Tegra tree without yours ACK. Thanks in
+advance!
