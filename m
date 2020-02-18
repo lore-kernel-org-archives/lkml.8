@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E3C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846BBC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7122176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA922176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrOMnbpF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kq5AA06U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgBRUQb (ORCPT
+        id S1727553AbgBRUQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:16:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35707 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgBRUQR (ORCPT
+        Tue, 18 Feb 2020 15:16:33 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41041 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgBRUQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:17 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so25535306wrt.2;
-        Tue, 18 Feb 2020 12:16:16 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:21 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so25556863wrw.8;
+        Tue, 18 Feb 2020 12:16:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4Rc8DWOPa+KHz6kWLduKvor/98RO2j9a30URsDICP5M=;
-        b=FrOMnbpFqApO6TyQk8xsp26ipMrtIvZ5zEj6zO9O/GHWHPfOrCpDOpRYypk1e+yG8i
-         pdxuDDBeMp/KMcID/uR7siiU147wfevvLmRIrkZMJCBqSOByaDl0QNfjNdH2gqgII8II
-         qX/vZgNoyKB9NEyeuVxKOYygHNuOCogCIWSfg0G9mtkxOkjEzR0pLtWbLqk5fKJ67cfC
-         gPeU2WV6Ar0b2Gxa79XU4qlCMcZctE4pb20SnD7RalGkzRc55M8hg9yjpNFBlyFxTjBi
-         J4WTQ5H7I02TWuViMssEWgZShy/ANPpRJPpuOXZQP3m6CDAVppUafoB5+7Jon9fJNevX
-         8sWw==
+        bh=Tqaz/9DLBs3+nH7EgtfwmunyHz4zjguLxD6YwWDSNJs=;
+        b=kq5AA06UofQtD8Gdaou1+OUTno9HRjrvVRFAwApSVbB5t/0XZDjBPtPTunl6agP6pu
+         vYOWWtBr0bsczi5kgF2hlJFaAjHvgcrPAzkV1BwOlDSFfHTOOeP5dpQrG/uWBvV+NcPx
+         1QL6ouPducEbrdueIVFW3b4uYqfhqu5Dwe0wrbC1JbDXjSnDoSm7LY7FB6M+w0VNEHGV
+         k3/Kk0v9sSZbv6Alv4o0wy2aMuI/+Y/K8m0RbzONei86CizfbBl0zYii0FWBwHcSurtu
+         sWHGDSmuMFLG5ir62q0J1tu34rXt1Iyf41mNdIoIYtwDWrzVLyWsiv7rvSYFHkpTt0OY
+         PQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4Rc8DWOPa+KHz6kWLduKvor/98RO2j9a30URsDICP5M=;
-        b=mKKeEcM54RGA+9gJNFKOl5peT9X7/BeSgmUnWN5W95+VivazM2HeKBeI0XYNCqrNcy
-         YSpW3d8E2LNkKSROVR+HD3XmWJO7X+1fuCIHRaPJP3Z60ZpBUc5q/pZjBdKC97RLN/jY
-         RkBzFrSO1iD6Ge7oqvpJqOOOm1qxW3S4yPGFmQ0vHB90OaxMaD7V6sgXGM4oyCWTrUzl
-         DpdpX4xWA1wC8as0VWQA+t60WKI4N0iqQyGm6OodxArzf0aHZrcrdYRWA2w0ojux9xWG
-         C2+d88Wi58Dm7Moui0r6RcggD/E51WQGqb/CXpx0rteZgQQrBsb2NgQ9FRumfhhv9VV+
-         2y8g==
-X-Gm-Message-State: APjAAAVOISepbeG4EyuNYpR4ROoTOaADCGjQkTOmyRWoV/hrv4St5Wkh
-        VCit4a12EhOsZ1XsDY9RKUJsrHew
-X-Google-Smtp-Source: APXvYqxgOCIIRMTmEqbJu/JCIS3JlQVaNVFkdkjcKAyjtTkW/KrITw2gXflWe0C20eMenOmcVlUQuQ==
-X-Received: by 2002:adf:ec0d:: with SMTP id x13mr30604236wrn.400.1582056975466;
-        Tue, 18 Feb 2020 12:16:15 -0800 (PST)
+        bh=Tqaz/9DLBs3+nH7EgtfwmunyHz4zjguLxD6YwWDSNJs=;
+        b=as/mFxEfWXdrZ/tj5lkUCYGpwJse9AvM6j2AtbESKPOrnK/ufMGAK3ki54FXEPsbLc
+         00sOg+yQ2a4FB0SiRCdkE0rXFqp1C/FI0Z/qW1R+2tDZawiulLnRbZfmodJ/0DN9rEU7
+         5RI1WovR3h0fCp/aAqrtZJusKzH0xo8vqL8LvbMXb+ahU6C03BX5iRnbMW/CX9b2bWro
+         XFOI0Ypey7Y5u/7vLcxk+BqPqTwC2ZVQUmZQciCjo4pAvbseYhIams0yqNGVqIWWAo/5
+         9kwh1Z9dSWySKrwlhFTj/MNIIkz8RNCTnnclzoPf7qt96zDgDBS08xVYWwk1ehbalkGt
+         uzWQ==
+X-Gm-Message-State: APjAAAUUqErbVWSvhSJLxeqCcBIVyYicAtJXlSLGog+8TiquJ6mLw7rB
+        Rp1mFZzSF4XVfAv0PRfjjuvBLM5e
+X-Google-Smtp-Source: APXvYqzV3Kloe53XiJ5XSgspfZ40NJJ07LzpFBcoGwxafx+rojb2gut3rzWf1rJ97/TUj/MmFFID2A==
+X-Received: by 2002:a5d:438c:: with SMTP id i12mr30168536wrq.51.1582056977444;
+        Tue, 18 Feb 2020 12:16:17 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id n1sm7999711wrw.52.2020.02.18.12.16.14
+        by smtp.googlemail.com with ESMTPSA id t187sm4979104wmt.25.2020.02.18.12.16.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:15 -0800 (PST)
-Subject: [PATCH net-next v2 07/13] jme: use new helper tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:17 -0800 (PST)
+Subject: [PATCH net-next v2 09/13] net: qcom/emac: use new helper
+ tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     David Miller <davem@davemloft.net>,
-        Guo-Fu Tseng <cooldavid@cooldavid.org>
+To:     David Miller <davem@davemloft.net>, Timur Tabi <timur@kernel.org>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <f9f6897b-8dc8-2036-97d4-60e154b57356@gmail.com>
-Date:   Tue, 18 Feb 2020 21:06:11 +0100
+Message-ID: <bb142033-18d9-e243-202c-59bc73cf85ca@gmail.com>
+Date:   Tue, 18 Feb 2020 21:08:21 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -83,27 +83,27 @@ Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/jme.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/ethernet/qualcomm/emac/emac-mac.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
-index 2e4975572..de3c7ce93 100644
---- a/drivers/net/ethernet/jme.c
-+++ b/drivers/net/ethernet/jme.c
-@@ -2077,12 +2077,7 @@ jme_tx_tso(struct sk_buff *skb, __le16 *mss, u8 *flags)
- 								IPPROTO_TCP,
- 								0);
- 		} else {
--			struct ipv6hdr *ip6h = ipv6_hdr(skb);
--
--			tcp_hdr(skb)->check = ~csum_ipv6_magic(&ip6h->saddr,
--								&ip6h->daddr, 0,
--								IPPROTO_TCP,
--								0);
-+			tcp_v6_gso_csum_prep(skb);
- 		}
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac-mac.c b/drivers/net/ethernet/qualcomm/emac/emac-mac.c
+index bebe38d74..251d4ac4a 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac-mac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac-mac.c
+@@ -1288,11 +1288,8 @@ static int emac_tso_csum(struct emac_adapter *adpt,
+ 			memset(tpd, 0, sizeof(*tpd));
+ 			memset(&extra_tpd, 0, sizeof(extra_tpd));
  
- 		return 0;
+-			ipv6_hdr(skb)->payload_len = 0;
+-			tcp_hdr(skb)->check =
+-				~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						 &ipv6_hdr(skb)->daddr,
+-						 0, IPPROTO_TCP, 0);
++			tcp_v6_gso_csum_prep(skb);
++
+ 			TPD_PKT_LEN_SET(&extra_tpd, skb->len);
+ 			TPD_LSO_SET(&extra_tpd, 1);
+ 			TPD_LSOV_SET(&extra_tpd, 1);
 -- 
 2.25.1
 
