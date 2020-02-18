@@ -2,118 +2,256 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E172CC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C278C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18CF2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9FE24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055827;
-	bh=+eaT5mS0QD793iBLrdJar3kcAGbiwMMCcEzxcvogsSE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pI6eoF8/qHsTCXoE9rO1FNhyX0sOTxQSG3tjJfK/BJyb+T4Qs3zDMLIkRMOqYZu0
-	 AVOuHoR/XH4GrkvsCJcfiKpIbRuOUaUr8vqDtmSqH6CIT3hTTobv7L1gRRFAcvCQP3
-	 P/E8+WIQ+2FPPsrjM/3+u1iA88aJV1kvXO/YDyI0=
+	s=default; t=1582055830;
+	bh=0NMSIlgeucUhav4NZuD/7fuGpHzVSMpOsAVbdoEeNw0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ikSnCZVu529wExpVn8QwSz31qE7VDGaPbd1IAZLf9ZkDnsupAqclXsrCkFDV0Zbt2
+	 b1YuyILTZlEpWI2hHUmfKx+5JuVw8rR1zyajOt0orGoZx3C1+abxoCOWJypM481PNx
+	 Bj3Ffkakw59EnUlc7KLqcOZOkeFRTM114Ap3xMWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgBRT5F (ORCPT
+        id S1727849AbgBRT5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:57:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34254 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgBRT5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:57:03 -0500
+        id S1727815AbgBRT5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:57:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD5B62465D;
-        Tue, 18 Feb 2020 19:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7610724125;
+        Tue, 18 Feb 2020 19:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055822;
-        bh=+eaT5mS0QD793iBLrdJar3kcAGbiwMMCcEzxcvogsSE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJnd3j+lvLduW/jyqL3zYvNBn+HQDT2p3uiS6Kf5DSGAhVqg+9DPoG0xEQssmNDUN
-         K/d7zm0dntYyq+O7izoazRazzbDWrADOZEJ624/jvuhGeUmGXtosLb6mmzDF9Fkk3s
-         Y9rX0ECYkCjhw3SmOZNqKp2TKcc39PGuMsaVlhZU=
+        s=default; t=1582055824;
+        bh=0NMSIlgeucUhav4NZuD/7fuGpHzVSMpOsAVbdoEeNw0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GMRjLNdQaUAMMQQARjuVqrT+GnO61yR8dv6dUOSoiFaaUgF+lb7KcckCt74S/OGcx
+         RQ7msRNNpnViMUYgw0xZ9Mg83YZETxdeaqFzocy2wim5/AyKJeFnpZMxoMCluyGL0x
+         6iG8+1tk1Ciufr7z/hPZ7FLYZrHrW25jPbrQBIbo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Saurav Girepunje <saurav.girepunje@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 09/38] ALSA: usb-audio: sound: usb: usb true/false for bool return type
-Date:   Tue, 18 Feb 2020 20:54:55 +0100
-Message-Id: <20200218190419.660649969@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/38] 4.19.105-stable review
+Date:   Tue, 18 Feb 2020 20:54:46 +0100
+Message-Id: <20200218190418.536430858@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
-References: <20200218190418.536430858@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.105-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.105-rc1
+X-KernelTest-Deadline: 2020-02-20T19:04+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saurav Girepunje <saurav.girepunje@gmail.com>
+This is the start of the stable review cycle for the 4.19.105 release.
+There are 38 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 1d4961d9eb1aaa498dfb44779b7e4b95d79112d0 upstream.
+Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
+Anything received after that time might be too late.
 
-Use true/false for bool type return in uac_clock_source_is_valid().
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.105-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-Link: https://lore.kernel.org/r/20191029175200.GA7320@saurav
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
----
- sound/usb/clock.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+greg k-h
 
---- a/sound/usb/clock.c
-+++ b/sound/usb/clock.c
-@@ -179,21 +179,21 @@ static bool uac_clock_source_is_valid(st
- 			snd_usb_find_clock_source_v3(chip->ctrl_intf, source_id);
- 
- 		if (!cs_desc)
--			return 0;
-+			return false;
- 		bmControls = le32_to_cpu(cs_desc->bmControls);
- 	} else { /* UAC_VERSION_1/2 */
- 		struct uac_clock_source_descriptor *cs_desc =
- 			snd_usb_find_clock_source(chip->ctrl_intf, source_id);
- 
- 		if (!cs_desc)
--			return 0;
-+			return false;
- 		bmControls = cs_desc->bmControls;
- 	}
- 
- 	/* If a clock source can't tell us whether it's valid, we assume it is */
- 	if (!uac_v2v3_control_is_readable(bmControls,
- 				      UAC2_CS_CONTROL_CLOCK_VALID))
--		return 1;
-+		return true;
- 
- 	err = snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0), UAC2_CS_CUR,
- 			      USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_DIR_IN,
-@@ -205,10 +205,10 @@ static bool uac_clock_source_is_valid(st
- 		dev_warn(&dev->dev,
- 			 "%s(): cannot get clock validity for id %d\n",
- 			   __func__, source_id);
--		return 0;
-+		return false;
- 	}
- 
--	return !!data;
-+	return data ? true :  false;
- }
- 
- static int __uac_clock_find_source(struct snd_usb_audio *chip, int entity_id,
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.105-rc1
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+
+zhangyi (F) <yi.zhang@huawei.com>
+    jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
+
+zhangyi (F) <yi.zhang@huawei.com>
+    jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
+
+Olga Kornievskaia <kolga@netapp.com>
+    NFSv4.1 make cachethis=no for writes
+
+Mike Jones <michael-a1.jones@analog.com>
+    hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+
+Kan Liang <kan.liang@linux.intel.com>
+    perf/x86/intel: Fix inaccurate period in context switch for auto-reload
+
+Nathan Chancellor <natechancellor@gmail.com>
+    s390/time: Fix clk type in get_tod_clock
+
+Leon Romanovsky <leon@kernel.org>
+    RDMA/core: Fix protection fault in get_pkey_idx_qp_list
+
+Zhu Yanjun <yanjunz@mellanox.com>
+    RDMA/rxe: Fix soft lockup problem due to using tasklets in softirq
+
+Kamal Heib <kamalheib1@gmail.com>
+    RDMA/hfi1: Fix memory leak in _dev_comp_vect_mappings_create
+
+Avihai Horon <avihaih@mellanox.com>
+    RDMA/core: Fix invalid memory access in spec_filter_size
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/rdmavt: Reset all QPs when the device is shut down
+
+Mike Marciniszyn <mike.marciniszyn@intel.com>
+    IB/hfi1: Close window for pq and request coliding
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Acquire lock to release TID entries when user file is closed
+
+Yi Zhang <yi.zhang@redhat.com>
+    nvme: fix the parameter order for nvme_get_log in nvme_get_fw_slot_info
+
+Kim Phillips <kim.phillips@amd.com>
+    perf/x86/amd: Add missing L2 misses event spec to AMD Family 17h's event map
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: nVMX: Use correct root level for nested EPT shadow page tables
+
+Will Deacon <will@kernel.org>
+    arm64: ssbs: Fix context-switch when SSBS is present on all CPUs
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    ARM: npcm: Bring back GPIOLIB support
+
+David Sterba <dsterba@suse.com>
+    btrfs: log message when rw remount is attempted with unclean tree-log
+
+David Sterba <dsterba@suse.com>
+    btrfs: print message when tree-log replay starts
+
+Wenwen Wang <wenwen@cs.uga.edu>
+    btrfs: ref-verify: fix memory leaks
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix race between using extent maps and merging them
+
+Theodore Ts'o <tytso@mit.edu>
+    ext4: improve explanation of a mount failure caused by a misconfigured kernel
+
+Shijie Luo <luoshijie1@huawei.com>
+    ext4: add cond_resched() to ext4_protect_reserved_inode
+
+Jan Kara <jack@suse.cz>
+    ext4: fix checksum errors with indexed dirs
+
+Theodore Ts'o <tytso@mit.edu>
+    ext4: fix support for inode sizes > 1024 bytes
+
+Andreas Dilger <adilger@dilger.ca>
+    ext4: don't assume that mmp_nodename/bdevname have NUL
+
+Alexander Tsoy <alexander@tsoy.me>
+    ALSA: usb-audio: Add clock validity quirk for Denon MC7000/MCX8000
+
+Saurav Girepunje <saurav.girepunje@gmail.com>
+    ALSA: usb-audio: sound: usb: usb true/false for bool return type
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+
+Arvind Sankar <nivedita@alum.mit.edu>
+    ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Fix silent output on MSI-GL73
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: usb-audio: Fix UAC2/3 effect unit parsing
+
+Benjamin Tissoires <benjamin.tissoires@redhat.com>
+    Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+
+Gaurav Agrawal <agrawalgaurav@gnome.org>
+    Input: synaptics - enable SMBus on ThinkPad L470
+
+Lyude Paul <lyude@redhat.com>
+    Input: synaptics - switch T470s to RMI4 by default
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                  |  4 +-
+ arch/arm/mach-npcm/Kconfig                |  2 +-
+ arch/arm64/kernel/cpufeature.c            | 52 +++++++++++++---
+ arch/arm64/kernel/fpsimd.c                | 20 ++++++-
+ arch/arm64/kernel/process.c               |  7 +++
+ arch/arm64/kvm/hyp/switch.c               | 10 +++-
+ arch/s390/include/asm/timex.h             |  2 +-
+ arch/x86/events/amd/core.c                |  1 +
+ arch/x86/events/intel/ds.c                |  2 +
+ arch/x86/kvm/paging_tmpl.h                |  2 +-
+ arch/x86/kvm/vmx/vmx.c                    |  3 +
+ drivers/hwmon/pmbus/ltc2978.c             |  4 +-
+ drivers/infiniband/core/security.c        | 24 +++-----
+ drivers/infiniband/core/uverbs_cmd.c      | 15 +++--
+ drivers/infiniband/hw/hfi1/affinity.c     |  2 +
+ drivers/infiniband/hw/hfi1/file_ops.c     | 52 +++++++++-------
+ drivers/infiniband/hw/hfi1/hfi.h          |  5 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c |  5 +-
+ drivers/infiniband/hw/hfi1/user_sdma.c    | 17 ++++--
+ drivers/infiniband/sw/rdmavt/qp.c         | 84 +++++++++++++++-----------
+ drivers/infiniband/sw/rxe/rxe_comp.c      |  8 +--
+ drivers/input/mouse/synaptics.c           |  4 +-
+ drivers/nvme/host/core.c                  |  2 +-
+ fs/btrfs/disk-io.c                        |  1 +
+ fs/btrfs/extent_map.c                     | 11 ++++
+ fs/btrfs/ref-verify.c                     |  5 ++
+ fs/btrfs/super.c                          |  2 +
+ fs/ext4/block_validity.c                  |  1 +
+ fs/ext4/dir.c                             | 14 +++--
+ fs/ext4/ext4.h                            |  5 +-
+ fs/ext4/inode.c                           | 12 ++++
+ fs/ext4/mmp.c                             | 12 ++--
+ fs/ext4/namei.c                           |  7 +++
+ fs/ext4/super.c                           | 32 +++++-----
+ fs/jbd2/commit.c                          | 46 +++++++-------
+ fs/jbd2/transaction.c                     | 10 ++--
+ fs/nfs/nfs4proc.c                         |  2 +-
+ sound/pci/hda/patch_realtek.c             |  1 +
+ sound/usb/clock.c                         | 99 +++++++++++++++++++++----------
+ sound/usb/clock.h                         |  4 +-
+ sound/usb/format.c                        |  3 +-
+ sound/usb/mixer.c                         | 12 +++-
+ sound/usb/quirks.c                        |  1 +
+ 43 files changed, 405 insertions(+), 202 deletions(-)
 
 
