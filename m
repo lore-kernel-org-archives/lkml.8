@@ -2,105 +2,68 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F9BC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8127C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37A62176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C358208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tvwpfn+F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cMe5mA+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBRRMR (ORCPT
+        id S1726672AbgBRRNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:12:17 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34434 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbgBRRMR (ORCPT
+        Tue, 18 Feb 2020 12:13:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51016 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgBRRNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:12:17 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so10986425pfc.1;
-        Tue, 18 Feb 2020 09:12:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BnPFaeZ3s43WUYcze9Kwo0dphRPPj2p/nuAOY7Iiq+8=;
-        b=Tvwpfn+F2RvTr98QbZKPePm7QRSSanWAsEG7c+BMFMe4LjUC0xiReKD6HTVbuLqwCC
-         KxeMbvctk6orp0LF6ZmK4Raz9N5eMNa+3u057kXwzlSxKNNFL2rgKqc1Z/v7LqXWhNdM
-         EMJpMOrJx1o601n7D1CXRLhaB0NCZhCAhcBPftpV2YBuwXsnVKRqiZ+xafIif7WvE6Ba
-         FMYCHafYDNB6P0q8YKY58lDMT7zKDC0F/HhYjtoSXkTqfvSqFOosITPrtyry7FUfv0uB
-         AMUYUp/P06ZSbJ7xx2KbYIzOiYmkX0/H2Q67DEnn5c6MfcIT9bvD4t+utKDRq3UaNVaR
-         3Y1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BnPFaeZ3s43WUYcze9Kwo0dphRPPj2p/nuAOY7Iiq+8=;
-        b=GHZs6MFwWPfAGavj+ZmIZKLgFPXQIcjb56XCXRN+avwbB+4YwbUwyjXhmP7nbv/Z7o
-         uW9tKedIXALWALYMLuJ8bt+YoX39QG/WMyrV2j73A8rEo1KAzFo9AlrM+ZZoJJtN3LLT
-         q6wEY6qNgXN0+RAhr01PMoRjpt/NHG+rx9L+kivXYN7C25b/ratGgLBwMecZv8lq0Vbv
-         NlfoV1ydlCtSiUKtbN++FRyO1I56DwHvzQrn616FPxf23zsPdZKCIqKTvGPRCA8DE3mX
-         1W10GOgnMh4mO/zQ16K27kT41QAB33jqy7gO/WeXlczbzDQ1zOnOshus1XO0OTgOuqWF
-         anng==
-X-Gm-Message-State: APjAAAW06LP3+CBmxb/UtC2sla7TdWd9fHBULO6tekahtYr5fOVDW3FB
-        UuvdIxgi8Dxzc7ujvY+TKtU=
-X-Google-Smtp-Source: APXvYqzISR3SCcV6wjCMjx4AhKC6RIu/lfMH3tpyp9bPHw1FkmDVC8A6IfL0knG5wA4RMVhycn84hg==
-X-Received: by 2002:aa7:9546:: with SMTP id w6mr22056881pfq.66.1582045936454;
-        Tue, 18 Feb 2020 09:12:16 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a99d:cf29:8886:cbc? ([2001:4898:80e8:2:29b3:cf29:8886:cbc])
-        by smtp.gmail.com with ESMTPSA id z10sm5534950pgf.35.2020.02.18.09.12.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 09:12:15 -0800 (PST)
-Subject: Re: [PATCH v11 1/2] dt-bindings: edac: dmc-520.yaml
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        ruizhao@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>
-References: <5354a9c3-5b5a-486a-9d19-fa9be169faef@gmail.com>
- <20200217181055.GC14426@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <4c02326d-cf38-e1e1-1822-d24de22fa2cc@gmail.com>
-Date:   Tue, 18 Feb 2020 09:12:15 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 12:13:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n83rleAnito6jfYSkWr8X9NF/FPLJL8j7d75hLxiOSk=; b=cMe5mA+eqHIGzUhxkEz0zsc1Um
+        0EJohCoPSicsQKtFXzYOjI/A8kCR30ryms2DTh+oeZe7uT64qyno3XTcdiFmpT2pmDRPF1pofJohq
+        9vpDgFaA3K1sg7o5bPjVIuoeS3HYbIzySmHvcj2cXQkGRTBUJDdSYTuM4x7KrV2Svg1BmifugLZS5
+        GB33gJ1AVZczhRILxqkP0mhXw+kaKAKALQyGLewkJ4aklg2cGfUqkTGwHOSGkj9RETOdhZFUKAdQE
+        in6UFhCUJpszSHzlaQeECX7DT8SP1tsMxGNxy36GTslPP9S9G5N19mQZUDws/55yEkSKpgYDRfQrz
+        uS0ZGYCQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j46Qd-0001pq-Qg; Tue, 18 Feb 2020 17:12:59 +0000
+Date:   Tue, 18 Feb 2020 09:12:59 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Merlijn Wajer <merlijn@archive.org>
+Cc:     merlijn@wizzup.org, linux-scsi@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
+Message-ID: <20200218171259.GA6724@infradead.org>
+References: <20200218143918.30267-1-merlijn@archive.org>
 MIME-Version: 1.0
-In-Reply-To: <20200217181055.GC14426@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218143918.30267-1-merlijn@archive.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/2020 10:10 AM, Borislav Petkov wrote:
-> I have only this v11 patch 1/2 in my inbox and not the actual driver,
-> i.e., patch 2/2.
+On Tue, Feb 18, 2020 at 03:39:17PM +0100, Merlijn Wajer wrote:
+> When replacing the Big Kernel Lock in commit
+> 2a48fc0ab24241755dc93bfd4f01d68efab47f5a ("block: autoconvert trivial
+> BKL users to private mutex"), the lock was replaced with a sr-wide lock.
 > 
-> For the driver, I have v10 here:
+> This causes very poor performance when using multiple sr devices, as the
+> sr driver was not able to execute more than one command to one drive at
+> any given time, even when there were many CD drives available.
 > 
-> https://lkml.kernel.org/r/83b48c70-dc06-d0d4-cae9-a2187fca628b@gmail.com
-> 
-> Did you send a v11 of the driver itself or should I have a look at v10?
+> Replace the global mutex with per-sr-device mutex.
 
-Actually I didn't send v11 of the driver since it will be identical to 
-v10, sorry for keeping you waiting on this. Please review v10, thanks!
-
---
-Best regards,
-Shiping Ji
-
-
+Do we actually need the lock at all?  What is protected by it?
