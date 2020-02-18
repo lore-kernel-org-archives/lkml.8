@@ -3,92 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1990EC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE608C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1F724125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30322B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgBRWpH (ORCPT
+        id S1726817AbgBRWqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:45:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgBRWpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:45:07 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB682173E;
-        Tue, 18 Feb 2020 22:45:05 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 17:45:03 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
- rcu_tasks_cbs_head
-Message-ID: <20200218174503.3d4e4750@gandalf.local.home>
-In-Reply-To: <20200218202226.GJ2935@paulmck-ThinkPad-P72>
-References: <20200215002446.GA15663@paulmck-ThinkPad-P72>
-        <20200215002520.15746-1-paulmck@kernel.org>
-        <20200217123851.GR14914@hirez.programming.kicks-ass.net>
-        <20200217181615.GP2935@paulmck-ThinkPad-P72>
-        <20200218075648.GW14914@hirez.programming.kicks-ass.net>
-        <20200218162719.GE2935@paulmck-ThinkPad-P72>
-        <20200218201142.GF11457@worktop.programming.kicks-ass.net>
-        <20200218202226.GJ2935@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 18 Feb 2020 17:46:16 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43265 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726438AbgBRWqQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 17:46:16 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2C6AA3A311C;
+        Wed, 19 Feb 2020 09:46:11 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4Bd4-0003kz-H7; Wed, 19 Feb 2020 09:46:10 +1100
+Date:   Wed, 19 Feb 2020 09:46:10 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 03/19] mm: Use readahead_control to pass arguments
+Message-ID: <20200218224610.GT10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-4-willy@infradead.org>
+ <20200218050300.GI10776@dread.disaster.area>
+ <20200218135618.GO7778@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218135618.GO7778@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=7-415B0cAAAA:8 a=-669WvyOGAhHUzcTJR8A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 12:22:26 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> On Tue, Feb 18, 2020 at 09:11:42PM +0100, Peter Zijlstra wrote:
-> > On Tue, Feb 18, 2020 at 08:27:19AM -0800, Paul E. McKenney wrote:  
-> > > On Tue, Feb 18, 2020 at 08:56:48AM +0100, Peter Zijlstra wrote:  
-> >   
-> > > > I just took offence at the Changelog wording. It seems to suggest there
-> > > > actually is a problem, there is not.  
-> > > 
-> > > Quoting the changelog: "Not appropriate for backporting due to failure
-> > > being unlikely."  
+On Tue, Feb 18, 2020 at 05:56:18AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 04:03:00PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:45:44AM -0800, Matthew Wilcox wrote:
+> > > +static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> > > +		gfp_t gfp)
+> > >  {
+> > > +	const struct address_space_operations *aops = rac->mapping->a_ops;
+> > >  	struct blk_plug plug;
+> > >  	unsigned page_idx;
 > > 
-> > That implies there is failure, however unlikely.
-> > 
-> > In this particular case there is absolutely no failure, except perhaps
-> > in KCSAN. This patch is a pure annotation such that KCSAN can understand
-> > the code.
-> > 
-> > Like said, I don't object to the actual patch, but I do think it is
-> > important to call out false negatives or to describe the actual problem
-> > found.  
+> > Splitting out the aops rather than the mapping here just looks
+> > weird, especially as you need the mapping later in the function.
+> > Using aops doesn't even reduce the code side....
 > 
-> I don't feel at all comfortable declaring that there is absolutely
-> no possibility of failure.
+> It does in subsequent patches ... I agree it looks a little weird here,
+> but I think in the final form, it makes sense:
 
-Perhaps wording it like so:
+Ok. Perhaps just an additional commit comment to say "read_pages() is
+changed to be aops centric as @rac abstracts away all other
+implementation details by the end of the patchset."
 
-"There's know known issue with the current code, but the *_ONCE()
-annotations here makes KCSAN happy, allowing us to focus on KCSAN
-warnings that can help bring about known issues in other code that we
-can fix, without being distracted by KCSAN warnings that we do not see
-a problem with."
+> > > +			if (readahead_count(&rac))
+> > > +				read_pages(&rac, &page_pool, gfp_mask);
+> > > +			rac._nr_pages = 0;
+> > 
+> > Hmmm. Wondering ig it make sense to move the gfp_mask to the readahead
+> > control structure - if we have to pass the gfp_mask down all the
+> > way along side the rac, then I think it makes sense to do that...
+> 
+> So we end up removing it later on in this series, but I do wonder if
+> it would make sense anyway.  By the end of the series, we still have
+> this in iomap:
+> 
+>                 if (ctx->rac) /* same as readahead_gfp_mask */
+>                         gfp |= __GFP_NORETRY | __GFP_NOWARN;
+> 
+> and we could get rid of that by passing gfp flags down in the rac.  On the
+> other hand, I don't know why it doesn't just use readahead_gfp_mask()
+> here anyway ... Christoph?
 
-?
+mapping->gfp_mask is awful. Is it a mask, or is it a valid set of
+allocation flags? Or both?  Some callers to mapping_gfp_constraint()
+uses it as a mask, some callers to mapping_gfp_constraint() use it
+as base flags that context specific flags get masked out of,
+readahead_gfp_mask() callers use it as the entire set of gfp flags
+for allocation.
 
--- Steve
+That whole API sucks - undocumented as to what it's suposed to do
+and how it's supposed to be used. Hence it's difficult to use
+correctly or understand whether it's being used correctly. And
+reading callers only leads to more confusion and crazy code like in
+do_mpage_readpage() where readahead returns a mask that are used as
+base flags and normal reads return a masked set of base flags...
+
+The iomap code is obviously correct when it comes to gfp flag
+manipulation. We start with GFP_KERNEL context, then constrain it
+via the mask held in mapping->gfp_mask, then if it's readahead we
+allow the allocation to silently fail.
+
+Simple to read and understand code, versus having weird code that
+requires the reader to decipher an undocumented and inconsistent API
+to understand how the gfp flags have been calculated and are valid.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
