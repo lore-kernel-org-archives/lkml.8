@@ -2,105 +2,112 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAF5C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86FDC34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2B822B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B3F22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:53:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U2j547Cy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgBRSw7 (ORCPT
+        id S1726557AbgBRSxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:52:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:58972 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgBRSw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:52:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B25D231B;
-        Tue, 18 Feb 2020 10:52:58 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 642823F703;
-        Tue, 18 Feb 2020 10:52:57 -0800 (PST)
-Date:   Tue, 18 Feb 2020 18:52:54 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Tue, 18 Feb 2020 13:53:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53798 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgBRSxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 13:53:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6j4dbVJFJ7oC5DhQZUAIAKi7jxQSaytsVxqOSb9w4KQ=; b=U2j547CyaTMSl1ZbRusn62lgFo
+        J84flzxCZ4FHWDTcaPQ1AXHDxrJ4x9KkJ4LkWBgafCFjPC1U5sTuP2Xga8daT30nhifZiBXhNOkGa
+        nL27PfE/VPWQjKFtFMEWNa2HvzjkyCFuFi0AohXmC6XOGhRfjc+QP3NVjvuRmrJUOKkB6xsgDcLN6
+        Tm1XDKozCfBPbzoqOqd8YPIMQjf1OdhXTZ/hOY7UA47vOkuseO4GfUb4lTd18nx2XKopkgHIxUsYV
+        aQN4ihIQzpNNZwDK+rVq1IToXO1awP5GMc1SVbK95/HKgB2pn4ACNF2ijCKTa5bNuZOGmNp9sVzLw
+        aizBuPiw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4800-0007Am-Hw; Tue, 18 Feb 2020 18:53:36 +0000
+Date:   Tue, 18 Feb 2020 10:53:36 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nikolai Merinov <n.merinov@inango-systems.com>
+Cc:     hch@infradead.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Jens Axboe <axboe@kernel.dk>, Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] sched/rt: cpupri_find: implement fallback mechanism
- for !fit case
-Message-ID: <20200218185253.yryfozr7jf2ve4lv@e107158-lin>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-2-qais.yousef@arm.com>
- <c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com>
- <20200217234549.rpv3ns7bd7l6twqu@e107158-lin>
- <20200218114658.74236b3c@gandalf.local.home>
- <20200218172745.hd7fxjqnzqkhfqx3@e107158-lin.cambridge.arm.com>
- <20200218130300.679f77ea@gandalf.local.home>
+Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
+ partition entry
+Message-ID: <20200218185336.GA14242@infradead.org>
+References: <20181124162123.21300-1-n.merinov@inango-systems.com>
+ <20191224092119.4581-1-n.merinov@inango-systems.com>
+ <20200108133926.GC4455@infradead.org>
+ <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218130300.679f77ea@gandalf.local.home>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/18/20 13:03, Steven Rostedt wrote:
-> On Tue, 18 Feb 2020 17:27:46 +0000
-> Qais Yousef <qais.yousef@arm.com> wrote:
+On Mon, Jan 13, 2020 at 03:27:23PM +0500, Nikolai Merinov wrote:
+> GUID partition entry defined to have a partition name as 36 UTF-16LE
+> code units. This means that on big-endian platforms ASCII symbols
+> would be read with 0xXX00 efi_char16_t character code. In order to
+> correctly extract ASCII characters from a partition name field we
+> should be converted from 16LE to CPU architecture.
 > 
-> > > If we are going to use static branches, then lets just remove the
-> > > parameter totally. That is, make two functions (with helpers), where
-> > > one needs this fitness function the other does not.
-> > > 
-> > > 	if (static_branch_unlikely(&sched_asym_cpu_capacity))
-> > > 		ret = cpupri_find_fitness(...);
-> > > 	else
-> > > 		ret = cpupri_find(...);
-> > > 
-> > > 	if (!ret)
-> > > 		return -1;
-> > > 
-> > > Something like that?  
-> > 
-> > Is there any implication on code generation here?
-> > 
-> > I like my flavour better tbh. But I don't mind refactoring the function out if
-> > it does make it more readable.
+> The problem exists on all big endian platforms.
 > 
-> I just figured we remove the passing of the parameter (which does make
-> an impact on the code generation).
+> Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
+> ---
+>  block/partitions/efi.c | 3 ++-
+>  block/partitions/efi.h | 2 +-
+>  include/linux/efi.h    | 5 +++++
+>  3 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+> index db2fef7dfc47..f1d0820de844 100644
+> --- a/block/partitions/efi.c
+> +++ b/block/partitions/efi.c
+> @@ -715,7 +715,8 @@ int efi_partition(struct parsed_partitions *state)
+>  				ARRAY_SIZE(ptes[i].partition_name));
+>  		info->volname[label_max] = 0;
+>  		while (label_count < label_max) {
+> -			u8 c = ptes[i].partition_name[label_count] & 0xff;
+> +			u8 c = 0xff & efi_char16le_to_cpu(
+> +					ptes[i].partition_name[label_count]);
 
-Ok. My mind went to protecting the whole function call with the static key
-could be better.
+Why are you swapping the order of the comparism to an unusual one here?
 
-> Also, perhaps it would be better to not have to pass functions to the
-> cpupri_find(). Is there any other function that needs to be past, or
-> just this one in this series?
+> -	efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
+> +	efi_char16le_t partition_name[72 / sizeof(efi_char16le_t)];
+>  } __packed gpt_entry;
+>  
+>  typedef struct _gpt_mbr_record {
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index aa54586db7a5..47882f2d45db 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -45,9 +45,14 @@
+>  typedef unsigned long efi_status_t;
+>  typedef u8 efi_bool_t;
+>  typedef u16 efi_char16_t;		/* UNICODE character */
+> +typedef __le16 efi_char16le_t;		/* UTF16-LE */
+> +typedef __be16 efi_char16be_t;		/* UTF16-BE */
+>  typedef u64 efi_physical_addr_t;
+>  typedef void *efi_handle_t;
+>  
+> +#define efi_char16le_to_cpu le16_to_cpu
+> +#define efi_char16be_to_cpu be16_to_cpu
 
-I had that discussion in the past with Dietmar [1]
-
-My argument was this way the code is generic and self contained and allows for
-easy extension for other potential users.
-
-I'm happy to split the function into cpupri_find_fitness() (with a fn ptr) and
-cpupri_find() (original) like you suggest above - if you're still okay with
-that..
-
-[1] https://lore.kernel.org/lkml/39c08971-5d07-8018-915b-9c6284f89d5d@arm.com/
-
-Thanks
-
---
-Qais Youesf
+I'd rather use plain __le16 and le16_to_cpu here.  Also the be
+variants seems to be entirely unused.
