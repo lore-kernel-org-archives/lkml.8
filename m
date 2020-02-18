@@ -2,59 +2,63 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72026C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9299EC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43530206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67107206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lANL6p2m"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BbL6LKcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgBRJlp (ORCPT
+        id S1726556AbgBRJlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:41:45 -0500
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:57194 "EHLO
+        Tue, 18 Feb 2020 04:41:47 -0500
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:58998 "EHLO
         mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgBRJlo (ORCPT
+        with ESMTP id S1726510AbgBRJlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:41:44 -0500
-Received: by mail-wm1-f73.google.com with SMTP id g26so787104wmk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:41:43 -0800 (PST)
+        Tue, 18 Feb 2020 04:41:46 -0500
+Received: by mail-wm1-f73.google.com with SMTP id p2so783391wmi.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:41:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=QNDLs7l5J8RmAhjpuRmr0/PxcwWDOhEmr8wUXVMCS2g=;
-        b=lANL6p2mxZ67NSBsDtLRBYxP1dnT4hLBAedhNx7ZmTLwbVjaSwPc6ETlhgNtHB/jzu
-         gHp15hKseyftrJCbIZVDUudAMcQ216VYl5pV1ZopaXZnugurtnzgIBjyFG0DTLT6HXEf
-         5B+8C4QFBEZYRaWl/4hp+j7DRzUVdRjoqXHHtO/CcYkjlP6ClzR+Z/o5nRanCJJU8LV5
-         MifU7kIk+0YYfMFsNPgp+iQHgl229wu6nrD21G44TYiBVe46j7litx2KvF4jE36nfzko
-         I+vjI826KsmfZUaXQveeJ0wUldepShLPUDQ72OfZvFtVmY74bMDe1E0LNyJQsg6sygFk
-         V3jg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=qS76XFbie+ijPEnE/4mOZAJ6e7AxYJOMIkUkTjFByi8=;
+        b=BbL6LKcr4n6d+ArwhgJ08Ogfe+RDRwdBgcnB5HpzIgUkBOFHfSgQeeUR+pdOtERihP
+         bbo7SDetBFjp61Ktgp0mskt+xcRwjyeKx8O3uj5nVJILFapUd8xrH+qJPLxEKUbg6o07
+         BBbejg57DDrQI+LmnInT7FXUH9heZqG6oLIki3Vr8FCDzHaYCxoXVaVQ3hGjp5zf8l02
+         1iB2wd79kUCUv+yHI8C565GRCTBbNYHMa+yydpkfc5nSmAycE+v/OlrTAA8SHTGTieSn
+         Z2TIyLEWeg0cHCGKjQyrCthwp7CJYK4k0jGFZ11g0JFKklnFXP+jyqEyvytbKcsNmYxY
+         9o1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=QNDLs7l5J8RmAhjpuRmr0/PxcwWDOhEmr8wUXVMCS2g=;
-        b=oLuRpvTwAvj4iTS/1SKI0omvEHCM7ppBKsJ+nS9OY+kr2lUsuruSOm/C/RYiYs4PNz
-         apCh21fMo/RUg57CeoqfGCqFGee3PKWopXsVmULamZvbHQKJu/H/8dRjjDMAKsahDxQx
-         E/Yg26Pi5Z4yr/3uu28664PFhi97+Qyj8a6B+ZIMGWX0vju96HhCYe4xmhHpBRRomrAP
-         iE3Apj0Huo/xeSR88hfyKcaubX5Yt5qi0/eYKxUuuthAaXhwZ8hv4VNlMtSDwOlfe974
-         IrWBp2Q0HYHLL6IGU3eqoEaEyXb/OaZEyLKocfVUNL7uPMvLFL8QyDEPgSz8Ru400odU
-         NOgQ==
-X-Gm-Message-State: APjAAAXXrdlmOvLts79P6N/0QmEfmhFhoKY834Z6sYfkLO9S625vmcB1
-        hB2U6P/gaod6wI/WjSg3BO8fA/z+UDXu
-X-Google-Smtp-Source: APXvYqzWf2YA23J1Glf8VxU8Do8ukZPloJr+JQccpQyyqafNEHRr0VlS6DnEGn/nGNBIEFKw6C+etcmhXXLV
-X-Received: by 2002:a5d:5485:: with SMTP id h5mr23613735wrv.346.1582018902233;
- Tue, 18 Feb 2020 01:41:42 -0800 (PST)
-Date:   Tue, 18 Feb 2020 09:41:36 +0000
-Message-Id: <20200218094139.78835-1-qperret@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=qS76XFbie+ijPEnE/4mOZAJ6e7AxYJOMIkUkTjFByi8=;
+        b=HXX8jWIk9/A8BPe7rbMIWVbUWL7An/y78nm2GF/grjjgazNOWtj5gMKbwGuYU1C2Ok
+         WBXhWMOWh/wSGUB+/aWGK5UJJj3najeebUiqGCTaM2+1to2Xfv/QY6dO9Mfw5IeBQ0ml
+         BKfuPbSJG+pAV16rw5A6WgU9+Hss4ndovr03K/K22CW4Jg8cOiNKJsCtBw3zML//wCsS
+         L5WK8O+bOq+qGd1fFGnjTCQD1Ja8vFC7UjVrs6RjTjKUZGwAAc6+182FM5wP/s0aVuIp
+         zfLuvVZgA8uS2A6UA8xc6ri6iOAQXgV6Zq0+ly451KzDQnip5MJX1eQiRUzih+0dpsYt
+         CJ3A==
+X-Gm-Message-State: APjAAAXS6k1NH1QN6pXwUxbOQ7EggwfgrmIHquHNVaqyE7lCBk1EjMRz
+        e1V8O1Ap8C8ctugKojmBm2rKh1mhvV3l
+X-Google-Smtp-Source: APXvYqzs0+ZgiVOp10BQd9rhcVA5oaVS2Y492qfKZ0GIDPzm+d80akNrtM4xJb7Q/TEuZkUcfiXZ91rSVtm1
+X-Received: by 2002:a5d:4dc5:: with SMTP id f5mr28628764wru.114.1582018905039;
+ Tue, 18 Feb 2020 01:41:45 -0800 (PST)
+Date:   Tue, 18 Feb 2020 09:41:37 +0000
+In-Reply-To: <20200218094139.78835-1-qperret@google.com>
+Message-Id: <20200218094139.78835-2-qperret@google.com>
 Mime-Version: 1.0
+References: <20200218094139.78835-1-qperret@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v5 0/3] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYM
+Subject: [PATCH v5 1/3] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
 From:   Quentin Perret <qperret@google.com>
 To:     masahiroy@kernel.org, nico@fluxnic.net
 Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
@@ -66,66 +70,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current norm on Android and many other systems is for vendors to
-introduce significant changes to their downstream kernels, and to
-contribute very little (if any) code back upstream. The Generic Kernel
-Image (GKI) project in Android attempts to improve the status-quo by
-having a unique kernel for all android devices of the same architecture,
-regardless of the SoC vendor. The key idea is to make all interested
-parties agree on a common solution, and contribute their code upstream
-to make it available to use by the wider community.
+CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
+from ksymtab. This works really well when using in-tree drivers, but
+cannot be used in its current form if some of them are out-of-tree.
 
-The kernel-to-drivers ABI on Android devices varies significantly from
-one vendor kernel to another today because of changes to exported
-symbols, dependencies on vendor symbols, and surely other things. The
-first step for GKI is to try and put some order into this by agreeing on
-one version of the ABI that works for everybody.
+Indeed, even if the list of symbols required by out-of-tree drivers is
+known at compile time, the only solution today to guarantee these don't
+get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
+space, but also makes it difficult to control the ABI usable by vendor
+modules in distribution kernels such as Android. Being able to control
+the kernel ABI surface is particularly useful to ship a unique Generic
+Kernel Image (GKI) for all vendors, which is a first step in the
+direction of getting all vendors to contribute their code upstream.
 
-For practical reasons, we need to reduce the ABI surface to a subset of
-the exported symbols, simply to make the problem realistically solvable,
-but there is currently no upstream support for this use-case.
+As such, attempt to improve the situation by enabling users to specify a
+symbol 'whitelist' at compile time. Any symbol specified in this
+whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
+even if it has no in-tree user. The whitelist is defined as a simple
+text file, listing symbols, one per line.
 
-As such, this series attempts to improve the situation by enabling users
-to specify a symbol 'whitelist' at compile time. Any symbol specified in
-this whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is
-set, even if it has no in-tree user. The whitelist is defined as a
-simple text file, listing symbols, one per line.
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
+Tested-by: Matthias Maennich <maennich@google.com>
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Signed-off-by: Quentin Perret <qperret@google.com>
+---
+ init/Kconfig                | 13 +++++++++++++
+ scripts/adjust_autoksyms.sh | 12 ++++++++++++
+ 2 files changed, 25 insertions(+)
 
-v5:
- - made sure to be POSIX-compliant (+ tested with dash and posh)
- - added failure path if the whitelist path is incorrect (Matthias,
-   Nicolas)
- - collected Acked-By (and other) tags from Nicolas and Matthias
-
-v4:
- - removed [[]] bash-specific pattern from the scripts (Nicolas)
- - use $CONFIG_SHELL consistently in all patches (Masahiro)
- - added shortlog for initial generation of autoksyms.h (Masahiro)
- - added comment on how 'eval' expands the whitelist path (Masahiro)
-
-v3:
- - added a cover letter to explain why this is in fact an attempt to
-   help upstream in the long term (Christoph)
- - made path relative to the kernel source tree (Matthias)
- - made the Kconfig help text less confusing (Jessica)
- - added patch 02 and 03 to optimize build time when a whitelist is
-   provided
-
-v2:
- - make sure to quote the whitelist path properly (Nicolas)
-
-Quentin Perret (3):
-  kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
-  kbuild: split adjust_autoksyms.sh in two parts
-  kbuild: generate autoksyms.h early
-
- Makefile                    |  7 +++--
- init/Kconfig                | 13 ++++++++++
- scripts/adjust_autoksyms.sh | 24 +++--------------
- scripts/gen_autoksyms.sh    | 52 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 74 insertions(+), 22 deletions(-)
- create mode 100755 scripts/gen_autoksyms.sh
-
+diff --git a/init/Kconfig b/init/Kconfig
+index cfee56c151f1..58b672afceb2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -2210,6 +2210,19 @@ config TRIM_UNUSED_KSYMS
+ 
+ 	  If unsure, or if you need to build out-of-tree modules, say N.
+ 
++config UNUSED_KSYMS_WHITELIST
++	string "Whitelist of symbols to keep in ksymtab"
++	depends on TRIM_UNUSED_KSYMS
++	help
++	  By default, all unused exported symbols will be un-exported from the
++	  build when TRIM_UNUSED_KSYMS is selected.
++
++	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
++	  exported at all times, even in absence of in-tree users. The value to
++	  set here is the path to a text file containing the list of symbols,
++	  one per line. The path can be absolute, or relative to the kernel
++	  source tree.
++
+ endif # MODULES
+ 
+ config MODULES_TREE_LOOKUP
+diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+index a904bf1f5e67..ff46996525d3 100755
+--- a/scripts/adjust_autoksyms.sh
++++ b/scripts/adjust_autoksyms.sh
+@@ -38,6 +38,17 @@ esac
+ # We need access to CONFIG_ symbols
+ . include/config/auto.conf
+ 
++ksym_wl=/dev/null
++if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
++	# Use 'eval' to expand the whitelist path and check if it is relative
++	eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
++	[ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
++	if [ ! -f "$ksym_wl" ]; then
++		echo "ERROR: '$ksym_wl' whitelist file not found" >&2
++		exit 1
++	fi
++fi
++
+ # Generate a new ksym list file with symbols needed by the current
+ # set of modules.
+ cat > "$new_ksyms_file" << EOT
+@@ -48,6 +59,7 @@ cat > "$new_ksyms_file" << EOT
+ EOT
+ sed 's/ko$/mod/' modules.order |
+ xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
++cat - "$ksym_wl" |
+ sort -u |
+ sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+ 
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
