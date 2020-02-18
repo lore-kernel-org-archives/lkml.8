@@ -2,215 +2,156 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3594DC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BEC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035A122B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA4824125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E23c3Mc4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jg/5BVHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgBRSzh (ORCPT
+        id S1726508AbgBRS4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:55:37 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41661 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgBRSzh (ORCPT
+        Tue, 18 Feb 2020 13:56:35 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42936 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgBRS4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:55:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so25292588wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:55:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=ErZHR63GyvAXj/k5szxTb4OUm9B9u05E1RcdCjTAUfI=;
-        b=E23c3Mc47XqQCvrDho+eUNOGA8a/hMVEaLa5ltPayqx2Ncqdu/SSzsDxDElTp8NhsI
-         wNiQ+xjuehDUCbLWhnbEp8TbjNQZROJMaZSiBrdZ4d7sGEm45WrZ0d1ll6A+2IA4ISwP
-         x03PFZMelXhq2BP14LPRp76pCZM3WFOmWZksBVxgUMMB7c32KmaBLOmj+DU995dylNMK
-         86+y+rJRunonJz/WuWlNsOPftxKpej9dMUzEkdk/Zpg5So9XbKBpmYobwSXCprEFdjgl
-         VDLGtK+OHLln+37e/YDBVJ9FJgmyoMFz0a0Fvx3pX/tXF4RpYNL9BLmdUutcXXogeOSz
-         3u5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=ErZHR63GyvAXj/k5szxTb4OUm9B9u05E1RcdCjTAUfI=;
-        b=EaCbj0uJoOhTQ4PEvQn6V3jIhTzCBOrpTCv79o424SyejdBC9o7Mw1Uv4EG53zVZWr
-         9CnFFLc2vnHGdcn6MgyTOBAqiDEI1FQLqKYbNI+XhPg0q34oqkWUpSFj2LeKIAR/kQDO
-         cr7IhIhF4Axnli+XepRx2aZGlKZJn761qP6W2n2B2qek17+tYakAC7YeSQH9w3Je5Mwc
-         jmR0UfPehh1vleHhZCfsuPItGJpUxgdRGa2vZY9vyL94XuV4uXdcAzeydhCx6d54EVTy
-         N2Ll7DZ4RXgFe8sinxVZZN8OTFUC5TWgZFXRWZmNBofgKwVbVs4XpMN4k3INFcqkVa7u
-         GEig==
-X-Gm-Message-State: APjAAAU4LDLjLsjiOYm3ugT1IHEGVAEJcOlWMBhzmZl3vF2pyIn6DqF3
-        ZebwHZpaALqwIjZQjiRMNAxt+WHx9jOkKA==
-X-Google-Smtp-Source: APXvYqwXudLunX8FJqJ2tRfpjX1YjMDJ7Af867EDxPqLeyN1Ym2kprlGpyMAwfKk45pDeoYRhB3/lg==
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr30046394wrw.126.1582052133180;
-        Tue, 18 Feb 2020 10:55:33 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id j14sm7229416wrn.32.2020.02.18.10.55.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:55:32 -0800 (PST)
-References: <20200214134704.342501-1-jbrunet@baylibre.com> <applied-20200214134704.342501-1-jbrunet@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Applied "ASoC: core: ensure component names are unique" to the asoc tree
-In-reply-to: <applied-20200214134704.342501-1-jbrunet@baylibre.com>
-Date:   Tue, 18 Feb 2020 19:55:31 +0100
-Message-ID: <1jblpvraho.fsf@starbuckisacylon.baylibre.com>
+        Tue, 18 Feb 2020 13:56:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582052193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UGqjQEwBIAGIH2rlvtx+n4+mjmKd16dlzwe9jbo2/EQ=;
+        b=Jg/5BVHFGd7gOa7bV7808Ho1UVKo7JLEYXcxEh1FkjKZW4GpDymVcHR534dp3PTk0po7Zg
+        882d/sOiij40duqSe+xSGUZsKZ0jfbxPzHpwbhaa5//FFKvribseI7+xyZmFjz8VofQMKF
+        XiYggb7J66KAJLAIyNT4Hy+3rlIJ044=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-WUsHyBmKMyO0YlUQF_9VXQ-1; Tue, 18 Feb 2020 13:56:24 -0500
+X-MC-Unique: WUsHyBmKMyO0YlUQF_9VXQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01E3BDBA3;
+        Tue, 18 Feb 2020 18:56:23 +0000 (UTC)
+Received: from mail (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B10A560BE1;
+        Tue, 18 Feb 2020 18:56:19 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 13:56:18 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Mark Salter <msalter@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] mm: use_mm: fix for arches checking mm_users to
+ optimize TLB flushes
+Message-ID: <20200218185618.GB14027@redhat.com>
+References: <20200203201745.29986-1-aarcange@redhat.com>
+ <20200203201745.29986-2-aarcange@redhat.com>
+ <20200218113103.GB4151@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218113103.GB4151@dhcp22.suse.cz>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Michal!
 
-On Fri 14 Feb 2020 at 21:56, Mark Brown <broonie@kernel.org> wrote:
+On Tue, Feb 18, 2020 at 12:31:03PM +0100, Michal Hocko wrote:
+> On Mon 03-02-20 15:17:44, Andrea Arcangeli wrote:
+> > alpha, ia64, mips, powerpc, sh, sparc are relying on a check on
+> > mm->mm_users to know if they can skip some remote TLB flushes for
+> > single threaded processes.
+> > 
+> > Most callers of use_mm() tend to invoke mmget_not_zero() or
+> > get_task_mm() before use_mm() to ensure the mm will remain alive in
+> > between use_mm() and unuse_mm().
+> > 
+> > Some callers however don't increase mm_users and they instead rely on
+> > serialization in __mmput() to ensure the mm will remain alive in
+> > between use_mm() and unuse_mm(). Not increasing mm_users during
+> > use_mm() is however unsafe for aforementioned arch TLB flushes
+> > optimizations. So either mmget()/mmput() should be added to the
+> > problematic callers of use_mm()/unuse_mm() or we can embed them in
+> > use_mm()/unuse_mm() which is more robust.
+> 
+> I would prefer we do not do that because then the real owner of the mm
+> cannot really tear down the address space and the life time of it is
+> bound to a kernel thread doing the use_mm. This is undesirable I would
+> really prefer if the existing few users would use mmget only when they
+> really need to access mm.
 
-> The patch
->
->    ASoC: core: ensure component names are unique
->
-> has been applied to the asoc tree at
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.  
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
+If the existing few users that don't already do the explicit mmget
+will have to start doing it too, the end result will be exactly the
+same that you described in your "cons" (lieftime of the mm will still
+be up to who did mmget;use_mm and didn't call unuse_mm;mmput yet).
 
-Hi Mark,
+One reason to prefer adding the mmget to the callers to forget it,
+would be to avoid an atomic op in use_mm (for those callers that
+didn't forget it), but if anybody is doing use_mm in a fast path that
+won't be very fast anyway so I didn't think this was worth the
+risk. If that microoptimization in a slow path is the reason we should
+add mmget to the callers that forgot it that would be fine with me
+although I think it's risky because if already happened once and it
+could happen again (and when it happens it only bits a few arches if
+used with a few drivers).
 
-Short Version:
-After looking at the problem reported by Marek, I think the best course
-of action for now is to revert b2354e4009a7 ("ASoC: core: ensure component names are unique")
-while working on a solution. It might take some time.
+On a side note the patch 2/2 should be dropped for now, I'm looking if
+we can optimize away TLB-i broadcasts from multithreaded apps too.
 
-Longer Version:
+Thanks,
+Andrea
 
-1) Multiple components :
-I found out that in fact it is common for linux devices to register
-multiple components. For most, it is a combination of the dmaengine
-generic and the actual device component, but other register more
-component. Ex:
-- vc4-hdmi
-- atmel-classd
-- atmel-pdmic
-- cros-ec-codec
-- mtXXXX-afe-pcm
-I suspect these trigger the debugfs warning
-Even dummy register two components :D
-
-All devices using devm_snd_dmaengine_pcm_register() and
-devm_snd_soc_register_component() are exposed to clean-up issue in case
-of deferral. That's because snd_soc_unregister_component() unregisters
-all the components registered the device. I suppose there might be other
-problems when using the devm API with this function.
-
-2) Fixed component names:
-Several card driver assume the component name is the device name and
-won't query the actual component name or node. Ex:
-- sun4i-codec
-- omap-hdmi
-- vc4-hdmi
-- sof-nocodec
-
-So changing the way ASoC generate the component names might break these
-cards. It gets tricky because the same cards driver might register
-multiple component themselves, like vc4-hdmi.
-
->
-> From b2354e4009a773c00054b964d937e1b81cb92078 Mon Sep 17 00:00:00 2001
-> From: Jerome Brunet <jbrunet@baylibre.com>
-> Date: Fri, 14 Feb 2020 14:47:04 +0100
-> Subject: [PATCH] ASoC: core: ensure component names are unique
->
-> Make sure each ASoC component is registered with a unique name.
-> The component is derived from the device name. If a device registers more
-> than one component, the component names will be the same.
->
-> This usually brings up a warning about the debugfs directory creation of
-> the component since directory already exists.
->
-> In such case, start numbering the component of the device so the names
-> don't collide anymore.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Link: https://lore.kernel.org/r/20200214134704.342501-1-jbrunet@baylibre.com
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  sound/soc/soc-core.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-> index 03b87427faa7..6a58a8f6e3c4 100644
-> --- a/sound/soc/soc-core.c
-> +++ b/sound/soc/soc-core.c
-> @@ -2446,6 +2446,33 @@ static int snd_soc_register_dais(struct snd_soc_component *component,
->  	return ret;
->  }
->  
-> +static char *snd_soc_component_unique_name(struct device *dev,
-> +					   struct snd_soc_component *component)
-> +{
-> +	struct snd_soc_component *pos;
-> +	int count = 0;
-> +	char *name, *unique;
-> +
-> +	name = fmt_single_name(dev, &component->id);
-> +	if (!name)
-> +		return name;
-> +
-> +	/* Count the number of components registred by the device */
-> +	for_each_component(pos) {
-> +		if (dev == pos->dev)
-> +			count++;
-> +	}
-> +
-> +	/* Keep naming as it is for the 1st component */
-> +	if (!count)
-> +		return name;
-> +
-> +	unique = devm_kasprintf(dev, GFP_KERNEL, "%s-%d", name, count);
-> +	devm_kfree(dev, name);
-> +
-> +	return unique;
-> +}
-> +
->  static int snd_soc_component_initialize(struct snd_soc_component *component,
->  	const struct snd_soc_component_driver *driver, struct device *dev)
->  {
-> @@ -2454,7 +2481,7 @@ static int snd_soc_component_initialize(struct snd_soc_component *component,
->  	INIT_LIST_HEAD(&component->card_list);
->  	mutex_init(&component->io_mutex);
->  
-> -	component->name = fmt_single_name(dev, &component->id);
-> +	component->name = snd_soc_component_unique_name(dev, component);
->  	if (!component->name) {
->  		dev_err(dev, "ASoC: Failed to allocate name\n");
->  		return -ENOMEM;
+> 
+> > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> > ---
+> >  mm/mmu_context.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/mm/mmu_context.c b/mm/mmu_context.c
+> > index 3e612ae748e9..ced0e1218c0f 100644
+> > --- a/mm/mmu_context.c
+> > +++ b/mm/mmu_context.c
+> > @@ -30,6 +30,7 @@ void use_mm(struct mm_struct *mm)
+> >  		mmgrab(mm);
+> >  		tsk->active_mm = mm;
+> >  	}
+> > +	mmget(mm);
+> >  	tsk->mm = mm;
+> >  	switch_mm(active_mm, mm, tsk);
+> >  	task_unlock(tsk);
+> > @@ -57,6 +58,7 @@ void unuse_mm(struct mm_struct *mm)
+> >  	task_lock(tsk);
+> >  	sync_mm_rss(mm);
+> >  	tsk->mm = NULL;
+> > +	mmput(mm);
+> >  	/* active_mm is still 'mm' */
+> >  	enter_lazy_tlb(mm, tsk);
+> >  	task_unlock(tsk);
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
 
