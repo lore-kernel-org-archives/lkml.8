@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14919C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB28C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8A124672
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7714124670
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056055;
-	bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
+	s=default; t=1582056059;
+	bh=iWXMXbYK0LaStEtH7nUNtYyCFaWt69JfVFpZubKdY1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oBcC1R3q34Ed1fG0BRbSrSgSK+aR57gWdUjDBokoeAkU811iLL/UQgZkdhcDG9gaU
-	 IbntXOgZHlJFfJXJUYsQ6MbVX8VpAdaEAXIt77sFm4m1Kx8YeNtlZv4CrcLQP9yjR1
-	 sX7aCfos3XLnkhoCF2/HJZpUGwiJ7L5xVjIQUdJw=
+	b=SDIJONL3LjjOZcKTCAP4bsYqia1JFgoCB3a7dsHNXTLKEhEeMbjgl55HFVsyeqbxP
+	 drlZ1sNwSgvvQu88ozQCuIk7WtGT50ZQXf3gWfzRSAIVCnbj6yUWnNFYBiM+kQroy1
+	 p0ne3h7iY0FVdeNt+qOun1puxBVf7lHv0P2tGIg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgBRUAy (ORCPT
+        id S1728701AbgBRUA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40210 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbgBRUAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:51 -0500
+        id S1728685AbgBRUA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43ED924125;
-        Tue, 18 Feb 2020 20:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4550324125;
+        Tue, 18 Feb 2020 20:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056050;
-        bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
+        s=default; t=1582056055;
+        bh=iWXMXbYK0LaStEtH7nUNtYyCFaWt69JfVFpZubKdY1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7q7iALN5lLhSL1h9sSy+LwSGvmOJ4QNSMKxhFzbNUEn/ZMEtfkHKCSCsj5BDX9dM
-         LPUVopN734aOE3W04BaPiLt2u4TVCAfe69+RalWp2bqwSQcFSVGJcJcmthwjr9J9Zy
-         wql/bhb5uzTPgOWXj7sXB0Pd9tat4X58EsFL1fZ4=
+        b=CsXQdkFV+M6yHV2f1Cpws6VbcHHC9qTkCrZIv/gMIYhfN0i2qotKqmcmO4f/Mq4ZE
+         r4dMICzfQ3wa5W+DmuEWFYr6bYgn8Jakx19PAjSkx0JnMJ89Y6+hl+SfVatU8vDL3U
+         FZv0h3GxGGjB5mbJt6032jMbKqFtzKY7/UAt78eI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.5 16/80] ext4: dont assume that mmp_nodename/bdevname have NUL
-Date:   Tue, 18 Feb 2020 20:54:37 +0100
-Message-Id: <20200218190433.731972284@linuxfoundation.org>
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.5 18/80] ext4: fix checksum errors with indexed dirs
+Date:   Tue, 18 Feb 2020 20:54:39 +0100
+Message-Id: <20200218190433.978913366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,58 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Dilger <adilger@dilger.ca>
+From: Jan Kara <jack@suse.cz>
 
-commit 14c9ca0583eee8df285d68a0e6ec71053efd2228 upstream.
+commit 48a34311953d921235f4d7bbd2111690d2e469cf upstream.
 
-Don't assume that the mmp_nodename and mmp_bdevname strings are NUL
-terminated, since they are filled in by snprintf(), which is not
-guaranteed to do so.
+DIR_INDEX has been introduced as a compat ext4 feature. That means that
+even kernels / tools that don't understand the feature may modify the
+filesystem. This works because for kernels not understanding indexed dir
+format, internal htree nodes appear just as empty directory entries.
+Index dir aware kernels then check the htree structure is still
+consistent before using the data. This all worked reasonably well until
+metadata checksums were introduced. The problem is that these
+effectively made DIR_INDEX only ro-compatible because internal htree
+nodes store checksums in a different place than normal directory blocks.
+Thus any modification ignorant to DIR_INDEX (or just clearing
+EXT4_INDEX_FL from the inode) will effectively cause checksum mismatch
+and trigger kernel errors. So we have to be more careful when dealing
+with indexed directories on filesystems with checksumming enabled.
 
-Link: https://lore.kernel.org/r/1580076215-1048-1-git-send-email-adilger@dilger.ca
-Signed-off-by: Andreas Dilger <adilger@dilger.ca>
+1) We just disallow loading any directory inodes with EXT4_INDEX_FL when
+DIR_INDEX is not enabled. This is harsh but it should be very rare (it
+means someone disabled DIR_INDEX on existing filesystem and didn't run
+e2fsck), e2fsck can fix the problem, and we don't want to answer the
+difficult question: "Should we rather corrupt the directory more or
+should we ignore that DIR_INDEX feature is not set?"
+
+2) When we find out htree structure is corrupted (but the filesystem and
+the directory should in support htrees), we continue just ignoring htree
+information for reading but we refuse to add new entries to the
+directory to avoid corrupting it more.
+
+Link: https://lore.kernel.org/r/20200210144316.22081-1-jack@suse.cz
+Fixes: dbe89444042a ("ext4: Calculate and verify checksums for htree nodes")
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/mmp.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/ext4/dir.c   |   14 ++++++++------
+ fs/ext4/ext4.h  |    5 ++++-
+ fs/ext4/inode.c |   12 ++++++++++++
+ fs/ext4/namei.c |    7 +++++++
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
---- a/fs/ext4/mmp.c
-+++ b/fs/ext4/mmp.c
-@@ -120,10 +120,10 @@ void __dump_mmp_msg(struct super_block *
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -129,12 +129,14 @@ static int ext4_readdir(struct file *fil
+ 		if (err != ERR_BAD_DX_DIR) {
+ 			return err;
+ 		}
+-		/*
+-		 * We don't set the inode dirty flag since it's not
+-		 * critical that it get flushed back to the disk.
+-		 */
+-		ext4_clear_inode_flag(file_inode(file),
+-				      EXT4_INODE_INDEX);
++		/* Can we just clear INDEX flag to ignore htree information? */
++		if (!ext4_has_metadata_csum(sb)) {
++			/*
++			 * We don't set the inode dirty flag since it's not
++			 * critical that it gets flushed back to the disk.
++			 */
++			ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++		}
+ 	}
+ 
+ 	if (ext4_has_inline_data(inode)) {
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2482,8 +2482,11 @@ void ext4_insert_dentry(struct inode *in
+ 			struct ext4_filename *fname);
+ static inline void ext4_update_dx_flag(struct inode *inode)
  {
- 	__ext4_warning(sb, function, line, "%s", msg);
- 	__ext4_warning(sb, function, line,
--		       "MMP failure info: last update time: %llu, last update "
--		       "node: %s, last update device: %s",
--		       (long long unsigned int) le64_to_cpu(mmp->mmp_time),
--		       mmp->mmp_nodename, mmp->mmp_bdevname);
-+		       "MMP failure info: last update time: %llu, last update node: %.*s, last update device: %.*s",
-+		       (unsigned long long)le64_to_cpu(mmp->mmp_time),
-+		       (int)sizeof(mmp->mmp_nodename), mmp->mmp_nodename,
-+		       (int)sizeof(mmp->mmp_bdevname), mmp->mmp_bdevname);
+-	if (!ext4_has_feature_dir_index(inode->i_sb))
++	if (!ext4_has_feature_dir_index(inode->i_sb)) {
++		/* ext4_iget() should have caught this... */
++		WARN_ON_ONCE(ext4_has_feature_metadata_csum(inode->i_sb));
+ 		ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++	}
  }
- 
- /*
-@@ -154,6 +154,7 @@ static int kmmpd(void *data)
- 	mmp_check_interval = max(EXT4_MMP_CHECK_MULT * mmp_update_interval,
- 				 EXT4_MMP_MIN_CHECK_INTERVAL);
- 	mmp->mmp_check_interval = cpu_to_le16(mmp_check_interval);
-+	BUILD_BUG_ON(sizeof(mmp->mmp_bdevname) < BDEVNAME_SIZE);
- 	bdevname(bh->b_bdev, mmp->mmp_bdevname);
- 
- 	memcpy(mmp->mmp_nodename, init_utsname()->nodename,
-@@ -375,7 +376,8 @@ skip:
- 	/*
- 	 * Start a kernel thread to update the MMP block periodically.
- 	 */
--	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%s",
-+	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%.*s",
-+					     (int)sizeof(mmp->mmp_bdevname),
- 					     bdevname(bh->b_bdev,
- 						      mmp->mmp_bdevname));
- 	if (IS_ERR(EXT4_SB(sb)->s_mmp_tsk)) {
+ static const unsigned char ext4_filetype_table[] = {
+ 	DT_UNKNOWN, DT_REG, DT_DIR, DT_CHR, DT_BLK, DT_FIFO, DT_SOCK, DT_LNK
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4615,6 +4615,18 @@ struct inode *__ext4_iget(struct super_b
+ 		ret = -EFSCORRUPTED;
+ 		goto bad_inode;
+ 	}
++	/*
++	 * If dir_index is not enabled but there's dir with INDEX flag set,
++	 * we'd normally treat htree data as empty space. But with metadata
++	 * checksumming that corrupts checksums so forbid that.
++	 */
++	if (!ext4_has_feature_dir_index(sb) && ext4_has_metadata_csum(sb) &&
++	    ext4_test_inode_flag(inode, EXT4_INODE_INDEX)) {
++		ext4_error_inode(inode, function, line, 0,
++			 "iget: Dir with htree data on filesystem without dir_index feature.");
++		ret = -EFSCORRUPTED;
++		goto bad_inode;
++	}
+ 	ei->i_disksize = inode->i_size;
+ #ifdef CONFIG_QUOTA
+ 	ei->i_reserved_quota = 0;
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2207,6 +2207,13 @@ static int ext4_add_entry(handle_t *hand
+ 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
+ 		if (!retval || (retval != ERR_BAD_DX_DIR))
+ 			goto out;
++		/* Can we just ignore htree data? */
++		if (ext4_has_metadata_csum(sb)) {
++			EXT4_ERROR_INODE(dir,
++				"Directory has corrupted htree index.");
++			retval = -EFSCORRUPTED;
++			goto out;
++		}
+ 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
+ 		dx_fallback++;
+ 		ext4_mark_inode_dirty(handle, dir);
 
 
