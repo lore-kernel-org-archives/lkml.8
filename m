@@ -6,73 +6,72 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C6FC34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455A4C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA87208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FB920801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QIjdz8QS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nC+ckAaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBRRPB (ORCPT
+        id S1726828AbgBRRQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:15:01 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57558 "EHLO
+        Tue, 18 Feb 2020 12:16:24 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36562 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgBRRO7 (ORCPT
+        with ESMTP id S1726475AbgBRRQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:14:59 -0500
+        Tue, 18 Feb 2020 12:16:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7a7BeuJeRNU5QeUULzHih8KoXjfLOlATiPV+cUmscGw=; b=QIjdz8QSjjIzAMdVllBXV1Ditl
-        VdQfMjoATPnUCECUsv27WHAJ189BzjMml0/WCJWrgl36BxxoeO80uWMODrvi1iZBmsS+hh7dIiy44
-        b+Zgrd143+f6dmQmLhZQ+FuH9ePMXl2ELA3qXgOzTDtEUEbb60nIa36OV97pUwOYLaeU/LzPg4UzL
-        AJtwyIqOXYgNzO6uGl+GlSImIP5h2zicGElavdnAACUdimW5ZnFJN7jRzb/7V/eo9FMyiywWCQVem
-        YDW+lqCuAVv+D7I4cdz6hEyYPzvN50Daw+JTBPbfKlKtHLSO7rU09izm9Se5yBKKdo+rL7lADysxb
-        DeAvxGgQ==;
+        bh=DtnUK1xASlzt/HMPi6EpJNZIY4HCkmIAFuNb2drX+S0=; b=nC+ckAaT3f0TAwRj0Ixv6COnz/
+        bA8ppTmtfdRbDRfBmTwGTFcdaCHxAYu9PVgc0w5snowjNkbT+n4eLW1hs54bAMcv0OKxlJTjHavJd
+        H6gMAgypDPoZMtrY7/TZ82zhFO8PUHqCaXqU1KHWKMmFgJ/uZeuC9/w7wTfEN+SwvyLl934e1cw4n
+        VO/cEhnVRwSmNe+zRgzOM+E0iq5RN3m2K4Xf6CQ+Kvud+VDqfpWJDDXeN4h2iwPQ0rrYI4Xs6yWZc
+        hweugJeJIVA6jl7GSvXKH8i0l9nvCgc9svIb+7fOJo7kt/zfvx30a/iQevoRSoy8JZuPYPa3NFrVu
+        6tnzLF2w==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j46SU-00038d-O4; Tue, 18 Feb 2020 17:14:54 +0000
-Date:   Tue, 18 Feb 2020 09:14:54 -0800
+        id 1j46Tp-0005de-Ng; Tue, 18 Feb 2020 17:16:17 +0000
+Date:   Tue, 18 Feb 2020 09:16:17 -0800
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
         David Woodhouse <dwmw2@infradead.org>, jroedel@suse.de,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] iommu/vt-d: Add attach_deferred() helper
-Message-ID: <20200218171454.GA7067@infradead.org>
+Subject: Re: [PATCH 2/5] iommu/vt-d: Move deferred device attachment into
+ helper function
+Message-ID: <20200218171617.GB7067@infradead.org>
 References: <20200217193858.26990-1-joro@8bytes.org>
- <20200217193858.26990-2-joro@8bytes.org>
+ <20200217193858.26990-3-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217193858.26990-2-joro@8bytes.org>
+In-Reply-To: <20200217193858.26990-3-joro@8bytes.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static bool attach_deferred(struct device *dev)
-> +{
-> +	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
-> +}
-
-This is not a very useful helper.
-
-> +
->  /**
->   * is_downstream_to_pci_bridge - test if a device belongs to the PCI
->   *				 sub-hierarchy of a candidate PCI-PCI bridge
-> @@ -2510,8 +2515,7 @@ struct dmar_domain *find_domain(struct device *dev)
+> +static void do_deferred_attach(struct device *dev)
 >  {
->  	struct device_domain_info *info;
+> +	struct iommu_domain *domain;
 >  
-> -	if (unlikely(dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO ||
-> -		     dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO))
-> +	if (unlikely(attach_deferred(dev) || iommu_dummy(dev)))
->  		return NULL;
+> +	dev->archdata.iommu = NULL;
+> +	domain = iommu_get_domain_for_dev(dev);
+> +	if (domain)
+> +		intel_iommu_attach_device(domain, dev);
+> +}
+> +
+> +static struct dmar_domain *deferred_attach_domain(struct device *dev)
+> +{
+> +	if (unlikely(attach_deferred(dev)))
+> +		do_deferred_attach(dev);
+>  
+>  	return find_domain(dev);
+>  }
 
-I'd rather kill the iommu_dummy helper as well.  And IIRC I have an
-outstanding series somewhere that does just that..
+Can we start using proper sybmbol prefixes and avoid do_* names where
+possible?
