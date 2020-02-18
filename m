@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC626C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A09AC34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CA622B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5432124649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgBRIvF (ORCPT
+        id S1726681AbgBRIvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 18 Feb 2020 03:51:05 -0500
-Received: from comms.puri.sm ([159.203.221.185]:39986 "EHLO comms.puri.sm"
+Received: from comms.puri.sm ([159.203.221.185]:39952 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbgBRIvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:51:04 -0500
+        id S1726652AbgBRIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:51:02 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 8FE51E114C;
-        Tue, 18 Feb 2020 00:51:04 -0800 (PST)
+        by comms.puri.sm (Postfix) with ESMTP id CB121E1151;
+        Tue, 18 Feb 2020 00:51:01 -0800 (PST)
 Received: from comms.puri.sm ([127.0.0.1])
         by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qYOfLCYxd975; Tue, 18 Feb 2020 00:51:03 -0800 (PST)
+        with ESMTP id UgTInZQdHsoU; Tue, 18 Feb 2020 00:51:00 -0800 (PST)
 From:   Martin Kepplinger <martin.kepplinger@puri.sm>
 To:     robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de
 Cc:     linux-imx@nxp.com, Anson.Huang@nxp.com, devicetree@vger.kernel.org,
         kernel@puri.sm, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 9/9] arm64: dts: librem5-devkit: add lsm9ds1 mount matrix
-Date:   Tue, 18 Feb 2020 09:49:42 +0100
-Message-Id: <20200218084942.4884-10-martin.kepplinger@puri.sm>
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v2 8/9] arm64: dts: librem5-devkit: increase the VBUS current in the kernel
+Date:   Tue, 18 Feb 2020 09:49:41 +0100
+Message-Id: <20200218084942.4884-9-martin.kepplinger@puri.sm>
 In-Reply-To: <20200218084942.4884-1-martin.kepplinger@puri.sm>
 References: <20200218084942.4884-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
@@ -44,37 +44,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IMU chip on the librem5-devkit is not mounted at the "natural" place
-that would match normal phone orientation (see the documentation for the
-details about what that is).
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-Since the lsm9ds1 driver supports providing a mount matrix, we can describe
-the orientation on the board in the dts:
+The poly fuses can handle 6V 4Amps so incease the kernel limts to 5V
+3.5Amps.
 
-Create a right-handed coordinate system (x * -1; see the datasheet for the
-axis) and rotate 180 degrees around the y axis because the device sits on
-the back side from the display.
-
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 4cb11ed17c24..19ca3b4f802f 100644
+index 8071e6a34604..4cb11ed17c24 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -537,6 +537,9 @@
- 		reg = <0x6a>;
- 		vdd-supply = <&reg_3v3_p>;
- 		vddio-supply = <&reg_3v3_p>;
-+		mount-matrix =  "1",  "0",  "0",
-+				"0",  "1",  "0",
-+				"0",  "0", "-1";
- 	};
- };
+@@ -426,10 +426,10 @@
+ 				PDO_FIXED_USB_COMM |
+ 				PDO_FIXED_DUAL_ROLE |
+ 				PDO_FIXED_DATA_SWAP )>;
+-			sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM |
++			sink-pdos = <PDO_FIXED(5000, 3500, PDO_FIXED_USB_COMM |
+ 				PDO_FIXED_DUAL_ROLE |
+ 				PDO_FIXED_DATA_SWAP )
+-			     PDO_VAR(5000, 3000, 3000)>;
++			     PDO_VAR(5000, 5000, 3500)>;
+ 			op-sink-microwatt = <10000000>;
  
+ 			ports {
 -- 
 2.20.1
 
