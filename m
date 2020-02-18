@@ -2,119 +2,87 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDBEC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376F9C3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488C92173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwceS1lB"
+	by mail.kernel.org (Postfix) with ESMTP id 0B21F24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582069064;
+	bh=0aWiRZmAfoGXZzUWUGCycJjuXmddi7uYzgUaZE/M7uc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Pw+zMjj/whfPAp1YqzX8szjQC6+7vySM7ZAjCkaxZH0tRMfr9QWQVSEyhPR6j0aRy
+	 ylYMHnMfpSIlgsnKEuBsPd9nchf8yHZPxGoE3reXCAgLZLJjSfO60mfZ8yfGe+GJUT
+	 +6hP6Q6IyE92JHQxSLW5IIPwOdwtyCfuOLOKzqhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgBRXgv (ORCPT
+        id S1726768AbgBRXhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:36:51 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35229 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBRXgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:36:50 -0500
-Received: by mail-pj1-f66.google.com with SMTP id q39so1694106pjc.0;
-        Tue, 18 Feb 2020 15:36:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bTzxD9TcFYcChEJJr98YzSBO8WFXRduTV9HuNB7JAI0=;
-        b=uwceS1lBwDXOZIZaX98KUbUeiIKQYJmtbXvRktMiGsvOP/lZwsEj6NTczMS0EmOVtE
-         6NQeRrWHDcbavsVfdxKUICBZ+fYZEjYwt8v8jx7wxKin6XOTP/8Vvtf5ZNVmqMRmBZ8Z
-         a/LIK+1eFNrtc0AbOP6ds5wvmpQPgPCx9NOTanOFQqU0ok4W6VavErSkyLQT1XjMVS4w
-         x7VJKg+y/nDoHEnjysAHc70yw7KKF51SI/NnkOD9MptqHZr9tZeDg0ndMZKcPbvtwpW9
-         k6rczakekV0Ht82e3uL/ZDqleQOLY/o6zaqcwNZ8P+89QJfDV9CzOe5XkwiSbeI9vr8Z
-         a+1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bTzxD9TcFYcChEJJr98YzSBO8WFXRduTV9HuNB7JAI0=;
-        b=srF1BEB7tS0f1N1M//P4nXUzhKl4vDvR6NzI8dodavIzS7rRuCWEprxr7BXNo7+qKs
-         Dw3Nd4WyMNTYu8anGWtMz/pa4qBKnwKccQfwRt352QshPXTSge8vQxTvEyGOBskx47mI
-         jpucuYPvrWn7M3hO1MKTk8mNvsbNcW2g/y+piNQ/4PJKaAZa4bYAJKe4dufwG+3SR6vm
-         3FvgNwqKhE88u41zyIg2O7qq9xGXjrWXEQe1Rh4P3GT4MnPMk5KBtRsph4Rw7yI7TTeK
-         oQPrFXgT7S5ReJzFH8S/4ixaIx7kYeZ8Yhwj4KBOy1Ybhc8IddB/wyXObnS0tGUTVESt
-         udeQ==
-X-Gm-Message-State: APjAAAVXQ6npScRnoTLeXkn5nW1Y5GME7KuzbWccgTg3FhNccl52Vexo
-        48kZ3HjShW45ry55KW5yGHg=
-X-Google-Smtp-Source: APXvYqzNtI9Cmyr0xksX/kuZPbU/WRWO1EWsEb8gLhMo5G+UefucY3zihUkjbYj8A4ORpQGFiCKxQg==
-X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr23934536plo.154.1582069009699;
-        Tue, 18 Feb 2020 15:36:49 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::5:dd54])
-        by smtp.gmail.com with ESMTPSA id s13sm3824655pjp.1.2020.02.18.15.36.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 15:36:48 -0800 (PST)
-Date:   Tue, 18 Feb 2020 15:36:42 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
-Message-ID: <20200218233641.i7fyf36zxocgucap@ast-mbp>
-References: <20200214133917.304937432@linutronix.de>
- <20200214161504.325142160@linutronix.de>
- <20200214191126.lbiusetaxecdl3of@localhost>
- <87imk9t02r.fsf@nanos.tec.linutronix.de>
+        Tue, 18 Feb 2020 18:37:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbgBRXhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:37:42 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7AB2173E;
+        Tue, 18 Feb 2020 23:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582069061;
+        bh=0aWiRZmAfoGXZzUWUGCycJjuXmddi7uYzgUaZE/M7uc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OPk9m23ZTUqwf7aTnrGTPlZ+tgVlZDOk2pNut3NoQaY7x0cAB6aZQ/76La+7wl5Re
+         AtN2fXSr9P71aU5MMq/b4tMMnTj5pvWCT3PYARCb1SbCnu5P64CuSBF2ifTOPlFbic
+         K70nrIqDLiowtxG0S/vqOVlMdYAeAFcbRdPKcXJw=
+Subject: Re: [PATCH 4.19 00/38] 4.19.105-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200218190418.536430858@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <5c3972ba-4343-a84d-7cfc-9b602e34e656@kernel.org>
+Date:   Tue, 18 Feb 2020 16:37:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imk9t02r.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 08:56:12PM +0100, Thomas Gleixner wrote:
+On 2/18/20 12:54 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.105 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > Also, I don't think using __this_cpu_inc() without preempt-disable or
-> > irq off is safe. You'll probably want to move to this_cpu_inc/dec
-> > instead, which can be heavier on some architectures.
+> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
+> Anything received after that time might be too late.
 > 
-> Good catch.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.105-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Overall looks great.
-Thank you for taking time to write commit logs and detailed cover letter.
-I think s/__this_cpu_inc/this_cpu_inc/ is the only bit that needs to be
-addressed for it to be merged.
-There were few other suggestions from Mathieu and Jakub.
-Could you address them and resend?
-I saw patch 1 landing in tip tree, but it needs to be in bpf-next as well
-along with the rest of the series. Does it really need to be in the tip?
-I would prefer to take the whole thing and avoid conflicts around
-migrate_disable() especially if nothing in tip is going to use it in this
-development cycle. So just drop patch 1 from the tip?
+Compiled and booted on my test system. No dmesg regressions.
 
-Regarding
-union {
-   raw_spinlock_t  raw_lock;
-   spinlock_t      lock;
-};
-yeah. it's not pretty, but I also don't have better ideas.
-
-Regarding migrate_disable()... can you enable it without the rest of RT?
-I haven't seen its implementation. I suspect it's scheduler only change?
-If I can use migrate_disable() without RT it will help my work on sleepable
-BPF programs. I would only have to worry about rcu_read_lock() since
-preempt_disable() is nicely addressed.
+thanks,
+-- Shuah
