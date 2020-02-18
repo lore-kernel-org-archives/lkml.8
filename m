@@ -2,145 +2,71 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A63FC34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1DCC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2298520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056014;
-	bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aDhLQZ33A2jqFX2+F/C1D1DDngoda8//ZYmANC/kdCnmuy5BU79PDondgIByE1cMk
-	 mLOlKeMSgtej8FM6KwxOn9dYUpT9Duwl8Ip9N0WN0ehcuGNXUee9Yg3yZ48eVx5ZAV
-	 nFXGysShhsjLRhzYUNbb9NMSn9aft1T18abUP420=
+	by mail.kernel.org (Postfix) with ESMTP id 88F772465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gAaJMjvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgBRUAN (ORCPT
+        id S1728541AbgBRUAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:16 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:55012 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbgBRUAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728522AbgBRUAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:12 -0500
+Received: from zn.tnic (p200300EC2F0C1F00DCB96C3517B36067.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1f00:dcb9:6c35:17b3:6067])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE8424125;
-        Tue, 18 Feb 2020 20:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056010;
-        bh=wAdqqFi0pp9/8Gp8KwrMsD1sYSgVs/A5mAIDtyCLqwg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8C2+HZLQU+ku5DKTjUe/SZ82C9+dNg5ZpxctsK1qTylvHwW/umCaSNhUxytnrNdg
-         c0oTvrmGH6TuVeXoedQDiaTcJJEj+q6RQjX9f2v9PN7a23syqZecGsLUlzJ38L0F92
-         zpzLklOaL3jh+MX8Z58/wOWmPskyn/gZ1tIP87W8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 52/66] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
-Date:   Tue, 18 Feb 2020 20:55:19 +0100
-Message-Id: <20200218190432.866086714@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4BC741EC0CF3;
+        Tue, 18 Feb 2020 21:00:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582056011;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=M7FeIuaaEw2kt/luaqzhrd/OTft0vjwkL2w9pvYIVaA=;
+        b=gAaJMjvEDuDgQZOY7IvD7Bf1WdJ86K66jxhCfQ/JdAHX5bBSXHFTGeHeB8ESBABfGA2Ki8
+        75StIVi7iL0kjYwZvURvM2oMkKnq2ucHLqPcBam5CEk/14o+i+/83J/fvjhO3ctnBcD1y/
+        QLUCfHTsP19UnTygXBBmNrw9/8ulOPI=
+Date:   Tue, 18 Feb 2020 21:00:11 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] #MC mess
+Message-ID: <20200218200011.GP14449@zn.tnic>
+References: <20200218173150.GK14449@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F57B937@ORSMSX115.amr.corp.intel.com>
+ <20200218195130.GO14449@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F57BD54@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F57BD54@ORSMSX115.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, Feb 18, 2020 at 07:54:54PM +0000, Luck, Tony wrote:
+> Recoverable machine checks are a normal (hopefully rare) event on a server.  But you wouldn't
+> want to lose tracing capability just because we took a page offline and killed a process to recover.
 
-commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
+Yeah, ok. How do you want to select which ones? What mce_no_way_out()
+says or severity or...?
 
-Perf doesn't take the left period into account when auto-reload is
-enabled with fixed period sampling mode in context switch.
+-- 
+Regards/Gruss,
+    Boris.
 
-Here is the MSR trace of the perf command as below.
-(The MSR trace is simplified from a ftrace log.)
-
-    #perf record -e cycles:p -c 2000000 -- ./triad_loop
-
-      //The MSR trace of task schedule out
-      //perf disable all counters, disable PEBS, disable GP counter 0,
-      //read GP counter 0, and re-enable all counters.
-      //The counter 0 stops at 0xfffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value fffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      //perf disable all counters, enable and set GP counter 0,
-      //enable PEBS, and re-enable all counters.
-      //0xffffffe17b80 (-2000000) is written to GP counter 0.
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-When the same task schedule in again, the counter should starts from
-previous left. However, it starts from the fixed period -2000000 again.
-
-A special variant of intel_pmu_save_and_restart() is used for
-auto-reload, which doesn't update the hwc->period_left.
-When the monitored task schedules in again, perf doesn't know the left
-period. The fixed period is used, which is inaccurate.
-
-With auto-reload, the counter always has a negative counter value. So
-the left period is -value. Update the period_left in
-intel_pmu_save_and_restart_reload().
-
-With the patch:
-
-      //The MSR trace of task schedule out
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value ffffffe25cbc
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/intel/ds.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1713,6 +1713,8 @@ intel_pmu_save_and_restart_reload(struct
- 	old = ((s64)(prev_raw_count << shift) >> shift);
- 	local64_add(new - old + count * period, &event->count);
- 
-+	local64_set(&hwc->period_left, -new);
-+
- 	perf_event_update_userpage(event);
- 
- 	return 0;
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
