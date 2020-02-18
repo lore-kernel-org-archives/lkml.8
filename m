@@ -2,134 +2,102 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98309C34022
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7926CC34022
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDB120801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581989187;
-	bh=3BzT6RmcZZj5eSlHT2DLI4ExcRF4k9v31POx0RmC3MI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AggSa/h5Sk2ZzBM0ziJFzQO2uTjega28QRrdXsteyBVVE9VYKEUV+KK1gMqu1wUWw
-	 5o6ARUPliZDHsSA9pv6Mzqkm77zsmidxL65mAtMn3uT9ZmbSQ6pTdf1OBcfXMmCQbR
-	 UJGQrAJXBqysIdwSr+IMSlHJNVfRj4GiJbj08XcE=
+	by mail.kernel.org (Postfix) with ESMTP id 5C26C20801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 01:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgBRB00 (ORCPT
+        id S1726240AbgBRBd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 20:26:26 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:59997 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgBRB00 (ORCPT
+        Mon, 17 Feb 2020 20:33:29 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32992 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726091AbgBRBd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 20:26:26 -0500
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01I1QD7N019766;
-        Tue, 18 Feb 2020 10:26:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01I1QD7N019766
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581989173;
-        bh=DFo5bZ5Bm4QsGsx8r/W+4n6QGw47HateZtKF1IqGjK4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jp8Y9Unk0X+nZxx/4xNp0bdyquwZdI2uguxEiL1thKibD01TDUQchfpR8tzH9qo54
-         ebqsDP1nPj2QrD86PyvvbtgtDZ8+GiPD1y5RNNa6TGQb56nqw213MaBrl/ua5uUOxU
-         5DgFbeS7eoU+ayS6eMsbL5jSguqEf93I5A31J7oZ1wYAGR5ojC7dKyrDGv00Cngfqv
-         iT2QgcdCBSG0oK5tLSXvBgDlhX0dsPlOMUfK8JtSI8F5ZV+NyZIQxGvqxdkZit3/wz
-         E3LUSTLD5c77SzuZHnSt3ucM4iXEOsnInbp7Gg7ExPHJF4YNry6LYvdUFi/EjL6m5E
-         7JX8AjBphg6hQ==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id b79so11619638vsd.9;
-        Mon, 17 Feb 2020 17:26:13 -0800 (PST)
-X-Gm-Message-State: APjAAAXDw3l+2liVfeoZoOSWVq0aQOuWwLZcHtyuN26YGAH5hwNeh+Lo
-        fk08zvlMAvRr8imthlwwaLkWMfoNfS1LlR46Lmo=
-X-Google-Smtp-Source: APXvYqxSiKTUTozFX1mDbJzMmvg2TfqQRp6FqoGdjnaYvvmSAf4Wg9j1N4gyQ+nadCxh2KhQZghaCZKnVejvMtBs3tE=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr9552896vsq.215.1581989172430;
- Mon, 17 Feb 2020 17:26:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200213003535.GA3269@embeddedor.com>
-In-Reply-To: <20200213003535.GA3269@embeddedor.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 18 Feb 2020 10:25:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS8TomJow4_3T++3u+eo=KhRMP9V5X=urWNRPUE93NOvQ@mail.gmail.com>
-Message-ID: <CAK7LNAS8TomJow4_3T++3u+eo=KhRMP9V5X=urWNRPUE93NOvQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: uniphier-mdmac: replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Mon, 17 Feb 2020 20:33:28 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01I1U6e9032917
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 20:33:27 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y6dq6h7gf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 20:33:27 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 18 Feb 2020 01:33:25 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Feb 2020 01:33:22 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01I1XLFl45023244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 01:33:21 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DF3F52051;
+        Tue, 18 Feb 2020 01:33:21 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.165.167])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 080315204F;
+        Tue, 18 Feb 2020 01:33:18 +0000 (GMT)
+Subject: Re: [PATCH v2 1/2] crypto: fix mismatched hash algorithm name
+ sm3-256 to sm3
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        jarkko.sakkinen@linux.intel.com, ebiggers@kernel.org,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com
+Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Feb 2020 20:33:18 -0500
+In-Reply-To: <20200217093649.97938-2-tianjia.zhang@linux.alibaba.com>
+References: <20200217093649.97938-1-tianjia.zhang@linux.alibaba.com>
+         <20200217093649.97938-2-tianjia.zhang@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021801-4275-0000-0000-000003A2F334
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021801-4276-0000-0000-000038B6F8A5
+Message-Id: <1581989598.8515.233.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_14:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 9:35 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On Mon, 2020-02-17 at 17:36 +0800, Tianjia Zhang wrote:
+> The name sm3-256 is defined in hash_algo_name in hash_info, but the
+> algorithm name implemented in sm3_generic.c is sm3, which will cause
+> the sm3-256 algorithm to be not found in some application scenarios of
+> the hash algorithm, and an ENOENT error will occur. For example,
+> IMA, keys, and other subsystems that reference hash_algo_name all use
+> the hash algorithm of sm3.
+> 
+> According to https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html,
+> SM3 always produces a 256-bit hash value and there are no plans for
+> other length development, so there is no ambiguity in the name of sm3.
+> 
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+The previous version of this patch set is queued in the next-
+integrity-testing branch.  That version of this patch didn't
+change TPM_ALG_SM3_256.  Unless the TPM standard was modified, the TPM
+spec refers to it as TPM_ALG_SM3_256.  Has that changed?
 
+Mimi
 
-> ---
->  drivers/dma/uniphier-mdmac.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/uniphier-mdmac.c b/drivers/dma/uniphier-mdmac.c
-> index 21b8f1131d55..618839df0748 100644
-> --- a/drivers/dma/uniphier-mdmac.c
-> +++ b/drivers/dma/uniphier-mdmac.c
-> @@ -68,7 +68,7 @@ struct uniphier_mdmac_device {
->         struct dma_device ddev;
->         struct clk *clk;
->         void __iomem *reg_base;
-> -       struct uniphier_mdmac_chan channels[0];
-> +       struct uniphier_mdmac_chan channels[];
->  };
->
->  static struct uniphier_mdmac_chan *
-> --
-> 2.23.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
