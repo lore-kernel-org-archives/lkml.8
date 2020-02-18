@@ -7,151 +7,97 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BEC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2023C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA4824125
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FDA22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jg/5BVHF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z+vOz7ZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgBRS4f (ORCPT
+        id S1726415AbgBRS5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:56:35 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42936 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgBRS4e (ORCPT
+        Tue, 18 Feb 2020 13:57:48 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44490 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgBRS5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:56:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582052193;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UGqjQEwBIAGIH2rlvtx+n4+mjmKd16dlzwe9jbo2/EQ=;
-        b=Jg/5BVHFGd7gOa7bV7808Ho1UVKo7JLEYXcxEh1FkjKZW4GpDymVcHR534dp3PTk0po7Zg
-        882d/sOiij40duqSe+xSGUZsKZ0jfbxPzHpwbhaa5//FFKvribseI7+xyZmFjz8VofQMKF
-        XiYggb7J66KAJLAIyNT4Hy+3rlIJ044=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-WUsHyBmKMyO0YlUQF_9VXQ-1; Tue, 18 Feb 2020 13:56:24 -0500
-X-MC-Unique: WUsHyBmKMyO0YlUQF_9VXQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01E3BDBA3;
-        Tue, 18 Feb 2020 18:56:23 +0000 (UTC)
-Received: from mail (ovpn-120-118.rdu2.redhat.com [10.10.120.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B10A560BE1;
-        Tue, 18 Feb 2020 18:56:19 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 13:56:18 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Mark Salter <msalter@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] mm: use_mm: fix for arches checking mm_users to
- optimize TLB flushes
-Message-ID: <20200218185618.GB14027@redhat.com>
-References: <20200203201745.29986-1-aarcange@redhat.com>
- <20200203201745.29986-2-aarcange@redhat.com>
- <20200218113103.GB4151@dhcp22.suse.cz>
+        Tue, 18 Feb 2020 13:57:48 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01IIv4AT108923;
+        Tue, 18 Feb 2020 12:57:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582052224;
+        bh=lg/2Z6zca55Iu7jvMKJqSywmZdemYSmrtaUYfeNcE7M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z+vOz7ZS7gut4Dor2Y7wFP7TzZRCGlKyp/WI42DHESu/+pb9F7FGCJ1V56vQ/klNO
+         X/KMNTqyLgCLNgVKoj4JI3TGVjmhyPmnlcueD34g3yQjUDAvzNvkkz77CZBJMi5zFz
+         6N9pI3PPPoX2zhLS1xVWMWaJ1saaZ4T6qzXLp2ms=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01IIv3wf023051
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Feb 2020 12:57:03 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 18
+ Feb 2020 12:57:03 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 18 Feb 2020 12:57:03 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01IIv3qu066914;
+        Tue, 18 Feb 2020 12:57:03 -0600
+Subject: Re: [PATCH] ASoC: tas2562: Return invalid for when bitwidth is
+ invalid
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200218174706.27309-1-dmurphy@ti.com>
+ <20200218184832.GL4232@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <89e205b4-ba03-8db6-ff75-acec3d954b52@ti.com>
+Date:   Tue, 18 Feb 2020 12:52:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218113103.GB4151@dhcp22.suse.cz>
-User-Agent: Mutt/1.13.1 (2019-12-14)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200218184832.GL4232@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal!
+Mark
+On 2/18/20 12:48 PM, Mark Brown wrote:
+> On Tue, Feb 18, 2020 at 11:47:06AM -0600, Dan Murphy wrote:
+>> If the bitwidth passed in to the set_bitwidth function is not supported
+>> then return an error.
+>>
+>> Fixes: 29b74236bd57 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   scripts/conmakehash        | Bin 0 -> 13120 bytes
+>>   scripts/sortextable        | Bin 0 -> 18040 bytes
+>>   sound/soc/codecs/tas2562.c |   3 ++-
+>>   3 files changed, 2 insertions(+), 1 deletion(-)
+>>   create mode 100755 scripts/conmakehash
+>>   create mode 100755 scripts/sortextable
+>>
+>> diff --git a/scripts/conmakehash b/scripts/conmakehash
+>> new file mode 100755
+>> index 0000000000000000000000000000000000000000..17eec37019b8ae45f42f3c82046d1a55a6f69cb3
+>> GIT binary patch
+>> literal 13120
+>> zcmeHOeQ;D&mcN}25CU`u1i`Q23C#=v(j@XB0Wx-n4!le?@~!SFHl6fK(rc$X+x=RD
+> This is...  fun?  I'm guessing it's not intentional, it's certainly a
+> litt
 
-On Tue, Feb 18, 2020 at 12:31:03PM +0100, Michal Hocko wrote:
-> On Mon 03-02-20 15:17:44, Andrea Arcangeli wrote:
-> > alpha, ia64, mips, powerpc, sh, sparc are relying on a check on
-> > mm->mm_users to know if they can skip some remote TLB flushes for
-> > single threaded processes.
-> > 
-> > Most callers of use_mm() tend to invoke mmget_not_zero() or
-> > get_task_mm() before use_mm() to ensure the mm will remain alive in
-> > between use_mm() and unuse_mm().
-> > 
-> > Some callers however don't increase mm_users and they instead rely on
-> > serialization in __mmput() to ensure the mm will remain alive in
-> > between use_mm() and unuse_mm(). Not increasing mm_users during
-> > use_mm() is however unsafe for aforementioned arch TLB flushes
-> > optimizations. So either mmget()/mmput() should be added to the
-> > problematic callers of use_mm()/unuse_mm() or we can embed them in
-> > use_mm()/unuse_mm() which is more robust.
-> 
-> I would prefer we do not do that because then the real owner of the mm
-> cannot really tear down the address space and the life time of it is
-> bound to a kernel thread doing the use_mm. This is undesirable I would
-> really prefer if the existing few users would use mmget only when they
-> really need to access mm.
+Ugh! Resending without the extra files.
 
-If the existing few users that don't already do the explicit mmget
-will have to start doing it too, the end result will be exactly the
-same that you described in your "cons" (lieftime of the mm will still
-be up to who did mmget;use_mm and didn't call unuse_mm;mmput yet).
+Dan
 
-One reason to prefer adding the mmget to the callers to forget it,
-would be to avoid an atomic op in use_mm (for those callers that
-didn't forget it), but if anybody is doing use_mm in a fast path that
-won't be very fast anyway so I didn't think this was worth the
-risk. If that microoptimization in a slow path is the reason we should
-add mmget to the callers that forgot it that would be fine with me
-although I think it's risky because if already happened once and it
-could happen again (and when it happens it only bits a few arches if
-used with a few drivers).
-
-On a side note the patch 2/2 should be dropped for now, I'm looking if
-we can optimize away TLB-i broadcasts from multithreaded apps too.
-
-Thanks,
-Andrea
-
-> 
-> > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-> > ---
-> >  mm/mmu_context.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/mm/mmu_context.c b/mm/mmu_context.c
-> > index 3e612ae748e9..ced0e1218c0f 100644
-> > --- a/mm/mmu_context.c
-> > +++ b/mm/mmu_context.c
-> > @@ -30,6 +30,7 @@ void use_mm(struct mm_struct *mm)
-> >  		mmgrab(mm);
-> >  		tsk->active_mm = mm;
-> >  	}
-> > +	mmget(mm);
-> >  	tsk->mm = mm;
-> >  	switch_mm(active_mm, mm, tsk);
-> >  	task_unlock(tsk);
-> > @@ -57,6 +58,7 @@ void unuse_mm(struct mm_struct *mm)
-> >  	task_lock(tsk);
-> >  	sync_mm_rss(mm);
-> >  	tsk->mm = NULL;
-> > +	mmput(mm);
-> >  	/* active_mm is still 'mm' */
-> >  	enter_lazy_tlb(mm, tsk);
-> >  	task_unlock(tsk);
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
-
+> le difficult to review.  :)
