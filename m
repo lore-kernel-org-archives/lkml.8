@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D5C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FAC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489B121D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB9824125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056274;
-	bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
+	s=default; t=1582056286;
+	bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1eSZPCibd2zWVFshPHtbhMFIBSvi1QVl4gK/TDxaI/7hHH/ZWZG+mdxo1cSAGCbLm
-	 49hmK94s3nUAtAAaTAza4tc+FOOP/iK+KyeMZQuATNcYf85FkF1lKLYxH6p8bTloxC
-	 SqDra2bg7wr/ZgXPW4dnSS0sXJ93w8Hs2ZWo3+5o=
+	b=LOGBwSQ9S6DS2arSNKyNCMKWj5RqQzRZFmR0VahwvkOmp1QEWefTNDsHTxfvKh9hm
+	 nxA9ewIG8sOQz7zYSG/pzEM2JEucbVjQs3YlH51yNp7S1ZjFzRWAvNQLVQzS7IMEa/
+	 4PoQ2+VZDOgrhCnuuh2tRdbvV7kQtWf2sF/5cQlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgBRUEd (ORCPT
+        id S1728937AbgBRUEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:04:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728262AbgBRUDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:23 -0500
+        id S1729044AbgBRUC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A40424670;
-        Tue, 18 Feb 2020 20:03:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF07021D56;
+        Tue, 18 Feb 2020 20:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056202;
-        bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
+        s=default; t=1582056179;
+        bh=us2hgAvUzqAPptOOCH7doagG3AK8HtWXYp9L9PEzMC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ui4i0N7XLvaUhS4WaRsk2INEp5bC2Vw02/ISVo2w+TzFHrHEcsT6YcTHCcy4w9yoL
-         giNEJWJTXYE8motqUzP9TnBk29MlsZQ/iPJDy+vPMSI4LUZ7urjS2fKDSpNm2nvLgX
-         eMS2YGAg8bYtRmjTSnXen3Ogfs4RGtK7hImmPED8=
+        b=xw4ztxXImCygasJii6jBuNGtrMzAFMoEFjRWu6Rs67eiaaWtZIvIg82iF2Wm7pmUH
+         jEZkEaerLVilF8H7ZgertAUV8sn4M0Ljh329oqHOr6eDcWKUaFkbA4EZdqkwdhQdqL
+         mIcRD5Or3FCZh6HGM4MM3EDSN3huPt5u0o+GElMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.5 37/80] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
-Date:   Tue, 18 Feb 2020 20:54:58 +0100
-Message-Id: <20200218190435.970207368@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.5 64/80] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+Date:   Tue, 18 Feb 2020 20:55:25 +0100
+Message-Id: <20200218190438.150862023@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -61,74 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Mike Jones <michael-a1.jones@analog.com>
 
-commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
+commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
 
-Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
-claimed L2 misses were unsupported, due to them not being found in its
-referenced documentation, whose link has now moved [1].
+Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
+bits 6/5. This fixs a LTC297X family bug where polling always returns
+not busy even when the part is busy. This fixes a LTC388X and
+LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
+not polled, which can lead to NACKing of commands. LTC388X and
+LTM467X modules now poll BUSY and PEND, increasing reliability by
+eliminating NACKing of commands.
 
-That old documentation listed PMCx064 unit mask bit 3 as:
-
-    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
-
-and bit 0 as:
-
-    "IcFillMiss: IC Fill Miss"
-
-We now have new public documentation [2] with improved descriptions, that
-clearly indicate what events those unit mask bits represent:
-
-Bit 3 now clearly states:
-
-    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
-
-and bit 0 is:
-
-    "IcFillMiss: Instruction Cache Req Miss in L2."
-
-So we can now add support for L2 misses in perf's genericised events as
-PMCx064 with both the above unit masks.
-
-[1] The commit's original documentation reference, "Processor Programming
-    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
-    originally available here:
-
-        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-
-    is now available here:
-
-        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-
-[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
-    Revision B0 Processors", available here:
-
-	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
-
-Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
-Reported-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
+Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
+Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/hwmon/pmbus/ltc2978.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -246,6 +246,7 @@ static const u64 amd_f17h_perfmon_event_
- 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
- 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
- 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
-+	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
- 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
- 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
- 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
+--- a/drivers/hwmon/pmbus/ltc2978.c
++++ b/drivers/hwmon/pmbus/ltc2978.c
+@@ -82,8 +82,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+ 
+ #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 
+-#define LTC_NOT_BUSY			BIT(5)
+-#define LTC_NOT_PENDING			BIT(4)
++#define LTC_NOT_BUSY			BIT(6)
++#define LTC_NOT_PENDING			BIT(5)
+ 
+ /*
+  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
 
 
