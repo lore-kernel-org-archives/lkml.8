@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C78C3402F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B99C3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9EA24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D8C24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgBSDY5 (ORCPT
+        id S1727078AbgBSDZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:24:57 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10640 "EHLO huawei.com"
+        Tue, 18 Feb 2020 22:25:02 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10639 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726475AbgBSDY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:24:57 -0500
+        id S1726467AbgBSDZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:25:00 -0500
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 420FF1827087B0FDBFDD;
+        by Forcepoint Email with ESMTP id 4632D349181D75DA334D;
         Wed, 19 Feb 2020 11:24:55 +0800 (CST)
 Received: from localhost.localdomain (10.175.34.53) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -31,12 +31,10 @@ To:     <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <aviad.krawczyk@huawei.com>, <luobin9@huawei.com>,
         <luoxianjun@huawei.com>
-Subject: [PATCH net-next 2/2] hinic: Fix a bug of setting hw_ioctxt
-Date:   Tue, 18 Feb 2020 19:40:13 +0000
-Message-ID: <20200218194013.23837-2-luobin9@huawei.com>
+Subject: [PATCH net-next 1/2] hinic: Fix a irq affinity bug
+Date:   Tue, 18 Feb 2020 19:40:12 +0000
+Message-ID: <20200218194013.23837-1-luobin9@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200218194013.23837-1-luobin9@huawei.com>
-References: <20200218194013.23837-1-luobin9@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.34.53]
@@ -46,52 +44,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix the bug of setting hw_ioctxt failed randomly
+do not use a local variable as an input parameter of irq_set_affinity_hint
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h | 2 +-
- drivers/net/ethernet/huawei/hinic/hinic_hw_if.h  | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h | 1 +
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c    | 5 ++---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 6f2cf569a283..79b3d53f2fbf 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -297,6 +297,7 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
+index f4a339b10b10..79091e131418 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
+@@ -94,6 +94,7 @@ struct hinic_rq {
+ 
+ 	struct hinic_wq         *wq;
+ 
++	struct cpumask		affinity_mask;
+ 	u32                     irq;
+ 	u16                     msix_entry;
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+index 56ea6d692f1c..2695ad69fca6 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+@@ -475,7 +475,6 @@ static int rx_request_irq(struct hinic_rxq *rxq)
+ 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
+ 	struct hinic_rq *rq = rxq->rq;
+ 	struct hinic_qp *qp;
+-	struct cpumask mask;
+ 	int err;
+ 
+ 	rx_add_napi(rxq);
+@@ -492,8 +491,8 @@ static int rx_request_irq(struct hinic_rxq *rxq)
  	}
  
- 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
-+	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
+ 	qp = container_of(rq, struct hinic_qp, rq);
+-	cpumask_set_cpu(qp->q_id % num_online_cpus(), &mask);
+-	return irq_set_affinity_hint(rq->irq, &mask);
++	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
++	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
+ }
  
- 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
- 	hw_ioctxt.cmdq_depth = 0;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index b069045de416..1265c11e8da8 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -151,7 +151,7 @@ struct hinic_cmd_hw_ioctxt {
- 
- 	u8      lro_en;
- 	u8      rsvd3;
--	u8      rsvd4;
-+	u8      ppf_idx;
- 	u8      rsvd5;
- 
- 	u16     rq_depth;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-index 517794509eb2..c7bb9ceca72c 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-@@ -137,6 +137,7 @@
- #define HINIC_HWIF_FUNC_IDX(hwif)       ((hwif)->attr.func_idx)
- #define HINIC_HWIF_PCI_INTF(hwif)       ((hwif)->attr.pci_intf_idx)
- #define HINIC_HWIF_PF_IDX(hwif)         ((hwif)->attr.pf_idx)
-+#define HINIC_HWIF_PPF_IDX(hwif)        ((hwif)->attr.ppf_idx)
- 
- #define HINIC_FUNC_TYPE(hwif)           ((hwif)->attr.func_type)
- #define HINIC_IS_PF(hwif)               (HINIC_FUNC_TYPE(hwif) == HINIC_PF)
+ static void rx_free_irq(struct hinic_rxq *rxq)
 -- 
 2.17.1
 
