@@ -2,161 +2,94 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC47C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757FDC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC11F206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5BA206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 09:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="J67inxLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgBRJiB (ORCPT
+        id S1726442AbgBRJiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 04:38:01 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726338AbgBRJiB (ORCPT
+        Tue, 18 Feb 2020 04:38:13 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40015 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgBRJiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:38:01 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01I9U71s009003
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 04:37:59 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e2f7sc5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 04:37:59 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Tue, 18 Feb 2020 09:37:57 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 09:37:55 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01I9bsV044105920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 09:37:54 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74C8411C04C;
-        Tue, 18 Feb 2020 09:37:54 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37C8011C05B;
-        Tue, 18 Feb 2020 09:37:54 +0000 (GMT)
-Received: from laptop2-ibm.local (unknown [9.152.212.60])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 09:37:54 +0000 (GMT)
-Date:   Tue, 18 Feb 2020 10:37:52 +0100
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Jeremy Cline <jcline@redhat.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: s390 depending on cc-options makes it difficult to configure
-In-Reply-To: <20200216185759.GA4091960@dev.jcline.org>
-References: <20191209164155.GA78160@dev.jcline.org>
-        <20191210090108.GA22512@unicorn.suse.cz>
-        <20191211171822.GA36366@dev.jcline.org>
-        <20200210194936.511ef603@laptop2-ibm.local>
-        <CAK7LNATL3Oyn=FLKm0TcB9SkJLuCOWV06a_t-FRtFiFp9Vda1g@mail.gmail.com>
-        <20200214203536.GA133402@laptop.jcline.org>
-        <CAK7LNAQ9+n8eRyUVrqTNDu915VcE+uHQoewH8WzJqpOpi8rT0Q@mail.gmail.com>
-        <20200216185759.GA4091960@dev.jcline.org>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021809-0012-0000-0000-00000387E519
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021809-0013-0000-0000-000021C474A4
-Message-Id: <20200218103752.6d4b9167@laptop2-ibm.local>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180077
+        Tue, 18 Feb 2020 04:38:12 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so2064966wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 01:38:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=diNDoQJLLiILeBSp0QO0Lz48zF47Rfh9Ax7IA6XtwgQ=;
+        b=J67inxLIMYJUPkxO7T96ySwzQg3VxXmPuDj5Mr3P4vSQ6vBQzVdg1ltFniAtpgq5EC
+         RryNiZ4n7lUwbyLLUQEI1lXWR9yObHs+Unc6iMGzzbEifWA4QVwxPXJ1Bs43i3A8/Qdd
+         VKck2+h+hCN8tE4912oW8dF6WdikqXnniVbtI2yZeRQn3uCBqj3bbHvRwPtYEGlZW/p2
+         vl11Xu1/snsnWHDWlf3d4M2DVXHsILuD92J5yxHUHc/cJz0N0ztEzB3jEEgs5pA23h1O
+         I5zy5+GYZcs2vNX2YwCJHmNwZohq38MjX7RAi9bMy1jl2tfiFdlzTH5M8WaIytfRRESU
+         5gVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=diNDoQJLLiILeBSp0QO0Lz48zF47Rfh9Ax7IA6XtwgQ=;
+        b=B2Ktz0fOKgk3ko8OAefjYKw6ymE4NKyBFVDMCQtnMrYW87L1H0eNXUfg1MP8tFN8Qy
+         lVzYiZXT5C5gfygqreUNEjY+VM/3xeSor0mnxozBBjbq9RVR+Q4GoC9139EDN9LehmZm
+         H8GF/oprefvLzzIVjY/HNd+sUBMLqKo0BAFbuCsYt4DGSWNw/+TTQgqiAKUb1HTp3sjX
+         Ok32eVkosmKdNy4i99iVz2HgeUfD/vgrFhFkXIc/8LvU5m72VYc/T+0BoScUcHm0sVAo
+         sSO/Heyqf1DkVQp/azvPXU1KDow5CEj2+jVrbN2yG1tf7s3yyQ2VVupBWMzO7UA7MTuL
+         eedA==
+X-Gm-Message-State: APjAAAX3jcc9wIi3Qzt4hQIrqosvJQArIy/l8zQDg7gb0pZK6YPotCZV
+        aE0CMT2HO8SAvOkDk68HopAYk2Q/mNU=
+X-Google-Smtp-Source: APXvYqzeD7oa4mok6DIG3T4dYqFSsOjTCWha3eJlu4pRVvxeD/u5na/yqU1ULsV45Nqx1fBw0lgYKA==
+X-Received: by 2002:a1c:5f41:: with SMTP id t62mr2171022wmb.42.1582018690334;
+        Tue, 18 Feb 2020 01:38:10 -0800 (PST)
+Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f127sm2740626wma.4.2020.02.18.01.38.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 18 Feb 2020 01:38:09 -0800 (PST)
+From:   Nicolas Belin <nbelin@baylibre.com>
+To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com
+Cc:     Nicolas Belin <nbelin@baylibre.com>
+Subject: [PATCH 0/3] leds: add support for apa102c leds
+Date:   Tue, 18 Feb 2020 10:37:34 +0100
+Message-Id: <1582018657-5720-1-git-send-email-nbelin@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+This patch series adds the driver and its related documentation 
+for the APA102C RGB Leds.
 
+Patch 1 adds the APA102C led manufacturer to the vendor-prefixes list.
 
-On Sun, 16 Feb 2020 13:57:59 -0500
-Jeremy Cline <jcline@redhat.com> wrote:
+Patch 2 Documents the APA102C led driver.
 
-> On Sun, Feb 16, 2020 at 01:08:49PM +0900, Masahiro Yamada wrote:
-> > On Sat, Feb 15, 2020 at 5:35 AM Jeremy Cline <jcline@redhat.com> wrote:  
-> > >
-> > > On Fri, Feb 14, 2020 at 12:31:05PM +0900, Masahiro Yamada wrote:  
-> > > > Hi.
-> > > >
-> > > > On Tue, Feb 11, 2020 at 3:49 AM Philipp Rudo <prudo@linux.ibm.com> wrote:  
+Patch 3 contains the actual driver code and modifications in the Kconfig 
+and the Makefile.
 
-[...]
+Nicolas Belin (3):
+  dt-bindings: Document shiji vendor-prefix
+  dt-bindings: leds: Shiji Lighting APA102C LED driver
+  drivers: leds: add support for apa102c leds
 
-> > > > One idea to workaround this is
-> > > > to use a fake script that accepts any flag,
-> > > > and use it as $(CC) in Kconfig.
-> > > >
-> > > > RFC patch is attached.
-> > > >
-> > > > This is not a perfect solution, of course.
+ .../devicetree/bindings/leds/leds-apa102c.yaml     |  91 +++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ drivers/leds/Kconfig                               |  11 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-apa102c.c                        | 268 +++++++++++++++++++++
+ 5 files changed, 373 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+ create mode 100644 drivers/leds/leds-apa102c.c
 
-I like the approach as it gives both sides what they need without blowing up
-Kconfig.
-
-> > > The attached patch doesn't looks like it'd work for what we need,  
-> > 
-> > I thought turning all cc-options to y would work
-> > for what you need.
-> > 
-> > With this, you can enable
-> > CONFIG_MARCH_Z13=y and CONFIG_TUNE_Z14=y
-> > instead of CONFIG_TUNE_DEFAULT.
-> > 
-> > If this approach does not work for you,
-> > what is your requirement?
-> >   
-> 
-> Oof, this was an awful typo. It *would* work for what we need. Sorry for
-> the confusion :(.
-> 
-> > 
-> >   
-> > > although I wonder if it's easier to just check when cc-options is
-> > > defined for an environment variable or something and always return y
-> > > instead of calling out to $(CC) at all. Comes to the same thing, I
-> > > suppose.  
-> > 
-> > 
-> > The macro definition in scripts/Kconfig.include
-> > takes precedence over any environment variable.
-> > 
-> > So, if you want to hack it from the environment,
-> > you need to change the code somehow.
-> > 
-> > The scripts/dummy-tools/ approach does not change
-> > anything for the use-case in upstream.
-> > 
-> > The result is the same, of course.
-> >   
-> 
-> Indeed. Since I'm not maintaining it I don't have a particularly strong
-> opinion about the approach. Whatever you like most works for me.
-
-I agree with Jeremy. Just pick what you think is best.
-
-Thanks a lot
-Philipp
+-- 
+2.7.4
 
