@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC1C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169C6C3404E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9442B24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E346024125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgBRVHx (ORCPT
+        id S1727873AbgBRVIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:07:53 -0500
+        Tue, 18 Feb 2020 16:08:16 -0500
 Received: from mga07.intel.com ([134.134.136.100]:6395 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgBRVHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:07:47 -0500
+        id S1727620AbgBRVHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:07:53 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 13:07:45 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 13:07:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,457,1574150400"; 
-   d="scan'208";a="253856414"
+   d="scan'208";a="253856469"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 18 Feb 2020 13:07:45 -0800
+  by orsmga002.jf.intel.com with ESMTP; 18 Feb 2020 13:07:46 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Paul Mackerras <paulus@ozlabs.org>,
@@ -49,9 +49,9 @@ Cc:     Paul Mackerras <paulus@ozlabs.org>,
         Christoffer Dall <christoffer.dall@arm.com>,
         Peter Xu <peterx@redhat.com>,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: [PATCH v6 07/22] KVM: Explicitly free allocated-but-unused dirty bitmap
-Date:   Tue, 18 Feb 2020 13:07:21 -0800
-Message-Id: <20200218210736.16432-8-sean.j.christopherson@intel.com>
+Subject: [PATCH v6 21/22] KVM: x86/mmu: Use ranged-based TLB flush for dirty log memslot flush
+Date:   Tue, 18 Feb 2020 13:07:35 -0800
+Message-Id: <20200218210736.16432-22-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200218210736.16432-1-sean.j.christopherson@intel.com>
 References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
@@ -62,47 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly free an allocated-but-unused dirty bitmap instead of relying
-on kvm_free_memslot() if an error occurs in __kvm_set_memory_region().
-There is no longer a need to abuse kvm_free_memslot() to free arch
-specific resources as arch specific code is now called only after the
-common flow is guaranteed to succeed.  Arch code can still fail, but
-it's responsible for its own cleanup in that case.
+Use the with_address() variant to when performing a TLB flush for a
+specific memslot via kvm_arch_flush_remote_tlbs_memslot(), i.e. when
+flushing after clearing dirty bits during KVM_{GET,CLEAR}_DIRTY_LOG.
+This aligns all dirty log memslot-specific TLB flushes to use the
+with_address() variant and paves the way for consolidating the relevant
+code.
 
-Eliminating the error path's abuse of kvm_free_memslot() paves the way
-for simplifying kvm_free_memslot(), i.e. dropping its @dont param.
+Note, moving to the with_address() variant only affects functionality
+when running as a HyperV guest.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- virt/kvm/kvm_main.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index fba171260ccb..42ec4dac99b3 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1093,7 +1093,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 
- 	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
- 	if (!slots)
--		goto out_free;
-+		goto out_bitmap;
- 	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
- 
- 	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
-@@ -1141,8 +1141,9 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
- 		slots = install_new_memslots(kvm, as_id, slots);
- 	kvfree(slots);
--out_free:
--	kvm_free_memslot(kvm, &new, &old);
-+out_bitmap:
-+	if (new.dirty_bitmap && !old.dirty_bitmap)
-+		kvm_destroy_dirty_bitmap(&new);
- out:
- 	return r;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 026e4a5c8e86..8a6516ce2983 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5950,7 +5950,8 @@ void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
+ 	 * kvm_mmu_slot_remove_write_access().
+ 	 */
+ 	lockdep_assert_held(&kvm->slots_lock);
+-	kvm_flush_remote_tlbs(kvm);
++	kvm_flush_remote_tlbs_with_address(kvm, memslot->base_gfn,
++					   memslot->npages);
  }
+ 
+ void kvm_mmu_slot_leaf_clear_dirty(struct kvm *kvm,
 -- 
 2.24.1
 
