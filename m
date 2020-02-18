@@ -2,167 +2,144 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4009C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75563C34049
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6082464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A07821D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxc9ph8g"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="omEsIjt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBRSff (ORCPT
+        id S1726481AbgBRSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:35:35 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41229 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgBRSfe (ORCPT
+        Tue, 18 Feb 2020 13:36:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40585 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgBRSg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:35:34 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so21090919oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:35:32 -0800 (PST)
+        Tue, 18 Feb 2020 13:36:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y1so8410715plp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:36:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IcvAuzFC9Lkg4wnHNZIr6uoBAzqVVQpFGj5rXmQg/yY=;
-        b=kxc9ph8gFehQw3AtSM+W9te+3/a+NdA+e7nXJ+dFQ5d6uyDVzW4Ldzl8FlH1Jih2Uo
-         oAVUatOsz5v8SNmBFERMUvS6uxS68oY4VUM2OI6RCopTfq8B0eHOwW1srbtkM8IcYOAi
-         CUSupwHe71FgGhmT59zjAPtWjBjHRPjuhLVMI56g9s9hQS6THRaP+95fQnnW1NOA2hen
-         fIFFmkRtnUST7ibHt8MP4lo54Gxm7w6AUCHICtdwwcxZi8+BTHJ8Kgtrs1EVNIMwKi+r
-         KqfEJjmkw9D/J4+idBfn+VyhY0oignGbe/Qw9vYN7nuVtkqBOaCHhyuPxQ3eGrmzBL1K
-         tc/Q==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=deSq0a14rSLUpPG1ENh74nUw4fh0dIpGPEl5kTUgrmw=;
+        b=omEsIjt8aCcWfGTycR646o4RZaZaKMTiWee69L+h8Fll5DulpeCtdxPisOy8v0kvAM
+         vu/2SlirKz3PFVgerQ+7mQNQVxEZgmSX+NtbNS8r1crMliYrPxUePrcoxH4zF2g3BuaO
+         nefp+B1sAzPMdwKqxU82rlYdguWXyDAiEMndG+3ZRotaL7i8NbwThMLyeQs/ab6AZPXC
+         506Ja+fL4Mqd1QNcEv6tcQhkhQ5JPNrVVmaNgG/Y6C6Q8033tQlpfDVvMg7Z9mnJLpgy
+         dPMIiQPP6tjBmYU2cZ34bUrQB9figgSStewo8Mg6Cq+4r0QneW73BkVzmlIbsvSffU6W
+         hWDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IcvAuzFC9Lkg4wnHNZIr6uoBAzqVVQpFGj5rXmQg/yY=;
-        b=VQ07osG5H2xfplzkdB3s9Zi8kW1gQN1+G9l5EBg8MiLTj64zTbdZVHcsCBNNkiBpQ2
-         oDcZD4yN03kSyr5CUlXUtyLfNMeYQ940BTy9rTcFsKjvi3kTGL1ywB0cciwJ2d0MihtF
-         NiCen4+qW+5GMii1fS36YA+ydX4cfxP2i0gPAxcCt3Zd3asRPDKUvBj9McrwBMi3/wBp
-         eFNPS4veiK1B/3RSfIQNKgowTakIWgEoQ1YeeI2V8RiakAxtNnrZZtZK2yTZdcZPYDh3
-         nYKRW43ZT3Vx+JRNLvj+qeSq+YCkKlvYgUW3QeQ6kdQ31OHIFGP2rSnAr6noNu4yQw4B
-         LnbQ==
-X-Gm-Message-State: APjAAAVzrhwBXOjA8Yx7e73xNJ3/N6JTi50mKfNwIsaOUfjgt9yTXC6E
-        W3KwKkz3u7hjzPwJv0mDzO+pj6tC5u9CdTsI6ZLU5Q==
-X-Google-Smtp-Source: APXvYqx9u3AJ/a/o5BknBaIj+KQkbejH5iz81odRS6pXkiOlPhUvAYEvsPxLonXOMmgTSCGFT5NxYFI4htC94mNVbHk=
-X-Received: by 2002:aca:af50:: with SMTP id y77mr2193716oie.8.1582050931979;
- Tue, 18 Feb 2020 10:35:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211151906.637d1703e4756066583b89da@linux-foundation.org> <1582035660.7365.90.camel@lca.pw>
-In-Reply-To: <1582035660.7365.90.camel@lca.pw>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Tue, 18 Feb 2020 10:35:20 -0800
-Message-ID: <CAHS8izO5=vKs-v9v=Di3hQXBD41+_YpYarXn1yZu9YE6SR-i6Q@mail.gmail.com>
-Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=deSq0a14rSLUpPG1ENh74nUw4fh0dIpGPEl5kTUgrmw=;
+        b=C1UrmkbOZEN6eXSQ00X5eIqPrfnmeBKNZXk5RQFOxVTaGk7/0d++LFhO6XN90CvYBB
+         rUr2P1FSB2YwL2NY8XNd+TVXIosmHj4Z5pUojgk4/ieyLiVmaom9Th5rOlHB97la/019
+         zDzPRNvXSuzCagWWws1yvfmnfTa8IQhJbyjKG1JKY3Hj2Jcj8pse1EEli6noNqVywV35
+         2LeoaNLz/J5hyrVM1dZ9P/5NZDJPNPjFoiuYqsEp+Fab/jWDzTctNQdSfP8vkkEXSwnl
+         NVjSpmTBaddO3lot6rceAYuenZmerKQtSrhw3aDtsFBW4OfbyTOq2SvEs4VfKHED943Z
+         haUg==
+X-Gm-Message-State: APjAAAVq/wy1+vylewC1ALyvnAVBbqJku9jmhq5k6wsBc5AmXwvOFyMq
+        t0+McU3MvXItQnWQbfQzWDpjgA==
+X-Google-Smtp-Source: APXvYqwcYKKfwzMe9EN+17kdygLIXGc6z65srtD5bMH+mVuMdxWGlEWgWQagiLvoXlBPO5rzfJPmEA==
+X-Received: by 2002:a17:902:426:: with SMTP id 35mr21802232ple.176.1582050988323;
+        Tue, 18 Feb 2020 10:36:28 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id z10sm5664511pgf.35.2020.02.18.10.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 10:36:27 -0800 (PST)
+Date:   Tue, 18 Feb 2020 10:36:27 -0800 (PST)
+X-Google-Original-Date: Tue, 18 Feb 2020 10:36:25 PST (-0800)
+Subject:     Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
+In-Reply-To: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
+CC:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>, anup@brainfault.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     atishp@atishpatra.org
+Message-ID: <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 6:21 AM Qian Cai <cai@lca.pw> wrote:
->
-> On Tue, 2020-02-11 at 15:19 -0800, Andrew Morton wrote:
-> > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
-> >
-> > > These counters will track hugetlb reservations rather than hugetlb
-> > > memory faulted in. This patch only adds the counter, following patches
-> > > add the charging and uncharging of the counter.
-> >
-> > We're still pretty thin on review here, but as it's v12 and Mike
-> > appears to be signed up to look at this work, I'll add them to -next to
-> > help move things forward.
-> >
->
-> Reverted the whole series on the top of next-20200217 fixed a crash below (I
-> don't see anything in next-20200218 would make any differences).
->
-> [ 7933.691114][T35046] LTP: starting hugemmap06
-> [ 7933.806377][T14355] ------------[ cut here ]------------
-> [ 7933.806541][T14355] kernel BUG at mm/hugetlb.c:490!
-> VM_BUG_ON(t - f <= 1);
-> [ 7933.806562][T14355] Oops: Exception in kernel mode, sig: 5 [#1]
-> [ 7933.806573][T14355] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256
-> DEBUG_PAGEALLOC NUMA PowerNV
-> [ 7933.806594][T14355] Modules linked in: kvm_hv kvm brd ext4 crc16 mbcache jbd2
-> loop ip_tables x_tables xfs sd_mod bnx2x ahci mdio libahci tg3 libata libphy
-> firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded:
-> binfmt_misc]
-> [ 7933.806651][T14355] CPU: 54 PID: 14355 Comm: hugemmap06 Tainted:
-> G           O      5.6.0-rc2-next-20200217 #1
-> [ 7933.806674][T14355] NIP:  c00000000040d22c LR: c00000000040d210 CTR:
-> 0000000000000000
-> [ 7933.806696][T14355] REGS: c0000014b71ef660 TRAP: 0700   Tainted:
-> G           O       (5.6.0-rc2-next-20200217)
-> [ 7933.806727][T14355] MSR:  900000000282b033
-> <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 22022228  XER: 00000000
-> [ 7933.806772][T14355] CFAR: c00000000040cbec IRQMASK: 0
-> [ 7933.806772][T14355] GPR00: c00000000040d210 c0000014b71ef8f0 c000000001657000
-> 0000000000000001
-> [ 7933.806772][T14355] GPR04: 0000000000000012 0000000000000013 0000000000000000
-> 0000000000000000
-> [ 7933.806772][T14355] GPR08: 0000000000000002 0000000000000002 0000000000000001
-> 0000000000000036
-> [ 7933.806772][T14355] GPR12: 0000000022022222 c000001ffffd3d00 00007fffad670000
-> 00007fffa4bc0000
-> [ 7933.806772][T14355] GPR16: 0000000000000000 c000000001567178 c0000014b71efa50
-> 0000000000000000
-> [ 7933.806772][T14355] GPR20: 0000000000000000 0000000000000013 0000000000000012
-> 0000000000000001
-> [ 7933.806772][T14355] GPR24: c0000019f74cd270 5deadbeef0000100 5deadbeef0000122
-> c0000019f74cd2c0
-> [ 7933.806772][T14355] GPR28: 0000000000000001 c0000019f74cd268 c0000014b71ef918
-> 0000000000000001
-> [ 7933.806961][T14355] NIP [c00000000040d22c] region_add+0x11c/0x3a0
-> [ 7933.806980][T14355] LR [c00000000040d210] region_add+0x100/0x3a0
-> [ 7933.807008][T14355] Call Trace:
-> [ 7933.807024][T14355] [c0000014b71ef8f0] [c00000000040d210]
-> region_add+0x100/0x3a0 (unreliable)
-> [ 7933.807056][T14355] [c0000014b71ef9b0] [c00000000040e0c8]
-> __vma_reservation_common+0x148/0x210
-> __vma_reservation_common at mm/hugetlb.c:2150
-> [ 7933.807087][T14355] [c0000014b71efa20] [c0000000004132a0]
-> alloc_huge_page+0x350/0x830
-> alloc_huge_page at mm/hugetlb.c:2359
-> [ 7933.807100][T14355] [c0000014b71efad0] [c0000000004168f8]
-> hugetlb_no_page+0x158/0xcb0
-> [ 7933.807113][T14355] [c0000014b71efc20] [c000000000417bc8]
-> hugetlb_fault+0x678/0xb30
-> [ 7933.807136][T14355] [c0000014b71efcd0] [c0000000003b1de4]
-> handle_mm_fault+0x444/0x450
-> [ 7933.807158][T14355] [c0000014b71efd20] [c000000000070b1c]
-> __do_page_fault+0x2bc/0xfd0
-> [ 7933.807181][T14355] [c0000014b71efe20] [c00000000000aa88]
-> handle_page_fault+0x10/0x30
-> [ 7933.807201][T14355] Instruction dump:
-> [ 7933.807209][T14355] 38c00000 7ea5ab78 7ec4b378 7fa3eb78 4bfff80d e9210020
-> e91d0050 e95d0068
-> [ 7933.807232][T14355] 7d3c4850 7d294214 7faa4800 409c0238 <0b170000> 7f03c378
-> 4858c005 60000000
-> [ 7933.807267][T14355] ---[ end trace 7560275de5f409f8 ]---
-> [ 7933.905258][T14355]
-> [ 7934.905339][T14355] Kernel panic - not syncing: Fatal exception
+On Sun, 02 Feb 2020 03:48:18 PST (-0800), atishp@atishpatra.org wrote:
+> On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
+>>
+>> Historically, we have been enabling all interrupts for each
+>> HART in trap_init(). Ideally, we should only enable M-mode
+>> interrupts for M-mode kernel and S-mode interrupts for S-mode
+>> kernel in trap_init().
+>>
+>> Currently, we get suprious S-mode interrupts on Kendryte K210
+>> board running M-mode NO-MMU kernel because we are enabling all
+>> interrupts in trap_init(). To fix this, we only enable software
+>> and external interrupt in trap_init(). In future, trap_init()
+>> will only enable software interrupt and PLIC driver will enable
+>> external interrupt using CPU notifiers.
 
-Hi Qian,
+I think we should add a proper interrupt controller driver for the per-hart
+interrupt controllers, as doing this within the other drivers is ugly -- for
+example, there's no reason an MMIO timer or interrupt controller driver should
+be toggling these bits.
 
-Yes this VM_BUG_ON was added by a patch in the series ("hugetlb:
-disable region_add file_region coalescing") so it's definitely related
-to the series. I'm taking a look at why this VM_BUG_ON fires. Can you
-confirm you reproduce this by running hugemmap06 from the ltp on a
-powerpc machine? Can I maybe have your config?
+>> Cc: stable@vger.kernel.org
+>> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
+
+I'd argue this actually fixes the M-mode stuff, since that's the first place
+this issue shows up.  I've queued this with
+
+Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
+
+instead, as that's the first commit that will actually write to MIE and
+therefor the first commit that will actually exhibit bad behavior.  It also has
+the advantage of making the patch apply on older trees, which should make life
+easier for the stable folks.
+
+>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+>> ---
+>>  arch/riscv/kernel/traps.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+>> index f4cad5163bf2..ffb3d94bf0cc 100644
+>> --- a/arch/riscv/kernel/traps.c
+>> +++ b/arch/riscv/kernel/traps.c
+>> @@ -156,6 +156,6 @@ void __init trap_init(void)
+>>         csr_write(CSR_SCRATCH, 0);
+>>         /* Set the exception vector address */
+>>         csr_write(CSR_TVEC, &handle_exception);
+>> -       /* Enable all interrupts */
+>> -       csr_write(CSR_IE, -1);
+>> +       /* Enable interrupts */
+>> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
+>>  }
+>> --
+>> 2.17.1
+>>
+>>
+>
+> Looks good.
+> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+
+Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+
+I consider this a bugfix, so I'm targeting it for RCs.  It's on fixes and
+should go up this week.
 
 Thanks!
