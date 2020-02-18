@@ -2,189 +2,186 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DD1C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF60CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BBD208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C6KqZjDs"
+	by mail.kernel.org (Postfix) with ESMTP id 91620208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgBRRGj (ORCPT
+        id S1727448AbgBRRGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:06:39 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28753 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727370AbgBRRGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 12:06:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582045597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yfA5n8Z+aIk+kyYGrURBEqzc1iGCmKy1Em7iNUliKXo=;
-        b=C6KqZjDsZoOnmqjNmWljr5ek5sB+MNMAoSNXOLnkzH/2Ash0SSySDVL9Y7qW6vLzOPA5+x
-        KvC6WiO0VqH9+l7rM0LbzIXqTeiorcwzpWyhIkSGcAVeYAWgfBTd0WV7RdpDzSECcmqnQG
-        iqzorM3yJDqrA2LLxaAzxNK0DUpblVY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-m6fPwh4wM82T2JjhXtBb3Q-1; Tue, 18 Feb 2020 12:06:32 -0500
-X-MC-Unique: m6fPwh4wM82T2JjhXtBb3Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2097C108442A;
-        Tue, 18 Feb 2020 17:06:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AF2E90F65;
-        Tue, 18 Feb 2020 17:06:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 12/19] security: Add hooks to rule on setting a superblock or
- mount watch [ver #16]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Feb 2020 17:06:28 +0000
-Message-ID: <158204558892.3299825.4526893589062757993.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54692 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBRRGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:06:33 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A56E72942E5
+Received: by earth.universe (Postfix, from userid 1000)
+        id 04A863C0C81; Tue, 18 Feb 2020 18:06:29 +0100 (CET)
+Date:   Tue, 18 Feb 2020 18:06:28 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+Message-ID: <20200218170628.r47xc3yydg6xx2yh@earth.universe>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+ <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+ <20200218153211.GI35972@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e4xhqf4ckenfagk5"
+Content-Disposition: inline
+In-Reply-To: <20200218153211.GI35972@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add security hooks that will allow an LSM to rule on whether or not a watch
-may be set on a mount or on a superblock.  More than one hook is required
-as the watches watch different types of object.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Casey Schaufler <casey@schaufler-ca.com>
-cc: Stephen Smalley <sds@tycho.nsa.gov>
-cc: linux-security-module@vger.kernel.org
----
+--e4xhqf4ckenfagk5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- include/linux/lsm_hooks.h |   24 ++++++++++++++++++++++++
- include/linux/security.h  |   16 ++++++++++++++++
- security/security.c       |   14 ++++++++++++++
- 3 files changed, 54 insertions(+)
+Hi,
 
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 16530255dc11..c4451ac197ae 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -1427,6 +1427,18 @@
-  *	Check to see if a process is allowed to watch for event notifications
-  *	from devices (as a global set).
-  *
-+ * @watch_mount:
-+ *	Check to see if a process is allowed to watch for mount topology change
-+ *	notifications on a mount subtree.
-+ *	@watch: The watch object
-+ *	@path: The root of the subtree to watch.
-+ *
-+ * @watch_sb:
-+ *	Check to see if a process is allowed to watch for event notifications
-+ *	from a superblock.
-+ *	@watch: The watch object
-+ *	@sb: The superblock to watch.
-+ *
-  * @post_notification:
-  *	Check to see if a watch notification can be posted to a particular
-  *	queue.
-@@ -1722,6 +1734,12 @@ union security_list_options {
- #ifdef CONFIG_DEVICE_NOTIFICATIONS
- 	int (*watch_devices)(void);
- #endif
-+#ifdef CONFIG_MOUNT_NOTIFICATIONS
-+	int (*watch_mount)(struct watch *watch, struct path *path);
-+#endif
-+#ifdef CONFIG_SB_NOTIFICATIONS
-+	int (*watch_sb)(struct watch *watch, struct super_block *sb);
-+#endif
- #ifdef CONFIG_WATCH_QUEUE
- 	int (*post_notification)(const struct cred *w_cred,
- 				 const struct cred *cred,
-@@ -2020,6 +2038,12 @@ struct security_hook_heads {
- #ifdef CONFIG_DEVICE_NOTIFICATIONS
- 	struct hlist_head watch_devices;
- #endif
-+#ifdef CONFIG_MOUNT_NOTIFICATIONS
-+	struct hlist_head watch_mount;
-+#endif
-+#ifdef CONFIG_SB_NOTIFICATIONS
-+	struct hlist_head watch_sb;
-+#endif
- #ifdef CONFIG_WATCH_QUEUE
- 	struct hlist_head post_notification;
- #endif /* CONFIG_WATCH_QUEUE */
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 910a1efa9a79..2ca2569bc12c 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -1306,6 +1306,22 @@ static inline int security_post_notification(const struct cred *w_cred,
- 	return 0;
- }
- #endif
-+#if defined(CONFIG_SECURITY) && defined(CONFIG_MOUNT_NOTIFICATIONS)
-+int security_watch_mount(struct watch *watch, struct path *path);
-+#else
-+static inline int security_watch_mount(struct watch *watch, struct path *path)
-+{
-+	return 0;
-+}
-+#endif
-+#if defined(CONFIG_SECURITY) && defined(CONFIG_SB_NOTIFICATIONS)
-+int security_watch_sb(struct watch *watch, struct super_block *sb);
-+#else
-+static inline int security_watch_sb(struct watch *watch, struct super_block *sb)
-+{
-+	return 0;
-+}
-+#endif
- 
- #ifdef CONFIG_SECURITY_NETWORK
- 
-diff --git a/security/security.c b/security/security.c
-index db7b574c9c70..5c0463444a90 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2004,6 +2004,20 @@ int security_watch_key(struct key *key)
- }
- #endif
- 
-+#ifdef CONFIG_MOUNT_NOTIFICATIONS
-+int security_watch_mount(struct watch *watch, struct path *path)
-+{
-+	return call_int_hook(watch_mount, 0, watch, path);
-+}
-+#endif
-+
-+#ifdef CONFIG_SB_NOTIFICATIONS
-+int security_watch_sb(struct watch *watch, struct super_block *sb)
-+{
-+	return call_int_hook(watch_sb, 0, watch, sb);
-+}
-+#endif
-+
- #ifdef CONFIG_DEVICE_NOTIFICATIONS
- int security_watch_devices(void)
- {
+On Tue, Feb 18, 2020 at 07:32:11AM -0800, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200218 15:16]:
+> > On 18/02/2020 1.23, Tony Lindgren wrote:
+> > > * Peter Ujfalusi <peter.ujfalusi@ti.com> [200214 13:30]:
+> > >> Hi Tony,
+> > >>
+> > >> On 12/02/2020 16.46, Tony Lindgren wrote:
+> > >>> * Peter Ujfalusi <peter.ujfalusi@ti.com> [200212 09:18]:
+> > >>>> On 11/02/2020 20.10, Tony Lindgren wrote:
+> > >>>>> +static int cpcap_voice_set_tdm_slot(struct snd_soc_dai *dai,
+> > >>>>> +				    unsigned int tx_mask, unsigned int rx_mask,
+> > >>>>> +				    int slots, int slot_width)
+> > >>>>> +{
+> > >>>>> +	struct snd_soc_component *component =3D dai->component;
+> > >>>>> +	struct cpcap_audio *cpcap =3D snd_soc_component_get_drvdata(com=
+ponent);
+> > >>>>> +	int err, ts_mask, mask;
+> > >>>>> +	bool voice_call;
+> > >>>>> +
+> > >>>>> +	/*
+> > >>>>> +	 * Primitive test for voice call, probably needs more checks
+> > >>>>> +	 * later on for 16-bit calls detected, Bluetooth headset etc.
+> > >>>>> +	 */
+> > >>>>> +	if (tx_mask =3D=3D 0 && rx_mask =3D=3D 1 && slot_width =3D=3D 8)
+> > >>>>> +		voice_call =3D true;
+> > >>>>> +	else
+> > >>>>> +		voice_call =3D false;
+> > >>>>
+> > >>>> You only have voice call if only rx slot0 is in use?
+> > >>>
+> > >>> Yeah so it seems. Then there's the modem to wlcore bluetooth path t=
+hat
+> > >>> I have not looked at. But presumably that's again just configuring =
+some
+> > >>> tdm slot on the PMIC.
+> > >>>
+> > >>>> If you record mono on the voice DAI, then rx_mask is also 1, no?
+> > >>>
+> > >>> It is above :) But maybe I don't follow what you're asking here
+> > >>
+> > >> If you arecrod -Dvoice_pcm -c1 -fS8 > /dev/null
+> > >> then it is reasonable that the machine driver will set rx_mask =3D 1
+> > >>
+> > >>> and maybe you have some better check in mind.
+> > >>
+> > >> Not sure, but relying on set_tdm_slots to decide if we are in a call
+> > >> case does not sound right.
+> > >=20
+> > > OK yeah seems at least bluetooth would need to be also handled
+> > > in the set_tdm_slots.
+> >=20
+> > set_tdm_slots() is for setting how the TDM slots supposed to be used by
+> > the component and not really for things to configure different operating
+> > modes.
+> >=20
+> > If you hardwire things in set_tdm_slots() for the droid4 then how the
+> > codec driver can be reused in other setups?
+>=20
+> Right, I'm all go for better solutions :)
+>=20
+> > >>>> You will also set the sampling rate for voice in
+> > >>>> cpcap_voice_hw_params(), but that is for normal playback/capture, =
+right?
+> > >>>
+> > >>> Yeah so normal playback/capture is already working with cpcap codec=
+ driver
+> > >>> with mainline Linux. The voice call needs to set rate to 8000.
+> > >>
+> > >> But if you have a voice call initiated should not the rate be set by=
+ the
+> > >> set_sysclk()?
+> > >=20
+> > > Hmm does set_sysclk called from modem codec know that cpcap codec
+> > > is the clock master based on bitclock-master and set the rate
+> > > for cpcap codec?
+> >=20
+> > Neither component should call set_sysclk, set_tdm_slots. The machine
+> > driver should as it is the only one who know how things are wired...
+>=20
+> OK, but so what's the machine driver part in this case?
 
+simple-graph-card is the current machine driver. We might have to
+introduce a Droid 4 specific driver instead. I used simple(-graph)-card
+instead of introducing a new driver, since the setup was simple enough
+without modem and bluetooth. The simple card was perfect to test the CPCAP
+codec driver. The TDM things might be complex enough to create
+a new machine driver (as I mentioned in the original patchset
+adding CPCAP codec support).
 
+Note: Don't use Motorola's tree to learn about ASoC. Their soundcard
+and cpcap codec drivers are full of weird hacks. I'm pretty sure the
+author(s) did not really understand how ASoC works. From my
+experience you should only use their code to understand the
+hardware wiring. You might also want to look into the MC13783
+datasheet for the keyword "network mode".
+
+-- Sebastian
+
+--e4xhqf4ckenfagk5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5MGZEACgkQ2O7X88g7
++pqn5A/7Bby/ClGFYeyupbA+sYRaZu0ngXwFHcjCe/kXviBzAt/Yx8Hm2Bu65KNA
+occazqTddxw4EHMvS3PbDjnxokZtyZZGHf8ZK8yXE9EeUJc8GW0OX/YjMgCKtKgk
+NzaPGkeWkwn29T/0+0p0Ld7j/LGg3qRirxyIfkeFTR5IN+sOGL7DdHCgCu8C/JEm
+fYFt0tNbLV+0sINzhLVNj6nu22204LxNpF/ZFwxVcStna8EdQR1osDlt9fe46LkF
+CuYsKahKTRS3hTGC3iJGwr1YRzxIc3myiCxQGnw2R0cYuqX+Yo0iNuqjlFL+Kzqu
+d43H6838ld18/xqIDRVh2NVaeeRuAwaa81YHoYFK0K80zx/tDkfjY9fbl34AXJzh
+KjsI3bedxewJtgtL1SIg9PD66fzcL8R0NHr6VE40OiiQZ0Gs+CnnDGZYHsiAgeJy
+hmc3NWk5nrxkcNHIVCWYnmvJ1zylvufSaCx2Ry5/ZL+S1opgo1P9UM4TCCfRl346
+9r09CrFbf/WYYhq9n1Oit8WpgoC6jZC/wU15/LCFA/dc8lMGc/Grt/Eiuz7eXdu8
+EO/sDKFRNCxlEUY5Tn/DMAc1d3T0lge19f3AN8+N3cHjti+NZicnoOsT+wfpAGh9
+kSbALPnfqw1Qk3B2pl88+WuGf8da2FDghRmG1PxovpsHEC9wtyo=
+=aBy/
+-----END PGP SIGNATURE-----
+
+--e4xhqf4ckenfagk5--
