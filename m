@@ -2,107 +2,133 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6F9C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF345C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2DD24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73C12173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VfUuBat9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgBRXka (ORCPT
+        id S1726760AbgBRXnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:40:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:39205 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbgBRXkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:40:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 15:40:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="436033034"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Feb 2020 15:40:18 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] KVM: x86: Take an unsigned 32-bit int for has_emulated_msr()'s index
-Date:   Tue, 18 Feb 2020 15:40:11 -0800
-Message-Id: <20200218234012.7110-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200218234012.7110-1-sean.j.christopherson@intel.com>
-References: <20200218234012.7110-1-sean.j.christopherson@intel.com>
+        Tue, 18 Feb 2020 18:43:21 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58074 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgBRXnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:43:21 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01INhCcV136753;
+        Tue, 18 Feb 2020 23:43:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0m00BguRlLekOA8EI0mqAMtdAPqsM6dw3X+VwmV1jKU=;
+ b=VfUuBat95GLBnl5Z0MvUS0geiN7taCy0N45hIa6gtaEbyeak1SvFKOOnFA9exgIZL3ah
+ PT8jtQd1wC2kv9ZBc6pkGrZOJS3OlH3iXmlGbSAqDKNgFvZRlALIfm4bIgvFZx8PzD5M
+ m+c8KBsuMeYP68QLynXnnrxX1lOrLFSs4gEbmD54qHNNXw6wid8IMUQGFa3se9To7Rgy
+ 3uwzk3Xm/eZnvHVHam5VyHut89CKYltM5H8rrDlB/Ujh16MhsCOr5dh44NeYOr5Sq35y
+ GThuOCNTfOavz9NJhO8HEhPEfQxv66Hy+un8DXCD3hJQ/Lb8c9cirs2Nxry2JJbH0TZ8 fg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2y8e1hn2ja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 23:43:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01INgA4b071778;
+        Tue, 18 Feb 2020 23:43:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2y6tetf960-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Feb 2020 23:43:14 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01INhCCS018965;
+        Tue, 18 Feb 2020 23:43:12 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Feb 2020 15:43:12 -0800
+Subject: Re: [PATCH -next] mm/hugetlb: Fix file_region entry allocations
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+References: <20200218222658.132101-1-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <67aa82a8-3c8d-d1eb-7e83-4f722b1eeb2a@oracle.com>
+Date:   Tue, 18 Feb 2020 15:43:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218222658.132101-1-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 bulkscore=0
+ suspectscore=2 mlxscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002180161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 phishscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take a u32 for the index in has_emulated_msr() to match hardware, which
-treats MSR indices as unsigned 32-bit values.  Functionally, taking a
-signed int doesn't cause problems with the current code base, but could
-theoretically cause problems with 32-bit KVM, e.g. if the index were
-checked via a less-than statement, which would evaluate incorrectly for
-MSR indices with bit 31 set.
+On 2/18/20 2:26 PM, Mina Almasry wrote:
+> Commit a9e443086489e ("hugetlb: disable region_add file_region
+> coalescing") introduced a bug with adding file_region entries
+> that is fixed here:
+> 
+> 1. Refactor file_region entry allocation logic into 1 function called
+>    from region_add and region_chg since the code is now identical.
+> 2. region_chg only modifies resv->adds_in_progress after the regions
+>    have been allocated. In the past it used to increment
+>    adds_in_progress and then drop the lock, which would confuse racing
+>    region_add calls into thinking they need to allocate entries when
+>    they are not allowed.
+> 3. In region_add, only try to allocate regions when
+>    actual_regions_needed > in_regions_needed. This is not causing a bug
+>    but is better for cleanliness and reasoning about the code.
+> 
+> Tested using ltp hugemmap0* tests, and libhugetlbfs tests.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Fixes: Commit a9e443086489e ("hugetlb: disable region_add file_region
+> coalescing")
+> 
+> ---
+>  mm/hugetlb.c | 149 +++++++++++++++++++++++++--------------------------
+>  1 file changed, 74 insertions(+), 75 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 8171d2211be77..3d5b48ae8971f 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -439,6 +439,66 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+>  	return add;
+>  }
+> 
+> +/* Must be called with resv->lock acquired. Will drop lock to allocate entries.
+> + */
+> +static int allocate_file_region_entries(struct resv_map *resv,
+> +					int regions_needed)
+> +{
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/svm.c              | 2 +-
- arch/x86/kvm/vmx/vmx.c          | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+I think this is going to need annotation for the lock or sparse is going
+throw a warning.  See,
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 4dffbc10d3f8..cac9c40e505c 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1050,7 +1050,7 @@ struct kvm_x86_ops {
- 	int (*hardware_setup)(void);               /* __init */
- 	void (*hardware_unsetup)(void);            /* __exit */
- 	bool (*cpu_has_accelerated_tpr)(void);
--	bool (*has_emulated_msr)(int index);
-+	bool (*has_emulated_msr)(u32 index);
- 	void (*cpuid_update)(struct kvm_vcpu *vcpu);
- 
- 	struct kvm *(*vm_alloc)(void);
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index a3e32d61d60c..2991a4a1fc30 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5989,7 +5989,7 @@ static bool svm_cpu_has_accelerated_tpr(void)
- 	return false;
- }
- 
--static bool svm_has_emulated_msr(int index)
-+static bool svm_has_emulated_msr(u32 index)
- {
- 	switch (index) {
- 	case MSR_IA32_MCG_EXT_CTL:
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9a6664886f2e..47017da35ac4 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6251,7 +6251,7 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
- 		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
- }
- 
--static bool vmx_has_emulated_msr(int index)
-+static bool vmx_has_emulated_msr(u32 index)
- {
- 	switch (index) {
- 	case MSR_IA32_SMBASE:
+https://lore.kernel.org/linux-mm/20200214204741.94112-7-jbi.octave@gmail.com/
+
+Other than that, looks good.  Sorry I missed that race in the review.
 -- 
-2.24.1
-
+Mike Kravetz
