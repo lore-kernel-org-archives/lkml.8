@@ -2,98 +2,113 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D953C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C0C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4CE22B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582043729;
-	bh=OpTededsgD6bYLVvlW4VOYwh0qzYKHyB7ZByWjL9SBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i7Hw19I4dbh/R2LfY+mk2UGe6R6oEotzay4zXPsnjYEaHQ2XgxUJ0vIVtN7xWzniB
-	 DhuNsT1WSOinkfogWT4GmgzPs+FmIJRVvNnbNbqMztPRE+IVoED/gtlyQCmmX6ezPN
-	 B8g3+KvxWqlRDbFmnq3MCCaLQlEqu99T6+VJoSgA=
+	by mail.kernel.org (Postfix) with ESMTP id 3FF81208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgBRQf1 (ORCPT
+        id S1726569AbgBRQhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 11:37:47 -0500
+Received: from mga18.intel.com ([134.134.136.126]:50244 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgBRQf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:35:27 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53B42067D;
-        Tue, 18 Feb 2020 16:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582043726;
-        bh=OpTededsgD6bYLVvlW4VOYwh0qzYKHyB7ZByWjL9SBc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZaYoDUC0DPiltq1WOO3/zYuwe9RFjRfGPMlEYMOhFowVVKDRJ6Hn6KqZTIfyQVx2n
-         V1/jPHm6kbX0Rixonv3GRG9IaUbMddsf2HZuTF6Bz3pxNZSjeWvWulPSPHeGKDHyvE
-         98yEjcTC/qpOoKnQlwtKA98uOAl4+10m3sWVRfaY=
-Date:   Tue, 18 Feb 2020 18:35:22 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net/mlx5: IPsec, Replace zero-length array with
- flexible-array member
-Message-ID: <20200218163522.GB11536@unreal>
-References: <20200217195434.GA1166@embeddedor>
+        id S1726399AbgBRQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 11:37:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 08:37:46 -0800
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="224189171"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 08:37:46 -0800
+Message-ID: <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
+Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     mgorman@techsingularity.net
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
+        osalvador@suse.de
+Date:   Tue, 18 Feb 2020 08:37:46 -0800
+In-Reply-To: <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+         <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+         <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+         <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217195434.GA1166@embeddedor>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 01:54:34PM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 2020-02-11 at 16:19 -0800, Andrew Morton wrote:
+> On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+> 
+> > On the host I just have to monitor /proc/meminfo and I can see the
+> > difference. I get the following results on the host, in the enabled case
+> > it takes about 30 seconds for it to settle into the final state since I
+> > only report page a bit at a time:
+> > Baseline/Applied
+> >   MemTotal:    131963012 kB
+> >   MemFree:      95189740 kB
+> > 
+> > Enabled:
+> >   MemTotal:    131963012 kB
+> >   MemFree:     126459472 kB
+> > 
+> > This is what I was referring to with the comment above. I had a test I was
+> > running back around the first RFC that consisted of bringing up enough VMs
+> > so that there was a bit of memory overcommit and then having the VMs in
+> > turn run memhog. As I recall the difference between the two was  something
+> > like a couple minutes to run through all the VMs as the memhog would take
+> > up to 40+ seconds for one that was having to pull from swap while it took
+> > only 5 to 7 seconds for the VMs that were all running the page hinting.
+> > 
+> > I had referenced it here in the RFC:
+> > https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
+> > 
+> > I have been verifying the memory has been getting freed but didn't feel
+> > like the test added much value so I haven't added it to the cover page for
+> > a while since the time could vary widely and is dependent on things like
+> > the disk type used for the host swap since my SSD is likely faster than
+> > spinning rust, but may not be as fast as other SSDs on the market. Since
+> > the disk speed can play such a huge role I wasn't comfortable posting
+> > numbers since the benefits could vary so widely.
+> 
+> OK, thanks.  I'll add the patches to the mm pile.  The new
+> mm/page_reporting.c is unreviewed afaict, so I guess you own that for
+> now ;)
+> 
+> It would be very nice to get some feedback from testers asserting "yes,
+> this really helped my workload" but I understand this sort of testing
+> is hard to obtain at this stage.
+> 
 
-Can you please do one patch for whole mlx5,
-instead of many identical patches?
+Mel,
 
-Thanks
+Any ETA on when you would be available to review these patches? They are
+now in Andrew's tree and in linux-next. I am hoping to get any remaining
+review from the community sorted out in the next few weeks so I can move
+onto focusing on how best to exert pressure on the page cache so that we
+can keep the guest memory footprint small.
+
+Thanks.
+
+- Alex
+
