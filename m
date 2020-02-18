@@ -2,123 +2,156 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7872C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E392C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBBC24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BE424125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="i+3xx54g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgBRTJZ (ORCPT
+        id S1726528AbgBRTJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:09:25 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33125 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTJY (ORCPT
+        Tue, 18 Feb 2020 14:09:46 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34340 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:09:24 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q81so21273981oig.0;
-        Tue, 18 Feb 2020 11:09:24 -0800 (PST)
+        Tue, 18 Feb 2020 14:09:46 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n10so23376363wrm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:09:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SBqpDcTE6AMCvGrFbLWhx5wZFetN9vSApojWcAj4+aU=;
+        b=i+3xx54gT+/cAZ6JrqaPpTCoBJz7XXOp7G7+r0gX9XNxgObwzrh1Wb1TTrZwkxfVCq
+         gP6Ovp4ugJ15he6KKTnXKD/O3OzUUpbXWGEOqvTx2kNsQ1tDt6tmnLKU0x6cEoKvnhwm
+         CBvzzEqLXY87c4kfGjiWVPdZeRBzpKkiDCxck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4zbrnNvTNHgXxwjMJnfhT5sGHXVeYA3py+fC4nnQX1g=;
-        b=hxHpfGZ1eg9pnSfPg5YL2okaL4jIsS3ewInVnRJIojrOl5G/z0s1qZnXQGBlQykB0f
-         hSlxBgqWb6BCYu8bIp24/4I7qlQDPuGIv4AI3vUioZ4UzFg8hxphPf0RRLzr+cldvXl3
-         7C8RA+QYFKhThMLd+tcMT8v+n/yY//kQik1u4j95VqkNDyWyFsfU3abb2imPh0UvuMRy
-         JAZWUXCnV6nEgfNcW+hu2OWemlrp55oaqJSU+18nZ18z8euYMqrz5sAdol8ixHfddVpH
-         mlgv/p2nYrTIhUd4U29RfZ7i9N/eqnMUsC2KR+zyUnzpgKnXfQXQ4qa6nu1qDTLsG3i4
-         IzWQ==
-X-Gm-Message-State: APjAAAUCcdYj7HXVOR0jJtNGE+s7v2r1hNaO/oyoyr0yqCNQEBSmwIdM
-        3efZyMZ+BPjiTA5E+uxUwe6QBHivcrjFlUSxGH4=
-X-Google-Smtp-Source: APXvYqwnKTCIB9GTLLpEL5W7g+LauaFKN7iZKQPh2++RZaJoaT+SssBYOvEoCXI/Jb080pGI7GySD9qCX6q6Z+PF39M=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr2308514oia.102.1582052963942;
- Tue, 18 Feb 2020 11:09:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=SBqpDcTE6AMCvGrFbLWhx5wZFetN9vSApojWcAj4+aU=;
+        b=SG1j5q/ebmw6H/w3f03/OEroyhf52L0JDAJeEUugNqrQmLMqvbeisDPFTqPLNEetyh
+         vebAjla4s3/icaULXZYb+3tKgYb4najJOG+YJ88Z/ScENy5UMOpn61jDFa8WKSb59Dj/
+         eD7bs4LoOJFTQZNUofeMNza3nDZ9dogsNHgWV3sZsb1zdzlFXTYeK6RzTQPORHtTRHO7
+         /ivcJbqrFvJEofyWl+o/17twNDJejfyDBqXXzFSkmk7hz9zcs4IK6LqKoE6Dfjcg1dAB
+         nRyjfkH49167aNiCFZOcHePVFiQxSuIeAFTKzJzj5bSwJindAFqnQ9oKbHFj/SiZfOlS
+         l7/w==
+X-Gm-Message-State: APjAAAV00fLklUxX0SofnKKuPGpLN/ljdZDRrFV4GOjG+OyBTkI54XO7
+        wbxd7def72KuX9nVcQOPNYCckg==
+X-Google-Smtp-Source: APXvYqw8JfZcZoALoGUrqXssK3WpI4YwooCYEW8v1nAWpuspWdhwXC/fZ0wbKeKdH3ckafrtkxSOqA==
+X-Received: by 2002:adf:e80e:: with SMTP id o14mr30197494wrm.212.1582052983166;
+        Tue, 18 Feb 2020 11:09:43 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id d4sm7295827wra.14.2020.02.18.11.09.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 11:09:42 -0800 (PST)
+Date:   Tue, 18 Feb 2020 20:09:40 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH 1/2] drm/debugfs: remove checks for return value of
+ drm_debugfs functions.
+Message-ID: <20200218190940.GN2363188@phenom.ffwll.local>
+Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+ <20200218172821.18378-3-wambui.karugax@gmail.com>
 MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be>
- <20200218151812.7816-5-geert+renesas@glider.be> <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-In-Reply-To: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 18 Feb 2020 20:09:12 +0100
-Message-ID: <CAMuHMdU9=vgO6ohoYTQMGjoFzhRy=4hYGjVyRsTK2uoNsU08XQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218172821.18378-3-wambui.karugax@gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Tue, Feb 18, 2020 at 08:28:14PM +0300, Wambui Karuga wrote:
+> As there is no need to check the return value of
+> drm_debugfs_create_files, remove unnecessary checks and error handling
+> statement blocks.
+> 
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-On Tue, Feb 18, 2020 at 7:30 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
-> > Document the GPIO Aggregator, and the two typical use-cases.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I'd split this up a bit differently, with a patch per function. But then
+including in that patch the prototype change (at least for the
+drm-internal ones that aren't used by drivers). This way reviewers don't
+have to check the entire series to make sure that we drop the now
+pointeless return value from the implementation of these functions.
 
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> > @@ -0,0 +1,102 @@
-> > +.. SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +GPIO Aggregator
-> > +===============
-> > +
-> > +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
->
-> "allows" really wants an object following the verb [although the kernel sources
-> and docs have many cases of it not having an object].  Something like
->
->                        allows {you, one, someone, users, a user} to aggregate
+I guess you could also just squash this function into the last one, it's a
+fairly small patch still.
+-Daniel
 
-Thanks for the hint!
-
-> > +             Example: Instantiate a new GPIO aggregator by aggregating GPIO
-> > +             19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
-> > +             gpio_chip:
-> > +
-> > +             .. code-block:: bash
-> > +
-> > +                 echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
-> > +
->
-> Does the above command tell the user that the new device is named
-> "gpio-aggregator.0", as used below?
-
-Yes, it will be printed through the kernel log, cfr. the sample session in
-the cover letter.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> ---
+>  drivers/gpu/drm/drm_debugfs.c | 28 +++++-----------------------
+>  1 file changed, 5 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+> index 4e673d318503..6a2f141b6a38 100644
+> --- a/drivers/gpu/drm/drm_debugfs.c
+> +++ b/drivers/gpu/drm/drm_debugfs.c
+> @@ -215,35 +215,17 @@ int drm_debugfs_init(struct drm_minor *minor, int minor_id,
+>  	sprintf(name, "%d", minor_id);
+>  	minor->debugfs_root = debugfs_create_dir(name, root);
+>  
+> -	ret = drm_debugfs_create_files(drm_debugfs_list, DRM_DEBUGFS_ENTRIES,
+> -				       minor->debugfs_root, minor);
+> -	if (ret) {
+> -		debugfs_remove(minor->debugfs_root);
+> -		minor->debugfs_root = NULL;
+> -		DRM_ERROR("Failed to create core drm debugfs files\n");
+> -		return ret;
+> -	}
+> +	drm_debugfs_create_files(drm_debugfs_list, DRM_DEBUGFS_ENTRIES,
+> +				 minor->debugfs_root, minor);
+>  
+>  	if (drm_drv_uses_atomic_modeset(dev)) {
+> -		ret = drm_atomic_debugfs_init(minor);
+> -		if (ret) {
+> -			DRM_ERROR("Failed to create atomic debugfs files\n");
+> -			return ret;
+> -		}
+> +		drm_atomic_debugfs_init(minor);
+>  	}
+>  
+>  	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+> -		ret = drm_framebuffer_debugfs_init(minor);
+> -		if (ret) {
+> -			DRM_ERROR("Failed to create framebuffer debugfs file\n");
+> -			return ret;
+> -		}
+> +		drm_framebuffer_debugfs_init(minor);
+>  
+> -		ret = drm_client_debugfs_init(minor);
+> -		if (ret) {
+> -			DRM_ERROR("Failed to create client debugfs file\n");
+> -			return ret;
+> -		}
+> +		drm_client_debugfs_init(minor);
+>  	}
+>  
+>  	if (dev->driver->debugfs_init) {
+> -- 
+> 2.25.0
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
