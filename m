@@ -2,84 +2,85 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D756C34036
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC8C34037
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7ED207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809062176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 11:44:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hanno.de header.i=@hanno.de header.b="YrBlPiXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBRLod (ORCPT
+        id S1726567AbgBRLot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 06:44:33 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:32904 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgBRLod (ORCPT
+        Tue, 18 Feb 2020 06:44:49 -0500
+Received: from www149.your-server.de ([78.47.15.70]:44596 "EHLO
+        www149.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgBRLos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 06:44:33 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C02573C057C;
-        Tue, 18 Feb 2020 12:44:30 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fH-QhLVjk6Dg; Tue, 18 Feb 2020 12:44:25 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 847193C00C5;
-        Tue, 18 Feb 2020 12:44:25 +0100 (CET)
-Received: from vmlxhi-121.adit-jv.com (10.72.93.65) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 18 Feb
- 2020 12:44:24 +0100
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     <niklas.soderlund@ragnatech.se>, <mchehab@kernel.org>,
-        <p.zabel@pengutronix.de>, <linux-media@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Michael Rodin <mrodin@de.adit-jv.com>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <sudipi@jp.adit-jv.com>,
-        <akiyama@nds-osk.co.jp>
-Subject: [PATCH] [RFC] media: rcar-vin: don't wait for stop state on clock lane during start of CSI2
-Date:   Tue, 18 Feb 2020 12:44:11 +0100
-Message-ID: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 18 Feb 2020 06:44:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hanno.de;
+         s=default1911; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9ODcbuBq0KSowtL9HqLEZNLZuVdpriDI3R3nICsV+FY=; b=YrBlPiXeQy59XycF3VGLBZD/jn
+        wEyqzN3Tk6w4NdpKdrzXRouQQgZ8I2odZgQ2yhCSHbDCeh+HzUJ/yal61HWtQdDmnG+tI9cOIVTI0
+        y84t56B4wvrGs40/J2ZZ5UIxMpDK/1dp5cMhniigep9XTHCovaVkOM5tk0FCKQQXTrPwl1sWU4dGt
+        vCdE4f1tNK3ri6DHOTMkcMXdYZoqjOOYP1a9bnPCFWKfjHvBqDfgPfmYSiWio8nxXRYdVFVR5V7g8
+        uDTpaZhk2k6+SkUKEtU4q/2U57hxdFd8bbQOK+c8Mr6lI2KnsoaTofTqL2KTOyJzoUZNVc3R5uSkK
+        QeXb2F9A==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www149.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j415R-0002Uw-EP; Tue, 18 Feb 2020 12:30:45 +0100
+Received: from [2a04:4540:680e:4300:a894:29ae:bca2:b322]
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <kontakt@hanno.de>)
+        id 1j415R-000GFn-B0; Tue, 18 Feb 2020 12:30:45 +0100
+Subject: [PATCH v2 0/3] HID: hid-bigbenff: fixing three crash bugs in a
+ gamepad driver
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <ae5eee33-9dfc-0609-1bf8-33fd773b9bd5@hanno.de>
+ <CAO-hwJJ1sc_RAh4ytWSOmRqfVESi2dvB_Ao_Vn+6XXixxVyxrA@mail.gmail.com>
+From:   Hanno Zulla <kontakt@hanno.de>
+Message-ID: <74d73ebc-0cff-768d-00b7-57bb9b44124f@hanno.de>
+Date:   Tue, 18 Feb 2020 12:30:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.72.93.65]
+In-Reply-To: <CAO-hwJJ1sc_RAh4ytWSOmRqfVESi2dvB_Ao_Vn+6XXixxVyxrA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: kontakt@hanno.de
+X-Virus-Scanned: Clear (ClamAV 0.102.1/25726/Mon Feb 17 15:01:07 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chapter 7.1 "D-PHY Physical Layer Option" of the CSI2 specification
-states that non-continuous clock behavior is optional, i.e. the Clock Lane
-can remain in high-speed mode between the transmission of data packets.
-Therefore waiting for the stop state (LP-11) on the Clock Lane is wrong and
-will cause timeouts when a CSI2 transmitter with continuous clock behavior
-is attached to R-Car CSI2 receiver. So wait only for the stop state on the
-Data Lanes.
+Hi Benjamin,
 
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
----
- drivers/media/platform/rcar-vin/rcar-csi2.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> I think the patches are correct (have you tested them with actual HW?).
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index faa9fb2..6d1992a 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -416,8 +416,7 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
- 	for (timeout = 0; timeout <= 20; timeout++) {
- 		const u32 lane_mask = (1 << priv->lanes) - 1;
- 
--		if ((rcsi2_read(priv, PHCLM_REG) & PHCLM_STOPSTATECKL)  &&
--		    (rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
-+		if ((rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
- 			return 0;
- 
- 		usleep_range(1000, 2000);
--- 
-2.7.4
+Yes, I did, and am also properly embarrassed that I didn't notice the 
+double free bug in the original driver.
 
+> However, checkpatch complains that the From and Signed-off-by email
+> differ. Can you send a v2 with a fix for that?
+
+Here it is.
+
+Thanks,
+
+Hanno
