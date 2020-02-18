@@ -2,97 +2,108 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC54C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA28C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804A624677
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8884424125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582047782;
+	bh=ULINXfseSagNOZvW6UiN82T7bMpUY/tI1ixigPcoiZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W5Wu9ORraK2ykTW/OlDJbqb3Dlcf8xaXELGHt9fOpcglxrJJB7maQC7TkCkpSINTu
+	 5qJAqh2EN6xRM9tkANaU3uJaJtr/YZT9R5yki87Uu7L9rQtdktLjr/NEY08t3AD8lU
+	 jeFYaLWL87kjn15MsEka4qpG/dlQU7rC9z0O5Xm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgBRRlZ (ORCPT
+        id S1726703AbgBRRnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:41:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34252 "EHLO mx2.suse.de"
+        Tue, 18 Feb 2020 12:43:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:57216 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgBRRlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:41:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AC980ADAA;
-        Tue, 18 Feb 2020 17:41:22 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 17:41:19 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, hdanton@sina.com
-Subject: Re: [PATCH v2 2/5] sched/numa: Replace runnable_load_avg by load_avg
-Message-ID: <20200218174119.GG3420@suse.de>
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-3-vincent.guittot@linaro.org>
- <b67ae78b-17ba-8f3f-9052-fecefb848e3d@arm.com>
- <20200218153801.GF3420@suse.de>
- <e28bb567-dade-877b-f338-ce87e28cc02d@arm.com>
+        id S1726403AbgBRRnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 12:43:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74FC431B;
+        Tue, 18 Feb 2020 09:43:00 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5F53F703;
+        Tue, 18 Feb 2020 09:42:59 -0800 (PST)
+Date:   Tue, 18 Feb 2020 17:42:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+Message-ID: <20200218174258.GK4232@sirena.org.uk>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+ <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+ <20200218153211.GI35972@atomide.com>
+ <20200218170628.r47xc3yydg6xx2yh@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
 Content-Disposition: inline
-In-Reply-To: <e28bb567-dade-877b-f338-ce87e28cc02d@arm.com>
+In-Reply-To: <20200218170628.r47xc3yydg6xx2yh@earth.universe>
+X-Cookie: No alcohol, dogs or horses.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:50:48PM +0000, Valentin Schneider wrote:
-> On 18/02/2020 15:38, Mel Gorman wrote:
-> >>
-> >> Could we reuse group_type instead? The definitions are the same modulo
-> >> s/group/node/.
-> >>
-> > 
-> > I kept the naming because there is the remote possibility that NUMA
-> > balancing will deviate in some fashion. Right now, it's harmless.
-> > 
-> 
-> Since it's just a subset ATM I'd go for the reuse and change that later if
-> shown a split is required, but fair enough.
-> 
 
-I would feel that I was churning code for the sake of it.
+--opg8F0UgoHELSI+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > I didn't merge that part of the first version of my series. I was
-> > waiting to see how the implementation for allowing a small degree of
-> > imbalance looks like. If it's entirely confined in adjust_numa_balance
->                                                      ^^^^^^^^^^^^^^^^^^^
-> Apologies if that's a newbie question, but I'm not familiar with that one.
-> Would that be added in your reconciliation series? I've only had a brief
-> look at it yet (it's next on the chopping block).
-> 
+On Tue, Feb 18, 2020 at 06:06:28PM +0100, Sebastian Reichel wrote:
 
-I should have wrote adjust_numa_imbalance but yes, it's part of the
-reconciled series so that NUMA balancing and the load balancer use the
-same helper.
+> simple-graph-card is the current machine driver. We might have to
+> introduce a Droid 4 specific driver instead. I used simple(-graph)-card
+> instead of introducing a new driver, since the setup was simple enough
+> without modem and bluetooth. The simple card was perfect to test the CPCAP
+> codec driver. The TDM things might be complex enough to create
+> a new machine driver (as I mentioned in the original patchset
+> adding CPCAP codec support).
 
-> > Yikes, no I'd rather not do that. Basically all I did before was create
-> > a common helper like __lb_has_capacity that only took basic types as
-> > parameters. group_has_capacity and numa_has_capacity were simple wrappers
-> > that read the correct fields from their respective stats structures.
-> > 
-> 
-> That's more sensible indeed. It'd definitely be nice to actually reconcile
-> the two balancers with these common helpers, though I guess it doesn't
-> *have* to happen with this very patch.
+I tend to agree here, phones are generally one of the most complicated
+classes of system for clocking and interconnects and the CODECs they use
+often the most complex too so they're really stretching the generic
+cards.  It'd be nice to be able to handle things with generic cards but
+it's likely you'll run into issues that it'd be unreasonable to force
+you to address for system enablement.  OTOH if you manage to get one of
+the generic cards working well that'd be excellent!
 
-Yep, it can happen at a later time.
+--opg8F0UgoHELSI+9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As it stands, I think the reconciled series stands on its own even
-though there are further improvements that could be built on top.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Mel Gorman
-SUSE Labs
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5MIiEACgkQJNaLcl1U
+h9D6Wgf+KODCNr6XeqdBCSDh3Rzl0aYLJntwETttXe5OX9SV2VAbUhheJKFsmhmK
+UN8bsVZNmhwC8qIAXznxkbwp+9BPnM72lmIuniA8KqRiNHGdMwHUYRqw4g9c53qX
+p2U5E9eZ35ilwDKYpb7SXn4r9pL02zAN7LqfcNs+v4CQ0LuGN/1xxsVKz7MlZ+t1
+J8iizIybXeDxYCIWEHOSQn9+Hq0kdzqziJKLnApzilqRqtB51QWUK/vU1nPtQBfd
+WPaGdaIa3qIh+R2PuhThKlJnQPaD/RRyM6TTApWjYrq8OfvfSvAC7f9r3P5yo3K3
+lT8+OH3w5S8ZHUAE2G1tfHCaNIRiuw==
+=tBdt
+-----END PGP SIGNATURE-----
+
+--opg8F0UgoHELSI+9--
