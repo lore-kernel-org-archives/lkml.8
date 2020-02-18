@@ -2,121 +2,67 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0BFC34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CB1C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54490206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="cbrXkPqV"
+	by mail.kernel.org (Postfix) with ESMTP id D5DF622B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 08:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgBRI0f (ORCPT
+        id S1726488AbgBRI0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 03:26:35 -0500
-Received: from first.geanix.com ([116.203.34.67]:59546 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgBRI0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 03:26:34 -0500
-Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 5784CC0028;
-        Tue, 18 Feb 2020 08:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1582014343; bh=ZAtnUACFheEa+h5OEOS/NnijGN4MumK8ORv55Tzj4Pg=;
-        h=From:To:Cc:Subject:Date;
-        b=cbrXkPqVmRHDowf8/B1LxQuNGMJmAf3flIv5q/EUHaXXnOuV7AkRNGznb200Cfk9U
-         4yXbtk3DRCroIPHGsfQxKBcjfejtg7ZJqDJeVsIrO6l+osJPCebfo4LANeKEYmEE4+
-         bDKyA7XyXwDHaFCMb4Haio8PjRMciPiZac1QOUY4Wqh45NQIfkw7FPMIBatE263Icj
-         baOQHZ7J3z0utjVgFnlgGibtyAVKuyaegn8D+mFmdNBTVSMxFyixylD4y3rx4fLdQK
-         3dd9+j9PHByuoUV2/eNPh1arzaIb4eK0ECM/4N+sExu6YfIuJvAFzVApBcmw1ljVP3
-         rNj22NCCxCREg==
-From:   Esben Haabendal <esben@geanix.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 2/8] net: ll_temac: Add more error handling of dma_map_single() calls
-Date:   Tue, 18 Feb 2020 09:26:31 +0100
-Message-Id: <20200218082631.7204-1-esben@geanix.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 03:26:45 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:39619 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgBRI0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 03:26:45 -0500
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 03A86CED25;
+        Tue, 18 Feb 2020 09:36:07 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v2] Bluetooth: hci_h5: btrtl: Add support for RTL8822C
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200217081455.30938-1-max.chou@realtek.com>
+Date:   Tue, 18 Feb 2020 09:26:43 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alex_lu@realsil.com.cn, hildawu@realtek.com, kidman@realtek.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <7EF06924-73AD-42C9-B372-D2FA4CD4F585@holtmann.org>
+References: <20200217081455.30938-1-max.chou@realtek.com>
+To:     Max Chou <max.chou@realtek.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds error handling to the remaining dma_map_single() calls, so that
-behavior is well defined if/when we run out of DMA memory.
+Hi Max,
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Cc: stable@vger.kernel.org
----
- drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+> Add new compatible and FW loading support for RTL8822C.
+> 
+> Signed-off-by: Max Chou <max.chou@realtek.com>
+> ---
+> Changes in v2:
+> - Separate the code description for ACPI and OF
+> - Note that forgiving my less experience, I can not find bt3wire.c from the
+> upstream. I just find hci_h5.c can support Realtek Bluetooth controller,
+> so I modify the code here for new chip support.
+> ---
+> drivers/bluetooth/Kconfig  |  2 +-
+> drivers/bluetooth/btrtl.c  | 12 ++++++++++++
+> drivers/bluetooth/hci_h5.c | 19 +++++++++++++++++++
+> 3 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 996004ef8bd4..c368c3914bda 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 					      XTE_MAX_JUMBO_FRAME_SIZE,
- 					      DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
-+			goto out;
- 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
- 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
- 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
-@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 				      skb_headlen(skb), DMA_TO_DEVICE);
- 	cur_p->len = cpu_to_be32(skb_headlen(skb));
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
-+		return NETDEV_TX_BUSY;
- 	cur_p->phys = cpu_to_be32(skb_dma_addr);
- 	ptr_to_txbd((void *)skb, cur_p);
- 
- 	for (ii = 0; ii < num_frag; ii++) {
--		lp->tx_bd_tail++;
--		if (lp->tx_bd_tail >= TX_BD_NUM)
-+		if (++lp->tx_bd_tail >= TX_BD_NUM)
- 			lp->tx_bd_tail = 0;
- 
- 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					      skb_frag_address(frag),
- 					      skb_frag_size(frag),
- 					      DMA_TO_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
-+			if (--lp->tx_bd_tail < 0)
-+				lp->tx_bd_tail = TX_BD_NUM - 1;
-+			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			while (--ii >= 0) {
-+				--frag;
-+				dma_unmap_single(ndev->dev.parent,
-+						 be32_to_cpu(cur_p->phys),
-+						 skb_frag_size(frag),
-+						 DMA_TO_DEVICE);
-+				if (--lp->tx_bd_tail < 0)
-+					lp->tx_bd_tail = TX_BD_NUM - 1;
-+				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			}
-+			dma_unmap_single(ndev->dev.parent,
-+					 be32_to_cpu(cur_p->phys),
-+					 skb_headlen(skb), DMA_TO_DEVICE);
-+			return NETDEV_TX_BUSY;
-+		}
- 		cur_p->phys = cpu_to_be32(skb_dma_addr);
- 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
- 		cur_p->app0 = 0;
--- 
-2.25.0
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
 
