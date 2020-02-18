@@ -2,94 +2,232 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF67C34033
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DE8C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066CF206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HD7TFrvS"
+	by mail.kernel.org (Postfix) with ESMTP id B07BE21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582012544;
+	bh=fj5RUzJmMIJH3SsuKj7SzywH9sWCRMRrLHPA3kXBFMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rmcEonppONnf2ZBFronVQ11fRfeBWeZFSW1Hp6vcBFIsK8M0iEAy7zAz/Y9e+amni
+	 KdFdXEtZO+YrWw+2Nb/aQmVFaFBRl4yt9z27LiuuGIqC7ALqbz/OEj2mvvhr4STeoy
+	 W7YmfWo9cLuUekAKPaTAQIgbVPenO3JTOeHgG4ZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBRHqq (ORCPT
+        id S1726246AbgBRHze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:46:46 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:41981 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726127AbgBRHqp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:46:45 -0500
-X-UUID: 729695ee8e884b638f224bd5a485de69-20200218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=g5TmMK5xtaVwCyccKk6B3PT0J4POGsB8eAQQZd7hA8o=;
-        b=HD7TFrvS6QC6Drlf77grZ51MNyFDbKjPzyk/JZWI7CRHiSbSg7oCO6b/oSx4fJoCbx0bk/AlUNiQyynHV+uoluE2iLBPc3LQp6P/N53YrOxpoGQ1dAAIy1Gb4munRdwCCMWiubHm07o1ARpMbctJt76bjdpObTDYTjfxy8IP++I=;
-X-UUID: 729695ee8e884b638f224bd5a485de69-20200218
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 108004550; Tue, 18 Feb 2020 15:46:38 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Feb 2020 15:45:47 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Feb 2020 15:46:14 +0800
-Message-ID: <1582011997.15399.1.camel@mtksdaap41>
-Subject: Re: [PATCH 2/2] drm/mediatek: add fb swap in async_update
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Tue, 18 Feb 2020 15:46:37 +0800
-In-Reply-To: <1581566763.12071.1.camel@mtksdaap41>
-References: <20200213012353.26815-1-bibby.hsieh@mediatek.com>
-         <20200213012353.26815-2-bibby.hsieh@mediatek.com>
-         <1581566763.12071.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 18 Feb 2020 02:55:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgBRHze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:55:34 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C89E72176D;
+        Tue, 18 Feb 2020 07:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582012533;
+        bh=fj5RUzJmMIJH3SsuKj7SzywH9sWCRMRrLHPA3kXBFMU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fsT6nsp9Ralp/l5S7MVGxllSKxpXsjtwQbz3OqDgJLKv1Gv6zZKHHQxGpOMUW1xMz
+         r/QWyAgMFgxWjcd7zih/m2eC2AA9hKqVfYxwdnmXAxQoYSPenqzLSRMnqZM/BnKcTj
+         ZCu696tANZ81lsqoXtoS23E2myC5bZPpIqyPtaG4=
+Date:   Tue, 18 Feb 2020 16:55:29 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Luigi Rizzo <lrizzo@google.com>
+Cc:     linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3] kretprobe: percpu support
+Message-Id: <20200218165529.39e761c4be828285cc060279@kernel.org>
+In-Reply-To: <20200218005659.91318-1-lrizzo@google.com>
+References: <20200218005659.91318-1-lrizzo@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpPbiBUaHUsIDIwMjAtMDItMTMgYXQgMTI6MDYgKzA4MDAsIENLIEh1IHdy
-b3RlOg0KPiBIaSwgQmliYnk6DQo+IA0KPiBPbiBUaHUsIDIwMjAtMDItMTMgYXQgMDk6MjMgKzA4
-MDAsIEJpYmJ5IEhzaWVoIHdyb3RlOg0KPiA+IEJlc2lkZXMgeCwgeSBwb3NpdGlvbiwgd2lkdGgg
-YW5kIGhlaWdodCwNCj4gPiBmYiBhbHNvIG5lZWQgdXBkYXRpbmcgaW4gYXN5bmMgdXBkYXRlLg0K
-PiA+IA0KPiANCj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQo+IA0K
-DQpBcHBsaWVkIHRvIG1lZGlhdGVrLWRybS1maXhlcy01LjYgWzFdLCB0aGFua3MuDQoNClsxXQ0K
-aHR0cHM6Ly9naXRodWIuY29tL2NraHUtbWVkaWF0ZWsvbGludXguZ2l0LXRhZ3MvY29tbWl0cy9t
-ZWRpYXRlay1kcm0tZml4ZXMtNS42DQoNClJlZ2FyZHMsDQpDSw0KDQo+ID4gRml4ZXM6IDkyMGZm
-ZmNjODkxMiAoImRybS9tZWRpYXRlazogdXBkYXRlIGN1cnNvcnMgYnkgdXNpbmcgYXN5bmMgYXRv
-bWljIHVwZGF0ZSIpDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5
-LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fcGxhbmUuYyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fcGxhbmUuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX3BsYW5lLmMN
-Cj4gPiBpbmRleCBkMzJiNDk0ZmYxZGUuLmUwODRjMzZmZGQ4YSAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fcGxhbmUuYw0KPiA+IEBAIC0xMjIsNiArMTIyLDcg
-QEAgc3RhdGljIHZvaWQgbXRrX3BsYW5lX2F0b21pY19hc3luY191cGRhdGUoc3RydWN0IGRybV9w
-bGFuZSAqcGxhbmUsDQo+ID4gIAlwbGFuZS0+c3RhdGUtPnNyY195ID0gbmV3X3N0YXRlLT5zcmNf
-eTsNCj4gPiAgCXBsYW5lLT5zdGF0ZS0+c3JjX2ggPSBuZXdfc3RhdGUtPnNyY19oOw0KPiA+ICAJ
-cGxhbmUtPnN0YXRlLT5zcmNfdyA9IG5ld19zdGF0ZS0+c3JjX3c7DQo+ID4gKwlzd2FwKHBsYW5l
-LT5zdGF0ZS0+ZmIsIG5ld19zdGF0ZS0+ZmIpOw0KPiA+ICAJc3RhdGUtPnBlbmRpbmcuYXN5bmNf
-ZGlydHkgPSB0cnVlOw0KPiA+ICANCj4gPiAgCW10a19kcm1fY3J0Y19hc3luY191cGRhdGUobmV3
-X3N0YXRlLT5jcnRjLCBwbGFuZSwgbmV3X3N0YXRlKTsNCj4gDQoNCg==
+Hi Luigi,
 
+On Mon, 17 Feb 2020 16:56:59 -0800
+Luigi Rizzo <lrizzo@google.com> wrote:
+
+> kretprobe uses a list protected by a single lock to allocate a
+> kretprobe_instance in pre_handler_kretprobe(). This works poorly with
+> concurrent calls.
+
+Yes, there are several potential performance issue and the recycle
+instance is one of them. However, I think this spinlock is not so racy,
+but noisy (especially on many core machine) right?
+
+Racy lock is the kretprobe_hash_lock(), I would like to replace it
+with ftrace's per-task shadow stack. But that will be available
+only if CONFIG_FUNCTION_GRAPH_TRACER=y (and instance has no own
+payload).
+
+> This patch offers a simplified fix: the percpu_instance flag indicates
+> that we allocate one instance per CPU, and the allocation is contention
+> free, but we allow only have one pending entry per CPU (this could be
+> extended to a small constant number without much trouble).
+
+OK, the percpu instance idea is good to me, and I think it should be
+default option. Unless user specifies the number of instances, it should
+choose percpu instance by default.
+Moreover, this makes things a bit complicated, can you add per-cpu
+instance array? If it is there, we can remove the old recycle rp insn
+code.
+
+> 
+> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+> ---
+>  include/linux/kprobes.h | 10 ++++++++--
+>  kernel/kprobes.c        | 41 +++++++++++++++++++++++++++++++++++++++++
+>  kernel/test_kprobes.c   | 18 +++++++++++++-----
+>  3 files changed, 62 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 04bdaf01112cb..5c549d6a599b9 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -142,7 +142,8 @@ static inline int kprobe_ftrace(struct kprobe *p)
+>   * can be active concurrently.
+>   * nmissed - tracks the number of times the probed function's return was
+>   * ignored, due to maxactive being too low.
+> - *
+> + * percpu_instance - if set, uses one instance per cpu instead of allocating
+> + * from the list protected by lock.
+>   */
+>  struct kretprobe {
+>  	struct kprobe kp;
+> @@ -151,8 +152,13 @@ struct kretprobe {
+>  	int maxactive;
+>  	int nmissed;
+>  	size_t data_size;
+> -	struct hlist_head free_instances;
+> +	union {
+> +		struct kretprobe_instance __percpu *pcpu;
+> +		struct hlist_head free_instances;
+> +	};
+>  	raw_spinlock_t lock;
+> +	u32 percpu_instance:1;
+> +	u32 unused:31;
+
+Please use a bool for the flag.
+
+>  };
+>  
+>  struct kretprobe_instance {
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c241ac00f..12ca682083ffc 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1184,6 +1184,10 @@ void recycle_rp_inst(struct kretprobe_instance *ri,
+>  	hlist_del(&ri->hlist);
+>  	INIT_HLIST_NODE(&ri->hlist);
+>  	if (likely(rp)) {
+> +		if (rp->percpu_instance) {
+> +			ri->rp = NULL;
+> +			return;
+> +		}
+>  		raw_spin_lock(&rp->lock);
+>  		hlist_add_head(&ri->hlist, &rp->free_instances);
+>  		raw_spin_unlock(&rp->lock);
+> @@ -1274,6 +1278,11 @@ static inline void free_rp_inst(struct kretprobe *rp)
+>  	struct kretprobe_instance *ri;
+>  	struct hlist_node *next;
+>  
+> +	if (rp->percpu_instance) {
+> +		free_percpu(rp->pcpu);
+> +		return;
+> +	}
+> +
+>  	hlist_for_each_entry_safe(ri, next, &rp->free_instances, hlist) {
+>  		hlist_del(&ri->hlist);
+>  		kfree(ri);
+> @@ -1874,6 +1883,27 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  
+>  	/* TODO: consider to only swap the RA after the last pre_handler fired */
+>  	hash = hash_ptr(current, KPROBE_HASH_BITS);
+
+Hmm, this hash calculation position is also not optimized.
+This should be done right before kretprobe_table_lock().
+
+> +	if (rp->percpu_instance) {
+> +		unsigned long flags;
+
+We already have flags, right?
+
+> +
+> +		local_irq_save(flags);
+> +		ri = this_cpu_ptr(rp->pcpu);
+> +		if (!ri || ri->rp) { /* already in use */
+> +			local_irq_restore(flags);
+> +			rp->nmissed++;
+> +			return 0;
+> +		}
+> +		INIT_HLIST_NODE(&ri->hlist);
+> +		ri->rp = rp;
+> +		ri->task = current;
+> +		local_irq_restore(flags);
+> +
+> +		if (rp->entry_handler && rp->entry_handler(ri, regs)) {
+> +			ri->rp = NULL;	/* failed */
+> +			return 0;
+> +		}
+> +		goto good;
+
+Can't you make a new helper function for finding new free instance?
+(note: don't forget to make it NOKPROBE)
+What I would like to see is;
+
+ri = get_free_rp_instance(rp);	/* If !ri, increment rp->nmissed */
+if (ri) {
+ 	arch_prepare_kretprobe(ri, regs);
+	...
+}
+
+> +	}
+>  	raw_spin_lock_irqsave(&rp->lock, flags);
+>  	if (!hlist_empty(&rp->free_instances)) {
+>  		ri = hlist_entry(rp->free_instances.first,
+> @@ -1891,6 +1921,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  			return 0;
+>  		}
+>  
+> +good:
+>  		arch_prepare_kretprobe(ri, regs);
+>  
+>  		/* XXX(hch): why is there no hlist_move_head? */
+> @@ -1950,6 +1981,15 @@ int register_kretprobe(struct kretprobe *rp)
+>  	rp->kp.post_handler = NULL;
+>  	rp->kp.fault_handler = NULL;
+>  
+> +	if (rp->percpu_instance) {
+> +		rp->pcpu = __alloc_percpu(sizeof(*rp->pcpu) + rp->data_size,
+> +					  __alignof__(*rp->pcpu));
+> +		if (rp->pcpu)
+> +			goto finalize;
+> +		free_rp_inst(rp);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	/* Pre-allocate memory for max kretprobe instances */
+>  	if (rp->maxactive <= 0) {
+
+Above new code should be here, and set rp->percpu_instance = true. 
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
