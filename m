@@ -2,136 +2,95 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B7C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8FCC3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A902068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F28208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582069996;
-	bh=YjCz20u5qK9/aj8t+FGcAcBFISIhsH0FVDLB4Ogpfeg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FqDRlbnOa8/Da11EKvZmfq0dDkySKPMuGm8ezlRh+EC4zjML2XuCKGwP7U4lcOSro
-	 SGVeiT+7gCA/oO+LoyTys72d2lsEKDK/jGyEscb7RCKnfM0+2jXClWIks8dBykJHSw
-	 H5EkN4zbDFMtdUzTVvVqE1yzSWBEVW7M+PrRi7Aw=
+	s=default; t=1582070049;
+	bh=sVFef4PzqftuGRief/QBL+AuxajuMta5Rk9EY8Z0RIg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=sc8emasXiVzONiYiToLOqiCAxK6WgH/LvKq5A0GgVN/jtOi0B0FMiXFGg7fn+fNV0
+	 vniunzgMHg6m7Bsr035ctJFTmRS3WAftwLlTBAHkJ5dSMd5U1FfCkZtxN74G/RqSi9
+	 uPlMlTBee1LIeWVFRDLDTzFszB0Wcrslzx+EzEBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgBRXxO (ORCPT
+        id S1727187AbgBRXyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:53:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 18:54:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbgBRXxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:53:14 -0500
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726716AbgBRXyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:54:07 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD1B2465A;
-        Tue, 18 Feb 2020 23:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1CA2068F;
+        Tue, 18 Feb 2020 23:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582069993;
-        bh=YjCz20u5qK9/aj8t+FGcAcBFISIhsH0FVDLB4Ogpfeg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IqUkCYBHI1LPGm/S4CRCNpyYKg2J7ClmF4QMfFfjs9V+Ntm9qpfPpnzePIe97WX/K
-         bcUC7dKjkV59OGb7WOp8QSyaYK8WY09lgcNUWb41IdKny223yk2g/H3WwMu5XQW70W
-         Q8zkLqs+mWhtURZYqA/ob4OafZpwrM9rQcUDofQQ=
-Received: by mail-qt1-f177.google.com with SMTP id w47so15906576qtk.4;
-        Tue, 18 Feb 2020 15:53:13 -0800 (PST)
-X-Gm-Message-State: APjAAAX1NtuZgmSFLkF8U0oFBmPrcZls26dXha1ZvaQQ766UqPfD8PuD
-        DmXIWnnoRl3IEvF7NxcLv+02VQCAEYb4NspIBA==
-X-Google-Smtp-Source: APXvYqxrJE335t2FjR4iBtJ6HJAhgu8z5nJYdc9dkse1UfSdNHwsqTSOPIax8IEVjBHsl64ZV1VYXZbERi+/c9/dMys=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr19867956qtc.136.1582069992571;
- Tue, 18 Feb 2020 15:53:12 -0800 (PST)
+        s=default; t=1582070047;
+        bh=sVFef4PzqftuGRief/QBL+AuxajuMta5Rk9EY8Z0RIg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ysC1+TgxWDsLsphReqqFT1BVqWJ9vnlLOGNZQt3e1XxQH4rY6Li/ezz7z0Evioru1
+         bDn/h6UG/J7T5F1SL3FFSpKqswxoNaCvn8qXP7KnY5Up9WAVAkNEs5KLF1ad5dhuUN
+         v1yHV1aqaNPY34IMZoPTKF2QuGCIq0qmZT2XRdw0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DBF4F3520856; Tue, 18 Feb 2020 15:54:06 -0800 (PST)
+Date:   Tue, 18 Feb 2020 15:54:06 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
+ rcu_tasks_cbs_head
+Message-ID: <20200218235406.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200215002520.15746-1-paulmck@kernel.org>
+ <20200217123851.GR14914@hirez.programming.kicks-ass.net>
+ <20200217181615.GP2935@paulmck-ThinkPad-P72>
+ <20200218075648.GW14914@hirez.programming.kicks-ass.net>
+ <20200218162719.GE2935@paulmck-ThinkPad-P72>
+ <20200218201142.GF11457@worktop.programming.kicks-ass.net>
+ <20200218202226.GJ2935@paulmck-ThinkPad-P72>
+ <20200218174503.3d4e4750@gandalf.local.home>
+ <20200218225455.GN2935@paulmck-ThinkPad-P72>
+ <20200218181323.4a102fe7@gandalf.local.home>
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com> <CALAqxLUTNq-Dg5Nd4PozCUx3K0hnVEJYmNnkpnGWGhph8vNr8w@mail.gmail.com>
-In-Reply-To: <CALAqxLUTNq-Dg5Nd4PozCUx3K0hnVEJYmNnkpnGWGhph8vNr8w@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Feb 2020 17:53:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
-Message-ID: <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218181323.4a102fe7@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 5:21 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, Feb 18, 2020 at 2:51 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Feb 18, 2020 at 4:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> > > at the end of initcall"), along with commit 25b4e70dcce9
-> > > ("driver core: allow stopping deferred probe after init") after
-> > > late_initcall, drivers will stop getting EPROBE_DEFER, and
-> > > instead see an error causing the driver to fail to load.
-> > >
-> > > That change causes trouble when trying to use many clk drivers
-> > > as modules, as the clk modules may not load until much later
-> > > after init has started. If a dependent driver loads and gets an
-> > > error instead of EPROBE_DEFER, it won't try to reload later when
-> > > the dependency is met, and will thus fail to load.
-> > >
-> > > This patch reworks some of the logic in
-> > > __driver_deferred_probe_check_state() so that if the
-> > > deferred_probe_timeout value is set, we will return EPROBE_DEFER
-> > > until that timeout expires, which may be after initcalls_done
-> > > is set to true.
-> > >
-> > > Specifically, on db845c, this change (when combined with booting
-> > > using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
-> > > QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
-> > > system, where as without it the display will fail to load.
-> >
-> > I would change the default for deferred_probe_timeout to 30 and then
-> > regulator code can rely on that.
->
-> That is exactly what I do in the following patch! Let me know if you
-> have further suggestions for it.
+On Tue, Feb 18, 2020 at 06:13:23PM -0500, Steven Rostedt wrote:
+> On Tue, 18 Feb 2020 14:54:55 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> >     This data race was reported by KCSAN.  Not appropriate for backporting
+> >     due to failure being unlikely and due to the mild consequences of the
+> >     failure, namely a confusing rcutorture console message.
+> >     
+> 
+> I've seen patches backported for less. :-/
+> 
+> Really, any statement that says something may go awry with the code,
+> will be an argument to backport it.
 
-Indeed.
+You aren't kidding!  Rumor has it that someone tried backporting the
+RCU flavor-consolidation work, for but one example.  Though I cannot
+help but salute the level of insanity represented by that attempt.  ;-)
 
-Between the above comment and this comment in patch 2:
-/* preserve 30 second interval if deferred_probe_timeout=-1 */
-
-...I was confused.
-
-> > Curious, why 30 sec is fine now when
-> > you originally had 2 min? I'd just pick what you think is best. I
-> > doubt Mark had any extensive experiments to come up with 30sec.
->
-> I had two minutes initially as, due to other delays I still have to
-> chase, booting all the way to UI on the db845c can sometimes take
-> almost a minute. So it was just a rough safety estimate. But in v2, I
-> tested with the 30 second time used by the regulator code, and that
-> seemed to work ok.
->
-> As long as 30 seconds is working well, I'm ok with it for now (and it
-> can be overrided via boot arg). Though from past experience with
-> enterprise distros running on servers with tons of disks (which might
-> take many minutes to initialize), I'd suspect its likely some
-> environments may need much longer.
-
-Those systems aren't going to have a pinctrl or clock driver sitting
-in an encrypted RAID partition either. :)
-
-Rob
+							Thanx, Paul
