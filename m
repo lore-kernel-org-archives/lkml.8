@@ -2,63 +2,95 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71217C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEC9C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D47C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAAB206EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgBRGdY (ORCPT
+        id S1726225AbgBRGhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:33:24 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:58744 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgBRGdX (ORCPT
+        Tue, 18 Feb 2020 01:37:37 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38081 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbgBRGhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:33:23 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 03AD115B48536;
-        Mon, 17 Feb 2020 22:33:22 -0800 (PST)
-Date:   Mon, 17 Feb 2020 22:33:20 -0800 (PST)
-Message-Id: <20200217.223320.1107717283396960655.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     netanel@amazon.com, akiyano@amazon.com, gtzalik@amazon.com,
-        saeedb@amazon.com, zorik@amazon.com, sameehj@amazon.com,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: ena: remove set but not used variable
- 'hash_key'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200218062154.3724-1-yuehaibing@huawei.com>
-References: <20200218062154.3724-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 17 Feb 2020 22:33:23 -0800 (PST)
+        Tue, 18 Feb 2020 01:37:37 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 76F237EA064;
+        Tue, 18 Feb 2020 17:37:33 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j3wVg-0006PR-Ey; Tue, 18 Feb 2020 17:37:32 +1100
+Date:   Tue, 18 Feb 2020 17:37:32 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
+        Junxiao Bi <junxiao.bi@oracle.com>
+Subject: Re: [PATCH v6 10/19] fs: Convert mpage_readpages to mpage_readahead
+Message-ID: <20200218063732.GP10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-18-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-18-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=VP4A6UuYfbXrVXFT8kYA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Tue, 18 Feb 2020 14:21:54 +0800
-
-> drivers/net/ethernet/amazon/ena/ena_com.c: In function ena_com_hash_key_allocate:
-> drivers/net/ethernet/amazon/ena/ena_com.c:1070:50:
->  warning: variable hash_key set but not used [-Wunused-but-set-variable]
+On Mon, Feb 17, 2020 at 10:45:58AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> commit 6a4f7dc82d1e ("net: ena: rss: do not allocate key when not supported")
-> introduced this, but not used, so remove it.
+> Implement the new readahead aop and convert all callers (block_dev,
+> exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
+> reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Junxiao Bi <junxiao.bi@oracle.com> # ocfs2
+> ---
+>  drivers/staging/exfat/exfat_super.c |  7 +++---
+>  fs/block_dev.c                      |  7 +++---
+>  fs/ext2/inode.c                     | 10 +++-----
+>  fs/fat/inode.c                      |  7 +++---
+>  fs/gfs2/aops.c                      | 23 ++++++-----------
+>  fs/hpfs/file.c                      |  7 +++---
+>  fs/iomap/buffered-io.c              |  2 +-
+>  fs/isofs/inode.c                    |  7 +++---
+>  fs/jfs/inode.c                      |  7 +++---
+>  fs/mpage.c                          | 38 +++++++++--------------------
+>  fs/nilfs2/inode.c                   | 15 +++---------
+>  fs/ocfs2/aops.c                     | 34 ++++++++++----------------
+>  fs/omfs/file.c                      |  7 +++---
+>  fs/qnx6/inode.c                     |  7 +++---
+>  fs/reiserfs/inode.c                 |  8 +++---
+>  fs/udf/inode.c                      |  7 +++---
+>  include/linux/mpage.h               |  4 +--
+>  mm/migrate.c                        |  2 +-
+>  18 files changed, 73 insertions(+), 126 deletions(-)
 
-Applied.
+That's actually pretty simple changeover. Nothing really scary
+there. :)
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
