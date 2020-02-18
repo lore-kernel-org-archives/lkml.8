@@ -2,107 +2,163 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD8DC34044
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E16C34044
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758D122B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jtIPsg8T"
+	by mail.kernel.org (Postfix) with ESMTP id 1EAB42067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgBRQfK (ORCPT
+        id S1726795AbgBRQfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:35:10 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35464 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBRQfH (ORCPT
+        Tue, 18 Feb 2020 11:35:19 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54338 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgBRQfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:35:07 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01IGVM8B004765;
-        Tue, 18 Feb 2020 16:34:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=9uIbz+6IZmhj+I6Ic8HpGMJUYSme2yHvjIUhlDjxNmM=;
- b=jtIPsg8TtK+AILGdKY3iw3MXqwd1YZljuFfBFRFF8O2BEklHbn/34z1C3+dOVpTim1nC
- AVnwk+Ai7/yXUDdypDiEmIuTRmcvdkLlGim74/L7Y0fbBNLHnMpVHgjpeMn4beh2KfrA
- mNMlJZLODJM570UZ7fCXhe8C5MPIVtkptQ8fhS0FwzyWbrzo8f8R0B/OXRY9ieck7FSd
- 2yjUzpEnPO67hqN2nH5kDIUq+Q0tK0z5z1YY09dLVdqj58HJT7+XkoU3yfy2tQDTF1Oi
- nUN8pP42lh34BL8GG7W+wx7sfqueSxaTnFE4FiyoESdGtYu/C2NORDfsjh12wNNXlxm6 mA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2y8e1hjruy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 16:34:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01IGRrFR019262;
-        Tue, 18 Feb 2020 16:34:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y6ternbnp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 16:34:50 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01IGYmmg023227;
-        Tue, 18 Feb 2020 16:34:48 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 08:34:48 -0800
-Date:   Tue, 18 Feb 2020 11:35:04 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     tj@kernel.org, jiangshanlai@gmail.com, will@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-Message-ID: <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
-References: <20200217204803.GA13479@Red>
+        Tue, 18 Feb 2020 11:35:19 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id EAEAB26CF76
+Received: by earth.universe (Postfix, from userid 1000)
+        id 823A53C0C81; Tue, 18 Feb 2020 17:35:15 +0100 (CET)
+Date:   Tue, 18 Feb 2020 17:35:15 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200218163515.rxdvv5ponu2ndwn7@earth.universe>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <20200214003452.xuadnylj2udqyljs@earth.universe>
+ <20200214013454.GX64767@atomide.com>
+ <20200214130428.gkhmr55ptmi2bh2x@earth.universe>
+ <20200214170946.GB64767@atomide.com>
+ <20200218140431.emrxgvckrpltmg2s@earth.universe>
+ <20200218141905.GG35972@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="njnztwvky5sdzicr"
 Content-Disposition: inline
-In-Reply-To: <20200217204803.GA13479@Red>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 bulkscore=0
- suspectscore=2 mlxscore=0 mlxlogscore=987 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002180121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 phishscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1011 adultscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180121
+In-Reply-To: <20200218141905.GG35972@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corentin,
 
-On Mon, Feb 17, 2020 at 09:48:03PM +0100, Corentin Labbe wrote:
-> When running some CI test jobs (targeting crypto tests), I always get the following WARNING:
+--njnztwvky5sdzicr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can you be more specific about which test triggers this?  I used the config
-option you mention and failed to reproduce after doing the boot-time crypto
-tests and running various tcrypt incantations.
+Hi,
 
-> [    7.886361] ------------[ cut here ]------------
-> [    7.886388] WARNING: CPU: 2 PID: 147 at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-> [    7.886394] Modules linked in: ghash_generic
-> [    7.886409] CPU: 2 PID: 147 Comm: modprobe Not tainted 5.6.0-rc1-next-20200214-00068-g166c9264f0b1-dirty #545
+On Tue, Feb 18, 2020 at 06:19:05AM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sebastian.reichel@collabora.com> [200218 06:05]:
+> > On Fri, Feb 14, 2020 at 09:09:46AM -0800, Tony Lindgren wrote:
+> > > * Sebastian Reichel <sre@kernel.org> [200214 13:05]:
+> > > > On Thu, Feb 13, 2020 at 05:34:54PM -0800, Tony Lindgren wrote:
+> > > > > And bluetooth would be similar to cpcap_audio and mot_mdm6600_aud=
+io
+> > > > > above.
+> > > >=20
+> > > > My understanding is, that CPU is not involved for calls (except for
+> > > > setting up cpcap registers correctly). Basically McBSP3 should
+> > > > remain idle for a call and data goes directly from modem to cpcap.
+> > > > The same should work for modem <-> BT, except that CPCAP seems to
+> > > > always provide the clock. That would imply a direct link between
+> > > > modem and codec / BT?
+> > >=20
+> > > Yes the direct link is i2s. I'm ot sure if mcbsp can be idle during
+> > > voice call though, I guess it should be doable since mcbsp is not
+> > > the clock master :)
+> > >=20
+> > > > > My guess is that only cpcap registers and clock rate needs to be
+> > > > > changed for bluetooth audio BTW, so if somebody havs a bluetooth
+> > > > > headset just do the following in Android:
+> > > > >=20
+> > > > > # cpcaprw --all > /tmp/before
+> > > > > configure bluetooth headset for audio in android and start
+> > > > > playing some music or make a phone call
+> > > > > ...
+> > > > > # cpcaprw --all > /tmp/after
+> > > > > stop playing music or phone call
+> > > > > ...
+> > > > > diff -u /tmp/before /tmp/after
+> > > > >=20
+> > > > > The registers will be different for a bluetooth phone call and
+> > > > > playing music.
+> > > >=20
+> > > > I can provider register values once I find some time.
+> >=20
+> > [NI] Normal idle (no BT headset connected)
+> > [BI] Bluetooth idle (with BT headset connected)
+> > [BC] Bluetooth call in progress
+> > [NC] Normal call in progress (BT headset disabled)
+> >=20
+> >                      [NI]  =3D>  [BI]  =3D>  [BC]  =3D>  [NC]
+> > CPCAP_REG_VAUDIOC   0x0065 =3D> 0x0065 =3D> 0x0065 =3D> 0x0025
+> > CPCAP_REG_CC        0x0000 =3D> 0x0000 =3D> 0x6000 =3D> 0x60df
+> > CPCAP_REG_CDI       0x0040 =3D> 0x0000 =3D> 0xaa40 =3D> 0xae0a
+> > CPCAP_REG_SDAC      -------------- 0x0000 --------------
+> > CPCAP_REG_SDACDI    -------------- 0x0004 --------------
+> > CPCAP_REG_TXI       0x0804 =3D> 0x0004 =3D> 0x0000 =3D> 0x0cc6
+> > CPCAP_REG_TXMP      0x079c =3D> 0x079c =3D> 0x0400 =3D> 0x0673
+> > CPCAP_REG_RXOA      0x0000 =3D> 0x0000 =3D> 0x0001 =3D> 0x0001
+> > CPCAP_REG_RXVC      0x0d34 =3D> 0x0d34 =3D> 0x0000 =3D> 0x0b2c
+> > CPCAP_REG_RXCOA     0x0000 =3D> 0x0000 =3D> 0x0000 =3D> 0x0601
+> > CPCAP_REG_RXSDOA    0x0000 =3D> 0x0000 =3D> 0x0600 =3D> 0x0600
+> > CPCAP_REG_RXEPOA    -------------- 0x0400 --------------
+> > CPCAP_REG_RXLL      -------------- 0x0000 --------------
+> > CPCAP_REG_A2LA      -------------- 0x0030 --------------
+> > CPCAP_REG_MIPIS1    -------------- 0x0000 --------------
+> > CPCAP_REG_MIPIS2    -------------- 0x0000 --------------
+> > CPCAP_REG_MIPIS3    -------------- 0x0000 --------------
+> > CPCAP_REG_LVAB      -------------- 0x0000 --------------
+>=20
+> Great thanks! Care to do also a dump just playing music to on
+> bluetooth headset at some point?
 
-I was using just plain next-20200214.  Can't find 166c9264f0b1, what tag/branch
-were you using exactly?
+AFAIK BT music is usually done via A2DP using the data connection,
+but I can get a register dump to make sure. I guess the more
+interesting bit would be to use BT headset for a VOIP call, which
+requires the headset profile being routed to the CPU.
 
-> So it seems that it is a "events" workqueue that hit this problem.
+-- Sebastian
 
-Looks like "schedule_work(&init_free_wq)" in do_init_module(), can't be sure
-though.
+--njnztwvky5sdzicr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks,
-Daniel
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5MEj4ACgkQ2O7X88g7
++poFYw//XQ7O3qOgKSSW0CMyFy16w6YZb78hfG0vsiZOA+KshUjO/hGfzhv9ySM3
+QQvcrsENfeadQ6EqFLUK/1xcDUjDgziemLEPnbSHwXfWz4DwFmVYyxwaQc1XaeRm
+qzgVBlvMiUCKKkDrhQz482eTWMZt6OyuXQ8YHZL1mCzrxdXDy7yYm5f1BIHLQK0H
++yboDLCloyuu+qiTinurCZxzmU8VuAbBFfh1iAQsfeJqcau8MEr0yTFHV77cHikU
+kAYczOFDDjROvE8Q56vxnpYuC1M7Rbz9Jj0Y1C78VVjJRAt5gyKMgreK213J6xZb
+nWXuBDoWKthTv2akmJ+HClx3kyi8TweQKnaDGPSy1/ub+6FswXCcZ172bg+kyUV2
+RM+HjqHeocK3fr8YIRxrPIVIih4NCTWuoc8xfCG5y314wS+D9KfD1aI3TMaKeKxG
+6ID7143Qgs1XxyBoAJ8dIW7knKxSldUs2LhSuglBeOhHCBVgBs4hHWbTUvCrR5Jt
+jCeVEt1SQ+wgsTgbTYbnUlzwLRWAIpuBzrprCndipfUTx0KQsvDS6aUFRkEx70HL
+CVEsTaDX3V7r1Z5izI6B7DJKw2gElRzRTHRQBhaqpvnxu57DEqdas4fQ/bdLbZj9
+3GTcae+qU+oaImxVYb4hZNKX740QeL1zoJ8YSzONOTrKBq/zx/g=
+=GOC7
+-----END PGP SIGNATURE-----
+
+--njnztwvky5sdzicr--
