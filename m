@@ -2,450 +2,148 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13588C34048
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074FEC34048
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D007A208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046065;
-	bh=nbHREpyg9JimnwnI/nPcT90CEwrvNVBdPizgOJxL6kE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d4Mz8l3VnmJ0nu96InWpaSfnVE2PvXaFXCx/yYOl761biVD1eSoib0kkeBBpVq/2k
-	 rJGE4yOsdlREYfSGEoQr3TfGftylaCB65regkgcWiEIjHo6RhBoRfiL29n64rjcYt8
-	 NB7jslWcyEkvWj5Ei7XByKp8BrgNb1r5MYGYJZT8=
+	by mail.kernel.org (Postfix) with ESMTP id D4A48208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="W1F6C5ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBRROY (ORCPT
+        id S1727958AbgBRROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:14:24 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40361 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbgBRRNi (ORCPT
+        Tue, 18 Feb 2020 12:14:36 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:33737 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgBRROe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:13:38 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i6so20247025otr.7;
-        Tue, 18 Feb 2020 09:13:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u8D2FPtNZ0VMBn5UkeqSg7CSDs/wZAjBSTTCQDmiSkY=;
-        b=eyn6Ia268py7xlpLA8tqbDqJJSSLK5C60VrqcXGDlAbKlm31cTS2Qv6bB5Jk3gSO00
-         XAeAxlrXmJTtbq3xnxOrexH4sS8b2aynAiSRLsGvvCQLDTr/vAJsmOdpBnZuH/UvKstq
-         JdHjXbpL1BhNuqYpsScd8nBLgjciEXsUnkQ1esdkgwSm1qYLSMkPXNFMf61jGBLdxP/a
-         968TK4URNPOXPP038wET6ShZ1+uvrihBvA8DacKgUWcjdNTQJvLqH6ZhGKtmxq7DhuWu
-         AWPW1ZULxnuntUDqhBrWuFouj2poa5YMUiYn3A2VcZiI/8F3rY2unUejlxaLsSclwcMA
-         +TrA==
-X-Gm-Message-State: APjAAAW8ExL+sPFYv+ek2ABsN6y2Db8CsNxHYl2j2lkIa9JlUvZDy+pK
-        3mCb7psTmDzgWGbcZa7kmA==
-X-Google-Smtp-Source: APXvYqw6TNQhn8784qV+7u3WFCDSuqFfYxpVsfN96SobcjyzzV4x9MxcI5ZxKLnqYBrEuZO3mSlkJg==
-X-Received: by 2002:a9d:7386:: with SMTP id j6mr16115366otk.336.1582046016817;
-        Tue, 18 Feb 2020 09:13:36 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:13:36 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 08/11] clk: Remove Calxeda driver
-Date:   Tue, 18 Feb 2020 11:13:18 -0600
-Message-Id: <20200218171321.30990-9-robh@kernel.org>
+        Tue, 18 Feb 2020 12:14:34 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DE21623D06;
+        Tue, 18 Feb 2020 18:14:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582046071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OXgmkwBe7DwnhUeIreA0ttrwVjYja06p6FlV/rhJKqk=;
+        b=W1F6C5neEJoDK3sAJ3pc9pIEkKrKYg1nqZTLfOSMt7m6Zjmp4L0yCv7uSB1OqvaOhqRLdm
+        PlFAlNH9of9ZZy6Wn6U3pay488h8FVFENksfsu/sXpkmOZU1AAG5PAj0I4rDX8SqLDPqXS
+        Ak6yMISOie1SsWMqMuBE4lBHfJRvYzc=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 2/2] arm64: dts: ls1028a: add missing SPI nodes
+Date:   Tue, 18 Feb 2020 18:14:18 +0100
+Message-Id: <20200218171418.18297-2-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
-References: <20200218171321.30990-1-robh@kernel.org>
+In-Reply-To: <20200218171418.18297-1-michael@walle.cc>
+References: <20200218171418.18297-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: DE21623D06
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.482];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.32.167.96:email,0.32.50.48:email,0.32.89.64:email,0.32.11.32:email];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+The LS1028A has three (dual) SPI controller. These are compatible with
+the ones from the LS1021A. Add the nodes.
+
+The third controller was tested on a custom board.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
-Do not apply yet.
+changes since v1:
+ - add "fsl,ls1028a-dspi" compatible string
 
- drivers/clk/Makefile       |   1 -
- drivers/clk/clk-highbank.c | 329 -------------------------------------
- 2 files changed, 330 deletions(-)
- delete mode 100644 drivers/clk/clk-highbank.c
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f4169cc2fd31..cb71dfaf1ac7 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -33,7 +33,6 @@ obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
- obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
- obj-$(CONFIG_COMMON_CLK_ASPEED)		+= clk-aspeed.o
- obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
--obj-$(CONFIG_ARCH_HIGHBANK)		+= clk-highbank.o
- obj-$(CONFIG_CLK_HSDK)			+= clk-hsdk-pll.o
- obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
- obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
-diff --git a/drivers/clk/clk-highbank.c b/drivers/clk/clk-highbank.c
-deleted file mode 100644
-index 2a0cea2946f9..000000000000
---- a/drivers/clk/clk-highbank.c
-+++ /dev/null
-@@ -1,329 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright 2011-2012 Calxeda, Inc.
-- */
--
--#include <linux/kernel.h>
--#include <linux/slab.h>
--#include <linux/err.h>
--#include <linux/clk-provider.h>
--#include <linux/io.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--
--#define HB_PLL_LOCK_500		0x20000000
--#define HB_PLL_LOCK		0x10000000
--#define HB_PLL_DIVF_SHIFT	20
--#define HB_PLL_DIVF_MASK	0x0ff00000
--#define HB_PLL_DIVQ_SHIFT	16
--#define HB_PLL_DIVQ_MASK	0x00070000
--#define HB_PLL_DIVR_SHIFT	8
--#define HB_PLL_DIVR_MASK	0x00001f00
--#define HB_PLL_RANGE_SHIFT	4
--#define HB_PLL_RANGE_MASK	0x00000070
--#define HB_PLL_BYPASS		0x00000008
--#define HB_PLL_RESET		0x00000004
--#define HB_PLL_EXT_BYPASS	0x00000002
--#define HB_PLL_EXT_ENA		0x00000001
--
--#define HB_PLL_VCO_MIN_FREQ	2133000000
--#define HB_PLL_MAX_FREQ		HB_PLL_VCO_MIN_FREQ
--#define HB_PLL_MIN_FREQ		(HB_PLL_VCO_MIN_FREQ / 64)
--
--#define HB_A9_BCLK_DIV_MASK	0x00000006
--#define HB_A9_BCLK_DIV_SHIFT	1
--#define HB_A9_PCLK_DIV		0x00000001
--
--struct hb_clk {
--        struct clk_hw	hw;
--	void __iomem	*reg;
--	char *parent_name;
--};
--#define to_hb_clk(p) container_of(p, struct hb_clk, hw)
--
--static int clk_pll_prepare(struct clk_hw *hwclk)
--	{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 reg;
--
--	reg = readl(hbclk->reg);
--	reg &= ~HB_PLL_RESET;
--	writel(reg, hbclk->reg);
--
--	while ((readl(hbclk->reg) & HB_PLL_LOCK) == 0)
--		;
--	while ((readl(hbclk->reg) & HB_PLL_LOCK_500) == 0)
--		;
--
--	return 0;
--}
--
--static void clk_pll_unprepare(struct clk_hw *hwclk)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 reg;
--
--	reg = readl(hbclk->reg);
--	reg |= HB_PLL_RESET;
--	writel(reg, hbclk->reg);
--}
--
--static int clk_pll_enable(struct clk_hw *hwclk)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 reg;
--
--	reg = readl(hbclk->reg);
--	reg |= HB_PLL_EXT_ENA;
--	writel(reg, hbclk->reg);
--
--	return 0;
--}
--
--static void clk_pll_disable(struct clk_hw *hwclk)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 reg;
--
--	reg = readl(hbclk->reg);
--	reg &= ~HB_PLL_EXT_ENA;
--	writel(reg, hbclk->reg);
--}
--
--static unsigned long clk_pll_recalc_rate(struct clk_hw *hwclk,
--					 unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	unsigned long divf, divq, vco_freq, reg;
--
--	reg = readl(hbclk->reg);
--	if (reg & HB_PLL_EXT_BYPASS)
--		return parent_rate;
--
--	divf = (reg & HB_PLL_DIVF_MASK) >> HB_PLL_DIVF_SHIFT;
--	divq = (reg & HB_PLL_DIVQ_MASK) >> HB_PLL_DIVQ_SHIFT;
--	vco_freq = parent_rate * (divf + 1);
--
--	return vco_freq / (1 << divq);
--}
--
--static void clk_pll_calc(unsigned long rate, unsigned long ref_freq,
--			u32 *pdivq, u32 *pdivf)
--{
--	u32 divq, divf;
--	unsigned long vco_freq;
--
--	if (rate < HB_PLL_MIN_FREQ)
--		rate = HB_PLL_MIN_FREQ;
--	if (rate > HB_PLL_MAX_FREQ)
--		rate = HB_PLL_MAX_FREQ;
--
--	for (divq = 1; divq <= 6; divq++) {
--		if ((rate * (1 << divq)) >= HB_PLL_VCO_MIN_FREQ)
--			break;
--	}
--
--	vco_freq = rate * (1 << divq);
--	divf = (vco_freq + (ref_freq / 2)) / ref_freq;
--	divf--;
--
--	*pdivq = divq;
--	*pdivf = divf;
--}
--
--static long clk_pll_round_rate(struct clk_hw *hwclk, unsigned long rate,
--			       unsigned long *parent_rate)
--{
--	u32 divq, divf;
--	unsigned long ref_freq = *parent_rate;
--
--	clk_pll_calc(rate, ref_freq, &divq, &divf);
--
--	return (ref_freq * (divf + 1)) / (1 << divq);
--}
--
--static int clk_pll_set_rate(struct clk_hw *hwclk, unsigned long rate,
--			    unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 divq, divf;
--	u32 reg;
--
--	clk_pll_calc(rate, parent_rate, &divq, &divf);
--
--	reg = readl(hbclk->reg);
--	if (divf != ((reg & HB_PLL_DIVF_MASK) >> HB_PLL_DIVF_SHIFT)) {
--		/* Need to re-lock PLL, so put it into bypass mode */
--		reg |= HB_PLL_EXT_BYPASS;
--		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
--
--		writel(reg | HB_PLL_RESET, hbclk->reg);
--		reg &= ~(HB_PLL_DIVF_MASK | HB_PLL_DIVQ_MASK);
--		reg |= (divf << HB_PLL_DIVF_SHIFT) | (divq << HB_PLL_DIVQ_SHIFT);
--		writel(reg | HB_PLL_RESET, hbclk->reg);
--		writel(reg, hbclk->reg);
--
--		while ((readl(hbclk->reg) & HB_PLL_LOCK) == 0)
--			;
--		while ((readl(hbclk->reg) & HB_PLL_LOCK_500) == 0)
--			;
--		reg |= HB_PLL_EXT_ENA;
--		reg &= ~HB_PLL_EXT_BYPASS;
--	} else {
--		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
--		reg &= ~HB_PLL_DIVQ_MASK;
--		reg |= divq << HB_PLL_DIVQ_SHIFT;
--		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
--	}
--	writel(reg, hbclk->reg);
--
--	return 0;
--}
--
--static const struct clk_ops clk_pll_ops = {
--	.prepare = clk_pll_prepare,
--	.unprepare = clk_pll_unprepare,
--	.enable = clk_pll_enable,
--	.disable = clk_pll_disable,
--	.recalc_rate = clk_pll_recalc_rate,
--	.round_rate = clk_pll_round_rate,
--	.set_rate = clk_pll_set_rate,
--};
--
--static unsigned long clk_cpu_periphclk_recalc_rate(struct clk_hw *hwclk,
--						   unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 div = (readl(hbclk->reg) & HB_A9_PCLK_DIV) ? 8 : 4;
--	return parent_rate / div;
--}
--
--static const struct clk_ops a9periphclk_ops = {
--	.recalc_rate = clk_cpu_periphclk_recalc_rate,
--};
--
--static unsigned long clk_cpu_a9bclk_recalc_rate(struct clk_hw *hwclk,
--						unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 div = (readl(hbclk->reg) & HB_A9_BCLK_DIV_MASK) >> HB_A9_BCLK_DIV_SHIFT;
--
--	return parent_rate / (div + 2);
--}
--
--static const struct clk_ops a9bclk_ops = {
--	.recalc_rate = clk_cpu_a9bclk_recalc_rate,
--};
--
--static unsigned long clk_periclk_recalc_rate(struct clk_hw *hwclk,
--					     unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 div;
--
--	div = readl(hbclk->reg) & 0x1f;
--	div++;
--	div *= 2;
--
--	return parent_rate / div;
--}
--
--static long clk_periclk_round_rate(struct clk_hw *hwclk, unsigned long rate,
--				   unsigned long *parent_rate)
--{
--	u32 div;
--
--	div = *parent_rate / rate;
--	div++;
--	div &= ~0x1;
--
--	return *parent_rate / div;
--}
--
--static int clk_periclk_set_rate(struct clk_hw *hwclk, unsigned long rate,
--				unsigned long parent_rate)
--{
--	struct hb_clk *hbclk = to_hb_clk(hwclk);
--	u32 div;
--
--	div = parent_rate / rate;
--	if (div & 0x1)
--		return -EINVAL;
--
--	writel(div >> 1, hbclk->reg);
--	return 0;
--}
--
--static const struct clk_ops periclk_ops = {
--	.recalc_rate = clk_periclk_recalc_rate,
--	.round_rate = clk_periclk_round_rate,
--	.set_rate = clk_periclk_set_rate,
--};
--
--static void __init hb_clk_init(struct device_node *node, const struct clk_ops *ops, unsigned long clkflags)
--{
--	u32 reg;
--	struct hb_clk *hb_clk;
--	const char *clk_name = node->name;
--	const char *parent_name;
--	struct clk_init_data init;
--	struct device_node *srnp;
--	int rc;
--
--	rc = of_property_read_u32(node, "reg", &reg);
--	if (WARN_ON(rc))
--		return;
--
--	hb_clk = kzalloc(sizeof(*hb_clk), GFP_KERNEL);
--	if (WARN_ON(!hb_clk))
--		return;
--
--	/* Map system registers */
--	srnp = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
--	hb_clk->reg = of_iomap(srnp, 0);
--	of_node_put(srnp);
--	BUG_ON(!hb_clk->reg);
--	hb_clk->reg += reg;
--
--	of_property_read_string(node, "clock-output-names", &clk_name);
--
--	init.name = clk_name;
--	init.ops = ops;
--	init.flags = clkflags;
--	parent_name = of_clk_get_parent_name(node, 0);
--	init.parent_names = &parent_name;
--	init.num_parents = 1;
--
--	hb_clk->hw.init = &init;
--
--	rc = clk_hw_register(NULL, &hb_clk->hw);
--	if (WARN_ON(rc)) {
--		kfree(hb_clk);
--		return;
--	}
--	of_clk_add_hw_provider(node, of_clk_hw_simple_get, &hb_clk->hw);
--}
--
--static void __init hb_pll_init(struct device_node *node)
--{
--	hb_clk_init(node, &clk_pll_ops, 0);
--}
--CLK_OF_DECLARE(hb_pll, "calxeda,hb-pll-clock", hb_pll_init);
--
--static void __init hb_a9periph_init(struct device_node *node)
--{
--	hb_clk_init(node, &a9periphclk_ops, 0);
--}
--CLK_OF_DECLARE(hb_a9periph, "calxeda,hb-a9periph-clock", hb_a9periph_init);
--
--static void __init hb_a9bus_init(struct device_node *node)
--{
--	hb_clk_init(node, &a9bclk_ops, CLK_IS_CRITICAL);
--}
--CLK_OF_DECLARE(hb_a9bus, "calxeda,hb-a9bus-clock", hb_a9bus_init);
--
--static void __init hb_emmc_init(struct device_node *node)
--{
--	hb_clk_init(node, &periclk_ops, 0);
--}
--CLK_OF_DECLARE(hb_emmc, "calxeda,hb-emmc-clock", hb_emmc_init);
---
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 0bf375ec959b..ef1e3867b3fb 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -290,6 +290,45 @@
+ 			status = "disabled";
+ 		};
+ 
++		dspi0: spi@2100000 {
++			compatible = "fsl,ls1028a-dspi", "fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2100000 0x0 0x10000>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 1>;
++			spi-num-chipselects = <4>;
++			little-endian;
++			status = "disabled";
++		};
++
++		dspi1: spi@2110000 {
++			compatible = "fsl,ls1028a-dspi", "fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2110000 0x0 0x10000>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 1>;
++			spi-num-chipselects = <4>;
++			little-endian;
++			status = "disabled";
++		};
++
++		dspi2: spi@2120000 {
++			compatible = "fsl,ls1028a-dspi", "fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2120000 0x0 0x10000>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 1>;
++			spi-num-chipselects = <3>;
++			little-endian;
++			status = "disabled";
++		};
++
+ 		esdhc: mmc@2140000 {
+ 			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+ 			reg = <0x0 0x2140000 0x0 0x10000>;
+-- 
 2.20.1
+
