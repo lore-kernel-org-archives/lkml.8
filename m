@@ -2,87 +2,81 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600DAC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D9C34032
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F928215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581993737;
-	bh=9s1PS3TUw7Zsqgs3UGzHhRFfsoLeo9wjHRqNuA7KWTU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRK69OqBS5JuoGPuy8FOVGt1Wk4PaBQ0+47bYIORiSeEUCL1D0+SzyEw4/SYhB+XZ
-	 MEw7WaZ75Yc6s1XbOiKN1xj+DEQ+OgZ2Imc41qeyO0p2OHaXIawmN9bn3u3RdMDlRC
-	 dmkXWQYsCUbcP/mMQ5jit9QYKcPgGFqmiU0/VydQ=
+	by mail.kernel.org (Postfix) with ESMTP id CC8CC215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 02:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBRCmP (ORCPT
+        id S1726353AbgBRCnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Feb 2020 21:42:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbgBRClv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Feb 2020 21:41:51 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD652467A;
-        Tue, 18 Feb 2020 02:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581993711;
-        bh=9s1PS3TUw7Zsqgs3UGzHhRFfsoLeo9wjHRqNuA7KWTU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIwAJNQ5HNu9czhmM5+JIIXVf88Bwz+rEaOqO3+ovrz4lcdLhtE5nggYwMLQWpGo+
-         h0v+nvbpEj9gYwiIeG6aZ/+agZ5G5pXaWzUHezJSVXQV136VyGhtBt7ISIZRBYrXOl
-         cVRsJiDmz9VLW/XUYQGXV5OWWkc4KiR53crjOTZI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     mingo@kernel.org, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@redhat.com,
-        alexey.budankov@linux.intel.com, songliubraving@fb.com,
-        acme@redhat.com, allison@lohutok.net,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 06/11] tools/kernel.h: add BUILD_BUG_ON_NOT_POWER_OF_2 macro
-Date:   Mon, 17 Feb 2020 21:41:28 -0500
-Message-Id: <20200218024133.5059-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200218024133.5059-1-sashal@kernel.org>
-References: <20200218024133.5059-1-sashal@kernel.org>
+        Mon, 17 Feb 2020 21:43:16 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:40439 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgBRCnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Feb 2020 21:43:16 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TqCIusF_1581993788;
+Received: from 30.27.234.229(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TqCIusF_1581993788)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Feb 2020 10:43:11 +0800
+Subject: Re: [PATCH v2 1/2] crypto: fix mismatched hash algorithm name sm3-256
+ to sm3
+To:     Mimi Zohar <zohar@linux.ibm.com>, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jarkko.sakkinen@linux.intel.com,
+        ebiggers@kernel.org, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com
+Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200217093649.97938-1-tianjia.zhang@linux.alibaba.com>
+ <20200217093649.97938-2-tianjia.zhang@linux.alibaba.com>
+ <1581989598.8515.233.camel@linux.ibm.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <f99d89d5-fbe0-49b9-a24d-b282ceb33e95@linux.alibaba.com>
+Date:   Tue, 18 Feb 2020 10:43:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <1581989598.8515.233.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is now needed as a result of 12593b7467f9 ("locking/lockdep: Reduce
-space occupied by stack traces").
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/include/linux/kernel.h | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
-index d2b3e1cc0218e..cc3d60623ca47 100644
---- a/tools/include/linux/kernel.h
-+++ b/tools/include/linux/kernel.h
-@@ -38,6 +38,12 @@
- #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
- #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
- 
-+/* Force a compilation error if a constant expression is not a power of 2 */
-+#define __BUILD_BUG_ON_NOT_POWER_OF_2(n)        \
-+	BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-+#define BUILD_BUG_ON_NOT_POWER_OF_2(n)                  \
-+	BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
-+
- #ifndef max
- #define max(x, y) ({				\
- 	typeof(x) _max1 = (x);			\
--- 
-2.20.1
+On 2020/2/18 9:33, Mimi Zohar wrote:
+> On Mon, 2020-02-17 at 17:36 +0800, Tianjia Zhang wrote:
+>> The name sm3-256 is defined in hash_algo_name in hash_info, but the
+>> algorithm name implemented in sm3_generic.c is sm3, which will cause
+>> the sm3-256 algorithm to be not found in some application scenarios of
+>> the hash algorithm, and an ENOENT error will occur. For example,
+>> IMA, keys, and other subsystems that reference hash_algo_name all use
+>> the hash algorithm of sm3.
+>>
+>> According to https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html,
+>> SM3 always produces a 256-bit hash value and there are no plans for
+>> other length development, so there is no ambiguity in the name of sm3.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> The previous version of this patch set is queued in the next-
+> integrity-testing branch.  That version of this patch didn't
+> change TPM_ALG_SM3_256.  Unless the TPM standard was modified, the TPM
+> spec refers to it as TPM_ALG_SM3_256.  Has that changed?
+> 
+> Mimi
+> 
 
+The definition in the TPM specification is still TPM_ALG_SM3_256, please
+ignore the modification to the TPM definition in this patch.
+
+Thanks,
+Tianjia
