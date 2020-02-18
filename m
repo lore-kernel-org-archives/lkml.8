@@ -2,81 +2,82 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6AC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE29C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72A21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2075021D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBRTlJ (ORCPT
+        id S1726461AbgBRTpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:41:09 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49475 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRTlI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:41:08 -0500
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id A034EE0005;
-        Tue, 18 Feb 2020 19:41:02 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 20:41:02 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     b-liu@ti.com, balbi@kernel.org, gregkh@linuxfoundation.org,
-        ludovic.desroches@microchip.com, mathias.nyman@intel.com,
-        nicolas.ferre@microchip.com, slemieux.tyco@gmail.com,
-        stern@rowland.harvard.edu, vz@mleia.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 09/20] usb: gadget: lpc32xx_udc: remove useless cast for
- driver.name
-Message-ID: <20200218194102.GE3385@piout.net>
-References: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
- <1582054383-35760-10-git-send-email-clabbe@baylibre.com>
+        Tue, 18 Feb 2020 14:45:42 -0500
+Received: from namei.org ([65.99.196.166]:46900 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgBRTpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:45:42 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 01IJhv9J016349;
+        Tue, 18 Feb 2020 19:43:58 GMT
+Date:   Wed, 19 Feb 2020 06:43:57 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+cc:     Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v7 09/12] drivers/perf: open access for CAP_PERFMON
+ privileged process
+In-Reply-To: <48baecd5-a015-3dbf-f774-9f2caee13893@linux.intel.com>
+Message-ID: <alpine.LRH.2.21.2002190643390.10165@namei.org>
+References: <c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com> <48baecd5-a015-3dbf-f774-9f2caee13893@linux.intel.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582054383-35760-10-git-send-email-clabbe@baylibre.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 19:32:52+0000, Corentin Labbe wrote:
-> device_driver name is const char pointer, so it not useful to cast
-> driver_name (which is already const char).
-> 
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Mon, 17 Feb 2020, Alexey Budankov wrote:
 
-> ---
->  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> For backward compatibility reasons access to the monitoring remains
+> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+> for secure monitoring is discouraged with respect to CAP_PERFMON
+> capability.
 > 
-> diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-> index d14b2bb3f67c..cb997b82c008 100644
-> --- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-> +++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-> @@ -3267,7 +3267,7 @@ static struct platform_driver lpc32xx_udc_driver = {
->  	.suspend	= lpc32xx_udc_suspend,
->  	.resume		= lpc32xx_udc_resume,
->  	.driver		= {
-> -		.name	= (char *) driver_name,
-> +		.name	= driver_name,
->  		.of_match_table = of_match_ptr(lpc32xx_udc_of_match),
->  	},
->  };
-> -- 
-> 2.24.1
-> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+
+
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+James Morris
+<jmorris@namei.org>
+
