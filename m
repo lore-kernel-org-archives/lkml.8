@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD542C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F56DC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B13321D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A77C21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056172;
-	bh=iQosepu1QFQGRPOVnnyEQkG/Jv/6/H0lyFElezmkXgM=;
+	s=default; t=1582056176;
+	bh=6M0+NYh2dsJFvJERXW7FFln+BxQTlcXI9TLiM82kJmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uluN7cPGF2zIVZIJz4c6vYm10s36h0RB1y/LEtKIkkPp40jwaibcIRjDiNFlv2+vx
-	 CVHEfRdH0TcLpf1ZDogommRaS81FsnK9U/Ehcuqf7TB+xGqc/EhXzkq1gO3KNTzs1G
-	 tYDhULrLrP1iQoUGOzUceCmcgwKHCRd10UKZ3i3E=
+	b=UuCcLRNFAoejTw28LN3QIwZ6X+NX696Z87xzlbTbXZkCksHYVtdKuEOwjbURXcC5y
+	 1fxS4NfwBhhPwngQfvzexb5nrzhV+/c8SPAVKOIzgUdAAzKapYhRxyWV22Bh605w7v
+	 5/slwmltIfsd7T/kiwZcolNjt2yq52cM50pXbJGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgBRUCu (ORCPT
+        id S1729023AbgBRUCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729002AbgBRUCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:02:47 -0500
+        id S1728273AbgBRUCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:02:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBAA24125;
-        Tue, 18 Feb 2020 20:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2A421D56;
+        Tue, 18 Feb 2020 20:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056166;
-        bh=iQosepu1QFQGRPOVnnyEQkG/Jv/6/H0lyFElezmkXgM=;
+        s=default; t=1582056169;
+        bh=6M0+NYh2dsJFvJERXW7FFln+BxQTlcXI9TLiM82kJmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjZAiYzlgagjnp2hTGwkftKGDfUDkBSyQlqodoDJsMeMS58xZb48gksIfTug3PjIs
-         mEKxfjR711EQIcNc/SThO0JZS6JeqsMn9/xu/SF+SMLqix5/Xk12TlV9f3LB2tiyjr
-         KBP1/Tj9y3iqoYzb0bc/eHt4zOJwqBOPXjlMdtM8=
+        b=SSUEIdEsK53W0v5WVGIWU2T7VF3BwOajNcqD6cno4SIUKUYwXhqNacIjBTDTXApET
+         9ATqs50yTd1/RGCLcN53x+4Dfsr+jQoyTa72UQHOhPQFpyaqxAgt8F89S5NaEh19W8
+         YJZs0h+szVHobZ/d0yJx/G2iTuft1hvGgBHEzk0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.5 60/80] sched/uclamp: Reject negative values in cpu_uclamp_write()
-Date:   Tue, 18 Feb 2020 20:55:21 +0100
-Message-Id: <20200218190437.835204491@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Subject: [PATCH 5.5 61/80] mac80211: use more bits for ack_frame_id
+Date:   Tue, 18 Feb 2020 20:55:22 +0100
+Message-Id: <20200218190437.913785931@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -60,50 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit b562d140649966d4daedd0483a8fe59ad3bb465a upstream.
+commit f2b18baca9539c6a3116d48b70972c7a2ba5d766 upstream.
 
-The check to ensure that the new written value into cpu.uclamp.{min,max}
-is within range, [0:100], wasn't working because of the signed
-comparison
+It turns out that this wasn't a good idea, I hit a test failure in
+hwsim due to this. That particular failure was easily worked around,
+but it raised questions: if an AP needs to, for example, send action
+frames to each connected station, the current limit is nowhere near
+enough (especially if those stations are sleeping and the frames are
+queued for a while.)
 
- 7301                 if (req.percent > UCLAMP_PERCENT_SCALE) {
- 7302                         req.ret = -ERANGE;
- 7303                         return req;
- 7304                 }
+Shuffle around some bits to make more room for ack_frame_id to allow
+up to 8192 queued up frames, that's enough for queueing 4 frames to
+each connected station, even at the maximum of 2007 stations on a
+single AP.
 
-	# echo -1 > cpu.uclamp.min
-	# cat cpu.uclamp.min
-	42949671.96
+We take the bits from band (which currently only 2 but I leave 3 in
+case we add another band) and from the hw_queue, which can only need
+4 since it has a limit of 16 queues.
 
-Cast req.percent into u64 to force the comparison to be unsigned and
-work as intended in capacity_from_percent().
-
-	# echo -1 > cpu.uclamp.min
-	sh: write error: Numerical result out of range
-
-Fixes: 2480c093130f ("sched/uclamp: Extend CPU's cgroup controller")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200114210947.14083-1-qais.yousef@arm.com
+Fixes: 6912daed05e1 ("mac80211: Shrink the size of ack_frame_id to make room for tx_time_est")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/r/20200115122549.b9a4ef9f4980.Ied52ed90150220b83a280009c590b65d125d087c@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/mac80211.h |   11 +++++------
+ net/mac80211/cfg.c     |    2 +-
+ net/mac80211/tx.c      |    2 +-
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7260,7 +7260,7 @@ capacity_from_percent(char *buf)
- 					     &req.percent);
- 		if (req.ret)
- 			return req;
--		if (req.percent > UCLAMP_PERCENT_SCALE) {
-+		if ((u64)req.percent > UCLAMP_PERCENT_SCALE) {
- 			req.ret = -ERANGE;
- 			return req;
- 		}
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -1004,12 +1004,11 @@ ieee80211_rate_get_vht_nss(const struct
+ struct ieee80211_tx_info {
+ 	/* common information */
+ 	u32 flags;
+-	u8 band;
+-
+-	u8 hw_queue;
+-
+-	u16 ack_frame_id:6;
+-	u16 tx_time_est:10;
++	u32 band:3,
++	    ack_frame_id:13,
++	    hw_queue:4,
++	    tx_time_est:10;
++	/* 2 free bits */
+ 
+ 	union {
+ 		struct {
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -3450,7 +3450,7 @@ int ieee80211_attach_ack_skb(struct ieee
+ 
+ 	spin_lock_irqsave(&local->ack_status_lock, spin_flags);
+ 	id = idr_alloc(&local->ack_status_frames, ack_skb,
+-		       1, 0x40, GFP_ATOMIC);
++		       1, 0x2000, GFP_ATOMIC);
+ 	spin_unlock_irqrestore(&local->ack_status_lock, spin_flags);
+ 
+ 	if (id < 0) {
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -2442,7 +2442,7 @@ static int ieee80211_store_ack_skb(struc
+ 
+ 		spin_lock_irqsave(&local->ack_status_lock, flags);
+ 		id = idr_alloc(&local->ack_status_frames, ack_skb,
+-			       1, 0x40, GFP_ATOMIC);
++			       1, 0x2000, GFP_ATOMIC);
+ 		spin_unlock_irqrestore(&local->ack_status_lock, flags);
+ 
+ 		if (id >= 0) {
 
 
