@@ -2,129 +2,136 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D0C34036
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5217C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C77A22527
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="FzFE0W+U"
+	by mail.kernel.org (Postfix) with ESMTP id 9F362206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 10:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgBRK3j (ORCPT
+        id S1726521AbgBRKcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 05:29:39 -0500
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:32835 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgBRK3j (ORCPT
+        Tue, 18 Feb 2020 05:32:53 -0500
+Received: from m213143.mail.qiye.163.com ([223.252.213.143]:45170 "EHLO
+        m213143.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgBRKcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 05:29:39 -0500
-Received: by mail-lj1-f169.google.com with SMTP id y6so22325172lji.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 02:29:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=s+I8pj7DDW7+MEIcYQaGsLXCKLqSSyhyC6U6vjGcY3Y=;
-        b=FzFE0W+UiHz1mbo6S9YKAeko2ypDGCUCA9ezE4SgAQI+9W3ZOhB7sCDgtSRGsbtiwi
-         WHZsz3Ox+UF79hDY/VMkWmHo8Ylh6afm7d6jEMM4QkPq8OxyIbGj8kaVffWRHnB9Z+gd
-         bDwvsnrR7OxysvPw6GY+SYBGvFfHxfqSAfiYwoKx/bHuUYCBpPHjG/TBRUB4sKfDohAb
-         ajJ6baDqYQgGGcVaKMuzuzxKAHyhP11EuHwX2aObJUIy7DDpX+zlSF72Sby7L3f7qQyo
-         ypJmiBrIUWebmMoik0zRHK+cC4QiX6NBnxcTPdyBUAIpfG219xIdk/K0+0N/PnViW+8i
-         hTAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=s+I8pj7DDW7+MEIcYQaGsLXCKLqSSyhyC6U6vjGcY3Y=;
-        b=dW6/8lLh0thY9l8Y7VGHWjdPbBTX2aEeT31B7sVhkPb6P0jpFfxJCLxt2Bs5tVFUAv
-         ABBiprnNlinW1nVLieFRLvTYk61qvfojaCrIYt6lrbCOacwwutvuxtClM/bAO3mIfEuy
-         bmlhQlQjoFQ6bMnCaG+tdqyi2aAHbSGTclbIv6miz0JImbvuTnVgwwV3afS1iu1UEfc/
-         kY456SqXSClie3jkmaDKUx9Kaw62s5OXnM/tNfxL+zRk/A7AjNBx39su3bddyqIsVjJn
-         MvlSovwKUoyM6ewl4fc3RCCbrboUW3Eq/IPvxqC7x03DwR1stVyWTXIbW2jDf/WtK7Gd
-         BaCg==
-X-Gm-Message-State: APjAAAWyqYFXUYFL0AkSbDKIWQll7ywfLUkim7EKzLN/wKV+oeXQROlk
-        vlEMtlJGyXqLY2VFCDo1Rh+WQw==
-X-Google-Smtp-Source: APXvYqx7w7kDrGAiOADdb7ykxRBSJpPOsXY00e27KzXbWnE6fz0tXD7YeabOs3OfrMDVtrtRpo9D/Q==
-X-Received: by 2002:a2e:a551:: with SMTP id e17mr12742787ljn.86.1582021777270;
-        Tue, 18 Feb 2020 02:29:37 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id a10sm1922743lfr.94.2020.02.18.02.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 02:29:36 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 1C99A100F9D; Tue, 18 Feb 2020 13:30:02 +0300 (+03)
-Date:   Tue, 18 Feb 2020 13:30:02 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, elver@google.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org,
-        syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH -next] fork: annotate a data race in vm_area_dup()
-Message-ID: <20200218103002.6rtjreyqjepo3yxe@box>
-References: <20200217223138.doaph66iwprbwhw5@box>
- <EAD6E54D-8A57-4494-94F2-2EEEC3265560@lca.pw>
+        Tue, 18 Feb 2020 05:32:53 -0500
+X-Greylist: delayed 456 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 05:32:52 EST
+Received: from vivo.com (wm-7 [127.0.0.1])
+        by m213143.mail.qiye.163.com (Hmail) with ESMTP id 880CE5818EA;
+        Tue, 18 Feb 2020 18:25:11 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AG*AmQC6CEB-c3GeBiN1qKrE.3.1582021511507.Hmail.wenhu.wang@vivo.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, wangwenhu <wenhu.pku@gmail.com>,
+        Paul Mackerras <paulus@samba.org>, trivial@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, lonehugo@hotmail.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gcG93ZXJwYy9zeXNkZXY6IGZpeCBjb21waWxlIGVycm9ycw==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <d3b340dc-54df-24f6-2831-50456beea7ab@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <EAD6E54D-8A57-4494-94F2-2EEEC3265560@lca.pw>
+Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 18 Feb 2020 18:25:11 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Tue, 18 Feb 2020 18:25:11 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCTktCQkJMSE1MQ05DQllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNSkpJS01MT0xJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6PFE6Fio4TTg#OVYYSDweORI1SgowCT5VSFVKTkNJS0lKTkpITExDVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUNPT0w3Bg++
+X-HM-Tid: 0a7057d4898a7f7bkuuk880ce5818ea
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:59:47PM -0500, Qian Cai wrote:
-> 
-> 
-> > On Feb 17, 2020, at 5:31 PM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> > 
-> > I'm confused. AFAICS both sides hold mmap_sem on write:
-> > 
-> > - vm_mmap_pgoff() takes mmap_sem for the write on the write side
-> > 
-> > - do_mprotect_pkey() takes mmap_sem for the write on the read side
-> > 
-> > 
-> > What do I miss?
-> 
-> Ah, good catch. I missed the locking for the read there. This is interesting because Marco
-> did confirmed that the concurrency could happen,
-> 
-> https://lore.kernel.org/lkml/20191025173511.181416-1-elver@google.com/
-> 
-> If that means KCSAN is not at fault, then I could think of two things,
-> 
-> 1) someone downgrades the lock.
-> 
-> I don’t think that a case here. Only __do_munmap() will do that but I did not see how
-> it will affect us here.
-> 
-> 2) the reader and writer are two different processes.
-> 
-> So, they held a different mmap_sem, but I can’t see how could two processes shared
-> the same vm_area_struct. Also, file->f_mapping->i_mmap was also stored in the
-> writer, but I can’t see how it was also loaded in the reader.
-> 
-> Any ideas?
-
-I think I've got this:
-
-vm_area_dup() blindly copies all fields of orignal VMA to the new one.
-This includes coping vm_area_struct::shared.rb which is normally protected
-by i_mmap_lock. But this is fine because the read value will be
-overwritten on the following __vma_link_file() under proper protectection.
-
-So the fix is correct, but justificaiton is lacking.
-
-Also, I would like to more fine-grained annotation: marking with
-data_race() 200 bytes copy may hide other issues.
-
--- 
- Kirill A. Shutemov
+CkZyb206IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPgogRGF0ZTog
+MjAyMC0wMS0yMSAxNjozNzowNwpUbzoi546L5paH6JmOIiA8d2VuaHUud2FuZ0B2aXZvLmNvbT4s
+QW5kcmV3IERvbm5lbGxhbiA8YWpkQGxpbnV4LmlibS5jb20+CiBjYzogS2F0ZSBTdGV3YXJ0IDxr
+c3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnPixSaWNoYXJkIEZvbnRhbmEgPHJmb250YW5hQHJl
+ZGhhdC5jb20+LEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
+LGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsd2FuZ3dlbmh1IDx3ZW5odS5wa3VAZ21haWwu
+Y29tPixQYXVsIE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4sdHJpdmlhbEBrZXJuZWwub3Jn
+LFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPixsaW51eHBwYy1kZXZAbGlzdHMu
+b3psYWJzLm9yZyxsb25laHVnb0Bob3RtYWlsLmNvbQpTdWJqZWN0OiBSZTogW1BBVENIXSBwb3dl
+cnBjL3N5c2RldjogZml4IGNvbXBpbGUgZXJyb3JzPgo+Cj5MZSAyMS8wMS8yMDIwIMOgIDA3OjU5
+LCDnjovmlofomY4gYSDDqWNyaXTCoDoKPj4g5Y+R5Lu25Lq677yaQW5kcmV3IERvbm5lbGxhbiA8
+YWpkQGxpbnV4LmlibS5jb20+Cj4+IOWPkemAgeaXpeacn++8mjIwMjAtMDEtMjEgMTQ6MTM6MDcK
+Pj4g5pS25Lu25Lq677yad2FuZ3dlbmh1IDx3ZW5odS5wa3VAZ21haWwuY29tPixCZW5qYW1pbiBI
+ZXJyZW5zY2htaWR0IDxiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc+LFBhdWwgTWFja2VycmFzIDxw
+YXVsdXNAc2FtYmEub3JnPixNaWNoYWVsIEVsbGVybWFuIDxtcGVAZWxsZXJtYW4uaWQuYXU+LEth
+dGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz4sR3JlZyBLcm9haC1IYXJ0
+bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4sUmljaGFyZCBGb250YW5hIDxyZm9udGFu
+YUByZWRoYXQuY29tPixUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4sbGludXhw
+cGMtZGV2QGxpc3RzLm96bGFicy5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+PiDm
+ioTpgIHkurrvvJp0cml2aWFsQGtlcm5lbC5vcmcsbG9uZWh1Z29AaG90bWFpbC5jb20sd2VuaHUu
+d2FuZ0B2aXZvLmNvbQo+PiDkuLvpopjvvJpSZTogW1BBVENIXSBwb3dlcnBjL3N5c2RldjogZml4
+IGNvbXBpbGUgZXJyb3JzPk9uIDIxLzEvMjAgNDozMSBwbSwgd2FuZ3dlbmh1IHdyb3RlOgo+Pj4+
+IEZyb206IHdhbmd3ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPj4+Pgo+Pj4+IEluY2x1ZGUg
+YXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2lvLmggaW50byBmc2xfODV4eF9jYWNoZV9zcmFtLmMg
+dG8KPj4+PiBmaXggdGhlIGltcGxpY2l0IGRlY2xhcmF0aW9uIGNvbXBpbGUgZXJyb3JzIHdoZW4g
+YnVpbGRpbmcgQ2FjaGUtU3JhbS4KPj4+Pgo+Pj4+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1
+eHhfY2FjaGVfc3JhbS5jOiBJbiBmdW5jdGlvbiDigJhpbnN0YW50aWF0ZV9jYWNoZV9zcmFt4oCZ
+Ogo+Pj4+IGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfY2FjaGVfc3JhbS5jOjk3OjI2OiBl
+cnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYaW9yZW1hcF9jb2hlcmVu
+dOKAmTsgZGlkIHlvdSBtZWFuIOKAmGJpdG1hcF9jb21wbGVtZW504oCZPyBbLVdlcnJvcj1pbXBs
+aWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0KPj4+PiAgICAgY2FjaGVfc3JhbS0+YmFzZV92aXJ0
+ID0gaW9yZW1hcF9jb2hlcmVudChjYWNoZV9zcmFtLT5iYXNlX3BoeXMsCj4+Pj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn4KPj4+PiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgYml0bWFwX2NvbXBsZW1lbnQKPj4+PiBhcmNoL3Bvd2VycGMvc3lzZGV2L2Zz
+bF84NXh4X2NhY2hlX3NyYW0uYzo5NzoyNDogZXJyb3I6IGFzc2lnbm1lbnQgbWFrZXMgcG9pbnRl
+ciBmcm9tIGludGVnZXIgd2l0aG91dCBhIGNhc3QgWy1XZXJyb3I9aW50LWNvbnZlcnNpb25dCj4+
+Pj4gICAgIGNhY2hlX3NyYW0tPmJhc2VfdmlydCA9IGlvcmVtYXBfY29oZXJlbnQoY2FjaGVfc3Jh
+bS0+YmFzZV9waHlzLAo+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgXgo+Pj4+IGFyY2gv
+cG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfY2FjaGVfc3JhbS5jOjEyMzoyOiBlcnJvcjogaW1wbGlj
+aXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYaW91bm1hcOKAmTsgZGlkIHlvdSBtZWFuIOKA
+mHJvdW5kdXDigJk/IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQo+Pj4+
+ICAgICBpb3VubWFwKGNhY2hlX3NyYW0tPmJhc2VfdmlydCk7Cj4+Pj4gICAgIF5+fn5+fn4KPj4+
+PiAgICAgcm91bmR1cAo+Pj4+IGNjMTogYWxsIHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJy
+b3JzCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiB3YW5nd2VuaHUgPHdlbmh1LndhbmdAdml2by5j
+b20+Cj4+Pgo+Pj4gSG93IGxvbmcgaGFzIHRoaXMgY29kZSBiZWVuIGJyb2tlbiBmb3I/Cj4+IAo+
+PiBJdCdzIGJlZW4gYnJva2VuIGFsbW9zdCAxNSBtb250aHMgc2luY2UgdGhlIGNvbW1pdCBiZWxv
+dzoKPj4gImNvbW1pdCBhYTkxNzk2ZWM0NjMzOWYyZWQ1M2RhMzExYmQzZWE3N2EzZTRkZmUxCj4+
+IEF1dGhvcjogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+Cj4+IERh
+dGU6ICAgVHVlIE9jdCA5IDEzOjUxOjQxIDIwMTggKzAwMDAKPj4gCj4+ICAgICAgcG93ZXJwYzog
+ZG9uJ3QgdXNlIGlvcmVtYXBfcHJvdCgpIG5vciBfX2lvcmVtYXAoKSB1bmxlc3MgcmVhbGx5IG5l
+ZWRlZC4iCj4+IAo+PiBBbmQgd2UgYXJlIHdvcmtpbmcgb24gaXQgbm93IGZvciBmdXJ0aGVyIGRl
+dmVsb3BtZW50Lgo+Cj5UaGF0J3MgcHJldHR5IHN1cnByaXNpbmcuIFRoYXQgY29tbWl0IGRpZG4n
+dCBjaGFuZ2UgdGhlIGlvdW5tYXAoKS4gSXQgCj5vbmx5IHJlcGxhY2VkIGlvcmVtYXBfcHJvdCgp
+IGJ5IGlvcmVtYXBfY29oZXJlbnQoKS4gQm90aCBhcmUgZGVmaW5lZCBpbiBpby5oCj4KPkNocmlz
+dG9waGUKPgoKVGhlIGNvbXBpbGUgZXJyb3IgZXhpc3RzIHNpbmNlIHRoZSB1cGxvYWRpbmcgb2Yg
+dGhlIGRyaXZlcgpEZXRhaWxzIGJlbG93OgoxLiAiaW9yZW1hcF9mbGFncyIgZGVmaW5lZCBpbiAi
+YXNtL2lvLmgiIHdhcyB1c2VkIHByaW1hcmlseShXZWQgT2N0IDEzIDE3OjMwOjU2IDIwMTApOgoo
+NmRiOTJjYzlkMDdkOiBwb3dlcnBjLzg1eHg6IGFkZCBjYWNoZS1zcmFtIHN1cHBvcnQpOwoyLiAi
+aW9yZW1hcF9wcm90IiB3YXMgdXNlZCB0byByZXBsYWNlICJpb3JlbWFwX2ZsYWdzIgooNDBmMWNl
+N2ZiN2U4OiBwb3dlcnBjOiBSZW1vdmUgaW9yZW1hcF9mbGFncyk7CjMuICJpb3JlbWFwX2NvaGVy
+ZW50IiB3YXMgdXNlZCB0byByZXBsYWNlICJpb3JlbWFwX3Byb3QiOgooYWE5MTc5NmVjNDYzOiBw
+b3dlcnBjOiBkb24ndCB1c2UgaW9yZW1hcF9wcm90KCkgbm9yIF9faW9yZW1hcCgpIHVubGVzcyBy
+ZWFsbHkgbmVlZGVkLikKClNvIEkgd2lsbCBkbyB0aGUgcmUtcGF0Y2ggd2l0aCBhICJGaXhlZCIg
+dGFnIGFuZCAiPGxpbnV4L2lvLmg+IiBpbmNsdWRlIG1vZGlmaWNhdGlvbi4KV2hpY2ggY29tbWl0
+IHNob3VsZCBiZSByZWZlcmVuY2VkIHRvIGFwcGVuZCB0byAiRml4ZWQiIHRhZz8gKE5vLjEgb3Ig
+Tm8uMyA/KQoKV2VuaHUKCj4+IAo+Pj4KPj4+PiAtLS0KPj4+PiAgICBhcmNoL3Bvd2VycGMvc3lz
+ZGV2L2ZzbF84NXh4X2NhY2hlX3NyYW0uYyB8IDEgKwo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9zeXNkZXYv
+ZnNsXzg1eHhfY2FjaGVfc3JhbS5jIGIvYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xfODV4eF9jYWNo
+ZV9zcmFtLmMKPj4+PiBpbmRleCBmNmM2NjVkYWM3MjUuLjI5YjY4NjhlZmY3ZCAxMDA2NDQKPj4+
+PiAtLS0gYS9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF84NXh4X2NhY2hlX3NyYW0uYwo+Pj4+ICsr
+KyBiL2FyY2gvcG93ZXJwYy9zeXNkZXYvZnNsXzg1eHhfY2FjaGVfc3JhbS5jCj4+Pj4gQEAgLTE3
+LDYgKzE3LDcgQEAKPj4+PiAgICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPj4+PiAg
+ICAjaW5jbHVkZSA8YXNtL3BndGFibGUuaD4KPj4+PiAgICAjaW5jbHVkZSA8YXNtL2ZzbF84NXh4
+X2NhY2hlX3NyYW0uaD4KPj4+PiArI2luY2x1ZGUgPGFzbS9pby5oPgo+Pj4+Cj4+Pj4gICAgI2lu
+Y2x1ZGUgImZzbF84NXh4X2NhY2hlX2N0bHIuaCIKPj4+Pgo+Pj4KPj4+IC0tIAo+Pj4gQW5kcmV3
+IERvbm5lbGxhbiAgICAgICAgICAgICAgT3pMYWJzLCBBREwgQ2FuYmVycmEKPj4+IGFqZEBsaW51
+eC5pYm0uY29tICAgICAgICAgICAgIElCTSBBdXN0cmFsaWEgTGltaXRlZAo+Pj4KPj4gCj4+IFdl
+bmh1Cj4+IAoNCg0K
