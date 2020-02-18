@@ -2,129 +2,248 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F057C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E8C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F9C21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A150F21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 06:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZHdJvTjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgBRGrO (ORCPT
+        id S1726283AbgBRGru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 01:47:14 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37066 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgBRGrO (ORCPT
+        Tue, 18 Feb 2020 01:47:50 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:33476 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgBRGru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:47:14 -0500
-Received: by mail-io1-f71.google.com with SMTP id p4so13270904ioo.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 22:47:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2uIvG8n91WjAK+8Fc4AV0UFGKDnjSDw2pznJjQ1AoWI=;
-        b=uIJ8llxXhJBtI/jpM43A6G50JYOEWxout8S5N+DQqJ6vl1fnLwf0YAAvIx3L8ngo3I
-         ywuRZoqN1gDsRKyezzWLnw3IMIhdAQdOvbmt4ZNvDey/8f4L1so61Zt1N07J70D0FqCG
-         Fsn2hLMs5eVwJ1BArokhaCvYtctH+rJ7OK38vwMSJqVe4xJX+pzNnqAXMxrSra9ULeNB
-         ot+MrvexUWodV/bHk9zLscfmqXX9/MaNYI6VWlvbzIRN/L4O/xVvlb6NDrsaSxQCv6PD
-         i9F/grUt60hs9T21x18wlptURcEADk0T1Q6U4KrOCUMxTw/v+vqCUOhaltNg24pI9jLN
-         Ge2Q==
-X-Gm-Message-State: APjAAAVM6kDLCU4nJrV036wzn+u+lCUDd4+TTKpGUmgCfnr4oAj6Hzhe
-        jywT2KxOoK85u9i3NFD5635zjQESJZ90/4xHycVYhKZ/bOdG
-X-Google-Smtp-Source: APXvYqyl+yC5vY8YiRKB6Nj+2QlehHRz/NDgCroTLCqKaqYUOiL9cwZlR8Nwrb/BTXe5y7Qx+Y6WRTSbs4MQ49+t3mAlTgzvI1NM
+        Tue, 18 Feb 2020 01:47:50 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200218064748euoutp018bee36e1c5454006cfa645e5dbf39f69~0bFH2AdYp2287022870euoutp011
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 06:47:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200218064748euoutp018bee36e1c5454006cfa645e5dbf39f69~0bFH2AdYp2287022870euoutp011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582008468;
+        bh=5OmFQvW0+eYHX8EYUo3b9SjCwA/SO59ajoq9b2DMIq8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ZHdJvTjcPN90qmVxCvoGQndNDGlAFiQa+V8O3y930gFHsE6jjYpn/AkxDwOtJvlEY
+         lC74jHU67nA6L+i7OohdfbFMLE7p1FjeKfgMZPAF1KsuI4NtIq6NNv6VALTuvgeurd
+         AqkCIUaKjG57hj6Wan1xxmkDpfv02j5v9yAqg0fY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200218064748eucas1p245e9a8e6d083311597cea7cd64e9515a~0bFHpLKtl2478324783eucas1p2M;
+        Tue, 18 Feb 2020 06:47:48 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id BD.5F.60679.4988B4E5; Tue, 18
+        Feb 2020 06:47:48 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200218064747eucas1p1d65dab715088fdefd0c3a50061ee2dca~0bFHTgj971065510655eucas1p1J;
+        Tue, 18 Feb 2020 06:47:47 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200218064747eusmtrp22169b3909a757538c24950a0c2da7550~0bFHS6I5E3148231482eusmtrp2Q;
+        Tue, 18 Feb 2020 06:47:47 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-cc-5e4b8894e801
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 46.C9.07950.3988B4E5; Tue, 18
+        Feb 2020 06:47:47 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200218064747eusmtip19a20528bc2d5b68f3affc9c168fa0bf6~0bFG6_1kO3273132731eusmtip1-;
+        Tue, 18 Feb 2020 06:47:47 +0000 (GMT)
+Subject: Re: [RFT/DONTMERGE] ASoC: devm_snd_soc_register_component fixup
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <e70bb7a5-21b0-0e71-871e-2c02b35f86ea@samsung.com>
+Date:   Tue, 18 Feb 2020 07:47:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a5e:940e:: with SMTP id q14mr13738130ioj.247.1582008433632;
- Mon, 17 Feb 2020 22:47:13 -0800 (PST)
-Date:   Mon, 17 Feb 2020 22:47:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b7ee04059ed40af8@google.com>
-Subject: general protection fault in sco_sock_getsockopt
-From:   syzbot <syzbot+4a38d3795200fd59a9eb@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200217180626.593909-1-jbrunet@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djPc7pTOrzjDCa+YbK4cvEQk8XUh0/Y
+        LN48OsJs8e1KB5PF5V1z2Cwm3t7A7sDmseFzE5vH+xut7B47Z91l99i0qpPNY/OSeo/Pm+QC
+        2KK4bFJSczLLUov07RK4Mk7t62EqWKZSMfN6J1MD43bZLkZODgkBE4mpq28ydzFycQgJrGCU
+        +PBxFxOE84VR4uG8XlYI5zOjxP4JU9hgWq4ueQKVWM4oMe34RkaQhJDAW0aJ1bPLQWxhAQ+J
+        9lkX2EFsEQFPiYUL/4PtYBaYzyhx9PN0sASbgKFE19susKm8AnYSCzrmsoLYLAKqEkt/LGQB
+        sUUFYiVmrzzMAlEjKHFy5hMwm1PAWuLooUNgNrOAvMT2t3OYIWxxiVtP5oP9ICGwjl3i5+cH
+        UGe7SBw5P5sdwhaWeHV8C5QtI/F/J0xDM9DT59ayQzg9jBKXm2YwQlRZS9w59wtoEgfQCk2J
+        9bv0IcKOEgt6vrGChCUE+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iVnH18GtPXjhEvMERqVZ
+        SF6bheSdWUjemYWwdwEjyypG8dTS4tz01GKjvNRyveLE3OLSvHS95PzcTYzAJHT63/EvOxh3
+        /Uk6xCjAwajEwxvQ5xUnxJpYVlyZe4hRgoNZSYTXWxwoxJuSWFmVWpQfX1Sak1p8iFGag0VJ
+        nNd40ctYIYH0xJLU7NTUgtQimCwTB6dUA2MW81mfrtan5817z/NXngs5FORv+uHeocZM/w0C
+        Ud9bV7Pc6Xd2F7has8Q7dd/TnT/yPq9tz72c++z5yaKz689l+ewKqrLmDRay3xqlrn+ta8IO
+        4WKVhj/JVxyzNm+0/ikf/mRegOWH3kSb5olnrycdZj9v5vdqxsLAS8lHDiV97lSdWNrKn6/E
+        UpyRaKjFXFScCACqTel6PgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xu7qTO7zjDN5+17S4cvEQk8XUh0/Y
+        LN48OsJs8e1KB5PF5V1z2Cwm3t7A7sDmseFzE5vH+xut7B47Z91l99i0qpPNY/OSeo/Pm+QC
+        2KL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mk7t
+        62EqWKZSMfN6J1MD43bZLkZODgkBE4mrS56wdjFycQgJLGWU6Jr3hwUiISNxcloDK4QtLPHn
+        WhcbRNFrRolb556DFQkLeEi0z7rADmKLCHhKLFz4nxmkiFlgPqPE3HWXmSE6DjNKNLT3g1Wx
+        CRhKdL0FGcXJwStgJ7GgYy7YChYBVYmlPxaCTRUViJW4MbODCaJGUOLkzCdgcU4Ba4mjhw6B
+        2cwCZhLzNj9khrDlJba/nQNli0vcejKfaQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnF
+        RnrFibnFpXnpesn5uZsYgXG37djPLTsYu94FH2IU4GBU4uFdMcErTog1say4MvcQowQHs5II
+        r7c4UIg3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgSkhryTe0NTQ3MLS0NzY3NjMQkmct0Pg
+        YIyQQHpiSWp2ampBahFMHxMHp1QDo++sijyT7ZeWtp8PkFr5xmDL1NulsSu/vLvP3nS/MNXJ
+        JdLPVXHO9Kc1yWd4xC6yJna6qAZ8WrTYLsL2zQT71dnXfmzPnXecQzfv6IOwazr+6XMsS+WE
+        1thX+7uZrdpn6F16XIRrcqZMmXzC85QNTx7tL62ym/xtW/3sDzI9iXrmEVGRTWcFlViKMxIN
+        tZiLihMBH7SAQ9ECAAA=
+X-CMS-MailID: 20200218064747eucas1p1d65dab715088fdefd0c3a50061ee2dca
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200217180640eucas1p220a8a33489d01a860821370060953153
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200217180640eucas1p220a8a33489d01a860821370060953153
+References: <20557448-d6d2-7584-e2ac-c46d337e1778@samsung.com>
+        <CGME20200217180640eucas1p220a8a33489d01a860821370060953153@eucas1p2.samsung.com>
+        <20200217180626.593909-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Jerome,
 
-syzbot found the following crash on:
+On 17.02.2020 19:06, Jerome Brunet wrote:
+> Hi Marek, would you mind trying the following patch. It should target the
+> component removal intead of removing them all. I'd like to comfirm this is
+> your problem before pushing in this direction. Thanks
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-HEAD commit:    c25a951c Add linux-next specific files for 20200217
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=127e5865e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c727d8fc485ff049
-dashboard link: https://syzkaller.appspot.com/bug?extid=4a38d3795200fd59a9eb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158849e9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e3d711e00000
+It helps a bit. There is no warning from sysfs, but vc4-drm is still not 
+registered properly:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4a38d3795200fd59a9eb@syzkaller.appspotmail.com
+raspberrypi-firmware soc:firmware: Attached to firmware from 2019-07-09 
+14:40
+raspberrypi-clk raspberrypi-clk: CPU frequency range: min 600000000, max 
+1200000000
+vc4_hdmi 3f902000.hdmi: ASoC: CODEC DAI vc4-hdmi-hifi not registered
+vc4_hdmi 3f902000.hdmi: Could not register sound card: -517
+vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
+vc4-drm soc:gpu: master bind failed: -517
 
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 PID: 9807 Comm: syz-executor290 Not tainted 5.6.0-rc2-next-20200217-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:sco_sock_getsockopt+0x33a/0x910 net/bluetooth/sco.c:966
-Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 74 05 00 00 49 8b 9e b8 04 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 45 05 00 00 48 8b 3b e8 44 d1 f3 ff be c8 03 00
-RSP: 0018:ffffc90007a97d40 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87282cb2
-RDX: 0000000000000000 RSI: ffffffff87282cc0 RDI: ffff88808cc7b4b8
-RBP: ffffc90007a97e00 R08: ffff8880a8fc0380 R09: fffffbfff1709225
-R10: fffffbfff1709224 R11: 0000000000000003 R12: 0000000000000000
-R13: 1ffff92000f52fab R14: ffff88808cc7b000 R15: 0000000000000000
-FS:  00000000009c3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 00000000a6d61000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __sys_getsockopt+0x16d/0x310 net/socket.c:2175
- __do_sys_getsockopt net/socket.c:2190 [inline]
- __se_sys_getsockopt net/socket.c:2187 [inline]
- __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2187
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440199
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd6ad93468 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440199
-RDX: 000000000000000e RSI: 0000000000000084 RDI: 0000000000000005
-RBP: 00000000006ca018 R08: 0000000020000080 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a20
-R13: 0000000000401ab0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 2241e8fa1d14b6d0 ]---
-RIP: 0010:sco_sock_getsockopt+0x33a/0x910 net/bluetooth/sco.c:966
-Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 74 05 00 00 49 8b 9e b8 04 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 45 05 00 00 48 8b 3b e8 44 d1 f3 ff be c8 03 00
-RSP: 0018:ffffc90007a97d40 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87282cb2
-RDX: 0000000000000000 RSI: ffffffff87282cc0 RDI: ffff88808cc7b4b8
-RBP: ffffc90007a97e00 R08: ffff8880a8fc0380 R09: fffffbfff1709225
-R10: fffffbfff1709224 R11: 0000000000000003 R12: 0000000000000000
-R13: 1ffff92000f52fab R14: ffff88808cc7b000 R15: 0000000000000000
-FS:  00000000009c3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 00000000a6d61000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ---
+>   include/sound/soc.h                   |  1 +
+>   sound/soc/soc-core.c                  |  8 +++++++
+>   sound/soc/soc-devres.c                | 32 ++++++++++++++++++---------
+>   sound/soc/soc-generic-dmaengine-pcm.c |  2 +-
+>   4 files changed, 31 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/sound/soc.h b/include/sound/soc.h
+> index f0e4f36f83bf..e5bfe2609110 100644
+> --- a/include/sound/soc.h
+> +++ b/include/sound/soc.h
+> @@ -442,6 +442,7 @@ int snd_soc_add_component(struct device *dev,
+>   		const struct snd_soc_component_driver *component_driver,
+>   		struct snd_soc_dai_driver *dai_drv,
+>   		int num_dai);
+> +void snd_soc_del_component(struct snd_soc_component *component);
+>   int snd_soc_register_component(struct device *dev,
+>   			 const struct snd_soc_component_driver *component_driver,
+>   			 struct snd_soc_dai_driver *dai_drv, int num_dai);
+> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+> index 6a58a8f6e3c4..bf6a64fbfa52 100644
+> --- a/sound/soc/soc-core.c
+> +++ b/sound/soc/soc-core.c
+> @@ -2599,6 +2599,14 @@ static void snd_soc_del_component_unlocked(struct snd_soc_component *component)
+>   	list_del(&component->list);
+>   }
+>   
+> +void snd_soc_del_component(struct snd_soc_component *component)
+> +{
+> +	mutex_lock(&client_mutex);
+> +	snd_soc_del_component_unlocked(component);
+> +	mutex_unlock(&client_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(snd_soc_del_component);
+> +
+>   int snd_soc_add_component(struct device *dev,
+>   			struct snd_soc_component *component,
+>   			const struct snd_soc_component_driver *component_driver,
+> diff --git a/sound/soc/soc-devres.c b/sound/soc/soc-devres.c
+> index a9ea172a66a7..d5e9e2bed2ce 100644
+> --- a/sound/soc/soc-devres.c
+> +++ b/sound/soc/soc-devres.c
+> @@ -11,7 +11,7 @@
+>   
+>   static void devm_component_release(struct device *dev, void *res)
+>   {
+> -	snd_soc_unregister_component(*(struct device **)res);
+> +	snd_soc_del_component(*(struct snd_soc_component **)res);
+>   }
+>   
+>   /**
+> @@ -28,21 +28,31 @@ int devm_snd_soc_register_component(struct device *dev,
+>   			 const struct snd_soc_component_driver *cmpnt_drv,
+>   			 struct snd_soc_dai_driver *dai_drv, int num_dai)
+>   {
+> -	struct device **ptr;
+> -	int ret;
+> +	struct snd_soc_component *component;
+> +	struct snd_soc_component **ptr;
+> +	int ret = -ENOMEM;
+> +
+> +	component = devm_kzalloc(dev, sizeof(*component), GFP_KERNEL);
+> +	if (!component)
+> +		return -ENOMEM;
+>   
+>   	ptr = devres_alloc(devm_component_release, sizeof(*ptr), GFP_KERNEL);
+>   	if (!ptr)
+> -		return -ENOMEM;
+> +	        goto err_devres;
+>   
+> -	ret = snd_soc_register_component(dev, cmpnt_drv, dai_drv, num_dai);
+> -	if (ret == 0) {
+> -		*ptr = dev;
+> -		devres_add(dev, ptr);
+> -	} else {
+> -		devres_free(ptr);
+> -	}
+> +	ret = snd_soc_add_component(dev, component, cmpnt_drv, dai_drv,
+> +				    num_dai);
+> +	if (ret)
+> +		goto err_add;
+> +
+> +	*ptr = component;
+> +	devres_add(dev, ptr);
+> +	return 0;
+>   
+> +err_add:
+> +	devres_free(ptr);
+> +err_devres:
+> +	devm_kfree(dev, component);
+>   	return ret;
+>   }
+>   EXPORT_SYMBOL_GPL(devm_snd_soc_register_component);
+> diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+> index 2cc25651661c..a33f21ce2d7a 100644
+> --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> @@ -474,7 +474,7 @@ void snd_dmaengine_pcm_unregister(struct device *dev)
+>   
+>   	pcm = soc_component_to_pcm(component);
+>   
+> -	snd_soc_unregister_component(dev);
+> +	snd_soc_del_component(component);
+>   	dmaengine_pcm_release_chan(pcm);
+>   	kfree(pcm);
+>   }
 
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
