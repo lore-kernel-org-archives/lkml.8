@@ -2,189 +2,100 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C10C34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F0BC3404D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628DB24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MTyOyZdH"
+	by mail.kernel.org (Postfix) with ESMTP id 09B4F207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582066810;
+	bh=hZuJKxOP4U7426Vra7K1+TaONlARPiZSHSEw1mixIkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JViZuyGvZ+SVqIcigwYpmRNHeZRj7/Gm2LGVGalZy6PY+J3xEV5zo2aglhcd6JWdh
+	 8L5SB2go2nkbbTdtwutor2MgFglV1yR+ZuS8bGrV5r0m94rdMlBC6zM9uS6xTod32n
+	 WywZN8JFFl6qTIXsRa2+SkDdqPie49aQINY/mZPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgBRW5p (ORCPT
+        id S1727380AbgBRXAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:57:45 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1295 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgBRW5o (ORCPT
+        Tue, 18 Feb 2020 18:00:08 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45442 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgBRXAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:57:44 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4c6ba10001>; Tue, 18 Feb 2020 14:56:33 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 14:57:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Feb 2020 14:57:43 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
- 2020 22:57:43 +0000
-Subject: Re: [PATCH v6 04/16] mm: Tweak readahead loop slightly
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-6-willy@infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <7691abe7-d0e9-e091-b158-764fb624c2d7@nvidia.com>
-Date:   Tue, 18 Feb 2020 14:57:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 18:00:08 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so21875385oic.12;
+        Tue, 18 Feb 2020 15:00:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4SXS4Vx31CbjF24/0UdHiAqHrzVdz6zIaMwael6olmo=;
+        b=CEBiiC2ann36dhv+yU3P1hTsrOyHROUfFg13t6LyKxf8Lj/l/+7+bgUzK9qI+bo9f9
+         szvXDyI9hh6cav3f0MPjapiCi1vHGc1qQoYOrsyR7gwDcH3nlisfwVHQAMc9jp/lIWUY
+         kd2y8m8HEF4n96ULgK6fIkPG16cCWVXulbzjIKsMUdbK0qSoI3Bp3P+xs/VcLexN1mPV
+         xgyLJITBdVg6lNOCjQe+AuPqSUp7Qkj6r5MRz2gVvip4dVP4Ih6F1yyvs9XCje7G6TmB
+         ls2kAsjRu+Gzata5RQVuOofafaga0mU6faM5slWZqHBTAHqKnzfj7eeA0/pWfGGaka3t
+         arvQ==
+X-Gm-Message-State: APjAAAVw72NJ9JK3OaN4BwV3+NRADXXE2tp50lGNR4mFMEY+KrS6mZ1G
+        9+XcH+W9EdokONOUOXTrTQ==
+X-Google-Smtp-Source: APXvYqwJgOSwcWVN0or0SUmkODwvFUkixIAxPI8oMJiGMChfd9gdfTl91ghUYsw4eo3AjzGu/XuJbw==
+X-Received: by 2002:aca:815:: with SMTP id 21mr2917579oii.52.1582066805654;
+        Tue, 18 Feb 2020 15:00:05 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 5sm2120otr.13.2020.02.18.15.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 15:00:05 -0800 (PST)
+Received: (nullmailer pid 3608 invoked by uid 1000);
+        Tue, 18 Feb 2020 23:00:04 -0000
+Date:   Tue, 18 Feb 2020 17:00:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH v4 3/7] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+Message-ID: <20200218230004.GA2060@bogus>
+References: <20200217032321.15164-1-zhang.lyra@gmail.com>
+ <20200217032321.15164-4-zhang.lyra@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200217184613.19668-6-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582066593; bh=FNMoOaZBBl3i9xCcuLKNCWIelNbWmCqc+hWHl4NpXdM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MTyOyZdHZQkMODmo8rlMB/2qEg3HU5pqh9FgRxpYsmGRmONsz8OrRQrreEBM2NRJR
-         0PWe6O9d1zufzQnZ7Nh6PXVGWI9FIG6u5Ry+tgMofrYVgsctLaciTGIvy+/cW27I6X
-         ozy/zXaexJDMUc/Qb0NIOSo/IRTQ4YUAKJ8AfzrVP0G+gsALpSzt/WUyZkuZM9/H1b
-         pEHxNVaE1Zn1djE6CJLbRxf6pW4SLxI0NCI/PFJCulvIoPdYakDv8H6EHgYany/KqQ
-         +WVDcVH0cvTLVgLvT04N+CZ78lEclF8aBvkeqi/RwbOuHLAT3Vj6DHF81hAcdWMyIY
-         Ygo2o7pN3aTag==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217032321.15164-4-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 10:45 AM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Mon, 17 Feb 2020 11:23:17 +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> Eliminate the page_offset variable which was just confusing;
-> record the start of each consecutive run of pages in the
-
-
-OK...presumably for the benefit of a following patch, since it is not 
-actually consumed in this patch.
-
-> readahead_control, and move the 'kick off a fresh batch' code to
-> the end of the function for easier use in the next patch.
-
-
-That last bit was actually done in the previous patch, rather than this
-one, right?
-
+> add a new bindings to describe sc9863a clock compatible string.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  mm/readahead.c | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      | 103 ++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
 > 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 15329309231f..74791b96013f 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -154,7 +154,6 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		unsigned long lookahead_size)
->  {
->  	struct inode *inode = mapping->host;
-> -	struct page *page;
->  	unsigned long end_index;	/* The last page we want to read */
->  	LIST_HEAD(page_pool);
->  	int page_idx;
-> @@ -163,6 +162,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	struct readahead_control rac = {
->  		.mapping = mapping,
->  		.file = filp,
-> +		._start = offset,
->  		._nr_pages = 0,
->  	};
->  
-> @@ -175,32 +175,39 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	 * Preallocate as many pages as we will need.
->  	 */
->  	for (page_idx = 0; page_idx < nr_to_read; page_idx++) {
-> -		pgoff_t page_offset = offset + page_idx;
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
-You know...this ends up incrementing offset each time through the
-loop, so yes, the behavior is the same as when using "offset + page_idx".
-However, now it's a little harder to see that.
+Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dts:38.11-44: Warning (ranges_format): /example-1/syscon@20e00000:ranges: "ranges" property has invalid length (16 bytes) (parent #address-cells == 1, child #address-cells == 1, #size-cells == 1)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dt.yaml: clock-controller@21500000: clock-names: ['ext-26m', 'ext-32k'] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dt.yaml: clock-controller@21500000: clocks: [[4294967295], [4294967295]] is too short
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
 
-IMHO the page_offset variable is not actually a bad thing, here. I'd rather
-keep it, all other things being equal (and I don't see any other benefits
-here: line count is the same, for example).
-
-What do you think?
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> +		struct page *page;
->  
-> -		if (page_offset > end_index)
-> +		if (offset > end_index)
->  			break;
->  
-> -		page = xa_load(&mapping->i_pages, page_offset);
-> +		page = xa_load(&mapping->i_pages, offset);
->  		if (page && !xa_is_value(page)) {
->  			/*
-> -			 * Page already present?  Kick off the current batch of
-> -			 * contiguous pages before continuing with the next
-> -			 * batch.
-> +			 * Page already present?  Kick off the current batch
-> +			 * of contiguous pages before continuing with the
-> +			 * next batch.  This page may be the one we would
-> +			 * have intended to mark as Readahead, but we don't
-> +			 * have a stable reference to this page, and it's
-> +			 * not worth getting one just for that.
->  			 */
-> -			if (readahead_count(&rac))
-> -				read_pages(&rac, &page_pool, gfp_mask);
-> -			rac._nr_pages = 0;
-> -			continue;
-> +			goto read;
->  		}
->  
->  		page = __page_cache_alloc(gfp_mask);
->  		if (!page)
->  			break;
-> -		page->index = page_offset;
-> +		page->index = offset;
->  		list_add(&page->lru, &page_pool);
->  		if (page_idx == nr_to_read - lookahead_size)
->  			SetPageReadahead(page);
->  		rac._nr_pages++;
-> +		offset++;
-> +		continue;
-> +read:
-> +		if (readahead_count(&rac))
-> +			read_pages(&rac, &page_pool, gfp_mask);
-> +		rac._nr_pages = 0;
-> +		rac._start = ++offset;
->  	}
->  
->  	/*
-> 
+See https://patchwork.ozlabs.org/patch/1238958
+Please check and re-submit.
