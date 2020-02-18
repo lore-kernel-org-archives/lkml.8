@@ -2,76 +2,152 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECEAC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D40AC34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FB2207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146B320722
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 05:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P9FM9oW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgBRFdY (ORCPT
+        id S1726168AbgBRFhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 00:33:24 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50773 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725878AbgBRFdY (ORCPT
+        Tue, 18 Feb 2020 00:37:05 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38928 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgBRFhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 00:33:24 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8B4E77EA1B5;
-        Tue, 18 Feb 2020 16:33:20 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j3vVX-00063Y-Ld; Tue, 18 Feb 2020 16:33:19 +1100
-Date:   Tue, 18 Feb 2020 16:33:19 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 06/19] mm: rename readahead loop variable to 'i'
-Message-ID: <20200218053319.GL10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-10-willy@infradead.org>
+        Tue, 18 Feb 2020 00:37:04 -0500
+Received: by mail-lj1-f195.google.com with SMTP id o15so21439085ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Feb 2020 21:37:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HQqzcFnDoi+mJWHn9CYGpZJAJQhhw/tPMZwi/T/g4NM=;
+        b=P9FM9oW0/QQsLJRWErjz3Ro5y5GOJlIV78gyDcdDweIynnwcdvnAAnc15dhRt4y7ja
+         +VO6G09pkHoJihWu8qe9H/MUklPe4uNN7jNB29oBWeOkA9ukiI/SHXTQPVnCRFPvYdv1
+         C1RgulT8ay5w4vjwXl8Q1IcIUpK6BnmlX+niwuwCUQsCEvXJ8P42MLyG1Mru9bgweta6
+         t6g8w5oAQG+bm0QmQC43FL4QgdGnrq8pDI6d4LaB7jVjW/dvTNOgMyCTNhhuAxoolwU3
+         xP+XtDqPnVTCScVk1HOq74hd0SHppRtUCaHdNF+7px2b6rjd9pdpDyV4a4bpDiuzJl03
+         Z7uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HQqzcFnDoi+mJWHn9CYGpZJAJQhhw/tPMZwi/T/g4NM=;
+        b=FEwJxgAINSwK/UDG1/lxZlv34PcXtyfQa4I928G6MogqPjgaIYlo3RuZTYuGhWDxgP
+         DSmJZMuVVizqynpT/OPro2EI27H5pLYCZmuyk2DVSPU+jFLopeLZDO6Uy2tMossVf0oT
+         /kiZNDwMn7+AcAcAuyn+iSLdkz290YOD+7aouN8O2BTAGC1qIBnSo8fnfLQLxOAeNeN7
+         Kk2/+TcNwiLLE/5VWGeBsIVW6TrEc2VTniOAB3UuoVwti521+OtW5zGuwB60gaNEKsEC
+         zzpEofcjzJJ50tFWV7UJ3oMxJWISC562Wcxf5IgHHRXQl3/pfckXprPDsX32TL+gsUSr
+         SiwQ==
+X-Gm-Message-State: APjAAAUPKKkVpf/l8FYJTdWI6QKCCvBjMMIoiZUSmNmifZlBnGvWRe1c
+        BEr24lpkEeLicNM4vJ56r50hXxQ7vyt2lffihVA+gg==
+X-Google-Smtp-Source: APXvYqzZk8WTMI+ktNFla+FJhSjzyb+0R+CvGj8jIUEUynj0w8f6xkRereZa9onoa7LNIT5cMbLDTwn/dOHWYqGK0LQ=
+X-Received: by 2002:a2e:5854:: with SMTP id x20mr11130896ljd.287.1582004222420;
+ Mon, 17 Feb 2020 21:37:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-10-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=Ikd4Dj_1AAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=hst_v9hiAf68Pp7nMRMA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+References: <cover.1580390127.git.amit.kucheria@linaro.org> <9d4f69cd-fb00-6216-5621-fa6d5b42ce19@linaro.org>
+In-Reply-To: <9d4f69cd-fb00-6216-5621-fa6d5b42ce19@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 18 Feb 2020 11:06:50 +0530
+Message-ID: <CAP245DXyciZ3RhGiK+10kiiG6ZHWfDXUGr5Dybwx7H5_UqJzjA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] thermal: tsens: Handle critical interrupts
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:50AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Change the type of page_idx to unsigned long, and rename it -- it's
-> just a loop counter, not a page index.
-> 
-> Suggested-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  mm/readahead.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Hi Daniel,
 
-Looks fine.
+OK. I will address one last comment as part of the rebase.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Regards,
+Amit
 
--- 
-Dave Chinner
-david@fromorbit.com
+On Mon, Feb 17, 2020 at 8:55 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Amit,
+>
+> can you respin the series against v5.6-rc2?
+>
+> Thanks
+>
+>   -- Daniel
+>
+>
+> On 30/01/2020 14:27, Amit Kucheria wrote:
+> > TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog supp=
+ort
+> > in case the FSM is stuck. Enable support in the driver.
+> >
+> > This series was generated on top of linux-next from 20200130 to integra=
+te
+> > some patches that that are queued currently.
+> >
+> > Changes from v3:
+> > - Remove the DTS changes that are already queued
+> > - Fix review comments by Bjorn
+> > - Fixup patch description to clarify that we don't use TSENS critical
+> >   interrupts in Linux, but need it for the watchdog support that uses t=
+he
+> >   same HW irq line.
+> > - Separate kernel-doc fixes into a separate patch.
+> >
+> > Changes from v2:
+> > - Handle old DTBs w/o critical irq in the same way as fix sent for 5.5
+> >
+> > Changes from v1:
+> > - Make tsens_features non-const to allow run time detection of features
+> > - Pass tsens_sensor around as a const
+> > - Fix a bug to release dev pointer in success path
+> > - Address review comments from Bjorn and Stephen (thanks for the review=
+)
+> > - Add msm8998 and msm8996 DTSI changes for critical interrupts
+> >
+> >
+> >
+> > Amit Kucheria (7):
+> >   drivers: thermal: tsens: Pass around struct tsens_sensor as a constan=
+t
+> >   drivers: thermal: tsens: use simpler variables
+> >   drivers: thermal: tsens: Release device in success path
+> >   drivers: thermal: tsens: Add critical interrupt support
+> >   drivers: thermal: tsens: Add watchdog support
+> >   drivers: thermal: tsens: kernel-doc fixup
+> >   drivers: thermal: tsens: Remove unnecessary irq flag
+> >
+> >  drivers/thermal/qcom/tsens-8960.c   |   2 +-
+> >  drivers/thermal/qcom/tsens-common.c | 191 ++++++++++++++++++++++++----
+> >  drivers/thermal/qcom/tsens-v2.c     |  18 ++-
+> >  drivers/thermal/qcom/tsens.c        |  26 +++-
+> >  drivers/thermal/qcom/tsens.h        |  94 +++++++++++++-
+> >  5 files changed, 300 insertions(+), 31 deletions(-)
+> >
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
