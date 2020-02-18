@@ -2,106 +2,139 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3E7C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE8BC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034D62067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623F02176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQ/FPSt5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXTAl6Ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgBRUPI (ORCPT
+        id S1726672AbgBRUQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:15:08 -0500
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:51971 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBRUPH (ORCPT
+        Tue, 18 Feb 2020 15:16:12 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34802 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgBRUQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:15:07 -0500
-Received: by mail-wm1-f49.google.com with SMTP id t23so4096632wmi.1;
-        Tue, 18 Feb 2020 12:15:05 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:11 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so23590979wrm.1;
+        Tue, 18 Feb 2020 12:16:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=0x0/HJiEHIniNToQWMEKzmP1pNeyrj9mArFmMB3/6oE=;
-        b=cQ/FPSt5OIRzl1p9b3GlWHZLZF3ES6cfsrm+xOf8SoJjHGH4TWiN/h6mdpR+y492h0
-         f/MUwDUSpVtDzXeZwwMOEKO8UrrR0pTIY1CHnL6j20GNRsM2JvOF3371F/OmXNrIptn3
-         CiHlLJUYwuCpSwyJq/jSi499b4/V37S1I5ydkRiLEUWQSbU5Z68aCcD4+9nDTCVxBxKJ
-         UOcTxcejqStBTxt+Lwze3KmqkYGmpOilVJP4OuozkAvgSgCRhplfwQcyf4/oiw1ZxLOu
-         zCBYeE5HNED5Nenn0EL8S6YrJ54SKUjtozg12xrLhgdfaI5kWDiw0tVWH1niZ9jk0SHC
-         Jx/w==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bFMbK7LyKRnHu/ZMhuK+JeN3P8TImavRX9bgAiZfMtk=;
+        b=QXTAl6KeEOAmHWG0qH4S6XmPJj4USYFkCIZ78dT/rmi09maEvpVOzZ//BmyS1kesW5
+         XI0TPXmZ4qZ31jlmuQf0h92ss4SwkWJD0CejHK2mP4ontx77GV16UeS5NSj1hJT9DdLM
+         7Jp/3ahcbfRwH6xUmZPVnPH/+DZFAaM5OFoXpCQUaqd7lr2KciD2f1UX97+D9esFaXeb
+         MHqm3+rmkAeECR3RkLCiE3l94YF4S6XbViZ/ur1ZSwK6SZ4lbKgVBkwNoCkeZWI37kMC
+         WmvS9n0GQIDsgnLwBpALegvqZ7pIl5NjrlFPcg6hlF7QDFnkxvHaaQKfgGjjT9VCyVBW
+         ytag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=0x0/HJiEHIniNToQWMEKzmP1pNeyrj9mArFmMB3/6oE=;
-        b=PNauAWQbaxcGp7slQseJDSuC0DZphSTlIERXD5sPI+05NBzQmPRslsBWbtEjCBt1Ao
-         Oa2UzXHOcVcXY8FfymB+j+4e6PUemaQ9I2kNr4NstIayLzpT5gDUzLGqogDrHOThJE5V
-         TGCk/kbNBgvCs669aq1qcood3nhehjSHvgUP7DzWFZjxel+BGCOqzT7OyCOkPzIdRlOc
-         m8kwMAzd4CIFdlImb6Gnqkd37I4FoaIdlG/e3dA4dcwpSL6EEoDKgNBeVjX30onauIuF
-         R28Rw9Fsrd8VY6hXd4orMacr2QlB3gp+60SOA38hvNl18d0TtCLEL4oQXM68LrPn1ald
-         9Okw==
-X-Gm-Message-State: APjAAAWNUlLZMJtL7DlJkJrDxcErqF0FyYbzd9wIRCDjawPbNppVccnz
-        Yng8KbAr+wB+Ar/KRBmVVNk=
-X-Google-Smtp-Source: APXvYqxaKM2I2yMNbfTnkgC7Ma2W+KQe6RNJr+dtwL3UO48sj8LWbrvhSS1fDhoq9yK7xMRlItjpyA==
-X-Received: by 2002:a1c:66d6:: with SMTP id a205mr4898203wmc.10.1582056905203;
-        Tue, 18 Feb 2020 12:15:05 -0800 (PST)
-Received: from felia ([2001:16b8:38a9:1a00:819d:444c:ffbc:5dca])
-        by smtp.gmail.com with ESMTPSA id v5sm8114572wrv.86.2020.02.18.12.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 12:15:04 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Tue, 18 Feb 2020 21:14:53 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     "Luck, Tony" <tony.luck@intel.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Anatoly Pugachev <matorola@gmail.com>, Pat Gefre <pfg@sgi.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] tty/serial: cleanup after ioc*_serial driver removal
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F57B7D6@ORSMSX115.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.21.2002182112520.3368@felia>
-References: <20200217081558.10266-1-lukas.bulwahn@gmail.com> <CADxRZqwGBi=4A224mG0cPgONdNitnvi3LFD_KQckxdYSXzgBGg@mail.gmail.com> <alpine.DEB.2.21.2002170950390.11007@felia> <3908561D78D1C84285E8C5FCA982C28F7F57B7D6@ORSMSX115.amr.corp.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bFMbK7LyKRnHu/ZMhuK+JeN3P8TImavRX9bgAiZfMtk=;
+        b=EfB0TFcT1Y440VwWf/O2PCUs3cbQBmr5XoiW6Jg69qwiGoGb1LifHg5omOpVkFn1zT
+         mbt1NwSbpLFFlgri3aiX8YiNktex5L5iOnsNvqeoHm1rYbnxsF1v9mIOD7t2BoEaAZq9
+         Z5k6omMjPOiWsTIwZGF2KrPwqyFqYdYRJg+2TnBmB4IasF3EYZds+x6pt/5KJJ7HvxKG
+         QzbVylhYfHWLLsZ9xU0EQEO9ww0dY10RLQeIGWbmWHMZdcOFgJr7E84YZNWBDaSf85An
+         HVBtMik+zTH7X+TRvVbFhNoTYL/aaCZAUQqGjcjpXJmiixd3n3JHh7c/MzY7Ccv+VCCo
+         jQHA==
+X-Gm-Message-State: APjAAAUy7J+I4lg7sJ9avF+rqSVm3c2bnw9k1GNAOyfs/Ws7JP/C4C8L
+        I7J4ZSOfvvyrcg18rihpVWhyjm5NVqQ=
+X-Google-Smtp-Source: APXvYqx0o7TLaD/TAtGQo3xJ8sCR+Q65dDtECgJ0RmmNYCrQiqxI1MUf49p/dryUzt3jnppRFGzHDQ==
+X-Received: by 2002:adf:f28f:: with SMTP id k15mr30535210wro.230.1582056968961;
+        Tue, 18 Feb 2020 12:16:08 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
+        by smtp.googlemail.com with ESMTPSA id p26sm4590202wmc.24.2020.02.18.12.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 12:16:08 -0800 (PST)
+Subject: [PATCH net-next v2 01/13] net: core: add helper tcp_v6_gso_csum_prep
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     David Miller <davem@davemloft.net>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guo-Fu Tseng <cooldavid@cooldavid.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Timur Tabi <timur@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+Message-ID: <82ba1653-6a88-edf2-b22f-938b64e46655@gmail.com>
+Date:   Tue, 18 Feb 2020 20:56:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Several network drivers for chips that support TSO6 share the same code
+for preparing the TCP header, so let's factor it out to a helper.
+A difference is that some drivers reset the payload_len whilst others
+don't do this. This value is overwritten by TSO anyway, therefore
+the new helper resets it in general.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ include/net/ip6_checksum.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/include/net/ip6_checksum.h b/include/net/ip6_checksum.h
+index 7bec95df4..27ec612cd 100644
+--- a/include/net/ip6_checksum.h
++++ b/include/net/ip6_checksum.h
+@@ -76,6 +76,15 @@ static inline void __tcp_v6_send_check(struct sk_buff *skb,
+ 	}
+ }
+ 
++static inline void tcp_v6_gso_csum_prep(struct sk_buff *skb)
++{
++	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
++	struct tcphdr *th = tcp_hdr(skb);
++
++	ipv6h->payload_len = 0;
++	th->check = ~tcp_v6_check(0, &ipv6h->saddr, &ipv6h->daddr, 0);
++}
++
+ #if IS_ENABLED(CONFIG_IPV6)
+ static inline void tcp_v6_send_check(struct sock *sk, struct sk_buff *skb)
+ {
+-- 
+2.25.1
 
 
-On Tue, 18 Feb 2020, Luck, Tony wrote:
-
-> > I do not know if there are more ia64 serial drivers, but the MAINTAINERS 
-> > entry and commit message suggested there is not another serial driver.
-> 
-> Lukas,
-> 
-> There aren't any other ia64 specific serial drivers. But ia64 does use generic
-> serial drivers (e.g. my test machine has a couple of serial ports attached to 16550A
-> devices)
-> 
-> I think some notes in that documentation file still apply. Please don't delete.
-> 
-
-I provided a PATCH v2 that does not delete the documentation, which 
-already was reviewed by Christoph Hellwig.
-
-Please pick and apply that PATCH v2.
-
-Lukas 
