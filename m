@@ -4,52 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858EC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F97C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A31322B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E5622B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056373;
-	bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
+	s=default; t=1582056380;
+	bh=BzMa2qGO8g16s/WmhDUrJw7bWLJLX8rlwouMNxuw3rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9TLTyifWM5vqdq1l/bTBrI97QcDdUzee17RIOLDYXXymEr2ILhvt1LzKUAeRUu0H
-	 MPhJa2EfCSgCRW8HGb2YULkO/KFp7kBg4dRAC/Q25BSKOW3SJ/mxOKQz9Hajrr0vDv
-	 PgwwRwCycCDvcW5KrZVOsW6wA7X+Q3O/0Q/YNZnU=
+	b=N9CA8IOhU+4Sw/ghj+3wWO8L90KPMvQaVXdjGAHTO+IkCBtxUHPtxX3NpIDcXBLuC
+	 Cg02GFMeaw1oX8MuTZbfPeF1iZCVY1XSiH2rJghBLOd1e+lPYvLOo/qYWlE1IkkFp3
+	 9RQSBa+MOfkYsivtYgEZhOIHtEZmk49P/e0SvFvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgBRUAl (ORCPT
+        id S1728613AbgBRUAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:00:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgBRUAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:00:37 -0500
+        id S1728582AbgBRUAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:00:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12212464E;
-        Tue, 18 Feb 2020 20:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95ACF24670;
+        Tue, 18 Feb 2020 20:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056037;
-        bh=889FUsw8ToFo6ZuKe4T1rsGGm3hUcVkaCHLutHExmao=;
+        s=default; t=1582056025;
+        bh=BzMa2qGO8g16s/WmhDUrJw7bWLJLX8rlwouMNxuw3rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4jEHiMYBxIMPuM4x8YS5fuUjKhTr1XO+QdEEhMOC8eU/UzzClHH4j6p0L1g5cJuF
-         A7ILLLgei+5yP8dCMJohytitTdI2WQwnEViI0K7IrVqK6K9hVhLsQDS5xfT/6A8heP
-         veJZDH9S2xATMqXs0reoZr5qUAHqj+HI+l7S9u6c=
+        b=Jy5kMjCEWJsKEHKg26RGOgR9ft5bewEGIzgyRXG8p1swMR/s1MHoWVDPwln4DZbaK
+         3OFnMeNv7Je9IbALVIQTuE/ZSHZzyZi0ew94jgYs0a+zjPWvqBUgfVMz2b7Iy8qPk1
+         +LVjil66MFOYBIPvdjGlaFZ4SEqK5/DRK81a2n4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 11/80] ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
-Date:   Tue, 18 Feb 2020 20:54:32 +0100
-Message-Id: <20200218190433.163362498@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 58/66] perf stat: Dont report a null stalled cycles per insn metric
+Date:   Tue, 18 Feb 2020 20:55:25 +0100
+Message-Id: <20200218190433.435351946@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
-References: <20200218190432.043414522@linuxfoundation.org>
+In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
+References: <20200218190428.035153861@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +69,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 93f9d1a4ac5930654c17412e3911b46ece73755a upstream.
+commit 80cc7bb6c104d733bff60ddda09f19139c61507c upstream.
 
-The Audioengine D1 (0x2912:0x30c8) does support reading the sample rate,
-but it returns the rate in byte-reversed order.
+For data collected on machines with front end stalled cycles supported,
+such as found on modern AMD CPU families, commit 146540fb545b ("perf
+stat: Always separate stalled cycles per insn") introduces a new line in
+CSV output with a leading comma that upsets some automated scripts.
+Scripts have to use "-e ex_ret_instr" to work around this issue, after
+upgrading to a version of perf with that commit.
 
-When setting sampling rate, the driver produces these warning messages:
-[168840.944226] usb 3-2.2: current rate 4500480 is different from the runtime rate 44100
-[168854.930414] usb 3-2.2: current rate 8436480 is different from the runtime rate 48000
-[168905.185825] usb 3-2.1.2: current rate 30465 is different from the runtime rate 96000
+We could add "if (have_frontend_stalled && !config->csv_sep)" to the not
+(total && avg) else clause, to emphasize that CSV users are usually
+scripts, and are written to do only what is needed, i.e., they wouldn't
+typically invoke "perf stat" without specifying an explicit event list.
 
-As can be seen from the hexadecimal conversion, the current rate read
-back is byte-reversed from the rate that was set.
+But - let alone CSV output - why should users now tolerate a constant
+0-reporting extra line in regular terminal output?:
 
-44100 == 0x00ac44, 4500480 == 0x44ac00
-48000 == 0x00bb80, 8436480 == 0x80bb00
-96000 == 0x017700,   30465 == 0x007701
+BEFORE:
 
-Rather than implementing a new quirk to reverse the order, just skip
-checking the rate to avoid spamming the log.
+$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200211162235.1639889-1-nivedita@alum.mit.edu
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+ Performance counter stats for 'system wide':
+
+       181,110,981      instructions              #    0.58  insn per cycle
+                                                  #    0.00  stalled cycles per insn
+       309,876,469      cycles
+
+       1.002202582 seconds time elapsed
+
+The user would not like to see the now permanent:
+
+  "0.00  stalled cycles per insn"
+
+line fixture, as it gives no useful information.
+
+So this patch removes the printing of the zeroed stalled cycles line
+altogether, almost reverting the very original commit fb4605ba47e7
+("perf stat: Check for frontend stalled for metrics"), which seems like
+it was written to normalize --metric-only column output of common Intel
+machines at the time: modern Intel machines have ceased to support the
+genericised frontend stalled metrics AFAICT.
+
+AFTER:
+
+$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+       244,071,432      instructions              #    0.69  insn per cycle
+       355,353,490      cycles
+
+       1.001862516 seconds time elapsed
+
+Output behaviour when stalled cycles is indeed measured is not affected
+(BEFORE == AFTER):
+
+$ sudo perf stat --all-cpus -einstructions,cycles,stalled-cycles-frontend -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+       247,227,799      instructions              #    0.63  insn per cycle
+                                                  #    0.26  stalled cycles per insn
+       394,745,636      cycles
+        63,194,485      stalled-cycles-frontend   #   16.01% frontend cycles idle
+
+       1.002079770 seconds time elapsed
+
+Fixes: 146540fb545b ("perf stat: Always separate stalled cycles per insn")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200207230613.26709-1-kim.phillips@amd.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/stat-shadow.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1402,6 +1402,7 @@ bool snd_usb_get_sample_rate_quirk(struc
- 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
- 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
- 	case USB_ID(0x21B4, 0x0081): /* AudioQuest DragonFly */
-+	case USB_ID(0x2912, 0x30c8): /* Audioengine D1 */
- 		return true;
- 	}
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -18,7 +18,6 @@
+  * AGGR_NONE: Use matching CPU
+  * AGGR_THREAD: Not supported?
+  */
+-static bool have_frontend_stalled;
  
+ struct runtime_stat rt_stat;
+ struct stats walltime_nsecs_stats;
+@@ -144,7 +143,6 @@ void runtime_stat__exit(struct runtime_s
+ 
+ void perf_stat__init_shadow_stats(void)
+ {
+-	have_frontend_stalled = pmu_have_event("cpu", "stalled-cycles-frontend");
+ 	runtime_stat__init(&rt_stat);
+ }
+ 
+@@ -853,10 +851,6 @@ void perf_stat__print_shadow_stats(struc
+ 			print_metric(config, ctxp, NULL, "%7.2f ",
+ 					"stalled cycles per insn",
+ 					ratio);
+-		} else if (have_frontend_stalled) {
+-			out->new_line(config, ctxp);
+-			print_metric(config, ctxp, NULL, "%7.2f ",
+-				     "stalled cycles per insn", 0);
+ 		}
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+ 		if (runtime_stat_n(st, STAT_BRANCHES, ctx, cpu) != 0)
 
 
