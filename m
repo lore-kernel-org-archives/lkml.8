@@ -2,129 +2,122 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804F9C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B71C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5416920801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA1A22B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="d3gbxN0E"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gPYG7Up2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgBRTSE (ORCPT
+        id S1726475AbgBRTSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:18:04 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43419 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgBRTSD (ORCPT
+        Tue, 18 Feb 2020 14:18:55 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34570 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgBRTSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:18:03 -0500
-Received: by mail-pg1-f195.google.com with SMTP id u12so11053140pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:17:58 -0800 (PST)
+        Tue, 18 Feb 2020 14:18:55 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so23407132wrm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hdis5Be2VylUOrCt10Cz6Yqnuk5YbPer1SATYKuRYm8=;
-        b=d3gbxN0Eb1BCaa9gLyAoMPLm5uMOU4lHLgDMa8jfpH75ogLpXd95m95AIF0mTusmEH
-         MUeKNqN0pYIwbAenzEdd6QpZDEC3FdYztj5vWXSffv/HT+hONr42+wiXCyRKuFNj1apz
-         n1LZFAkPvnE/YliBP06K+CKh6vpG8IpwT9/g3jh7gZqPhdmJRh3TxNCoygUucNGuzWMU
-         b912pH7Dx43ouulUY7T/lbOSD+DiLBgyaO1gaPYf2pN8VNRYmL0dwodx8Rc4fiBCYnJ9
-         LS39tFVs1CRnOIgEToMois9djIZNuXBl5ptwoeDJX0ldqSpEPS5DeLhZj0mIua5gEtGN
-         rCeg==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EDv1Nfe5wsXfzyx8EHU5Go2CXWqnRUT+kGZGsxidLAE=;
+        b=gPYG7Up24HLKpZ2gCcBHga9Kdn41TjeEpUn3sEfyxxZOeb7n5ZX/xuScf9tRJaAVx6
+         MoH32/VpmVP1Jt3EglGtbe0koWcMmkTEE2/5ECdhSTZ60aSdd0RR2DnfByRsKFU595Os
+         uoRd7KoMm5qj6sBTo1P+E6zboAFd3PnBLqEno=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hdis5Be2VylUOrCt10Cz6Yqnuk5YbPer1SATYKuRYm8=;
-        b=fAujNfaeFOEcle4yFNeLbqbZAITLh/Ns2OTKkMRwMWO0iTvXsRSpKvDDVzM0jgVauJ
-         wvyn3qAkchpNraijYMGyHLdS4mxa2KmdFfhSO/o4hu1IcfwdpYe5KwzLJN57WfrP/dkk
-         0RO5pVS4d1PQ9hVZycA6hxFSo2Q4JNEcGcRypg7DVhUuWZjvHLYtpDVDv/4c3/UhfeKA
-         9n61gSrZ3JA/wUND73sfhglwKKdakH+vfh8YO1VrjpFBYui+OYhEJsOc/GyYp2NHsMVL
-         juGY4Rv7RyT2rGqtjPSORw2XZivLdZvx2wRszUoWVHZSdMdViLHXDSpRK4hbmPVzmnyC
-         fd0A==
-X-Gm-Message-State: APjAAAUlNdxfLzd/b/QWOkXjltIOkCS3Tc//mtuzVKP77EJmpggJe7Qx
-        pxKmVHRtnVg9iQLmiUoI8SlB59fUeo/TN1EX
-X-Google-Smtp-Source: APXvYqyh0pn6jwE7x9qEuaVNzph8xYHQuv1XhcCWUwyL8qLvGC2/yIcQyOL4I2O/iBd7nq53fqFDCg==
-X-Received: by 2002:a63:d18:: with SMTP id c24mr24447947pgl.218.1582053478100;
-        Tue, 18 Feb 2020 11:17:58 -0800 (PST)
-Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.173])
-        by smtp.gmail.com with ESMTPSA id a35sm5769697pgl.20.2020.02.18.11.17.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Feb 2020 11:17:57 -0800 (PST)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Wed, 19 Feb 2020 00:47:47 +0530
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: bcm2835-camera: call function instead of macro
-Message-ID: <20200218191747.GA12782@kaaira-HP-Pavilion-Notebook>
-References: <20200218160727.GA17010@kaaira-HP-Pavilion-Notebook>
- <20200218183711.GE19641@kadam>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=EDv1Nfe5wsXfzyx8EHU5Go2CXWqnRUT+kGZGsxidLAE=;
+        b=B+TEgWeOoR5gD+LInmgN6s8LPnPjgWCr8wKiP7Igp08X7xW3JJIm8FqsH9FFerLI6h
+         3q44BwYQT/LfzvumY+Bgw4Zcaw7Kw5R3hZAGHY3MmdT/Iid26vdw71VlMp1ynAqNNci0
+         VJ0Kr87gEc+YkONLIPH6GQks9x6Dwhl+11YkaQQ8PWfRHBoX7Q3tyebmeS9Fmvy7yj6r
+         CylMLl8Fu8+vfxGRzE7P3z3ZJ/Qftuez8MeOcoHjgsMgkEpHgSmqGdFF+V+PV36QHiIG
+         509kp6/jixNHQaB8QRQgIP3ARsAv6F9SQjOa1oYHqr8h50ukxLDY+LWudEvlaKmGdBQm
+         4g4A==
+X-Gm-Message-State: APjAAAUEUCEtU1Mf6fIp5jCQAgh0IjzELixFNppXFvqemA5X5gI1S3iW
+        yJIwKhpSFXq7yxT7y3ea6B++LpYLGxA=
+X-Google-Smtp-Source: APXvYqx+/IkcOWLmZ/nIlILF5xmAM7d4Bh9kKuTs/+e2gy8RKNfntjbzdg7t7O97vuabW9+kI7TpgA==
+X-Received: by 2002:a5d:5148:: with SMTP id u8mr32125166wrt.132.1582053533137;
+        Tue, 18 Feb 2020 11:18:53 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id x11sm4433598wmg.46.2020.02.18.11.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 11:18:52 -0800 (PST)
+Date:   Tue, 18 Feb 2020 20:18:50 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     Alexey Brodkin <abrodkin@synopsys.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/arc: make arcpgu_debugfs_init return 0
+Message-ID: <20200218191850.GP2363188@phenom.ffwll.local>
+Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+ <CAKMK7uHeSW-sFCZK09n89mJ66J3sb0EtxYU9Ojfi-adM7czTug@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218183711.GE19641@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKMK7uHeSW-sFCZK09n89mJ66J3sb0EtxYU9Ojfi-adM7czTug@mail.gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 09:37:11PM +0300, Dan Carpenter wrote:
-> On Tue, Feb 18, 2020 at 09:37:28PM +0530, Kaaira Gupta wrote:
-> > Fix checkpatch.pl warning of 'macro argument reuse' in bcm2835-camera.h
-> > by removing the macro and calling the function, written in macro in
-> > bcm2835-camera.h, directly in bcm2835-camera.c
-> > 
-> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+On Tue, Feb 18, 2020 at 08:00:30PM +0100, Daniel Vetter wrote:
+> On Tue, Feb 18, 2020 at 6:28 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> >
+> > As drm_debugfs_create_files should return void, remove its use as the
+> > return value of arcpgu_debugfs_init and have the latter function
+> > return 0 directly.
+> >
+> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 > > ---
-> >  .../bcm2835-camera/bcm2835-camera.c           | 28 +++++++++++++++----
-> >  .../bcm2835-camera/bcm2835-camera.h           | 10 -------
-> >  2 files changed, 22 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > index 1ef31a984741..19b3ba80d0e7 100644
-> > --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > @@ -919,9 +919,17 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-> >  	else
-> >  		f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
-> >  	f->fmt.pix.priv = 0;
-> > -
-> > -	v4l2_dump_pix_format(1, bcm2835_v4l2_debug, &dev->v4l2_dev, &f->fmt.pix,
-> > -			     __func__);
-> > +	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
-> > +		 "%s: w %u h %u field %u pfmt 0x%x bpl %u sz_img %u colorspace 0x%x priv %u\n",
-> > +		  __func__,
-> > +		 (&f->fmt.pix)->width,
-> > +		 (&f->fmt.pix)->height,
-> > +		 (&f->fmt.pix)->field,
-> > +		 (&f->fmt.pix)->pixelformat,
-> > +		 (&f->fmt.pix)->bytesperline,
-> > +		 (&f->fmt.pix)->sizeimage,
-> > +		 (&f->fmt.pix)->colorspace,
-> > +		 (&f->fmt.pix)->priv);
+> >  drivers/gpu/drm/arc/arcpgu_drv.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/arc/arcpgu_drv.c b/drivers/gpu/drm/arc/arcpgu_drv.c
+> > index d6a6692db0ac..660b25f9588e 100644
+> > --- a/drivers/gpu/drm/arc/arcpgu_drv.c
+> > +++ b/drivers/gpu/drm/arc/arcpgu_drv.c
+> > @@ -139,8 +139,10 @@ static struct drm_info_list arcpgu_debugfs_list[] = {
+> >
+> >  static int arcpgu_debugfs_init(struct drm_minor *minor)
+> >  {
+> > -       return drm_debugfs_create_files(arcpgu_debugfs_list,
+> > -               ARRAY_SIZE(arcpgu_debugfs_list), minor->debugfs_root, minor);
+> > +       drm_debugfs_create_files(arcpgu_debugfs_list,
+> > +                                ARRAY_SIZE(arcpgu_debugfs_list),
+> > +                                minor->debugfs_root, minor);
+> > +       return 0;
 > 
-> This is not as nice to look at as the original.  Just ignore the
-> warning.
-> 
-> regards,
-> dan carpenter
->
-So, is this warning to be ignored from everywhere in every driver, as it
-doesn't look good? And if yes, then why is it there in the first place?
+> For cases like these I think we should go a step further and also
+> remove the return value from the driver wrapper. And that all the way
+> up until there's something that actually needs to return a value for
+> some other reason than debugfs.
 
-Thanks!
+This ofc applies to almost all the driver patches for this series, most
+can be cleaned up quite a bit more.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
