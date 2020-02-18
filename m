@@ -2,106 +2,98 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D2FC34031
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC4C34033
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8128C207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACD620836
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582010269;
+	bh=TptrOmN9olc77EOFb55S0oGUJ2AnHnCIpyfBD4JXfpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DH9Vo6eEIdpTAQAHLgU7UAiAcAppBIYalUAmqLseYotTlMnrWOVy7kRjKm7fmnLse
+	 BTONAMUkn9tjnja9wOf1O/382oj9YrawqhSsgLPRs5Kp0pK/N+e7l88OnZFjnUF+wX
+	 srAcj+KyCyx3rJRNHPu04kofffau8Ic+FSufDdtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgBRHQl (ORCPT
+        id S1726289AbgBRHRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:16:41 -0500
-Received: from mga07.intel.com ([134.134.136.100]:41843 "EHLO mga07.intel.com"
+        Tue, 18 Feb 2020 02:17:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgBRHQl (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:16:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Feb 2020 23:16:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,455,1574150400"; 
-   d="scan'208";a="258474485"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Feb 2020 23:16:38 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf stat: Align the output for interval aggregation mode
-Date:   Tue, 18 Feb 2020 15:16:14 +0800
-Message-Id: <20200218071614.25736-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726072AbgBRHRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 02:17:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B597207FD;
+        Tue, 18 Feb 2020 07:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582010266;
+        bh=TptrOmN9olc77EOFb55S0oGUJ2AnHnCIpyfBD4JXfpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JHwm9kzUgoWAlTQXwUpdpe6fhpgeX19c3Yxgc1Ga4x20dsQh2iWTkLYidTOBxENUG
+         Sc16GXyFOlBH9qK+efHnhQySjDauwZR4hWaB6hSlvIBKbjJbYUJ+WDX8rvbOiqyII6
+         pgfBIpVWXe/JLq9FbNOCbv6MPEjohNsSzfgSH5FQ=
+Date:   Tue, 18 Feb 2020 08:17:44 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH 0/2] serial: imx: Backport fixes for irq handling to v4.14
+Message-ID: <20200218071744.GA2087281@kroah.com>
+References: <20200217140740.29743-1-frieder.schrempf@kontron.de>
+ <20200218045008.GA2049358@kroah.com>
+ <20200218070310.ibv2m2f7ihfaevrp@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218070310.ibv2m2f7ihfaevrp@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a slight misalignment in -A -I output.
+On Tue, Feb 18, 2020 at 08:03:10AM +0100, Uwe Kleine-König wrote:
+> On Tue, Feb 18, 2020 at 05:50:08AM +0100, gregkh@linuxfoundation.org wrote:
+> > On Mon, Feb 17, 2020 at 02:08:00PM +0000, Schrempf Frieder wrote:
+> > > From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> > > 
+> > > A customer of ours has problems with RS485 on i.MX6UL with the latest v4.14
+> > > kernel. They get an exception like below from time to time (the trace is
+> > > from an older kernel, but the problem also exists in v4.14.170).
+> > > 
+> > > As the cpuidle state 2 causes large delays for the interrupt that controls the
+> > > RS485 RTS signal (which can lead to collisions on the bus), cpuidle state 2 was
+> > > disabled on this system. This aspect might cause the exception happening more
+> > > often on this system than on other systems with default cpuidle settings.
+> > > 
+> > > Looking for solutions I found Uwe's patches that were applied in v4.17 being
+> > > mentioned here [1] and here [2]. In [1] Uwe notes that backporting these fixes
+> > > to v4.14 might not be trivial, but I tried and in my opinion found it not to be
+> > > too problematic either.
+> > > 
+> > > With the backported patches applied, our customer reports that the exceptions
+> > > stopped occuring. Given this and the fact that the problem seems to be known
+> > > and quite common, it would be nice to get this into the v4.14 stable tree. 
+> > 
+> > Thanks for the backports, both now queued up.
+> 
+> To complete these fixes you also want to backport
+> 
+> 	101aa46bd221 serial: imx: fix a race condition in receive path
 
-For example,
+If so, it needs to also go to 4.19.y, and someone needs to provide a
+working backport for both places :)
 
- perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
+thanks,
 
- #           time CPU                    counts unit events
-      1.000440863 CPU0               1,068,388      cpu/event=cpu-cycles/
-      1.000440863 CPU1                 875,954      cpu/event=cpu-cycles/
-      1.000440863 CPU2               3,072,538      cpu/event=cpu-cycles/
-      1.000440863 CPU3               4,026,870      cpu/event=cpu-cycles/
-      1.000440863 CPU4               5,919,630      cpu/event=cpu-cycles/
-      1.000440863 CPU5               2,714,260      cpu/event=cpu-cycles/
-      1.000440863 CPU6               2,219,240      cpu/event=cpu-cycles/
-      1.000440863 CPU7               1,299,232      cpu/event=cpu-cycles/
-
-The value of counts is not aligned with the column "counts" and
-the event name is not aligned with the column "events".
-
-With this patch, the output is,
-
- perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
-
- #           time CPU                    counts unit events
-      1.000423009 CPU0                  997,421      cpu/event=cpu-cycles/
-      1.000423009 CPU1                1,422,042      cpu/event=cpu-cycles/
-      1.000423009 CPU2                  484,651      cpu/event=cpu-cycles/
-      1.000423009 CPU3                  525,791      cpu/event=cpu-cycles/
-      1.000423009 CPU4                1,370,100      cpu/event=cpu-cycles/
-      1.000423009 CPU5                  442,072      cpu/event=cpu-cycles/
-      1.000423009 CPU6                  205,643      cpu/event=cpu-cycles/
-      1.000423009 CPU7                1,302,250      cpu/event=cpu-cycles/
-
-Now output is aligned.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/util/stat-display.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc31fccc0057..95b29c9cba36 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -114,11 +114,11 @@ static void aggr_printout(struct perf_stat_config *config,
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
- 				cpu_map__id_to_socket(id),
- 				cpu_map__id_to_die(id),
--				config->csv_output ? 0 : -5,
-+				config->csv_output ? 0 : -3,
- 				cpu_map__id_to_cpu(id), config->csv_sep);
- 		} else {
--			fprintf(config->output, "CPU%*d%s ",
--				config->csv_output ? 0 : -5,
-+			fprintf(config->output, "CPU%*d%s",
-+				config->csv_output ? 0 : -7,
- 				evsel__cpus(evsel)->map[id],
- 				config->csv_sep);
- 		}
--- 
-2.17.1
-
+greg k-h
