@@ -2,382 +2,225 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765A2C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA07C3403B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3434E206EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD90D21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UhzB7IdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBRNBZ (ORCPT
+        id S1726735AbgBRNBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:01:25 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:1082 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726648AbgBRNBY (ORCPT
+        Tue, 18 Feb 2020 08:01:40 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23349 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726707AbgBRNBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:01:24 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Feb 2020 18:31:16 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 18 Feb 2020 18:30:43 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 4B1954C42; Tue, 18 Feb 2020 18:30:42 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: [RFC v4 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
-Date:   Tue, 18 Feb 2020 18:30:32 +0530
-Message-Id: <1582030833-12964-2-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
-References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
+        Tue, 18 Feb 2020 08:01:40 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582030898; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=zg7uOTNhl06Of6m/IGJ2JX7YMKlvKHRPMgNieOllFHI=; b=UhzB7IdKSTCAfuc1hXRSgf+fHCwOndprN4kUVlBLJ5dlpZI3hN5BBSuemFTML2ERK1Bv1oZB
+ rjMFo7pYa12zlzUvGWKCjJ9wZ89ASl1lcpJWRBCgkoMa4bycdcBZcJ7p5S0QK9xtgQwbvIZW
+ WuJenTVopZ7l27BrcYS1U4u6q5Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4be00f.7fec514f6ce0-smtp-out-n01;
+ Tue, 18 Feb 2020 13:01:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D22AFC4479C; Tue, 18 Feb 2020 13:01:01 +0000 (UTC)
+Received: from [10.204.79.138] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5EF1C43383;
+        Tue, 18 Feb 2020 13:00:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5EF1C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5808f959-f0fc-85be-4bfa-980b5311adeb@codeaurora.org>
+ <20200218033542.GY955802@ripper>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <6df14d5f-dbc7-22eb-e4b2-ac5973f6424f@codeaurora.org>
+Date:   Tue, 18 Feb 2020 18:30:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200218033542.GY955802@ripper>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect bandwidths for SDHC driver using OPP framework that
-is required by SDHC driver based on the clock frequency and bus width
-of the card. Otherwise, the system clocks may run at minimum clock
-speed and thus affecting the performance.
 
-This change is based on
-[RFC] mmc: host: sdhci-msm: Use the interconnect API
-(https://lkml.org/lkml/2018/10/11/499) and
+On 2/18/2020 9:05 AM, Bjorn Andersson wrote:
+> On Sun 16 Feb 06:14 PST 2020, Dwivedi, Avaneesh Kumar (avani) wrote:
+>
+>> Thank you very much Bjorn for your comments, will address them and post
+>> latest patchset soon.
+>>
+>> On 2/4/2020 1:05 AM, Bjorn Andersson wrote:
+>>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+> [..]
+>>>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>>>> index d0a73e7..6b7c9d0 100644
+>>>> --- a/drivers/soc/qcom/Kconfig
+>>>> +++ b/drivers/soc/qcom/Kconfig
+>>>> @@ -202,4 +202,16 @@ config QCOM_APR
+>>>>    	  application processor and QDSP6. APR is
+>>>>    	  used by audio driver to configure QDSP6
+>>>>    	  ASM, ADM and AFE modules.
+>>>> +
+>>>> +config QCOM_EUD
+>>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>>> which obviously is in the wrong place)
+>> Please help to elaborate more, do you mean adding configs in alphabetical
+>> order?
+> Yes, we want to maintain alphabetical sort order of the config options
+> in the Kconfig file. Unfortunately I must have missed this as I picked
+> up QCOM_APR - hence my ask to add you entry further up, even if the
+> order isn't perfect...
+Ok
+>
+>>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>>> +       depends on ARCH_QCOM
+>>>> +       help
+>>>> +         The Embedded USB Debugger (EUD) driver is a driver for the
+>>>> +         control peripheral which waits on events like USB attach/detach
+>>>> +         and charger enable/disable. The control peripheral further helps
+>>>> +         support the USB-based debug and trace capabilities.
+>>>> +         This module enables support for Qualcomm Technologies, Inc.
+>>>> +         Embedded USB Debugger (EUD).
+>>>> +         If unsure, say N.
+>>>>    endmenu
+> [..]
+>>>> +static ssize_t enable_store(struct device *dev,
+>>>> +				struct device_attribute *attr,
+>>>> +				const char *buf, size_t count)
+>>>> +{
+>>>> +	struct eud_chip *chip = dev_get_drvdata(dev);
+>>>> +	int enable = 0;
+>>> You shouldn't need to initialize this as you're checking the return
+>>> value of sscanf().
+>> OK
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	if (sscanf(buf, "%du", &enable) != 1)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (enable == EUD_ENABLE_CMD)
+>>>> +		ret = enable_eud(chip);
+>>> If ret is !0 you should probably return that, rather than count...
+>> ok
+>>>> +	else if (enable == EUD_DISABLE_CMD)
+>>>> +		disable_eud(chip);
+>>>> +	if (!ret)
+>>> ...and then you don't need this check, or initialize ret to 0 above.
+>> ok
+>>>> +		chip->enable = enable;
+>>> So if I write 42 to "enable" nothing will change in the hardware, but
+>>> chip->enable will be 42...
+>> will change enable struct member to bool?
+> The problem I meant was hat if buf is "42", then you will hit the
+> following code path:
+>
+> int ret = 0;
+> sscanf(buf, "%du", &enable);
+> chip->enable = 42;
+>
+> As enable isn't 1 or 0, neither conditional path is taken, but you still
+> store the value in chip->enable.
+>
+> Changing enable to bool won't change this problem, adding an else and
+> returning -EINVAL; would.
+ok.
+>>>> +	return count;
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(enable);
+> [..]
+>>>> +static int msm_eud_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct eud_chip *chip;
+>>>> +	struct resource *res;
+>>>> +	int ret;
+>>>> +
+>>>> +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>>>> +	if (!chip)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	chip->dev = &pdev->dev;
+>>>> +	platform_set_drvdata(pdev, chip);
+>>>> +
+>>>> +	chip->extcon = devm_extcon_dev_allocate(&pdev->dev, eud_extcon_cable);
+>>> Aren't we moving away from extcon in favor of the usb role switching
+>>> thing?
+>> i could see that usb role switch has been implemented for c type connector
+>> and that connector is modeled as child of usb controller, but EUD is not a
+>> true connector, it intercepts PHY signals and reroute it to USB controller
+>> as per EUD Command issued by debug appliaction
+>>
+>> i am not sure if i need to implement EUD DT node as child of usb controller,
+>> if i do so, as per my understanding EUD driver need to set USB controller
+>> mode(host or device mode) by calling usb role switch API's, please let me
+>> know if my understanding is correct?
+>>
+> I don't know how to properly represent this, but I would like the USB
+> guys to chime in before merging something.
 
-[PATCH v6] Introduce Bandwidth OPPs for interconnects
-(https://lkml.org/lkml/2019/12/6/740)
+I will check with USB folks if they can give their opinion.
 
-Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
+based on that will proceed.
 
-changes from RFC v3 -> v4:
+>
+>>>> +	if (IS_ERR(chip->extcon))
+>>>> +		return PTR_ERR(chip->extcon);
+>>>> +
+> [..]
+>>>> +static const struct of_device_id msm_eud_dt_match[] = {
+>>>> +	{.compatible = "qcom,msm-eud"},
+>>> Is this the one and only, past and future, version of the EUD hardware
+>>> block? Or do we need this compatible to be more specific?
+>> EUD h/w  IP is Qualcomm IP, As of now this is only hw IP available, if
+>> future version of EUD IP comes, we can modify and add support then?
+> You can add additional compatibles, but you can't change this one as
+> existing devicetree files must continue to function.
+>
+> If you have a number of platforms that works with this very same
+> implementation then you could make the binding require a specific
+> platform and qcom,msm-eud (although qcom,eud should be enough?) and then
+> keep the implementation as is.
+>
+> I.e. dt would say:
+> 	compatible = "qcom,sc7180-eud", "qcom,eud";
+>
+> And driver would match on the latter only, for now.
+Ok.
+>
+> Regards,
+> Bjorn
 
-- Addressed review comments from Bjorn and Matthias
-
- drivers/mmc/host/sdhci-msm.c | 204 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 200 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 71f29ba..5af1c58 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -11,8 +11,10 @@
- #include <linux/mmc/mmc.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-+#include <linux/interconnect.h>
- #include <linux/iopoll.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/pm_opp.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -229,6 +231,12 @@ struct sdhci_msm_variant_info {
- 	const struct sdhci_msm_offset *offset;
- };
- 
-+struct sdhci_msm_bus_vote_data {
-+	struct icc_path *sdhc_to_ddr;
-+	struct icc_path *cpu_to_sdhc;
-+	u32 curr_freq;
-+};
-+
- struct sdhci_msm_host {
- 	struct platform_device *pdev;
- 	void __iomem *core_mem;	/* MSM SDCC mapped address */
-@@ -255,8 +263,11 @@ struct sdhci_msm_host {
- 	bool use_cdr;
- 	u32 transfer_mode;
- 	bool updated_ddr_cfg;
-+	struct sdhci_msm_bus_vote_data *bus_vote_data;
- };
- 
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable);
-+
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1564,6 +1575,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	msm_set_clock_rate_for_bus_mode(host, clock);
- out:
-+	sdhci_msm_bus_voting(host, !!clock);
- 	__sdhci_msm_set_clock(host, clock);
- }
- 
-@@ -1685,6 +1697,174 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
- 	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
- }
- 
-+/*
-+ * Returns required bandwidth in Bytes per Sec
-+ */
-+static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
-+					struct mmc_ios *ios)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+
-+	switch (ios->bus_width) {
-+	case MMC_BUS_WIDTH_1:
-+		return msm_host->clk_rate/8;
-+	case MMC_BUS_WIDTH_4:
-+		return msm_host->clk_rate/2;
-+	case MMC_BUS_WIDTH_8:
-+		break;
-+	}
-+	return msm_host->clk_rate;
-+}
-+
-+/*
-+ * Helper function to parse the exact OPP node
-+ * Returns OPP pointer on success else NULL on error
-+ */
-+static struct dev_pm_opp
-+		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
-+							unsigned long bw)
-+{
-+	struct dev_pm_opp *opp;
-+	struct sdhci_host *host = mmc_priv(msm_host->mmc);
-+	unsigned int freq = bw;
-+	struct device *dev = &msm_host->pdev->dev;
-+
-+
-+	if (!freq)
-+		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
-+	else
-+		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
-+
-+	/* Max bandwidth vote */
-+	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
-+		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
-+
-+	if (IS_ERR(opp)) {
-+		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
-+				freq, PTR_ERR(opp));
-+		return NULL;
-+	}
-+	return opp;
-+}
-+
-+/*
-+ * This function sets the interconnect bus bandwidth
-+ * vote based on bw (bandwidth) argument.
-+ */
-+#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
-+static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
-+						unsigned int bw)
-+{
-+	int i, ddr_rc, cpu_rc;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
-+	struct device *dev = &msm_host->pdev->dev;
-+	struct dev_pm_opp *opp;
-+	unsigned long freq = bw;
-+	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
-+	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
-+
-+	if (bw == vote_data->curr_freq)
-+		return;
-+
-+	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-+		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
-+		if (opp) {
-+			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
-+			freq += 1; /* Next bandwidth vote */
-+			dev_pm_opp_put(opp);
-+		}
-+	}
-+	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc avg_bw:%lu peak_bw:%lu\n",
-+			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
-+				avg_bw[1], peak_bw[1]);
-+	ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
-+	cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
-+	if (ddr_rc || cpu_rc) {
-+		dev_err(dev, "icc_set() failed ddr_rc:%d cpu_rc:%d\n",
-+							ddr_rc, cpu_rc);
-+		return;
-+	}
-+	vote_data->curr_freq = bw;
-+}
-+
-+/*
-+ * Helper function to register for OPP and interconnect
-+ * frameworks.
-+ */
-+static struct sdhci_msm_bus_vote_data
-+		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-+				struct platform_device *pdev)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-+	if (!vote_data)
-+		return NULL;
-+
-+	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
-+	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
-+	if (!vote_data->sdhc_to_ddr || !vote_data->cpu_to_sdhc) {
-+		dev_info(&pdev->dev, "ICC DT property is missing. skip vote !!\n");
-+		return NULL;
-+	} else if (IS_ERR(vote_data->sdhc_to_ddr) ||
-+			IS_ERR(vote_data->cpu_to_sdhc)) {
-+		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
-+				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
-+		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
-+				PTR_ERR(vote_data->sdhc_to_ddr), "cpu-sdhc");
-+
-+		return IS_ERR(vote_data->sdhc_to_ddr) ?
-+			ERR_CAST(vote_data->sdhc_to_ddr) :
-+			ERR_CAST(vote_data->cpu_to_sdhc);
-+	}
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret) {
-+		if (ret == -ENODEV || ret == -ENODATA)
-+			dev_err(dev, "OPP dt properties missing:%d\n", ret);
-+		else
-+			dev_err(dev, "OPP registration failed:%d\n", ret);
-+		return ERR_PTR(ret);
-+	}
-+	return vote_data;
-+}
-+
-+static void sdhci_msm_bus_unregister(struct device *dev,
-+				struct sdhci_msm_host *host)
-+{
-+	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
-+
-+	if (!vote_data ||
-+		IS_ERR(vote_data->sdhc_to_ddr) ||
-+		IS_ERR(vote_data->cpu_to_sdhc))
-+		return;
-+
-+	icc_put(vote_data->sdhc_to_ddr);
-+	icc_put(vote_data->cpu_to_sdhc);
-+}
-+
-+static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable)
-+{
-+	struct mmc_ios *ios = &host->mmc->ios;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	unsigned int bw;
-+
-+	if (!msm_host->bus_vote_data ||
-+		IS_ERR(msm_host->bus_vote_data))
-+		return;
-+
-+	if (enable) {
-+		bw = sdhci_get_bw_required(host, ios);
-+		sdhci_msm_bus_set_vote(host, bw);
-+	} else
-+		sdhci_msm_bus_set_vote(host, 0);
-+}
-+
- static const struct sdhci_msm_variant_ops mci_var_ops = {
- 	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
- 	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-@@ -1845,11 +2025,20 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
- 	}
- 
-+	msm_host->bus_vote_data = sdhci_msm_bus_register(msm_host, pdev);
-+	if (IS_ERR(msm_host->bus_vote_data)) {
-+		ret = PTR_ERR(msm_host->bus_vote_data);
-+		dev_err(&pdev->dev, "Bus registration failed (%d)\n", ret);
-+		goto clk_disable;
-+	}
-+
-+	sdhci_msm_bus_voting(host, true);
-+
- 	if (!msm_host->mci_removed) {
- 		msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(msm_host->core_mem)) {
- 			ret = PTR_ERR(msm_host->core_mem);
--			goto clk_disable;
-+			goto bus_unregister;
- 		}
- 	}
- 
-@@ -1924,7 +2113,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
- 	if (msm_host->pwr_irq < 0) {
- 		ret = msm_host->pwr_irq;
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	sdhci_msm_init_pwr_irq_wait(msm_host);
-@@ -1937,7 +2126,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 					dev_name(&pdev->dev), host);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
--		goto clk_disable;
-+		goto bus_unregister;
- 	}
- 
- 	pm_runtime_get_noresume(&pdev->dev);
-@@ -1962,6 +2151,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_set_suspended(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
-+bus_unregister:
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- clk_disable:
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
-@@ -1991,6 +2183,9 @@ static int sdhci_msm_remove(struct platform_device *pdev)
- 				   msm_host->bulk_clks);
- 	if (!IS_ERR(msm_host->bus_clk))
- 		clk_disable_unprepare(msm_host->bus_clk);
-+
-+	sdhci_msm_bus_voting(host, false);
-+	sdhci_msm_bus_unregister(&pdev->dev, msm_host);
- 	sdhci_pltfm_free(pdev);
- 	return 0;
- }
-@@ -2003,7 +2198,7 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
- 
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
- 				   msm_host->bulk_clks);
--
-+	sdhci_msm_bus_voting(host, false);
- 	return 0;
- }
- 
-@@ -2025,6 +2220,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
- 	if (msm_host->restore_dll_config && msm_host->clk_rate)
- 		return sdhci_msm_restore_sdr_dll_config(host);
- 
-+	sdhci_msm_bus_voting(host, true);
- 	return 0;
- }
- 
 -- 
-1.9.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
