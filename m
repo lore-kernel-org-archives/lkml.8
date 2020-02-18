@@ -2,235 +2,86 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EEFC3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E78C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6192465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB857208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgBROft (ORCPT
+        id S1727497AbgBROf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:35:49 -0500
-Received: from mga12.intel.com ([192.55.52.136]:55034 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgBROfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 09:35:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 06:35:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
-   d="scan'208";a="382472883"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 18 Feb 2020 06:35:44 -0800
-Received: from [10.125.249.72] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3849E580472;
-        Tue, 18 Feb 2020 06:35:39 -0800 (PST)
-Subject: Re: [PATCH v7 0/3] perf x86: Exposing IO stack to IO PMON mapping
- through sysfs
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com
-References: <20200214140159.9267-1-roman.sudarikov@linux.intel.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <34ec945b-2456-7398-44c2-d523973e8e61@linux.intel.com>
-Date:   Tue, 18 Feb 2020 17:35:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 18 Feb 2020 09:35:58 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53073 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgBROfm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 09:35:42 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j43y6-0000fF-Ax; Tue, 18 Feb 2020 14:35:22 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v3 18/25] commoncap: cap_task_fix_setuid(): handle fsid mappings
+Date:   Tue, 18 Feb 2020 15:34:04 +0100
+Message-Id: <20200218143411.2389182-19-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <20200214140159.9267-1-roman.sudarikov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Switch cap_task_fix_setuid() to lookup fsids in the fsid mappings. If no fsid
+mappings are setup the behavior is unchanged, i.e. fsids are looked up in the
+id mappings.
 
-Could you please take a look at the patch set?
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
 
-Thanks,
-Roman
+/* v3 */
+unchanged
+---
+ security/commoncap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 14.02.2020 17:01, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
->
-> The previous version can be found at:
-> v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v6 -> v7:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Added proper handling of load/unload path
->    2. Simplified the mapping attribute show procedure by using the segment value
->       of the first available root bus for all mapping attributes which is safe
->       due to current implementation supports single segment configuration only
->    3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
->
-> The previous version can be found at:
-> v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v5 -> v6:
->    1. Changed the mapping attribute name to "dieX"
->    2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
->    3. Removed redundant "empty" attribute
->    4. Got an agreement on the mapping attribute format
->
-> The previous version can be found at:
-> v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v4 -> v5:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Using the attr_update flow for newly introduced optional attributes
->    2. No subfolder, optional attributes are created the same level as 'cpumask'
->    3. No symlinks, optional attributes are created as files
->    4. Single file for each IIO PMON block to node mapping
->    5. Added Documentation/ABI/sysfs-devices-mapping
->
-> The previous version can be found at:
-> v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v3 -> v4:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Reworked handling of newly introduced attribute.
->    2. Required Documentation update is expected in the follow up patchset
->
->
-> The previous version can be found at:
-> v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v2 -> v3:
->    1. Addressed comments from Peter and Kan
->
-> The previous version can be found at:
-> v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v1 -> v2:
->    1. Fixed process related issues;
->    2. This patch set includes kernel support for IIO stack to PMON mapping;
->    3. Stephane raised concerns regarding output format which may require
-> code changes in the user space part of the feature only. We will continue
-> output format discussion in the context of user space update.
->
-> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-> significant changes in the integrated I/O (IIO) architecture. The new
-> solution introduces IIO stacks which are responsible for managing traffic
-> between the PCIe domain and the Mesh domain. Each IIO stack has its own
-> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-> or various built-in accelerators. IIO PMON blocks allow concurrent
-> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
->
-> Software is supposed to program required perf counters within each IIO
-> stack and gather performance data. The tricky thing here is that IIO PMON
-> reports data per IIO stack but users have no idea what IIO stacks are -
-> they only know devices which are connected to the platform.
->
-> Understanding IIO stack concept to find which IIO stack that particular
-> IO device is connected to, or to identify an IIO PMON block to program
-> for monitoring specific IIO stack assumes a lot of implicit knowledge
-> about given Intel server platform architecture.
->
-> This patch set introduces:
-> 1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
->     through sysfs-backend;
-> 2. A new --iiostat mode in perf stat to provide I/O performance metrics
->     per I/O device.
->
-> Usage examples:
->
-> 1. List all devices below IIO stacks
->    ./perf stat --iiostat=show
->
-> Sample output w/o libpci:
->
->      S0-RootPort0-uncore_iio_0<00:00.0>
->      S1-RootPort0-uncore_iio_0<81:00.0>
->      S0-RootPort1-uncore_iio_1<18:00.0>
->      S1-RootPort1-uncore_iio_1<86:00.0>
->      S1-RootPort1-uncore_iio_1<88:00.0>
->      S0-RootPort2-uncore_iio_2<3d:00.0>
->      S1-RootPort2-uncore_iio_2<af:00.0>
->      S1-RootPort3-uncore_iio_3<da:00.0>
->
-> Sample output with libpci:
->
->      S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
->      S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
->      S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
->      S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
->
-> 2. Collect metrics for all I/O devices below IIO stack
->
->    ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      357708+0 records in
->      357707+0 records out
->      375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
->
->    Performance counter stats for 'system wide':
->
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      00:00.0                    0                    0                    0                    0
->      81:00.0                    0                    0                    0                    0
->      18:00.0                    0                    0                    0                    0
->      86:00.0                    0                    0                    0                    0
->      88:00.0                    0                    0                    0                    0
->      3b:00.0                    3                    0                    0                    0
->      3c:03.0                    3                    0                    0                    0
->      3d:00.0                    3                    0                    0                    0
->      af:00.0                    0                    0                    0                    0
->      da:00.0               358559                   44                    0                   22
->
->      215.383783574 seconds time elapsed
->
->
-> 3. Collect metrics for comma separted list of I/O devices
->
->    ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      381555+0 records in
->      381554+0 records out
->      400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
->
->    Performance counter stats for 'system wide':
->
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      da:00.0               382462                   47                    0                   23
->
->      374.045775505 seconds time elapsed
->
-> Roman Sudarikov (3):
->    perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
->    perf x86: Topology max dies for whole system
->    perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
->      platform
->
->   .../ABI/testing/sysfs-devices-mapping         |  33 +++
->   arch/x86/events/intel/uncore.c                |  21 +-
->   arch/x86/events/intel/uncore.h                |  18 ++
->   arch/x86/events/intel/uncore_snbep.c          | 197 ++++++++++++++++++
->   4 files changed, 263 insertions(+), 6 deletions(-)
->   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
->
->
-> base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 55e6cc24f887..0581c6aa8bdc 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -1062,7 +1062,7 @@ int cap_task_fix_setuid(struct cred *new, const struct cred *old, int flags)
+ 		 *          if not, we might be a bit too harsh here.
+ 		 */
+ 		if (!issecure(SECURE_NO_SETUID_FIXUP)) {
+-			kuid_t root_uid = make_kuid(old->user_ns, 0);
++			kuid_t root_uid = make_kfsuid(old->user_ns, 0);
+ 			if (uid_eq(old->fsuid, root_uid) && !uid_eq(new->fsuid, root_uid))
+ 				new->cap_effective =
+ 					cap_drop_fs_set(new->cap_effective);
+-- 
+2.25.0
+
