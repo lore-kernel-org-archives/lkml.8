@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E4C3403D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3810C3403F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D5F20801
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C634A20801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 14:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBROgy (ORCPT
+        id S1727895AbgBROgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 09:36:54 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52969 "EHLO
+        Tue, 18 Feb 2020 09:36:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52971 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgBROff (ORCPT
+        with ESMTP id S1726645AbgBROff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Feb 2020 09:35:35 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j43xz-0000fF-2a; Tue, 18 Feb 2020 14:35:15 +0000
+        id 1j43xr-0000fF-7O; Tue, 18 Feb 2020 14:35:07 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -41,9 +41,9 @@ Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
         containers@lists.linux-foundation.org,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 11/25] inode: inode_owner_or_capable(): handle fsid mappings
-Date:   Tue, 18 Feb 2020 15:33:57 +0100
-Message-Id: <20200218143411.2389182-12-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 03/25] proc: add /proc/<pid>/fsgid_map
+Date:   Tue, 18 Feb 2020 15:33:49 +0100
+Message-Id: <20200218143411.2389182-4-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
 References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
@@ -54,12 +54,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch inode_owner_or_capable() to lookup fsids in the fsid mappings. If no
-fsid mappings are setup the behavior is unchanged, i.e. fsids are looked up in
-the id mappings.
+The /proc/<pid>/fsgid_map file can be written once to setup an fsgid mapping
+for a user namespace. Writing to this file has the same restrictions as writing
+to /proc/<pid>/fsgid_map.
 
-Filesystems that share a superblock in all user namespaces they are mounted in
-will retain their old semantics even with the introduction of fsid mappings.
+root@e1-vm:/# cat /proc/13023/fsgid_map
+         0     300000     100000
+
+Fsid mappings have always been around. They are currently always identical to
+the id mappings for a user namespace. This means, currently whenever an fsid
+needs to be looked up the kernel will use the id mapping of the user namespace.
+With the introduction of fsid mappings the kernel will now lookup fsids in the
+fsid mappings of the user namespace. If no fsid mapping exists the kernel will
+continue looking up fsids in the id mappings of the user namespace. Hence, if a
+system supports fsid mappings through /proc/<pid>/fs*id_map and a container
+runtime is not aware of fsid mappings it or does not use them it will it will
+continue to work just as before.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
@@ -67,37 +77,51 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 unchanged
 
 /* v3 */
-unchanged
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Fix grammar in commit message.
 ---
- fs/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/proc/base.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 7d57068b6b7a..81d7a30b381d 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -21,6 +21,7 @@
- #include <linux/ratelimit.h>
- #include <linux/list_lru.h>
- #include <linux/iversion.h>
-+#include <linux/fsuidgid.h>
- #include <trace/events/writeback.h>
- #include "internal.h"
- 
-@@ -2087,8 +2088,12 @@ bool inode_owner_or_capable(const struct inode *inode)
- 		return true;
- 
- 	ns = current_user_ns();
--	if (kuid_has_mapping(ns, inode->i_uid) && ns_capable(ns, CAP_FOWNER))
-+	if (is_userns_visible(inode->i_sb->s_iflags)) {
-+		if (kuid_has_mapping(ns, inode->i_uid) && ns_capable(ns, CAP_FOWNER))
-+			return true;
-+	} else if (kfsuid_has_mapping(ns, inode->i_uid) && ns_capable(ns, CAP_FOWNER)) {
- 		return true;
-+	}
- 	return false;
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 5fb28004663e..1303cdd2e617 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2975,6 +2975,11 @@ static int proc_fsuid_map_open(struct inode *inode, struct file *file)
+ {
+ 	return proc_id_map_open(inode, file, &proc_fsuid_seq_operations);
  }
- EXPORT_SYMBOL(inode_owner_or_capable);
++
++static int proc_fsgid_map_open(struct inode *inode, struct file *file)
++{
++	return proc_id_map_open(inode, file, &proc_fsgid_seq_operations);
++}
+ #endif
+ 
+ static const struct file_operations proc_uid_map_operations = {
+@@ -3009,6 +3014,14 @@ static const struct file_operations proc_fsuid_map_operations = {
+ 	.llseek		= seq_lseek,
+ 	.release	= proc_id_map_release,
+ };
++
++static const struct file_operations proc_fsgid_map_operations = {
++	.open		= proc_fsgid_map_open,
++	.write		= proc_fsgid_map_write,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= proc_id_map_release,
++};
+ #endif
+ 
+ static int proc_setgroups_open(struct inode *inode, struct file *file)
+@@ -3195,6 +3208,7 @@ static const struct pid_entry tgid_base_stuff[] = {
+ #ifdef CONFIG_USER_NS
+ #ifdef CONFIG_USER_NS_FSID
+ 	REG("fsuid_map",  S_IRUGO|S_IWUSR, proc_fsuid_map_operations),
++	REG("fsgid_map",  S_IRUGO|S_IWUSR, proc_fsgid_map_operations),
+ #endif
+ 	REG("uid_map",    S_IRUGO|S_IWUSR, proc_uid_map_operations),
+ 	REG("gid_map",    S_IRUGO|S_IWUSR, proc_gid_map_operations),
 -- 
 2.25.0
 
